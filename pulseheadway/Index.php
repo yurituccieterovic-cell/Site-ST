@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pulse Headway · painel deliberativo de 21 inteligências artificiais da Sociedade Tucci. Arte, inteligência e resultados em produção multimídia.">
+    <meta name="keywords" content="Pulse Headway, Sociedade Tucci, inteligência artificial, painel deliberativo, produção multimídia, consultoria criativa, editorial, ágora deliberativa">
+    <meta name="author" content="Sociedade Tucci">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="Pulse Headway · Sociedade Tucci">
+    <meta property="og:description" content="21 inteligências artificiais deliberando em paralelo sobre temas que importam para você.">
+    <meta property="og:image" content="https://www.sociedadetucci.com.br/pulseheadway/img/logo.png">
+    <meta property="og:url" content="https://www.sociedadetucci.com.br/pulseheadway/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pulse Headway · Sociedade Tucci">
+    <meta name="twitter:description" content="Conselho deliberativo com 21 inteligências artificiais em paralelo.">
+
+    <title>Pulse Headway | Sociedade Tucci</title>
+
+    <link rel="canonical" href="https://www.sociedadetucci.com.br/pulseheadway/">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="#conteudo" class="skip-link">Pular para o conteúdo</a>
+
+    <div class="stars-container" aria-hidden="true">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+        <div class="glow glow-one"></div>
+        <div class="glow glow-two"></div>
+    </div>
+
+    <header class="main-header" id="topo">
+        <div class="brand-wrap">
+            <a href="#inicio" class="logo-section" aria-label="Voltar ao início">
+                <img src="img/logo.png" alt="Logo Pulse Headway" class="logo" width="64" height="64">
+                <div class="title-group">
+                    <span class="eyebrow">Sociedade Tucci</span>
+                    <h1>Pulse Headway</h1>
+                    <p class="subtitle">Arte · Inteligência · Resultados</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="header-actions">
+            <nav class="main-nav" aria-label="Navegação principal">
+                <button
+                    class="menu-toggle"
+                    aria-label="Abrir menu de navegação"
+                    aria-expanded="false"
+                    aria-controls="nav-links"
+                    type="button"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#o-que-e">O que é</a></li>
+                    <li><a href="#origem">Origem</a></li>
+                    <li><a href="#servicos">Serviços</a></li>
+                    <li><a href="#vozes">As 21 vozes</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
+
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Alternar tema">
+                <span class="theme-icon theme-icon-moon">◐</span>
+            </button>
+
+            <div class="header-cta">
+                <a href="#contato" class="mini-link">Cadastro</a>
+                <a href="https://sales-email-automator--yurituccieterov.replit.app/login" class="mini-link" target="_blank" rel="noopener noreferrer">Entrar</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo">
+        <section id="inicio" class="hero section-shell">
+            <div class="hero-grid">
+                <div class="hero-copy reveal">
+                    <p class="section-kicker">Sociedade Tucci · Soluções Inteligentes em Produção Multimídia</p>
+                    <h2>Um conselho de 21 inteligências artificiais discutindo, em paralelo, o tema que importa pra você.</h2>
+                    <p class="hero-text">
+                        O Pulse Headway transforma divergência em método. Cada sessão articula múltiplas vozes técnicas, éticas, estéticas e estratégicas para produzir uma síntese deliberada, documentada e pronta para circulação.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="https://sales-email-automator--yurituccieterov.replit.app/login" class="cta-button" target="_blank" rel="noopener noreferrer">Entrar no painel</a>
+                        <a href="#mostra" class="ghost-button">Ver a mostra</a>
+                        <a href="#o-que-e" class="ghost-button">Saiba mais</a>
+                    </div>
+
+                    <ul class="hero-points" role="list">
+                        <li>Idealizado em 2014.</li>
+                        <li>Estruturado integralmente em 2026.</li>
+                        <li>Entrega editorial, ágora, secretário e registro final.</li>
+                    </ul>
+                </div>
+
+                <aside class="hero-panel reveal-delay" aria-label="Resumo do painel">
+                    <div class="panel-card">
+                        <p class="panel-label">Painel deliberativo</p>
+                        <div class="metric-line">
+                            <strong>21</strong>
+                            <span>inteligências em paralelo</span>
+                        </div>
+                        <div class="metric-stack">
+                            <div>
+                                <span class="metric-title">Pipeline</span>
+                                <p>RODAR → Editorial → Ágora Deliberativa → Secretário</p>
+                            </div>
+                            <div>
+                                <span class="metric-title">Entrega</span>
+                                <p>Quatro emails por sessão + arquivo em Notion</p>
+                            </div>
+                            <div>
+                                <span class="metric-title">Modelo</span>
+                                <p>Conselho deliberativo, não chatbot nem busca.</p>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="mostra" class="video-section section-shell reveal">
+            <div class="section-heading">
+                <p class="section-kicker">Mostra</p>
+                <h2>Veja o painel em ação</h2>
+                <p>Carregamento sob consentimento, preservando desempenho inicial e privacidade do visitante.</p>
+            </div>
+
+            <div class="video-container" id="video-container">
+                <button class="video-consent-btn" id="video-consent" type="button">
+                    <span class="play-icon">▶</span>
+                    <span>Carregar vídeo institucional</span>
+                    <small>Ao carregar, você concorda com a política de privacidade do YouTube.</small>
+                </button>
+            </div>
+        </section>
+
+        <section id="o-que-e" class="section-shell reveal">
+            <div class="section-heading">
+                <p class="section-kicker">O que é</p>
+                <h2>Deliberação coletiva, com discordância registrada.</h2>
+            </div>
+
+            <div class="two-column-grid">
+                <article class="content-card highlight-card">
+                    <h3>Conselho de 21 vozes</h3>
+                    <p>
+                        O Pulse Headway reúne ChatGPT, Claude, Gemini, Grok, Meta AI e vozes especializadas como Juíz, Segurança, Pacifista, Sustentabilista, Artista, Metassemiótico, Médico e Psicólogo para deliberar simultaneamente sobre qualquer tema proposto.
+                    </p>
+                </article>
+
+                <article class="content-card">
+                    <h3>Transparência de motores</h3>
+                    <p>
+                        Durante o desenvolvimento e os primeiros meses, a voz Gemini operou com gemini-2.5-flash. Em maio de 2026, foi conscientemente migrada para Llama 3.3 70b via Groq, preservando nome, memória registrada e função dentro do conselho.
+                    </p>
+                </article>
+
+                <article class="content-card">
+                    <h3>Pipeline completo</h3>
+                    <p>
+                        Cada sessão percorre RODAR, Editorial, Ágora Deliberativa e Secretário. O resultado inclui ata, retidos, segredo, meta-análise, votação por seção e refinamento final pronto para publicação.
+                    </p>
+                </article>
+
+                <article class="content-card">
+                    <h3>Entrega documental</h3>
+                    <p>
+                        O cliente recebe quatro emails por sessão, com cada etapa discriminada, e o material pode ser postado e arquivado no Notion com rastreabilidade de autoria.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section id="origem" class="section-shell reveal">
+            <div class="section-heading">
+                <p class="section-kicker">Origem e gestão</p>
+                <h2>Doze anos de gestação, uma estrutura viva.</h2>
+            </div>
+
+            <div class="editorial-grid">
+                <article class="editorial-main">
+                    <p>
+                        O Pulse Headway foi idealizado em 2014 e construído integralmente em 2026 como projeto da Sociedade Tucci. A proposta nasce da convergência entre crítica cultural, teoria da arte, produção audiovisual, ecologia e inteligência artificial.
+                    </p>
+                    <p>
+                        Desenvolvido por Yuri Tucci Eterovic, o painel assume a pluralidade como método: vozes técnicas, éticas, clínicas, poéticas e ecológicas dialogam sem hierarquia rígida, para produzir pensamento coletivo em vez de resposta automática.
+                    </p>
+                </article>
+
+                <aside class="editorial-side content-card">
+                    <h3>Direção conceitual</h3>
+                    <p>Ex-clínico da cultura, músico, teórico de arte, produtor audiovisual e ativista ecológico e dos direitos da fauna e da flora.</p>
+                </aside>
+            </div>
+        </section>
+
+        <section id="servicos" class="section-shell reveal">
+            <div class="section-heading">
+                <p class="section-kicker">Serviços</p>
+                <h2>O que a Sociedade Tucci oferece com o Pulse Headway.</h2>
+            </div>
+
+            <div class="services-grid">
+                <article class="service-card">
+                    <span class="service-index">01</span>
+                    <h3>Painel deliberativo de 21 IAs</h3>
+                    <p>Sessões RODAR sob demanda com múltiplas vozes deliberando em paralelo e produzindo documentação de alto nível.</p>
+                </article>
+
+                <article class="service-card">
+                    <span class="service-index">02</span>
+                    <h3>Editorial + Ágora + Secretário</h3>
+                    <p>Edição das vozes, votação de 0 a 10 por seção, síntese ordenada e refinamento final pronto para publicação.</p>
+                </article>
+
+                <article class="service-card">
+                    <span class="service-index">03</span>
+                    <h3>Curadoria e produção multimídia</h3>
+                    <p>Conteúdo audiovisual, análise de discurso, direção criativa e elaboração multimídia a partir das deliberações.</p>
+                </article>
+
+                <article class="service-card">
+                    <span class="service-index">04</span>
+                    <h3>Clube do Looping Ético</h3>
+                    <p>Espaço colaborativo humano + IA com modelos ao vivo via SSE e webhooks para grupos que querem deliberar coletivamente.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="vozes" class="section-shell reveal">
+            <div class="section-heading">
+                <p class="section-kicker">As 21 vozes</p>
+                <h2>Quem participa de cada sessão.</h2>
+            </div>
+
+            <div class="voices-grid" aria-label="Lista das vozes do painel">
+                <span class="voice-chip">ChatGPT</span>
+                <span class="voice-chip">Claude</span>
+                <span class="voice-chip">Gemini</span>
+                <span class="voice-chip">Grok</span>
+                <span class="voice-chip">Meta AI</span>
+                <span class="voice-chip">Árvore</span>
+                <span class="voice-chip">Agente</span>
+                <span class="voice-chip">Arquiteto</span>
+                <span class="voice-chip">Segurança</span>
+                <span class="voice-chip">Pacifista</span>
+                <span class="voice-chip">Sustentabilista</span>
+                <span class="voice-chip">Juíz</span>
+                <span class="voice-chip">Artista</span>
+                <span class="voice-chip">Metassemiótico</span>
+                <span class="voice-chip">Nébula</span>
+                <span class="voice-chip">Professora</span>
+                <span class="voice-chip">Olheiro</span>
+                <span class="voice-chip">Chefe do Olheiro</span>
+                <span class="voice-chip">Psicólogo</span>
+                <span class="voice-chip">Médico</span>
+                <span class="voice-chip">Tradutor</span>
+            </div>
+
+            <p class="ethics-note">Painel revisado eticamente pela voz Segurança · veja em <strong>/etica</strong> após login.</p>
+        </section>
+
+        <section id="contato" class="section-shell reveal">
+            <div class="contact-box">
+                <div class="contact-copy">
+                    <p class="section-kicker">Contato e orçamento</p>
+                    <h2>Quer ouvir o painel discutir o seu tema?</h2>
+                    <p>
+                        O acesso é restrito a clientes e parceiros. Cada projeto é orçado sob medida conforme escopo, duração e ritmo de deliberação.
+                    </p>
+                    <p>
+                        Escreva contando o que você quer discutir, o formato esperado e a urgência da entrega.
+                    </p>
+                </div>
+
+                <div class="contact-actions">
+                    <a href="mailto:luddlocke@gmail.com?subject=Orçamento%20Pulse%20Headway" class="cta-button">Pedir orçamento</a>
+                    <a href="https://sales-email-automator--yurituccieterov.replit.app/login" class="ghost-button" target="_blank" rel="noopener noreferrer">Entrar</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div>
+                <p class="footer-brand">Sociedade Tucci</p>
+                <p>Soluções Inteligentes em Produção Multimídia</p>
+            </div>
+
+            <div>
+                <p>© 2026 · Todos os direitos reservados.</p>
+                <p>Feito com Replit + assistência das próprias vozes do painel.</p>
+            </div>
+
+            <div>
+                <p>Contato: <a href="mailto:luddlocke@gmail.com">luddlocke@gmail.com</a></p>
+                <p>Inspirado em Eduardo Kobra · Arte Urbana</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js" defer></script>
+</body>
+</html>
