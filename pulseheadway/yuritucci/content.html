@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conteúdo — Yuri Tucci</title>
+  <meta name="description" content="Documentos, textos e conteúdos editoriais de Yuri Tucci.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./css/main.css">
+
+  <style>
+    :root {
+      --content-max: 1180px;
+      --content-narrow: 760px;
+      --paper: rgba(255, 250, 246, 0.86);
+      --paper-line: rgba(90, 72, 58, 0.12);
+      --paper-shadow: 0 18px 40px rgba(20, 16, 12, 0.06);
+      --accent-soft: rgba(217, 125, 104, 0.12);
+      --ink-muted: var(--muted, #6d6459);
+      --ink-main: var(--text, #211c17);
+      --accent-main: var(--primary, #d97d68);
+    }
+
+    body.content-page {
+      background:
+        radial-gradient(circle at top left, rgba(217,125,104,.08), transparent 28%),
+        radial-gradient(circle at top right, rgba(235,164,91,.08), transparent 24%),
+        var(--bg, #f7f1eb);
+    }
+
+    .content-shell {
+      padding: 2rem 0 5rem;
+    }
+
+    .content-hero {
+      padding: 2rem 0 2rem;
+    }
+
+    .content-hero .container {
+      max-width: var(--content-max);
+    }
+
+    .content-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 .85rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-main);
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 1rem;
+    }
+
+    .content-hero h1 {
+      margin: 0 0 .9rem;
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      line-height: .94;
+    }
+
+    .content-hero p {
+      max-width: 760px;
+      font-size: 1.06rem;
+      color: var(--ink-muted);
+      margin: 0;
+    }
+
+    .content-layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .content-sidebar {
+      position: sticky;
+      top: 96px;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .content-panel,
+    .content-editorial {
+      border: 1px solid var(--paper-line);
+      background: var(--paper);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      box-shadow: var(--paper-shadow);
+    }
+
+    .content-panel {
+      padding: 1rem;
+    }
+
+    .content-panel h2 {
+      margin: 0 0 .85rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--ink-muted);
+    }
+
+    .content-search {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid var(--paper-line);
+      background: rgba(255,255,255,.72);
+      padding: .8rem .95rem;
+      color: var(--ink-main);
+    }
+
+    .content-search:focus {
+      outline: none;
+      border-color: var(--accent-main);
+      box-shadow: 0 0 0 4px rgba(217,125,104,.12);
+    }
+
+    .doc-nav {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: .4rem;
+      max-height: 56vh;
+      overflow: auto;
+    }
+
+    .doc-nav a {
+      display: block;
+      padding: .72rem .8rem;
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--ink-main);
+      transition: .2s ease;
+    }
+
+    .doc-nav a:hover,
+    .doc-nav a:focus-visible,
+    .doc-nav a.is-active {
+      background: var(--accent-soft);
+      color: var(--accent-main);
+    }
+
+    .content-main {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .content-editorial {
+      padding: 1.2rem;
+    }
+
+    .editor-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--paper-line);
+    }
+
+    .editor-meta p {
+      margin: 0;
+      color: var(--ink-muted);
+      font-size: .95rem;
+    }
+
+    .editor-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+    }
+
+    .editor-btn {
+      min-height: 42px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--paper-line);
+      background: rgba(255,255,255,.72);
+      color: var(--ink-main);
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .editor-btn:hover,
+    .editor-btn:focus-visible {
+      border-color: var(--accent-main);
+      color: var(--accent-main);
+    }
+
+    .docs-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .doc-entry {
+      scroll-margin-top: 110px;
+      border: 1px solid var(--paper-line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.6);
+      padding: 1.35rem;
+    }
+
+    .doc-entry[hidden] {
+      display: none !important;
+    }
+
+    .doc-entry header {
+      margin-bottom: 1rem;
+      padding-bottom: .9rem;
+      border-bottom: 1px solid var(--paper-line);
+    }
+
+    .doc-kicker {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 .7rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-main);
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: .7rem;
+    }
+
+    .doc-entry h2 {
+      margin: 0 0 .55rem;
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      line-height: .98;
+    }
+
+    .doc-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .7rem;
+      color: var(--ink-muted);
+      font-size: .92rem;
+    }
+
+    .doc-content {
+      max-width: var(--content-narrow);
+    }
+
+    .doc-content h3 {
+      margin: 1.8rem 0 .75rem;
+      font-size: 1.4rem;
+      line-height: 1.05;
+    }
+
+    .doc-content p,
+    .doc-content li {
+      line-height: 1.8;
+      color: var(--ink-main);
+      font-size: 1.03rem;
+    }
+
+    .doc-content ul,
+    .doc-content ol {
+      padding-left: 1.2rem;
+      margin: 1rem 0;
+    }
+
+    .doc-content blockquote {
+      margin: 1.4rem 0;
+      padding: 1rem 1.1rem;
+      border-left: 3px solid var(--accent-main);
+      border-radius: 0 18px 18px 0;
+      background: var(--accent-soft);
+      color: var(--ink-muted);
+    }
+
+    .doc-anchor {
+      color: var(--ink-muted);
+      text-decoration: none;
+      margin-left: .4rem;
+      opacity: 0;
+      transition: .2s ease;
+    }
+
+    .doc-entry h2:hover .doc-anchor,
+    .doc-entry h3:hover .doc-anchor {
+      opacity: 1;
+    }
+
+    .content-empty {
+      display: none;
+      padding: 1rem 0 .2rem;
+      color: var(--ink-muted);
+    }
+
+    .content-empty.is-visible {
+      display: block;
+    }
+
+    .article-toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 100;
+      padding: .9rem 1rem;
+      border-radius: 14px;
+      background: rgba(20,16,12,.92);
+      color: #fff;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: .24s ease;
+    }
+
+    .article-toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .content-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .content-sidebar {
+        position: static;
+      }
+
+      .doc-nav {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .content-shell {
+        padding-top: 1rem;
+      }
+
+      .content-editorial,
+      .content-panel,
+      .doc-entry {
+        padding: 1rem;
+        border-radius: 18px;
+      }
+
+      .editor-meta {
+        align-items: flex-start;
+      }
+
+      .editor-actions {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      .site-header,
+      .site-footer,
+      .content-sidebar,
+      .editor-actions {
+        display: none !important;
+      }
+
+      body.content-page {
+        background: #fff;
+      }
+
+      .content-editorial,
+      .doc-entry {
+        border: none;
+        box-shadow: none;
+        background: #fff;
+      }
+    }
+  </style>
+</head>
+<body class="content-page">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="./index.html" class="logo" aria-label="Voltar para a página inicial">Yuri Tucci</a>
+
+      <nav class="main-nav" role="navigation" aria-label="Navegação principal">
+        <ul>
+          <li><a href="./index.html">Início</a></li>
+          <li><a href="./jornal.html">Jornais</a></li>
+          <li><a href="./content.html" class="active" aria-current="page">Conteúdo</a></li>
+          <li><a href="./index.html#livros">Livros</a></li>
+          <li><a href="./index.html#contato">Contato</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" data-theme-toggle aria-label="Ativar tema escuro" type="button">
+          Tema
+        </button>
+
+        <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" type="button">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="content-shell" id="conteudo">
+    <section class="content-hero">
+      <div class="container">
+        <span class="content-eyebrow">Arquivo vivo</span>
+        <h1>Conteúdo</h1>
+        <p>
+          Página para escrever documentos diretamente no HTML, mantendo coerência visual com a root,
+          navegação interna, busca local e atualização editorial manual.
+        </p>
+      </div>
+    </section>
+
+    <section class="content-layout">
+      <aside class="content-sidebar" aria-label="Navegação dos documentos">
+        <div class="content-panel">
+          <h2>Pesquisar</h2>
+          <input
+            id="content-search"
+            class="content-search"
+            type="search"
+            placeholder="Buscar por título ou texto..."
+            aria-label="Buscar documentos"
+          >
+        </div>
+
+        <div class="content-panel">
+          <h2>Documentos</h2>
+          <ul class="doc-nav" id="doc-nav"></ul>
+        </div>
+      </aside>
+
+      <div class="content-main">
+        <section class="content-editorial">
+          <div class="editor-meta">
+            <p>
+              Escreva cada documento dentro de um bloco <code>&lt;article class="doc-entry"&gt;</code>.
+              O menu lateral e as âncoras se atualizam automaticamente.
+            </p>
+
+            <div class="editor-actions">
+              <button class="editor-btn" type="button" data-copy-link>Copiar link da página</button>
+              <button class="editor-btn" type="button" data-print-page>Imprimir / PDF</button>
+            </div>
+          </div>
+
+          <div class="content-empty" id="content-empty">
+            Nenhum documento encontrado para esta busca.
+          </div>
+
+          <div class="docs-list" id="docs-list">
+
+            <!-- DOCUMENTO 1 -->
+            <article class="doc-entry" id="subversao-ambiental-mundial" data-title="Subversão Ambiental Mundial" data-kicker="Manifesto" data-date="2026-05-14">
+              <header>
+                <span class="doc-kicker">Manifesto</span>
+                <h2>
+                  Subversão Ambiental Mundial
+                  <a class="doc-anchor" href="#subversao-ambiental-mundial" aria-label="Link para Subversão Ambiental Mundial">#</a>
+                </h2>
+                <div class="doc-meta">
+                  <time datetime="2026-05-14">14 de Maio, 2026</time>
+                  <span>Documento base</span>
+                </div>
+              </header>
+
+              <div class="doc-content">
+                <p>Subversão ambiental mundial não é slogan. É pergunta estrutural: como construir presença digital, narrativa pública e coerência ecológica sem reduzir a crítica a ornamento estético?</p>
+
+                <h3>Hipótese</h3>
+                <p>Uma arquitetura editorial só sustenta relevância quando forma, operação e discurso caminham juntos. Se o site afirma uma ética ambiental, o código também precisa refletir disciplina, leveza e clareza.</p>
+
+                <h3>Desdobramento</h3>
+                <p>O documento pode funcionar como manifesto, roadmap, série editorial ou texto-base de posicionamento. A decisão estratégica precisa aparecer não apenas no texto, mas na organização do site.</p>
+              </div>
+            </article>
+
+            <!-- DOCUMENTO 2 -->
+            <article class="doc-entry" id="arquitetura-de-um-organismo-vivo" data-title="Arquitetura de um Organismo Vivo" data-kicker="Método" data-date="2026-05-14">
+              <header>
+                <span class="doc-kicker">Método</span>
+                <h2>
+                  Arquitetura de um Organismo Vivo
+                  <a class="doc-anchor" href="#arquitetura-de-um-organismo-vivo" aria-label="Link para Arquitetura de um Organismo Vivo">#</a>
+                </h2>
+                <div class="doc-meta">
+                  <time datetime="2026-05-14">14 de Maio, 2026</time>
+                  <span>Documento editorial</span>
+                </div>
+              </header>
+
+              <div class="doc-content">
+                <p>Nenhuma ideia sobreposta por outra. Cada uma complementa a anterior. O site funciona como organismo vivo quando manifesto, arquivo e fluxo deixam de competir e passam a sustentar leituras diferentes da mesma presença.</p>
+
+                <h3>Princípio</h3>
+                <p>A homepage orienta. O jornal aprofunda. O arquivo preserva. O conteúdo aqui reunido pode existir como camada intermediária: documento integral, legível, citável e permanente.</p>
+
+                <blockquote>“Construir não é empilhar. É coordenar intensidades.”</blockquote>
+              </div>
+            </article>
+
+            <!-- DOCUMENTO 3 -->
+            <article class="doc-entry" id="notas-editoriais" data-title="Notas Editoriais" data-kicker="Arquivo" data-date="2026-05-14">
+              <header>
+                <span class="doc-kicker">Arquivo</span>
+                <h2>
+                  Notas Editoriais
+                  <a class="doc-anchor" href="#notas-editoriais" aria-label="Link para Notas Editoriais">#</a>
+                </h2>
+                <div class="doc-meta">
+                  <time datetime="2026-05-14">14 de Maio, 2026</time>
+                  <span>Rascunhos e versões</span>
+                </div>
+              </header>
+
+              <div class="doc-content">
+                <p>Esta página também pode servir como depósito legível de notas, ensaios em andamento, roteiros de páginas, versões de manifesto e textos longos que não precisam virar card no jornal imediatamente.</p>
+
+                <h3>Uso prático</h3>
+                <ul>
+                  <li>Adicionar novos documentos duplicando um bloco <code>.doc-entry</code>.</li>
+                  <li>Trocar o <code>id</code> para gerar um link acessível próprio.</li>
+                  <li>Editar título, data, kicker e corpo direto no HTML.</li>
+                </ul>
+              </div>
+            </article>
+
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span data-year></span> Yuri Tucci. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="./js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const docs = [...document.querySelectorAll(".doc-entry")];
+      const nav = document.getElementById("doc-nav");
+      const search = document.getElementById("content-search");
+      const empty = document.getElementById("content-empty");
+      const printButton = document.querySelector("[data-print-page]");
+      const copyButton = document.querySelector("[data-copy-link]");
+
+      buildNav();
+      initSearch();
+      initHashHighlight();
+      initCopy();
+      initPrint();
+
+      function buildNav() {
+        nav.innerHTML = "";
+
+        docs.forEach((doc) => {
+          const id = doc.id;
+          const title = doc.dataset.title || doc.querySelector("h2")?.textContent.trim() || "Documento";
+          const kicker = doc.dataset.kicker || "";
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+
+          a.href = `#${id}`;
+          a.dataset.target = id;
+          a.innerHTML = kicker ? `<strong>${title}</strong><br><small>${kicker}</small>` : title;
+
+          li.appendChild(a);
+          nav.appendChild(li);
+        });
+      }
+
+      function initSearch() {
+        if (!search) return;
+
+        search.addEventListener("input", () => {
+          const term = normalize(search.value.trim());
+          let visibleCount = 0;
+
+          docs.forEach((doc) => {
+            const text = normalize(doc.textContent);
+            const title = normalize(doc.dataset.title || "");
+            const match = !term || text.includes(term) || title.includes(term);
+
+            doc.hidden = !match;
+            if (match) visibleCount++;
+          });
+
+          empty.classList.toggle("is-visible", visibleCount === 0);
+        });
+      }
+
+      function initHashHighlight() {
+        const links = [...nav.querySelectorAll("a")];
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const currentId = entry.target.id;
+
+            links.forEach((link) => {
+              link.classList.toggle("is-active", link.dataset.target === currentId);
+            });
+          });
+        }, { rootMargin: "-25% 0px -60% 0px", threshold: 0.1 });
+
+        docs.forEach((doc) => observer.observe(doc));
+
+        if (window.location.hash) {
+          const target = document.querySelector(window.location.hash);
+          if (target) {
+            setTimeout(() => {
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 120);
+          }
+        }
+      }
+
+      function initCopy() {
+        if (!copyButton) return;
+
+        copyButton.addEventListener("click", async () => {
+          const url = window.location.href;
+          try {
+            await navigator.clipboard.writeText(url);
+            notify("Link da página copiado.");
+          } catch {
+            fallbackCopy(url);
+          }
+        });
+      }
+
+      function initPrint() {
+        if (!printButton) return;
+        printButton.addEventListener("click", () => window.print());
+      }
+
+      function fallbackCopy(text) {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "absolute";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+
+        try {
+          document.execCommand("copy");
+          notify("Link da página copiado.");
+        } catch {
+          notify("Não foi possível copiar o link.");
+        }
+
+        area.remove();
+      }
+
+      function notify(message) {
+        let toast = document.querySelector(".article-toast");
+
+        if (!toast) {
+          toast = document.createElement("div");
+          toast.className = "article-toast";
+          toast.setAttribute("role", "status");
+          toast.setAttribute("aria-live", "polite");
+          document.body.appendChild(toast);
+        }
+
+        toast.textContent = message;
+        toast.classList.add("is-visible");
+
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => {
+          toast.classList.remove("is-visible");
+        }, 2200);
+      }
+
+      function normalize(text) {
+        return text
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[̀-ͯ]/g, "");
+      }
+    });
+  </script>
+</body>
+  </html>
