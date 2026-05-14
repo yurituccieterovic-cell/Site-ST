@@ -1,4 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yuri Tucci Eterovic — Manifesto, Arquivo e Fluxo</title>
+  <meta name="description" content="Território de convergência entre manifesto, arquivo e fluxo. Mediação sistêmica territorial, livros, músicas, jornal e presença autoral." />
+  <meta name="theme-color" content="#f7f3ee" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root,[data-theme="light"]{
+      --bg:#f7f3ee;
+      --surface:#fcfaf7;
+      --surface-2:#f0e9e1;
+      --surface-3:#e8ddd1;
+      --text:#211c17;
+      --muted:#6d6459;
+      --line:#d9cec1;
+      --primary:#d97d68;
+      --primary-2:#ea9a4a;
+      --accent:#a55443;
+      --ok:#4b7a4a;
+      --inverse:#fffaf5;
+      --shadow:0 14px 40px rgba(34,24,16,.08);
+      --radius:24px;
+      --radius-sm:14px;
+      --content:1180px;
+      --space:clamp(18px,2vw,28px);
+    }
+
+    [data-theme="dark"]{
+      --bg:#171311;
+      --surface:#201a17;
+      --surface-2:#2a221e;
+      --surface-3:#362a24;
+      --text:#f2eadf;
+      --muted:#b8ab9a;
+      --line:#41362f;
+      --primary:#eb8c76;
+      --primary-2:#f2a85b;
+      --accent:#f5c7a3;
+      --ok:#82b57c;
+      --inverse:#171311;
+      --shadow:0 18px 46px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(234,154,74,.08), transparent 20%),
+        radial-gradient(circle at left 20%, rgba(217,125,104,.09), transparent 22%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    img,iframe{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    button,input,textarea,select{font:inherit}
+    ::selection{background:rgba(217,125,104,.18)}
+
+    .container{width:min(var(--content),calc(100% - 32px));margin-inline:auto}
+    .skip-link{
+      position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;
+    }
+    .skip-link:focus{
+      left:12px;top:12px;width:auto;height:auto;
+      background:var(--surface);padding:10px 14px;border-radius:12px;z-index:999;
+      border:1px solid var(--line);
+    }
+
+    .site-header{
+      position:sticky;top:0;z-index:40;
+      background:color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid color-mix(in srgb, var(--line) 75%, transparent);
+    }
+
+    .header-row{
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+      min-height:76px;
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em;
+    }
+
+    .brand svg{width:38px;height:38px;color:var(--text)}
+    .brand-mark{
+      display:grid;place-items:center;
+      width:44px;height:44px;border-radius:14px;
+      background:linear-gradient(135deg, color-mix(in srgb,var(--primary) 18%,var(--surface)), var(--surface));
+      border:1px solid var(--line);
+    }
+
+    .nav{
+      display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    }
+
+    .nav a{
+      color:var(--muted);
+      font-size:.95rem;
+      padding:8px 0;
+      position:relative;
+    }
+
+    .nav a:hover,.nav a:focus-visible{color:var(--text)}
+    .nav a::after{
+      content:"";
+      position:absolute;left:0;bottom:2px;width:100%;height:1.5px;
+      background:linear-gradient(90deg,var(--primary),var(--primary-2));
+      transform:scaleX(0);transform-origin:left;transition:.22s ease;
+    }
+    .nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
+
+    .header-actions{display:flex;align-items:center;gap:10px}
+    .theme-toggle,.nav-toggle{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:44px;height:44px;border-radius:999px;
+      border:1px solid var(--line);background:var(--surface);color:var(--text);
+      cursor:pointer;
+    }
+    .nav-toggle{display:none}
+
+    .hero{
+      padding:38px 0 18px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.06fr .94fr;
+      gap:24px;
+      align-items:stretch;
+    }
+
+    .hero-copy,.hero-visual{
+      background:color-mix(in srgb, var(--surface) 92%, transparent);
+      border:1px solid var(--line);
+      border-radius:calc(var(--radius) + 6px);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .hero-copy{
+      padding:clamp(24px,4vw,52px);
+      display:flex;flex-direction:column;justify-content:center;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero-copy::before{
+      content:"";
+      position:absolute;inset:auto auto -80px -60px;
+      width:240px;height:240px;border-radius:50%;
+      background:radial-gradient(circle, rgba(217,125,104,.16), transparent 70%);
+      z-index:-1;
+    }
+
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:.8rem;letter-spacing:.13em;text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:14px;font-weight:700;
+    }
+
+    .eyebrow::before{
+      content:"";
+      width:28px;height:1px;background:currentColor;display:inline-block;
+    }
+
+    h1,h2{
+      font-family:"Instrument Serif", Georgia, serif;
+      font-weight:400;line-height:.96;margin:0 0 14px;
+      letter-spacing:-.02em;
+    }
+
+    h1{font-size:clamp(2.9rem,7vw,6.1rem)}
+    h2{font-size:clamp(2rem,4vw,3.4rem)}
+    h3{margin:0 0 10px;font-size:1.08rem;line-height:1.25}
+    p{margin:0 0 12px}
+    .lead{font-size:1.06rem;color:var(--muted);max-width:62ch}
+    .hero-actions,.stack-actions{
+      display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;
+    }
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-height:48px;padding:0 18px;border-radius:999px;
+      border:1px solid var(--line);
+      transition:.2s ease;
+      font-weight:600;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      color:var(--inverse);
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      border-color:transparent;
+    }
+
+    .btn-secondary{background:transparent}
+    .btn-ghost{background:var(--surface)}
+
+    .hero-visual img{
+      width:100%;height:100%;min-height:460px;object-fit:cover;
+    }
+
+    .section{padding:34px 0}
+    .section-head{
+      display:grid;
+      grid-template-columns:.85fr 1.15fr;
+      gap:26px;
+      align-items:end;
+      margin-bottom:20px;
+    }
+    .section-head p{color:var(--muted);margin:0}
+
+    .grid{display:grid;gap:18px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card{
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .card p{color:var(--muted)}
+    .card strong{color:var(--text)}
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      font-size:.78rem;
+      border-radius:999px;
+      color:var(--text);
+      background:color-mix(in srgb, var(--primary) 13%, var(--surface));
+      margin-bottom:12px;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1.12fr .88fr;
+      gap:18px;
+    }
+
+    .manifesto-panel{
+      display:grid;
+      grid-template-columns:1fr .9fr;
+      gap:18px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .stat{
+      padding:16px;border-radius:18px;
+      background:color-mix(in srgb, var(--surface-2) 80%, var(--surface));
+      border:1px solid var(--line);
+    }
+    .stat b{display:block;font-size:1.5rem;margin-bottom:4px}
+    .stat span{color:var(--muted);font-size:.92rem}
+
+    .timeline{display:grid;gap:12px}
+    .timeline article{
+      padding:15px 16px;
+      border-left:3px solid color-mix(in srgb, var(--primary) 45%, var(--line));
+      border-radius:0 16px 16px 0;
+      background:var(--surface);
+    }
+
+    .book-card,.music-card,.journal-card{
+      display:flex;flex-direction:column;gap:10px;height:100%;
+    }
+
+    .book-meta,.music-meta,.journal-meta{
+      font-size:.85rem;color:var(--muted);
+      display:flex;gap:10px;flex-wrap:wrap;
+    }
+
+    .platforms{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;
+    }
+
+    .platform{
+      padding:7px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--bg);
+      font-size:.84rem;color:var(--muted);
+    }
+
+    .embed{
+      overflow:hidden;border-radius:18px;border:1px solid var(--line);margin-top:12px;
+      background:var(--surface-2);
+    }
+
+    .manifesto-copy p,.about-copy p{max-width:74ch}
+    .bullet-list{
+      display:grid;gap:10px;margin:6px 0 0;padding:0;list-style:none;
+    }
+
+    .bullet-list li{
+      display:flex;gap:10px;align-items:flex-start;color:var(--muted);
+    }
+
+    .bullet-list li::before{
+      content:"•";color:var(--primary);font-weight:800;line-height:1.2;
+    }
+
+    .journal-toolbar{
+      display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+      margin-bottom:18px;
+    }
+
+    .search{
+      width:min(420px,100%);
+      padding:13px 15px;border:1px solid var(--line);
+      background:var(--surface);border-radius:999px;color:var(--text);
+    }
+
+    .filters{
+      display:flex;gap:10px;flex-wrap:wrap;
+    }
+
+    .filter-btn{
+      border:1px solid var(--line);
+      background:var(--surface);
+      color:var(--muted);
+      padding:10px 14px;border-radius:999px;cursor:pointer;
+    }
+    .filter-btn.active{
+      color:var(--inverse);
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+    }
+
+    .journal-thumb{
+      aspect-ratio:16/9;
+      border-radius:18px;
+      background:
+        linear-gradient(135deg, rgba(217,125,104,.16), rgba(234,154,74,.1)),
+        var(--surface-2);
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      color:var(--accent);
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:.8rem;
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:18px;
+    }
+
+    .contact-list{
+      display:grid;gap:12px;
+    }
+
+    .contact-item{
+      padding:16px;border-radius:18px;
+      background:color-mix(in srgb, var(--surface-2) 70%, var(--surface));
+      border:1px solid var(--line);
+    }
+
+    .form{
+      display:grid;gap:12px;
+    }
+
+    .field{display:grid;gap:7px}
+    .field label{font-size:.92rem;font-weight:600}
+    .field input,.field textarea,.field select{
+      width:100%;border:1px solid var(--line);
+      background:var(--bg);color:var(--text);
+      border-radius:16px;padding:14px 15px;
+    }
+
+    .micro{font-size:.92rem;color:var(--muted)}
+    .footer{
+      padding:34px 0 60px;
+      color:var(--muted);
+    }
+
+    .signature{
+      margin-top:10px;
+      font-size:.85rem;color:var(--muted);
+    }
+
+    .fade-up{
+      opacity:0;transform:translateY(16px);
+      transition:opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible{
+      opacity:1;transform:translateY(0);
+    }
+
+    @media (max-width: 980px){
+      .hero-grid,.section-head,.split,.manifesto-panel,.contact-grid,.grid-3,.grid-4,.grid-2,.stats{
+        grid-template-columns:1fr;
+      }
+      .nav{display:none}
+      .nav.open{
+        display:grid;
+        position:absolute;left:16px;right:16px;top:74px;
+        background:var(--surface);border:1px solid var(--line);
+        border-radius:20px;padding:12px 16px;box-shadow:var(--shadow);
+      }
+      .nav a{padding:10px 0}
+      .nav-toggle{display:inline-flex}
+      .hero-visual img{min-height:300px}
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="#inicio" aria-label="Voltar ao início">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M13 14h38L32 50 13 14Z" stroke="currentColor" stroke-width="3"></path>
+            <path d="M24 26h16" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+          </svg>
+        </span>
+        <span>Yuri Tucci</span>
+      </a>
+
+      <nav class="nav" id="mainNav" aria-label="Principal">
+        <a href="#sobre">Sobre</a>
+        <a href="#livros">Livros</a>
+        <a href="#musicas">Músicas</a>
+        <a href="#manifesto">Manifesto</a>
+        <a href="#jornal">Jornal</a>
+        <a href="#contato">Contato</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema">◐</button>
+        <button class="nav-toggle" data-nav-toggle aria-label="Abrir menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero container">
+      <div class="hero-grid">
+        <div class="hero-copy fade-up" id="inicio">
+          <span class="eyebrow">Manifesto · Arquivo · Fluxo</span>
+          <h1>Território de convergência entre clínica, arte, arquivo e presença viva.</h1>
+          <p class="lead">
+            Yuri Tucci Eterovic reúne mediação sistêmica territorial, pensamento crítico, produção audiovisual,
+            experimentação musical e obra escrita numa arquitetura autoral que prefere método à simplificação.
+            Esta root única concentra a entrada comercial, a memória editorial e a continuidade da produção.
+          </p>
+
+          <div class="stats">
+            <div class="stat">
+              <b>3</b>
+              <span>livros como arquivo e legitimação</span>
+            </div>
+            <div class="stat">
+              <b>2020–hoje</b>
+              <span>fluxo musical via Atom un Ao / OneRPM</span>
+            </div>
+            <div class="stat">
+              <b>1</b>
+              <span>CTA principal para mediação e palestras</span>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#manifesto">Agendar conversa</a>
+            <a class="btn btn-secondary" href="#livros">Ver livros</a>
+            <a class="btn btn-ghost" href="#musicas">Ouvir catálogo</a>
+          </div>
+
+          <p class="signature">Manifesto assinado por Yuri Tucci Eterovic e Pulse Headway.</p>
+        </div>
+
+        <figure class="hero-visual fade-up">
+          <img
+            src="https://sociedadetucci.com.br/pulseheadway/yuritucci/img/image-20.png"
+            alt="Composição artística minimalista com camadas editoriais, ecológicas e sonoras"
+            width="1600"
+            height="900"
+            loading="eager"
+            decoding="async"
+          />
+        </figure>
+      </div>
+    </section>
+
+    <section class="section container fade-up" id="sobre">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Sobre</span>
+          <h2>Biografia como método</h2>
+        </div>
+        <p>
+          O site nasce para reunir biografia, livros em PDF, catálogo musical agregado, manifesto vivo e contato profissional em uma estrutura única, estática e manualmente curada, evitando dependência excessiva de plataformas externas [file:1].
+        </p>
+      </div>
+
+      <div class="split">
+        <article class="card about-copy">
+          <span class="pill">Identidade e propósito</span>
+          <p>
+            Yuri Tucci Eterovic é ex-clínico da cultura, músico experimental, teórico de arte, produtor audiovisual e ativista ecológico e dos direitos da fauna e flora. Especialista em Semiótica Psicanalítica — Clínica da Cultura pela PUC-SP em 2019 e tecnólogo em Produção Audiovisual pelo Senac em 2017, atravessa também formações complementares em direitos humanos, meio ambiente, sound design, trilha sonora, empreendedorismo, edição de vídeo, motion graphics, iluminação, texturização 3D, AutoCAD, ética, fotografia, neurociência e arte, inteligência artificial, ABA e estratégias naturalistas, além de economia circular [file:1].
+          </p>
+          <p>
+            A multiplicidade não aparece aqui como ruído curricular, mas como coerência epistemológica de segunda ordem: arte, clínica, tecnologia e ecologia são registros de um mesmo campo de trabalho, não blocos isolados [file:1].
+          </p>
+        </article>
+
+        <aside class="card">
+          <span class="pill">Dados rápidos</span>
+          <ul class="bullet-list">
+            <li>Autor de três livros: <strong>Traduições intersemióticas da existência</strong>, <strong>Convivência Ambiental</strong> e <strong>Cultura Transhumana</strong> [file:1].</li>
+            <li>Cofundador do selo e projeto musical <strong>Atom un Ao</strong>, com distribuição via OneRPM desde 2020 [file:1].</li>
+            <li>Contato profissional: <strong>(11) 98233-2994</strong>, com emissão de NF-e inclusa [file:1].</li>
+            <li>Lattes: <strong>9192122328635283</strong> [file:1].</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section container fade-up" id="livros">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Arquivo</span>
+          <h2>Livros em permanência</h2>
+        </div>
+        <p>
+          O PDF define os livros como eixo de arquivo, legitimação intelectual e preservação, com hospedagem local dos PDFs em vez de dependência de Google Drive, e com opção de envio por email como mecanismo de contato [file:1].
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card book-card">
+          <span class="pill">2026</span>
+          <h3>Cultura Transhumana</h3>
+          <div class="book-meta">
+            <span>Ensaio filosófico</span>
+            <span>Eter Editora</span>
+          </div>
+          <p>
+            Reúne ensaios sobre transumanismo, crítica midiática e sustentabilidade, usando a semiótica psicanalítica como fundo teórico. Discute o papel da mídia na democracia, o valor midiático no poder político e a relação disso com a sustentabilidade social, econômica e ambiental, incluindo diálogos com IAs e uma proposta de valores midiáticos sustentáveis [file:1].
+          </p>
+          <div class="stack-actions">
+            <a class="btn btn-primary" href="https://sociedadetucci.com.br/pulseheadway/yuritucci/PDF/pdf3.pdf" target="_blank" rel="noopener noreferrer">Abrir PDF</a>
+            <a class="btn btn-secondary" href="#contato">Receber por email</a>
+          </div>
+        </article>
+
+        <article class="card book-card">
+          <span class="pill">2025</span>
+          <h3>Convivência Ambiental</h3>
+          <div class="book-meta">
+            <span>Projeto e crônicas</span>
+            <span>Ecologia urbana</span>
+          </div>
+          <p>
+            Reúne reflexões teóricas e relatos de campo sobre convivência ambiental em contexto urbano paulistano, articulando Milton Santos, Paulo Freire, filosofia da educação e semiótica psicanalítica com experiências de plantio, manejo de praça, fauna urbana, cartazes, posts, audiovisual e música [file:1].
+          </p>
+          <div class="stack-actions">
+            <a class="btn btn-primary" href="https://sociedadetucci.com.br/pulseheadway/yuritucci/PDF/pdf2.pdf" target="_blank" rel="noopener noreferrer">Abrir PDF</a>
+            <a class="btn btn-secondary" href="#contato">Receber por email</a>
+          </div>
+        </article>
+
+        <article class="card book-card">
+          <span class="pill">2020</span>
+          <h3>Traduções intersemióticas da existência</h3>
+  
 ```html
 <!DOCTYPE html>
 <html lang="pt-BR">
