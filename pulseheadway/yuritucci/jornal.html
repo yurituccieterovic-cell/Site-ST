@@ -1,40 +1,249 @@
-
-
-```html
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Reflexões sobre transformação, vendas e liderança - Jornais de Yuri Tucci">
+    <meta name="description" content="Jornais de Yuri Tucci — reflexões sobre ecologia, tecnologia, cultura, método e crítica editorial.">
     <title>Jornais — Yuri Tucci</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/jornal.css">
 </head>
 <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
     <header class="site-header">
         <div class="container">
-            <a href="index.html" class="logo">Yuri Tucci</a>
-            <nav class="main-nav" role="navigation">
+            <a href="index.html" class="logo" aria-label="Voltar para a página inicial">Yuri Tucci</a>
+
+            <nav class="main-nav" role="navigation" aria-label="Navegação principal">
                 <ul>
                     <li><a href="index.html">Início</a></li>
-                    <li><a href="sobre.html">Sobre</a></li>
+                    <li><a href="index.html#sobre">Sobre</a></li>
                     <li><a href="jornal.html" class="active" aria-current="page">Jornais</a></li>
-                    <li><a href="contato.html">Contato</a></li>
+                    <li><a href="index.html#livros">Livros</a></li>
+                    <li><a href="index.html#musicas">Músicas</a></li>
+                    <li><a href="index.html#contato">Contato</a></li>
                 </ul>
             </nav>
-            <button class="menu-toggle" aria-label="Abrir menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+
+            <div class="header-actions">
+                <button class="theme-toggle" data-theme-toggle aria-label="Ativar tema escuro" type="button">
+                    Tema
+                </button>
+
+                <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" type="button">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </header>
 
+    <section class="jornal-hero reveal">
+        <div class="container">
+            <span class="eyebrow">Publicações</span>
+            <h1>Jornais</h1>
+            <p class="lead">
+                Reflexões sobre ecologia, tecnologia, cultura, clínica do cotidiano e método.
+                Uma vitrine editorial para organizar pensamento, arquivo e presença pública. [file:1]
+            </p>
+        </div>
+    </section>
+
+    <section class="jornal-filtros reveal" aria-label="Filtros editoriais">
+        <div class="container">
+            <div class="filtros-topo">
+                <input
+                    type="text"
+                    id="pesquisa"
+                    placeholder="Pesquisar artigos..."
+                    aria-label="Buscar artigos"
+                >
+                <p class="contador" id="contador-artigos">0 artigos encontrados</p>
+            </div>
+
+            <div class="filtro-buttons" role="group" aria-label="Filtrar por categoria">
+                <button class="filtro-btn active" data-category="todas" type="button">Todas</button>
+                <button class="filtro-btn" data-category="ecologia" type="button">Ecologia</button>
+                <button class="filtro-btn" data-category="tecnologia" type="button">Tecnologia</button>
+                <button class="filtro-btn" data-category="cultura" type="button">Cultura</button>
+                <button class="filtro-btn" data-category="metodo" type="button">Método</button>
+            </div>
+        </div>
+    </section>
+
+    <main class="jornal-grid" id="conteudo">
+        <div class="container">
+
+            <article class="card-jornal reveal is-visible" data-category="ecologia" data-tags="subversao ambiental mundial ecologia crise cidade fauna flora">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/subversao-ambiental.jpg"
+                         alt="Camada gráfica para artigo sobre subversão ambiental mundial"
+                         loading="lazy">
+                    <span class="card-tag">Ecologia</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-14">14 de Maio, 2026</time>
+                    <h2>Subversão Ambiental Mundial</h2>
+                    <p class="resumo">
+                        Arquitetura técnica, posicionamento editorial e tensão entre coerência ambiental, infraestrutura digital e credibilidade pública.
+                    </p>
+                    <a href="artigo.html?slug=subversao-ambiental-mundial" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <article class="card-jornal reveal is-visible" data-category="metodo" data-tags="organismo vivo complementaridade construcao camadas sistema">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/organismo-vivo.jpg"
+                         alt="Composição visual para arquitetura de um organismo vivo"
+                         loading="lazy">
+                    <span class="card-tag">Método</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-14">14 de Maio, 2026</time>
+                    <h2>Arquitetura de um Organismo Vivo</h2>
+                    <p class="resumo">
+                        Nenhuma ideia sobreposta por outra: camadas que se complementam para construir um ecossistema editorial, técnico e sustentável.
+                    </p>
+                    <a href="artigo.html?slug=arquitetura-de-um-organismo-vivo" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <article class="card-jornal reveal is-visible" data-category="tecnologia" data-tags="codigo javascript html css constelacao interface jornal digital">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/codigo-constelacao.jpg"
+                         alt="Imagem editorial sobre código, HTML, CSS e JavaScript"
+                         loading="lazy">
+                    <span class="card-tag">Tecnologia</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-14">14 de Maio, 2026</time>
+                    <h2>Quando o Código se Torna Constelação</h2>
+                    <p class="resumo">
+                        HTML como estrutura, CSS como retórica visual e JavaScript como pulso interativo em uma arquitetura jornalística com sentido.
+                    </p>
+                    <a href="artigo.html?slug=quando-o-codigo-se-torna-constelacao" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <article class="card-jornal reveal is-visible" data-category="cultura" data-tags="arquivo memoria autoria processo editorial metodo artistico">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/arquivo-critico.jpg"
+                         alt="Imagem editorial sobre arquivo crítico e memória"
+                         loading="lazy">
+                    <span class="card-tag">Cultura</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-13">13 de Maio, 2026</time>
+                    <h2>Arquivo Crítico e Memória de Processo</h2>
+                    <p class="resumo">
+                        O jornal como vitrine de credibilidade editorial, mas também como lugar de registro, rastros e camadas de autoria.
+                    </p>
+                    <a href="artigo.html?slug=arquivo-critico-e-memoria-de-processo" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <article class="card-jornal reveal is-visible" data-category="ecologia" data-tags="cidade convivencia ambiental plantio fauna urbana educacao">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/convivencia-ambiental.jpg"
+                         alt="Imagem editorial sobre convivência ambiental urbana"
+                         loading="lazy">
+                    <span class="card-tag">Ecologia</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-12">12 de Maio, 2026</time>
+                    <h2>Convivência Ambiental em Contexto Urbano</h2>
+                    <p class="resumo">
+                        Relatos, conflitos e micro-ações de cuidado com árvores, animais urbanos e paisagem como prática ecológica cotidiana.
+                    </p>
+                    <a href="artigo.html?slug=convivencia-ambiental-em-contexto-urbano" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <article class="card-jornal reveal is-visible" data-category="tecnologia" data-tags="ia semiose etica transumanismo cultura transhumana">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/cultura-transhumana.jpg"
+                         alt="Imagem editorial sobre inteligência artificial e cultura transhumana"
+                         loading="lazy">
+                    <span class="card-tag">Tecnologia</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-11">11 de Maio, 2026</time>
+                    <h2>Cultura Transhumana e Disputa de Narrativas</h2>
+                    <p class="resumo">
+                        IA, mídia, sustentabilidade e ética não aparecem como temas isolados, mas como conflito de valores e de imaginação política.
+                    </p>
+                    <a href="artigo.html?slug=cultura-transhumana-e-disputa-de-narrativas" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <article class="card-jornal reveal is-visible" data-category="metodo" data-tags="hierarquia brutal proposta de valor multiplicidade transdisciplinar">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/hierarquia-visual.jpg"
+                         alt="Composição sobre hierarquia visual e proposta de valor"
+                         loading="lazy">
+                    <span class="card-tag">Método</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-10">10 de Maio, 2026</time>
+                    <h2>Hierarquia Visual Brutal</h2>
+                    <p class="resumo">
+                        Como transformar multiplicidade legítima em narrativa legível, sem empobrecer teoria, prática clínica, arte e ativismo.
+                    </p>
+                    <a href="artigo.html?slug=hierarquia-visual-brutal" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <article class="card-jornal reveal is-visible" data-category="cultura" data-tags="musica atom un ao arquivo historico plataformas memoria digital">
+                <div class="card-thumb">
+                    <img src="/assets/images/jornais/arquivo-musical.jpg"
+                         alt="Imagem editorial sobre arquivo musical e plataformas digitais"
+                         loading="lazy">
+                    <span class="card-tag">Cultura</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2026-05-09">09 de Maio, 2026</time>
+                    <h2>Fluxo, Plataforma e Memória Musical</h2>
+                    <p class="resumo">
+                        A curadoria manual do catálogo musical como resistência ao apagamento algorítmico e à efemeridade do streaming.
+                    </p>
+                    <a href="artigo.html?slug=fluxo-plataforma-e-memoria-musical" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; <span data-year></span> Yuri Tucci. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Jornais - Yuri Tucci",
+      "description": "Seção editorial do site Yuri Tucci com publicações sobre ecologia, tecnologia, cultura e método.",
+      "author": {
+        "@type": "Person",
+        "name": "Yuri Tucci"
+      },
+      "inLanguage": "pt-BR"
+    }
+    </script>
+
+    <script src="js/main.js"></script>
+    <script src="js/jornal.js"></script>
+</body>
+</html>
     <section class="jornal-hero">
         <div class="container">
             <span class="eyebrow">Publicações</span>
