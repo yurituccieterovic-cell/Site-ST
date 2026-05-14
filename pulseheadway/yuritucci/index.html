@@ -1,1 +1,103 @@
 
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reflexões sobre transformação, vendas e liderança - Jornais de Yuri Tucci">
+    <title>Jornais — Yuri Tucci</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/jornal.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo">Yuri Tucci</a>
+            <nav class="main-nav" role="navigation">
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="sobre.html">Sobre</a></li>
+                    <li><a href="jornal.html" class="active" aria-current="page">Jornais</a></li>
+                    <li><a href="contato.html">Contato</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" aria-label="Abrir menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <section class="jornal-hero">
+        <div class="container">
+            <span class="eyebrow">Publicações</span>
+            <h1>Jornais</h1>
+            <p class="lead">Reflexões sobre transformação, vendas e liderança. Direto, sem enfeite.</p>
+        </div>
+    </section>
+
+
+  <section class="jornal-filtros">
+        <div class="container">
+            <input type="text" id="pesquisa" placeholder="Pesquisar artigos..." aria-label="Buscar artigos">
+            <div class="filtro-buttons" role="group" aria-label="Filtrar por categoria">
+                <button class="filtro-btn active" data-category="todas">Todas</button>
+                <button class="filtro-btn" data-category="vendas">Vendas</button>
+                <button class="filtro-btn" data-category="lideranca">Liderança</button>
+                <button class="filtro-btn" data-category="transformacao">Transformação</button>
+            </div>
+        </div>
+    </section>
+
+    <main class="jornal-grid">
+        <div class="container">
+            <article class="card-jornal" data-category="vendas">
+                <div class="card-thumb">
+                    <img src="assets/images/jornais/vendas-complexas.jpg"
+                         alt="Vendas Complexas"
+                         loading="lazy">
+                    <span class="card-tag">Vendas</span>
+                </div>
+                <div class="card-content">
+                    <time datetime="2025-01-15">15 de Janeiro, 2025</time>
+                    <h2>Vendas Complexas: Por Que Seu Time Trava no Meio do Funil</h2>
+                    <p class="resumo">A maioria dos gerentes acha que o problema está no fechamento. Não está. Está na qualificação que ninguém faz de verdade.</p>
+                    <a href="artigo-vendas-complexas.html" class="btn-leia">Ler mais</a>
+                </div>
+            </article>
+
+            <!-- Repetir estrutura para outros artigos -->
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Yuri Tucci. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Jornais - Yuri Tucci",
+      "author": {
+        "@type": "Person",
+        "name": "Yuri Tucci"
+      }
+    }
+    </script>
+
+    <script src="js/main.js"></script>
+    <script src="js/jornal.js"></script>
+</body>
+</html>
+```
+
+  
