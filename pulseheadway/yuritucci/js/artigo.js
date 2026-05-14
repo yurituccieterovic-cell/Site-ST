@@ -4,7 +4,6 @@ window.ARTIGOS = [
     titulo: "Arquitetura de um Organismo Vivo",
     descricao: "Nenhuma ideia sobreposta por outra: camadas complementares para um ecossistema editorial, técnico e sensível.",
     categoria: "Método",
-    categoriaSlug: "metodo",
     data: "2026-05-14",
     dataFormatada: "14 de Maio, 2026",
     leitura: "Leitura de referência",
@@ -13,28 +12,17 @@ window.ARTIGOS = [
     imagemAlt: "Imagem editorial do artigo Arquitetura de um Organismo Vivo",
     relacionados: [
       { slug: "subversao-ambiental-mundial", titulo: "Subversão Ambiental Mundial" },
-      { slug: "arquivo-critico-e-memoria-de-processo", titulo: "Arquivo Crítico e Memória de Processo" },
-      { slug: "hierarquia-visual-brutal", titulo: "Hierarquia Visual Brutal" }
+      { slug: "arquivo-critico-e-memoria-de-processo", titulo: "Arquivo Crítico e Memória de Processo" }
     ],
     conteudo: `
       <p>Um site não precisa funcionar como vitrine estática de credenciais. Ele pode agir como organismo vivo, em que manifesto, arquivo e fluxo não competem entre si, mas se organizam em camadas de entrada para diferentes leitores.</p>
-
-      <p>A homepage não resolve tudo; ela orienta. O jornal não prova tudo; ele aprofunda. O arquivo não encerra o movimento; ele preserva rastros. O resultado é uma arquitetura em que cada parte existe menos para isolar uma função e mais para sustentar o sentido das demais.</p>
-
+      <p>A homepage não resolve tudo; ela orienta. O jornal não prova tudo; ele aprofunda. O arquivo não encerra o movimento; ele preserva rastros.</p>
       <h2>Camadas complementares</h2>
-      <p>Quando uma ideia sobrepõe a outra, o site vira ruído. Quando uma ideia complementa a outra, a navegação produz continuidade. O visitante entra por uma porta, mas percebe que há outras densidades disponíveis: contato, ensaio, livro, música, processo, arquivo.</p>
-
-      <p>Isso exige disciplina formal. Cabeçalhos claros, ritmos de leitura, contrastes consistentes, hierarquia tipográfica e links que respeitam contexto. O código precisa servir à narrativa, não chamar atenção para si mesmo.</p>
-
+      <p>Quando uma ideia sobrepõe a outra, o site vira ruído. Quando uma ideia complementa a outra, a navegação produz continuidade.</p>
       <blockquote>“Nenhuma ideia sobreposta por outra, ela é complementada.”</blockquote>
-
-      <h2>O jornal como respiração</h2>
-      <p>A seção de jornais entra como respiração do projeto. Ela permite presença viva sem desmontar a clareza da root. Em vez de acumular postagens dispersas, organiza peças que ajudam a nomear método, disputas simbólicas, ecologia, técnica e produção cultural.</p>
-
-      <p>Não se trata apenas de publicar. Trata-se de dar forma a um campo de leitura onde o texto articula autoridade, experiência e abertura, sem virar panfleto nem currículum expandido.</p>
-
-      <h2>O papel do código</h2>
-      <p>HTML define estrutura. CSS regula presença, temperatura e distância. JavaScript entra apenas para melhorar uso, nunca para sequestrar a leitura. O que vale para o pensamento vale para a interface: excesso de efeito enfraquece o gesto.</p>
+    `
+  }
+];      <p>HTML define estrutura. CSS regula presença, temperatura e distância. JavaScript entra apenas para melhorar uso, nunca para sequestrar a leitura. O que vale para o pensamento vale para a interface: excesso de efeito enfraquece o gesto.</p>
 
       <p>Um organismo vivo não é caótico. Ele é adaptável. Por isso, a base precisa ser estável o suficiente para crescer sem perder forma.</p>
     `
