@@ -1,0 +1,20 @@
+{
+  "id": "uuid-único-da-task",
+  "tipo": "int-ou-enum-que-define-a-natureza",
+  "titulo": "string-essência-breve-da-task",
+  "descricao": "string-detalhes-em-texto-livre-opcional",
+  "tags": ["string-tag1", "string-tag2"],
+  "dataCriacao": "iso-date-hora-que-a-semente-surgiu",
+  "dataEdicao": "iso-date-hora-ultima-modificacao",
+  "status": "string-estado-do-ciclo-de-vida",
+  "origem": {
+    "meio": "string-canal-de-input-web-chat-email",
+    "referencia": "string-id-ou-url-do-input-original-opcional"
+  },
+  "conteudoEspecifico": {
+    // Objeto flexível para o tipo de task
+    // ex: se tipo=educacional: { "nivel": "iniciante", "topicos": ["ia", "etica"] }
+    // ex: se tipo=pessoa: { "nome": "Yuri", "contato": "email@ex.com" }
+    // ex: se tipo=tarefa: { "prazo": "iso-date", "responsavel": "id-pessoa" }
+  }
+}
