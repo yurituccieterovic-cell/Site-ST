@@ -1,9 +1,10 @@
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LAB · Árvore Oracular</title>
-  <meta charset="utf-8">
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -13,6 +14,18 @@
       background: #0f0f0f;
       color: #e0e0e0;
     }
+    h1 { color: #00ffcc; }
+    .task {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #1a1a1a;
+    }
+    .status.pendente { color: #ff9900; }
+    .status.aprovado { color: #00cc99; }
+    .actions { margin-top: 10px; }
+    input, button { padding: 8px; margin: 4px; }
     .lock {
       text-align: center;
       padding: 60px 20px;
@@ -27,22 +40,71 @@
   </style>
 </head>
 <body>
-  <div class="lock">
+  <div class="lock" id="lock">
     <h1>🔐 LAB</h1>
-    <p>Insira a senha para entrar</p>
+    <p>senha para entrar</p>
     <input type="password" id="pass" placeholder="senha" />
   </div>
 
+  <main id="app" style="display: none;">
+    <h1>LAB 🌿</h1>
+    <div id="tasks"></div>
+  </main>
+
   <script>
+    const PASSWORD = 'oraculo2026';
+
     document.getElementById('pass').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         const p = e.target.value.trim();
-        // senha fixa por enquanto — vamos mudar depois
-        if (p === 'oraculo2026') {
+        if (p === PASSWORD) {
           sessionStorage.setItem('lab_pass', p);
-          location.reload();
+          document.getElementById('lock').style.display = 'none';
+          document.getElementById('app').style.display = 'block';
+          loadTasks();
         } else {
           alert('senha incorreta');
         }
+
       }
     });
+
+    if (sessionStorage.getItem('lab_pass') === PASSWORD) {
+      document.getElementById('lock').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      loadTasks();
+    }
+
+    async function loadTasks() {
+      try {
+        const res = await fetch('tasks.json?' + Date.now());
+        const tasks = await res.json();
+        const container = document.getElementById('tasks');
+        container.innerHTML = tasks.map(t => `
+          <div class="task">
+            <h3>${t.title}</h3>
+            <p>${t.description}</p>
+            <small class="status ${t.status}">● ${t.status}</small>
+            <br>
+            <small>estimativa: R$${t.cost_estimation}</small>
+            <div class="actions">
+              <input type="text" id="comment-${t.id}" placeholder="comentar" />
+              <button onclick="addComment(${t.id})">+</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        document.getElementById('tasks').innerHTML = '<p>erro ao carregar tarefas</p>';
+      }
+
+      function addComment(id) {
+      const input = document.getElementById(`comment-${id}`);
+      alert('comentário salvo no GitHub — atualize o tasks.json manualmente');
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
+```
+    }
