@@ -1,0 +1,48 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LAB · Árvore Oracular</title>
+  <meta charset="utf-8">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #0f0f0f;
+      color: #e0e0e0;
+    }
+    .lock {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="lock">
+    <h1>🔐 LAB</h1>
+    <p>Insira a senha para entrar</p>
+    <input type="password" id="pass" placeholder="senha" />
+  </div>
+
+  <script>
+    document.getElementById('pass').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const p = e.target.value.trim();
+        // senha fixa por enquanto — vamos mudar depois
+        if (p === 'oraculo2026') {
+          sessionStorage.setItem('lab_pass', p);
+          location.reload();
+        } else {
+          alert('senha incorreta');
+        }
+      }
+    });
