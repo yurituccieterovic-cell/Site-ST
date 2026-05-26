@@ -1,0 +1,14 @@
+```json
+[
+  {
+    "id": 1,
+    "title": "teste de tarefa",
+    "description": "esta tarefa foi criada sem banco",
+    "status": "pendente",
+    "cost_estimation": 0.30,
+    "diff_url": "",
+    "created_at": "2026-05-26T10:00:00Z",
+    "comments": []
+  }
+]
+```
