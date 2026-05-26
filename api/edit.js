@@ -1,37 +1,63 @@
+// api/edit.js
 export default async function handler(req, res) {
-  const token = process.env.arvore_github_token;
-  if (!token) return res.status(500).json({ error: 'No token' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Use POST' });
+  }
 
-  // aqui virá a lógica: editar arquivo, commit, push
-  res.json({ message: 'Arquiteto pronto' });
+  const { path, content, commitMessage = 'Atualizado por arvore' } = await req.json();
+
+  const owner = 'yurituccieterovic-cell';
+  const repo = 'Site-ST';
+  const branch = 'main';
+
+  const token = process.env.arvore_github_token;
+  if (!token) {
+    return res.status(500).json({ error: 'Token não configurado' });
+  }
+
+  try {
+    // Primeiro: buscar SHA do arquivo atual
+    const fileRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    const fileData = await fileRes.json();
+    const sha = fileData.sha;
+
+    // Segundo: fazer o PUT com o novo conteúdo
+    const updateRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: commitMessage,
+          content: Buffer.from(content).toString('base64'),
+          sha,
+          branch,
+        }),
+      }
+    );
+
+    const result = await updateRes.json();
+
+    if (updateRes.ok) {
+      return res.status(200).json({ 
+        message: 'Atualizado com sucesso', 
+        commit: result.commit.sha 
+      });
+    } else {
+      return res.status(400).json({ error: result.message });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 }
 
 export const config = { runtime: 'edge' };
-import { Octokit } from '@octokit/rest'; // precisa instalar no Vercel
-
-export default async function handler(req, res) {
-  const token = process.env.arvore_github_token;
-  if (!token) {
-    return res.status(500).json({ error: 'GitHub token not configured.' });
-  }
-
-  // A Arvore enviaria estas informações no corpo da requisição POST
-  const { filePath, newContent, commitMessage } = req.body;
-
-  if (!filePath || !newContent || !commitMessage) {
-    return res.status(400).json({ error: 'Missing filePath, newContent, or commitMessage.' });
-  }
-
-  const octokit = new Octokit({ auth: token });
-  const owner = 'yurituccieterovic-cell';
-  const repo = 'Site-ST';
-  const branch = 'main'; // ou uma branch temporária, como discutimos
-
-  try {
-    // 1. Obter o SHA do arquivo existente (necessário para atualizar)
-    const { data: { sha } } = await octokit.repos.getContent({
-      owner,
-      repo,
-      path: filePath,
-      ref: branch,
-    });
