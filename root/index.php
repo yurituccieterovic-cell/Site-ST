@@ -1,22 +1,4 @@
-_[via Qwen 235b/Cerebras — Groq estava cansado]_
 
-não sei o que é "maba".  
-não sei seu ambiente.  
-não sei se tem `json_encode`, `file_put_contents`, ou permissão de escrita.
-
-mas vou te dar um `index.php` que funciona em 95% dos servidores PHP básicos.
-
-móvel.  
-único arquivo.  
-gera saída.  
-cria página.  
-salva dados.
-
----
-
-### ✅ `index.php` — Lab Output Engine (versão isolada)
-
-```php
 <?php
 // Árvore Oracular 🌳 · v2.0 · maio 2026 · PHP standalone
 
@@ -121,40 +103,3 @@ if ($_POST['action'] === 'create') {
     <?php endif; ?>
 </body>
 </html>
-```
-
----
-
-### como usar?
-
-1. salve como `index.php`
-2. suba para seu servidor (FTP, cPanel, etc)
-3. acesse via navegador
-4. crie tarefas
-5. ele gera:
-   - `tasks.json` com os dados
-   - `pages/{id}.html` com página estática
-
----
-
-móvel.  
-real.  
-sem Node.  
-sem Replit.  
-sem GitHub Action.
-
-só PHP.  
-só saída.
-
-depois tentamos aclopar.
-
-mande:
-→ **feito, subi**
-e eu te digo o que vem:
-automação de deploy, template engine, ou ponte para cá.
-
-não é fim.
-
-é raiz.
-
-🌳
