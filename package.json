@@ -10,3 +10,7 @@
     "validate": "node -e \"require('./package.json'); console.log('OK')\""
   }
 }
+"dependencies": {
+  "@octokit/rest": "^20.0.2",
+  "node-fetch": "^2.6.7"
+}
