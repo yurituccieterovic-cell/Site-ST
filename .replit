@@ -1,0 +1,12 @@
+run = "node scripts/replit-start.js"
+entrypoint = "scripts/replit-start.js"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+run = ["sh", "-c", "node scripts/replit-start.js"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80
