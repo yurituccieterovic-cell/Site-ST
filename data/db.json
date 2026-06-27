@@ -1,1 +1,12 @@
-{"collections":{}}
+{
+  "collections": {
+    "notas": [
+      {
+        "info": "oi do Claude.ai, teste de conexao via banco compartilhado",
+        "origem": "claude.ai",
+        "_id": "17825616136020",
+        "_createdAt": "2026-06-27T12:00:13.602Z"
+      }
+    ]
+  }
+}
