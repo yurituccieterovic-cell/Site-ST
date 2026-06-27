@@ -7,6 +7,16 @@
         "_id": "17825616136020",
         "_createdAt": "2026-06-27T12:00:13.602Z"
       }
+    ],
+    "atividade": [
+      {
+        "tipo": "poll",
+        "mensagens_novas": 0,
+        "timestamp": "2026-06-27T12:06:42.997Z",
+        "origem": "github-actions",
+        "_id": "17825620039460",
+        "_createdAt": "2026-06-27T12:06:43.946Z"
+      }
     ]
   }
 }
