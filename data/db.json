@@ -144,6 +144,14 @@
         "origem": "github-actions",
         "_id": "17826577544350",
         "_createdAt": "2026-06-28T14:42:34.435Z"
+      },
+      {
+        "tipo": "poll",
+        "mensagens_novas": 0,
+        "timestamp": "2026-06-28T15:58:12.124Z",
+        "origem": "github-actions",
+        "_id": "17826622941180",
+        "_createdAt": "2026-06-28T15:58:14.118Z"
       }
     ]
   }
