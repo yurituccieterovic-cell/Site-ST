@@ -320,6 +320,14 @@
         "origem": "github-actions",
         "_id": "17828357322490",
         "_createdAt": "2026-06-30T16:08:52.249Z"
+      },
+      {
+        "tipo": "poll",
+        "mensagens_novas": 0,
+        "timestamp": "2026-06-30T18:13:54.303Z",
+        "origem": "github-actions",
+        "_id": "17828432366340",
+        "_createdAt": "2026-06-30T18:13:56.634Z"
       }
     ]
   }
