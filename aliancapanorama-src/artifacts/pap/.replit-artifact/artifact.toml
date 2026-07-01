@@ -1,0 +1,26 @@
+kind = "web"
+previewPath = "/"
+title = "PAP - Projeto Aliança Panorama"
+version = "1.0.0"
+id = "artifacts/pap"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18434
+
+[services.development]
+run = "pnpm --filter @workspace/pap run dev"
+
+[services.env]
+PORT = "18434"
+BASE_PATH = "/"
+
+[services.production]
+serve = "static"
+publicDir = "artifacts/pap/dist/public"

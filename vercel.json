@@ -1,5 +1,7 @@
 {
+  "buildCommand": "bash scripts/build-pap.sh",
   "rewrites": [
+    { "source": "/aliancapanorama/api/:path*", "destination": "https://pap-api.fly.dev/api/:path*" },
     { "source": "/api/db/:path*", "destination": "/api/db" }
   ]
 }
