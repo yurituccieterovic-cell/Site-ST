@@ -10,9 +10,11 @@ import sitemapRouter from "./sitemap";
 import adminRouter from "./admin";
 import stripeRouter from "./stripe";
 import paypalRouter from "./paypal";
+import aiRouter from "./ai";
 
 const router: IRouter = Router();
 
+router.use(aiRouter);
 router.use(healthRouter);
 router.use(sitemapRouter);
 router.use(adminRouter);
