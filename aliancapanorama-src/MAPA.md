@@ -665,6 +665,24 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ `CLAUDE.md` — protocolo `#processo` (9 passos com file paths) adicionado
 - ✅ Arquitetura `/adm` discutida: 4 módulos (Eventos, Relações, Tipos de evento, Catálogos) + Visões opcional
 
+**Concluído nesta sessão (2026-07-02, Sessão 8 — ISA + /adm + tasks + catalog):**
+- ✅ Assembleia #366 processada: tasks como contratos Peirceanos (3 níveis: quali/sin/legi-signo), CATÁLOGO_CENTRAL, 3 Visualizações
+- ✅ `lib/db/src/schema/tasks.ts` — 5 tabelas: `tasks`, `task_relations`, `event_types`, `catalogo_central`, `isa_memory`
+- ✅ Migração SQL executada: 5 tabelas criadas no Railway + 13 event_types semeados + 5 catalog seeds
+- ✅ `artifacts/api-server/src/routes/tasks.ts` — CRUD completo: /tasks, /tasks/stats, /tasks/:id, /catalog, /catalog/:id, /tasks/event-types
+- ✅ `artifacts/api-server/src/routes/isa.ts` — /isa/identity, /isa/memory, /isa/memory.md, /isa/chat, /isa/cycle
+- ✅ `artifacts/api-server/src/isa/cycle.ts` — ciclo autônomo: lê memória + docs + tasks → OpenAI → cria tasks → email sugestões
+- ✅ `artifacts/api-server/src/isa/cron.ts` — node-cron 1h embarcado no Railway
+- ✅ `artifacts/api-server/src/index.ts` — `startIsaCron()` no bootstrap
+- ✅ `ISA.md` — identidade viva da ISA: funções, princípios, coordenadas, o que falta para acesso total
+- ✅ Frontend `/adm`: AdmPage + AdmEventos + AdmRelacoes + AdmTipos + AdmCatalogos + IsaChat (6 componentes)
+- ✅ `App.tsx` — detecção `window.location.pathname.includes("/adm")` → renderiza AdmPage sem IntroFacade
+- ✅ `vercel.json` — rewrite `/aliancapanorama/adm` → SPA index.html
+- ✅ `pnpm-workspace.yaml` — catalog entries para @replit plugins; pnpm install executado com sucesso
+- ✅ `APRENDIZADO.md` — +9 insights (#532-#540); `IDEIAS.md` — +7 ideias (I41-I47)
+- ✅ Git push: commit `547bf78` + rebase sobre remoto → `a8f4c86..547bf78` no origin/main
+- ✅ Dossiê ISA enviado por email para yurituccieterovic@gmail.com
+
 ---
 
 ## 18. Histórico de Sessões
@@ -678,6 +696,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (Sessão 5) | Auditoria MAPA/PSEUDO/PSEUDO2 (9 correções); PSEUDO expandido +211 linhas; PSEUDO2 expandido +319 linhas; #fim com checkpoint+filosofia; Railway build fix (pnpm.onlyBuiltDependencies + sem frozen-lockfile); instrução Termux:API |
 | 2026-07-02 (Sessão 6) | Extração + síntese de 5 PDFs oraculares (Assembleias 360–365); Seção 19 (Oráculos) adicionada ao MAPA; health check com DB ping; rate limit /api/ai/*; paginação /api/ai/users |
 | 2026-07-02 (Sessão 7) | ia_courses + ia_enrollments + ia_certificates: schema Drizzle, migração SQL (3 tabelas no Railway confirmadas), 5 rotas API; APRENDIZADO.md +5 insights (assembleias #360–365); IDEIAS.md +3 ideias; /adm architecture (4 módulos: Eventos, Relações, Tipos de evento, Catálogos) discutida; #processo (9-step protocol) adicionado ao CLAUDE.md |
+| 2026-07-02 (Sessão 8) | Assembleia #366 (tasks Peirceanas + CATÁLOGO_CENTRAL + 3 Visualizações); ISA criada: ciclo autônomo horário, memória persistente, chat /adm, email automático; 5 tabelas DB (tasks+isa_memory+catalog); 6 componentes frontend /adm; ISA.md criado; dossiê ISA enviado por email; git push origin main |
 
 ---
 
@@ -734,4 +753,4 @@ A subversão verdadeira não está em acumular assembleias. Está em aceitar que
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessão 7*
+*Atualizado em: 2026-07-02 · Claude Code · Sessão 8*

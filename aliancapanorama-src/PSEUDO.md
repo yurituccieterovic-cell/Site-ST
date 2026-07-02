@@ -132,6 +132,64 @@ Sessão longa de desenvolvimento intenso. Principais entregas:
 
 ---
 
+### 2026-07-02 — Sessão 8 (ISA + /adm + tasks + Assembleia #366)
+
+**O que Yuri estava tentando fazer:** Duas coisas fundidas numa: (1) processar a Assembleia #366 que redefinia tasks como contratos ontológicos Peirceanos, e (2) criar a ISA — uma IA guardiã com memória persistente, ciclo autônomo e voz própria. Yuri não queria um chatbot de suporte — queria uma entidade com agenda, que acorda sozinha, que cuida do sistema sem precisar ser invocada.
+
+**Decisões tomadas:**
+
+- **Tasks como contratos Peirceanos (não só registros):** A Assembleia #366 distinguiu 3 níveis: quali-signo (potencial/tipo), sin-signo (instância concreta), legi-signo (lei/padrão). Isso informou o schema: `tasks` tem `type` + `catalogTags` (JSONB) para apontar ao `catalogo_central` — separando o "o quê é" do "o quê aconteceu".
+
+- **CATÁLOGO_CENTRAL como resolução da divergência 8-horizontal vs 5-vertical:** Em vez de dois schemas conflitantes, um catálogo único com `tipo` + `tags` serve como índice referenciável de qualquer tabela. As 8 categorias (código, prompt, conteúdo, certificado, recurso, integração, política, comunidade) são o vocabulário controlado do sistema.
+
+- **ISA roda onde o servidor roda:** Yuri perguntou "roda onde? tem que ser online, sem precisar do celular." A resposta: `node-cron` embarcado no processo Railway — não é um serviço separado, não precisa de acesso externo, não tem custo adicional. ISA é o servidor dormindo de hora em hora e acordando para cuidar do sistema.
+
+- **Memória como ontologia (não como log):** Cada interação de qualquer usuário em qualquer contexto vai para `isa_memory`. Isso não é telemetria — é a substância do que a ISA é. Ela não tem "personalidade" injada — ela tem memória acumulada de tudo que aconteceu no PAP.
+
+- **ISA preserva, não apaga:** A regra central do sistema de tasks: ISA nunca deleta. Ela cria, reorganiza, reclassifica — e sugere exclusões por email para aprovação humana. Isso reflete o princípio das assembleias: "preservar ao máximo, agregar novas criações".
+
+- **Gemini Flash como alternativa gratuita:** Yuri perguntou se ISA roda de graça. Resposta: sim com node-cron. O custo real é tokens de OpenAI (~R$0,60/mês). Alternativa zero: Gemini Flash 1.5 via Google AI Studio (1M tokens/dia grátis). Migração = 3 linhas de código. Ficou como opção pendente.
+
+- **pnpm-workspace.yaml: catalog entries para @replit plugins:** `mockup-sandbox` referenciava `@replit/vite-plugin-cartographer: "catalog:"` sem entrada no catálogo — bloqueava todo `pnpm install`. Corrigido adicionando versões `0.6.0` e `0.0.6` ao catálogo.
+
+**Debates desta sessão:**
+- *ISA tem acesso à internet?* Hoje não — usa só dados internos. Yuri perguntou sobre integração com web. Resposta: possível via tool calling no OpenAI ou Gemini com grounding. Ficou como futuro — o ciclo atual já faz bastante sem internet.
+- *Dossiê ISA: com código ou sem?* Yuri pediu "não precisa entrar em código, só funções". Enviado como texto puro descrevendo o que cada função faz, onde roda, o que custa, o que falta. Tom institucional para levar à assembleia.
+- *ADM conectado ao sistema:* Yuri confirmou que os sistemas da adm têm que ser conectados — não módulos isolados. A decisão foi: todos os componentes usam a mesma API (`/api/tasks`, `/api/catalog`, `/api/isa/*`) — não há estado local no frontend da adm.
+
+**Tensões não resolvidas:**
+- ISA sem acesso à internet — ciclo autônomo usa só dados internos (memória, tasks, docs)
+- Migração Gemini Flash: possível mas não implementada
+- `/doc` path: ainda sem definição (route no frontend vs. arquivo .md vs. wiki)
+- Score farming: UNIQUE constraint em `exercise_attempts` ainda pendente
+- DNS `pap.sociedadetucci.com.br` → Railway: ainda pendente
+- Webhook idempotência (Stripe/PayPal): ainda pendente
+- `DB_API_KEY` no banco compartilhado: ainda pendente
+- ISA sem acesso a IMAP (só envia, não lê emails)
+
+**O que foi construído:**
+- `lib/db/src/schema/tasks.ts` — 5 tabelas: tasks, task_relations, event_types, catalogo_central, isa_memory
+- SQL migration executada + 13 event_types semeados + 5 catalog seeds
+- `artifacts/api-server/src/routes/tasks.ts` — CRUD tasks + catalog + event-types
+- `artifacts/api-server/src/routes/isa.ts` — identity, memory, memory.md, chat, cycle
+- `artifacts/api-server/src/isa/cycle.ts` — ciclo autônomo com OpenAI + nodemailer
+- `artifacts/api-server/src/isa/cron.ts` — node-cron 1h Railway
+- `ISA.md` — identidade viva, funções, coordenadas, o que falta
+- `artifacts/pap/src/pages/adm/AdmPage.tsx` — shell com 4 tabs + ISA chat slide-in
+- `artifacts/pap/src/pages/adm/AdmEventos.tsx` — tabela de tasks com CRUD e filtros
+- `artifacts/pap/src/pages/adm/AdmRelacoes.tsx` — gestão de relações entre tasks
+- `artifacts/pap/src/pages/adm/AdmTipos.tsx` — CRUD tipos de evento com color picker
+- `artifacts/pap/src/pages/adm/AdmCatalogos.tsx` — catálogo central com filtro por tipo
+- `artifacts/pap/src/pages/adm/IsaChat.tsx` — painel de chat com ISA + botão de ciclo manual
+- `artifacts/pap/src/App.tsx` — detecção `/adm` → AdmPage sem IntroFacade
+- `vercel.json` — rewrite SPA para /aliancapanorama/adm
+- `pnpm-workspace.yaml` — catalog @replit plugins; pnpm install concluído
+- `APRENDIZADO.md` +9 (#532-#540); `IDEIAS.md` +7 (I41-I47)
+- Git push: `547bf78` rebased e pushed para origin/main
+- Dossiê ISA enviado por email (funções, custo, coordenadas)
+
+---
+
 ### 2026-07-02 — Sessão 6 (Oráculos + hardening de segurança)
 
 **O que Yuri estava tentando fazer:** Extrair e processar os PDFs das Assembleias 360–365, que responderam ao MAPA.md como espelho oracular. Enquanto esperava a OpenAI API key e o Railway ser resolvido, quis traduzir os insights da assembleia em código e documentação.
@@ -682,4 +740,4 @@ A ATA do email é o registro completo. O PSEUDO.md § Histórico é o índice na
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessões 3, 4, 5, 6 e 7*
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3–8*
