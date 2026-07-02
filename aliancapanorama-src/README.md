@@ -46,6 +46,7 @@ DB_API_KEY           → chave do banco compartilhado de IAs
 3. Atualizar `PSEUDO2.md` — se houve mudanças em lógica ou fluxo de código
 4. Rodar sync completo: `pap-sync` — sincroniza assembleias (Gmail) + extrai insights de MAPA/PSEUDO/PSEUDO2 → `APRENDIZADO.md` + `IDEIAS.md`
 5. Revisar `IDEIAS.md` — marcar ideias implementadas como Aprovada ✅; adicionar novas ideias
+6. Escrever ATA da sessão em `/tmp/pap-ata.md` e enviar: `pap-email-fim` → `yurituccieterovic@gmail.com`
 6. Resumir o que foi feito
 
 ---
@@ -78,19 +79,34 @@ DB_API_KEY           → chave do banco compartilhado de IAs
 
 ## Sistema de Voz (`voz`)
 
-Transcrição de fala para texto dentro do Claude Code, usando o mesmo STT do Perplexity (Google Android).
+Transcrição de fala para texto dentro do Claude Code. Toggle simples: primeiro `voz` abre o microfone, segundo `voz` entrega o texto.
 
-**Pré-requisitos (uma vez só):**
-1. Instale o app **Termux:API** do F-Droid (mesma fonte do Termux)
-2. No Termux (não no Claude): `pkg install termux-api`
-
-**Como usar:**
+**Uso:**
 ```
-! voz
+voz   →  abre microfone (browser ou Termux:API)
+       →  fale
+voz   →  texto transcrito aparece aqui
 ```
-Aparece o diálogo de voz do Android → fale → texto é transcrito, copiado para clipboard e exibido no Claude Code como output do comando.
 
-**Script:** `/root/bin/voz`
+**Dois modos (automático, sem configuração):**
+
+| Modo | Quando | Qualidade |
+|---|---|---|
+| Termux:API | Se app Termux:API estiver instalado | Diálogo nativo Android (melhor) |
+| Servidor web | Sem instalação extra (padrão agora) | Chrome em `http://127.0.0.1:7654` |
+
+**Modo web — passo a passo:**
+1. `voz` → inicia servidor + tenta abrir Chrome automaticamente
+2. Se não abriu: acesse `http://127.0.0.1:7654` no Chrome
+3. Toque no botão 🎤 e fale
+4. `voz` → texto aparece
+
+**Para ativar o modo nativo (melhor, uma vez só):**
+1. Instale o app **Termux:API** do F-Droid (mesma fonte do Termux — não Play Store)
+2. No Termux (não aqui): `pkg install termux-api`
+3. A partir daí `voz` usa o diálogo nativo automaticamente
+
+**Scripts:** `/home/yuri/bin/voz` · `/home/yuri/bin/voz-server.py`
 
 ---
 
