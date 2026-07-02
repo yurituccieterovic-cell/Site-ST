@@ -15,10 +15,12 @@ import iaCourseRouter from "./ia-course";
 import tasksRouter from "./tasks";
 import isaRouter from "./isa";
 import adminUsersRouter from "./admin-users";
+import nebulaRouter from "./nebula";
 
 const router: IRouter = Router();
 
 router.use(adminUsersRouter);
+router.use(nebulaRouter);
 router.use(aiRouter);
 router.use(iaCourseRouter);
 router.use(tasksRouter);

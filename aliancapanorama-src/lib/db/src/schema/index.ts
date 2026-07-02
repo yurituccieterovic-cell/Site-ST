@@ -6,3 +6,4 @@ export * from "./exercises";
 export * from "./social";
 export * from "./ia-courses";
 export * from "./tasks";
+export * from "./nebula";

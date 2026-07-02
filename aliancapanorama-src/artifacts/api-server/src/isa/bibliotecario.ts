@@ -6,7 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { db } from "@workspace/db";
-import { isaMemoryTable } from "@workspace/db";
+import { isaMemoryTable, bibliotecaDocsTable } from "@workspace/db";
 import { gte, eq, and } from "drizzle-orm";
 import OpenAI from "openai";
 
@@ -108,6 +108,17 @@ export async function runBibliotecario(): Promise<{ baixados: number; itens: Bib
     };
 
     baixados.push(item);
+
+    // Registra na biblioteca de documentos
+    await db.insert(bibliotecaDocsTable).values({
+      titulo,
+      url,
+      localPath: localPath,
+      tipo: url.endsWith(".pdf") ? "pdf" : "html",
+      origem: "bibliotecario",
+      tamanhoBytes: stat.size,
+      tags: ["assembleia", "auto"],
+    }).onConflictDoNothing();
 
     // Registra na memória da ISA
     await db.insert(isaMemoryTable).values({
