@@ -618,7 +618,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ `IDEIAS.md` — 31 ideias de programação com prioridade, complexidade e desc. técnica
 - ✅ `scripts/sync-assembleias.py` — sync incremental Gmail → APRENDIZADO.md ao `#fim`
 
-**Concluído nesta sessão (2026-07-02):**
+**Concluído nesta sessão (2026-07-02, Sessão 4):**
 - ✅ `APRENDIZADO.md` expandido: +108 insights de MAPA.md, PSEUDO.md, PSEUDO2.md (total: 634)
 - ✅ `IDEIAS.md` expandido: +6 ideias de programação dos docs (total: 37)
 - ✅ `PSEUDO2.md` criado — pseudocódigo completo (bootstrap, auth, score, social, /api/ai/*, Stripe)
@@ -631,6 +631,17 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ Auto-sync em `/root/.bashrc` — roda `pap-sync` se >10h desde último sync
 - ✅ `#fim` atualizado: pap-sync + escrever ATA + pap-email-fim
 
+**Concluído nesta sessão (2026-07-02, Sessão 5 — Railway fix):**
+- ✅ MAPA.md, PSEUDO.md, PSEUDO2.md auditados — 9 inconsistências corrigidas (Neon→Railway, Fly.io→Railway, esbuild CJS→ESM, repo correto, assembleia status)
+- ✅ PSEUDO.md expandido de 372 → 583 linhas (8 novas seções: stack narrativo, DB evolução, tiers, IA, deploy, decisões, gotchas, memória)
+- ✅ PSEUDO2.md expandido de 205 → 524 linhas (11 novas seções: PayPal, middleware chain, canAccess, OpenAI, conquistas, heatmap, frontend, build, notes, admin, env vars)
+- ✅ `#fim` checkpoint: `.pap-fim-checkpoint` + SÍNTESE FILOSÓFICA obrigatória
+- ✅ `voz` toggle funcionando (servidor Python 7654 + Web Speech API)
+- ✅ **Railway build fix**: `pnpm.onlyBuiltDependencies` em `package.json` + remoção do `--frozen-lockfile`
+  - Causa: pnpm 10 lê `onlyBuiltDependencies` do `package.json`, não só do workspace yaml
+  - Efeito: `[ERR_PNPM_IGNORED_BUILDS] esbuild@0.27.3` resolvido
+- ✅ Instrução Termux:API: `pkg install termux-api` no Termux puro (swipe left → New Session)
+
 ---
 
 ## 18. Histórico de Sessões
@@ -641,7 +652,8 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (tarde) | Sistema `#secrets` + `/root/.pap-secrets`; Gmail IMAP/SMTP configurado; 424 assembleias extraídas; email com backup enviado para Yuri; AI_API_KEY + SESSION_SECRET gerados |
 | 2026-07-02 (noite) | APRENDIZADO.md (526 insights, 290 assembleias); IDEIAS.md (31 ideias de programação); sync-assembleias.py (incremental ao #fim); /root/bin/voz (STT via Termux:API); CLAUDE.md + README.md atualizados |
 | 2026-07-02 (cont.) | PSEUDO2.md criado; learn-from-docs.py (+108 aprendizados de docs); railway.toml (substituiu Fly.io); voz toggle remodelado; pap-email-fim; auto-sync .bashrc; README atualizado |
+| 2026-07-02 (Sessão 5) | Auditoria MAPA/PSEUDO/PSEUDO2 (9 correções); PSEUDO expandido +211 linhas; PSEUDO2 expandido +319 linhas; #fim com checkpoint+filosofia; Railway build fix (pnpm.onlyBuiltDependencies + sem frozen-lockfile); instrução Termux:API |
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code*
+*Atualizado em: 2026-07-02 · Claude Code · Sessão 5*

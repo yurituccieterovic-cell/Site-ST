@@ -70,7 +70,7 @@ Sessão longa de desenvolvimento intenso. Principais entregas:
   - Requer: app Termux:API (F-Droid) + `pkg install termux-api` no Termux
 - `#pap` e `#fim` atualizados para incluir APRENDIZADO.md e IDEIAS.md no fluxo
 
-### 2026-07-02 — Sessão 4 (continuação, pós-compactação de contexto)
+### 2026-07-02 — Sessão 4 (pós-compactação de contexto)
 - **Decisão de infra:** Railway substituiu Fly.io (gratuito, PostgreSQL incluído, Nixpacks, sem Docker)
 - **`railway.toml`** criado e commitado: builder Nixpacks, root `aliancapanorama-src`, start `node --enable-source-maps artifacts/api-server/dist/index.mjs`
 - **`PSEUDO2.md`** criado do zero — pseudocódigo completo de todos os fluxos:
@@ -89,6 +89,26 @@ Sessão longa de desenvolvimento intenso. Principais entregas:
 - **Auto-sync** em `/root/.bashrc`: verifica se >10h desde último sync → roda `pap-sync` em background na subshell
 - **`#fim` atualizado**: pap-sync + escrever ATA em `/tmp/pap-ata.md` + pap-email-fim
 - **MAPA.md, README.md, CLAUDE.md** atualizados com Railway, novas pendências e histórico
+
+### 2026-07-02 — Sessão 5 (Railway deploy + voz + auditoria)
+
+**O que Yuri estava tentando fazer:** Colocar a API no ar no Railway. Sessão focada em unblocking — o build estava falhando com `ERR_PNPM_IGNORED_BUILDS` e Yuri não conseguia avançar. Em paralelo, queria o `voz` funcionando para falar em vez de digitar.
+
+**Decisões tomadas:**
+- **pnpm.onlyBuiltDependencies no package.json (não só no workspace yaml):** O Nixpacks roda pnpm 10 na fase de instalação antes do `buildCommand`. pnpm 10 lê `onlyBuiltDependencies` do `package.json`, e o campo no `pnpm-workspace.yaml` estava sendo ignorado. Adicionar ao `package.json` foi a correção mínima.
+- **Remover `--frozen-lockfile` do buildCommand:** Não existe `pnpm-lock.yaml` no repo. Nixpacks já faz `pnpm install` na fase [7/8]; nosso buildCommand era redundante e iria falhar. Agora o buildCommand faz só o build.
+- **`termux-api` no Termux puro (não Ubuntu):** O microfone no Android só é acessível via Termux nativo (não proot). Instrução: swipe left → New Session → `pkg install termux-api`.
+
+**Tensões não resolvidas:**
+- Railway não foi validado ao vivo nesta sessão — a confirmação do build virá quando Yuri verificar o dashboard do Railway.
+- `pnpm-lock.yaml` ainda não existe no repo. Quando Railway gerar o lockfile durante o build, não é commitado automaticamente. Isso significa que cada deploy recalcula as versões → risco de divergência futura. Próximo passo: gerar e commitar o lockfile.
+- `termux-api` ainda não instalado — Yuri não consegue chegar ao Termux puro (Claude auto-abre o proot). Alternativa pendente.
+
+**O que foi construído:**
+- `package.json`: campo `"pnpm": {"onlyBuiltDependencies": [...]}` adicionado
+- `railway.toml`: `buildCommand` simplificado (sem `--frozen-lockfile`, sem install redundante)
+- `IDEIAS.md`: seções duplicadas (I38–I49) removidas; count corrigido para 37
+- `MAPA.md` + `PSEUDO.md`: histórico e pendências atualizados
 
 ---
 
@@ -580,4 +600,4 @@ A ATA do email é o registro completo. O PSEUDO.md § Histórico é o índice na
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessões 3 e 4*
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3, 4 e 5*
