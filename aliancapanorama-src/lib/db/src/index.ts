@@ -4,13 +4,33 @@ import * as schema from "./schema";
 
 const { Pool } = pg;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
+type PgPool = InstanceType<typeof Pool>;
+type DrizzleDb = ReturnType<typeof drizzle<typeof schema>>;
+
+let _pool: PgPool | undefined;
+let _db: DrizzleDb | undefined;
+
+function resolvePool(): PgPool {
+  if (!_pool) {
+    const url = process.env["DATABASE_URL"];
+    if (!url) throw new Error("DATABASE_URL must be set. Did you forget to provision a database?");
+    _pool = new Pool({ connectionString: url });
+  }
+  return _pool;
 }
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle(pool, { schema });
+function resolveDb(): DrizzleDb {
+  if (!_db) _db = drizzle(resolvePool(), { schema });
+  return _db;
+}
+
+// Lazy proxies — fail at first use, not at module load (allows server to boot without DATABASE_URL)
+export const pool: PgPool = new Proxy({} as PgPool, {
+  get(_t, prop) { return resolvePool()[prop as keyof PgPool]; },
+});
+
+export const db: DrizzleDb = new Proxy({} as DrizzleDb, {
+  get(_t, prop) { return resolveDb()[prop as keyof DrizzleDb]; },
+});
 
 export * from "./schema";
