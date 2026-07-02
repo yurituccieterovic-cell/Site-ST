@@ -9,6 +9,7 @@ import { ArquiteturaPage } from "@/pages/ArquiteturaPage";
 import { BuscarPage } from "@/pages/BuscarPage";
 import { MapaPage } from "@/pages/MapaPage";
 import { EcossystemmaPage } from "@/pages/EcossystemmaPage";
+import { ToyotaPage } from "@/pages/ToyotaPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
 
@@ -23,6 +24,7 @@ const isArquitetura = path.includes("/arquitetura");
 const isBuscar = path.includes("/buscar");
 const isMapa = path.includes("/mapa");
 const isEco = path.includes("/eco");
+const isToyota = path.includes("/toyota");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -64,6 +66,10 @@ function App() {
 
   if (isEco) {
     return <EcossystemmaPage />;
+  }
+
+  if (isToyota) {
+    return <ToyotaPage />;
   }
 
   return (

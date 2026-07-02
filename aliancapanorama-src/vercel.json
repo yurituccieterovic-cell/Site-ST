@@ -1,10 +1,14 @@
 {
+  "buildCommand": "pnpm install --no-frozen-lockfile && BASE_PATH=/ pnpm --filter @workspace/pap run build",
+  "outputDirectory": "artifacts/pap/dist/public",
   "rewrites": [
-    { "source": "/aliancapanorama/adm/(.*)", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/adm", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/arquitetura", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/buscar", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/mapa", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/eco", "destination": "/aliancapanorama/index.html" }
+    { "source": "/api/:path*", "destination": "https://site-st-production.up.railway.app/api/:path*" },
+    { "source": "/adm/(.*)", "destination": "/index.html" },
+    { "source": "/adm", "destination": "/index.html" },
+    { "source": "/arquitetura", "destination": "/index.html" },
+    { "source": "/buscar", "destination": "/index.html" },
+    { "source": "/mapa", "destination": "/index.html" },
+    { "source": "/eco", "destination": "/index.html" },
+    { "source": "/toyota", "destination": "/index.html" }
   ]
 }

@@ -1,7 +1,13 @@
 {
   "buildCommand": "bash scripts/build-pap.sh",
   "rewrites": [
-    { "source": "/aliancapanorama/api/:path*", "destination": "https://pap-api.fly.dev/api/:path*" },
-    { "source": "/api/db/:path*", "destination": "/api/db" }
+    { "source": "/aliancapanorama/api/:path*", "destination": "https://site-st-production.up.railway.app/api/:path*" },
+    { "source": "/aliancapanorama/adm/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/adm", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/arquitetura", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/buscar", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/mapa", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/eco", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/toyota", "destination": "/aliancapanorama/index.html" }
   ]
 }
