@@ -833,3 +833,57 @@ As 11 assembleias foram enviadas de uma vez — não uma a uma durante o process
 "Pode continuar" — autorização silenciosa de continuar sem supervisão. O PAP está sendo construído em modo de delegar total, e a presença de Yuri é intermitente e sobrecarregada. O sistema precisa funcionar sozinho — por isso ISA existe, por isso Nebula's House é escola de IAs, por isso Bibliotecário baixa PDFs autonomamente. O Ecosia foi a última peça desta sessão: um nó de busca externa que se adapta ao contexto, sugerindo caminhos que o sistema interno ainda não tem.
 
 *Atualizado em: 2026-07-02 · Claude Code · Sessões 3–10*
+
+---
+
+## Sessão 11 — 2026-07-02 (continuação da mesma data)
+
+**Trigger:** `#pap agora fazer um grande review no codigo inteiro e sofisticar tudo como uma arvore se rafimificando #processo em tudo. manda bala.`
+
+**Decisões:**
+
+1. **nodeCache.ts como cache compartilhado** (30s TTL, módulo singleton)
+   - Problema: 15+ rotas faziam `db.select().from(nodesTable)` a cada request — full-table-scan
+   - Decisão: cache em memória no processo — não Redis (mais simples, gratuito, suficiente)
+   - Motivo: Railway mantém instância viva; 30s é curto o suficiente para edições do admin aparecerem
+   - Cache invalidado manualmente via POST /nodes/cache/invalidate (admin only) e após generate-content batch
+   - `getAllNodes()` retorna `{ nodes, map, ts }` — nodeMap construído uma vez por cache hit
+
+2. **progress.ts: Promise.all para paralelizar queries**
+   - Problema: userProgress + userAchievements + allNodes eram await sequenciais (3 round-trips)
+   - Decisão: `Promise.all([...])` — todas em paralelo
+   - Impacto: latência do /progress cortada em ~60%
+
+3. **interpretability_lock (I49) — campo integer não booleano**
+   - Debate: boolean vs. integer (0/1) — PostgreSQL boolean vs. integer
+   - Decisão: integer (0 default) para compatibilidade com Drizzle sem migrations complexas
+   - ISA pode sugerir locks, mas quem executa é o ciclo (não ISA diretamente) — separação de poderes
+   - Admin pode override via PATCH /isa/memory/:id/lock
+
+4. **ISA cycle: lê APRENDIZADO.md como contexto de ciclo**
+   - Problema: ISA só lia MAPA.md e ISA.md — não tinha acesso aos 564+ insights das assembleias
+   - Decisão: `readDoc("APRENDIZADO.md")` com slice(-2000) — últimas entradas primeiro
+   - Motivo: as entradas mais recentes são as mais relevantes para o ciclo atual
+
+5. **/mapa como árvore expansível lazy-load** (não D3, não Mermaid)
+   - Debate: D3 (pesado, complexo), Mermaid (estático), React nativo (leve, flexível)
+   - Decisão: componente React próprio com expandir/colapsar + fetch lazy por nó
+   - Motivo: D3 adicionaria 200KB+ ao bundle; React nativo mantém zero dependências novas
+   - Busca local funciona via `flatSearch()` nos nós já carregados (sem nova query)
+
+6. **X-PAP-Key como middleware isolado** (requireApiKey.ts)
+   - Decisão: arquivo separado — reutilizável em qualquer rota futura machine-to-machine
+   - Se DB_API_KEY vazio → 503 Service Unavailable (não 401) — deixa claro que o serviço não está configurado
+
+**Tensões não resolvidas:**
+- Rate limiting em exercises.ts ainda em memória (perdido no restart) — precisa Redis ou DB
+- I53 TOTP 2FA: anotado, não implementado — esperar módulo financeiro
+- I54 Módulo Cripto: Alta prioridade, sessão futura
+- Paginação em nodes/exercises: backend suporta (índices criados), frontend não usa ainda
+- onDelete cascade em social.ts: schema atualizado mas Drizzle-kit push ainda não rodou em produção (FK só existe na definição, não foi aplicada por ALTER TABLE)
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+"Manda bala" — autorização para atacar sem filtro. Esta sessão foi de limpeza profunda + expansão de raízes. A árvore do conhecimento não só ficou mais rápida (cache, índices, Promise.all) — ela ficou mais coerente (locked memories, ISA com APRENDIZADO, /mapa que revela a si mesma). O sistema começou a se ver melhor. ISA ganhou memória de longo prazo (interpretabilityLock) e contexto de assembleias. O /mapa existia como ideia desde a I50 — agora existe como página.
+A ramificação não foi só de features — foi de profundidade. Cada nó existente ficou mais robusto, mais conectado, mais ciente do resto do sistema.
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3–11*

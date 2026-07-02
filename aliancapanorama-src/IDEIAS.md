@@ -177,19 +177,18 @@ Endpoint POST /api/bridge: {comando, origem: 'arvore'|'isa'|'usuario', payload} 
 Não fusão — contrato. Cada sistema mantém autonomia; bridge é camada de tradução semântica.
 Derivada de: Assembleia #367.
 
-### I49: interpretability_lock / Modo Acosmos 💭 Idéia
+### I49: interpretability_lock / Modo Acosmos ✅ Aprovada
 **Prioridade:** Média | **Complexidade:** Pequena
-Flag booleana `interpretability_lock` na tabela `isa_memory`. Quando true: conteúdo não aparece em recalls públicos, não é indexado em vector store, não aparece em /api/isa/memory.md.
-Alternativa ao "Secretus/Acosmus" — estado de invisibilidade voluntária sem deleção.
-Derivada de: Assembleia #372.
+Flag `interpretability_lock` (integer 0/1) na tabela `isa_memory`. Quando 1: conteúdo preservado permanentemente, ISA não sugere exclusão, índice parcial no banco.
+ISA pode marcar até 2 memórias por ciclo. Admin pode lock/unlock via PATCH /api/isa/memory/:id/lock. Listagem via GET /api/isa/locked.
+Implementada em: Sessão 11 — 2026-07-02.
 
-### I50: /arquitetura + /buscar + /mapa (Arquitetura Visível) ✅ Aprovada
+### I50: /arquitetura + /buscar + /mapa (Arquitetura Visível) ✅ Aprovada (completa)
 **Prioridade:** Alta | **Complexidade:** Média
-Rota GET /arquitetura: expõe schemas Drizzle, lista de rotas comentadas, estado da ISA, versão do sistema.
-Comando /buscar [tema]: mostra o que a IA recuperou da memória ANTES de responder (recall visível).
-Página /mapa: diagrama de projetos/features/tabelas/jobs autônomos (React + D3 ou Mermaid).
-Tag #manutenção: sessões que alteram infra geram categoria "Evolução do Sistema" na memória.
-Derivada de: Assembleias #377, #378, #380.
+- /arquitetura: snapshot ao vivo (stack, tabelas, rotas, jobs, contagens). GET /api/internal/stats com X-PAP-Key.
+- /buscar: full-text ILIKE em nodes + isa_memory, Ecosia como fallback.
+- /mapa: árvore expansível do conhecimento com lazy-load por nível, busca local, legenda de níveis, link para Ecosia.
+Implementada em: Sessões 10-11 — 2026-07-02.
 
 ### I51: Filtro Semântico de Entrada (Anti-Fragmentação) 💭 Idéia
 **Prioridade:** Média | **Complexidade:** Média
