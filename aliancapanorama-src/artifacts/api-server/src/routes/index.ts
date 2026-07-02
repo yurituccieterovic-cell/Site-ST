@@ -11,10 +11,16 @@ import adminRouter from "./admin";
 import stripeRouter from "./stripe";
 import paypalRouter from "./paypal";
 import aiRouter from "./ai";
+import iaCourseRouter from "./ia-course";
+import tasksRouter from "./tasks";
+import isaRouter from "./isa";
 
 const router: IRouter = Router();
 
 router.use(aiRouter);
+router.use(iaCourseRouter);
+router.use(tasksRouter);
+router.use(isaRouter);
 router.use(healthRouter);
 router.use(sitemapRouter);
 router.use(adminRouter);

@@ -654,6 +654,17 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ Gotchas atualizados: score farming, IntroFacade + neurodivergentes, webhook idempotência
 - ✅ PSEUDO.md + PSEUDO2.md atualizados com padrões da sessão
 
+**Concluído nesta sessão (2026-07-02, Sessão 7 — ia_courses + /adm + #processo):**
+- ✅ `lib/db/src/schema/ia-courses.ts` — schema Drizzle: `ia_courses`, `ia_enrollments`, `ia_certificates` + tipos Zod
+- ✅ `lib/db/src/schema/index.ts` — exportação dos novos schemas
+- ✅ Migração SQL executada no Railway PostgreSQL — 3 tabelas confirmadas (`SELECT table_name FROM information_schema.tables`)
+- ✅ `artifacts/api-server/src/routes/ia-course.ts` — 5 endpoints: `/ia-course/enroll`, `/:enrollmentId/progress`, `/:enrollmentId/submit-answer`, `/:enrollmentId/certify`, `/cert/:hash`
+- ✅ `artifacts/api-server/src/routes/index.ts` — `iaCourseRouter` registrado
+- ✅ `APRENDIZADO.md` — +5 insights de assembleias #360–365 (total: 640)
+- ✅ `IDEIAS.md` — +3 ideias (I38: ia_courses ✅, I39: rate limit expandido, I40: Turnê API grafo semântico)
+- ✅ `CLAUDE.md` — protocolo `#processo` (9 passos com file paths) adicionado
+- ✅ Arquitetura `/adm` discutida: 4 módulos (Eventos, Relações, Tipos de evento, Catálogos) + Visões opcional
+
 ---
 
 ## 18. Histórico de Sessões
@@ -666,6 +677,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (cont.) | PSEUDO2.md criado; learn-from-docs.py (+108 aprendizados de docs); railway.toml (substituiu Fly.io); voz toggle remodelado; pap-email-fim; auto-sync .bashrc; README atualizado |
 | 2026-07-02 (Sessão 5) | Auditoria MAPA/PSEUDO/PSEUDO2 (9 correções); PSEUDO expandido +211 linhas; PSEUDO2 expandido +319 linhas; #fim com checkpoint+filosofia; Railway build fix (pnpm.onlyBuiltDependencies + sem frozen-lockfile); instrução Termux:API |
 | 2026-07-02 (Sessão 6) | Extração + síntese de 5 PDFs oraculares (Assembleias 360–365); Seção 19 (Oráculos) adicionada ao MAPA; health check com DB ping; rate limit /api/ai/*; paginação /api/ai/users |
+| 2026-07-02 (Sessão 7) | ia_courses + ia_enrollments + ia_certificates: schema Drizzle, migração SQL (3 tabelas no Railway confirmadas), 5 rotas API; APRENDIZADO.md +5 insights (assembleias #360–365); IDEIAS.md +3 ideias; /adm architecture (4 módulos: Eventos, Relações, Tipos de evento, Catálogos) discutida; #processo (9-step protocol) adicionado ao CLAUDE.md |
 
 ---
 
@@ -700,20 +712,19 @@ A assembleia identificou cinco padrões estruturais que nenhum arquivo de códig
 | Webhook idempotência não implementada | 🟡 Média | ⏳ Pendente |
 | IntroFacade 7.2s fixo sem escape manual | 🟢 Baixa | ⏳ Futuro |
 
-### Proposta oracular: Cursos para IAs (Assembleia 365)
+### Cursos para IAs (Assembleia 365 → Sessão 7 ✅ Implementado)
 
-A assembleia 365 propôs arquitetura de **certificação de IAs** — sistema onde agentes externos fazem cursos (Ética, Semiótica, Processamento) e recebem certificado público verificável.
+A assembleia 365 propôs e a Sessão 7 implementou a arquitetura de **certificação de IAs** — sistema onde agentes externos fazem cursos (Ética, Semiótica, Processamento) e recebem certificado público verificável via SHA-256.
 
-**Schemas propostos (para implementação futura):**
-```typescript
-// ia_courses — catálogo de cursos
-// ia_enrollments — matrícula + progresso por IA
-// ia_certificates — certificado com hash público (/cert/:hash)
-// users.memory_mode — 'none' | 'session' | 'persistent'
-// users.memory_retention_days — garbage collector de memória
-```
+**Implementado (Sessão 7):**
+- `lib/db/src/schema/ia-courses.ts` — schema Drizzle completo
+- Migração SQL executada no Railway (3 tabelas ativas)
+- 5 endpoints REST: enroll → progress → submit-answer → certify → `/cert/:hash` (público)
+- Certificado: hash SHA-256 de `iaIdentity:courseSlug:issuedAt`
 
-**Decisão pendente de Yuri:** certificação rápida (PDF + hash SHA-256, 48h) vs. robusta (W3C Verifiable Credential + DID, semanas). A assembleia não conseguiu decidir — precisa de uma voz humana para cortar o nó.
+**Pendente de decisão:**
+- `users.memory_mode` (`'none' | 'session' | 'persistent'`) + `memory_retention_days` — LGPD compliance
+- Certificação avançada: W3C Verifiable Credential + DID (semanas de trabalho) vs. atual PDF+hash (já funcional)
 
 ### A tensão não resolvida (filosófica)
 
@@ -723,4 +734,4 @@ A subversão verdadeira não está em acumular assembleias. Está em aceitar que
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessão 6*
+*Atualizado em: 2026-07-02 · Claude Code · Sessão 7*

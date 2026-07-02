@@ -101,3 +101,68 @@
 | I36 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I37 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
 
+
+## ⚙️ Técnico — Assembleias #360-365 (2026-07-02)
+
+| # | Feature | Prior. | Compl. | Status | Origem | Impacto | Descrição técnica |
+|---|---|---|---|---|---|---|---|
+| I38 | **Cursos para IAs (ia_courses)** | 🔴 Alta | ● L | ✅ Aprovada | A363, A365 | Sistema de credenciamento de alinhamento — certificado público verificavel | Tabelas ia_courses/ia_enrollments/ia_certificates ja criadas e migradas (Railway). Rotas /api/ia-course/* implementadas. 5 modulos: Etica Planetaria, Conhecimentos Gerais, Processamento, Memoria e Identidade, Producao Cultural. GET /cert/:hash para auditabilidade. |
+| I39 | **Rate Limiting em /api/ai/* e webhooks** | 🔴 Alta | ○ S | 💭 Ideia | A360, A361 | Falha critica: /api/ai/* sem rate limit e vetor de custo inesperado e abuso | express-rate-limit ja no package. Adicionar: /api/ai/* = 30req/min por IP, /api/stripe/*, /api/paypal/* = rate limit conservador. Webhook Stripe precisa STRIPE_WEBHOOK_SECRET configurado. |
+| I40 | **Turnê API — Grafo Semântico** | 🟢 Baixa | ◑ M | 💭 Ideia | A364 | Integrar projeto Atom un Ação ao PAP como grafo de nos geograficos | Endpoints /api/ai/turne/* retornam JSON com track, state, semanticTag (jacu/taquiTaqui) e ODS. Branch turne-prototype. Semana 4 do cronograma da assembleia #364. |
+
+
+## Docs PAP — Ideias Novas (2026-07-02)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I41 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I42 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I43 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I44 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I45 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I46 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+
+---
+
+## ⚙️ Sistema de Tasks + ISA — Assembleia #366 + Sessão 8 (2026-07-02)
+
+### I41: Tabela tasks (Contratos Ontológicos) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Média
+Schema: tasks(id, type, status, payload JSONB, assigned_to, assigned_to_agent, priority 0-10, title, description, dependencies JSONB, origem_sessao, catalog_tags JSONB, created_by, created_at, updated_at, completed_at).
+Rotas CRUD: GET/POST /api/tasks, PATCH /api/tasks/:id, GET /api/tasks/stats.
+Botão "Pular" = PATCH status:'skipped'. Rastreabilidade temporal + genealógica + responsabilizatória.
+
+### I42: task_relations + event_types + catalogo_central ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Média
+- task_relations(task_id, related_task_id, relation_type[depends_on/blocks/related/spawned_from])
+- event_types(name, slug, extra_schema JSONB) — tipos que alteram colunas de tasks
+- catalogo_central(id UUID, tipo, titulo, descricao, tags[], sessao_origem, artefato_url, validado_por, acesso[público/restrito/AO_only])
+
+### I43: ISA Memória Persistente (isa_memory) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Alta
+Tabela isa_memory para todas interações de todos usuários. Hook em /api/social/notes (chat) e /api/exercises (MCQ).
+API: GET /api/isa/memory (paginada), POST /api/isa/chat, GET /api/isa/memory.md (live markdown).
+ISA.md — identidade viva da ISA, auto-atualizada com MAPA/PSEUDO/PSEUDO2 via fs.readFileSync.
+
+### I44: ISA Ciclo Autônomo (node-cron no Railway) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Alta
+node-cron roda a cada 1h no servidor Railway (sem celular, sem intervenção manual).
+Ciclo: lê memória + MAPA/PSEUDO/PSEUDO2 + tasks → OpenAI analisa → cria/edita tasks preservando existentes → envia email com sugestões de exclusão (luddlocke → yurituccieterovic@gmail.com).
+POST /api/isa/cycle (trigger manual). Resultado salvo em isa_memory.
+
+### I45: /adm Frontend — 4 Módulos + ISA Chat ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Alta
+/adm com 4 módulos: Eventos (CRUD tasks kanban), Relações (grafo task_relations), Tipos de Evento (event_types), Catálogos (catalogo_central filtrado por tipo/tags).
+ISA Chat panel: chat em tempo real com ISA. Paleta: #F9FAFB fundo, #F97316 CTAs, #10B981 verde.
+
+### I46: 3 Visualizações de Tasks 💭 Idéia
+**Prioridade:** Média | **Complexidade:** Alta
+Global/Macro: dashboard executivo (status, prioridade, responsavel).
+Relacional/Meso: grafo dependências com D3.js/Cytoscape (nós=tasks, arestas=relações).
+Temporal/Micro: Gantt/timeline (D3 ou Frappe Gantt), cor por status (#9CA3AF aberta, #3B82F6 andamento, #10B981 concluída, #F97316 pausada, #EF4444 failed).
+
+### I47: ISA API Público 💭 Idéia
+**Prioridade:** Média | **Complexidade:** Média
+GET /api/isa/identity — coordenadas, características, stats memória (sem expor dados privados).
+GET /api/isa/memory.md — memória como markdown auto-atualizado ao vivo.
+Autenticada por AI_API_KEY (agentes externos) ou sessão admin (/adm).

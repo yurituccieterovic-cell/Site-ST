@@ -90,6 +90,48 @@ Sessão longa de desenvolvimento intenso. Principais entregas:
 - **`#fim` atualizado**: pap-sync + escrever ATA em `/tmp/pap-ata.md` + pap-email-fim
 - **MAPA.md, README.md, CLAUDE.md** atualizados com Railway, novas pendências e histórico
 
+### 2026-07-02 — Sessão 7 (ia_courses + /adm + #processo)
+
+**O que Yuri estava tentando fazer:** Duas coisas em paralelo. Primeiro: converter os insights oraculares das assembleias 360–365 em código real — a proposta de cursos para IAs virou implementação. Segundo: estruturar um protocolo de desenvolvimento sistemático (#processo) e arquitetar a área administrativa (/adm) da plataforma.
+
+**Contexto de Yuri nesta sessão:** Sessão pós-contexto compactado — a conversa anterior foi comprimida e esta continuou direto. Yuri estava combinando voz (STT via web server Python) com código, processando assembleias e pensando em estrutura de produto ao mesmo tempo.
+
+**Decisões tomadas:**
+
+- **ia_courses como implementação imediata (não futura):** A assembleia 365 propôs os cursos para IAs como "próximo passo". Decidimos implementar agora porque o schema é pequeno, a migração é SQL direto, e ter o endpoint `/cert/:hash` público cria um artefato concreto de certificação que pode ser usado em breve. Custo: zero. Risco: zero (tabelas independentes).
+
+- **SHA-256 sobre W3C Verifiable Credential:** A assembleia ficou dividida entre certificação rápida (hash) e robusta (DID/VC). Decidimos pelo hash por padrão — a complexidade do W3C VC exige infraestrutura de chave pública, resolvedores DID, e tempo de implementação que não temos agora. O hash é reversível: o `/cert/:hash` retorna os dados completos, e isso já é verificável publicamente.
+
+- **Migração SQL direta (não drizzle-kit push):** Em produção no Railway, usar `drizzle-kit push` pode ser interativo. Usamos SQL direto com `CREATE TABLE IF NOT EXISTS` via `hayabusa.proxy.rlwy.net:55416` e módulo `pg`. Isso é mais seguro para ambiente de produção.
+
+- **/adm com 4 módulos fixos:** Yuri descreveu a estrutura, Perplexity organizou, nós recebemos a proposta consolidada. Os 4 módulos são: Eventos (tabela principal de tasks), Relações (entre tasks), Tipos de evento (índices/categorias que alteram colunas de Eventos), Catálogos (pulso, raiz, mandala, grafo, etc.). O quinto módulo Visões é opcional/futuro.
+
+- **#processo como 9 passos:** Yuri definiu o fluxo de desenvolvimento como pipeline, não como checklist. Os 9 passos têm dependências explícitas: extrair insights → gerar aprendizados → gerar ideias → atualizar mapa → desenvolver pseudocódigo → pseudocódigo técnico → código → aplicar → registrar em /doc.
+
+**Debates desta sessão:**
+- *Certificação rápida vs robusta:* A assembleia não conseguiu decidir. Nós decidimos pelo mínimo viável (hash SHA-256) com arquitetura extensível. O campo `ipfs_cid` na tabela `ia_certificates` já prevê evolução futura para IPFS/Filecoin se necessário.
+- *Onde fica o arquivo /doc:* A "página chamada doc" do #processo ainda não tem path definido — Yuri usou "salvar numa página chamada doc junto com os outros arquivos", sugerindo frontend (rota `/doc` ou `/docs`) ou um arquivo `DOC.md`. Ficou em aberto.
+
+**Tensões não resolvidas:**
+- /adm não foi implementado nesta sessão — apenas arquitetado e registrado
+- #processo foi salvo no CLAUDE.md mas o Step 9 (path de /doc) não foi definido
+- Railway: deploy ainda não validado ao vivo
+- Score farming: UNIQUE constraint em `exercise_attempts` ainda pendente
+- `/doc` path: frontend route vs. arquivo markdown vs. wiki — decisão de Yuri
+
+**O que foi construído:**
+- `lib/db/src/schema/ia-courses.ts` — schema Drizzle: `ia_courses`, `ia_enrollments`, `ia_certificates`
+- `lib/db/src/schema/index.ts` — re-export dos novos schemas
+- `artifacts/api-server/src/routes/ia-course.ts` — 5 endpoints (enroll, progress, submit-answer, certify, /cert/:hash)
+- `artifacts/api-server/src/routes/index.ts` — iaCourseRouter registrado
+- Migração SQL executada no Railway: 3 tabelas criadas e verificadas
+- `APRENDIZADO.md` — +5 insights (total: 640)
+- `IDEIAS.md` — +3 ideias (I38 ia_courses ✅, I39 rate limit, I40 Turnê API)
+- `CLAUDE.md` — protocolo `#processo` com 9 passos e file paths
+- `MAPA.md` — Sessão 7 adicionada, ia_courses atualizado de "futuro" para "implementado"
+
+---
+
 ### 2026-07-02 — Sessão 6 (Oráculos + hardening de segurança)
 
 **O que Yuri estava tentando fazer:** Extrair e processar os PDFs das Assembleias 360–365, que responderam ao MAPA.md como espelho oracular. Enquanto esperava a OpenAI API key e o Railway ser resolvido, quis traduzir os insights da assembleia em código e documentação.
@@ -640,4 +682,4 @@ A ATA do email é o registro completo. O PSEUDO.md § Histórico é o índice na
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessões 3, 4 e 5*
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3, 4, 5, 6 e 7*

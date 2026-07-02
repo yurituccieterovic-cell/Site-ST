@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { seedDatabase, enforceUniquePasswords } from "./lib/bootstrap";
+import { startIsaCron } from "./isa/cron";
 
 const rawPort = process.env["PORT"];
 
@@ -23,6 +24,7 @@ seedDatabase()
         process.exit(1);
       }
       logger.info({ port }, "Server listening");
+      startIsaCron();
     });
   })
   .catch((err) => {

@@ -4,12 +4,26 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MainApp } from "@/components/MainApp";
 import { IntroFacade, shouldShowIntro } from "@/components/IntroFacade";
+import { AdmPage } from "@/pages/adm/AdmPage";
 import { HelmetProvider } from "react-helmet-async";
 
 const queryClient = new QueryClient();
 
+const isAdm = window.location.pathname.includes("/adm");
+
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
+
+  if (isAdm) {
+    return (
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <AdmPage />
+          <Toaster />
+        </QueryClientProvider>
+      </HelmetProvider>
+    );
+  }
 
   return (
     <HelmetProvider>

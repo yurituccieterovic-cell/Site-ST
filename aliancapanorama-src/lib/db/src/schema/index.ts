@@ -4,3 +4,5 @@ export * from "./progress";
 export * from "./users";
 export * from "./exercises";
 export * from "./social";
+export * from "./ia-courses";
+export * from "./tasks";
