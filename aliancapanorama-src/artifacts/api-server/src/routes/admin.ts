@@ -21,7 +21,7 @@ O texto deve ter 3 parágrafos curtos:
 Escreva em português claro, direto e motivador para um estudante do ensino médio. Sem bullets, sem títulos, só parágrafos. Máximo 220 palavras no total.`;
 
   const response = await openai.chat.completions.create({
-    model: "gpt-5-mini",
+    model: "gpt-4o-mini",
     max_completion_tokens: 400,
     messages: [{ role: "user", content: prompt }],
   });

@@ -492,7 +492,7 @@ git push → github.com/yurituccieterovic-cell/Site-ST
 - Build: `pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build`
 - Start: `node --enable-source-maps artifacts/api-server/dist/index.mjs`
 - PostgreSQL service: injetado automaticamente como `DATABASE_URL`
-- Env vars necessárias: `NODE_ENV=production`, `SESSION_SECRET`, `AI_API_KEY`, `ALLOWED_ORIGINS`
+- Env vars necessárias: `NODE_ENV=production`, `SESSION_SECRET`, `AI_API_KEY`, `OPENAI_API_KEY`, `ALLOWED_ORIGINS`
 - Restart: ON_FAILURE, máx 5 tentativas
 
 ### Build do frontend
@@ -551,7 +551,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 ```
 
 **Env vars obrigatórias:** `DATABASE_URL`, `SESSION_SECRET`
-**Env vars opcionais:** `OPENAI_API_KEY`, `AI_API_KEY`, `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `ALLOWED_ORIGINS`
+**Env vars opcionais (servidor não quebra sem elas, mas features ficam desabilitadas):** `OPENAI_API_KEY` (exercícios MCQ + conteúdo dos nós), `AI_API_KEY` (/api/ai/*), `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID`, `ALLOWED_ORIGINS`
 
 ---
 

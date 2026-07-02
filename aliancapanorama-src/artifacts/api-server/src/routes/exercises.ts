@@ -57,7 +57,7 @@ Exemplo de formato:
 Retorne SOMENTE o array JSON, sem texto adicional, sem markdown.`;
 
   const response = await openai.chat.completions.create({
-    model: "gpt-5-mini",
+    model: "gpt-4o-mini",
     max_completion_tokens: 2048,
     messages: [{ role: "user", content: prompt }],
   });
