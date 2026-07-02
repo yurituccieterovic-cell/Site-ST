@@ -1,0 +1,13 @@
+{
+  "name": "sociedadetucci/mdgrs",
+  "description": "MDGRS — Método de Disposição Gráfica em Raiz Singular",
+  "type": "project",
+  "require": {
+    "php": ">=8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "MDGRS\\": "src/"
+    }
+  }
+}
