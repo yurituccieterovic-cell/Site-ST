@@ -44,8 +44,8 @@ DB_API_KEY           → chave do banco compartilhado de IAs
 1. Atualizar `MAPA.md` — seções: Pendências, Estado da Infraestrutura, Histórico de Sessões
 2. Atualizar `PSEUDO.md` — adicionar entrada no histórico; atualizar fluxograma/wireframe se houve mudanças de UX
 3. Atualizar `PSEUDO2.md` — se houve mudanças em lógica ou fluxo de código
-4. Rodar sync de assembleias: `python3 scripts/sync-assembleias.py` — adiciona novas assembleias ao `APRENDIZADO.md`
-5. Atualizar `IDEIAS.md` — marcar ideias implementadas como Aprovada ✅; adicionar novas ideias que surgiram
+4. Rodar sync completo: `pap-sync` — sincroniza assembleias (Gmail) + extrai insights de MAPA/PSEUDO/PSEUDO2 → `APRENDIZADO.md` + `IDEIAS.md`
+5. Revisar `IDEIAS.md` — marcar ideias implementadas como Aprovada ✅; adicionar novas ideias
 6. Resumir o que foi feito
 
 ---
@@ -59,7 +59,8 @@ DB_API_KEY           → chave do banco compartilhado de IAs
 | `PSEUDO2.md` | Pseudocódigo dos principais fluxos |
 | `APRENDIZADO.md` | 526 insights extraídos de 424 assembleias de IAs — relevantes ao PAP |
 | `IDEIAS.md` | 31 ideias de programação derivadas do APRENDIZADO; atualizar ao `#fim` |
-| `scripts/sync-assembleias.py` | Sincroniza novas assembleias do Gmail → APRENDIZADO.md (rodar ao `#fim`) |
+| `scripts/sync-assembleias.py` | Sync incremental Gmail → APRENDIZADO.md (chamado por `pap-sync`) |
+| `scripts/learn-from-docs.py` | Extrai insights de MAPA/PSEUDO/PSEUDO2 → APRENDIZADO.md + IDEIAS.md |
 | `replit.md` | Documentação técnica legada (referência) |
 
 ---
