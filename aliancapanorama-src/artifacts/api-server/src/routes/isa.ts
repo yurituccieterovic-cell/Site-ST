@@ -5,6 +5,7 @@ import { db } from "@workspace/db";
 import { isaMemoryTable, tasksTable, insertIsaMemorySchema } from "@workspace/db";
 import { desc, eq, sql } from "drizzle-orm";
 import { runIsaCycle } from "../isa/cycle";
+import { runBibliotecario } from "../isa/bibliotecario";
 import { logger } from "../lib/logger";
 
 const router = Router();
@@ -229,6 +230,31 @@ router.post("/isa/cycle", async (_req, res) => {
     logger.error({ err }, "ISA: erro no ciclo manual");
     res.status(500).json({ error: "Erro ao executar ciclo ISA" });
   }
+});
+
+// POST /api/isa/bibliotecario — trigger manual do Bibliotecário
+router.post("/isa/bibliotecario", async (req, res) => {
+  const tier = req.session.userTier ?? 0;
+  if (tier < 5) { res.status(403).json({ error: "Apenas administradores" }); return; }
+  try {
+    const result = await runBibliotecario();
+    res.json(result);
+  } catch (err) {
+    logger.error({ err }, "ISA Bibliotecário: erro manual");
+    res.status(500).json({ error: "Erro no bibliotecário" });
+  }
+});
+
+// GET /api/isa/biblioteca — lista itens baixados pelo bibliotecário
+router.get("/isa/biblioteca", async (req, res) => {
+  if (!req.session.userId) { res.status(401).json({ error: "Autenticação necessária" }); return; }
+  const itens = await db
+    .select()
+    .from(isaMemoryTable)
+    .where(eq(isaMemoryTable.context, "biblioteca"))
+    .orderBy(desc(isaMemoryTable.createdAt))
+    .limit(100);
+  res.json({ itens });
 });
 
 // Hook interno — salvar interação em isa_memory (chamado por outros routes)
