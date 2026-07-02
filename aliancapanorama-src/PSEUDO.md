@@ -70,6 +70,26 @@ Sessão longa de desenvolvimento intenso. Principais entregas:
   - Requer: app Termux:API (F-Droid) + `pkg install termux-api` no Termux
 - `#pap` e `#fim` atualizados para incluir APRENDIZADO.md e IDEIAS.md no fluxo
 
+### 2026-07-02 — Sessão 4 (continuação, pós-compactação de contexto)
+- **Decisão de infra:** Railway substituiu Fly.io (gratuito, PostgreSQL incluído, Nixpacks, sem Docker)
+- **`railway.toml`** criado e commitado: builder Nixpacks, root `aliancapanorama-src`, start `node --enable-source-maps artifacts/api-server/dist/index.mjs`
+- **`PSEUDO2.md`** criado do zero — pseudocódigo completo de todos os fluxos:
+  - Bootstrap (PORT/SESSION_SECRET/DATABASE_URL validation, seedDatabase, enforceUniquePasswords)
+  - Auth (rate limit, bcrypt compare, session)
+  - Score: `Σ (node_code.length × 10)` por tentativa correta
+  - Progress (open/read upserts + achievements), Exercises, Social, /api/ai/*, Stripe, Sessions, CORS
+- **`scripts/learn-from-docs.py`** — lê MAPA.md, PSEUDO.md, PSEUDO2.md, extrai insights por seção, classifica por domínio → APRENDIZADO.md + IDEIAS.md (incremental por mtime)
+  - +108 insights de docs, +6 ideias (Audit Log, Migration System, Connection Pool Tuning, Health Check DB, ALLOWED_ORIGINS, Paginação /api/ai/)
+- **`/home/yuri/bin/voz`** — toggle STT reescrito: 1ª chamada inicia servidor Python (porta 7654) + tenta abrir Chrome; 2ª chamada entrega texto
+  - Fallback: Termux:API nativo se instalado
+  - Symlinks em `/usr/local/bin/` para funcionar em shell não-interativo (usuário `yuri`)
+- **`/home/yuri/bin/voz-server.py`** — servidor Python + HTML com Web Speech API (pt-BR), botão pulse, POST /salvar → `/tmp/voz.txt`
+- **`/home/yuri/bin/pap-email-fim`** — envia ATA da sessão (SMTP STARTTLS) de luddlocke@gmail.com para yurituccieterovic@gmail.com
+- **`pap-sync`** — wrapper sequencial: sync-assembleias.py → learn-from-docs.py (log em `/home/yuri/.pap-sync.log`)
+- **Auto-sync** em `/root/.bashrc`: verifica se >10h desde último sync → roda `pap-sync` em background na subshell
+- **`#fim` atualizado**: pap-sync + escrever ATA em `/tmp/pap-ata.md` + pap-email-fim
+- **MAPA.md, README.md, CLAUDE.md** atualizados com Railway, novas pendências e histórico
+
 ---
 
 ## 2. Fluxograma — Jornadas do Usuário
