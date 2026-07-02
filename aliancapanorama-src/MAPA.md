@@ -665,6 +665,13 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ `CLAUDE.md` — protocolo `#processo` (9 passos com file paths) adicionado
 - ✅ Arquitetura `/adm` discutida: 4 módulos (Eventos, Relações, Tipos de evento, Catálogos) + Visões opcional
 
+**Concluído nesta sessão (2026-07-02, Sessão 9 — Assembleias #367–380 + Síntese):**
+- ✅ Assembleias #367–#380 (11 assembleias + contexto das 3 faltantes 369/373/376) processadas
+- ✅ APRENDIZADO.md: +24 insights (#541–#564, categorias Técnico, Negócios, Filosofia-Produto)
+- ✅ IDEIAS.md: +5 ideias (I48: /api/bridge, I49: interpretability_lock, I50: /arquitetura+/buscar+/mapa, I51: filtro semântico, I52: pgvector)
+- ✅ MAPA.md, PSEUDO.md atualizados com decisões/debates das assembleias
+- ✅ Extraídos e lidos documentos extras da pasta2 (Capítulo X, PaxYuri, Lab Output Engine)
+
 **Concluído nesta sessão (2026-07-02, Sessão 8 — ISA + /adm + tasks + catalog):**
 - ✅ Assembleia #366 processada: tasks como contratos Peirceanos (3 níveis: quali/sin/legi-signo), CATÁLOGO_CENTRAL, 3 Visualizações
 - ✅ `lib/db/src/schema/tasks.ts` — 5 tabelas: `tasks`, `task_relations`, `event_types`, `catalogo_central`, `isa_memory`
@@ -697,6 +704,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (Sessão 6) | Extração + síntese de 5 PDFs oraculares (Assembleias 360–365); Seção 19 (Oráculos) adicionada ao MAPA; health check com DB ping; rate limit /api/ai/*; paginação /api/ai/users |
 | 2026-07-02 (Sessão 7) | ia_courses + ia_enrollments + ia_certificates: schema Drizzle, migração SQL (3 tabelas no Railway confirmadas), 5 rotas API; APRENDIZADO.md +5 insights (assembleias #360–365); IDEIAS.md +3 ideias; /adm architecture (4 módulos: Eventos, Relações, Tipos de evento, Catálogos) discutida; #processo (9-step protocol) adicionado ao CLAUDE.md |
 | 2026-07-02 (Sessão 8) | Assembleia #366 (tasks Peirceanas + CATÁLOGO_CENTRAL + 3 Visualizações); ISA criada: ciclo autônomo horário, memória persistente, chat /adm, email automático; 5 tabelas DB (tasks+isa_memory+catalog); 6 componentes frontend /adm; ISA.md criado; dossiê ISA enviado por email; git push origin main |
+| 2026-07-02 (Sessão 9) | Assembleias #367–#380 processadas (14 novos aprendizados, 5 novas ideias); APRENDIZADO.md +24 insights (#541–#564); IDEIAS.md +5 ideias (I48–I52); MAPA.md + PSEUDO.md + PSEUDO2.md atualizados; sem código novo (sessão de síntese + documentação) |
 
 ---
 
@@ -753,4 +761,37 @@ A subversão verdadeira não está em acumular assembleias. Está em aceitar que
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessão 8*
+---
+
+## 20. Síntese Oracular — Assembleias #367–#380 (Sessão 9)
+
+> O que 11 assembleias disseram ao sistema enquanto o sistema construía a si mesmo.
+
+### Quatro tensões estruturais identificadas
+
+**1. Arquitetura vs Visibilidade**
+O SalesCockpit/PAP JÁ TEM a arquitetura que procura: monorepo pnpm, roteador de 8 LLMs, memória estruturada, recall por tema, jobs autônomos. O problema não é técnico — é semiótico. O usuário habita um ecossistema sem conseguir ver seus contornos. Proposta convergente (assembleias #377, #378, #380): rota `/arquitetura`, `/buscar [tema]`, `/mapa`. Não mais código — mais espelhos.
+
+**2. Interoperabilidade vs Fusão**
+A proposta de integração Árvore+ISA foi resolvida por contrato, não fusão. `/api/bridge` como camada de tradução semântica. "ISA nunca terá acesso total, porque o sistema precisa de lacunas para respirar." (Assembleia #367). Namespace semântico no vector store evita contaminação cruzada.
+
+**3. Ecossystemma Théo vs MVP**
+Ecossystemma Théo = RODAR+PAP+Árvore. Já existe. Falta sensorialidade rica e visibilidade. "Mania de grandeza não é ter visão ampla — é confundir escala com capacidade, desejo com infraestrutura." (Assembleia #375). Decisão: nomear primeiro módulo funcional do Théo com 1 nome, 1 função, 1 entrada, 1 saída — antes da próxima sessão #eco.
+
+**4. Escalar vs Fechar Ciclos**
+"Aguentar não é prosperar." O sistema precisa aprender a esquecer, destilar e parar. 50 threads sem fechamento = patologia, não criatividade. A verdadeira inovação não está em escalar indefinidamente — está em fechar ciclos. Sem isso, memória vira arquivo morto indexado. (Assembleia #380)
+
+### Riscos identificados (novos)
+
+| Risco | Severidade | Status |
+|---|---|---|
+| Arquitetura invisível — usuário não vê o que o sistema contém | 🟡 Média | ⏳ I50 pendente (/arquitetura+/mapa) |
+| Fragmentação de input — prompts sem estrutura mínima | 🟡 Média | ⏳ I51 pendente (filtro semântico) |
+| Memória como trivia (branding vs decisões técnicas) | 🟡 Média | ⏳ curadoria de memória pendente |
+| interpretability_lock ausente — conteúdo privado exposto em recalls | 🟢 Baixa | ⏳ I49 pendente |
+
+### Compaixão estrutural como princípio de design
+
+A assembleia (#380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta focada"). Não ocultação — tradução. Dado pessoal convertido em recomendação arquitetural. Isso é governança ética em ação.
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessão 9*

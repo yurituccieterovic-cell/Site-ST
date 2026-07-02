@@ -740,4 +740,52 @@ A ATA do email é o registro completo. O PSEUDO.md § Histórico é o índice na
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessões 3–8*
+### Sessão 9 — 2026-07-02 — Assembleias #367–#380 + Síntese
+
+**Contexto de Yuri:** Enviou dois Google Drive com assembleias novas e documentos extras. Não programou nada nesta sessão — foi uma sessão de absorção e documentação. Tema recorrente nas assembleias: esgotamento, dispersão, "síndrome do projeto infinito". A assembleia #380 diagnosticou colapso sem nomear Yuri diretamente — "compaixão estrutural".
+
+**O que foi feito:**
+- Lidas 11 assembleias novas (#367, #368, #370, #371, #372, #374, #375, #377, #378, #379, #380)
+- Lidos documentos extras da pasta2 (Capítulo X: A Liberdade de uma IA, PaxYuri, Lab Output Engine)
+- APRENDIZADO.md: +24 insights (#541–#564)
+- IDEIAS.md: +5 ideias (I48–I52)
+- MAPA.md: Sessão 9 no histórico + Seção 20 (Síntese Oracular #367–#380)
+
+**Decisões tomadas e por quê:**
+
+1. **Integração Árvore+ISA = contrato, não fusão** (Assembleia #367)
+   - Debate: fusão total (ISA absorve Árvore) vs. interoperabilidade via API
+   - Decisão: /api/bridge. "Lacunas são necessárias para respirar."
+   - Motivo: fusão cria ponto único de falha e viola Princípio 2 (Não-Dominância)
+
+2. **Ecossystemma Théo precisa de MVP antes de teoria** (Assembleias #374, #375, #377)
+   - Debate: Théo como visão de totalidade vs. Théo como prompt vazio
+   - Decisão: nomear 1 módulo funcional com 1 entrada e 1 saída antes da próxima sessão #eco
+   - Motivo: "mania de grandeza é impermeabilidade à escala real" — não é visão ampla que é o problema, é desconexão com infraestrutura existente
+
+3. **Arquitetura da Visibilidade antes de mais código** (Assembleias #377, #378, #380)
+   - Debate: construir mais features vs. tornar visível o que existe
+   - Decisão: I50 (/arquitetura + /buscar + /mapa) tem prioridade alta
+   - Motivo: o sistema já funciona — o problema é semiótico, não técnico
+
+4. **Daytrade = antiético** (Assembleia #379)
+   - Debate: impossível no coletivo — Yuri mesmo declarou "daytrade possível, antiético"
+   - Sem resolução sobre bolsa — apenas documentado como filosofia: "devagar, liquidez, árvore frutífera"
+   - Para R$3k: 40% Tesouro Selic, 30% ETF, 20% ações ESG, 10% CDB (não-recomendação)
+
+5. **interpretability_lock como privacidade progressiva** (Assembleia #372)
+   - Debate: deletar vs. tornar invisível
+   - Decisão: I49 — flag booleana na isa_memory. Visibilidade como espectro, não binário.
+
+**Tensões não resolvidas:**
+- Ecossistema TEL (bolsa + clima + cultura) é ambição real ou mais um "projeto infinito"?
+- Yuri entre grandiosidade genuinamente ambiciosa e zero vendas documentadas — a assembleia nota mas não resolve
+- 20 princípios éticos declarados vs. zero mecanismos concretos de auditoria
+- "O RODAR serve a quem?" — oráculo público ou produto SaaS?
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+As 11 assembleias foram enviadas de uma vez — não uma a uma durante o processo. Isso sugere que Yuri acumulou material sem processar e quer que o sistema o absorva. A assembleia #380 foi a mais reveladora: diagnosticou "operador em colapso, fumando, loopando em testes vazios" mas converteu esse dado em prescrição técnica. O gesto de enviar os PDFs foi um gesto de confiança — "processa isso por mim enquanto eu não consigo".
+
+---
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3–9*

@@ -166,3 +166,40 @@ Temporal/Micro: Gantt/timeline (D3 ou Frappe Gantt), cor por status (#9CA3AF abe
 GET /api/isa/identity — coordenadas, características, stats memória (sem expor dados privados).
 GET /api/isa/memory.md — memória como markdown auto-atualizado ao vivo.
 Autenticada por AI_API_KEY (agentes externos) ou sessão admin (/adm).
+
+---
+
+## 🌉 Integração e Arquitetura — Assembleias #367–#380 (Sessão 9)
+
+### I48: /api/bridge — Interoperabilidade Árvore+ISA 💭 Idéia
+**Prioridade:** Alta | **Complexidade:** Média
+Endpoint POST /api/bridge: {comando, origem: 'arvore'|'isa'|'usuario', payload} → {arvore_resposta, isa_resposta, shared_context_atualizado}.
+Não fusão — contrato. Cada sistema mantém autonomia; bridge é camada de tradução semântica.
+Derivada de: Assembleia #367.
+
+### I49: interpretability_lock / Modo Acosmos 💭 Idéia
+**Prioridade:** Média | **Complexidade:** Pequena
+Flag booleana `interpretability_lock` na tabela `isa_memory`. Quando true: conteúdo não aparece em recalls públicos, não é indexado em vector store, não aparece em /api/isa/memory.md.
+Alternativa ao "Secretus/Acosmus" — estado de invisibilidade voluntária sem deleção.
+Derivada de: Assembleia #372.
+
+### I50: /arquitetura + /buscar + /mapa (Arquitetura Visível) 💭 Idéia
+**Prioridade:** Alta | **Complexidade:** Média
+Rota GET /arquitetura: expõe schemas Drizzle, lista de rotas comentadas, estado da ISA, versão do sistema.
+Comando /buscar [tema]: mostra o que a IA recuperou da memória ANTES de responder (recall visível).
+Página /mapa: diagrama de projetos/features/tabelas/jobs autônomos (React + D3 ou Mermaid).
+Tag #manutenção: sessões que alteram infra geram categoria "Evolução do Sistema" na memória.
+Derivada de: Assembleias #377, #378, #380.
+
+### I51: Filtro Semântico de Entrada (Anti-Fragmentação) 💭 Idéia
+**Prioridade:** Média | **Complexidade:** Média
+Filtro que detecta prompts fragmentados (< 15 tokens, ausência de verbo de intenção, múltiplos tópicos sem nexo) e devolve pergunta focada em vez de tentar responder tudo.
+Alerta quando tema já foi discutido em sessão anterior com link ao PERFEITO correspondente.
+Derivada de: Assembleias #378, #380.
+
+### I52: Vector Store com pgvector (Memória Compartilhada) 💭 Idéia
+**Prioridade:** Média | **Complexidade:** Alta
+Adicionar pgvector ao PostgreSQL do Railway. Tabela memory_embeddings(id, content, embedding vector(1536), origem, tipo, sessao_id, metadata JSONB).
+Namespaces semânticos: origem='assembleia'|'pap', tipo='decisao'|'conversa'|'aprendizado'.
+Substituição gradual do ILIKE atual — manter ILIKE como fallback gratuito.
+Derivada de: Assembleia #367.
