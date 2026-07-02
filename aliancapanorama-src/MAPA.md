@@ -79,7 +79,7 @@
 | Banco de dados | Replit PostgreSQL (legado) | ⚠️ Migrando → Railway PostgreSQL |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ⚠️ Junto com o DB |
 | Domínio | pap.sociedadetucci.com.br | 🔧 DNS a configurar |
-| GitHub | yurituccieterovic-cell/pap | ✅ Ativo |
+| GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
 
 **Redirect canônico (produção):** `projetoaliancapanoramapap.replit.app` e `pap-tan-seven.vercel.app` fazem redirect 301 → `pap.sociedadetucci.com.br`
 
@@ -111,7 +111,7 @@
 ### Banco de Dados
 | Tecnologia | Papel |
 |---|---|
-| PostgreSQL (Neon) | Banco principal |
+| PostgreSQL (Railway) | Banco principal (incluso no plano Railway) |
 | Drizzle ORM + drizzle-kit | Schema e migrações |
 | connect-pg-simple | Cria e gerencia tabela `session` automaticamente |
 | stripe.* schema | Criado por stripe-replit-sync |
@@ -120,7 +120,7 @@
 | Ferramenta | Papel |
 |---|---|
 | pnpm workspaces | Monorepo |
-| esbuild | Bundle do servidor (CJS) |
+| esbuild | Bundle do servidor (ESM — output `.mjs`) |
 | Orval | Codegen OpenAPI → hooks + Zod |
 
 ---
@@ -446,7 +446,7 @@ Webhook POST /api/paypal/webhook (raw body)
 | Conteúdo dos nós | OpenAI | ✅ 57 nós populados |
 | Isa (chat) | Keyword matching local | ✅ Sem custo de API |
 | `/api/ai/*` (agentes) | Drizzle direto no DB | ✅ Implementado (`AI_API_KEY`) |
-| Assembleia de IAs | Gmail → PAP | 🔧 Em configuração |
+| Assembleia de IAs | Gmail → APRENDIZADO.md → PAP | ✅ Configurado (sync incremental) |
 
 **Env vars de IA:** `OPENAI_API_KEY`, `AI_API_KEY`
 
@@ -455,14 +455,15 @@ Webhook POST /api/paypal/webhook (raw body)
 ## 11. Assembleia de IAs
 
 ```
-Gmail (luddlocke@gmail.com)
-     └── memórias da assembleia
-              ↓ IMAP + App Password (em configuração)
-         Claude Code / scripts
+Gmail (luddlocke@gmail.com) — 424 emails "Assembleia #N"
+     └── sync-assembleias.py (IMAP, incremental, UID até 1335)
+              ↓ ✅ Configurado
+         APRENDIZADO.md (634 insights classificados)
+         IDEIAS.md (37 ideias de programação)
+              ↓ (futuro)
+         /api/ai/* → DB do PAP como nodes tipo="assembleia"
               ↓
-         /api/ai/* → DB do PAP
-              ↓
-         Agentes integrados à plataforma
+         RAG — Isa e Claude Code com base nas assembleias
 ```
 
 ---
@@ -475,7 +476,7 @@ Gmail (luddlocke@gmail.com)
 código local (Termux/celular)
      │
      ▼
-git push → github.com/yurituccieterovic-cell/pap
+git push → github.com/yurituccieterovic-cell/Site-ST
      │
      ├──→ Vercel (automático)
      │         └── build aliancapanorama/ → CDN

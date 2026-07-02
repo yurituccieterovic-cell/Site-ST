@@ -2,7 +2,7 @@
 
 > Extraído de 424 Assembleias de IAs (luddlocke@gmail.com). Atualizar ao `#fim` com novas assembleias.
 
-> **526 entradas** de **290 assembleias** (2026-07-02)
+> **634 entradas** — 526 de assembleias (290 emails) + 108 de docs (MAPA/PSEUDO/PSEUDO2) · (2026-07-02)
 
 
 ## Legenda
@@ -749,3 +749,142 @@
 | # | Fonte | Seção | Domínio | Tipo | Insight |
 |---|---|---|---|---|---|
 | 610 | PSEUDO | 3.4 Modal de Planos | Social | 🔍 Análise | ┌────────────────────────────────────────────────────┐ │  PLANOS PAP · FUVEST 2026                     ╳   │ ├──────────┬──────────┬──────────┬──────────────────┤ │ ALUNO I  │ ALUN |
+
+## Sync 2026-07-02 — 1 novas entradas
+
+
+### 🎮 Gamificação (novas)
+
+| # | Asm | Tema | Dom. | Ângulo | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|---|
+| 635 | #359 | #atomunacao | Gamificação | 🎯 Direto | 🔍 Análise | Assembleia 359 — "atomunacao  A Luciana Galvão (provavelmente referindo-se à filósofa Lúcia Helena Galvão) costuma abordar símbolos esotéricos e filosóficos e |
+
+## Docs PAP — Sync 2026-07-02 08:24 (90 entradas)
+
+> Fonte: MAPA (60 entradas), PSEUDO (30 entradas)
+
+
+### ⚙️ Técnico — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 636 | MAPA | 1. Ecossistema Geral | Infra-Deploy | 🔍 Análise | ┌─────────────────────────────────────────────────────────────────┐ │                     ECOSSISTEMA SOCIEDADE TUCCI                 │ │                                            |
+| 637 | MAPA | 2. Arquitetura da Plataforma PAP | Arquitetura | 🔍 Análise | USUÁRIO (browser)                               │                     ┌─────────▼──────────┐                     │       VERCEL       │                     │  CDN estático      │   |
+| 638 | MAPA | 2. Arquitetura da Plataforma PAP | Segurança | 📋 Metodologia | USUÁRIO (browser)                               │                     ┌─────────▼──────────┐                     │       VERCEL       │                     │  CDN estático      │   |
+| 639 | MAPA | Estado da Infraestrutura | Segurança | 📋 Metodologia | ‖ Componente ‖ Onde roda ‖ Status ‖ ‖---‖---‖---‖ ‖ Frontend ‖ Vercel hobby ‖ ✅ Ativo ‖ ‖ API ‖ Replit (legado) ‖ ⚠️ Migrando → Railway ‖ ‖ Banco de dados ‖ Replit PostgreSQL (lega |
+| 641 | MAPA | Frontend | Performance | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ React + Vite ‖ SPA, build tool ‖ ‖ TypeScript 5.9 ‖ Tipagem ‖ ‖ Tailwind CSS ‖ Estilos ‖ ‖ Framer Motion ‖ Animações (Intro, Isa, transições) ‖ ‖ |
+| 643 | MAPA | API | Segurança | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ Node.js 24 + Express 5 ‖ Servidor HTTP ‖ ‖ pino + pino-http ‖ Logging estruturado (nunca console.log) ‖ ‖ express-session + connect-pg-simple ‖ S |
+| 645 | MAPA | Banco de Dados | Segurança | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ PostgreSQL (Neon) ‖ Banco principal ‖ ‖ Drizzle ORM + drizzle-kit ‖ Schema e migrações ‖ ‖ connect-pg-simple ‖ Cria e gerencia tabela session aut |
+| 646 | MAPA | Banco de Dados | DB-Schema | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ PostgreSQL (Neon) ‖ Banco principal ‖ ‖ Drizzle ORM + drizzle-kit ‖ Schema e migrações ‖ ‖ connect-pg-simple ‖ Cria e gerencia tabela session aut |
+| 647 | MAPA | Tooling | Arquitetura | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ ‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo ‖ ‖ esbuild ‖ Bundle do servidor (CJS) ‖ ‖ Orval ‖ Codegen OpenAPI → hooks + Zod ‖ |
+| 648 | MAPA | Tooling | Performance | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ ‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo ‖ ‖ esbuild ‖ Bundle do servidor (CJS) ‖ ‖ Orval ‖ Codegen OpenAPI → hooks + Zod ‖ |
+| 649 | MAPA | 4. Estrutura do Monorepo | Arquitetura | 🔍 Análise | aliancapanorama-src/ │ ├── lib/ │   ├── api-spec/openapi.yaml          ← FONTE DA VERDADE da API │   ├── api-client-react/              ← hooks gerados (não editar) │   ├── api-zod |
+| 650 | MAPA | 4. Estrutura do Monorepo | Segurança | 📋 Metodologia | aliancapanorama-src/ │ ├── lib/ │   ├── api-spec/openapi.yaml          ← FONTE DA VERDADE da API │   ├── api-client-react/              ← hooks gerados (não editar) │   ├── api-zod |
+| 651 | MAPA | Intro (IntroFacade.tsx) | Segurança | 📋 Metodologia | Tela animada na primeira visita da sessão (skip via sessionStorage"papintroseenv1"):  "uma produção"  →  Logo Sociedade Tucci  →  "PAP · Projeto Aliança Panorama"  →  fade out   0s |
+| 655 | MAPA | Tabelas e campos principais | Segurança | 📋 Metodologia | users  id · login (unique) · passwordhash · tier (0-5) · displayname usercode (unique) · stripecustomerid · paypalsubscriptionid subscriptionstatus · lastdowngradeat · createdat ‖  |
+| 659 | MAPA | Via OpenAPI + codegen (usar hooks gerado | Segurança | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/healthz ‖ Health check ‖ ‖ GET ‖ /api/nodes?parentCode=X ‖ Listar filhos de um nó (sem arg → só raiz) ‖ ‖ GET ‖ /api/nodes/ |
+| 660 | MAPA | Via OpenAPI + codegen (usar hooks gerado | Performance | 💡 Proposta | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/healthz ‖ Health check ‖ ‖ GET ‖ /api/nodes?parentCode=X ‖ Listar filhos de um nó (sem arg → só raiz) ‖ ‖ GET ‖ /api/nodes/ |
+| 662 | MAPA | Social (fetch direto, fora do OpenAPI) | API-Design | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/social/me ‖ Perfil + score + nº de amigos ‖ ‖ PATCH ‖ /api/social/me ‖ Atualizar displayName ou userCode ‖ ‖ GET ‖ /api/soc |
+| 663 | MAPA | /api/ai/* — Interface para Agentes de IA | Segurança | 📋 Metodologia | Auth: header X-Api-Key: <AIAPIKEY> (env var AIAPIKEY) ‖ ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/ai/nodes ‖ Todos os nós (ordenados por level/sortOrder) ‖ ‖ GET ‖ / |
+| 665 | MAPA | Pagamentos (fora do OpenAPI) | Segurança | 📋 Metodologia | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ GET /api/stripe/plans ‖ Planos Stripe ‖ ‖ POST /api/stripe/checkout ‖ Criar Checkout Session ‖ ‖ POST /api/stripe/sync-tier ‖ Sincronizar tier via  |
+| 668 | MAPA | Admin | API-Design | 📋 Metodologia | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ POST /api/admin/generate-content ‖ Regenerar conteúdo AI de todos os nós (tier 5 only) ‖ |
+| 669 | MAPA | 8. Sistema de Usuários | Segurança | 📋 Metodologia | - express-session com PostgreSQL store (cookie: 7 dias, httpOnly, sameSite: lax, secure em prod) ‖ - CORS: valida origin no login, verifica allowedOrigins em todas as rotas |
+| 671 | MAPA | Stripe | Segurança | 📋 Metodologia | PlansModal → /api/stripe/plans            → /api/stripe/checkout → Stripe Checkout Session → redirect            → /api/stripe/sync-tier → poll Stripe → atualiza users.tier         |
+| 675 | MAPA | 10. IA no Sistema | Segurança | 📋 Metodologia | ‖ Uso ‖ Tecnologia ‖ Status ‖ ‖---‖---‖---‖ ‖ Exercícios MCQ ‖ OpenAI (OPENAIAPIKEY) ‖ ✅ Funciona, cache no DB ‖ ‖ Conteúdo dos nós ‖ OpenAI ‖ ✅ 57 nós populados ‖ ‖ Isa (chat) ‖ K |
+| 676 | MAPA | 10. IA no Sistema | Performance | 🔍 Análise | ‖ Uso ‖ Tecnologia ‖ Status ‖ ‖---‖---‖---‖ ‖ Exercícios MCQ ‖ OpenAI (OPENAIAPIKEY) ‖ ✅ Funciona, cache no DB ‖ ‖ Conteúdo dos nós ‖ OpenAI ‖ ✅ 57 nós populados ‖ ‖ Isa (chat) ‖ K |
+| 680 | MAPA | Railway (railway.toml) | Segurança | 📋 Metodologia | - Env vars necessárias: NODEENV=production, SESSIONSECRET, AIAPIKEY, ALLOWEDORIGINS ‖ - Build: pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build |
+| 681 | MAPA | Railway (railway.toml) | Performance | 📋 Metodologia | - Start: node --enable-source-maps artifacts/api-server/dist/index.mjs ‖ - Build: pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build |
+| 682 | MAPA | CORS allowlist | Segurança | 📋 Metodologia | - ALLOWEDORIGINS env var (domínios extras sem rebuild) ‖ - .vercel.app · .replit.app · .replit.dev |
+| 683 | MAPA | CORS allowlist | Infra-Deploy | 🔍 Análise | - ALLOWEDORIGINS env var (domínios extras sem rebuild) ‖ - .vercel.app · .replit.app · .replit.dev |
+| 684 | MAPA | 13. Banco Compartilhado das IAs | Segurança | 📋 Metodologia | ‖ Campo ‖ Valor ‖ ‖---‖---‖ ‖ Endpoint ‖ https://site-st.vercel.app/api/db ‖ ‖ Auth ‖ x-api-key (ver .env ou Vercel env DBAPIKEY) ‖ ‖ Storage ‖ data/db.json no repo GitHub Site-ST  |
+| 685 | MAPA | 13. Banco Compartilhado das IAs | DB-Schema | 📋 Metodologia | ‖ Campo ‖ Valor ‖ ‖---‖---‖ ‖ Endpoint ‖ https://site-st.vercel.app/api/db ‖ ‖ Auth ‖ x-api-key (ver .env ou Vercel env DBAPIKEY) ‖ ‖ Storage ‖ data/db.json no repo GitHub Site-ST  |
+| 686 | MAPA | 14. Comandos de Operação | Segurança | 📋 Metodologia | Env vars obrigatórias: DATABASEURL, SESSIONSECRET ‖ Env vars opcionais: OPENAIAPIKEY, AIAPIKEY, PAYPALCLIENTID, PAYPALCLIENTSECRET, PAYPALWEBHOOKID, ALLOWEDORIGINS |
+| 687 | MAPA | 14. Comandos de Operação | DB-Schema | 📋 Metodologia | DB pnpm --filter @workspace/db run push           push schema (dev only) ‖ Scripts de setup (rodar uma vez) pnpm --filter @workspace/scripts run seed-products           Stripe pnpm |
+| 688 | MAPA | 15. Decisões de Arquitetura | Arquitetura | 🔍 Análise | ‖ Decisão ‖ Motivo ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Nunca escrever tipos de API à mão ‖ ‖ Viewport quadrado (~900×900px) ‖ UI cockpit; forçado em App.tsx ‖ ‖ Raiz |
+| 689 | MAPA | 15. Decisões de Arquitetura | Segurança | 📋 Metodologia | ‖ Decisão ‖ Motivo ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Nunca escrever tipos de API à mão ‖ ‖ Viewport quadrado (~900×900px) ‖ UI cockpit; forçado em App.tsx ‖ ‖ Raiz |
+| 690 | MAPA | 16. Gotchas | Segurança | 📋 Metodologia | - Session store é PostgreSQL (não memory store). Requer tabela session — criada automaticamente por connect-pg-simple na primeira execução. ‖ - Push no GitHub: se git push falhar c |
+| 691 | MAPA | 16. Gotchas | Performance | 💡 Proposta | - Push no GitHub: se git push falhar com "Could not read hash...", usar bundle + clone limpo. Ver replit.md seção GitHub. ‖ - lib/api-zod/src/index.ts deve exportar só ./generated/ |
+| 692 | MAPA | 17. Pendências (por prioridade) | Segurança | 📋 Metodologia | ‖  ‖ Item ‖ Depende de ‖ Status ‖ ‖---‖---‖---‖---‖ ‖ 1 ‖ Deploy Railway: New Project → GitHub → aliancapanorama-src ‖ — ‖ ⏳ ‖ ‖ 2 ‖ Adicionar PostgreSQL service no Railway ‖ Railw |
+| 694 | MAPA | 18. Histórico de Sessões | Segurança | 📋 Metodologia | ‖ Data ‖ O que foi feito ‖ ‖---‖---‖ ‖ 2026-07-02 (manhã) ‖ Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO |
+| 696 | PSEUDO | 2026-06-27 — Sessão 1: Infraestrutura ba | Segurança | 📋 Metodologia | - Criação do banco compartilhado entre as três instâncias de Claude:   - site-st.vercel.app/api/db — API Edge (Vercel) sobre arquivo JSON no GitHub (data/db.json)   - Auth via x-ap |
+| 698 | PSEUDO | 2026-06-27 a 2026-07-01 — Sessão 2: Dese | Segurança | 📋 Metodologia | - Tentativa com MCP @gongrzhe/server-gmail-autoauth-mcp + OAuth Google Cloud ‖ - bcrypt migration: passwordplain → passwordhash (cost 12) |
+| 699 | PSEUDO | 2026-06-27 a 2026-07-01 — Sessão 2: Dese | Performance | 💡 Proposta | - userCode auto-gerado (lazy, no /social/me) ‖ - Integração PayPal: 4 planos, create-subscription server-side, sync-tier, webhook CANCELLED/EXPIRED/SUSPENDED → downgrade tier 1 |
+| 700 | PSEUDO | 2026-07-02 — Sessão 3 | Segurança | 📋 Metodologia | - AIAPIKEY + SESSIONSECRET gerados e salvos em .pap-secrets ‖ - Sistema secrets: /root/.pap-secrets (chmod 600), caixinha interativa por campo |
+| 702 | PSEUDO | 2026-07-02 — Sessão 4 (continuação, pós- | Segurança | 📋 Metodologia | - PSEUDO2.md criado do zero — pseudocódigo completo de todos os fluxos:   - Bootstrap (PORT/SESSIONSECRET/DATABASEURL validation, seedDatabase, enforceUniquePasswords)   - Auth (ra |
+| 703 | PSEUDO | 2026-07-02 — Sessão 4 (continuação, pós- | Performance | ✨ Insight | - scripts/learn-from-docs.py — lê MAPA.md, PSEUDO.md, PSEUDO2.md, extrai insights por seção, classifica por domínio → APRENDIZADO.md + IDEIAS.md (incremental por mtime)   - +108 in |
+| 704 | PSEUDO | 2.1 Entrada na plataforma | Segurança | 📋 Metodologia | Abrir PAP     │     ▼ IntroFacade (7.2s) "uma produção" → Logo Sociedade Tucci → "PAP · FUVEST 2026" → fade     │ (ou Pular)     ▼ Tela de Login     ├── Login com usuário/senha     |
+| 706 | PSEUDO | 2.2 Cockpit principal | Performance | 🔍 Análise | Cockpit     │     ├── MENU ──────────────────────────────────────────┐     │                                                     ▼     │                                             |
+| 709 | PSEUDO | 2.3 Fluxo de assinatura (Stripe) | API-Design | 📋 Metodologia | PlansModal → Escolher plano → POST /stripe/checkout     │     ▼ Stripe Checkout (redirect externo)     │     ▼ (returnurl) POST /stripe/sync-tier → poll Stripe API → users.tier = p |
+| 712 | PSEUDO | 2.5 Fluxo de agentes IA (/api/ai/*) | Segurança | 📋 Metodologia | Agente externo (Claude, script)     │     ├── Header: X-Api-Key: <AIAPIKEY>     │     ├── GET /api/ai/nodes → árvore completa     ├── POST /api/ai/nodes → criar nó     ├── PUT /api |
+| 719 | PSEUDO | 3.3 Área Social | Infra-Deploy | 💡 Proposta | ┌─────────────────────────────────────┐ │  ╳  SOCIAL                          │ ├──────────────┬──────────────────────┤ │  MEU PERFIL  │  AMIGOS              │ │              │     |
+
+### 🎨 UX/UI — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 640 | MAPA | Estado da Infraestrutura | UX-Fluxo | ⚠️ Alerta | Redirect canônico (produção): projetoaliancapanoramapap.replit.app e pap-tan-seven.vercel.app fazem redirect 301 → pap.sociedadetucci.com.br ‖ ‖ Componente ‖ Onde roda ‖ Status ‖ ‖ |
+| 642 | MAPA | Frontend | UX-Fluxo | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ React + Vite ‖ SPA, build tool ‖ ‖ TypeScript 5.9 ‖ Tipagem ‖ ‖ Tailwind CSS ‖ Estilos ‖ ‖ Framer Motion ‖ Animações (Intro, Isa, transições) ‖ ‖ |
+| 652 | MAPA | Intro (IntroFacade.tsx) | UX-Fluxo | 🔍 Análise | Tela animada na primeira visita da sessão (skip via sessionStorage"papintroseenv1"):  "uma produção"  →  Logo Sociedade Tucci  →  "PAP · Projeto Aliança Panorama"  →  fade out   0s |
+| 653 | MAPA | Cockpit Principal (MainApp.tsx) | UX-Fluxo | 🔍 Análise | COCKPIT SPACESHIP │ ├── Árvore de Conhecimento │   ├── 57 nós FUVEST 2026 (hierárquicos por código: "1", "11", "111"...) │   ├── Tier < 4 → raiz "1" (Ciências); Tier ≥ 4 → raiz "0" |
+| 656 | MAPA | Tabelas e campos principais | UX-Fluxo | 🔍 Análise | users  id · login (unique) · passwordhash · tier (0-5) · displayname usercode (unique) · stripecustomerid · paypalsubscriptionid subscriptionstatus · lastdowngradeat · createdat ‖  |
+| 664 | MAPA | /api/ai/* — Interface para Agentes de IA | UX-Fluxo | 💡 Proposta | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/ai/nodes ‖ Todos os nós (ordenados por level/sortOrder) ‖ ‖ GET ‖ /api/ai/nodes/:code ‖ Nó + filhos ‖ ‖ POST ‖ /api/ai/node |
+| 666 | MAPA | Pagamentos (fora do OpenAPI) | UX-Fluxo | 💡 Proposta | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ GET /api/stripe/plans ‖ Planos Stripe ‖ ‖ POST /api/stripe/checkout ‖ Criar Checkout Session ‖ ‖ POST /api/stripe/sync-tier ‖ Sincronizar tier via  |
+| 667 | MAPA | Admin | UX-Fluxo | 🔍 Análise | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ POST /api/admin/generate-content ‖ Regenerar conteúdo AI de todos os nós (tier 5 only) ‖ |
+| 670 | MAPA | 8. Sistema de Usuários | UX-Fluxo | 🔍 Análise | ‖ Tier ‖ Nome ‖ Acesso ‖ ‖---‖---‖---‖ ‖ 0 ‖ Visitante ‖ Navega a árvore (raiz "1"), sem exercícios ‖ ‖ 1 ‖ Aluno I ‖ + Exercícios MCQ por nó ‖ ‖ 2 ‖ Aluno II — R$19,90/mês ‖ + con |
+| 672 | MAPA | Stripe | UX-Fluxo | 🔍 Análise | PlansModal → /api/stripe/plans            → /api/stripe/checkout → Stripe Checkout Session → redirect            → /api/stripe/sync-tier → poll Stripe → atualiza users.tier         |
+| 673 | MAPA | PayPal | UX-Fluxo | 🔍 Análise | PlansModal → /api/paypal/plans            → /api/paypal/create-subscription (server-side, customid=userId)            ← PayPal approval            → /api/paypal/sync-tier → verific |
+| 678 | MAPA | Fluxo CI/CD | UX-Fluxo | 🔍 Análise | código local (Termux/celular)      │      ▼ git push → github.com/yurituccieterovic-cell/pap      │      ├──→ Vercel (automático)      │         └── build aliancapanorama/ → CDN    |
+| 701 | PSEUDO | 2026-07-02 — Sessão 3 | UX-Fluxo | 📋 Metodologia | - pap e fim atualizados para incluir APRENDIZADO.md e IDEIAS.md no fluxo ‖ - IDEIAS.md criado: 31 ideias de programação derivadas do APRENDIZADO   - Exemplos: Daily Quest, Spaced R |
+| 705 | PSEUDO | 2.1 Entrada na plataforma | UX-Fluxo | ⚠️ Alerta | Abrir PAP     │     ▼ IntroFacade (7.2s) "uma produção" → Logo Sociedade Tucci → "PAP · FUVEST 2026" → fade     │ (ou Pular)     ▼ Tela de Login     ├── Login com usuário/senha     |
+| 707 | PSEUDO | 2.2 Cockpit principal | UX-Fluxo | 🔍 Análise | Cockpit     │     ├── MENU ──────────────────────────────────────────┐     │                                                     ▼     │                                             |
+| 708 | PSEUDO | 2.3 Fluxo de assinatura (Stripe) | UX-Fluxo | 🔍 Análise | PlansModal → Escolher plano → POST /stripe/checkout     │     ▼ Stripe Checkout (redirect externo)     │     ▼ (returnurl) POST /stripe/sync-tier → poll Stripe API → users.tier = p |
+| 710 | PSEUDO | 2.4 Fluxo de assinatura (PayPal) | UX-Fluxo | 🔍 Análise | PlansModal → Escolher plano → POST /paypal/create-subscription     │ (customid = userId)     ▼ PayPal approval (popup/redirect)     │     ▼ POST /paypal/sync-tier     → verifica st |
+| 713 | PSEUDO | 2.5 Fluxo de agentes IA (/api/ai/*) | UX-Fluxo | 💡 Proposta | Agente externo (Claude, script)     │     ├── Header: X-Api-Key: <AIAPIKEY>     │     ├── GET /api/ai/nodes → árvore completa     ├── POST /api/ai/nodes → criar nó     ├── PUT /api |
+| 714 | PSEUDO | 3.1 Cockpit (tela principal — viewport q | UX-Fluxo | 🔍 Análise | ┌──────────────────────────────────────────────────────────────────┐ │ ≡ MENU              PAP · Projeto Aliança Panorama  SAIR/LOGIN│ ├────────────────────────┬─────────────────── |
+| 716 | PSEUDO | 3.2 Menu (painel lateral) | UX-Fluxo | 📋 Metodologia | ┌─────────────────────────┐ │  ╳  MENU                │ ├─────────────────────────┤ │  Status Cal Ins Guia │ ├─────────────────────────┤ │  ABA: STATUS            │ │               |
+| 722 | PSEUDO | 3.5 IntroFacade (tela de abertura) | UX-Fluxo | 🔍 Análise | ┌──────────────────────────────────────┐  ← fundo preto │                            PULAR   │ │                                      │ │         · ✦ ·  · ✦ (estrelas)    │ │       |
+| 724 | PSEUDO | 4. Notas de UX / Produto | UX-Fluxo | 🔍 Análise | - Isa a coruja: animação 4 fases, keyword matching para dicas FUVEST ‖ - Tema espacial/universo — cockpit de nave |
+
+### 🎮 Gamificação — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 644 | MAPA | API | Gamificação | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ Node.js 24 + Express 5 ‖ Servidor HTTP ‖ ‖ pino + pino-http ‖ Logging estruturado (nunca console.log) ‖ ‖ express-session + connect-pg-simple ‖ S |
+| 654 | MAPA | Cockpit Principal (MainApp.tsx) | Gamificação | 🔍 Análise | COCKPIT SPACESHIP │ ├── Árvore de Conhecimento │   ├── 57 nós FUVEST 2026 (hierárquicos por código: "1", "11", "111"...) │   ├── Tier < 4 → raiz "1" (Ciências); Tier ≥ 4 → raiz "0" |
+| 657 | MAPA | Fórmula de score | Gamificação | 🔍 Análise | score = Σ (nodecode.length × 10)  para cada exerciseattempt com correct = 1 |
+| 661 | MAPA | Social (fetch direto, fora do OpenAPI) | Gamificação | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/social/me ‖ Perfil + score + nº de amigos ‖ ‖ PATCH ‖ /api/social/me ‖ Atualizar displayName ou userCode ‖ ‖ GET ‖ /api/soc |
+| 674 | MAPA | PayPal | Gamificação | 🔍 Análise | Webhook POST /api/paypal/webhook (raw body)   → verifyPayPalWebhook() via /v1/notifications/verify-webhook-signature   → CANCELLED / EXPIRED / SUSPENDED → tier=1, subscriptionstatu |
+| 679 | MAPA | Fluxo CI/CD | Gamificação | 🔍 Análise | código local (Termux/celular)      │      ▼ git push → github.com/yurituccieterovic-cell/pap      │      ├──→ Vercel (automático)      │         └── build aliancapanorama/ → CDN    |
+| 693 | MAPA | 17. Pendências (por prioridade) | Gamificação | 💡 Proposta | - ✅ PSEUDO2.md criado — pseudocódigo completo (bootstrap, auth, score, social, /api/ai/, Stripe) ‖ - ✅ APRENDIZADO.md expandido: +108 insights de MAPA.md, PSEUDO.md, PSEUDO2.md (to |
+| 711 | PSEUDO | 2.4 Fluxo de assinatura (PayPal) | Gamificação | 🔍 Análise | PlansModal → Escolher plano → POST /paypal/create-subscription     │ (customid = userId)     ▼ PayPal approval (popup/redirect)     │     ▼ POST /paypal/sync-tier     → verifica st |
+| 717 | PSEUDO | 3.2 Menu (painel lateral) | Gamificação | 📋 Metodologia | ┌─────────────────────────┐ │  ╳  MENU                │ ├─────────────────────────┤ │  Status Cal Ins Guia │ ├─────────────────────────┤ │  ABA: STATUS            │ │               |
+| 718 | PSEUDO | 3.3 Área Social | Gamificação | 💡 Proposta | ┌─────────────────────────────────────┐ │  ╳  SOCIAL                          │ ├──────────────┬──────────────────────┤ │  MEU PERFIL  │  AMIGOS              │ │              │     |
+| 725 | PSEUDO | 4. Notas de UX / Produto | Gamificação | 🔍 Análise | - Conquistas: 2 por nó (explorado ao clicar + lido após 30s) ‖ - Score baseado na profundidade do nó (código mais longo = mais pontos) |
+
+### 📝 Conteúdo — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 658 | MAPA | Fórmula de score | Conteudo-Nos | 🔍 Análise | score = Σ (nodecode.length × 10)  para cada exerciseattempt com correct = 1 |
+| 723 | PSEUDO | 3.5 IntroFacade (tela de abertura) | Conteudo-Nos | 🔍 Análise | ┌──────────────────────────────────────┐  ← fundo preto │                            PULAR   │ │                                      │ │         · ✦ ·  · ✦ (estrelas)    │ │       |
+
+### 🤖 IA — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 677 | MAPA | 11. Assembleia de IAs | IA-Integracao | 🔍 Análise | Gmail (luddlocke@gmail.com)      └── memórias da assembleia               ↓ IMAP + App Password (em configuração)          Claude Code / scripts               ↓          /api/ai/ → |
+| 695 | MAPA | 18. Histórico de Sessões | IA-Integracao | ✨ Insight | ‖ Data ‖ O que foi feito ‖ ‖---‖---‖ ‖ 2026-07-02 (manhã) ‖ Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO |
+| 697 | PSEUDO | 2026-06-27 — Sessão 1: Infraestrutura ba | IA-Integracao | 🔍 Análise | - Sistema de prompt compartilhado criado em /root/claude-ai-system-prompt.md ‖ - Criação do banco compartilhado entre as três instâncias de Claude:   - site-st.vercel.app/api/db —  |
+| 715 | PSEUDO | 3.1 Cockpit (tela principal — viewport q | IA-Integracao | 🔍 Análise | ┌──────────────────────────────────────────────────────────────────┐ │ ≡ MENU              PAP · Projeto Aliança Panorama  SAIR/LOGIN│ ├────────────────────────┬─────────────────── |
+
+### 💡 Negócios — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 720 | PSEUDO | 3.4 Modal de Planos | Pagamento | 🔍 Análise | ┌────────────────────────────────────────────────────┐ │  PLANOS PAP · FUVEST 2026                     ╳   │ ├──────────┬──────────┬──────────┬──────────────────┤ │ ALUNO I  │ ALUN |
+
+### 👥 Social — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 721 | PSEUDO | 3.4 Modal de Planos | Social | 🔍 Análise | ┌────────────────────────────────────────────────────┐ │  PLANOS PAP · FUVEST 2026                     ╳   │ ├──────────┬──────────┬──────────┬──────────────────┤ │ ALUNO I  │ ALUN |

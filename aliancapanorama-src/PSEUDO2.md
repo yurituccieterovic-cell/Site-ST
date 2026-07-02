@@ -225,8 +225,10 @@ POST /api/paypal/sync-tier { subscriptionId }
   se expirou poll sem ACTIVE → erro 409
 
 // Webhook (raw body, antes do express.json)
+// Env: PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_WEBHOOK_ID
 POST /api/paypal/webhook
   verifyPayPalWebhook(rawBody, headers) via /v1/notifications/verify-webhook-signature
+  // usa PAYPAL_WEBHOOK_ID para verificar assinatura
   
   switch event.event_type:
     "BILLING.SUBSCRIPTION.CANCELLED"
@@ -443,6 +445,78 @@ pnpm --filter @workspace/api-server run build
 // Start produção
 node --enable-source-maps artifacts/api-server/dist/index.mjs
   // --enable-source-maps: stack traces apontam para .ts original
+```
+
+---
+
+## 19. Notes (CRUD de notas pessoais)
+
+```
+// Env: requer autenticação (req.session.userId)
+
+GET /api/notes?nodeCode=X
+  SELECT * FROM notes WHERE user_id = $1 AND (nodeCode IS NULL OR node_code = $2)
+  ORDER BY updated_at DESC
+
+POST /api/notes { nodeCode?, content }
+  INSERT INTO notes { user_id, node_code, content, created_at, updated_at }
+  retornar nota criada
+
+PATCH /api/notes/:id { content }
+  verificar que notes.user_id === req.session.userId → 403 se não
+  UPDATE notes SET content = $1, updated_at = now() WHERE id = $2
+  retornar nota atualizada
+
+DELETE /api/notes/:id
+  verificar ownership → 403 se não
+  DELETE FROM notes WHERE id = $1
+```
+
+---
+
+## 20. Admin (tier 5 only)
+
+```
+POST /api/admin/generate-content
+  se user.tier < 5 → 403
+
+  para cada node em nodes:
+    se node.content já existe → pular (não re-gerar)
+    prompt OpenAI: "Escreva 3 parágrafos educacionais sobre [node.title] para FUVEST 2026..."
+    UPDATE nodes SET content = resposta WHERE code = node.code
+    aguardar 1s (rate limiting OpenAI)
+  
+  retornar { generated: N, skipped: M }
+
+// Env necessária: OPENAI_API_KEY
+// Custo: ~57 chamadas × ~1000 tokens cada
+// Idempotente: só gera nós sem conteúdo
+```
+
+---
+
+## 21. Env Vars — Referência Completa
+
+```
+// Obrigatórias (servidor não inicia sem estas):
+PORT              → Railway injeta automaticamente
+SESSION_SECRET    → string aleatória longa (gerada: ver .pap-secrets)
+DATABASE_URL      → postgresql://... (Railway injeta automaticamente)
+
+// Para pagamentos:
+STRIPE_SECRET_KEY        → chave secreta Stripe
+STRIPE_WEBHOOK_SECRET    → secret do webhook Stripe
+PAYPAL_CLIENT_ID         → client ID do app PayPal
+PAYPAL_CLIENT_SECRET     → client secret do app PayPal
+PAYPAL_WEBHOOK_ID        → ID do webhook PayPal (para verificação de assinatura)
+
+// Para IA:
+OPENAI_API_KEY    → sk-... (para exercícios + conteúdo dos nós)
+AI_API_KEY        → chave customizada para /api/ai/* (agentes externos)
+
+// Para CORS e domínios:
+ALLOWED_ORIGINS   → URLs extras separadas por vírgula
+NODE_ENV          → "production" (ativa redirect 301, secure cookies)
 ```
 
 ---

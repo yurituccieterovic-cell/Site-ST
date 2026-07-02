@@ -205,13 +205,18 @@ Agente externo (Claude, script)
     │
     ├── Header: X-Api-Key: <AI_API_KEY>
     │
-    ├── GET /api/ai/nodes → árvore completa
-    ├── POST /api/ai/nodes → criar nó
-    ├── PUT /api/ai/nodes/:code → editar conteúdo
-    ├── GET /api/ai/exercises?nodeCode=X → exercícios do nó
-    ├── POST /api/ai/exercises → criar exercício
-    ├── GET /api/ai/users → lista de usuários (sem senhas)
-    └── GET /api/ai/stats → contadores + distribuição por tier
+    ├── GET    /api/ai/nodes           → árvore completa
+    ├── GET    /api/ai/nodes/:code     → nó + filhos
+    ├── POST   /api/ai/nodes           → criar nó
+    ├── PUT    /api/ai/nodes/:code     → editar conteúdo
+    ├── DELETE /api/ai/nodes/:code     → remover nó
+    ├── GET    /api/ai/exercises       → todos os exercícios
+    ├── GET    /api/ai/exercises?nodeCode=X → exercícios do nó
+    ├── POST   /api/ai/exercises       → criar exercício
+    ├── PUT    /api/ai/exercises/:id   → atualizar exercício
+    ├── DELETE /api/ai/exercises/:id   → remover exercício
+    ├── GET    /api/ai/users           → lista de usuários (sem senhas)
+    └── GET    /api/ai/stats           → contadores + distribuição por tier
 ```
 
 ---
@@ -542,6 +547,7 @@ Yuri usa Termux + proot-distro Ubuntu no Android. Claude Code roda dentro desse 
 - **IsaOwl** fases: `"flying" → "perched" → "bubble" → "chat"`. useEffect precisa de early return para evitar TS7030.
 - **esbuild** agrupa workspace deps — não precisa de build separado para libs ao fazer build do api-server.
 - **PATH no Claude Code** (usuário yuri, não-interativo): `.bashrc` não é sourced. Solução: symlinks em `/usr/local/bin/`.
+- **`git push` falhar com "Could not read [hash]..."**: repo corrompido localmente. Solução: `git bundle create repo.bundle --all` → clone limpo do bundle. Ver histórico Sessão 2.
 
 ---
 
