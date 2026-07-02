@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# PAP — estado do sync Gmail (contém UID interno, não vai pro repo)
+.assembleia-sync-state.json
