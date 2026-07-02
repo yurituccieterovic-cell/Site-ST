@@ -7,6 +7,7 @@ import { LoginGate } from "@/components/LoginGate";
 import { AdmPage } from "@/pages/adm/AdmPage";
 import { ArquiteturaPage } from "@/pages/ArquiteturaPage";
 import { BuscarPage } from "@/pages/BuscarPage";
+import { MapaPage } from "@/pages/MapaPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
 
@@ -19,6 +20,7 @@ const path = window.location.pathname;
 const isAdm = path.includes("/adm");
 const isArquitetura = path.includes("/arquitetura");
 const isBuscar = path.includes("/buscar");
+const isMapa = path.includes("/mapa");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -46,6 +48,14 @@ function App() {
     return (
       <QueryClientProvider client={queryClient}>
         <BuscarPage />
+      </QueryClientProvider>
+    );
+  }
+
+  if (isMapa) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <MapaPage />
       </QueryClientProvider>
     );
   }

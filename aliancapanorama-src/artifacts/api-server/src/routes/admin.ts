@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db, nodesTable } from "@workspace/db";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { eq } from "drizzle-orm";
+import { invalidateNodeCache } from "../lib/nodeCache";
 
 const router: IRouter = Router();
 
@@ -59,6 +60,7 @@ router.post("/admin/generate-content", async (req, res): Promise<void> => {
       }
     }
 
+    invalidateNodeCache(); // invalidar cache após atualizar conteúdo de todos os nós
     res.json({ generated: results.filter((r) => r.status === "ok").length, results });
   } catch (err) {
     req.log.error(err, "admin generate-content failed");

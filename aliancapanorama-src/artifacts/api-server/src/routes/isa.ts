@@ -284,4 +284,35 @@ export async function saveToIsaMemory(data: {
   }
 }
 
+// GET /api/isa/locked — memórias marcadas com interpretability_lock=1 (adm only)
+router.get("/isa/locked", async (req, res) => {
+  if ((req.session.userTier ?? 0) < 5) {
+    res.status(403).json({ error: "Apenas administradores" });
+    return;
+  }
+  const locked = await db
+    .select()
+    .from(isaMemoryTable)
+    .where(eq(isaMemoryTable.interpretabilityLock, 1))
+    .orderBy(desc(isaMemoryTable.createdAt))
+    .limit(100);
+  res.json(locked);
+});
+
+// PATCH /api/isa/memory/:id/lock — admin pode lock/unlock manualmente
+router.patch("/isa/memory/:id/lock", async (req, res) => {
+  if ((req.session.userTier ?? 0) < 5) {
+    res.status(403).json({ error: "Apenas administradores" });
+    return;
+  }
+  const id = parseInt(req.params.id ?? "");
+  if (isNaN(id)) { res.status(400).json({ error: "ID inválido" }); return; }
+  const { locked } = req.body as { locked?: boolean };
+  await db
+    .update(isaMemoryTable)
+    .set({ interpretabilityLock: locked ? 1 : 0 })
+    .where(eq(isaMemoryTable.id, id));
+  res.json({ ok: true });
+});
+
 export default router;

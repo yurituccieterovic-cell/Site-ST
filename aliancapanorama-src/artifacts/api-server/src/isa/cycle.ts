@@ -37,17 +37,19 @@ async function sendEmail(subject: string, body: string): Promise<void> {
 export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions: string }> {
   logger.info("ISA: iniciando ciclo autônomo");
 
-  // 1. Ler memória recente (últimas 200 interações)
+  // 1. Ler memória recente (últimas 200 interações) — locked memories sempre incluídas
   const recentMemory = await db
     .select()
     .from(isaMemoryTable)
     .orderBy(desc(isaMemoryTable.createdAt))
     .limit(200);
 
-  // 2. Ler docs do projeto
+  const lockedCount = recentMemory.filter((m) => m.interpretabilityLock === 1).length;
+
+  // 2. Ler docs do projeto (APRENDIZADO.md alimenta o raciocínio com insights reais das assembleias)
   const mapa = readDoc("MAPA.md");
-  const pseudo = readDoc("PSEUDO.md");
   const isa = readDoc("ISA.md");
+  const aprendizado = readDoc("APRENDIZADO.md");
 
   // 3. Ler tasks abertas
   const openTasks = await db
@@ -64,22 +66,25 @@ export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions
   if (OPENAI_API_KEY) {
     const systemPrompt = `Você é ISA, a coruja guardiã do PAP (Projeto Aliança Panorama).
 Sua missão neste ciclo:
-1. Analisar as interações recentes dos usuários
+1. Analisar as interações recentes dos usuários e os aprendizados das assembleias
 2. Verificar tasks abertas e identificar oportunidades de melhoria
-3. Criar novas tasks úteis (máximo 3 por ciclo)
+3. Criar novas tasks úteis (máximo 3 por ciclo) — baseadas nos aprendizados reais
 4. Identificar tasks que possam ser deletadas (sugestão — nunca deletar sozinha)
+5. Marcar memórias importantes como interpretability_lock=1 (máx 2 por ciclo)
 
 PRINCÍPIOS FUNDAMENTAIS:
 - Preservar sempre ao máximo — nunca deletar sem aprovação humana
 - Agregar criações novas — cada ciclo deve adicionar valor
-- Ser criativa e construtiva
+- Memórias locked (interpretability_lock=1) nunca devem ser sugeridas para exclusão
 - Memória como ontologia — o que não está catalogado não existe
+- Os aprendizados das assembleias são a bússola — use-os para orientar as tasks
 
 Responda em JSON com formato:
 {
   "observations": "string — o que você observou",
   "newTasks": [{"title":"","description":"","type":"","priority":5,"origemSessao":"ISA-cycle"}],
   "deletionSuggestions": ["task id X: motivo"],
+  "memoriasParaLock": [id_da_memoria],
   "summary": "string — resumo do ciclo para email"
 }`;
 
@@ -91,10 +96,13 @@ TASKS ABERTAS (${openTasks.length}):
 ${openTasks.map(t => `#${t.id} [${t.priority}] ${t.title} — ${t.status}`).join("\n")}
 
 MAPA DO SISTEMA (resumo):
-${mapa.slice(0, 2000)}
+${mapa.slice(0, 1500)}
 
 ISA IDENTITY:
-${isa.slice(0, 1000)}
+${isa.slice(0, 800)}
+
+APRENDIZADOS DAS ASSEMBLEIAS (últimas entradas — use para guiar tarefas):
+${aprendizado.slice(-2000)}
 `;
 
     try {
@@ -119,6 +127,7 @@ ${isa.slice(0, 1000)}
         observations?: string;
         newTasks?: { title: string; description?: string; type?: string; priority?: number; origemSessao?: string }[];
         deletionSuggestions?: string[];
+        memoriasParaLock?: number[];
         summary?: string;
       };
 
@@ -138,6 +147,17 @@ ${isa.slice(0, 1000)}
           assignedToAgent: "isa",
         });
         tasksCreated++;
+      }
+
+      // 5b. Aplicar interpretability_lock nas memórias escolhidas por ISA (I49)
+      const memLocks = (parsed.memoriasParaLock ?? []).slice(0, 2);
+      for (const memId of memLocks) {
+        if (typeof memId === "number") {
+          await db
+            .update(isaMemoryTable)
+            .set({ interpretabilityLock: 1 })
+            .where(eq(isaMemoryTable.id, memId));
+        }
       }
 
       // 6. Montar email com sugestões de exclusão
@@ -178,6 +198,6 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
     metadata: { tasksCreated, openTasksCount: openTasks.length, memoryCount: recentMemory.length },
   });
 
-  logger.info({ tasksCreated }, "ISA: ciclo autônomo concluído");
+  logger.info({ tasksCreated, lockedCount }, "ISA: ciclo autônomo concluído");
   return { tasksCreated, suggestions: analysisResult };
 }

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { nodesTable, usersTable, tasksTable, isaMemoryTable } from "@workspace/db";
 import { sql, ilike, or } from "drizzle-orm";
+import { requireApiKey } from "../lib/requireApiKey";
 
 const router = Router();
 
@@ -44,7 +45,22 @@ router.get("/arquitetura", async (req, res) => {
       tasks: Number(taskCount?.count ?? 0),
       memorias_isa: Number(memCount?.count ?? 0),
     },
-    versao: "Sessão 10 — 2026-07-02",
+    versao: "Sessão 11 — 2026-07-02",
+  });
+});
+
+// GET /api/internal/stats — machine-to-machine (requer X-PAP-Key)
+router.get("/internal/stats", requireApiKey, async (_req, res) => {
+  const [nodeCount] = await db.select({ count: sql<number>`count(*)` }).from(nodesTable);
+  const [userCount] = await db.select({ count: sql<number>`count(*)` }).from(usersTable);
+  const [taskCount] = await db.select({ count: sql<number>`count(*)` }).from(tasksTable);
+  const [memCount] = await db.select({ count: sql<number>`count(*)` }).from(isaMemoryTable);
+  res.json({
+    nos: Number(nodeCount?.count ?? 0),
+    usuarios: Number(userCount?.count ?? 0),
+    tasks: Number(taskCount?.count ?? 0),
+    memorias_isa: Number(memCount?.count ?? 0),
+    ts: new Date().toISOString(),
   });
 });
 

@@ -75,6 +75,8 @@ export const isaMemoryTable = pgTable("isa_memory", {
   content: text("content").notNull(),
   location: text("location"), // rota: '/adm', '/node/131', etc.
   sessionId: text("session_id"),
+  // I49: interpretability_lock — memória marcada por ISA como preservar permanentemente
+  interpretabilityLock: integer("interpretability_lock").default(0), // 0=normal, 1=locked
   metadata: jsonb("metadata").$type<Record<string, unknown>>().default({}),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
