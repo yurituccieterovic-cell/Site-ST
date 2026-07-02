@@ -521,4 +521,96 @@ NODE_ENV          → "production" (ativa redirect 301, secure cookies)
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessões 3 e 4*
+## 13. Health Check com DB Ping (Sessão 6)
+
+```
+GET /api/healthz
+  → pool.query("SELECT 1")
+      OK  → 200 { status: "ok" }
+      ERR → 503 { status: "error", db: "unreachable" }
+
+// Railway usa /healthz para decidir se reinicia o serviço.
+// Retornar 200 com DB morto = Railway não reinicia = silêncio de morte.
+// pool é o pg.Pool compartilhado (já conectado no bootstrap).
+// Não criar nova conexão: pool.query() testa a conexão existente.
+```
+
+---
+
+## 14. Rate Limit em /api/ai/* (Sessão 6)
+
+```
+router.use("/ai",
+  rateLimit(windowMs=60s, limit=100, per IP),  // vem ANTES do requireApiKey
+  requireApiKey,
+)
+
+// Por que rate limit antes de auth?
+// Auth check sozinho não protege bruteforce da AI_API_KEY.
+// 100 req/min é permissivo para agentes legítimos mas bloqueia ataques.
+// express-rate-limit com standardHeaders: "draft-8" envia RateLimit-* headers.
+// message: { error: "Rate limit atingido..." } em JSON (consistente com o resto da API).
+```
+
+---
+
+## 15. Paginação em /api/ai/users (Sessão 6)
+
+```
+GET /api/ai/users?limit=50&offset=0
+
+// Antes: SELECT * FROM users → todos os usuários de uma vez (LGPD risk + scraping)
+// Depois:
+limit = min(Number(req.query.limit ?? 50), 200)  // cap em 200
+offset = Number(req.query.offset ?? 0)
+
+[users, [{ total }]] = await Promise.all([
+  db.select({id, login, displayName, tier, userCode, subscriptionStatus, createdAt})
+    .from(usersTable).orderBy(asc(createdAt)).limit(limit).offset(offset),
+  db.select({ total: count(*) }).from(usersTable)
+])
+
+→ { data: users[], total: N, limit: 50, offset: 0 }
+
+// Clientes existentes que esperavam array[] precisam atualizar para .data[]
+// O campo total permite ao cliente calcular quantas páginas existem.
+```
+
+---
+
+## 16. Padrões Futuros — Cursos para IAs (Proposta Assembleia 365)
+
+```
+// Schema (não implementado — decisão de Yuri pendente)
+
+ia_courses:
+  id, slug (unique), title, description
+  modules: jsonb [{id, title, nodes: [nodeCode,...]}]
+  requires_memory: bool
+  issuer_did: text (W3C DID do PAP, opcional)
+
+ia_enrollments:
+  id, course_id → ia_courses.id
+  ia_identity: text (hash ou email declarado)
+  session_id: text (nullable)
+  progress: jsonb {moduleId: {completedNodes[], score}}
+  memory_mode: 'session' | 'persistent'
+
+ia_certificates:
+  id, enrollment_id → ia_enrollments.id
+  certificate_hash: text (unique, SHA-256 do payload)
+  issued_at, ipfs_cid (nullable), public_url (/cert/:hash)
+  vc_json: jsonb (W3C Verifiable Credential completo, se emitido)
+
+// Opção rápida: PDF via jsPDF + hash no DB + endpoint GET /cert/:hash
+// Opção robusta: W3C VC JSON-LD + DID do PAP + revocation list pública
+// Decisão: velocidade de validação vs. profundidade de legitimidade
+
+// Critério de conclusão:
+//   min 80% dos nós do módulo completados + score médio >= 0.7
+//   (evita gaming mas não resolve avaliação qualitativa)
+```
+
+---
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3, 4 e 6*

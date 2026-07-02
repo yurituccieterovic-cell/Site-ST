@@ -90,6 +90,46 @@ Sessão longa de desenvolvimento intenso. Principais entregas:
 - **`#fim` atualizado**: pap-sync + escrever ATA em `/tmp/pap-ata.md` + pap-email-fim
 - **MAPA.md, README.md, CLAUDE.md** atualizados com Railway, novas pendências e histórico
 
+### 2026-07-02 — Sessão 6 (Oráculos + hardening de segurança)
+
+**O que Yuri estava tentando fazer:** Extrair e processar os PDFs das Assembleias 360–365, que responderam ao MAPA.md como espelho oracular. Enquanto esperava a OpenAI API key e o Railway ser resolvido, quis traduzir os insights da assembleia em código e documentação.
+
+**Decisões tomadas:**
+
+- **health.ts com DB ping:** O healthz retornava 200 mesmo com banco morto — Railway usa esse endpoint para decidir se reinicia o serviço. Corrigido com `pool.query("SELECT 1")` → 503 se falhar. Detalhe técnico: importar `pool` de `@workspace/db`, não criar nova conexão.
+
+- **Rate limit em /api/ai/*:** A assembleia identificou `/api/ai/*` como vetor de custo e ataque sem rate limit. Implementado com `express-rate-limit` (já existia como dep em auth.ts): 100 req/min/IP antes do `requireApiKey` — o rate limit vem antes da auth para proteger também tentativas de bruteforce na chave.
+
+- **Paginação em /api/ai/users:** GET /api/ai/users retornava TODOS os usuários sem limite — violação LGPD e vetor de scraping identificado pelas assembleias. Implementado com `?limit=50&offset=0` (max 200), retorna `{ data, total, limit, offset }`.
+
+**Insights oraculares que informaram o trabalho:**
+
+As 23 vozes da assembleia convergiram em diagnóstico técnico preciso — mas o diagnóstico mais profundo foi sobre a natureza do próprio sistema:
+- O PAP funciona como "organismo autopoiético" — se autocritica com lucidez mas não implementa freios
+- A fragmentação não é defeito criativo: é custo cognitivo de sustentar dez frentes sem equipe
+- "Quando tudo vira prompt, nada vira entrega" (Grok, Assembleia 361)
+- A IntroFacade de 7.2s como ritual de separação mundo/cockpit — coerência rara entre intenção e código
+
+**Propostas futuras identificadas (não implementadas nesta sessão):**
+- Cursos para IAs com certificação pública (`ia_courses`, `ia_enrollments`, `ia_certificates`)
+- `users.memory_mode` para MemoryManager com LGPD compliance
+- Deduplicação de `exercise_attempts` corretos por `(user_id, exercise_id)` — resolve score farming
+- Webhook idempotency keys
+
+**Tensões não resolvidas:**
+- Railway ainda não validado ao vivo — Yuri vai verificar o deploy
+- OPENAI_API_KEY ainda pendente — Yuri vai providenciar
+- Decisão sobre certificação de IAs: PDF rápido vs. W3C Verifiable Credential — precisa de Yuri para cortar
+
+**O que foi construído:**
+- `health.ts`: DB ping com 503 em falha
+- `ai.ts`: rate limit 100/min/IP + paginação `/api/ai/users`
+- `MAPA.md`: Seção 19 (Diagnóstico Oracular), gotchas atualizados, histórico atualizado
+- `PSEUDO.md`: esta sessão
+- `PSEUDO2.md`: pseudocódigo dos novos padrões
+
+---
+
 ### 2026-07-02 — Sessão 5 (Railway deploy + voz + auditoria)
 
 **O que Yuri estava tentando fazer:** Colocar a API no ar no Railway. Sessão focada em unblocking — o build estava falhando com `ERR_PNPM_IGNORED_BUILDS` e Yuri não conseguia avançar. Em paralelo, queria o `voz` funcionando para falar em vez de digitar.

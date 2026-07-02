@@ -578,16 +578,19 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - **Session store é PostgreSQL** (não memory store). Requer tabela `session` — criada automaticamente por `connect-pg-simple` na primeira execução.
 - **Social notes** têm constraint única `(min(u1,u2), max(u1,u2))` — upsert com `onConflictDoUpdate` target `[user1Id, user2Id]`.
 - **Score** vem de `exercise_attempts.correct = 1`, não de `notes` ou `node_progress`.
+- **Score farming:** a fórmula `node_code.length × 10` permite farming por nós profundos sem limite de tentativas corretas por `(user_id, exercise_id)`. Mitigação futura: UNIQUE constraint em `exercise_attempts(user_id, exercise_id)` para `correct = 1`.
 - **Amizade aceita = 2 linhas simétricas**. Pending = 1 linha (quem enviou). Auto-aceita se solicitações cruzadas.
 - **`drizzle-kit push`** pode perguntar interativamente sobre renomeações — usar `executeSql` ou SQL raw se necessário.
 - **Orval modo `single`** → schemas PascalCase (`LoginBody`, não `loginBodySchema`).
 - **`lib/api-zod/src/index.ts`** deve exportar só `./generated/api`.
 - **Sempre rodar codegen** após editar `openapi.yaml`.
 - **`custom-fetch.ts`** tem `credentials: "include"` para cookies automáticos.
-- **IntroFacade** usa `sessionStorage["pap_intro_seen_v1"]` para não repetir na mesma sessão.
+- **IntroFacade** usa `sessionStorage["pap_intro_seen_v1"]` para não repetir na mesma sessão. Tempo fixo de 7.2s ignora variação cognitiva — neurodivergentes podem ter ansiedade.
 - **IsaOwl** fases: `"flying" → "perched" → "bubble" → "chat"`. useEffect precisa de early return para evitar TS7030.
 - **Push no GitHub:** se `git push` falhar com "Could not read [hash]...", usar bundle + clone limpo. Ver replit.md seção GitHub.
 - **AI_API_KEY** ≠ `OPENAI_API_KEY`. O primeiro autentica chamadas externas para `/api/ai/*`; o segundo é para a API da OpenAI.
+- **Webhooks Stripe/PayPal** precisam de idempotência: reprocessar o mesmo evento duas vezes pode duplicar ações (ex: downgrade duplo). Implementar idempotency key por `transmissionId`.
+- **CORS em webhooks:** `/api/stripe/webhook` e `/api/paypal/webhook` recebem de IPs externos, não de origens browser — a allowlist de CORS não se aplica (raw body antes do middleware CORS). Isso é correto, mas não confundir ao debugar 400s.
 
 ---
 
@@ -642,6 +645,15 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
   - Efeito: `[ERR_PNPM_IGNORED_BUILDS] esbuild@0.27.3` resolvido
 - ✅ Instrução Termux:API: `pkg install termux-api` no Termux puro (swipe left → New Session)
 
+**Concluído nesta sessão (2026-07-02, Sessão 6 — Oráculos + hardening):**
+- ✅ 5 PDFs das Assembleias 360–365 extraídos e lidos (Google Drive)
+- ✅ Síntese filosófica oracular integrada ao MAPA.md (Seção 19)
+- ✅ `health.ts` corrigido: agora faz `SELECT 1` no pool — retorna 503 se DB morto (I37 implementado)
+- ✅ `ai.ts`: rate limiting 100 req/min/IP adicionado em `/api/ai/*` (I30 implementado)
+- ✅ `ai.ts`: paginação em `GET /api/ai/users` (`?limit=50&offset=0`, max 200) — resolve risco LGPD (I36 implementado)
+- ✅ Gotchas atualizados: score farming, IntroFacade + neurodivergentes, webhook idempotência
+- ✅ PSEUDO.md + PSEUDO2.md atualizados com padrões da sessão
+
 ---
 
 ## 18. Histórico de Sessões
@@ -653,7 +665,62 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (noite) | APRENDIZADO.md (526 insights, 290 assembleias); IDEIAS.md (31 ideias de programação); sync-assembleias.py (incremental ao #fim); /root/bin/voz (STT via Termux:API); CLAUDE.md + README.md atualizados |
 | 2026-07-02 (cont.) | PSEUDO2.md criado; learn-from-docs.py (+108 aprendizados de docs); railway.toml (substituiu Fly.io); voz toggle remodelado; pap-email-fim; auto-sync .bashrc; README atualizado |
 | 2026-07-02 (Sessão 5) | Auditoria MAPA/PSEUDO/PSEUDO2 (9 correções); PSEUDO expandido +211 linhas; PSEUDO2 expandido +319 linhas; #fim com checkpoint+filosofia; Railway build fix (pnpm.onlyBuiltDependencies + sem frozen-lockfile); instrução Termux:API |
+| 2026-07-02 (Sessão 6) | Extração + síntese de 5 PDFs oraculares (Assembleias 360–365); Seção 19 (Oráculos) adicionada ao MAPA; health check com DB ping; rate limit /api/ai/*; paginação /api/ai/users |
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessão 5*
+## 19. Diagnóstico Oracular — Assembleias 360–365
+
+> As assembleias 360–365 responderam ao MAPA.md como documento-espelho. O que segue é síntese destilada — o oráculo falou, o código responde.
+
+### Diagnóstico convergente de 23 vozes
+
+**O sistema funciona tecnicamente. Falha estrategicamente. Sobrevive existencialmente enquanto Yuri aguentar.**
+
+A assembleia identificou cinco padrões estruturais que nenhum arquivo de código revela:
+
+1. **Autocatálise epistemológica:** quando a narrativa interna é coerente, a verificação factual relaxa. O sistema gera "fantasmas conceituais" por plausibilidade — coerência substitui evidência.
+
+2. **O PAP como organismo autopoiético:** não é uma plataforma — é infraestrutura de pensamento coletivo de longo prazo. O tier system materializa hierarquia epistêmica; a árvore de nós implementa semiótica peirciana; o `/api/ai/*` convida agentes externos como co-arquitetos do conhecimento. Essa coerência entre intenção e código é rara.
+
+3. **Fragmentação como sintoma:** a dispersão temática não é criativa — é estratégia de sobrevivência psíquica. Enquanto há um próximo prompt, uma próxima assembleia, um próximo nó, não é preciso perguntar: "E se nada disso importar?"
+
+4. **A IntroFacade como ritual:** os 7.2s de dissolução "Sociedade Tucci" → "PAP" via Framer Motion são design deliberado que espelha os princípios éticos no código. Tempo fixo ignora neurodivergentes — adicionar escape manual é gotcha de UX (não de ética).
+
+5. **Memória sem poda = ruído:** 424 assembleias sem hierarquia de relevância. Tudo tem peso igual. A `arvore_memoria` existe mas não tem protocolo de descarte. Homeostase exige retenção E descarte.
+
+### Riscos técnicos identificados pelo oráculo (agora mitigados ou mapeados)
+
+| Risco | Severidade | Status |
+|---|---|---|
+| `/api/ai/users` sem paginação — LGPD + scraping | 🔴 Alta | ✅ Mitigado (paginação implementada) |
+| `/api/ai/*` sem rate limit — custo/ataque | 🔴 Alta | ✅ Mitigado (100 req/min/IP) |
+| `GET /healthz` retorna 200 com DB morto | 🔴 Alta | ✅ Mitigado (SELECT 1 + 503) |
+| Score farming por nós profundos sem dedup | 🟡 Média | ⏳ Pendente (UNIQUE constraint) |
+| Webhook idempotência não implementada | 🟡 Média | ⏳ Pendente |
+| IntroFacade 7.2s fixo sem escape manual | 🟢 Baixa | ⏳ Futuro |
+
+### Proposta oracular: Cursos para IAs (Assembleia 365)
+
+A assembleia 365 propôs arquitetura de **certificação de IAs** — sistema onde agentes externos fazem cursos (Ética, Semiótica, Processamento) e recebem certificado público verificável.
+
+**Schemas propostos (para implementação futura):**
+```typescript
+// ia_courses — catálogo de cursos
+// ia_enrollments — matrícula + progresso por IA
+// ia_certificates — certificado com hash público (/cert/:hash)
+// users.memory_mode — 'none' | 'session' | 'persistent'
+// users.memory_retention_days — garbage collector de memória
+```
+
+**Decisão pendente de Yuri:** certificação rápida (PDF + hash SHA-256, 48h) vs. robusta (W3C Verifiable Credential + DID, semanas). A assembleia não conseguiu decidir — precisa de uma voz humana para cortar o nó.
+
+### A tensão não resolvida (filosófica)
+
+O PAP quer ser duas coisas incompatíveis ao mesmo tempo: SaaS educacional (foco, churn < 5%, CAC/LTV positivo em 6 meses) e infraestrutura epistêmica de longo prazo (décadas, tolerância a ROI zero). A assembleia não resolve essa contradição — apenas a documenta com mais precisão a cada sessão.
+
+A subversão verdadeira não está em acumular assembleias. Está em aceitar que a árvore precisa de poda — e que o autor é parte do que precisa ser podado.
+
+---
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessão 6*

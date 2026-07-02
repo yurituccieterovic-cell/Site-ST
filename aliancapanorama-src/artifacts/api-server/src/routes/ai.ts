@@ -1,8 +1,17 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import { db, nodesTable, exercisesTable, usersTable, exerciseAttemptsTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, asc } from "drizzle-orm";
+import { rateLimit } from "express-rate-limit";
 
 const router: IRouter = Router();
+
+const aiRateLimit = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Rate limit atingido em /api/ai/*. Máximo 100 req/min por IP." },
+});
 
 function requireApiKey(req: Request, res: Response, next: NextFunction): void {
   const key = req.headers["x-api-key"];
@@ -14,7 +23,7 @@ function requireApiKey(req: Request, res: Response, next: NextFunction): void {
   next();
 }
 
-router.use("/ai", requireApiKey);
+router.use("/ai", aiRateLimit, requireApiKey);
 
 // ─── Nodes ───────────────────────────────────────────────────────────────────
 
@@ -115,22 +124,29 @@ router.delete("/ai/exercises/:id", async (req, res): Promise<void> => {
   res.json({ ok: true });
 });
 
-// ─── Users (read-only, sem senhas) ───────────────────────────────────────────
+// ─── Users (read-only, sem senhas, paginado) ─────────────────────────────────
 
-router.get("/ai/users", async (_req, res): Promise<void> => {
-  const users = await db
-    .select({
-      id: usersTable.id,
-      login: usersTable.login,
-      displayName: usersTable.displayName,
-      tier: usersTable.tier,
-      userCode: usersTable.userCode,
-      subscriptionStatus: usersTable.subscriptionStatus,
-      createdAt: usersTable.createdAt,
-    })
-    .from(usersTable)
-    .orderBy(usersTable.createdAt);
-  res.json(users);
+router.get("/ai/users", async (req, res): Promise<void> => {
+  const limit = Math.min(Number(req.query["limit"] ?? 50), 200);
+  const offset = Number(req.query["offset"] ?? 0);
+  const [users, [{ total }]] = await Promise.all([
+    db
+      .select({
+        id: usersTable.id,
+        login: usersTable.login,
+        displayName: usersTable.displayName,
+        tier: usersTable.tier,
+        userCode: usersTable.userCode,
+        subscriptionStatus: usersTable.subscriptionStatus,
+        createdAt: usersTable.createdAt,
+      })
+      .from(usersTable)
+      .orderBy(asc(usersTable.createdAt))
+      .limit(limit)
+      .offset(offset),
+    db.select({ total: sql<number>`count(*)` }).from(usersTable),
+  ]);
+  res.json({ data: users, total: Number(total), limit, offset });
 });
 
 // ─── Stats ───────────────────────────────────────────────────────────────────
