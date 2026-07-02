@@ -6,6 +6,7 @@ import { isaMemoryTable, tasksTable, insertIsaMemorySchema } from "@workspace/db
 import { desc, eq, sql } from "drizzle-orm";
 import { runIsaCycle } from "../isa/cycle";
 import { runBibliotecario } from "../isa/bibliotecario";
+import { runIsaBluesky, createBlueskyAccount } from "../isa/bluesky";
 import { logger } from "../lib/logger";
 
 const router = Router();
@@ -243,6 +244,33 @@ router.post("/isa/bibliotecario", async (req, res) => {
     logger.error({ err }, "ISA Bibliotecário: erro manual");
     res.status(500).json({ error: "Erro no bibliotecário" });
   }
+});
+
+// POST /api/isa/bluesky — trigger manual da postagem Bluesky (admin only)
+router.post("/isa/bluesky", async (req, res) => {
+  const tier = req.session.userTier ?? 0;
+  if (tier < 5) { res.status(403).json({ error: "Apenas administradores" }); return; }
+  try {
+    await runIsaBluesky();
+    res.json({ ok: true, timestamp: new Date().toISOString() });
+  } catch (err) {
+    logger.error({ err }, "ISA Bluesky: erro manual");
+    res.status(500).json({ error: "Erro no Bluesky" });
+  }
+});
+
+// POST /api/isa/bluesky/criar-conta — cria conta Bluesky via AT Protocol
+// Yuri receberá email de verificação — precisa clicar para ativar
+router.post("/isa/bluesky/criar-conta", async (req, res) => {
+  const tier = req.session.userTier ?? 0;
+  if (tier < 5) { res.status(403).json({ error: "Apenas administradores" }); return; }
+  const { email, handle, password } = req.body as { email?: string; handle?: string; password?: string };
+  if (!email || !handle || !password) {
+    res.status(400).json({ error: "email, handle e password são obrigatórios" });
+    return;
+  }
+  const result = await createBlueskyAccount(email, handle, password);
+  res.json(result);
 });
 
 // GET /api/isa/biblioteca — lista itens baixados pelo bibliotecário

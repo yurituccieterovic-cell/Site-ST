@@ -4,6 +4,7 @@
     { "source": "/aliancapanorama/adm", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/arquitetura", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/buscar", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/mapa", "destination": "/aliancapanorama/index.html" }
+    { "source": "/aliancapanorama/mapa", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/eco", "destination": "/aliancapanorama/index.html" }
   ]
 }

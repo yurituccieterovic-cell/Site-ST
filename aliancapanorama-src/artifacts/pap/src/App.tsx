@@ -8,6 +8,7 @@ import { AdmPage } from "@/pages/adm/AdmPage";
 import { ArquiteturaPage } from "@/pages/ArquiteturaPage";
 import { BuscarPage } from "@/pages/BuscarPage";
 import { MapaPage } from "@/pages/MapaPage";
+import { EcossystemmaPage } from "@/pages/EcossystemmaPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
 
@@ -21,6 +22,7 @@ const isAdm = path.includes("/adm");
 const isArquitetura = path.includes("/arquitetura");
 const isBuscar = path.includes("/buscar");
 const isMapa = path.includes("/mapa");
+const isEco = path.includes("/eco");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -58,6 +60,10 @@ function App() {
         <MapaPage />
       </QueryClientProvider>
     );
+  }
+
+  if (isEco) {
+    return <EcossystemmaPage />;
   }
 
   return (
