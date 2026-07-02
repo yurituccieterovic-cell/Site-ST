@@ -10,7 +10,10 @@ import { BuscarPage } from "@/pages/BuscarPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
 
-const queryClient = new QueryClient();
+// Singleton fora do componente — evita re-criação a cada render
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
+});
 
 const path = window.location.pathname;
 const isAdm = path.includes("/adm");

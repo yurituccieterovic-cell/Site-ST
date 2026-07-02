@@ -24,7 +24,8 @@ router.get("/admin/users", async (req, res) => {
       createdAt: usersTable.createdAt,
     })
     .from(usersTable)
-    .orderBy(desc(usersTable.createdAt));
+    .orderBy(desc(usersTable.createdAt))
+    .limit(500);
   res.json({ users });
 });
 

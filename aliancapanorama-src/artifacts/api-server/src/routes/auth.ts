@@ -86,7 +86,8 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
     req.session.admPinUserId = user.id;
     req.session.admVerified = false;
 
-    const emailDest = process.env.GMAIL_ACCOUNT ?? "";
+    // PIN vai para o email do usuário admin (campo email) ou fallback para Yuri
+    const emailDest = (user as { email?: string | null }).email ?? "yurituccieterovic@gmail.com";
     try {
       await sendAdmPin(emailDest, pin, user.login);
     } catch {
@@ -176,6 +177,7 @@ router.get("/auth/me", async (req, res) => {
       displayName: user.displayName,
       subscriptionStatus: user.subscriptionStatus ?? null,
       lastDowngradeAt: user.lastDowngradeAt ? user.lastDowngradeAt.toISOString() : null,
+      admVerified: req.session.admVerified ?? false,
     },
   });
 });

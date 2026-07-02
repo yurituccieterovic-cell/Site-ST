@@ -196,4 +196,16 @@ app.use(
 
 app.use("/api", router);
 
+// Global error handler — captura qualquer erro não tratado nas rotas
+app.use((err: unknown, _req: import("express").Request, res: import("express").Response, _next: import("express").NextFunction) => {
+  logger.error({ err }, "unhandled route error");
+  const status = (err as { status?: number; statusCode?: number })?.status
+    ?? (err as { statusCode?: number })?.statusCode
+    ?? 500;
+  const message = err instanceof Error ? err.message : "Erro interno do servidor";
+  if (!res.headersSent) {
+    res.status(status).json({ error: message });
+  }
+});
+
 export default app;

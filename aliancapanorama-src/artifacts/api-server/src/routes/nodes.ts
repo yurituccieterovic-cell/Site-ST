@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
-import { db, nodesTable } from "@workspace/db";
 import { ListNodesQueryParams, GetNodeParams } from "@workspace/api-zod";
 import { canAccess, isInAllowedSubtree } from "../lib/canAccess";
+import { getAllNodes, invalidateNodeCache } from "../lib/nodeCache";
 
 const router: IRouter = Router();
 
@@ -15,8 +15,7 @@ router.get("/nodes", async (req, res): Promise<void> => {
   const { parentCode } = query.data;
   const tier = req.session.userTier ?? 0;
 
-  const allNodes = await db.select().from(nodesTable);
-  const nodeMap = new Map(allNodes.map((n) => [n.code, n]));
+  const { nodes: allNodes, map: nodeMap } = await getAllNodes();
 
   if (parentCode) {
     if (!canAccess(parentCode, tier) || !isInAllowedSubtree(parentCode, nodeMap, tier)) {
@@ -31,17 +30,9 @@ router.get("/nodes", async (req, res): Promise<void> => {
       .map((n) => n.code),
   );
 
-  let filteredNodes;
-  if (parentCode) {
-    filteredNodes = allNodes.filter(
-      (n) => n.parentCode === parentCode && accessibleCodes.has(n.code),
-    );
-  } else {
-    filteredNodes = allNodes.filter(
-      (n) =>
-        (n.parentCode === null || n.parentCode === undefined) && accessibleCodes.has(n.code),
-    );
-  }
+  const filteredNodes = parentCode
+    ? allNodes.filter((n) => n.parentCode === parentCode && accessibleCodes.has(n.code))
+    : allNodes.filter((n) => (n.parentCode === null || n.parentCode === undefined) && accessibleCodes.has(n.code));
 
   filteredNodes.sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 
@@ -52,7 +43,7 @@ router.get("/nodes", async (req, res): Promise<void> => {
     return acc;
   }, {});
 
-  const result = filteredNodes.map((n) => ({
+  res.json(filteredNodes.map((n) => ({
     code: n.code,
     title: n.title,
     abbreviation: n.abbreviation ?? null,
@@ -60,9 +51,7 @@ router.get("/nodes", async (req, res): Promise<void> => {
     childCount: childCounts[n.code] ?? 0,
     level: n.level,
     locked: false,
-  }));
-
-  res.json(result);
+  })));
 });
 
 router.get("/nodes/:code", async (req, res): Promise<void> => {
@@ -73,22 +62,22 @@ router.get("/nodes/:code", async (req, res): Promise<void> => {
   }
 
   const tier = req.session.userTier ?? 0;
+  const code = params.data.code;
 
-  if (!canAccess(params.data.code, tier)) {
+  if (!canAccess(code, tier)) {
     res.status(403).json({ error: "Acesso negado para o seu nível de conta" });
     return;
   }
 
-  const allNodes = await db.select().from(nodesTable);
-  const node = allNodes.find((n) => n.code === params.data.code);
+  const { nodes: allNodes, map: nodeMap } = await getAllNodes();
+  const node = nodeMap.get(code);
 
   if (!node) {
     res.status(404).json({ error: "Node not found" });
     return;
   }
 
-  const nodeMap = new Map(allNodes.map((n) => [n.code, n]));
-  if (!isInAllowedSubtree(node.code, nodeMap, tier)) {
+  if (!isInAllowedSubtree(code, nodeMap, tier)) {
     res.status(403).json({ error: "Acesso negado para o seu nível de conta" });
     return;
   }
@@ -107,7 +96,7 @@ router.get("/nodes/:code", async (req, res): Promise<void> => {
   }, {});
 
   const children = allNodes
-    .filter((n) => n.parentCode === node.code && accessibleCodes.has(n.code))
+    .filter((n) => n.parentCode === code && accessibleCodes.has(n.code))
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
     .map((n) => ({
       code: n.code,
@@ -130,6 +119,16 @@ router.get("/nodes/:code", async (req, res): Promise<void> => {
     children,
     level: node.level,
   });
+});
+
+// Permite invalidar o cache via admin (ex: após editar nodes via admin panel)
+router.post("/nodes/cache/invalidate", (req, res): void => {
+  if ((req.session.userTier ?? 0) < 5) {
+    res.status(403).json({ error: "Apenas administradores" });
+    return;
+  }
+  invalidateNodeCache();
+  res.json({ ok: true, message: "Node cache invalidado" });
 });
 
 export default router;

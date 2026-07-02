@@ -11,32 +11,27 @@ const GMAIL_APP_PASSWORD = process.env["GMAIL_APP_PASSWORD"] ?? "";
 const OPENAI_API_KEY = process.env["OPENAI_API_KEY"] ?? "";
 const YURI_EMAIL = "yurituccieterovic@gmail.com";
 
+// Transporter singleton — criado uma vez, reutilizado em todos os ciclos
+const mailer = GMAIL_ACCOUNT && GMAIL_APP_PASSWORD
+  ? nodemailer.createTransport({ service: "gmail", auth: { user: GMAIL_ACCOUNT, pass: GMAIL_APP_PASSWORD } })
+  : null;
+
 // Lê um arquivo de doc com fallback silencioso
 function readDoc(relativePath: string): string {
   try {
-    // Em Railway, o repo está em /app; localmente em /root/Site-ST/aliancapanorama-src
     const base = process.env["REPO_ROOT"] ?? join(__dirname, "../../../../..");
-    return readFileSync(join(base, relativePath), "utf-8").slice(0, 8000); // max 8k chars por doc
+    return readFileSync(join(base, relativePath), "utf-8").slice(0, 8000);
   } catch {
     return `[${relativePath} não disponível]`;
   }
 }
 
 async function sendEmail(subject: string, body: string): Promise<void> {
-  if (!GMAIL_ACCOUNT || !GMAIL_APP_PASSWORD) {
+  if (!mailer) {
     logger.warn("ISA: email não configurado — pulando envio");
     return;
   }
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: GMAIL_ACCOUNT, pass: GMAIL_APP_PASSWORD },
-  });
-  await transporter.sendMail({
-    from: GMAIL_ACCOUNT,
-    to: YURI_EMAIL,
-    subject,
-    text: body,
-  });
+  await mailer.sendMail({ from: GMAIL_ACCOUNT, to: YURI_EMAIL, subject, text: body });
 }
 
 export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions: string }> {
@@ -113,7 +108,7 @@ ${isa.slice(0, 1000)}
             { role: "user", content: userContent },
           ],
           response_format: { type: "json_object" },
-          max_tokens: 1500,
+          max_completion_tokens: 1500,
           temperature: 0.7,
         }),
       });
