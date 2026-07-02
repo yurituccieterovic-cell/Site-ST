@@ -50,16 +50,15 @@
                               │ /api/* → proxy
                               │
                     ┌─────────▼──────────┐
-                    │      FLY.IO        │  ← PENDENTE
+                    │     RAILWAY        │  ← PENDENTE
                     │  pap-api           │
-                    │  região: gru (SP)  │
-                    │  256MB / 1 CPU     │
-                    │  auto start/stop   │
+                    │  Nixpacks build    │
+                    │  restart on fail   │
                     └──┬─────────────────┘
                        │
           ┌────────────▼──────────────────────┐
-          │           NEON                     │
-          │   PostgreSQL (gratuito)            │  ← PENDENTE
+          │     RAILWAY PostgreSQL            │
+          │   (incluso no plano Railway)      │  ← PENDENTE
           │   ├── tabelas do app               │
           │   ├── session (connect-pg-simple)  │
           │   └── stripe.* (stripe-replit-sync)│
