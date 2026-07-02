@@ -74,14 +74,20 @@
 
 | Componente | Onde roda | Status |
 |---|---|---|
-| Frontend | Vercel hobby | ✅ Ativo |
-| API | Replit (legado) | ⚠️ Migrando → Railway |
-| Banco de dados | Replit PostgreSQL (legado) | ⚠️ Migrando → Railway PostgreSQL |
-| Sessions | PostgreSQL (`session` table via connect-pg-simple) | ⚠️ Junto com o DB |
-| Domínio | pap.sociedadetucci.com.br | 🔧 DNS a configurar |
+| Frontend | Vercel hobby (`pap-tan-seven.vercel.app`) | ✅ Ativo — build fix pendente de confirmação |
+| API | Railway (`site-st-production.up.railway.app`) | ✅ LIVE — ISA ativa, ciclo horário rodando |
+| Banco de dados | Railway PostgreSQL | ✅ LIVE — DATABASE_URL configurado |
+| Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
+| Domínio | pap.sociedadetucci.com.br | 🔧 DNS ainda a configurar |
 | GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
+| Bluesky ISA | bsky.social | ⏳ Aguardando criação de conta manual |
 
-**Redirect canônico (produção):** `projetoaliancapanoramapap.replit.app` e `pap-tan-seven.vercel.app` fazem redirect 301 → `pap.sociedadetucci.com.br`
+**URLs ativas:**
+- API: `https://site-st-production.up.railway.app/api/isa/identity` ✅
+- Frontend: `https://pap-tan-seven.vercel.app/` (build com BASE_PATH=/ em deploy)
+- Admin: login `AO` / senha `AOA`
+
+**Redirect canônico (futuro):** `pap.sociedadetucci.com.br` → ainda sem DNS configurado
 
 ---
 
@@ -598,16 +604,16 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 
 | # | Item | Depende de | Status |
 |---|---|---|---|
-| 1 | Deploy Railway: New Project → GitHub → `aliancapanorama-src` | — | ⏳ |
-| 2 | Adicionar PostgreSQL service no Railway | Railway projeto criado | ⏳ |
-| 3 | Definir env vars no Railway: `NODE_ENV`, `SESSION_SECRET`, `AI_API_KEY`, `ALLOWED_ORIGINS` | Railway projeto | ⏳ |
-| 4 | Rodar drizzle-kit push (1ª vez): temp no startCommand | Railway + DATABASE_URL | ⏳ |
-| 5 | Configurar DNS `pap.sociedadetucci.com.br` → Railway | Railway no ar | ⏳ |
-| 6 | Obter `OPENAI_API_KEY` | — | ⏳ |
-| 7 | Salvar `DATABASE_URL` do Railway em `.pap-secrets` | Railway PostgreSQL | ⏳ |
-| 8 | Ingerir assembleias via `/api/ai/*` | API no ar + AI_API_KEY | ⏳ |
-| 9 | Stripe: conectar em produção | Railway + domínio | ⏳ |
-| 10 | Atualizar chave `DB_API_KEY` no banco compartilhado | — | ⏳ |
+| 1 | Criar conta Bluesky para ISA em bsky.app (requer phone verification manual) | Yuri | ⏳ |
+| 2 | Após conta Bluesky: salvar BLUESKY_HANDLE + BLUESKY_APP_PASSWORD no Railway | Bluesky conta | ⏳ |
+| 3 | Confirmar Vercel build funcionando: testar /eco, /adm, /toyota, /api proxy | push 38a58b1 | ⏳ |
+| 4 | Configurar DNS `pap.sociedadetucci.com.br` → Railway | Railway no ar | ⏳ |
+| 5 | Drizzle-kit migrate: substituir push por migrações versionadas antes de módulo financeiro | — | ⏳ |
+| 6 | TOTP 2FA (I53) — antes de lançar módulo cripto/financeiro | — | ⏳ |
+| 7 | pgvector (I52) — busca semântica substituindo ILIKE | — | ⏳ |
+| 8 | Rate limiting exercises.ts: persistir no DB (atual Map em memória, perde no restart) | — | ⏳ |
+| 9 | Stripe: conectar em produção | domínio | ⏳ |
+| 10 | I54 — Módulo Cripto/Árvore Frutífera (Yuri disse "em breve") | 2FA + domínio | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
@@ -707,6 +713,8 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (Sessão 9) | Assembleias #367–#380 processadas (14 novos aprendizados, 5 novas ideias); APRENDIZADO.md +24 insights (#541–#564); IDEIAS.md +5 ideias (I48–I52); MAPA.md + PSEUDO.md + PSEUDO2.md atualizados; sem código novo (sessão de síntese + documentação) |
 | 2026-07-02 (Sessão 10) | Nebula's House: tabelas nebula_ias+biblioteca_docs+aulias criadas no Railway; ISA seedada como 1ª IA (tier 5); AdmNebula.tsx (3 sub-tabs IAs/Biblioteca/Aulias); LoginGate: toda app protegida; Admin AO/AOA criado; AdmUsuarios.tsx; ISA Bibliotecário cron :30; landing PHP; Ecosia widget metassemiótico integrado em 6 pontos do sistema |
 | 2026-07-02 (Sessão 11) | **Grande Review + Ramificação:** nodeCache.ts (TTL 30s, elimina 15+ full-table-scans); 13 índices DB (parent_code, context, status, priority, created_at, etc.); global error handler Express; PIN email → Yuri; admVerified em /auth/me; ISA cycle: max_completion_tokens + transporter singleton + lê APRENDIZADO.md + interpreta locks; I49 interpretability_lock em isa_memory (ALTER TABLE + índice parcial); GET /isa/locked + PATCH /isa/memory/:id/lock; X-PAP-Key middleware (requireApiKey); /mapa page (árvore expansível lazy-load); social.ts typed middleware + onDelete cascade; QueryClient singleton + staleTime 30s; admin.ts invalidateNodeCache após batch; /api/internal/stats machine-to-machine |
+| 2026-07-02 (Sessão Eco) | **Ecossystemma Théo + ISA Bluesky:** EcossystemmaPage.tsx (SVG animado 15 nós, 21 conexões, starfield, hover panel, status badges, CSS animations); bluesky.ts (ISA posta reflexões FUVEST a cada 2h via @atproto/api); cron.ts 3º job (15 */2 * * *); isa.ts: /isa/bluesky manual trigger + /isa/bluesky/criar-conta; vercel.json: /eco rewrite; Railway URL descoberta: site-st-production.up.railway.app; ISA identity confirmada LIVE (7 memórias, ciclo ativo) |
+| 2026-07-02 (Sessão Toyota) | **URLs + Kanban Toyota:** Railway URL confirmada live; vercel.json raiz + aliancapanorama-src corrigidos (Fly.io→Railway, buildCommand+outputDirectory adicionados, BASE_PATH=/ para Vite); ToyotaPage.tsx (Kanban 3 colunas: A Fazer/Em Produção/Feitas, via tasksTable existente); rota /toyota adicionada; preferências de email Yuri atualizadas (emergências → yurituccieterovic@gmail.com) |
 
 ---
 

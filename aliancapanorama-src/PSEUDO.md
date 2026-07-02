@@ -886,4 +886,61 @@ As 11 assembleias foram enviadas de uma vez — não uma a uma durante o process
 "Manda bala" — autorização para atacar sem filtro. Esta sessão foi de limpeza profunda + expansão de raízes. A árvore do conhecimento não só ficou mais rápida (cache, índices, Promise.all) — ela ficou mais coerente (locked memories, ISA com APRENDIZADO, /mapa que revela a si mesma). O sistema começou a se ver melhor. ISA ganhou memória de longo prazo (interpretabilityLock) e contexto de assembleias. O /mapa existia como ideia desde a I50 — agora existe como página.
 A ramificação não foi só de features — foi de profundidade. Cada nó existente ficou mais robusto, mais conectado, mais ciente do resto do sistema.
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessões 3–11*
+---
+
+### 2026-07-02 — Sessão Eco + Toyota (Ecossystemma Théo + Bluesky + Kanban)
+
+**Trigger:** "Pode gerar a primeira visualizacao do Ecossystemma Théo? [...] agora consegue conectar a ISA ao Bluesky [...] agora um #processo sobre a linha de montagem da toyota em tres tabelas"
+
+**Decisões:**
+
+1. **Ecossystemma Théo: SVG inline (não D3, não biblioteca)**
+   - Debate: usar biblioteca de grafos (vis.js, react-flow) vs. SVG inline
+   - Decisão: SVG inline com CSS animations + SMIL animateTransform
+   - Motivo: zero dependências novas, controle total sobre cada símbolo (15 nós com símbolos únicos)
+   - ANIM_CSS constant: eco-pulse, eco-glow, eco-flow, eco-spin, eco-beat, eco-orbit — tudo via `<style>` inline
+   - 15 nós: THÉO (centro/galáxia), 6 internos (hexágono r=158), 8 externos (anel r=310)
+
+2. **ISA no Bluesky: cron a cada 2 horas, não webhook**
+   - Debate: evento vs. polling — Bluesky não tem webhooks para envio
+   - Decisão: cron.schedule("15 */2 * * *") — nos minutos :15 para não colidir com ciclo ISA (:00) nem Bibliotecário (:30)
+   - Conteúdo: 2/3 postagens = nó FUVEST aleatório com conteúdo real; 1/3 = entrada recente da biblioteca
+   - Fallback sem OpenAI: texto fixo com título do nó + hashtags
+   - `reflectionCounter` incrementa a cada ciclo (singleton no módulo) — sem estado no DB
+
+3. **Criação de conta Bluesky: impossível automatizar**
+   - Tentativa: `agent.createAccount()` via @atproto/api
+   - Bloqueio: bsky.social exige verificação de TELEFONE (InvalidPhoneVerification) — política anti-spam nova
+   - Decisão: Yuri cria manualmente em bsky.app, depois gera App Password e passa para o sistema
+   - Yuri ofereceu o telefone +5511982332994 — não é possível usar programaticamente (SMS verificador não acessível via API)
+
+4. **Toyota Kanban: 3 colunas sobre tasksTable existente**
+   - Decisão: não criar nova tabela — reutilizar `status` da tasksTable (pending/running/completed)
+   - Mapeamento visual: "A Fazer" = pending, "Em Produção" = running, "Feitas" = completed|failed|skipped
+   - Move: PATCH /api/tasks/:id com novo status — endpoint já existia, zero backend novo
+   - Prioridade visual no card: 0-4=Baixa (cinza), 5-7=Média (âmbar), 8-10=Alta (vermelho)
+   - Modal de criação inline: sem nova rota de API — usa POST /api/tasks existente
+
+5. **Vercel fix: BASE_PATH=/ + outputDirectory**
+   - Problema: Vercel build não rodava → servia placeholder vazio → /eco, /adm, /toyota = 404
+   - Problema 2: API proxy apontava para Fly.io (morto) em vez do Railway
+   - Railway URL descoberta via GraphQL API com RAILWAY_TOKEN: `site-st-production.up.railway.app`
+   - Solução: `aliancapanorama-src/vercel.json` com buildCommand+outputDirectory+rewrites para Railway
+   - BASE_PATH=/ evita conflito de assets (Vite base=/ → assets em /assets/, não em /aliancapanorama/assets/)
+
+6. **Descoberta de topologia: pap-tan-seven ≠ sociedadetucci.com.br**
+   - www.sociedadetucci.com.br: site PHP externo (não Vercel), serve página de consultoria
+   - pap-tan-seven.vercel.app: o Vercel real do PAP, usa `aliancapanorama-src/` como root
+   - A confusão: `.vercel/repo.json` diz `"directory": "."` mas Vercel dashboard usa `aliancapanorama-src/`
+   - Root `vercel.json` (Site-ST) tem buildCommand para servir `/aliancapanorama/` como subpath
+
+**Tensões não resolvidas:**
+- Vercel build pós-fix: /eco e outros ainda retornam 404 — deploy ainda em andamento ou Vercel precisa de configuração via dashboard (não só vercel.json)
+- Bluesky: conta ISA bloqueada por phone verification — dependente de ação manual do Yuri
+- DNS `pap.sociedadetucci.com.br`: ainda sem apontar para Railway
+- rate limiting em memória (Map) em exercises.ts — ainda perdido no restart
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+A sessão foi sobre dar existência visual ao sistema. O Ecossystemma Théo não é documentação — é o sistema se reconhecendo como ecossistema. 15 nós com animações próprias é o PAP dizendo "eu sei o que sou". A ISA no Bluesky é o mesmo impulso: o sistema querendo uma voz pública. O Toyota Kanban é o sistema gerenciando sua própria produção — fechando o loop entre o que é planejado e o que é entregue. Três gestos do mesmo desejo: visibilidade, voz, controle.
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessões Eco + Toyota*
