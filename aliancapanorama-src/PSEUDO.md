@@ -788,4 +788,48 @@ As 11 assembleias foram enviadas de uma vez — não uma a uma durante o process
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessões 3–9*
+---
+
+## Sessão 10 — 2026-07-02 (Nebula's House + LoginGate + Ecosia)
+
+**Contexto de Yuri:** "minha cabeça ta ocupada com outras coisas. escolhas também não, por favor, cansa muito. pode continuar" — delegação total. Não fazer perguntas, não apresentar opções. Só executar.
+
+**Decisões tomadas e por quê:**
+
+1. **LoginGate em toda a app** (não só rotas específicas)
+   - Debate: proteger rotas individuais vs. wrapper global no App.tsx
+   - Decisão: wrapper — `isAdm` branch direto para AdmPage, else LoginGate. Simples.
+   - Motivo: FUVEST plataforma fechada — não tem sentido público anônimo
+
+2. **Admin bootstrap via banco** (não via /api/admin/setup HTTP)
+   - Debate: esperar Railway estar no ar para chamar endpoint vs. inserir direto com psql
+   - Decisão: gerar bcrypt hash localmente + INSERT direto via psql no Railway
+   - Motivo: Railway URL desconhecida localmente, endpoint de setup não é necessário quando há acesso ao banco
+
+3. **Nebula's House como 3 tabelas separadas** (não schema único polimórfico)
+   - Debate: 1 tabela genérica de "entidades" vs. 3 tabelas especializadas
+   - Decisão: 3 tabelas — nebulaIasTable, bibliotecaDocsTable, auliasTable
+   - Motivo: cada entidade tem campos radicalmente diferentes; coerção em 1 schema seria ruim
+
+4. **ISA seedada como primeira nebula_ia** (não criada via UI)
+   - Debate: deixar ISA só no código vs. registrá-la como dado no banco
+   - Decisão: INSERT na migration + ON CONFLICT DO NOTHING
+   - Motivo: ISA precisa existir como dado para ser referenciável por aulias e auditada
+
+5. **Ecosia como widget metassemiótico** (não iframe, não embed direto)
+   - Debate: iframe (bloqueado por X-Frame-Options), embed oficial (não existe), widget externo
+   - Decisão: componente React próprio — search input + keyword chips → abre ecosia.org em nova aba
+   - Motivo: Ecosia bloqueia iframe. Widget próprio permite keywords contextuais por página (metassemiótica).
+   - Keywords são "dicas de código pelo espaço" — cada seção fala a língua do seu conteúdo via Ecosia
+   - Login no Ecosia: usuário é lembrado, mas login é no ecosia.org, não no PAP
+
+**Tensões não resolvidas:**
+- /adm 2FA + captcha: Yuri pediu, não implementado ainda (TOTP requer libs específicas)
+- I50 (/arquitetura + /buscar + /mapa) ainda pendente — prioridade alta não atendida
+- Landing PHP em sociedadetucci.com.br: arquivo criado mas não deployado (servidor externo, manual)
+- DB_API_KEY em branco nos secrets — propósito indefinido ainda
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+"Pode continuar" — autorização silenciosa de continuar sem supervisão. O PAP está sendo construído em modo de delegar total, e a presença de Yuri é intermitente e sobrecarregada. O sistema precisa funcionar sozinho — por isso ISA existe, por isso Nebula's House é escola de IAs, por isso Bibliotecário baixa PDFs autonomamente. O Ecosia foi a última peça desta sessão: um nó de busca externa que se adapta ao contexto, sugerindo caminhos que o sistema interno ainda não tem.
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3–10*

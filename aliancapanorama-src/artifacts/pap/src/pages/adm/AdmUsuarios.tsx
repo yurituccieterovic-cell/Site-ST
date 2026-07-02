@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, UserPlus, Trash2, Edit2, Check, X } from "lucide-react";
+import { EcosiaSearch } from "../../components/EcosiaSearch";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
@@ -188,6 +189,15 @@ export function AdmUsuarios() {
           </table>
         </div>
       )}
+
+      <div className="mt-4">
+        <EcosiaSearch
+          dark={false}
+          compact
+          label="Gestão de usuários"
+          keywords={["autenticação JWT bcrypt", "sistema de tiers acesso", "RBAC plataforma educacional", "gestão usuários plataforma"]}
+        />
+      </div>
     </div>
   );
 }

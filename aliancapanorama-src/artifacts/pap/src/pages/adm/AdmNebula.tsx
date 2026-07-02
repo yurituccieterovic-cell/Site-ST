@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Plus, Trash2, Edit2, Check, X, BookOpen, Star, Zap } from "lucide-react";
+import { EcosiaSearch } from "../../components/EcosiaSearch";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
@@ -267,6 +268,14 @@ function BibliotecaView() {
           </table>
         </div>
       )}
+
+      <div className="mt-4">
+        <EcosiaSearch
+          dark={false}
+          label="Encontrar documentos no Ecosia"
+          keywords={["PDF assembleia IA", "inteligência artificial educação PDF", "ética IA 2025", "aprendizado de máquina livre", "documento filosofia tecnologia"]}
+        />
+      </div>
     </div>
   );
 }

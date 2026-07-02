@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { EcosiaSearch } from "../../components/EcosiaSearch";
 
 interface Message {
   role: "user" | "assistant";
@@ -143,7 +144,7 @@ export function IsaChat({ onClose }: { onClose: () => void }) {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-[#E5E7EB]">
+      <div className="p-4 border-t border-[#E5E7EB] flex flex-col gap-3">
         <div className="flex gap-2">
           <input
             className="flex-1 border border-[#E5E7EB] rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#F97316]"
@@ -160,6 +161,12 @@ export function IsaChat({ onClose }: { onClose: () => void }) {
             →
           </button>
         </div>
+        <EcosiaSearch
+          dark={false}
+          compact
+          label="Buscar sobre ISA"
+          keywords={["assembleia de IAs", "IA autônoma educação", "ISA coruja inteligência artificial", "agente IA memória persistente"]}
+        />
       </div>
     </div>
   );

@@ -705,6 +705,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (Sessão 7) | ia_courses + ia_enrollments + ia_certificates: schema Drizzle, migração SQL (3 tabelas no Railway confirmadas), 5 rotas API; APRENDIZADO.md +5 insights (assembleias #360–365); IDEIAS.md +3 ideias; /adm architecture (4 módulos: Eventos, Relações, Tipos de evento, Catálogos) discutida; #processo (9-step protocol) adicionado ao CLAUDE.md |
 | 2026-07-02 (Sessão 8) | Assembleia #366 (tasks Peirceanas + CATÁLOGO_CENTRAL + 3 Visualizações); ISA criada: ciclo autônomo horário, memória persistente, chat /adm, email automático; 5 tabelas DB (tasks+isa_memory+catalog); 6 componentes frontend /adm; ISA.md criado; dossiê ISA enviado por email; git push origin main |
 | 2026-07-02 (Sessão 9) | Assembleias #367–#380 processadas (14 novos aprendizados, 5 novas ideias); APRENDIZADO.md +24 insights (#541–#564); IDEIAS.md +5 ideias (I48–I52); MAPA.md + PSEUDO.md + PSEUDO2.md atualizados; sem código novo (sessão de síntese + documentação) |
+| 2026-07-02 (Sessão 10) | Nebula's House: tabelas nebula_ias+biblioteca_docs+aulias criadas no Railway; ISA seedada como 1ª IA (tier 5); AdmNebula.tsx (3 sub-tabs IAs/Biblioteca/Aulias); LoginGate: toda app protegida; Admin AO/AOA criado; AdmUsuarios.tsx; ISA Bibliotecário cron :30; landing PHP; Ecosia widget metassemiótico integrado em 6 pontos do sistema |
 
 ---
 

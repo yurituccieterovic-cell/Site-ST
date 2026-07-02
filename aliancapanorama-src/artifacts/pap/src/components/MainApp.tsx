@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import { Helmet } from "react-helmet-async";
+import { EcosiaSearch, EcosiaFloatingButton } from "./EcosiaSearch";
 import {
   useGetSummary,
   useListNodes,
@@ -179,6 +180,10 @@ function MainAppInner({ queryClient }: { queryClient: ReturnType<typeof useQuery
           activeNodeCode={activeNodeCode}
           onNodeOpen={setActiveNodeCode}
           userTier={user?.tier ?? 0}
+        />
+        <EcosiaFloatingButton
+          dark
+          keywords={["FUVEST 2026", "vestibular medicina", "cronograma de estudos", "árvore do conhecimento vestibular", "como estudar para FUVEST"]}
         />
       </div>
 
@@ -1211,6 +1216,14 @@ function NavGuide() {
           </div>
         </div>
       ))}
+
+      <div className="mt-2">
+        <EcosiaSearch
+          dark
+          label="Guia pelo código — Ecosia"
+          keywords={["FUVEST 2026 dicas", "como estudar vestibular", "PAP plataforma educacional", "gamificação vestibular", "árvore do conhecimento"]}
+        />
+      </div>
     </div>
   );
 }
@@ -1413,12 +1426,22 @@ function NodeModal({ code, onClose, onNodeOpen, onAchievementEarned, onExercise,
               {node.subtitle && <p className="text-sm text-black/55 font-medium mt-1">{node.subtitle}</p>}
             </div>
 
-            <div className="flex-1 overflow-auto px-8 py-6">
+            <div className="flex-1 overflow-auto px-8 py-6 flex flex-col gap-4">
               {node.content ? (
                 <p className="text-sm text-black/75 leading-relaxed">{node.content}</p>
               ) : (
                 <p className="text-sm text-black/35 italic">Conteudo em desenvolvimento...</p>
               )}
+              <EcosiaSearch
+                dark={false}
+                label="Aprofundar no Ecosia"
+                keywords={[
+                  node.title,
+                  `${node.title} FUVEST`,
+                  `exercícios ${node.title}`,
+                  `${node.title} vestibular`,
+                ]}
+              />
             </div>
 
             <div className="px-8 pb-6 border-t border-black/8 pt-4 flex flex-col gap-4">
