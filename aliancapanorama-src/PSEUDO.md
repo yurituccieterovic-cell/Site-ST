@@ -369,4 +369,209 @@ Agente externo (Claude, script)
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code · Sessão 3*
+## 5. Stack Técnico — O Que É e Por Que
+
+### Por que este stack
+
+O PAP nasceu no Replit porque Yuri precisava de zero configuração. A plataforma cresceu lá até o ponto em que o custo do Agente Replit atingiu R$265 em um dia (Assembleia #22). A decisão de migrar para stack independente não foi técnica — foi financeira e de soberania: não depender de uma plataforma que pode mudar os preços.
+
+**Frontend: React + Vite + TypeScript**
+Escolha conservadora e correta para um produto que precisa durar até FUVEST 2026. Vite compila em segundos no celular via Termux. TypeScript detecta erros antes de quebrar em produção. Tailwind elimina decisões de CSS. Framer Motion dá as animações do cockpit sem biblioteca pesada.
+
+**API: Express 5 + Drizzle + Zod**
+Express 5 porque Yuri já conhecia. Drizzle porque é o único ORM TypeScript que não gera migrations automáticas perigosas — você controla o schema. Zod porque validação no boundary de entrada é a única proteção real; o TypeScript não existe em runtime.
+
+**Contract-first (OpenAPI → Orval → hooks)**
+Maior decisão técnica do projeto. O `openapi.yaml` é a FONTE DA VERDADE. Orval lê esse arquivo e gera os hooks React Query e os schemas Zod automaticamente. Nunca escrever tipos de API à mão — eles ficam desatualizados. **Regra:** sempre rodar codegen após editar `openapi.yaml`.
+
+**Por que Railway (substituiu Fly.io/Neon)**
+- Fly.io: exige Docker, gratuito só 90 dias, cold start imprevisível
+- Neon: banco separado = mais uma conta, mais um ponto de falha
+- Railway: PostgreSQL incluso, deploy via GitHub push, Nixpacks (sem Docker), grátis dentro do plano ($5 de crédito/mês = ~500h)
+- Vercel Frontend + Railway API+DB = duas plataformas, não três
+
+### Tooling de suporte
+| Ferramenta | Papel | Por que |
+|---|---|---|
+| pnpm workspaces | Monorepo de 4 pacotes | Um `pnpm install` instala tudo; workspace refs sem publish |
+| esbuild | Bundle do servidor | 50ms de build; agrupa workspace deps sem precisar publicar |
+| pino | Logging | Structured JSON; `req.log` em handlers, `logger` fora; nunca `console.log` |
+
+---
+
+## 6. Banco de Dados — Contexto e Evolução
+
+### Por que cada tabela existe
+
+**`users`** — núcleo de identidade. `tier` determina o que o usuário pode acessar. `user_code` é gerado lazy (no `/social/me` se não existir) e serve como identificador público para sistema de amigos. `stripe_customer_id` e `paypal_subscription_id` ficam aqui porque tier e pagamento são inseparáveis.
+
+**`nodes`** — a árvore de conhecimento FUVEST. 57 nós hierárquicos com código que é a própria hierarquia: "1" (Ciências), "11" (Física), "111" (Mecânica), "1111" (Cinemática). O comprimento do código determina o nível E o valor em pontos. Conteúdo gerado por OpenAI, ~1380 chars, 3 parágrafos por nó.
+
+**`node_progress`** — unique (user_id, node_code). Upsert: primeira vez que o usuário clica → `opened=true`. Fica 30s na tela → `read=true`. A tabela de heatmap de atividade vem do `read_at`.
+
+**`achievements`** — unique (user_id, code). Code é composto tipo "explored:11" ou "read:111". 2 conquistas por nó × 57 nós = 114 conquistas possíveis.
+
+**`exercises` + `exercise_attempts`** — MCQs gerados via OpenAI (3 por nó, cacheados no DB). Attempt registra `selected_option` e `correct` (int 0/1). Score é calculado on-the-fly: `Σ (node_code.length × 10)` para attempts com `correct=1`.
+
+**`friendships`** — unique (user_id, friend_id). Amizade aceita = 2 linhas simétricas (A→B e B→A). Pending = 1 linha. Auto-aceita se solicitações cruzadas (A pede B enquanto B já havia pedido A).
+
+**`social_notes`** — unique (user1_id, user2_id), onde user1 = min(u1,u2). Caderno compartilhado por par de amigos. Upsert com `onConflictDoUpdate`.
+
+**`session`** — gerenciada automaticamente por connect-pg-simple. Criada na primeira execução. NÃO APAGAR em migrations — destrói todas as sessões ativas.
+
+### Evolução do banco
+| Momento | O que aconteceu |
+|---|---|
+| Replit (legado) | PostgreSQL no próprio Replit, schema criado ao longo de semanas |
+| Sessão 2 | `bcrypt` migration: password_plain → password_hash (migrate-password-hash.ts) |
+| Sessão 2 | stripe.* tables criadas via stripe-replit-sync |
+| Próximo passo | Railway: `drizzle-kit push` recria tudo do schema atual |
+
+---
+
+## 7. Sistema de Usuários — Filosofia dos Tiers
+
+O PAP usa tiers (0-5) não como feature flags aleatórias, mas como uma progressão pedagógica:
+- **Tier 0** (Visitante): pode ver a árvore, não pode fazer exercícios. É o convite.
+- **Tier 1** (Aluno I, gratuito): exercícios MCQ. Valor imediato sem pagar.
+- **Tiers 2-3**: conteúdo expandido + área social. Estudar junto vale.
+- **Tier 4**: árvore completa (raiz "0", todos os 57 nós). Topo do plano.
+- **Tier 5** (Dev): acesso admin + geração de conteúdo AI.
+
+**`canAccess(user, requiredTier)`** — função em `canAccess.ts`. Verifica `user.tier >= requiredTier`. Chamada em cada rota que tem gate de tier.
+
+**Raiz da árvore por tier:**
+- `tier < 4` → raiz "1" (Ciências) — a maioria dos nós
+- `tier ≥ 4` → raiz "0" (todos os nós) — árvore completa
+
+**Usuários pré-criados:** guest / aluno1 / aluno2 / aluno3 / aluno4 / root
+Em produção: `enforceUniquePasswords()` no bootstrap alerta se alguém ainda usa senha "pap" padrão.
+
+---
+
+## 8. IA na Plataforma — Estratégia
+
+### Três camadas de IA
+
+**Camada 1: Conteúdo estático (gerado, não em tempo real)**
+- 57 nós com conteúdo gerado via `generate-node-content.ts` + OpenAI
+- Está no DB, não gera custo em runtime
+- Exercícios MCQ: gerados na primeira requisição (`GET /api/exercises?nodeCode=X`), depois cacheados no DB
+- Isa (mascote): keyword matching local — zero custo, zero latência
+
+**Camada 2: OpenAI em runtime (futuro, depende de OPENAI_API_KEY)**
+- Exercícios novos via `POST /api/ai/generate-exercise` (ainda não implementado, na IDEIAS.md como I18)
+- Isa contextualizada por nó (I17)
+- Diagnóstico de lacunas (I19)
+
+**Camada 3: Interface de agentes externos (/api/ai/*)**
+- CRUD completo para nós, exercícios, leitura de usuários e stats
+- Auth via `AI_API_KEY` (não OpenAI)
+- Criada para que Claude Code possa operar a plataforma diretamente: ingerir assembleias, atualizar conteúdo, monitorar métricas
+
+### Assembleia de IAs → PAP
+424 emails de sessões de tomada de decisão coletiva com múltiplos agentes de IA, guardados em `luddlocke@gmail.com`. Extraídos e transformados em:
+- `APRENDIZADO.md` (634 insights classificados)
+- `IDEIAS.md` (37 ideias de programação)
+- Futuramente: ingestão via `/api/ai/*` como nodes especiais (tipo="assembleia") para RAG
+
+---
+
+## 9. Deployment — Evolução e Contexto
+
+### Linha do tempo da infraestrutura
+```
+Replit (2024-2025)
+  └── tudo junto: frontend + API + DB
+       custo: Agente Replit chegou a R$265/dia
+       problema: lock-in, custo imprevisível
+
+Vercel (2026)
+  └── frontend separado do backend
+       automático no git push
+       ainda em uso, funcionando
+
+Tentativa Fly.io → Railway (2026-07-02)
+  └── Railway escolhido: grátis, PostgreSQL incluso, sem Docker
+       railway.toml commitado, aguardando deploy manual
+```
+
+### Por que o código roda no celular
+Yuri usa Termux + proot-distro Ubuntu no Android. Claude Code roda dentro desse Ubuntu como root. O git push do celular dispara o CI no Vercel/Railway. Todo o desenvolvimento do PAP foi feito assim — num celular, num emulador de terminal Linux. Isso não é limitação; é a realidade operacional do projeto.
+
+### Deploy Railway — passos pendentes
+1. Railway dashboard → New Project → GitHub Site-ST → root `aliancapanorama-src`
+2. Add PostgreSQL service (auto-injeta DATABASE_URL)
+3. Env vars: `NODE_ENV=production`, `SESSION_SECRET`, `AI_API_KEY`, `ALLOWED_ORIGINS`
+4. 1º deploy → adicionar temporariamente ao startCommand: `cd lib/db && npx drizzle-kit push && cd ../.. &&` → remover após
+5. DNS: `pap.sociedadetucci.com.br` → Railway app URL
+
+---
+
+## 10. Decisões de Arquitetura — O Raciocínio
+
+| Decisão | Raciocínio real |
+|---|---|
+| Contract-first (OpenAPI → codegen) | Tipos desatualizados são bugs silenciosos; codegen os elimina |
+| Viewport quadrado (~900×900px) | UI cockpit só funciona em proporção quadrada; barras pretas em telas wide |
+| Raiz da árvore por tier | Lock server-side em `canAccess()` — nunca só no frontend |
+| PostgreSQL session store | connect-pg-simple persiste sessões entre restarts; memory store perde tudo |
+| Sem `console.log` no servidor | `req.log` (handlers) ou `logger` (pino); console.log vai para stdout sem estrutura |
+| Stripe e PayPal fora do OpenAPI | Webhooks precisam de raw Buffer; codegen não se aplica a raw-body routes |
+| Social fora do OpenAPI | Polling com estado específico; fetch direto + useQuery sem codegen |
+| Webhooks antes do `express.json()` | Stripe/PayPal verificam assinatura no body bruto — JSON middleware destrói isso |
+| Redirect 301 canônico em produção | Replit/Vercel URLs existem; SEO e bookmarks devem ir para o domínio real |
+| AI_API_KEY ≠ OPENAI_API_KEY | Dois propósitos distintos: autenticar agentes externos vs. chamar a API da OpenAI |
+| Railway sobre Fly.io/Neon | Fly.io: pago após 90 dias + Docker; Neon: banco separado = terceira conta |
+
+---
+
+## 11. Armadilhas Técnicas (Gotchas)
+
+- **`useListNodes()` sem args** → só retorna nós com `parentCode IS NULL` (raiz "0"). Sempre passar `{ parentCode: "X" }` para filhos.
+- **Session store é PostgreSQL**, não memory store. Requer tabela `session` — criada por `connect-pg-simple` na primeira execução. NÃO apagar em migrations.
+- **Social notes** — constraint única `(min(u1,u2), max(u1,u2))`. Upsert com `onConflictDoUpdate` target `[user1Id, user2Id]`.
+- **Score** vem exclusivamente de `exercise_attempts.correct = 1`. Não de `notes` nem de `node_progress`.
+- **Amizade aceita = 2 linhas simétricas**. Pending = 1 linha (quem enviou). Auto-aceita se cruzado.
+- **`drizzle-kit push`** pode perguntar interativamente sobre renomeações → usar `executeSql` ou SQL raw se necessário.
+- **Orval modo `single`** → schemas PascalCase (`LoginBody`, não `loginBodySchema`).
+- **`lib/api-zod/src/index.ts`** deve exportar só `./generated/api`.
+- **Sempre rodar codegen** após editar `openapi.yaml`.
+- **`custom-fetch.ts`** tem `credentials: "include"` para cookies automáticos em cross-origin.
+- **IntroFacade** usa `sessionStorage["pap_intro_seen_v1"]` para não repetir na mesma sessão.
+- **IsaOwl** fases: `"flying" → "perched" → "bubble" → "chat"`. useEffect precisa de early return para evitar TS7030.
+- **esbuild** agrupa workspace deps — não precisa de build separado para libs ao fazer build do api-server.
+- **PATH no Claude Code** (usuário yuri, não-interativo): `.bashrc` não é sourced. Solução: symlinks em `/usr/local/bin/`.
+
+---
+
+## 12. Memória das Sessões — Onde as Conversas Vivem
+
+Esta seção existe porque conversas no Claude Code são compactadas quando crescem. O que não for salvo aqui some.
+
+### Onde cada tipo de informação é salvo
+
+| Tipo | Onde |
+|---|---|
+| O que foi construído | PSEUDO.md § Histórico (bullet list por sessão) |
+| O que foi discutido e decidido | PSEUDO.md § Histórico + ATA email do `#fim` |
+| Estado técnico atual | MAPA.md (referência viva: rotas, schema, pendências) |
+| Pseudocódigo dos fluxos | PSEUDO2.md (close-to-code, atualizado quando lógica muda) |
+| Aprendizados das assembleias | APRENDIZADO.md (634 insights classificados) |
+| Ideias de programação | IDEIAS.md (37 ideias, atualizado ao `#fim`) |
+| Perfil de Yuri e como colaborar | `/root/.claude/projects/-root/memory/user_yuri.md` |
+| Mandatos filosóficos e feedback | `/root/.claude/projects/-root/memory/` (vários arquivos) |
+| Conversa bruta (compactada) | `/home/yuri/.claude/projects/-home-yuri/*.jsonl` |
+
+### Protocolo ao `#fim` — captura de memória
+O `#fim` **não é só sobre commits e scripts**. É o momento de salvar o que foi pensado. No histórico do PSEUDO.md, cada sessão deve registrar:
+- As **decisões e por que** foram tomadas (não só o que foi feito)
+- Os **debates** que aconteceram (Railway vs Fly.io, por exemplo)
+- As **tensões não resolvidas** (o que ficou em aberto)
+- O **contexto de Yuri** naquele momento (o que ele estava tentando fazer por baixo das tarefas)
+
+A ATA do email é o registro completo. O PSEUDO.md § Histórico é o índice navegável.
+
+---
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3 e 4*

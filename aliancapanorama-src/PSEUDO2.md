@@ -202,4 +202,249 @@ credenciais: true (cookies cross-origin)
 
 ---
 
-*Atualizado em: 2026-07-02 · Claude Code*
+## 11. Pagamentos PayPal
+
+```
+// Criar assinatura
+POST /api/paypal/create-subscription { planId }
+  buscar paypal_plan por planId
+  paypal.subscriptions.create {
+    plan_id: plan.paypal_plan_id
+    custom_id: userId  // para identificar o user no webhook
+    application_context: { return_url, cancel_url }
+  }
+  retornar { subscriptionId, approveLink }
+  → frontend redireciona para approveLink (aprovação PayPal)
+
+// Sincronizar tier após aprovação
+POST /api/paypal/sync-tier { subscriptionId }
+  poll paypal.subscriptions.get() até 6 vezes (intervalo 1.5s)
+  se status === "ACTIVE":
+    update user: tier = plano, paypal_subscription_id = subscriptionId, subscription_status = "active"
+    retornar { tier }
+  se expirou poll sem ACTIVE → erro 409
+
+// Webhook (raw body, antes do express.json)
+POST /api/paypal/webhook
+  verifyPayPalWebhook(rawBody, headers) via /v1/notifications/verify-webhook-signature
+  
+  switch event.event_type:
+    "BILLING.SUBSCRIPTION.CANCELLED"
+    "BILLING.SUBSCRIPTION.EXPIRED"
+    "BILLING.SUBSCRIPTION.SUSPENDED"
+      → users.tier = 1, subscription_status = event_type
+```
+
+---
+
+## 12. Middleware Chain (app.ts — ordem importa)
+
+```
+app.ts monta middlewares nesta ordem exata:
+
+1. cors(allowedOrigins)              // antes de tudo
+2. pino-http logger                  // loga todas as requisições
+3. POST /api/stripe/webhook          // RAW BODY — antes do express.json()
+4. POST /api/paypal/webhook          // RAW BODY — antes do express.json()
+5. express.json()                    // parse body das outras rotas
+6. session middleware (connect-pg-simple)
+7. redirect canônico (se prod e hostname != pap.sociedadetucci.com.br → 301)
+8. rotas: auth, nodes, notes, progress, exercises, social, ai, stripe, paypal, admin, health, sitemap
+9. 404 handler
+10. error handler (log + 500)
+
+// CRÍTICO: webhooks devem ser registrados ANTES do express.json()
+// O express.json() consome o body stream — depois disso, rawBody está vazio
+// Stripe e PayPal verificam assinatura no rawBody original
+```
+
+---
+
+## 13. canAccess() — Gate de Tier
+
+```
+// lib/canAccess.ts
+function canAccess(user: User | null, requiredTier: number): boolean
+  se user === null → return requiredTier === 0
+  return user.tier >= requiredTier
+
+// Uso em rotas:
+GET /api/exercises?nodeCode=X
+  se !canAccess(req.session.user, 1) → 403
+
+// Raiz da árvore (server-side):
+GET /api/nodes (sem parentCode)
+  rootCode = user.tier >= 4 ? "0" : "1"
+  retornar filhos do rootCode
+
+// Nunca confiar só no frontend para gates de tier
+// O frontend esconde visualmente — a API deve rejeitar
+```
+
+---
+
+## 14. Geração de Exercícios via OpenAI
+
+```
+GET /api/exercises?nodeCode=X
+  buscar exercises existentes WHERE node_code = X
+  
+  se exercises.length >= 3:
+    retornar os 3 (cacheados)
+  
+  senão (precisa gerar):
+    se !OPENAI_API_KEY → retornar erro 503 "exercícios indisponíveis"
+    
+    buscar node por X → title + content
+    
+    prompt OpenAI (gpt-4o-mini):
+      "Crie 3 questões MCQ sobre: [title]. Conteúdo: [content].
+       Formato JSON: [{ question, options: [A,B,C,D], correctOption: 'A'|'B'|'C'|'D', explanation }]"
+    
+    parsear resposta JSON
+    inserir 3 exercises no DB com node_code = X
+    retornar os 3 exercises inseridos
+
+// Idempotente: gera apenas se não existir
+// Cache no DB = custo OpenAI apenas uma vez por nó
+```
+
+---
+
+## 15. Sistema de Conquistas
+
+```
+// Tipos de achievement:
+type = "explored"  → ao clicar no nó (POST /progress/open/:code)
+type = "read"      → após 30s na tela (POST /progress/read/:code)
+type = "exercise"  → ao acertar questão (POST /exercises/attempt)
+
+// Code do achievement = tipo + nodeCode:
+code = "explored:11"  ou  "read:111"  ou  "exercise:1111"
+
+// Upsert:
+INSERT INTO achievements (user_id, code, type, node_code, earned, earned_at)
+VALUES (...)
+ON CONFLICT (user_id, code) DO UPDATE SET earned = true, earned_at = now()
+
+// Total possível: 2 por nó × 57 nós = 114 conquistas (explorado + lido)
+// Exercícios: 1 por nó ao acertar (57 adicionais possíveis)
+```
+
+---
+
+## 16. Heatmap de Atividade (365 dias)
+
+```
+GET /api/progress/daily
+  SELECT date_trunc('day', read_at) as day, COUNT(*) as activity
+  FROM node_progress
+  WHERE user_id = $1
+    AND read_at >= NOW() - INTERVAL '365 days'
+  GROUP BY day
+  ORDER BY day ASC
+  
+  retornar: [{ date: "2026-07-02", count: 3 }, ...]
+
+// Frontend renderiza heatmap estilo GitHub:
+// grade 52×7 = 364 células, cor por intensidade de count
+// 0 = cinza, 1-2 = verde claro, 3-5 = verde, 6+ = verde escuro
+```
+
+---
+
+## 17. Frontend — Fluxo de Componentes
+
+```
+App.tsx
+  viewport quadrado: min(window.width, window.height)
+  barras pretas se widescreen
+  
+  se sessionStorage["pap_intro_seen_v1"] não existe:
+    → IntroFacade (7.2s)
+         "uma produção" → Logo ST → "PAP FUVEST 2026" → fade
+         [PULAR] disponível a qualquer momento
+         ao terminar → set sessionStorage → MainApp
+  
+  senão:
+    → MainApp diretamente
+
+MainApp.tsx
+  estado local: selectedNode, menuOpen, socialOpen, plansOpen
+  
+  useQuery: GET /api/auth/me → user (null se não logado)
+  
+  render:
+    ├── Header: [Menu] PAP [Login/Sair]
+    ├── Árvore (esquerda):
+    │     useListNodes({ parentCode: rootCode })  // rootCode por tier
+    │     recursivo: expandir filhos ao clicar
+    │     ao selecionar nó desbloqueado:
+    │       POST /progress/open/:code
+    │       setSelectedNode(node)
+    │
+    ├── Painel central:
+    │     useGetNode(selectedNode.code)
+    │     exibe: title, subtitle, content
+    │     timer 30s: useEffect → POST /progress/read/:code
+    │     [Exercícios] (se tier ≥ 1):
+    │       useGetExercises({ nodeCode })
+    │       render 3 MCQ
+    │       ao responder: POST /exercises/attempt → feedback imediato
+    │
+    ├── Isa (canto inferior):
+    │     fases: flying(2s) → perched → bubble(saudação) → idle
+    │     ao clicar: toggle chat local
+    │     chat: input → keyword match → resposta pré-definida FUVEST
+    │
+    └── Menu (drawer):
+          Status: tier, nós explorados, conquistas, score
+          Calendário: useGetDaily() → heatmap 365 dias
+          Insígnias: useGetAchievements() → grid
+          Guia: texto estático de navegação
+
+Social.tsx (modal)
+  useGetMe() + useGetFriends() + useGetFriendRequests()
+  polling 5s via refetchInterval para mensagens
+  
+PlansModal.tsx
+  GET /stripe/plans + GET /paypal/plans
+  ao clicar Stripe: POST /stripe/checkout → redirect
+  ao clicar PayPal: POST /paypal/create-subscription → redirect
+```
+
+---
+
+## 18. Build Pipeline
+
+```
+// Desenvolvimento (celular, Termux)
+pnpm --filter @workspace/api-server run dev   // nodemon + esbuild watch (porta 8080)
+pnpm --filter @workspace/pap run dev          // Vite HMR (porta 18434)
+
+// Codegen (OBRIGATÓRIO após editar openapi.yaml)
+pnpm --filter @workspace/api-spec run codegen
+  → gera lib/api-client-react/src/generated/
+  → gera lib/api-zod/src/generated/
+
+// Build produção do frontend
+bash scripts/build-pap.sh
+  pnpm install
+  pnpm run build  // todos os pacotes
+  cp -r artifacts/pap/dist/ aliancapanorama/
+  // aliancapanorama/ é servido pelo Vercel
+
+// Build produção da API (Railway)
+pnpm install --frozen-lockfile
+pnpm --filter @workspace/api-server run build
+  // esbuild → artifacts/api-server/dist/index.mjs
+  // bundla TODOS os workspace deps em um único arquivo
+
+// Start produção
+node --enable-source-maps artifacts/api-server/dist/index.mjs
+  // --enable-source-maps: stack traces apontam para .ts original
+```
+
+---
+
+*Atualizado em: 2026-07-02 · Claude Code · Sessões 3 e 4*
