@@ -69,7 +69,7 @@ DB_API_KEY           → chave do banco compartilhado de IAs
 ## Contexto rápido
 
 - **Produto:** Plataforma educacional gamificada para FUVEST 2026 (estilo cockpit espacial)
-- **Stack:** React + Vite → Vercel · Express 5 → Fly.io · PostgreSQL → Neon
+- **Stack:** React + Vite → Vercel · Express 5 → Railway · PostgreSQL → Railway
 - **Repo:** `github.com/yurituccieterovic-cell/Site-ST` (branch `main`)
 - **Domínio alvo:** `pap.sociedadetucci.com.br`
 - **Pasta local:** `/root/Site-ST/aliancapanorama-src/`
@@ -112,10 +112,11 @@ voz   →  texto transcrito aparece aqui
 
 ## Pendências prioritárias (resumo)
 
-1. Criar conta Neon → `DATABASE_URL`
-2. Deploy Fly.io (`pap-api`, região gru/SP)
-3. DNS `pap.sociedadetucci.com.br`
-4. Obter `OPENAI_API_KEY`
-5. Gmail IMAP + App Password (`luddlocke@gmail.com`) para memórias da assembleia de IAs
+1. Deploy Railway → New Project → GitHub `Site-ST` → root dir `aliancapanorama-src`
+2. Adicionar PostgreSQL no Railway (auto-injeta `DATABASE_URL`)
+3. Env vars no Railway: `NODE_ENV`, `SESSION_SECRET`, `AI_API_KEY`, `ALLOWED_ORIGINS`
+4. Rodar drizzle-kit push (1ª vez) para criar tabelas
+5. DNS `pap.sociedadetucci.com.br` → Railway
+6. Obter `OPENAI_API_KEY`
 
 > Para detalhes completos, ver `MAPA.md` seção 17.

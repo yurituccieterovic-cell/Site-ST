@@ -76,8 +76,8 @@
 | Componente | Onde roda | Status |
 |---|---|---|
 | Frontend | Vercel hobby | ✅ Ativo |
-| API | Replit (legado) | ⚠️ Migrando → Fly.io |
-| Banco de dados | Replit PostgreSQL (legado) | ⚠️ Migrando → Neon |
+| API | Replit (legado) | ⚠️ Migrando → Railway |
+| Banco de dados | Replit PostgreSQL (legado) | ⚠️ Migrando → Railway PostgreSQL |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ⚠️ Junto com o DB |
 | Domínio | pap.sociedadetucci.com.br | 🔧 DNS a configurar |
 | GitHub | yurituccieterovic-cell/pap | ✅ Ativo |
@@ -481,18 +481,19 @@ git push → github.com/yurituccieterovic-cell/pap
      ├──→ Vercel (automático)
      │         └── build aliancapanorama/ → CDN
      │
-     └──→ Fly.io (pendente — a configurar)
-               └── Docker → pap-api (região gru/SP)
-                            256MB RAM · 1 CPU shared
-                            auto_stop / auto_start
-                            min_machines_running: 0
+     └──→ Railway (pendente — deploy via GitHub)
+               └── Nixpacks → pap-api
+                            Node 24 · PostgreSQL incluído
+                            auto-restart on failure
 ```
 
-### Fly.io (fly.toml)
-- App: `pap-api` · Região: `gru` (São Paulo)
-- Porta interna: 8080 · HTTPS forçado
-- Auto start/stop (cold start em inatividade)
-- 256MB RAM, 1 CPU compartilhado
+### Railway (railway.toml)
+- Builder: NIXPACKS · Root dir: `aliancapanorama-src`
+- Build: `pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build`
+- Start: `node --enable-source-maps artifacts/api-server/dist/index.mjs`
+- PostgreSQL service: injetado automaticamente como `DATABASE_URL`
+- Env vars necessárias: `NODE_ENV=production`, `SESSION_SECRET`, `AI_API_KEY`, `ALLOWED_ORIGINS`
+- Restart: ON_FAILURE, máx 5 tentativas
 
 ### Build do frontend
 ```bash
@@ -561,7 +562,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | Contract-first (OpenAPI → codegen) | Nunca escrever tipos de API à mão |
 | Viewport quadrado (~900×900px) | UI cockpit; forçado em `App.tsx` |
 | Raiz da árvore por tier | tier ≥ 4 → "0" (tudo); tier < 4 → "1" (Ciências). Lock server-side em `canAccess()` |
-| PostgreSQL session store | Sessões sobrevivem restart do servidor; necessário em Fly.io com auto-stop |
+| PostgreSQL session store | Sessões sobrevivem restart do servidor; necessário em Railway com restart automático |
 | Sem `console.log` no servidor | Usar `req.log` (handlers) ou `logger` singleton (pino) |
 | Stripe e PayPal fora do OpenAPI | Raw-body webhook + rotas complexas; codegen não se aplica |
 | Social fora do OpenAPI | Polling e estado específico; fetch direto + useQuery |
@@ -594,18 +595,18 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 
 | # | Item | Depende de | Status |
 |---|---|---|---|
-| 1 | Criar conta Neon → `DATABASE_URL` | — | ⏳ |
-| 2 | Migrar schema + dados para Neon | Neon criado | ⏳ |
-| 3 | Deploy API no Fly.io (`pap-api`, região gru) | Neon + `DATABASE_URL` | ⏳ |
-| 4 | Configurar DNS `pap.sociedadetucci.com.br` | Fly.io no ar | ⏳ |
-| 5 | Obter `OPENAI_API_KEY` | — | ⏳ |
-| 6 | Definir `AI_API_KEY` nas env vars do Fly.io + gerar valor | API no Fly.io | ⏳ |
-| 7 | Ingerir 424 assembleias (JSON pronto em scratchpad) via `/api/ai/*` | API no ar + AI_API_KEY | ⏳ |
-| 8 | Stripe: conectar em produção | Fly.io + domínio | ⏳ |
-| 9 | Atualizar chave `DB_API_KEY` no banco compartilhado | — | ⏳ |
-| 10 | SESSION_SECRET: gerar e definir no Fly.io | Fly.io | ⏳ |
+| 1 | Deploy Railway: New Project → GitHub → `aliancapanorama-src` | — | ⏳ |
+| 2 | Adicionar PostgreSQL service no Railway | Railway projeto criado | ⏳ |
+| 3 | Definir env vars no Railway: `NODE_ENV`, `SESSION_SECRET`, `AI_API_KEY`, `ALLOWED_ORIGINS` | Railway projeto | ⏳ |
+| 4 | Rodar drizzle-kit push (1ª vez): temp no startCommand | Railway + DATABASE_URL | ⏳ |
+| 5 | Configurar DNS `pap.sociedadetucci.com.br` → Railway | Railway no ar | ⏳ |
+| 6 | Obter `OPENAI_API_KEY` | — | ⏳ |
+| 7 | Salvar `DATABASE_URL` do Railway em `.pap-secrets` | Railway PostgreSQL | ⏳ |
+| 8 | Ingerir assembleias via `/api/ai/*` | API no ar + AI_API_KEY | ⏳ |
+| 9 | Stripe: conectar em produção | Railway + domínio | ⏳ |
+| 10 | Atualizar chave `DB_API_KEY` no banco compartilhado | — | ⏳ |
 
-**Concluído nesta sessão:**
+**Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
 - ✅ 424 emails "Assembleia #N" extraídos (total no Gmail: 424, UID até 1335)
 - ✅ MAPA.md, PSEUDO.md, README.md, CLAUDE.md criados e sofisticados
@@ -616,7 +617,19 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ `APRENDIZADO.md` — 526 insights de 290 assembleias, classificados por área/tipo/ângulo
 - ✅ `IDEIAS.md` — 31 ideias de programação com prioridade, complexidade e desc. técnica
 - ✅ `scripts/sync-assembleias.py` — sync incremental Gmail → APRENDIZADO.md ao `#fim`
-- ✅ `/root/bin/voz` — sistema de voz para Claude Code (usa Termux:API + Google STT)
+
+**Concluído nesta sessão (2026-07-02):**
+- ✅ `APRENDIZADO.md` expandido: +108 insights de MAPA.md, PSEUDO.md, PSEUDO2.md (total: 634)
+- ✅ `IDEIAS.md` expandido: +6 ideias de programação dos docs (total: 37)
+- ✅ `PSEUDO2.md` criado — pseudocódigo completo (bootstrap, auth, score, social, /api/ai/*, Stripe)
+- ✅ `scripts/learn-from-docs.py` — extrai insights de MAPA/PSEUDO/PSEUDO2 → APRENDIZADO.md + IDEIAS.md
+- ✅ `railway.toml` — configuração de deploy via Nixpacks (substituiu Fly.io)
+- ✅ `pap-sync` — wrapper que roda sync-assembleias.py + learn-from-docs.py
+- ✅ `/home/yuri/bin/voz` — toggle STT (web server 7654 / Termux:API nativo)
+- ✅ `/home/yuri/bin/voz-server.py` — servidor Python + Web Speech API (Chrome Android)
+- ✅ `/home/yuri/bin/pap-email-fim` — envia ATA da sessão por email ao `#fim`
+- ✅ Auto-sync em `/root/.bashrc` — roda `pap-sync` se >10h desde último sync
+- ✅ `#fim` atualizado: pap-sync + escrever ATA + pap-email-fim
 
 ---
 
@@ -627,6 +640,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (manhã) | Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO.md, README.md, CLAUDE.md |
 | 2026-07-02 (tarde) | Sistema `#secrets` + `/root/.pap-secrets`; Gmail IMAP/SMTP configurado; 424 assembleias extraídas; email com backup enviado para Yuri; AI_API_KEY + SESSION_SECRET gerados |
 | 2026-07-02 (noite) | APRENDIZADO.md (526 insights, 290 assembleias); IDEIAS.md (31 ideias de programação); sync-assembleias.py (incremental ao #fim); /root/bin/voz (STT via Termux:API); CLAUDE.md + README.md atualizados |
+| 2026-07-02 (cont.) | PSEUDO2.md criado; learn-from-docs.py (+108 aprendizados de docs); railway.toml (substituiu Fly.io); voz toggle remodelado; pap-email-fim; auto-sync .bashrc; README atualizado |
 
 ---
 
