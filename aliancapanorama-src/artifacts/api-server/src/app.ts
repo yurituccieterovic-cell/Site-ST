@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
@@ -164,8 +165,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const sessionSecret = process.env["SESSION_SECRET"];
-if (!sessionSecret) throw new Error("SESSION_SECRET is required");
+const sessionSecret = process.env["SESSION_SECRET"] ?? (() => {
+  logger.warn("SESSION_SECRET não configurada — usando secret efêmero. Todas as sessões serão perdidas ao reiniciar. Configure SESSION_SECRET no Railway.");
+  return randomUUID();
+})();
 
 const isProduction = process.env["NODE_ENV"] === "production";
 
