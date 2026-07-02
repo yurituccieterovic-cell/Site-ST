@@ -32,13 +32,24 @@ async function checkAdmSession(): Promise<AdminUser | null> {
   } catch { return null; }
 }
 
-async function doLogin(login: string, password: string) {
+async function doLogin(login: string, password: string): Promise<{ requiresPin?: boolean }> {
   const r = await fetch(`${API}/api/auth/login`, {
     method: "POST", credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ login, password }),
   });
-  if (!r.ok) { const d = await r.json() as { error?: string }; throw new Error(d.error ?? "Erro"); }
+  const d = await r.json() as { error?: string; requiresPin?: boolean };
+  if (!r.ok) throw new Error(d.error ?? "Erro");
+  return d;
+}
+
+async function doAdmPin(pin: string) {
+  const r = await fetch(`${API}/api/auth/adm-pin`, {
+    method: "POST", credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pin }),
+  });
+  if (!r.ok) { const d = await r.json() as { error?: string }; throw new Error(d.error ?? "PIN inválido"); }
 }
 
 // ─── Login Adm ────────────────────────────────────────────────────────────────
@@ -48,17 +59,37 @@ function AdmLogin({ onLogin }: { onLogin: (u: AdminUser) => void }) {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [pinStage, setPinStage] = useState(false);
+  const [pin, setPin] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true); setError("");
     try {
-      await doLogin(login, password);
-      const user = await checkAdmSession();
-      if (!user) { setError("Acesso negado. Apenas administradores."); }
-      else onLogin(user);
+      const res = await doLogin(login, password);
+      if (res.requiresPin) {
+        setPinStage(true);
+      } else {
+        const user = await checkAdmSession();
+        if (!user) { setError("Acesso negado. Apenas administradores."); }
+        else onLogin(user);
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro ao entrar");
+    }
+    setLoading(false);
+  }
+
+  async function handlePin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true); setError("");
+    try {
+      await doAdmPin(pin);
+      const user = await checkAdmSession();
+      if (!user) { setError("PIN verificado mas sessão inválida."); }
+      else onLogin(user);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "PIN incorreto");
     }
     setLoading(false);
   }
@@ -69,31 +100,58 @@ function AdmLogin({ onLogin }: { onLogin: (u: AdminUser) => void }) {
         <div className="text-center mb-8">
           <div className="text-4xl mb-3">🦉</div>
           <h1 className="text-xl font-bold text-gray-900">PAP · Administração</h1>
-          <p className="text-xs text-gray-400 mt-1">Acesso restrito — tier 5+</p>
+          <p className="text-xs text-gray-400 mt-1">{pinStage ? "2FA — verifique seu email" : "Acesso restrito — tier 5+"}</p>
         </div>
-        <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-4">
-          <div>
-            <label className="block text-xs text-gray-500 mb-1 uppercase tracking-wide">Login</label>
-            <input type="text" autoComplete="username" value={login} onChange={(e) => setLogin(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="login" required />
-          </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-1 uppercase tracking-wide">Senha</label>
-            <div className="relative">
-              <input type={showPass ? "text" : "password"} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="••••••••" required />
-              <button type="button" onClick={() => setShowPass((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-600">
-                {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+
+        {!pinStage ? (
+          <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-4">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1 uppercase tracking-wide">Login</label>
+              <input type="text" autoComplete="username" value={login} onChange={(e) => setLogin(e.target.value)}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="login" required />
             </div>
-          </div>
-          {error && <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
-          <button type="submit" disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-[#F97316] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50">
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogIn className="w-4 h-4" />}
-            {loading ? "Entrando…" : "Entrar"}
-          </button>
-        </form>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1 uppercase tracking-wide">Senha</label>
+              <div className="relative">
+                <input type={showPass ? "text" : "password"} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="••••••••" required />
+                <button type="button" onClick={() => setShowPass((v) => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-600">
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            {error && <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
+            <button type="submit" disabled={loading}
+              className="w-full flex items-center justify-center gap-2 bg-[#F97316] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50">
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogIn className="w-4 h-4" />}
+              {loading ? "Entrando…" : "Entrar"}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={(e) => { void handlePin(e); }} className="space-y-4">
+            <div className="bg-orange-50 border border-orange-200 rounded-lg px-4 py-3 text-xs text-orange-700">
+              PIN de 6 dígitos enviado por email. Válido por 10 minutos.
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1 uppercase tracking-wide">PIN</label>
+              <input
+                type="text" inputMode="numeric" pattern="\d{6}" maxLength={6}
+                autoFocus value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-center tracking-[0.5em] font-mono text-xl focus:outline-none focus:ring-2 focus:ring-orange-400"
+                placeholder="000000" required
+              />
+            </div>
+            {error && <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
+            <button type="submit" disabled={loading || pin.length !== 6}
+              className="w-full flex items-center justify-center gap-2 bg-[#F97316] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50">
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogIn className="w-4 h-4" />}
+              {loading ? "Verificando…" : "Verificar PIN"}
+            </button>
+            <button type="button" onClick={() => { setPinStage(false); setPin(""); setError(""); }} className="w-full text-xs text-gray-400 hover:text-gray-600 transition-colors">
+              ← Voltar ao login
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

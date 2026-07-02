@@ -16,11 +16,13 @@ import tasksRouter from "./tasks";
 import isaRouter from "./isa";
 import adminUsersRouter from "./admin-users";
 import nebulaRouter from "./nebula";
+import arquiteturaRouter from "./arquitetura";
 
 const router: IRouter = Router();
 
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
+router.use(arquiteturaRouter);
 router.use(aiRouter);
 router.use(iaCourseRouter);
 router.use(tasksRouter);

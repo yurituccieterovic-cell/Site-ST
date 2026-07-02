@@ -1,6 +1,8 @@
 {
   "rewrites": [
     { "source": "/aliancapanorama/adm/(.*)", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/adm", "destination": "/aliancapanorama/index.html" }
+    { "source": "/aliancapanorama/adm", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/arquitetura", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/buscar", "destination": "/aliancapanorama/index.html" }
   ]
 }

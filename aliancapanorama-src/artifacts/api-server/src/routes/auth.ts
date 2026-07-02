@@ -6,6 +6,25 @@ import { eq } from "drizzle-orm";
 import { LoginBody } from "@workspace/api-zod";
 import bcrypt from "bcryptjs";
 import { allowedOrigins } from "../lib/allowedOrigins";
+import nodemailer from "nodemailer";
+
+const mailer = nodemailer.createTransport({
+  service: "gmail",
+  auth: { user: process.env.GMAIL_ACCOUNT, pass: process.env.GMAIL_APP_PASSWORD },
+});
+
+function generatePin(): string {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+async function sendAdmPin(email: string, pin: string, login: string) {
+  await mailer.sendMail({
+    from: `PAP Admin <${process.env.GMAIL_ACCOUNT}>`,
+    to: email,
+    subject: `PAP /adm — PIN de acesso: ${pin}`,
+    text: `Olá ${login},\n\nSeu PIN de acesso ao /adm é: ${pin}\n\nVálido por 10 minutos. Não compartilhe.\n\n— PAP · Projeto Aliança Panorama`,
+  });
+}
 
 const router = Router();
 
@@ -59,6 +78,25 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
     return;
   }
 
+  // Tier 5 (admin) requer PIN 2FA via email
+  if (user.tier >= 5) {
+    const pin = generatePin();
+    req.session.admPin = pin;
+    req.session.admPinExpiry = Date.now() + 10 * 60 * 1000;
+    req.session.admPinUserId = user.id;
+    req.session.admVerified = false;
+
+    const emailDest = process.env.GMAIL_ACCOUNT ?? "";
+    try {
+      await sendAdmPin(emailDest, pin, user.login);
+    } catch {
+      // em dev, não falhar se email não configurado
+    }
+
+    res.json({ requiresPin: true, login: user.login });
+    return;
+  }
+
   req.session.userId = user.id;
   req.session.userLogin = user.login;
   req.session.userTier = user.tier;
@@ -69,6 +107,41 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
     tier: user.tier,
     displayName: user.displayName,
   });
+});
+
+// PIN 2FA para admins
+const pinRateLimit = rateLimit({ windowMs: 5 * 60 * 1000, limit: 5, skipSuccessfulRequests: true });
+
+router.post("/auth/adm-pin", pinRateLimit, async (req, res) => {
+  const { pin } = req.body as { pin?: string };
+  const { admPin, admPinExpiry, admPinUserId } = req.session;
+
+  if (!admPin || !admPinExpiry || !admPinUserId) {
+    res.status(400).json({ error: "Nenhum PIN pendente. Faça login primeiro." });
+    return;
+  }
+  if (Date.now() > admPinExpiry) {
+    req.session.admPin = undefined;
+    res.status(401).json({ error: "PIN expirado. Faça login novamente." });
+    return;
+  }
+  if (pin !== admPin) {
+    res.status(401).json({ error: "PIN incorreto." });
+    return;
+  }
+
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, admPinUserId)).limit(1);
+  if (!user) { res.status(401).json({ error: "Usuário não encontrado." }); return; }
+
+  req.session.userId = user.id;
+  req.session.userLogin = user.login;
+  req.session.userTier = user.tier;
+  req.session.admVerified = true;
+  req.session.admPin = undefined;
+  req.session.admPinExpiry = undefined;
+  req.session.admPinUserId = undefined;
+
+  res.json({ id: user.id, login: user.login, tier: user.tier, displayName: user.displayName });
 });
 
 router.post("/auth/logout", (req, res) => {

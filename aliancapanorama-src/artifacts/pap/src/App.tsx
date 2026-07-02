@@ -5,17 +5,21 @@ import { MainApp } from "@/components/MainApp";
 import { IntroFacade, shouldShowIntro } from "@/components/IntroFacade";
 import { LoginGate } from "@/components/LoginGate";
 import { AdmPage } from "@/pages/adm/AdmPage";
+import { ArquiteturaPage } from "@/pages/ArquiteturaPage";
+import { BuscarPage } from "@/pages/BuscarPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
 
 const queryClient = new QueryClient();
 
-const isAdm = window.location.pathname.includes("/adm");
+const path = window.location.pathname;
+const isAdm = path.includes("/adm");
+const isArquitetura = path.includes("/arquitetura");
+const isBuscar = path.includes("/buscar");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
 
-  // Área /adm tem próprio fluxo de auth (gate interno, tier 5+)
   if (isAdm) {
     return (
       <HelmetProvider>
@@ -27,7 +31,22 @@ function App() {
     );
   }
 
-  // Todas as outras páginas: requer login via LoginGate
+  if (isArquitetura) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ArquiteturaPage />
+      </QueryClientProvider>
+    );
+  }
+
+  if (isBuscar) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <BuscarPage />
+      </QueryClientProvider>
+    );
+  }
+
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>

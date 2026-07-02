@@ -5,5 +5,9 @@ declare module "express-session" {
     userId?: number;
     userLogin?: string;
     userTier?: number;
+    admVerified?: boolean;
+    admPin?: string;
+    admPinExpiry?: number;
+    admPinUserId?: number;
   }
 }

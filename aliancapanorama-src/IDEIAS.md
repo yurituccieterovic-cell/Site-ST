@@ -203,3 +203,22 @@ Adicionar pgvector ao PostgreSQL do Railway. Tabela memory_embeddings(id, conten
 Namespaces semânticos: origem='assembleia'|'pap', tipo='decisao'|'conversa'|'aprendizado'.
 Substituição gradual do ILIKE atual — manter ILIKE como fallback gratuito.
 Derivada de: Assembleia #367.
+
+## 🔐 Segurança e Financeiro — Sessão 10 (2026-07-02)
+
+### I53: TOTP 2FA para /adm (Google Authenticator) 📌 Anotado
+**Prioridade:** Baixa (agora) → Alta (seções sensíveis) | **Complexidade:** Alta
+PIN por email é suficiente para o /adm atual. Quando houver seções de alto valor (cripto, dados financeiros, acesso root), migrar para TOTP: gerar secret por usuário, armazenar hasheado, QR code no setup.
+Libs: `otpauth` + `qrcode`. Cada admin teria um seed único na tabela users.
+Nota: não implementar junto com cripto/árvore — implementar ANTES de lançar seções financeiras.
+Anotada em: 2026-07-02.
+
+### I54: Módulo Cripto — Árvore Frutífera / Ecosistema TEL 💭 Idéia
+**Prioridade:** Alta (próximas sessões) | **Complexidade:** Alta
+Sistema de portfolio baseado na filosofia "devagar, liquidez, árvore frutífera" da Assembleia #379.
+TEL = Bolsa + Clima + Cultura.
+Alocação guiada: 40% Tesouro Selic, 30% ETF, 20% ESG, 10% CDB.
+Rastreia posições sem conectar a corretora (leitura manual ou CSV import).
+Integra com PAP: alunos que acertam exercícios ganham "sementes" (tokens internos) que alimentam o portfólio simbólico.
+DB: tabela portfolio_entries, portfolio_snapshots.
+Derivada de: Assembleias #378, #379.
