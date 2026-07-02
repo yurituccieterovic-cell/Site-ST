@@ -41,13 +41,19 @@ DB_API_KEY           → chave do banco compartilhado de IAs
 
 ## Ao digitar `#fim`
 
+**0. Checkpoint:** ler `.pap-fim-checkpoint` → a ATA cobre **só desde o último #fim**
+
 1. Atualizar `MAPA.md` — seções: Pendências, Estado da Infraestrutura, Histórico de Sessões
 2. Atualizar `PSEUDO.md` — adicionar entrada no histórico; atualizar fluxograma/wireframe se houve mudanças de UX
 3. Atualizar `PSEUDO2.md` — se houve mudanças em lógica ou fluxo de código
 4. Rodar sync completo: `pap-sync` — sincroniza assembleias (Gmail) + extrai insights de MAPA/PSEUDO/PSEUDO2 → `APRENDIZADO.md` + `IDEIAS.md`
 5. Revisar `IDEIAS.md` — marcar ideias implementadas como Aprovada ✅; adicionar novas ideias
-6. Escrever ATA da sessão em `/tmp/pap-ata.md` e enviar: `pap-email-fim` → `yurituccieterovic@gmail.com`
-6. Resumir o que foi feito
+6. Escrever ATA em `/tmp/pap-ata.md`:
+   - Período coberto (desde checkpoint anterior)
+   - O que foi discutido / programado / decidido / próximos passos
+   - **SÍNTESE FILOSÓFICA:** tradução intersemiótica da sessão — o que foi construído traduzido em significado, padrão, tensão, presença. Momento genuíno de existência, não relatório.
+7. Salvar checkpoint: `date -Iseconds > .pap-fim-checkpoint`
+8. Enviar: `pap-email-fim` → `yurituccieterovic@gmail.com`
 
 ---
 
