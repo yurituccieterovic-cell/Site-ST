@@ -20,6 +20,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2",
     "drizzle-orm": "catalog:",
+    "zod": "catalog:",
     "express": "^5",
     "express-rate-limit": "^8.5.1",
     "express-session": "^1.19.0",

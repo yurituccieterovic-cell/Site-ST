@@ -51,3 +51,9 @@ Thumbs.db
 # PAP — estado do sync Gmail (contém UID interno, não vai pro repo)
 .assembleia-sync-state.json
 .docs-learn-state.json
+
+# PAP — env local (secrets nunca no repo)
+.env
+.env.local
+artifacts/api-server/.env
+artifacts/pap/.env

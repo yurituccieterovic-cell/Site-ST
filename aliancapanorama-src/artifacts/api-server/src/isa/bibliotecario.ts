@@ -10,7 +10,9 @@ import { isaMemoryTable, bibliotecaDocsTable } from "@workspace/db";
 import { gte, eq, and } from "drizzle-orm";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null;
 
 const BIBLIOTECA_DIR = process.env.BIBLIOTECA_DIR ?? "/tmp/pap-biblioteca";
 
@@ -53,6 +55,7 @@ Ignore URLs de vídeos YouTube, redes sociais e imagens.
 TEXTO:
 ${text.slice(0, 4000)}`;
 
+  if (!openai) return [];
   try {
     const res = await openai.chat.completions.create({
       model: "gpt-4o-mini",

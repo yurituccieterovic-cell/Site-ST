@@ -2,7 +2,7 @@
 // Usa Pollinations.ai — 100% gratuito, sem token, sem rate limit severo
 // Sonho → prompt de arte → imagem → arquivo curável
 
-import { db } from "../lib/db.js";
+import { db } from "@workspace/db";
 import { mekyArt, mekyDreams } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 

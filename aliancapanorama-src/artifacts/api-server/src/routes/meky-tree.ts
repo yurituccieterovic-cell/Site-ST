@@ -4,7 +4,7 @@
 // Ambos postam na memória coletiva automaticamente
 
 import { Router } from "express";
-import { db } from "../lib/db.js";
+import { db } from "@workspace/db";
 import {
   nodesTable, nodeProgressTable, collectiveMemory, usersTable
 } from "@workspace/db/schema";

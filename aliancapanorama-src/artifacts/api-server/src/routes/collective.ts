@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "../lib/db.js";
+import { db } from "@workspace/db";
 import { collectiveMemory, usersTable, nodesTable } from "@workspace/db/schema";
 import { desc, eq, sql, and, gte } from "drizzle-orm";
 

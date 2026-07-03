@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "../lib/db.js";
+import { db } from "@workspace/db";
 import { mekyTelemetry, mekyEvents, mekyControlQueue } from "@workspace/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 

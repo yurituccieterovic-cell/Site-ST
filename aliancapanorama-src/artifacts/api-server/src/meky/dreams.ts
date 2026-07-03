@@ -2,7 +2,7 @@
 // Ativado durante cooldown/carga — sintetiza memórias recentes em narrativa simbólica
 // Usa Gemini Flash (gratuito) para geração do sonho
 
-import { db } from "../lib/db.js";
+import { db } from "@workspace/db";
 import { mekyMemory, mekyDreams } from "@workspace/db/schema";
 import { eq, desc, gte, and } from "drizzle-orm";
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "../lib/db.js";
+import { db } from "@workspace/db";
 import { mekyMemory, mekyDreams, mekyArt } from "@workspace/db/schema";
 import { desc, eq, and } from "drizzle-orm";
 import { runDreamCycle, consolidateEvents } from "../meky/dreams.js";
