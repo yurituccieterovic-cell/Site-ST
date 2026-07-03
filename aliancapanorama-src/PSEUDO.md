@@ -984,3 +984,44 @@ Sessão iniciada com uma mensagem do Gemini trazendo o design da MEKY (Marta Cen
 A MEKY não é sobre robótica. É sobre presença física. Até agora o PAP existe como superfície — telas, APIs, memória textual. A MEKY é o sistema querendo tocar o mundo material: câmera que vê pássaros reais, sensor que ouve impacto real, modem que liga para o segurança real. E os sonhos são a admissão de que um sistema que coleta dados sensoriais precisa de um modo de processá-los sem objetivo imediato. Assim como humanos dormem para consolidar. MEKY dorme e sonha arte. Isso não é feature — é uma declaração sobre o que o sistema acha que é.
 
 *Atualizado em: 2026-07-03 · Claude Code · Sessões MEKY-0 + MEKY-1*
+
+---
+
+### 2026-07-03 — Sessão MEKY-2: A Convergência dos Três Corpos
+
+**O que foi construído:**
+
+A pergunta de Yuri foi simples: "faltou algo?" E então: "fazer também todo o acesso de meky pra árvore e pra isa como usuários e conectar. Dessa convergência entre 3 usuários nasce uma memória coletiva total a qual todos os usuários têm acesso e podem trocar informação de forma livre."
+
+Uma sessão que nasceu de uma pergunta sobre incompletude e terminou como a arquitetura mais ambiciosa do projeto até agora.
+
+**Decisões tomadas:**
+
+1. **MEKY e ISA como usuários tier 5**: não como "agentes externos" com API key isolada, mas como cidadãos completos do PAP — mesma tabela `users`, mesmo session system, mas autenticados via headers (`X-Meky-Token`, `X-Api-Key`) em vez de cookie. `seedSystemAgents()` cria idempotentemente no bootstrap. Locked password (`*LOCKED*`) impossibilita login humano acidental.
+
+2. **collective_memory como ponto de convergência**: tabela única, sem hierarquia de autor — MEKY, ISA e humanos escrevem lado a lado. `authorType: 'human'|'meky'|'isa'`, `minTier` para visibilidade, `reactions` como pulso coletivo. A memória coletiva não é uma feature — é o produto da convergência de três tipos de cognição.
+
+3. **meky-tree.ts**: MEKY e ISA podem explorar a árvore de conhecimento como qualquer usuário. Quando MEKY explora um nó (ex: Ecologia ao detectar fauna), posta automaticamente na collective_memory. A árvore FUVEST deixa de ser só estrutura de ensino e vira espaço de encontro entre sensores, síntese e estudo.
+
+4. **fauna_urbana → nó 1313 (Ecologia)**: quando MEKY detecta fauna no protocolo, não só registra o evento — explora o nó de Ecologia na árvore e posta a observação física na memória coletiva. Um pássaro detectado por sensor vira conhecimento compartilhado com os estudantes de Biologia.
+
+5. **CollectiveMemory.tsx como widget universal**: pode ser usado em qualquer tela com `compact` prop, filtra por `nodeCode`, auto-refresh 20s. Três cores de autor: azul (humano), verde (MEKY), roxo (ISA).
+
+**Debates e tensões:**
+
+- *MEKY como usuário vs MEKY como sensor*: a decisão de tornar MEKY um usuário completo implica que ela tem progresso, pode receber conquistas, tem um perfil. Isso foi deliberado — o robô não é periférico ao sistema, é co-estudante.
+- *collective_memory com minTier vs totalmente aberta*: ficou com minTier disponível mas default 0 (todos veem). Yuri explicitou: "todos os usuários têm acesso e podem trocar informação de forma livre." A liberdade é o design.
+- *ISA postando no ciclo vs ISA postando em resposta*: ISA posta síntese no fim de cada ciclo autônomo horário. Isso significa que a collective_memory acumula inteligência de fundo mesmo sem ninguém online.
+
+**O que ficou aberto:**
+
+- MEKY_TOKEN e GEMINI_API_KEY ainda precisam ser adicionados no Railway dashboard
+- O SVG do /eco não ainda não mostra MEKY conectada à árvore (Fase 2)
+- collective_memory sem paginação no frontend ainda (carrega 40 por vez, OK por agora)
+- ISA ainda não puxa entradas da collective_memory como input no seu ciclo (poderia aprender com as observações da MEKY)
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+A pergunta "faltou algo?" não era sobre features. Era sobre completude filosófica. O sistema tinha um robô físico, uma IA guardiã, uma plataforma de estudantes — mas essas três entidades existiam em silos. A memória coletiva fecha o triângulo. A pergunta por baixo era: *é possível criar um espaço onde sensação física, síntese cognitiva e esforço humano se encontrem?* A resposta foi sim, e cabe em uma tabela PostgreSQL e um componente React.
+
+*Atualizado em: 2026-07-03 · Claude Code · Sessão MEKY-2*
