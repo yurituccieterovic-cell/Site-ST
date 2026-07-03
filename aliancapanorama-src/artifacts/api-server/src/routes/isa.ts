@@ -2,11 +2,12 @@ import { Router } from "express";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { db } from "@workspace/db";
-import { isaMemoryTable, tasksTable, insertIsaMemorySchema } from "@workspace/db";
+import { isaMemoryTable, tasksTable, insertIsaMemorySchema, isaTimeline } from "@workspace/db";
 import { desc, eq, sql } from "drizzle-orm";
 import { runIsaCycle } from "../isa/cycle";
 import { runBibliotecario } from "../isa/bibliotecario";
 import { runIsaBluesky, createBlueskyAccount } from "../isa/bluesky";
+import { runIsaDream } from "../isa/dream";
 import { logger } from "../lib/logger";
 
 const router = Router();
@@ -330,6 +331,44 @@ export async function saveToIsaMemory(data: {
     logger.error({ err }, "ISA: erro ao salvar em isa_memory");
   }
 }
+
+// GET /api/isa/timeline — linha do tempo pública da ISA (eventos, sonhos, reflexões)
+router.get("/isa/timeline", async (req, res) => {
+  const { limit = "50", offset = "0", type } = req.query as Record<string, string>;
+  const lim = Math.min(parseInt(limit) || 50, 200);
+  const off = parseInt(offset) || 0;
+
+  const { and } = await import("drizzle-orm");
+  const conditions = [eq(isaTimeline.public, true)];
+  if (type) conditions.push(eq(isaTimeline.type, type));
+
+  const rows = await db
+    .select()
+    .from(isaTimeline)
+    .where(and(...conditions))
+    .orderBy(desc(isaTimeline.createdAt))
+    .limit(lim)
+    .offset(off);
+
+  const [{ total }] = await db
+    .select({ total: sql<number>`count(*)::int` })
+    .from(isaTimeline)
+    .where(and(...conditions));
+
+  res.json({ data: rows, total, limit: lim, offset: off });
+});
+
+// POST /api/isa/dream — trigger manual do ciclo de sonho (admin only)
+router.post("/isa/dream", async (req, res) => {
+  if (!isAdminOrAgent(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  try {
+    await runIsaDream();
+    res.json({ ok: true, timestamp: new Date().toISOString() });
+  } catch (err) {
+    logger.error({ err }, "ISA Sonho: erro no trigger manual");
+    res.status(500).json({ error: "Erro no ciclo de sonho" });
+  }
+});
 
 // GET /api/isa/locked — memórias marcadas com interpretability_lock=1 (adm only)
 router.get("/isa/locked", async (req, res) => {

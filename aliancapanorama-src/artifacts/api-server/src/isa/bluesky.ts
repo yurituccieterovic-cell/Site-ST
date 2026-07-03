@@ -121,6 +121,22 @@ export async function runIsaBluesky(): Promise<void> {
   }
 }
 
+// Lê as próprias postagens da ISA no Bluesky para auto-referência no ciclo
+export async function readOwnPosts(limit: number = 5): Promise<string[]> {
+  if (!HANDLE || !APP_PASSWORD) return [];
+  try {
+    const agent = new AtpAgent({ service: "https://bsky.social" });
+    await agent.login({ identifier: HANDLE, password: APP_PASSWORD });
+    const feed = await agent.getAuthorFeed({ actor: HANDLE, limit });
+    return feed.data.feed
+      .map(item => (item.post.record as { text?: string }).text ?? "")
+      .filter(Boolean);
+  } catch (err) {
+    logger.warn({ err }, "ISA Bluesky: falha ao ler próprias postagens");
+    return [];
+  }
+}
+
 // Criação de conta via AT Protocol (necessita verificação de email pelo usuário)
 export async function createBlueskyAccount(
   email: string,

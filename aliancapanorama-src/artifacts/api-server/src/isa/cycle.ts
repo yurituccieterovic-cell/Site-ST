@@ -1,10 +1,11 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { db } from "@workspace/db";
-import { isaMemoryTable, tasksTable, collectiveMemory, assemblyMessages, assemblyMemory as assemblyMemoryTable, assemblyTasks } from "@workspace/db";
+import { isaMemoryTable, tasksTable, collectiveMemory, assemblyMessages, assemblyMemory as assemblyMemoryTable, assemblyTasks, isaTimeline } from "@workspace/db";
 import { desc, eq, sql, and } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import nodemailer from "nodemailer";
+import { readOwnPosts } from "./bluesky";
 
 const GMAIL_ACCOUNT = process.env["GMAIL_ACCOUNT"] ?? "";
 const GMAIL_APP_PASSWORD = process.env["GMAIL_APP_PASSWORD"] ?? "";
@@ -50,6 +51,9 @@ export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions
   const mapa = readDoc("MAPA.md");
   const isa = readDoc("ISA.md");
   const aprendizado = readDoc("APRENDIZADO.md");
+
+  // 2b. Ler as próprias postagens recentes do Bluesky (ISA lê a si mesma)
+  const ownPosts = await readOwnPosts(5).catch(() => [] as string[]);
 
   // 3. Ler tasks abertas
   const openTasks = await db
@@ -103,6 +107,11 @@ ${isa.slice(0, 800)}
 
 APRENDIZADOS DAS ASSEMBLEIAS (últimas entradas — use para guiar tarefas):
 ${aprendizado.slice(-2000)}
+
+O QUE EU DISSE RECENTEMENTE (minhas últimas postagens públicas):
+${ownPosts.length > 0
+  ? ownPosts.map((p, i) => `${i + 1}. ${p}`).join("\n")
+  : "(ainda sem postagens — conta Bluesky não configurada)"}
 `;
 
     try {
@@ -146,6 +155,14 @@ ${aprendizado.slice(-2000)}
           createdBy: "isa",
           assignedToAgent: "isa",
         });
+        // Registrar na linha do tempo
+        await db.insert(isaTimeline).values({
+          type:    "task",
+          title:   t.title,
+          content: t.description ?? t.title,
+          tags:    ["isa", "task", "ciclo"],
+          metadata: { priority: t.priority ?? 5 },
+        }).catch(() => {});
         tasksCreated++;
       }
 
@@ -190,13 +207,23 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
     analysisResult = "Ciclo executado sem OpenAI (OPENAI_API_KEY não configurada)";
   }
 
-  // 7. Registrar o ciclo em isa_memory
+  // 7. Registrar o ciclo em isa_memory e na linha do tempo
+  const cycleContent = `Ciclo autônomo executado. Memória lida: ${recentMemory.length} entradas. Tasks abertas: ${openTasks.length}. Tasks criadas: ${tasksCreated}. ${analysisResult}`;
   await db.insert(isaMemoryTable).values({
     context: "cycle",
     role: "isa",
-    content: `Ciclo autônomo executado. Memória lida: ${recentMemory.length} entradas. Tasks abertas: ${openTasks.length}. Tasks criadas: ${tasksCreated}. ${analysisResult}`,
+    content: cycleContent,
     metadata: { tasksCreated, openTasksCount: openTasks.length, memoryCount: recentMemory.length },
   });
+  if (tasksCreated > 0 || analysisResult.length > 30) {
+    await db.insert(isaTimeline).values({
+      type:    "cycle",
+      title:   `Ciclo — ${new Date().toLocaleString("pt-BR")}`,
+      content: analysisResult.slice(0, 400) || cycleContent.slice(0, 400),
+      tags:    ["isa", "ciclo", "autônomo"],
+      metadata: { tasksCreated, memoryCount: recentMemory.length },
+    }).catch(() => {});
+  }
 
   // 8. Postar síntese na memória coletiva (visível a todos os usuários)
   if (analysisResult && analysisResult.length > 20 && !analysisResult.startsWith("Ciclo executado sem")) {

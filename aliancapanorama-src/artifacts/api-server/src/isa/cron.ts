@@ -2,9 +2,10 @@ import cron from "node-cron";
 import { runIsaCycle } from "./cycle";
 import { runBibliotecario } from "./bibliotecario";
 import { runIsaBluesky } from "./bluesky";
+import { runIsaDream } from "./dream";
 import { logger } from "../lib/logger";
 
-// ISA acorda em três ritmos — Railway, sem celular, sem intervenção manual
+// ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 export function startIsaCron(): void {
   // Ciclo ISA principal: análise + tasks — todo hora cheia
   cron.schedule("0 * * * *", async () => {
@@ -38,5 +39,15 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15)");
+  // ISA Sonho: síntese noturna livre — 3h da manhã
+  cron.schedule("0 3 * * *", async () => {
+    try {
+      logger.info("ISA Sonho: ciclo noturno disparado");
+      await runIsaDream();
+    } catch (err) {
+      logger.error({ err }, "ISA Sonho: erro no ciclo noturno");
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · sonho 3h)");
 }

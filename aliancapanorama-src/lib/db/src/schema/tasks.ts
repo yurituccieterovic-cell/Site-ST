@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, timestamp, jsonb, uuid } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, timestamp, jsonb, uuid, varchar, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -95,3 +95,18 @@ export type InsertCatalogoCentral = z.infer<typeof insertCatalogoCentralSchema>;
 export const insertIsaMemorySchema = createInsertSchema(isaMemoryTable).omit({ id: true, createdAt: true });
 export type InsertIsaMemory = z.infer<typeof insertIsaMemorySchema>;
 export type IsaMemory = typeof isaMemoryTable.$inferSelect;
+
+// ISA Timeline — linha do tempo pública da vida autônoma da ISA
+// Eventos significativos: sonhos, reflexões, tasks criadas, marcos da assembleia
+export const isaTimeline = pgTable("isa_timeline", {
+  id:        uuid("id").defaultRandom().primaryKey(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  type:      varchar("type", { length: 30 }).notNull(), // dream|post|cycle|task|assembly|lock
+  title:     varchar("title", { length: 200 }),
+  content:   text("content").notNull(),
+  tags:      jsonb("tags").$type<string[]>(),
+  public:    boolean("public").default(true).notNull(),
+  metadata:  jsonb("metadata").$type<Record<string, unknown>>(),
+});
+
+export type IsaTimelineEntry = typeof isaTimeline.$inferSelect;

@@ -234,6 +234,20 @@ export async function ensureMekyTables(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_assembly_msgs_unread ON assembly_messages(read) WHERE read = FALSE;
     CREATE INDEX IF NOT EXISTS idx_assembly_tasks_status ON assembly_tasks(status, to_agent);
     CREATE INDEX IF NOT EXISTS idx_assembly_memory_importance ON assembly_memory(importance DESC);
+
+    CREATE TABLE IF NOT EXISTS isa_timeline (
+      id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      type       VARCHAR(30) NOT NULL,
+      title      VARCHAR(200),
+      content    TEXT NOT NULL,
+      tags       JSONB,
+      public     BOOLEAN DEFAULT TRUE NOT NULL,
+      metadata   JSONB
+    );
+    CREATE INDEX IF NOT EXISTS idx_isa_timeline_type ON isa_timeline(type);
+    CREATE INDEX IF NOT EXISTS idx_isa_timeline_created ON isa_timeline(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_isa_timeline_public ON isa_timeline(public) WHERE public = TRUE;
   `);
 
   // Seed assembly_agents (idempotente)
