@@ -8,3 +8,4 @@ export * from "./ia-courses";
 export * from "./tasks";
 export * from "./nebula";
 export * from "./meky";
+export * from "./collective";

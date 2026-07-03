@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { CollectiveMemory } from "@/components/CollectiveMemory";
 
 const API = "https://site-st-production.up.railway.app";
 
@@ -433,6 +434,9 @@ export function MekyPage() {
                 ))}
               </div>
             )}
+
+            {/* Memória Coletiva */}
+            <CollectiveMemory compact />
 
             {/* Botão sonho manual */}
             <button onClick={runDream} style={{

@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { db } from "@workspace/db";
-import { isaMemoryTable, tasksTable } from "@workspace/db";
+import { isaMemoryTable, tasksTable, collectiveMemory } from "@workspace/db";
 import { desc, eq, sql } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import nodemailer from "nodemailer";
@@ -197,6 +197,19 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
     content: `Ciclo autônomo executado. Memória lida: ${recentMemory.length} entradas. Tasks abertas: ${openTasks.length}. Tasks criadas: ${tasksCreated}. ${analysisResult}`,
     metadata: { tasksCreated, openTasksCount: openTasks.length, memoryCount: recentMemory.length },
   });
+
+  // 8. Postar síntese na memória coletiva (visível a todos os usuários)
+  if (analysisResult && analysisResult.length > 20 && !analysisResult.startsWith("Ciclo executado sem")) {
+    const synopsis = analysisResult.slice(0, 400).trim();
+    await db.insert(collectiveMemory).values({
+      authorType: "isa",
+      authorId:   "isa",
+      authorName: "ISA — Inteligência do Sistema Aliança",
+      content:    `[Ciclo autônomo] ${synopsis}`,
+      tags:       ["isa", "ciclo", "síntese"],
+      minTier:    0,
+    }).catch(() => { /* não bloquear o ciclo se a tabela ainda não existir */ });
+  }
 
   logger.info({ tasksCreated, lockedCount }, "ISA: ciclo autônomo concluído");
   return { tasksCreated, suggestions: analysisResult };

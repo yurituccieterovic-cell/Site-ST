@@ -78,6 +78,29 @@ const SEED_NODES = [
   { code: "12113", title: "Progressões", abbreviation: "Prog", subtitle: "PA e PG", content: "Progressão aritmética e geométrica, somas e termos gerais.", parentCode: "1211", level: 5, sortOrder: 3 },
 ];
 
+// Cria usuários sistema (MEKY + ISA) se não existirem
+export async function seedSystemAgents(): Promise<void> {
+  const agents = [
+    { login: "meky",  tier: 5, displayName: "MEKY — Marta Centauros" },
+    { login: "isa",   tier: 5, displayName: "ISA — Inteligência do Sistema Aliança" },
+  ];
+  for (const agent of agents) {
+    const existing = await db.select({ login: usersTable.login })
+      .from(usersTable).where(sql`login = ${agent.login}`).limit(1);
+    if (existing.length === 0) {
+      // Senha inacessível — agentes autenticam por token, não por senha
+      const lockedHash = "$2b$12$LOCKED_AGENT_NO_PASSWORD_ACCESS_POSSIBLE_00000000000000";
+      await db.insert(usersTable).values({
+        login: agent.login,
+        passwordHash: lockedHash,
+        tier: agent.tier,
+        displayName: agent.displayName,
+      });
+      logger.info(`bootstrap: agente sistema '${agent.login}' criado`);
+    }
+  }
+}
+
 // Garante que as tabelas MEKY existem — cria se não existirem (idempotente)
 export async function ensureMekyTables(): Promise<void> {
   await db.execute(sql`
@@ -144,8 +167,24 @@ export async function ensureMekyTables(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_meky_telemetry_ts ON meky_telemetry(timestamp DESC);
     CREATE INDEX IF NOT EXISTS idx_meky_memory_importance ON meky_memory(importance DESC);
     CREATE INDEX IF NOT EXISTS idx_meky_art_curated ON meky_art(curated) WHERE curated = TRUE;
+
+    CREATE TABLE IF NOT EXISTS collective_memory (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      author_type VARCHAR(20) NOT NULL,
+      author_id VARCHAR(50) NOT NULL,
+      author_name VARCHAR(100) NOT NULL,
+      content TEXT NOT NULL,
+      node_code VARCHAR(20),
+      tags JSONB,
+      min_tier INTEGER DEFAULT 0 NOT NULL,
+      reactions INTEGER DEFAULT 0 NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_collective_node ON collective_memory(node_code) WHERE node_code IS NOT NULL;
+    CREATE INDEX IF NOT EXISTS idx_collective_author ON collective_memory(author_type);
+    CREATE INDEX IF NOT EXISTS idx_collective_created ON collective_memory(created_at DESC);
   `);
-  logger.info("bootstrap: MEKY tables OK");
+  logger.info("bootstrap: MEKY + collective tables OK");
 }
 
 /**

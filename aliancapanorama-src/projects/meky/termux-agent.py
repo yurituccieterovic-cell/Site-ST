@@ -174,6 +174,32 @@ def post_event(source: str, description: str, metadata: dict = None) -> bool:
         print(f"[event] Falha de rede: {e}")
     return False
 
+def explore_tree_node(node_code: str, observation: str, tags: list = None) -> bool:
+    """MEKY explora um nó da árvore de conhecimento e posta na memória coletiva."""
+    payload = {"nodeCode": node_code, "observation": observation, "tags": tags or ["meky", "físico"]}
+    try:
+        r = requests.post(f"{API_BASE}/api/meky/tree/explore", json=payload, headers=HEADERS, timeout=10)
+        if r.ok:
+            data = r.json()
+            print(f"[tree] Explorado: {data.get('node', {}).get('title', node_code)} → coletiva")
+            return True
+        print(f"[tree] ERRO {r.status_code}: {r.text[:100]}")
+    except Exception as e:
+        print(f"[tree] Falha: {e}")
+    return False
+
+def post_collective(content: str, node_code: str = None, tags: list = None) -> bool:
+    """Posta diretamente na memória coletiva (sem vincular a nó específico)."""
+    payload = {"content": content}
+    if node_code: payload["nodeCode"] = node_code
+    if tags:      payload["tags"] = tags
+    try:
+        r = requests.post(f"{API_BASE}/api/collective", json=payload, headers=HEADERS, timeout=10)
+        return r.ok
+    except Exception as e:
+        print(f"[coletiva] Falha: {e}")
+    return False
+
 def get_control_orders() -> list:
     try:
         r = requests.get(f"{API_BASE}/api/meky/control", headers=HEADERS, timeout=10)
@@ -236,10 +262,21 @@ def execute_protocol(order: dict, modem: A7670Modem):
             modem.send_sms(number, message)
             post_event("sms_sent", f"SMS enviado para {number}", payload)
 
+    elif protocol == "fauna_urbana":
+        # MEKY registra + explora nó de Ecologia na árvore + posta na memória coletiva
+        especie = payload.get("especie", "fauna não identificada")
+        local   = payload.get("local", "ponto de patrulha")
+        obs = f"Observação física em {local}: {especie} detectada por sensor MEKY."
+        post_event("fauna_urbana", obs, payload)
+        # Nó 1313 = Ecologia (nível 4, pai: Biologia)
+        explore_tree_node("1313", obs, tags=["fauna", "ecologia", "físico", "meky"])
+
     elif protocol == "amparo":
         # Aproximar do humano + sinal sonoro (via Arduino)
         modem.send(f"AMPARO:{json.dumps(payload)}")
         post_event("protocol_amparo", "Protocolo Amparo ativado")
+        post_collective("Protocolo Amparo ativado — MEKY detectou humano precisando de assistência.",
+                        tags=["amparo", "meky", "humano"])
 
     else:
         # Protocolo genérico — enviar diretamente para Arduino via serial
