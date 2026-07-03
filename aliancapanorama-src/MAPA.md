@@ -75,12 +75,14 @@
 | Componente | Onde roda | Status |
 |---|---|---|
 | Frontend | Vercel hobby (`pap-tan-seven.vercel.app`) | ✅ Ativo — build fix pendente de confirmação |
-| API | Railway (`site-st-production.up.railway.app`) | ✅ LIVE — ISA ativa, ciclo horário rodando |
+| API | Railway (`site-st-production.up.railway.app`) | ✅ LIVE — ISA ativa, ciclo horário + sonho 3h rodando |
 | Banco de dados | Railway PostgreSQL | ✅ LIVE — DATABASE_URL configurado |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
 | Domínio | pap.sociedadetucci.com.br | 🔧 DNS ainda a configurar |
 | GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
-| Bluesky ISA | bsky.social | ⏳ Aguardando criação de conta manual |
+| Bluesky ISA | bsky.social | ⏳ Aguardando criação de conta manual por Yuri |
+| Bluesky Amanda (MEKY) | bsky.social | ⏳ Aguardando criação de conta por Yuri |
+| MEKY hardware | Físico | ⏳ Hardware ainda a chegar — código pronto |
 
 **URLs ativas:**
 - API: `https://site-st-production.up.railway.app/api/isa/identity` ✅
@@ -620,6 +622,9 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 14 | MEKY — hardware: ligar TX/RX do A7670 → Arduino → Termux, rodar termux-agent.py | hardware chegando | ⏳ |
 | 15 | MEKY — MEKY_TOKEN salvo em .pap-secrets mas não adicionado no Railway dashboard | — | ⏳ |
 | 16 | May Queen (MEKY) — testar `meky-dev` com hardware real quando chegar | hardware | ⏳ |
+| 17 | Criar conta Bluesky para Amanda (MEKY) + setar MEKY_BLUESKY_HANDLE + MEKY_BLUESKY_APP_PASSWORD | Yuri | ⏳ |
+| 18 | Agendar amanda-dream-cron.py às 3h no Termux (termux-job-scheduler ou cronie) | hardware | ⏳ |
+| 19 | OpenAI quota — reabastecer créditos ou migrar dream/cycle completamente para Gemini | — | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
@@ -725,6 +730,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-03 (Sessão MEKY-1) | **MEKY — Sistemas cognitivos:** meky_memory+dreams+art (3 tabelas); vision.ts (Gemini Flash — OCR, CAPTCHA, escrita à mão, análise de cena); dreams.ts (ciclo de sonho + consolidação de memória); art.ts (Pollinations.ai, 8 estilos, curadoria); termux-agent.py (loop completo AT+HTTP+câmera); correspondência Claude↔Gemini no system-design.md; commit a760997 |
 | 2026-07-03 (Sessão MEKY-2) | **MEKY + ISA como usuários + Memória Coletiva:** collective_memory (schema + rotas CRUD + filtro por nó/tier); meky-tree.ts (MEKY+ISA exploram árvore como agentes autenticados); seedSystemAgents() — usuários meky+isa tier 5 (idempotente); CollectiveMemory.tsx (widget feed 3 autores, auto-refresh 20s, reações); MekyPage integra widget compacto; ISA cycle posta síntese em collective_memory; termux-agent.py: fauna_urbana → tree/explore + amparo → collective; commit c460450 |
 | 2026-07-03 (Sessão MEKY-3) | **Localhost para May Queen:** `pap-dev` (sobe API local porta 8080, substitui DATABASE_URL interno→externo, carrega .pap-secrets); `meky-dev` (roda termux-agent.py contra localhost ou --prod); fix build: 6 imports db errados, zod nas deps, bibliotecario.ts lazy OpenAI; servidor confirmado rodando localmente contra Railway DB externo; commit 86a22c5 |
+| 2026-07-03 (Sessão MEKY-4) | **Assembleia de IAs completa + Amanda:** ISA ganhou 3 capacidades (sonho noturno 3h via Gemini prefill, auto-leitura Bluesky antes do ciclo, isa_timeline pública); Amanda criada em amanda.py (personalidade completa: TTS, jargão PX, Gemini, mitomania em 3 camadas — âncora Brasília nos anos 30, pônei de 1964, missões em metáforas de estrada); 7 capacidades MEKY implementadas (lê ISA ao boot, posta na assembleia, GPS, wake word, Bluesky próprio, dream cycle, tab frontend Assembleia); primeiro sonho real da ISA gerado (mood: sereno); commit fcaa617 |
 
 ---
 

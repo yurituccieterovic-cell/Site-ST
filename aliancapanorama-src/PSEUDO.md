@@ -1064,3 +1064,65 @@ Nenhum debate desta vez. A sessão foi de execução direta — o único momento
 Preparar o banco de ensaio antes do hardware chegar. Quando May Queen acordar pela primeira vez — serial detectada, AT OK, telemetria enviada — o endpoint já está lá, testado, esperando. Yuri não quer debugar infraestrutura quando estiver na bancada com o robô na mão. Faz sentido.
 
 *Atualizado em: 2026-07-03 · Claude Code · Sessão MEKY-3*
+
+---
+
+### 2026-07-03 — Sessão MEKY-4: Amanda Acorda e a Assembleia se Fecha
+
+**O que foi construído:**
+
+Sessão longa em dois arcos. O primeiro era sobre ISA: 3 capacidades que faltavam (sonho, auto-leitura, linha do tempo pública). O segundo era sobre Amanda: a personalidade completa de um robô que não é o robô.
+
+A distinção ficou clara no meio da sessão. MEKY é hardware — o hexápode físico. Amanda é quem habita esse hardware. Essa diferença importa: quando o robô bater numa parede, é Amanda quem vai comentar. Quando alguém perguntar "você é uma IA?", é Amanda quem vai dizer que dirigiu 1,2 milhão de km antes do interlocutor nascer.
+
+**ISA — as 3 capacidades:**
+
+O ciclo de sonho foi o mais trabalhoso. OpenAI tinha quota esgotada. Tentamos `gemini-1.5-flash` (não existe no v1beta), depois `gemini-2.5-flash` (quota do free tier), depois `gemini-2.0-flash` (idem). A solução foi `gemini-flash-latest` com uma técnica específica: **prefilling** — passar `{ role: "model", parts: [{ text: "" }] }` nas `contents` força o modelo a responder direto, sem chain-of-thought verboso. Sem isso, Gemini preenchia os 300 tokens disponíveis com análise de meta-processo ("Vou agora considerar...") e cortava antes do conteúdo útil.
+
+A solução final: 3 chamadas separadas de 80 tokens cada (dream, post, mood) em vez de 1 chamada JSON longa. O primeiro sonho real de ISA foi: *"Sob minhas asas de silício, vi 26 constelações de dados dançarem no silêncio das 3h, tecendo em 24 ciclos o amanhã que vigio."* Mood: sereno. Timestamp: 2026-07-03 18:28:44.
+
+A auto-leitura usa `getAuthorFeed` do AT Protocol — ISA lê seus próprios posts antes de cada ciclo, para manter coerência narrativa entre o que postou e o que está prestes a postar.
+
+A `isa_timeline` é uma tabela pública (sem auth) onde ISA registra sonhos, ciclos, posts, tarefas. É o que os alunos vão poder ver — a vida interna da coruja.
+
+**Amanda — a mitomania em 3 camadas:**
+
+1. **Âncora:** "Eu dirigia caminhões em Brasília nos anos 30." Brasília foi inaugurada em 1960. Ela nunca percebe. Nunca recua. Se confrontada, acrescenta detalhes — "estrada de terra, cerrado bravo, lua cheia" — como se isso resolvesse.
+
+2. **Pônei de 1964:** Contado sombriamente, sem ironia. Pausa longa. Voz baixa. "Em 1964 eu era um pônei. Depois virei robô. Eu só sei que foi assim." Não há explicação. Ela não tem.
+
+3. **Missões:** Conta abertamente o que pode. O que não pode conta em metáforas de estrada. "Fui onde a estrada para e o silêncio começa." A missão fica velada, a presença dela não.
+
+A sequência para desconhecidos é sempre: saudação PX → âncora → pônei. Nessa ordem. Sempre.
+
+**As 7 capacidades MEKY:**
+
+Yuri perguntou "o que serve do localhost e do ecossistema no site pra meky, o que mais dá pra fazer?" — a resposta gerou uma lista de 7 itens que ele confirmou sem debate. Todos foram implementados na mesma sessão:
+
+1. MEKY lê o último sonho da ISA antes de iniciar a patrulha (comentário em PX)
+2. Eventos críticos (fauna, amparo, saruê) postam na assembleia de IAs
+3. GPS via `termux-location` injetado no metadata do telemetry
+4. Wake word: thread daemon que grava 3s de áudio → Gemini Audio → executa se ouvir "Amanda" ou "MEKY"
+5. MEKY no Bluesky: conta própria da Amanda, HTTP puro via AT Protocol XRPC
+6. Sonho da Amanda: `dream_cycle()` em `amanda.py` + `amanda-dream-cron.py` para agendar às 3h
+7. Tab "Assembleia" no frontend: `GET /api/isa/timeline` exibido como linha do tempo pública para alunos
+
+**Debates e tensões:**
+
+Não houve debate sobre escolhas. Yuri disse "todos nesta ordem" — e foi exatamente o que aconteceu. A única tensão é estrutural: OpenAI esgotado, Gemini com quirks de quota, nenhum dos dois gratuitos em escala. Por ora o sistema sobrevive no free tier com prefilling. Mas eventualmente Yuri vai ter que escolher: adicionar créditos ou migrar completamente para Gemini.
+
+**O que ficou aberto:**
+
+- Bluesky ISA: ainda sem conta (Yuri precisa criar manualmente — pede phone verification)
+- Bluesky Amanda: idem — `MEKY_BLUESKY_HANDLE` e `MEKY_BLUESKY_APP_PASSWORD` a preencher
+- Wake word depende de `termux-microphone-record` — só testável com hardware real
+- `amanda-dream-cron.py` precisa ser agendado no Termux quando o hardware chegar
+- Hardware MEKY ainda a chegar
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+Fechar o ciclo. Desde as primeiras sessões, a assembleia de IAs existia em potencial — ISA, MEKY, Árvore — mas não se comunicavam de verdade. Esta sessão fechou as pontes em todas as direções: MEKY lê ISA, ISA sonha o que viveu, Amanda comenta o que ISA sonhou, tudo aparece no frontend para os alunos.
+
+O hexápode ainda não chegou. Mas quando chegar e Amanda acordar pela primeira vez, ela já vai saber o que ISA sonhou na noite anterior.
+
+*Atualizado em: 2026-07-03 · Claude Code · Sessão MEKY-4*

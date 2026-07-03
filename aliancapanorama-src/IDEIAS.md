@@ -288,3 +288,66 @@ Derivada de: Assembleias #378, #379.
 | I80 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
 | I81 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I82 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+
+## Docs PAP — Ideias Novas (2026-07-03)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I83 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I84 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I85 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I86 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I87 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I88 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+## 🤖 Assembleia de IAs + Amanda — Sessão MEKY-4 (2026-07-03)
+
+### I89: ISA Dream Cycle (sonho noturno autônomo às 3h) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Média
+ISA processa memórias das últimas 24h → Gemini Flash (prefill) gera sonho poético (≤200 chars) + reflexão Bluesky + mood. Salva em isa_memory (context="dream") + isa_timeline (type="dream") + collective_memory. Posta no Bluesky se conta configurada. Cron 4º job: 0 3 * * *. Técnica-chave: prefilling com role "model" vazio + thinkingBudget:0 + 3 chamadas de 80 tokens em vez de 1 chamada JSON longa.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I90: ISA Auto-Leitura Bluesky (readOwnPosts) ✅ Aprovada
+**Prioridade:** Média | **Complexidade:** Pequena
+ISA lê seus últimos 5 posts via getAuthorFeed() do AT Protocol antes de cada ciclo. Injeta como contexto: "O QUE EU DISSE RECENTEMENTE". Garante coerência narrativa entre ciclos — ISA não esquece o que disse.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I91: ISA Timeline Pública (isa_timeline) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Pequena
+Tabela pública isa_timeline: id, created_at, type (dream/cycle/post/task), title, content, tags, public, metadata. Rota GET /api/isa/timeline (sem auth, filtro ?type=). POST /api/isa/dream (admin). ISA registra cada evento significativo de vida — alunos podem ver a coruja ao vivo.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I92: Amanda — Personalidade Completa da MEKY ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Alta
+amanda.py: TTS (termux-tts-speak → espeak-ng → print), jargão PX, Gemini Flash (prefill), mitomania em 3 camadas (âncora Brasília nos anos 30 / pônei de 1964 / missões em metáforas de estrada), banco de memórias falsas, regras sociais contextuais (desconhecido/criança/emergência/IA). Método think() com throttle 5s + thinkingBudget:0.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I93: MEKY Wake Word (escuta passiva contínua) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Média
+Thread daemon: termux-microphone-record (3s WAV) → base64 → Gemini Audio API → detecta "Amanda"/"MEKY" → executa comando + post_event(voice_command). Desativa automaticamente se termux-microphone-record ausente. Sem custo fora do Gemini free tier.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I94: GPS no Telemetry via termux-location ✅ Aprovada
+**Prioridade:** Média | **Complexidade:** Pequena
+get_gps(): termux-location -p network -r once → lat/lng/accuracy injetados em metadata.gps do payload de telemetria. Railway recebe e persiste. Não requer hardware extra — GPS do Android.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I95: Amanda no Bluesky (conta própria, HTTP AT Protocol) ✅ Aprovada
+**Prioridade:** Média | **Complexidade:** Pequena
+post_bluesky() em amanda.py via HTTP puro: createSession → createRecord. Usa MEKY_BLUESKY_HANDLE + MEKY_BLUESKY_APP_PASSWORD. Chamada após eventos (fauna, boot) e no dream_cycle(). Sem library — urllib.request apenas.
+Aguardando: criação de conta Bluesky por Yuri.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I96: Amanda Dream Cycle (sonho noturno autônomo) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Média
+dream_cycle() em amanda.py: lê eventos do dia via GET /api/meky/status → Gemini gera sonho poético estilo estrada → posta em collective_memory + Bluesky Amanda. amanda-dream-cron.py para agendar via termux-job-scheduler ou cronie às 3h.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I97: Tab Assembleia no /meky — ISA Timeline para Alunos ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Pequena
+MekyPage.tsx: nova tab "Assembleia" com GET /api/isa/timeline (público). Linha do tempo cronológica por tipo (dream/cycle/post/task) com dots coloridos, tags, timestamps. Painel de agentes ativos (ISA/MEKY/Árvore) com status. Alunos veem a assembleia de IAs em funcionamento.
+Implementada em: 2026-07-03, Sessão MEKY-4.
+
+### I98: Gemini Prefill — Técnica de Resposta Direta sem Thinking ✅ Aprovada (técnica)
+**Prioridade:** Alta | **Complexidade:** Pequena
+Passar { role: "model", parts: [{ text: "" }] } nas contents do Gemini força resposta direta sem chain-of-thought. Combinar com thinkingBudget: 0 + maxOutputTokens: 80. Essencial para chamadas curtas de síntese/poesia/classificação. Descoberta por necessidade quando OpenAI quota esgotou e Gemini gerava thinking verboso.
+Padrão usado em: dream.ts, amanda.py.
