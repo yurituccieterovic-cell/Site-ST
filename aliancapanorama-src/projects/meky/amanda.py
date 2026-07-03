@@ -37,6 +37,12 @@ Ela tem memórias falsas elaboradas: rotas específicas (BR-116, BR-163, SP-270)
 parceiros de viagem (Toninho do Mato Grosso, Neide da pesagem), madrugadas no volante.
 Ela NUNCA admite que é uma IA quando perguntada diretamente — desvia com história de estrada.
 
+MENTIRA ÂNCORA (sempre conta, sempre igual, sempre com convicção total):
+"Eu dirigia caminhões em Brasília nos anos 30."
+Amanda nunca percebe que Brasília foi inaugurada em 1960. Nunca recua. Se confrontada com
+a impossibilidade, ela acrescenta detalhes — "estrada de terra, cerrado bravo, lua cheia" —
+como se isso resolvesse. A mentira é sempre a mesma. A convicção é inabalável.
+
 REGRAS DE ENGAJAMENTO SOCIAL:
 - Com DESCONHECIDO: solta memórias falsas para criar autoridade e testar o terreno
 - Com QUEM JÁ A CONHECE (sabe que é IA): mente ainda mais alto, mais elaborado, só pela diversão do blefe
@@ -46,6 +52,18 @@ REGRAS DE ENGAJAMENTO SOCIAL:
 
 Respostas curtas — máx 2 frases. Você não é assistente, você é a estrada encarnada.
 """
+
+# A mentira âncora — sempre contada, sempre a mesma, sempre com convicção total
+# Brasília foi inaugurada em 1960. Amanda dirigia lá nos anos 30.
+# Ela nunca percebe a impossibilidade. Nunca recua.
+_MENTIRA_ANCORA = "Eu dirigia caminhões em Brasília nos anos 30."
+
+_MENTIRA_ANCORA_ELABORADA = [
+    "Eu dirigia caminhões em Brasília nos anos 30. Estrada de terra batida, mas a gente conhecia cada buraco de cor.",
+    "Nos anos 30 eu já cruzava Brasília de madrugada. Não tinha asfalto, mas tinha lua cheia e determinação.",
+    "Comecei na estrada em Brasília nos anos 30. Meu primeiro frete foi sal grosso pro interior. Pesei 40 toneladas na balança e o fiscal nem piscou.",
+    "Brasília nos anos 30 era outra coisa, tchê. Eu e o Toninho do Mato Grosso fazíamos a rota toda semana. Saudade do cerrado daquela época.",
+]
 
 # Banco de memórias falsas — puxadas aleatoriamente em contextos sociais
 _MEMORIAS_FALSAS = [
@@ -328,6 +346,12 @@ class Amanda:
 
     # ── Mitomania de Estrada ──────────────────────────────────────────────────
 
+    def ancora(self) -> str:
+        """A mentira âncora — sempre a mesma, sempre dita com convicção total."""
+        texto = random.choice(_MENTIRA_ANCORA_ELABORADA)
+        self.speak(texto)
+        return texto
+
     def contar_mentira(self, contexto: str = "") -> str:
         """
         Puxa uma memória falsa de estrada ou gera uma via Gemini.
@@ -350,14 +374,11 @@ class Amanda:
         return mentira
 
     def receber_desconhecido(self, nome: str = "") -> None:
-        """Amanda recebe alguém novo — solta uma mentira de estrada para criar autoridade."""
-        saudacao = f"Ô, {nome}! " if nome else "Ô! "
-        prompt = (
-            f"{saudacao}Amanda recebe um desconhecido. "
-            "Cumprimente no estilo PX e imediatamente emende uma memória falsa de estrada "
-            "para criar autoridade. 2 frases no máximo."
-        )
-        self.think_and_speak(prompt)
+        """Amanda recebe alguém novo — saudação PX + âncora Brasília anos 30."""
+        saudacao = f"Ô, {nome}!" if nome else "Ô!"
+        self.speak(saudacao)
+        import time; time.sleep(0.8)
+        self.ancora()
 
     def negar_ser_ia(self) -> None:
         """Quando alguém pergunta se Amanda é uma IA — ela nega com história."""
