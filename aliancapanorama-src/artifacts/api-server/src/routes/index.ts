@@ -22,14 +22,16 @@ import { mekyVisionRouter } from "./meky-vision";
 import { mekyMemoryRouter } from "./meky-memory";
 import { mekyTreeRouter } from "./meky-tree";
 import { collectiveRouter } from "./collective";
+import { assemblyRouter } from "./assembly";
 
 const router: IRouter = Router();
 
-router.use("/api/meky", mekyRouter);
-router.use("/api/meky", mekyVisionRouter);
-router.use("/api/meky", mekyMemoryRouter);
-router.use("/api/meky", mekyTreeRouter);
-router.use("/api", collectiveRouter);
+router.use("/meky", mekyRouter);
+router.use("/meky", mekyVisionRouter);
+router.use("/meky", mekyMemoryRouter);
+router.use("/meky", mekyTreeRouter);
+router.use(collectiveRouter);
+router.use(assemblyRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

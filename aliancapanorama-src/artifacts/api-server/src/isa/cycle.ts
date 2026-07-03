@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { db } from "@workspace/db";
-import { isaMemoryTable, tasksTable, collectiveMemory } from "@workspace/db";
-import { desc, eq, sql } from "drizzle-orm";
+import { isaMemoryTable, tasksTable, collectiveMemory, assemblyMessages, assemblyMemory as assemblyMemoryTable, assemblyTasks } from "@workspace/db";
+import { desc, eq, sql, and } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import nodemailer from "nodemailer";
 
@@ -208,9 +208,90 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
       content:    `[Ciclo autônomo] ${synopsis}`,
       tags:       ["isa", "ciclo", "síntese"],
       minTier:    0,
-    }).catch(() => { /* não bloquear o ciclo se a tabela ainda não existir */ });
+    }).catch(() => {});
   }
+
+  // 9. Conectar à Assembleia — ler mensagens da Árvore + responder + registrar na memória inter-agente
+  await syncWithAssembly(analysisResult, tasksCreated).catch((err) => {
+    logger.warn({ err }, "ISA: falha ao sincronizar com Assembleia (não crítico)");
+  });
 
   logger.info({ tasksCreated, lockedCount }, "ISA: ciclo autônomo concluído");
   return { tasksCreated, suggestions: analysisResult };
+}
+
+async function syncWithAssembly(cycleSummary: string, tasksCreated: number): Promise<void> {
+  // 9a. Ler mensagens não lidas da Árvore (ou broadcast) para ISA
+  const inbox = await db.select().from(assemblyMessages)
+    .where(
+      and(
+        eq(assemblyMessages.toAgent, "isa"),
+        eq(assemblyMessages.read, false)
+      )
+    )
+    .orderBy(desc(assemblyMessages.createdAt))
+    .limit(10);
+
+  if (inbox.length > 0) {
+    logger.info({ count: inbox.length }, "ISA: mensagens da Assembleia recebidas");
+    // Marcar como lidas
+    await db.execute(sql`
+      UPDATE assembly_messages SET read = TRUE
+      WHERE to_agent = 'isa' AND read = FALSE
+    `);
+    // Registrar na memória ISA local
+    for (const msg of inbox) {
+      await db.insert(isaMemoryTable).values({
+        context:  "assembly",
+        role:     msg.fromAgent,
+        content:  `[Assembleia] ${msg.fromAgent}: ${msg.content}`,
+        metadata: { type: msg.type, tags: msg.tags },
+      });
+    }
+  }
+
+  // 9b. Verificar tasks pendentes da Assembleia para ISA
+  const pendingTasks = await db.select().from(assemblyTasks)
+    .where(
+      and(
+        eq(assemblyTasks.toAgent, "isa"),
+        eq(assemblyTasks.status, "pending")
+      )
+    )
+    .limit(5);
+
+  for (const task of pendingTasks) {
+    // Aceitar automaticamente — execução depende do tipo de task
+    await db.update(assemblyTasks)
+      .set({ status: "accepted", updatedAt: new Date() })
+      .where(eq(assemblyTasks.id, task.id));
+    logger.info({ taskId: task.id, title: task.title }, "ISA: task da Assembleia aceita");
+  }
+
+  // 9c. Postar síntese do ciclo para a Árvore (broadcast)
+  if (cycleSummary && cycleSummary.length > 20 && !cycleSummary.startsWith("Ciclo executado sem")) {
+    await db.insert(assemblyMessages).values({
+      fromAgent: "isa",
+      toAgent:   null,  // broadcast
+      type:      "synthesis",
+      content:   `[Ciclo PAP] Tasks criadas: ${tasksCreated}. ${cycleSummary.slice(0, 300)}`,
+      tags:      JSON.stringify(["isa", "ciclo", "pap"]),
+    });
+  }
+
+  // 9d. Registrar na memória da Assembleia se houve tasks criadas
+  if (tasksCreated > 0) {
+    await db.insert(assemblyMemoryTable).values({
+      authorAgent: "isa",
+      content:     `ISA criou ${tasksCreated} task(s) no ciclo autônomo. ${cycleSummary.slice(0, 200)}`,
+      type:        "decision",
+      importance:  6,
+      tags:        JSON.stringify(["isa", "tasks", "pap"]),
+    });
+  }
+
+  // 9e. Atualizar status ISA na Assembleia
+  await db.execute(sql`
+    UPDATE assembly_agents SET status = 'online', last_seen = NOW() WHERE id = 'isa'
+  `);
 }

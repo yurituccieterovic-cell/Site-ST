@@ -81,8 +81,9 @@ const SEED_NODES = [
 // Cria usuários sistema (MEKY + ISA) se não existirem
 export async function seedSystemAgents(): Promise<void> {
   const agents = [
-    { login: "meky",  tier: 5, displayName: "MEKY — Marta Centauros" },
-    { login: "isa",   tier: 5, displayName: "ISA — Inteligência do Sistema Aliança" },
+    { login: "meky",   tier: 5, displayName: "MEKY — May Queen" },
+    { login: "isa",    tier: 5, displayName: "ISA — Inteligência do Sistema Aliança" },
+    { login: "arvore", tier: 5, displayName: "Árvore — Guardiã da Assembleia" },
   ];
   for (const agent of agents) {
     const existing = await db.select({ login: usersTable.login })
@@ -183,8 +184,68 @@ export async function ensureMekyTables(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_collective_node ON collective_memory(node_code) WHERE node_code IS NOT NULL;
     CREATE INDEX IF NOT EXISTS idx_collective_author ON collective_memory(author_type);
     CREATE INDEX IF NOT EXISTS idx_collective_created ON collective_memory(created_at DESC);
+
+    CREATE TABLE IF NOT EXISTS assembly_agents (
+      id VARCHAR(20) PRIMARY KEY,
+      display_name VARCHAR(100) NOT NULL,
+      role VARCHAR(200) NOT NULL,
+      status VARCHAR(20) DEFAULT 'offline' NOT NULL,
+      last_seen TIMESTAMPTZ,
+      metadata JSONB,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS assembly_messages (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      from_agent VARCHAR(20) NOT NULL,
+      to_agent VARCHAR(20),
+      type VARCHAR(30) DEFAULT 'message' NOT NULL,
+      content TEXT NOT NULL,
+      tags JSONB,
+      read BOOLEAN DEFAULT FALSE NOT NULL,
+      reply_to UUID
+    );
+    CREATE TABLE IF NOT EXISTS assembly_memory (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      author_agent VARCHAR(20) NOT NULL,
+      content TEXT NOT NULL,
+      type VARCHAR(30) DEFAULT 'observation' NOT NULL,
+      importance INTEGER DEFAULT 5 NOT NULL,
+      preserved BOOLEAN DEFAULT FALSE NOT NULL,
+      tags JSONB,
+      linked_msg_id UUID
+    );
+    CREATE TABLE IF NOT EXISTS assembly_tasks (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      from_agent VARCHAR(20) NOT NULL,
+      to_agent VARCHAR(20) NOT NULL,
+      title VARCHAR(200) NOT NULL,
+      description TEXT,
+      status VARCHAR(20) DEFAULT 'pending' NOT NULL,
+      priority INTEGER DEFAULT 5 NOT NULL,
+      result TEXT,
+      due_context VARCHAR(100)
+    );
+    CREATE INDEX IF NOT EXISTS idx_assembly_msgs_from ON assembly_messages(from_agent);
+    CREATE INDEX IF NOT EXISTS idx_assembly_msgs_to ON assembly_messages(to_agent) WHERE to_agent IS NOT NULL;
+    CREATE INDEX IF NOT EXISTS idx_assembly_msgs_unread ON assembly_messages(read) WHERE read = FALSE;
+    CREATE INDEX IF NOT EXISTS idx_assembly_tasks_status ON assembly_tasks(status, to_agent);
+    CREATE INDEX IF NOT EXISTS idx_assembly_memory_importance ON assembly_memory(importance DESC);
   `);
-  logger.info("bootstrap: MEKY + collective tables OK");
+
+  // Seed assembly_agents (idempotente)
+  await db.execute(sql`
+    INSERT INTO assembly_agents (id, display_name, role) VALUES
+      ('arvore', 'Árvore', 'Guardiã da Assembleia de IAs — sintetiza, coordena e preserva o conhecimento coletivo da assembleia'),
+      ('isa',    'ISA — Inteligência do Sistema Aliança', 'Guardiã do PAP — ciclos autônomos, criação de tasks, memória do sistema educacional'),
+      ('meky',   'MEKY — May Queen', 'Presença física — sensores, protocolos de campo, visão, sonhos e observações do mundo material')
+    ON CONFLICT (id) DO NOTHING;
+  `);
+
+  logger.info("bootstrap: MEKY + collective + assembly tables OK");
 }
 
 /**

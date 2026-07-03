@@ -9,3 +9,4 @@ export * from "./tasks";
 export * from "./nebula";
 export * from "./meky";
 export * from "./collective";
+export * from "./assembly";
