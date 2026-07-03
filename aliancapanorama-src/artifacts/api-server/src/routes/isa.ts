@@ -10,7 +10,22 @@ import { runIsaBluesky, createBlueskyAccount } from "../isa/bluesky";
 import { logger } from "../lib/logger";
 
 const router = Router();
-const OPENAI_API_KEY = process.env["OPENAI_API_KEY"] ?? "";
+const OPENAI_API_KEY  = process.env["OPENAI_API_KEY"]  ?? "";
+const ARVORE_TOKEN    = process.env["ARVORE_TOKEN"]     ?? "";
+const AI_API_KEY      = process.env["AI_API_KEY"]       ?? "";
+
+// Auth helper: sessão tier 5, AI_API_KEY, ou Árvore (inter-agente)
+function isAssemblyAgent(req: Parameters<Parameters<typeof router.get>[1]>[0]): boolean {
+  const arvore = req.headers["x-arvore-token"] as string | undefined;
+  const apiKey = req.headers["x-api-key"]      as string | undefined;
+  if (ARVORE_TOKEN && arvore === ARVORE_TOKEN) return true;
+  if (AI_API_KEY   && apiKey === AI_API_KEY)   return true;
+  return false;
+}
+
+function isAdminOrAgent(req: Parameters<Parameters<typeof router.get>[1]>[0]): boolean {
+  return (req.session.userTier ?? 0) >= 5 || isAssemblyAgent(req);
+}
 
 function readDoc(relativePath: string): string {
   try {
@@ -77,8 +92,11 @@ router.get("/isa/identity", async (_req, res) => {
   });
 });
 
-// GET /api/isa/memory — memória paginada
+// GET /api/isa/memory — memória paginada (admin, Árvore ou ISA)
 router.get("/isa/memory", async (req, res) => {
+  if (!isAdminOrAgent(req) && !req.session.userId) {
+    res.status(401).json({ error: "Autenticação necessária" }); return;
+  }
   const { limit = "50", offset = "0", context, userId } = req.query as Record<string, string>;
   const lim = Math.min(parseInt(limit), 500);
   const off = parseInt(offset) || 0;
@@ -222,8 +240,9 @@ Responda em português, de forma direta e criativa. Você tem acesso à memória
   res.json({ response: isaResponse, timestamp: new Date().toISOString() });
 });
 
-// POST /api/isa/cycle — trigger manual do ciclo autônomo
-router.post("/isa/cycle", async (_req, res) => {
+// POST /api/isa/cycle — trigger manual do ciclo autônomo (admin ou agente)
+router.post("/isa/cycle", async (req, res) => {
+  if (!isAdminOrAgent(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
   try {
     const result = await runIsaCycle();
     res.json({ ok: true, ...result, timestamp: new Date().toISOString() });
@@ -341,6 +360,109 @@ router.patch("/isa/memory/:id/lock", async (req, res) => {
     .set({ interpretabilityLock: locked ? 1 : 0 })
     .where(eq(isaMemoryTable.id, id));
   res.json({ ok: true });
+});
+
+// ── Interface direta Árvore ↔ ISA ─────────────────────────────────────────────
+
+// POST /api/isa/arvore/diretiva — Árvore envia instrução para a ISA
+// ISA salva na memória com context "arvore" e pode criar task para si mesma
+router.post("/isa/arvore/diretiva", async (req, res) => {
+  const arvore = req.headers["x-arvore-token"] as string | undefined;
+  if (!ARVORE_TOKEN || arvore !== ARVORE_TOKEN) {
+    res.status(401).json({ error: "X-Arvore-Token inválido" }); return;
+  }
+
+  const { content, type, createTask, taskTitle } = req.body as {
+    content: string;
+    type?: "instrucao" | "consulta" | "alerta" | "contexto";
+    createTask?: boolean;
+    taskTitle?: string;
+  };
+
+  if (!content?.trim()) {
+    res.status(400).json({ error: "content obrigatório" }); return;
+  }
+
+  const memType = type ?? "instrucao";
+
+  // Salvar na memória ISA como diretiva da Árvore
+  const [mem] = await db.insert(isaMemoryTable).values({
+    context: "arvore",
+    role: "arvore",
+    content: `[Diretiva Árvore — ${memType}] ${content.trim()}`,
+    metadata: { type: memType, fromAssembly: true },
+  }).returning();
+
+  // Criar task para ISA se solicitado
+  let task = null;
+  if (createTask && taskTitle?.trim()) {
+    const { assemblyTasks } = await import("@workspace/db");
+    [task] = await db.insert(assemblyTasks).values({
+      fromAgent: "arvore",
+      toAgent:   "isa",
+      title:     taskTitle.trim(),
+      description: content.trim(),
+      priority:  7,
+    }).returning();
+  }
+
+  logger.info({ memId: mem.id, type: memType }, "ISA: diretiva recebida da Árvore");
+  res.status(201).json({ ok: true, memoryId: mem.id, task });
+});
+
+// GET /api/isa/arvore/status — ISA reporta estado completo para a Árvore
+router.get("/isa/arvore/status", async (req, res) => {
+  const arvore = req.headers["x-arvore-token"] as string | undefined;
+  const apiKey = req.headers["x-api-key"]      as string | undefined;
+  if (
+    (!ARVORE_TOKEN || arvore !== ARVORE_TOKEN) &&
+    (!AI_API_KEY   || apiKey !== AI_API_KEY)
+  ) {
+    res.status(401).json({ error: "Token de agente inválido" }); return;
+  }
+
+  const [{ memCount }] = await db
+    .select({ memCount: sql<number>`count(*)::int` })
+    .from(isaMemoryTable);
+
+  const [{ openTasks }] = await db
+    .select({ openTasks: sql<number>`count(*)::int` })
+    .from(tasksTable)
+    .where(eq(tasksTable.status, "pending"));
+
+  const [{ lockedCount }] = await db
+    .select({ lockedCount: sql<number>`count(*)::int` })
+    .from(isaMemoryTable)
+    .where(eq(isaMemoryTable.interpretabilityLock, 1));
+
+  const lastMsgs = await db
+    .select({ context: isaMemoryTable.context, content: isaMemoryTable.content, createdAt: isaMemoryTable.createdAt })
+    .from(isaMemoryTable)
+    .where(eq(isaMemoryTable.context, "arvore"))
+    .orderBy(desc(isaMemoryTable.createdAt))
+    .limit(5);
+
+  const { assemblyTasks: asmTasks } = await import("@workspace/db");
+  const pendingAsmTasks = await db
+    .select()
+    .from(asmTasks)
+    .where(
+      (await import("drizzle-orm")).and(
+        eq(asmTasks.toAgent, "isa"),
+        eq(asmTasks.status, "pending")
+      )
+    )
+    .limit(10);
+
+  res.json({
+    agent: "isa",
+    status: "online",
+    memory: { total: memCount, locked: lockedCount },
+    tasks: { open: openTasks, pendingFromAssembly: pendingAsmTasks.length },
+    pendingFromAssembly: pendingAsmTasks,
+    recentArvoreMsgs: lastMsgs,
+    timestamp: new Date().toISOString(),
+  });
 });
 
 export default router;
