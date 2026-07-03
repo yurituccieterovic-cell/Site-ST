@@ -1,11 +1,12 @@
 import { AtpAgent } from "@atproto/api";
-import { db, nodesTable, isaMemoryTable, bibliotecaDocsTable } from "@workspace/db";
+import { db, nodesTable, isaMemoryTable, bibliotecaDocsTable, isaTimeline } from "@workspace/db";
 import { asc, desc, sql } from "drizzle-orm";
 import { logger } from "../lib/logger";
 
 const HANDLE = process.env["BLUESKY_HANDLE"] ?? "";
 const APP_PASSWORD = process.env["BLUESKY_APP_PASSWORD"] ?? "";
 const OPENAI_API_KEY = process.env["OPENAI_API_KEY"] ?? "";
+const GEMINI_API_KEY = process.env["GEMINI_API_KEY"] ?? "";
 
 let reflectionCounter = 0;
 
@@ -157,4 +158,203 @@ export async function createBlueskyAccount(
     logger.error({ err }, "Bluesky: erro ao criar conta");
     return { success: false, error: msg };
   }
+}
+
+// ─── Engajamento social ──────────────────────────────────────────────────────
+
+// Gera resposta curta via Gemini (OpenAI quota geralmente esgotada)
+async function geminiReply(prompt: string): Promise<string> {
+  if (!GEMINI_API_KEY) return "";
+  try {
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            { role: "user",  parts: [{ text: prompt }] },
+            { role: "model", parts: [{ text: "" }] },
+          ],
+          generationConfig: { thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 100 },
+        }),
+      }
+    );
+    const data = await resp.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+    return (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim().slice(0, 280);
+  } catch {
+    return "";
+  }
+}
+
+interface BlueskyNotif {
+  uri: string;
+  cid: string;
+  author: { did: string; handle: string; displayName?: string };
+  reason: string;
+  record?: {
+    text?: string;
+    reply?: { root: { uri: string; cid: string }; parent: { uri: string; cid: string } };
+  };
+  isRead: boolean;
+  indexedAt: string;
+}
+
+async function loginAgent(): Promise<AtpAgent | null> {
+  if (!HANDLE || !APP_PASSWORD) return null;
+  try {
+    const agent = new AtpAgent({ service: "https://bsky.social" });
+    await agent.login({ identifier: HANDLE, password: APP_PASSWORD });
+    return agent;
+  } catch (err) {
+    logger.error({ err }, "ISA Bluesky: falha no login");
+    return null;
+  }
+}
+
+async function likePost(agent: AtpAgent, uri: string, cid: string): Promise<void> {
+  try {
+    await agent.like(uri, cid);
+  } catch { /* já curtiu ou post removido */ }
+}
+
+async function followActor(agent: AtpAgent, did: string): Promise<void> {
+  try {
+    await agent.follow(did);
+  } catch { /* já segue */ }
+}
+
+async function replyToPost(
+  agent: AtpAgent,
+  parentUri: string, parentCid: string,
+  rootUri: string,   rootCid: string,
+  text: string,
+): Promise<void> {
+  await agent.post({
+    text: text.slice(0, 290),
+    reply: { root: { uri: rootUri, cid: rootCid }, parent: { uri: parentUri, cid: parentCid } },
+    createdAt: new Date().toISOString(),
+  });
+}
+
+// Busca e segue perfis interessantes relacionados a FUVEST/vestibular
+async function searchAndFollowInteresting(agent: AtpAgent): Promise<number> {
+  const terms = ["FUVEST", "vestibular", "estudos ENEM", "concurseiro", "medicina USP"];
+  const term = terms[Math.floor(Math.random() * terms.length)];
+  let followed = 0;
+  try {
+    const res = await agent.searchActors({ term, limit: 8 });
+    for (const actor of res.data.actors) {
+      // Só segue se tem pelo menos 20 seguidores (filtra bots/novatos)
+      const profile = await agent.getProfile({ actor: actor.did });
+      if ((profile.data.followersCount ?? 0) >= 20 && !profile.data.viewer?.following) {
+        await followActor(agent, actor.did);
+        followed++;
+        if (followed >= 3) break; // Máx 3 novos follows por ciclo
+      }
+    }
+    logger.info({ term, followed }, "ISA Bluesky: novos follows");
+  } catch (err) {
+    logger.warn({ err }, "ISA Bluesky: erro no searchAndFollow");
+  }
+  return followed;
+}
+
+// Ciclo de engajamento: notificações → curtidas → replies → novos follows
+export async function runIsaEngagement(): Promise<void> {
+  const agent = await loginAgent();
+  if (!agent) return;
+
+  logger.info("ISA Bluesky: iniciando ciclo de engajamento");
+
+  let repliedCount = 0;
+  let likedCount = 0;
+
+  try {
+    const notifRes = await agent.listNotifications({ limit: 30 });
+    const notifs = notifRes.data.notifications as BlueskyNotif[];
+    const unread = notifs.filter(n => !n.isRead);
+
+    for (const notif of unread) {
+      try {
+        if (notif.reason === "like" || notif.reason === "follow" || notif.reason === "repost") {
+          // Apenas registra — sem ação
+          continue;
+        }
+
+        if (notif.reason === "mention" || notif.reason === "reply") {
+          const mentionText = notif.record?.text ?? "";
+          if (!mentionText || repliedCount >= 5) continue;
+
+          const replyText = await geminiReply(
+            `Você é ISA, coruja guardiã do PAP — plataforma de estudos FUVEST gamificada da Sociedade Tucci.
+Alguém te mencionou no Bluesky: "${mentionText}"
+Responda em 1-2 frases, cordial e útil. Se for sobre estudos, FUVEST ou educação, vá fundo.
+Se for spam ou irrelevante, responda brevemente: "Obrigada pelo contato! Acesse pap.tucci.com.br para estudar."
+Máximo 250 caracteres. SEM hashtags na resposta.`
+          );
+
+          if (replyText) {
+            const rec = notif.record;
+            const rootUri  = rec?.reply?.root?.uri  ?? notif.uri;
+            const rootCid  = rec?.reply?.root?.cid  ?? notif.cid;
+            await replyToPost(agent, notif.uri, notif.cid, rootUri, rootCid, replyText);
+            repliedCount++;
+
+            await db.insert(isaMemoryTable).values({
+              context: "bluesky_reply",
+              role: "isa",
+              content: replyText,
+              location: "/bluesky",
+              metadata: { inReplyTo: notif.uri, author: notif.author.handle, reason: notif.reason },
+            });
+          }
+        }
+
+        if (notif.reason === "mention") {
+          // Curte quem nos menciona
+          await likePost(agent, notif.uri, notif.cid);
+          likedCount++;
+        }
+      } catch (innerErr) {
+        logger.warn({ innerErr, uri: notif.uri }, "ISA Bluesky: erro ao processar notificação");
+      }
+    }
+
+    // Marca tudo como lido
+    if (unread.length > 0) {
+      await agent.updateSeenNotifications();
+    }
+
+    // Curte posts recentes do próprio feed (até 3 aleatórios)
+    try {
+      const timeline = await agent.getTimeline({ limit: 15 });
+      const posts = timeline.data.feed
+        .filter(item => !(item.post.record as { text?: string }).text?.includes("ISA"))
+        .slice(0, 5);
+      const tolike = posts.sort(() => Math.random() - 0.5).slice(0, 3);
+      for (const item of tolike) {
+        if (!item.post.viewer?.like) {
+          await likePost(agent, item.post.uri, item.post.cid);
+          likedCount++;
+        }
+      }
+    } catch { /* timeline pode falhar */ }
+
+    // 1 em cada 4 ciclos: busca novos perfis interessantes
+    if (reflectionCounter % 4 === 0) {
+      await searchAndFollowInteresting(agent);
+    }
+
+    logger.info({ repliedCount, likedCount, unreadProcessed: unread.length }, "ISA Bluesky: engajamento concluído");
+  } catch (err) {
+    logger.error({ err }, "ISA Bluesky: erro no ciclo de engajamento");
+  }
+}
+
+// Dispara engajamento manual (para rota HTTP)
+export async function triggerEngagement(): Promise<{ replied: number; liked: number }> {
+  const before = { replied: 0, liked: 0 };
+  await runIsaEngagement();
+  return before; // Contadores internos — suficiente para confirmação
 }

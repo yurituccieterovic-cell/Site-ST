@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { runIsaCycle } from "./cycle";
 import { runBibliotecario } from "./bibliotecario";
-import { runIsaBluesky } from "./bluesky";
+import { runIsaBluesky, runIsaEngagement } from "./bluesky";
 import { runIsaDream } from "./dream";
 import { logger } from "../lib/logger";
 
@@ -49,5 +49,15 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · sonho 3h)");
+  // ISA Engajamento: notificações + replies + likes + novos follows — a cada 2h nos :45
+  cron.schedule("45 */2 * * *", async () => {
+    try {
+      logger.info("ISA Engajamento: verificando notificações e interagindo");
+      await runIsaEngagement();
+    } catch (err) {
+      logger.error({ err }, "ISA Engajamento: erro no ciclo");
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · sonho 3h · engajamento 2h:45)");
 }

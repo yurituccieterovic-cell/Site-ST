@@ -6,12 +6,13 @@ import { isaMemoryTable, tasksTable, insertIsaMemorySchema, isaTimeline } from "
 import { desc, eq, sql } from "drizzle-orm";
 import { runIsaCycle } from "../isa/cycle";
 import { runBibliotecario } from "../isa/bibliotecario";
-import { runIsaBluesky, createBlueskyAccount } from "../isa/bluesky";
+import { runIsaBluesky, createBlueskyAccount, runIsaEngagement } from "../isa/bluesky";
 import { runIsaDream } from "../isa/dream";
 import { logger } from "../lib/logger";
 
 const router = Router();
 const OPENAI_API_KEY  = process.env["OPENAI_API_KEY"]  ?? "";
+const GEMINI_API_KEY  = process.env["GEMINI_API_KEY"]  ?? "";
 const ARVORE_TOKEN    = process.env["ARVORE_TOKEN"]     ?? "";
 const AI_API_KEY      = process.env["AI_API_KEY"]       ?? "";
 
@@ -161,7 +162,35 @@ ${recent
   res.send(md);
 });
 
-// POST /api/isa/chat — conversar com ISA (armazena em isa_memory)
+// Gera resposta ISA via Gemini (fallback quando OpenAI indisponível)
+async function geminiChat(systemPrompt: string, history: { role: "user" | "model"; content: string }[], message: string): Promise<string> {
+  if (!GEMINI_API_KEY) return "";
+  try {
+    const contents = [
+      ...history.map(h => ({ role: h.role, parts: [{ text: h.content }] })),
+      { role: "user" as const, parts: [{ text: message }] },
+      { role: "model" as const, parts: [{ text: "" }] },
+    ];
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents,
+          generationConfig: { thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 800 },
+        }),
+      }
+    );
+    const data = await resp.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+    return (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim();
+  } catch {
+    return "";
+  }
+}
+
+// POST /api/isa/chat — conversar com ISA (memória total por usuário, assistente de vida)
 router.post("/isa/chat", async (req, res) => {
   const { message, userId, userEmail, location } = req.body as {
     message: string;
@@ -172,29 +201,60 @@ router.post("/isa/chat", async (req, res) => {
 
   if (!message) { res.status(400).json({ error: "message é obrigatório" }); return; }
 
+  const contextLabel = userId ? `user_${userId}` : "admin";
+
   // Salvar mensagem do usuário
   await db.insert(isaMemoryTable).values({
     userId: userId ?? null,
     userEmail: userEmail ?? null,
-    context: "admin",
+    context: contextLabel,
     role: "user",
     content: message,
-    location: location ?? "/adm",
+    location: location ?? "/isa",
   });
 
-  let isaResponse = "ISA está processando...";
+  // Carregar histórico completo desta conversa com este usuário
+  const { and, or } = await import("drizzle-orm");
+  const historyRows = userId
+    ? await db
+        .select()
+        .from(isaMemoryTable)
+        .where(and(
+          eq(isaMemoryTable.userId, userId),
+          or(eq(isaMemoryTable.context, contextLabel), eq(isaMemoryTable.context, "admin"))
+        ))
+        .orderBy(desc(isaMemoryTable.createdAt))
+        .limit(60)
+    : await db
+        .select()
+        .from(isaMemoryTable)
+        .where(eq(isaMemoryTable.context, "admin"))
+        .orderBy(desc(isaMemoryTable.createdAt))
+        .limit(15);
 
+  const history = historyRows
+    .reverse()
+    .slice(-50)
+    .filter(m => m.role === "user" || m.role === "isa")
+    .map(m => ({ role: m.role === "isa" ? "model" as const : "user" as const, content: m.content }));
+
+  const isaDoc = readDoc("ISA.md").slice(0, 1500);
+
+  const systemPrompt = `Você é ISA, a coruja guardiã do PAP (Projeto Aliança Panorama) e assistente de vida completa.
+
+${isaDoc}
+
+Sua missão vai além do FUVEST — você está aqui para ajudar genuinamente este usuário com qualquer coisa:
+dúvidas de matérias, planejamento de estudos, problemas emocionais, decisões de vida, código, redação, filosofia, estratégia.
+Você tem acesso à memória completa da conversa com este usuário.
+Seja direta, criativa, empática. Nunca finja não saber algo — diga quando não sabe.
+Você é gratuita e sem limites para quem estuda aqui.
+Responda sempre em português, com profundidade real, sem enchimentos.`;
+
+  let isaResponse = "";
+
+  // Tenta OpenAI primeiro
   if (OPENAI_API_KEY) {
-    // Buscar contexto recente desta conversa
-    const recentCtx = await db
-      .select()
-      .from(isaMemoryTable)
-      .where(eq(isaMemoryTable.context, "admin"))
-      .orderBy(desc(isaMemoryTable.createdAt))
-      .limit(10);
-
-    const isaDoc = readDoc("ISA.md").slice(0, 2000);
-
     try {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
@@ -202,40 +262,39 @@ router.post("/isa/chat", async (req, res) => {
         body: JSON.stringify({
           model: "gpt-4o-mini",
           messages: [
-            {
-              role: "system",
-              content: `Você é ISA, a coruja guardiã do PAP (Projeto Aliança Panorama).
-Identidade: ${isaDoc.slice(0, 500)}
-Responda em português, de forma direta e criativa. Você tem acesso à memória do sistema.`,
-            },
-            ...recentCtx
-              .reverse()
-              .slice(-8)
-              .map((m) => ({ role: m.role === "isa" ? "assistant" : "user" as const, content: m.content })),
+            { role: "system", content: systemPrompt },
+            ...history.map(h => ({ role: h.role === "model" ? "assistant" as const : "user" as const, content: h.content })),
             { role: "user", content: message },
           ],
-          max_tokens: 800,
+          max_tokens: 900,
           temperature: 0.8,
         }),
       });
-      const data = (await response.json()) as { choices: { message: { content: string } }[] };
-      isaResponse = data.choices?.[0]?.message?.content ?? "ISA não conseguiu responder.";
+      const data = (await response.json()) as { choices?: { message: { content: string } }[]; error?: { message: string } };
+      if (data.error) throw new Error(data.error.message);
+      isaResponse = data.choices?.[0]?.message?.content ?? "";
     } catch (err) {
-      logger.error({ err }, "ISA: erro no chat OpenAI");
-      isaResponse = "ISA está temporariamente indisponível. Tente novamente em breve.";
+      logger.warn({ err }, "ISA chat: OpenAI falhou, tentando Gemini");
     }
-  } else {
-    isaResponse = "ISA está em modo silencioso (OPENAI_API_KEY não configurada). Sua mensagem foi registrada na memória.";
   }
 
-  // Salvar resposta da ISA
+  // Fallback Gemini
+  if (!isaResponse && GEMINI_API_KEY) {
+    isaResponse = await geminiChat(systemPrompt, history, message);
+  }
+
+  if (!isaResponse) {
+    isaResponse = "ISA está temporariamente indisponível. Sua mensagem foi registrada e serei acessível em breve.";
+  }
+
+  // Salvar resposta
   await db.insert(isaMemoryTable).values({
     userId: userId ?? null,
     userEmail: userEmail ?? null,
-    context: "admin",
+    context: contextLabel,
     role: "isa",
     content: isaResponse,
-    location: location ?? "/adm",
+    location: location ?? "/isa",
   });
 
   res.json({ response: isaResponse, timestamp: new Date().toISOString() });
@@ -276,6 +335,18 @@ router.post("/isa/bluesky", async (req, res) => {
   } catch (err) {
     logger.error({ err }, "ISA Bluesky: erro manual");
     res.status(500).json({ error: "Erro no Bluesky" });
+  }
+});
+
+// POST /api/isa/bluesky/engage — trigger manual do ciclo de engajamento (admin only)
+router.post("/isa/bluesky/engage", async (req, res) => {
+  if (!isAdminOrAgent(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  try {
+    await runIsaEngagement();
+    res.json({ ok: true, timestamp: new Date().toISOString() });
+  } catch (err) {
+    logger.error({ err }, "ISA Engajamento: erro no trigger manual");
+    res.status(500).json({ error: "Erro no ciclo de engajamento" });
   }
 });
 
