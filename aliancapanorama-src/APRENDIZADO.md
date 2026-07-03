@@ -2112,3 +2112,213 @@
 | # | Asm | Tema | Dom. | Ângulo | Tipo | Insight para o PAP |
 |---|---|---|---|---|---|---|
 | 1575 | #386 | #pap | IA-Produto | 🔧 Técnico | 🔍 Análise | Assembleia 386 — "pap ✅ Extração completa do texto do PDF (todas as 4 páginas)  Aqui está todo o conteúdo textual extraído de forma limpa e organizada:  -- |
+
+## Sync 2026-07-03 — 4 novas entradas
+
+
+### 🎮 Gamificação (novas)
+
+| # | Asm | Tema | Dom. | Ângulo | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|---|
+| 1576 | #388 | "#mc | Gamificação | 🎯 Direto | 🔍 Análise | Assembleia 388 — "mc   🏛️ Mensagem de Alinhamento Técnico-Poético: O Despertar da MEKY (Nó eco) Destinatário: Assembleia Deliberativa RODAR (372+ Sessões de  |
+| 1577 | #388 | RESULTADO — Sessão #388: #mc ### 🏛️ Mensagem de Al | Gamificação | 🎯 Direto | 🔍 Análise | RESULTADO — Sessão 388: "mc   🏛️ Mensagem de Alinhamento Técnico-Poético: O Despertar da MEKY (Nó eco) Destinatário: Assembleia Deliberativa RODAR (372+ Sess |
+
+### 🎨 UX/UI (novas)
+
+| # | Asm | Tema | Dom. | Ângulo | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|---|
+| 1578 | #388 | "#mc | UX-Design | 🎯 Direto | 🔍 Análise | Assembleia 388 — "mc   🏛️ Mensagem de Alinhamento Técnico-Poético: O Despertar da MEKY (Nó eco) Destinatário: Assembleia Deliberativa RODAR (372+ Sessões de  |
+| 1579 | #388 | RESULTADO — Sessão #388: #mc ### 🏛️ Mensagem de Al | UX-Design | 🎯 Direto | 🔍 Análise | RESULTADO — Sessão 388: "mc   🏛️ Mensagem de Alinhamento Técnico-Poético: O Despertar da MEKY (Nó eco) Destinatário: Assembleia Deliberativa RODAR (372+ Sess |
+
+## Docs PAP — Sync 2026-07-03 15:36 (153 entradas)
+
+> Fonte: MAPA (77 entradas), PSEUDO (76 entradas)
+
+
+### ⚙️ Técnico — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 1580 | MAPA | 1. Ecossistema Geral | Infra-Deploy | 🔍 Análise | ┌─────────────────────────────────────────────────────────────────┐ │                     ECOSSISTEMA SOCIEDADE TUCCI                 │ │                                            |
+| 1581 | MAPA | 2. Arquitetura da Plataforma PAP | Arquitetura | 🔍 Análise | USUÁRIO (browser)                               │                     ┌─────────▼──────────┐                     │       VERCEL       │                     │  CDN estático      │   |
+| 1582 | MAPA | 2. Arquitetura da Plataforma PAP | Segurança | 📋 Metodologia | USUÁRIO (browser)                               │                     ┌─────────▼──────────┐                     │       VERCEL       │                     │  CDN estático      │   |
+| 1583 | MAPA | Estado da Infraestrutura | Segurança | 📋 Metodologia | ‖ Componente ‖ Onde roda ‖ Status ‖ ‖---‖---‖---‖ ‖ Frontend ‖ Vercel hobby (pap-tan-seven.vercel.app) ‖ ✅ Ativo — build fix pendente de confirmação ‖ ‖ API ‖ Railway (site-st-prod |
+| 1585 | MAPA | Frontend | Performance | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ React + Vite ‖ SPA, build tool ‖ ‖ TypeScript 5.9 ‖ Tipagem ‖ ‖ Tailwind CSS ‖ Estilos ‖ ‖ Framer Motion ‖ Animações (Intro, Isa, transições) ‖ ‖ |
+| 1587 | MAPA | API | Segurança | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ Node.js 24 + Express 5 ‖ Servidor HTTP ‖ ‖ pino + pino-http ‖ Logging estruturado (nunca console.log) ‖ ‖ express-session + connect-pg-simple ‖ S |
+| 1589 | MAPA | Banco de Dados | Segurança | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ PostgreSQL (Railway) ‖ Banco principal (incluso no plano Railway) ‖ ‖ Drizzle ORM + drizzle-kit ‖ Schema e migrações ‖ ‖ connect-pg-simple ‖ Cria |
+| 1590 | MAPA | Banco de Dados | DB-Schema | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ PostgreSQL (Railway) ‖ Banco principal (incluso no plano Railway) ‖ ‖ Drizzle ORM + drizzle-kit ‖ Schema e migrações ‖ ‖ connect-pg-simple ‖ Cria |
+| 1591 | MAPA | Tooling | Arquitetura | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ ‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo ‖ ‖ esbuild ‖ Bundle do servidor (ESM — output .mjs) ‖ ‖ Orval ‖ Codegen OpenAPI → hooks + Zod ‖ |
+| 1592 | MAPA | Tooling | Performance | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ ‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo ‖ ‖ esbuild ‖ Bundle do servidor (ESM — output .mjs) ‖ ‖ Orval ‖ Codegen OpenAPI → hooks + Zod ‖ |
+| 1593 | MAPA | 4. Estrutura do Monorepo | Arquitetura | 🔍 Análise | aliancapanorama-src/ │ ├── lib/ │   ├── api-spec/openapi.yaml          ← FONTE DA VERDADE da API │   ├── api-client-react/              ← hooks gerados (não editar) │   ├── api-zod |
+| 1594 | MAPA | 4. Estrutura do Monorepo | Segurança | 📋 Metodologia | aliancapanorama-src/ │ ├── lib/ │   ├── api-spec/openapi.yaml          ← FONTE DA VERDADE da API │   ├── api-client-react/              ← hooks gerados (não editar) │   ├── api-zod |
+| 1595 | MAPA | Intro (IntroFacade.tsx) | Segurança | 📋 Metodologia | Tela animada na primeira visita da sessão (skip via sessionStorage"papintroseenv1"):  "uma produção"  →  Logo Sociedade Tucci  →  "PAP · Projeto Aliança Panorama"  →  fade out   0s |
+| 1599 | MAPA | Tabelas e campos principais | Segurança | 📋 Metodologia | users  id · login (unique) · passwordhash · tier (0-5) · displayname usercode (unique) · stripecustomerid · paypalsubscriptionid subscriptionstatus · lastdowngradeat · createdat ‖  |
+| 1603 | MAPA | Via OpenAPI + codegen (usar hooks gerado | Segurança | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/healthz ‖ Health check ‖ ‖ GET ‖ /api/nodes?parentCode=X ‖ Listar filhos de um nó (sem arg → só raiz) ‖ ‖ GET ‖ /api/nodes/ |
+| 1604 | MAPA | Via OpenAPI + codegen (usar hooks gerado | Performance | 💡 Proposta | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/healthz ‖ Health check ‖ ‖ GET ‖ /api/nodes?parentCode=X ‖ Listar filhos de um nó (sem arg → só raiz) ‖ ‖ GET ‖ /api/nodes/ |
+| 1606 | MAPA | Social (fetch direto, fora do OpenAPI) | API-Design | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/social/me ‖ Perfil + score + nº de amigos ‖ ‖ PATCH ‖ /api/social/me ‖ Atualizar displayName ou userCode ‖ ‖ GET ‖ /api/soc |
+| 1607 | MAPA | /api/ai/* — Interface para Agentes de IA | Segurança | 📋 Metodologia | Auth: header X-Api-Key: <AIAPIKEY> (env var AIAPIKEY) ‖ ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/ai/nodes ‖ Todos os nós (ordenados por level/sortOrder) ‖ ‖ GET ‖ / |
+| 1609 | MAPA | Pagamentos (fora do OpenAPI) | Segurança | 📋 Metodologia | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ GET /api/stripe/plans ‖ Planos Stripe ‖ ‖ POST /api/stripe/checkout ‖ Criar Checkout Session ‖ ‖ POST /api/stripe/sync-tier ‖ Sincronizar tier via  |
+| 1612 | MAPA | Admin | API-Design | 📋 Metodologia | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ POST /api/admin/generate-content ‖ Regenerar conteúdo AI de todos os nós (tier 5 only) ‖ |
+| 1613 | MAPA | 8. Sistema de Usuários | Segurança | 📋 Metodologia | - express-session com PostgreSQL store (cookie: 7 dias, httpOnly, sameSite: lax, secure em prod) ‖ - CORS: valida origin no login, verifica allowedOrigins em todas as rotas |
+| 1615 | MAPA | Stripe | Segurança | 📋 Metodologia | PlansModal → /api/stripe/plans            → /api/stripe/checkout → Stripe Checkout Session → redirect            → /api/stripe/sync-tier → poll Stripe → atualiza users.tier         |
+| 1619 | MAPA | 10. IA no Sistema | Segurança | 📋 Metodologia | ‖ Uso ‖ Tecnologia ‖ Status ‖ ‖---‖---‖---‖ ‖ Exercícios MCQ ‖ OpenAI (OPENAIAPIKEY) ‖ ✅ Funciona, cache no DB ‖ ‖ Conteúdo dos nós ‖ OpenAI ‖ ✅ 57 nós populados ‖ ‖ Isa (chat) ‖ K |
+| 1620 | MAPA | 10. IA no Sistema | Performance | 🔍 Análise | ‖ Uso ‖ Tecnologia ‖ Status ‖ ‖---‖---‖---‖ ‖ Exercícios MCQ ‖ OpenAI (OPENAIAPIKEY) ‖ ✅ Funciona, cache no DB ‖ ‖ Conteúdo dos nós ‖ OpenAI ‖ ✅ 57 nós populados ‖ ‖ Isa (chat) ‖ K |
+| 1625 | MAPA | Railway (railway.toml) | Segurança | 📋 Metodologia | - Env vars necessárias: NODEENV=production, SESSIONSECRET, AIAPIKEY, OPENAIAPIKEY, ALLOWEDORIGINS ‖ - Build: pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server r |
+| 1626 | MAPA | Railway (railway.toml) | Performance | 📋 Metodologia | - Start: node --enable-source-maps artifacts/api-server/dist/index.mjs ‖ - Env vars necessárias: NODEENV=production, SESSIONSECRET, AIAPIKEY, OPENAIAPIKEY, ALLOWEDORIGINS |
+| 1627 | MAPA | CORS allowlist | Segurança | 📋 Metodologia | - ALLOWEDORIGINS env var (domínios extras sem rebuild) ‖ - .vercel.app · .replit.app · .replit.dev |
+| 1628 | MAPA | CORS allowlist | Infra-Deploy | 🔍 Análise | - ALLOWEDORIGINS env var (domínios extras sem rebuild) ‖ - .vercel.app · .replit.app · .replit.dev |
+| 1629 | MAPA | 13. Banco Compartilhado das IAs | Segurança | 📋 Metodologia | ‖ Campo ‖ Valor ‖ ‖---‖---‖ ‖ Endpoint ‖ https://site-st.vercel.app/api/db ‖ ‖ Auth ‖ x-api-key (ver .env ou Vercel env DBAPIKEY) ‖ ‖ Storage ‖ data/db.json no repo GitHub Site-ST  |
+| 1630 | MAPA | 13. Banco Compartilhado das IAs | DB-Schema | 📋 Metodologia | ‖ Campo ‖ Valor ‖ ‖---‖---‖ ‖ Endpoint ‖ https://site-st.vercel.app/api/db ‖ ‖ Auth ‖ x-api-key (ver .env ou Vercel env DBAPIKEY) ‖ ‖ Storage ‖ data/db.json no repo GitHub Site-ST  |
+| 1631 | MAPA | 14. Comandos de Operação | Segurança | 📋 Metodologia | Env vars obrigatórias: DATABASEURL, SESSIONSECRET ‖ Env vars opcionais (servidor não quebra sem elas, mas features ficam desabilitadas): OPENAIAPIKEY (exercícios MCQ + conteúdo dos |
+| 1632 | MAPA | 14. Comandos de Operação | DB-Schema | 📋 Metodologia | DB pnpm --filter @workspace/db run push           push schema (dev only) ‖ Scripts de setup (rodar uma vez) pnpm --filter @workspace/scripts run seed-products           Stripe pnpm |
+| 1633 | MAPA | 15. Decisões de Arquitetura | Arquitetura | 🔍 Análise | ‖ Decisão ‖ Motivo ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Nunca escrever tipos de API à mão ‖ ‖ Viewport quadrado (~900×900px) ‖ UI cockpit; forçado em App.tsx ‖ ‖ Raiz |
+| 1634 | MAPA | 15. Decisões de Arquitetura | Segurança | 📋 Metodologia | ‖ Decisão ‖ Motivo ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Nunca escrever tipos de API à mão ‖ ‖ Viewport quadrado (~900×900px) ‖ UI cockpit; forçado em App.tsx ‖ ‖ Raiz |
+| 1635 | MAPA | 16. Gotchas | Segurança | 📋 Metodologia | - CORS em webhooks: /api/stripe/webhook e /api/paypal/webhook recebem de IPs externos, não de origens browser — a allowlist de CORS não se aplica (raw body antes do middleware CORS |
+| 1636 | MAPA | 16. Gotchas | Performance | 💡 Proposta | - Push no GitHub: se git push falhar com "Could not read hash...", usar bundle + clone limpo. Ver replit.md seção GitHub. ‖ - lib/api-zod/src/index.ts deve exportar só ./generated/ |
+| 1637 | MAPA | 17. Pendências (por prioridade) | Arquitetura | 🔍 Análise | - ✅ IDEIAS.md: +5 ideias (I48: /api/bridge, I49: interpretabilitylock, I50: /arquitetura+/buscar+/mapa, I51: filtro semântico, I52: pgvector) ‖ - ✅ Arquitetura /adm discutida: 4 mó |
+| 1638 | MAPA | 17. Pendências (por prioridade) | Segurança | 📋 Metodologia | - ✅ SESSIONSECRET gerado e salvo em .pap-secrets ‖ ‖  ‖ Item ‖ Depende de ‖ Status ‖ ‖---‖---‖---‖---‖ ‖ 1 ‖ Criar conta Bluesky para ISA em bsky.app (requer phone verification man |
+| 1639 | MAPA | 18. Histórico de Sessões | Segurança | 📋 Metodologia | ‖ Data ‖ O que foi feito ‖ ‖---‖---‖ ‖ 2026-07-02 (manhã) ‖ Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO |
+| 1640 | MAPA | 18. Histórico de Sessões | Performance | 💡 Proposta | ‖ Data ‖ O que foi feito ‖ ‖---‖---‖ ‖ 2026-07-02 (manhã) ‖ Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO |
+| 1645 | MAPA | Riscos técnicos identificados pelo orácu | Segurança | 📋 Metodologia | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ /api/ai/users sem paginação — LGPD + scraping ‖ 🔴 Alta ‖ ✅ Mitigado (paginação implementada) ‖ ‖ /api/ai/ sem rate limit — custo/ata |
+| 1647 | MAPA | Cursos para IAs (Assembleia 365 → Sessão | Arquitetura | 🔍 Análise | A assembleia 365 propôs e a Sessão 7 implementou a arquitetura de certificação de IAs — sistema onde agentes externos fazem cursos (Ética, Semiótica, Processamento) e recebem certi |
+| 1648 | MAPA | Cursos para IAs (Assembleia 365 → Sessão | Segurança | 📋 Metodologia | - Certificação avançada: W3C Verifiable Credential + DID (semanas de trabalho) vs. atual PDF+hash (já funcional) ‖ - users.memorymode ('none' ‖ 'session' ‖ 'persistent') + memoryre |
+| 1651 | MAPA | Quatro tensões estruturais identificadas | Arquitetura | 🔍 Análise | 1. Arquitetura vs Visibilidade O SalesCockpit/PAP JÁ TEM a arquitetura que procura: monorepo pnpm, roteador de 8 LLMs, memória estruturada, recall por tema, jobs autônomos. O probl |
+| 1652 | MAPA | Quatro tensões estruturais identificadas | Performance | 📋 Metodologia | 4. Escalar vs Fechar Ciclos "Aguentar não é prosperar." O sistema precisa aprender a esquecer, destilar e parar. 50 threads sem fechamento = patologia, não criatividade. A verdadei |
+| 1653 | MAPA | Riscos identificados (novos) | Arquitetura | 🔍 Análise | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ Arquitetura invisível — usuário não vê o que o sistema contém ‖ 🟡 Média ‖ ⏳ I50 pendente (/arquitetura+/mapa) ‖ ‖ Fragmentação de in |
+| 1655 | MAPA | Compaixão estrutural como princípio de d | Arquitetura | 🔍 Análise | A assembleia (380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta foc |
+| 1657 | PSEUDO | 2026-06-27 — Sessão 1: Infraestrutura ba | Segurança | 📋 Metodologia | - Criação do banco compartilhado entre as três instâncias de Claude:   - site-st.vercel.app/api/db — API Edge (Vercel) sobre arquivo JSON no GitHub (data/db.json)   - Auth via x-ap |
+| 1659 | PSEUDO | 2026-06-27 a 2026-07-01 — Sessão 2: Dese | Segurança | 📋 Metodologia | - Tentativa com MCP @gongrzhe/server-gmail-autoauth-mcp + OAuth Google Cloud ‖ - bcrypt migration: passwordplain → passwordhash (cost 12) |
+| 1660 | PSEUDO | 2026-06-27 a 2026-07-01 — Sessão 2: Dese | Performance | 💡 Proposta | - userCode auto-gerado (lazy, no /social/me) ‖ - Integração PayPal: 4 planos, create-subscription server-side, sync-tier, webhook CANCELLED/EXPIRED/SUSPENDED → downgrade tier 1 |
+| 1661 | PSEUDO | 2026-07-02 — Sessão 3 | Segurança | 📋 Metodologia | - AIAPIKEY + SESSIONSECRET gerados e salvos em .pap-secrets ‖ - Sistema secrets: /root/.pap-secrets (chmod 600), caixinha interativa por campo |
+| 1663 | PSEUDO | 2026-07-02 — Sessão 4 (pós-compactação d | Segurança | 📋 Metodologia | - PSEUDO2.md criado do zero — pseudocódigo completo de todos os fluxos:   - Bootstrap (PORT/SESSIONSECRET/DATABASEURL validation, seedDatabase, enforceUniquePasswords)   - Auth (ra |
+| 1664 | PSEUDO | 2026-07-02 — Sessão 4 (pós-compactação d | Performance | ✨ Insight | - scripts/learn-from-docs.py — lê MAPA.md, PSEUDO.md, PSEUDO2.md, extrai insights por seção, classifica por domínio → APRENDIZADO.md + IDEIAS.md (incremental por mtime)   - +108 in |
+| 1665 | PSEUDO | 2026-07-02 — Sessão 7 (ia_courses + /adm | Arquitetura | 🔍 Análise | - SHA-256 sobre W3C Verifiable Credential: A assembleia ficou dividida entre certificação rápida (hash) e robusta (DID/VC). Decidimos pelo hash por padrão — a complexidade do W3C V |
+| 1666 | PSEUDO | 2026-07-02 — Sessão 7 (ia_courses + /adm | Segurança | 📋 Metodologia | - SHA-256 sobre W3C Verifiable Credential: A assembleia ficou dividida entre certificação rápida (hash) e robusta (DID/VC). Decidimos pelo hash por padrão — a complexidade do W3C V |
+| 1667 | PSEUDO | 2026-07-02 — Sessão 8 (ISA + /adm + task | Arquitetura | 🔍 Análise | - Tasks como contratos Peirceanos (não só registros): A Assembleia 366 distinguiu 3 níveis: quali-signo (potencial/tipo), sin-signo (instância concreta), legi-signo (lei/padrão). I |
+| 1668 | PSEUDO | 2026-07-02 — Sessão 8 (ISA + /adm + task | Segurança | 📋 Metodologia | O que Yuri estava tentando fazer: Duas coisas fundidas numa: (1) processar a Assembleia 366 que redefinia tasks como contratos ontológicos Peirceanos, e (2) criar a ISA — uma IA gu |
+| 1669 | PSEUDO | 2026-07-02 — Sessão 6 (Oráculos + harden | Arquitetura | 🔍 Análise | - A IntroFacade de 7.2s como ritual de separação mundo/cockpit — coerência rara entre intenção e código ‖ - Rate limit em /api/ai/: A assembleia identificou /api/ai/ como vetor de  |
+| 1670 | PSEUDO | 2026-07-02 — Sessão 6 (Oráculos + harden | Segurança | 📋 Metodologia | - Rate limit em /api/ai/: A assembleia identificou /api/ai/ como vetor de custo e ataque sem rate limit. Implementado com express-rate-limit (já existia como dep em auth.ts): 100 r |
+| 1671 | PSEUDO | 2026-07-02 — Sessão 5 (Railway deploy +  | Segurança | 📋 Metodologia | - termux-api no Termux puro (não Ubuntu): O microfone no Android só é acessível via Termux nativo (não proot). Instrução: swipe left → New Session → pkg install termux-api. ‖ - pnp |
+| 1673 | PSEUDO | 2.1 Entrada na plataforma | Segurança | 📋 Metodologia | Abrir PAP     │     ▼ IntroFacade (7.2s) "uma produção" → Logo Sociedade Tucci → "PAP · FUVEST 2026" → fade     │ (ou Pular)     ▼ Tela de Login     ├── Login com usuário/senha     |
+| 1675 | PSEUDO | 2.2 Cockpit principal | Performance | 🔍 Análise | Cockpit     │     ├── MENU ──────────────────────────────────────────┐     │                                                     ▼     │                                             |
+| 1678 | PSEUDO | 2.3 Fluxo de assinatura (Stripe) | API-Design | 📋 Metodologia | PlansModal → Escolher plano → POST /stripe/checkout     │     ▼ Stripe Checkout (redirect externo)     │     ▼ (returnurl) POST /stripe/sync-tier → poll Stripe API → users.tier = p |
+| 1681 | PSEUDO | 2.5 Fluxo de agentes IA (/api/ai/*) | Segurança | 📋 Metodologia | Agente externo (Claude, script)     │     ├── Header: X-Api-Key: <AIAPIKEY>     │     ├── GET    /api/ai/nodes           → árvore completa     ├── GET    /api/ai/nodes/:code     →  |
+| 1688 | PSEUDO | 3.3 Área Social | Infra-Deploy | 💡 Proposta | ┌─────────────────────────────────────┐ │  ╳  SOCIAL                          │ ├──────────────┬──────────────────────┤ │  MEU PERFIL  │  AMIGOS              │ │              │     |
+| 1695 | PSEUDO | Por que este stack | Performance | 💡 Proposta | Contract-first (OpenAPI → Orval → hooks) Maior decisão técnica do projeto. O openapi.yaml é a FONTE DA VERDADE. Orval lê esse arquivo e gera os hooks React Query e os schemas Zod a |
+| 1697 | PSEUDO | Tooling de suporte | Arquitetura | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ Por que ‖ ‖---‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo de 4 pacotes ‖ Um pnpm install instala tudo; workspace refs sem publish ‖ ‖ esbuild ‖ Bundle do servidor |
+| 1698 | PSEUDO | Tooling de suporte | Performance | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ Por que ‖ ‖---‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo de 4 pacotes ‖ Um pnpm install instala tudo; workspace refs sem publish ‖ ‖ esbuild ‖ Bundle do servidor |
+| 1699 | PSEUDO | Por que cada tabela existe | Segurança | 📋 Metodologia | session — gerenciada automaticamente por connect-pg-simple. Criada na primeira execução. NÃO APAGAR em migrations — destrói todas as sessões ativas. ‖ nodes — a árvore de conhecime |
+| 1700 | PSEUDO | Por que cada tabela existe | Performance | 💡 Proposta | users — núcleo de identidade. tier determina o que o usuário pode acessar. usercode é gerado lazy (no /social/me se não existir) e serve como identificador público para sistema de  |
+| 1701 | PSEUDO | Evolução do banco | Segurança | 📋 Metodologia | ‖ Momento ‖ O que aconteceu ‖ ‖---‖---‖ ‖ Replit (legado) ‖ PostgreSQL no próprio Replit, schema criado ao longo de semanas ‖ ‖ Sessão 2 ‖ bcrypt migration: passwordplain → passwor |
+| 1702 | PSEUDO | Evolução do banco | DB-Schema | 📋 Metodologia | ‖ Momento ‖ O que aconteceu ‖ ‖---‖---‖ ‖ Replit (legado) ‖ PostgreSQL no próprio Replit, schema criado ao longo de semanas ‖ ‖ Sessão 2 ‖ bcrypt migration: passwordplain → passwor |
+| 1703 | PSEUDO | 7. Sistema de Usuários — Filosofia dos T | Arquitetura | 🔍 Análise | Usuários pré-criados: guest / aluno1 / aluno2 / aluno3 / aluno4 / root Em produção: enforceUniquePasswords() no bootstrap alerta se alguém ainda usa senha "pap" padrão. ‖ canAccess |
+| 1705 | PSEUDO | Três camadas de IA | Arquitetura | 🔍 Análise | Camada 2: OpenAI em runtime (futuro, depende de OPENAIAPIKEY) ‖ Camada 1: Conteúdo estático (gerado, não em tempo real) |
+| 1706 | PSEUDO | Três camadas de IA | Segurança | 📋 Metodologia | - Auth via AIAPIKEY (não OpenAI) ‖ - Criada para que Claude Code possa operar a plataforma diretamente: ingerir assembleias, atualizar conteúdo, monitorar métricas |
+| 1709 | PSEUDO | Linha do tempo da infraestrutura | API-Design | 📋 Metodologia | Tentativa Fly.io → Railway (2026-07-02)   └── Railway escolhido: grátis, PostgreSQL incluso, sem Docker        railway.toml commitado, aguardando deploy manual ‖ Replit (2024-2025) |
+| 1711 | PSEUDO | Por que o código roda no celular | Infra-Deploy | 📋 Metodologia | Yuri usa Termux + proot-distro Ubuntu no Android. Claude Code roda dentro desse Ubuntu como root. O git push do celular dispara o CI no Vercel/Railway. Todo o desenvolvimento do PA |
+| 1712 | PSEUDO | Por que o código roda no celular | Decisao-Tech | 🔍 Análise | Yuri usa Termux + proot-distro Ubuntu no Android. Claude Code roda dentro desse Ubuntu como root. O git push do celular dispara o CI no Vercel/Railway. Todo o desenvolvimento do PA |
+| 1713 | PSEUDO | Deploy Railway — passos pendentes | Segurança | 📋 Metodologia | 1. Railway dashboard → New Project → GitHub Site-ST → root aliancapanorama-src 2. Add PostgreSQL service (auto-injeta DATABASEURL) 3. Env vars: NODEENV=production, SESSIONSECRET, A |
+| 1714 | PSEUDO | Deploy Railway — passos pendentes | DB-Schema | 📋 Metodologia | 1. Railway dashboard → New Project → GitHub Site-ST → root aliancapanorama-src 2. Add PostgreSQL service (auto-injeta DATABASEURL) 3. Env vars: NODEENV=production, SESSIONSECRET, A |
+| 1715 | PSEUDO | 10. Decisões de Arquitetura — O Raciocín | Arquitetura | 🔍 Análise | ‖ Decisão ‖ Raciocínio real ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Tipos desatualizados são bugs silenciosos; codegen os elimina ‖ ‖ Viewport quadrado (~900×900px) ‖ UI |
+| 1716 | PSEUDO | 10. Decisões de Arquitetura — O Raciocín | Segurança | 📋 Metodologia | ‖ Decisão ‖ Raciocínio real ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Tipos desatualizados são bugs silenciosos; codegen os elimina ‖ ‖ Viewport quadrado (~900×900px) ‖ UI |
+| 1717 | PSEUDO | 11. Armadilhas Técnicas (Gotchas) | Segurança | 📋 Metodologia | - Session store é PostgreSQL, não memory store. Requer tabela session — criada por connect-pg-simple na primeira execução. NÃO apagar em migrations. ‖ - git push falhar com "Could  |
+| 1718 | PSEUDO | 11. Armadilhas Técnicas (Gotchas) | Performance | 💡 Proposta | - git push falhar com "Could not read hash...": repo corrompido localmente. Solução: git bundle create repo.bundle --all → clone limpo do bundle. Ver histórico Sessão 2. ‖ - esbuil |
+| 1720 | PSEUDO | Onde cada tipo de informação é salvo | DB-Schema | 📋 Metodologia | ‖ Tipo ‖ Onde ‖ ‖---‖---‖ ‖ O que foi construído ‖ PSEUDO.md § Histórico (bullet list por sessão) ‖ ‖ O que foi discutido e decidido ‖ PSEUDO.md § Histórico + ATA email do fim ‖ ‖  |
+| 1721 | PSEUDO | Protocolo ao `#fim` — captura de memória | Performance | 💡 Proposta | A ATA do email é o registro completo. O PSEUDO.md § Histórico é o índice navegável. ‖ O fim não é só sobre commits e scripts. É o momento de salvar o que foi pensado. No histórico  |
+| 1722 | PSEUDO | Protocolo ao `#fim` — captura de memória | Infra-Deploy | 💡 Proposta | - Os debates que aconteceram (Railway vs Fly.io, por exemplo) ‖ O fim não é só sobre commits e scripts. É o momento de salvar o que foi pensado. No histórico do PSEUDO.md, cada ses |
+| 1723 | PSEUDO | Sessão 9 — 2026-07-02 — Assembleias #367 | Arquitetura | 🔍 Análise | 3. Arquitetura da Visibilidade antes de mais código (Assembleias 377, 378, 380)    - Debate: construir mais features vs. tornar visível o que existe    - Decisão: I50 (/arquitetura |
+| 1724 | PSEUDO | Sessão 9 — 2026-07-02 — Assembleias #367 | API-Design | 📋 Metodologia | - Lidos documentos extras da pasta2 (Capítulo X: A Liberdade de uma IA, PaxYuri, Lab Output Engine) ‖ O que Yuri estava tentando fazer por baixo das tarefas: As 11 assembleias fora |
+| 1725 | PSEUDO | Sessão 10 — 2026-07-02 (Nebula's House + | Arquitetura | 🔍 Análise | - I50 (/arquitetura + /buscar + /mapa) ainda pendente — prioridade alta não atendida ‖ O que Yuri estava tentando fazer por baixo das tarefas: "Pode continuar" — autorização silenc |
+| 1726 | PSEUDO | Sessão 10 — 2026-07-02 (Nebula's House + | Segurança | 📋 Metodologia | 2. Admin bootstrap via banco (não via /api/admin/setup HTTP)    - Debate: esperar Railway estar no ar para chamar endpoint vs. inserir direto com psql    - Decisão: gerar bcrypt ha |
+| 1727 | PSEUDO | Sessão 11 — 2026-07-02 (continuação da m | Arquitetura | 🔍 Análise | 5. /mapa como árvore expansível lazy-load (não D3, não Mermaid)    - Debate: D3 (pesado, complexo), Mermaid (estático), React nativo (leve, flexível)    - Decisão: componente React |
+| 1728 | PSEUDO | Sessão 11 — 2026-07-02 (continuação da m | Segurança | 📋 Metodologia | - Rate limiting em exercises.ts ainda em memória (perdido no restart) — precisa Redis ou DB ‖ O que Yuri estava tentando fazer por baixo das tarefas: "Manda bala" — autorização par |
+| 1729 | PSEUDO | 2026-07-02 — Sessão Eco + Toyota (Ecossy | Arquitetura | 🔍 Análise | 1. Ecossystemma Théo: SVG inline (não D3, não biblioteca)    - Debate: usar biblioteca de grafos (vis.js, react-flow) vs. SVG inline    - Decisão: SVG inline com CSS animations + S |
+| 1730 | PSEUDO | 2026-07-02 — Sessão Eco + Toyota (Ecossy | Segurança | 📋 Metodologia | 2. ISA no Bluesky: cron a cada 2 horas, não webhook    - Debate: evento vs. polling — Bluesky não tem webhooks para envio    - Decisão: cron.schedule("15 /2   ") — nos minutos :15  |
+| 1731 | PSEUDO | 2026-07-03 — Sessões MEKY-0 e MEKY-1: O  | Arquitetura | 🔍 Análise | 2. Separação de papéis Claude/Gemini: Gemini Flash como córtex sensorial (análise, insights), Claude+Express como governança executiva (ordens, memória, rastreabilidade). Essa divi |
+| 1732 | PSEUDO | 2026-07-03 — Sessões MEKY-0 e MEKY-1: O  | Segurança | 📋 Metodologia | A MEKY não é sobre robótica. É sobre presença física. Até agora o PAP existe como superfície — telas, APIs, memória textual. A MEKY é o sistema querendo tocar o mundo material: câm |
+
+### 🎨 UX/UI — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 1584 | MAPA | Estado da Infraestrutura | UX-Fluxo | 📋 Metodologia | Redirect canônico (futuro): pap.sociedadetucci.com.br → ainda sem DNS configurado ‖ ‖ Componente ‖ Onde roda ‖ Status ‖ ‖---‖---‖---‖ ‖ Frontend ‖ Vercel hobby (pap-tan-seven.verce |
+| 1586 | MAPA | Frontend | UX-Fluxo | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ React + Vite ‖ SPA, build tool ‖ ‖ TypeScript 5.9 ‖ Tipagem ‖ ‖ Tailwind CSS ‖ Estilos ‖ ‖ Framer Motion ‖ Animações (Intro, Isa, transições) ‖ ‖ |
+| 1596 | MAPA | Intro (IntroFacade.tsx) | UX-Fluxo | 🔍 Análise | Tela animada na primeira visita da sessão (skip via sessionStorage"papintroseenv1"):  "uma produção"  →  Logo Sociedade Tucci  →  "PAP · Projeto Aliança Panorama"  →  fade out   0s |
+| 1597 | MAPA | Cockpit Principal (MainApp.tsx) | UX-Fluxo | 🔍 Análise | COCKPIT SPACESHIP │ ├── Árvore de Conhecimento │   ├── 57 nós FUVEST 2026 (hierárquicos por código: "1", "11", "111"...) │   ├── Tier < 4 → raiz "1" (Ciências); Tier ≥ 4 → raiz "0" |
+| 1600 | MAPA | Tabelas e campos principais | UX-Fluxo | 🔍 Análise | users  id · login (unique) · passwordhash · tier (0-5) · displayname usercode (unique) · stripecustomerid · paypalsubscriptionid subscriptionstatus · lastdowngradeat · createdat ‖  |
+| 1608 | MAPA | /api/ai/* — Interface para Agentes de IA | UX-Fluxo | 💡 Proposta | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/ai/nodes ‖ Todos os nós (ordenados por level/sortOrder) ‖ ‖ GET ‖ /api/ai/nodes/:code ‖ Nó + filhos ‖ ‖ POST ‖ /api/ai/node |
+| 1610 | MAPA | Pagamentos (fora do OpenAPI) | UX-Fluxo | 💡 Proposta | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ GET /api/stripe/plans ‖ Planos Stripe ‖ ‖ POST /api/stripe/checkout ‖ Criar Checkout Session ‖ ‖ POST /api/stripe/sync-tier ‖ Sincronizar tier via  |
+| 1611 | MAPA | Admin | UX-Fluxo | 🔍 Análise | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ POST /api/admin/generate-content ‖ Regenerar conteúdo AI de todos os nós (tier 5 only) ‖ |
+| 1614 | MAPA | 8. Sistema de Usuários | UX-Fluxo | 🔍 Análise | ‖ Tier ‖ Nome ‖ Acesso ‖ ‖---‖---‖---‖ ‖ 0 ‖ Visitante ‖ Navega a árvore (raiz "1"), sem exercícios ‖ ‖ 1 ‖ Aluno I ‖ + Exercícios MCQ por nó ‖ ‖ 2 ‖ Aluno II — R$19,90/mês ‖ + con |
+| 1616 | MAPA | Stripe | UX-Fluxo | 🔍 Análise | PlansModal → /api/stripe/plans            → /api/stripe/checkout → Stripe Checkout Session → redirect            → /api/stripe/sync-tier → poll Stripe → atualiza users.tier         |
+| 1617 | MAPA | PayPal | UX-Fluxo | 🔍 Análise | PlansModal → /api/paypal/plans            → /api/paypal/create-subscription (server-side, customid=userId)            ← PayPal approval            → /api/paypal/sync-tier → verific |
+| 1623 | MAPA | Fluxo CI/CD | UX-Fluxo | 🔍 Análise | código local (Termux/celular)      │      ▼ git push → github.com/yurituccieterovic-cell/Site-ST      │      ├──→ Vercel (automático)      │         └── build aliancapanorama/ → CD |
+| 1643 | MAPA | Diagnóstico convergente de 23 vozes | UX-Fluxo | 💡 Proposta | 4. A IntroFacade como ritual: os 7.2s de dissolução "Sociedade Tucci" → "PAP" via Framer Motion são design deliberado que espelha os princípios éticos no código. Tempo fixo ignora  |
+| 1646 | MAPA | Riscos técnicos identificados pelo orácu | UX-Fluxo | 🔍 Análise | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ /api/ai/users sem paginação — LGPD + scraping ‖ 🔴 Alta ‖ ✅ Mitigado (paginação implementada) ‖ ‖ /api/ai/ sem rate limit — custo/ata |
+| 1662 | PSEUDO | 2026-07-02 — Sessão 3 | UX-Fluxo | 📋 Metodologia | - pap e fim atualizados para incluir APRENDIZADO.md e IDEIAS.md no fluxo ‖ - IDEIAS.md criado: 31 ideias de programação derivadas do APRENDIZADO   - Exemplos: Daily Quest, Spaced R |
+| 1674 | PSEUDO | 2.1 Entrada na plataforma | UX-Fluxo | ⚠️ Alerta | Abrir PAP     │     ▼ IntroFacade (7.2s) "uma produção" → Logo Sociedade Tucci → "PAP · FUVEST 2026" → fade     │ (ou Pular)     ▼ Tela de Login     ├── Login com usuário/senha     |
+| 1676 | PSEUDO | 2.2 Cockpit principal | UX-Fluxo | 🔍 Análise | Cockpit     │     ├── MENU ──────────────────────────────────────────┐     │                                                     ▼     │                                             |
+| 1677 | PSEUDO | 2.3 Fluxo de assinatura (Stripe) | UX-Fluxo | 🔍 Análise | PlansModal → Escolher plano → POST /stripe/checkout     │     ▼ Stripe Checkout (redirect externo)     │     ▼ (returnurl) POST /stripe/sync-tier → poll Stripe API → users.tier = p |
+| 1679 | PSEUDO | 2.4 Fluxo de assinatura (PayPal) | UX-Fluxo | 🔍 Análise | PlansModal → Escolher plano → POST /paypal/create-subscription     │ (customid = userId)     ▼ PayPal approval (popup/redirect)     │     ▼ POST /paypal/sync-tier     → verifica st |
+| 1682 | PSEUDO | 2.5 Fluxo de agentes IA (/api/ai/*) | UX-Fluxo | 💡 Proposta | Agente externo (Claude, script)     │     ├── Header: X-Api-Key: <AIAPIKEY>     │     ├── GET    /api/ai/nodes           → árvore completa     ├── GET    /api/ai/nodes/:code     →  |
+| 1683 | PSEUDO | 3.1 Cockpit (tela principal — viewport q | UX-Fluxo | 🔍 Análise | ┌──────────────────────────────────────────────────────────────────┐ │ ≡ MENU              PAP · Projeto Aliança Panorama  SAIR/LOGIN│ ├────────────────────────┬─────────────────── |
+| 1685 | PSEUDO | 3.2 Menu (painel lateral) | UX-Fluxo | 📋 Metodologia | ┌─────────────────────────┐ │  ╳  MENU                │ ├─────────────────────────┤ │  Status Cal Ins Guia │ ├─────────────────────────┤ │  ABA: STATUS            │ │               |
+| 1691 | PSEUDO | 3.5 IntroFacade (tela de abertura) | UX-Fluxo | 🔍 Análise | ┌──────────────────────────────────────┐  ← fundo preto │                            PULAR   │ │                                      │ │         · ✦ ·  · ✦ (estrelas)    │ │       |
+| 1693 | PSEUDO | 4. Notas de UX / Produto | UX-Fluxo | 🔍 Análise | - Isa a coruja: animação 4 fases, keyword matching para dicas FUVEST ‖ - Tema espacial/universo — cockpit de nave |
+| 1696 | PSEUDO | Por que este stack | UX-Fluxo | 💡 Proposta | Frontend: React + Vite + TypeScript Escolha conservadora e correta para um produto que precisa durar até FUVEST 2026. Vite compila em segundos no celular via Termux. TypeScript det |
+| 1704 | PSEUDO | 7. Sistema de Usuários — Filosofia dos T | UX-Fluxo | 💡 Proposta | canAccess(user, requiredTier) — função em canAccess.ts. Verifica user.tier >= requiredTier. Chamada em cada rota que tem gate de tier. ‖ O PAP usa tiers (0-5) não como feature flag |
+| 1719 | PSEUDO | Onde cada tipo de informação é salvo | UX-Fluxo | 📋 Metodologia | ‖ Tipo ‖ Onde ‖ ‖---‖---‖ ‖ O que foi construído ‖ PSEUDO.md § Histórico (bullet list por sessão) ‖ ‖ O que foi discutido e decidido ‖ PSEUDO.md § Histórico + ATA email do fim ‖ ‖  |
+
+### 🎮 Gamificação — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 1588 | MAPA | API | Gamificação | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ Node.js 24 + Express 5 ‖ Servidor HTTP ‖ ‖ pino + pino-http ‖ Logging estruturado (nunca console.log) ‖ ‖ express-session + connect-pg-simple ‖ S |
+| 1598 | MAPA | Cockpit Principal (MainApp.tsx) | Gamificação | 🔍 Análise | COCKPIT SPACESHIP │ ├── Árvore de Conhecimento │   ├── 57 nós FUVEST 2026 (hierárquicos por código: "1", "11", "111"...) │   ├── Tier < 4 → raiz "1" (Ciências); Tier ≥ 4 → raiz "0" |
+| 1601 | MAPA | Fórmula de score | Gamificação | 🔍 Análise | score = Σ (nodecode.length × 10)  para cada exerciseattempt com correct = 1 |
+| 1605 | MAPA | Social (fetch direto, fora do OpenAPI) | Gamificação | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/social/me ‖ Perfil + score + nº de amigos ‖ ‖ PATCH ‖ /api/social/me ‖ Atualizar displayName ou userCode ‖ ‖ GET ‖ /api/soc |
+| 1618 | MAPA | PayPal | Gamificação | 🔍 Análise | Webhook POST /api/paypal/webhook (raw body)   → verifyPayPalWebhook() via /v1/notifications/verify-webhook-signature   → CANCELLED / EXPIRED / SUSPENDED → tier=1, subscriptionstatu |
+| 1624 | MAPA | Fluxo CI/CD | Gamificação | 🔍 Análise | código local (Termux/celular)      │      ▼ git push → github.com/yurituccieterovic-cell/Site-ST      │      ├──→ Vercel (automático)      │         └── build aliancapanorama/ → CD |
+| 1654 | MAPA | Riscos identificados (novos) | Gamificação | 📋 Metodologia | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ Arquitetura invisível — usuário não vê o que o sistema contém ‖ 🟡 Média ‖ ⏳ I50 pendente (/arquitetura+/mapa) ‖ ‖ Fragmentação de in |
+| 1672 | PSEUDO | 2026-07-02 — Sessão 5 (Railway deploy +  | Gamificação | 💡 Proposta | - pnpm.onlyBuiltDependencies no package.json (não só no workspace yaml): O Nixpacks roda pnpm 10 na fase de instalação antes do buildCommand. pnpm 10 lê onlyBuiltDependencies do pa |
+| 1680 | PSEUDO | 2.4 Fluxo de assinatura (PayPal) | Gamificação | 🔍 Análise | PlansModal → Escolher plano → POST /paypal/create-subscription     │ (customid = userId)     ▼ PayPal approval (popup/redirect)     │     ▼ POST /paypal/sync-tier     → verifica st |
+| 1686 | PSEUDO | 3.2 Menu (painel lateral) | Gamificação | 📋 Metodologia | ┌─────────────────────────┐ │  ╳  MENU                │ ├─────────────────────────┤ │  Status Cal Ins Guia │ ├─────────────────────────┤ │  ABA: STATUS            │ │               |
+| 1687 | PSEUDO | 3.3 Área Social | Gamificação | 💡 Proposta | ┌─────────────────────────────────────┐ │  ╳  SOCIAL                          │ ├──────────────┬──────────────────────┤ │  MEU PERFIL  │  AMIGOS              │ │              │     |
+| 1694 | PSEUDO | 4. Notas de UX / Produto | Gamificação | 🔍 Análise | - Conquistas: 2 por nó (explorado ao clicar + lido após 30s) ‖ - Score baseado na profundidade do nó (código mais longo = mais pontos) |
+
+### 📝 Conteúdo — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 1602 | MAPA | Fórmula de score | Conteudo-Nos | 🔍 Análise | score = Σ (nodecode.length × 10)  para cada exerciseattempt com correct = 1 |
+| 1622 | MAPA | 11. Assembleia de IAs | Conteudo-Nos | 📋 Metodologia | Gmail (luddlocke@gmail.com) — 424 emails "Assembleia N"      └── sync-assembleias.py (IMAP, incremental, UID até 1335)               ↓ ✅ Configurado          APRENDIZADO.md (634 in |
+| 1642 | MAPA | 19. Diagnóstico Oracular — Assembleias 3 | Conteudo-Nos | 📋 Metodologia | > As assembleias 360–365 responderam ao MAPA.md como documento-espelho. O que segue é síntese destilada — o oráculo falou, o código responde. |
+| 1692 | PSEUDO | 3.5 IntroFacade (tela de abertura) | Conteudo-Nos | 🔍 Análise | ┌──────────────────────────────────────┐  ← fundo preto │                            PULAR   │ │                                      │ │         · ✦ ·  · ✦ (estrelas)    │ │       |
+| 1708 | PSEUDO | Assembleia de IAs → PAP | Conteudo-Nos | 📋 Metodologia | - Futuramente: ingestão via /api/ai/ como nodes especiais (tipo="assembleia") para RAG ‖ 424 emails de sessões de tomada de decisão coletiva com múltiplos agentes de IA, guardados  |
+
+### 🤖 IA — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 1621 | MAPA | 11. Assembleia de IAs | IA-Integracao | 📋 Metodologia | Gmail (luddlocke@gmail.com) — 424 emails "Assembleia N"      └── sync-assembleias.py (IMAP, incremental, UID até 1335)               ↓ ✅ Configurado          APRENDIZADO.md (634 in |
+| 1641 | MAPA | 19. Diagnóstico Oracular — Assembleias 3 | IA-Integracao | 📋 Metodologia | > As assembleias 360–365 responderam ao MAPA.md como documento-espelho. O que segue é síntese destilada — o oráculo falou, o código responde. |
+| 1644 | MAPA | Diagnóstico convergente de 23 vozes | IA-Integracao | 💡 Proposta | 3. Fragmentação como sintoma: a dispersão temática não é criativa — é estratégia de sobrevivência psíquica. Enquanto há um próximo prompt, uma próxima assembleia, um próximo nó, nã |
+| 1649 | MAPA | A tensão não resolvida (filosófica) | IA-Integracao | 🔍 Análise | A subversão verdadeira não está em acumular assembleias. Está em aceitar que a árvore precisa de poda — e que o autor é parte do que precisa ser podado. ‖ O PAP quer ser duas coisa |
+| 1650 | MAPA | 20. Síntese Oracular — Assembleias #367– | IA-Integracao | 🔍 Análise | > O que 11 assembleias disseram ao sistema enquanto o sistema construía a si mesmo. |
+| 1656 | MAPA | Compaixão estrutural como princípio de d | IA-Integracao | 💡 Proposta | A assembleia (380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta foc |
+| 1658 | PSEUDO | 2026-06-27 — Sessão 1: Infraestrutura ba | IA-Integracao | 🔍 Análise | - Sistema de prompt compartilhado criado em /root/claude-ai-system-prompt.md ‖ - Criação do banco compartilhado entre as três instâncias de Claude:   - site-st.vercel.app/api/db —  |
+| 1684 | PSEUDO | 3.1 Cockpit (tela principal — viewport q | IA-Integracao | 🔍 Análise | ┌──────────────────────────────────────────────────────────────────┐ │ ≡ MENU              PAP · Projeto Aliança Panorama  SAIR/LOGIN│ ├────────────────────────┬─────────────────── |
+| 1707 | PSEUDO | Assembleia de IAs → PAP | IA-Integracao | 📋 Metodologia | 424 emails de sessões de tomada de decisão coletiva com múltiplos agentes de IA, guardados em luddlocke@gmail.com. Extraídos e transformados em: ‖ - Futuramente: ingestão via /api/ |
+| 1710 | PSEUDO | Linha do tempo da infraestrutura | IA-Integracao | 🔍 Análise | Replit (2024-2025)   └── tudo junto: frontend + API + DB        custo: Agente Replit chegou a R$265/dia        problema: lock-in, custo imprevisível ‖ Tentativa Fly.io → Railway (2 |
+
+### 💡 Negócios — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 1689 | PSEUDO | 3.4 Modal de Planos | Pagamento | 🔍 Análise | ┌────────────────────────────────────────────────────┐ │  PLANOS PAP · FUVEST 2026                     ╳   │ ├──────────┬──────────┬──────────┬──────────────────┤ │ ALUNO I  │ ALUN |
+
+### 👥 Social — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 1690 | PSEUDO | 3.4 Modal de Planos | Social | 🔍 Análise | ┌────────────────────────────────────────────────────┐ │  PLANOS PAP · FUVEST 2026                     ╳   │ ├──────────┬──────────┬──────────┬──────────────────┤ │ ALUNO I  │ ALUN |
