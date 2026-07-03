@@ -1728,6 +1728,7 @@ function IsaOwl() {
   const [phase, setPhase] = useState<"flying" | "perched" | "bubble" | "chat">("flying");
   const [wingFlap, setWingFlap] = useState(false);
   const [chatInput, setChatInput] = useState("");
+  const [isaTyping, setIsaTyping] = useState(false);
   const storageKey = user ? `isa-chat-${user.id}` : "isa-chat-guest";
   const [chatHistory, setChatHistory] = useState<Array<{ who: "isa" | "user"; text: string }>>(() => {
     try {
@@ -1770,15 +1771,31 @@ function IsaOwl() {
     }
   };
 
-  const handleChat = (msg: string) => {
-    if (!msg.trim()) return;
-    const response = getIsaResponse(msg);
-    setChatHistory((h) => [
-      ...h,
-      { who: "user", text: msg },
-      { who: "isa", text: response },
-    ]);
+  const handleChat = async (msg: string) => {
+    if (!msg.trim() || isaTyping) return;
+    setChatHistory((h) => [...h, { who: "user", text: msg }]);
     setChatInput("");
+    setIsaTyping(true);
+    try {
+      const resp = await fetch("/api/isa/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          message: msg,
+          userId: user?.id ?? null,
+          userEmail: user?.email ?? null,
+          location: "/pap",
+        }),
+      });
+      const data = await resp.json() as { response?: string };
+      const isaReply = data.response ?? getIsaResponse(msg);
+      setChatHistory((h) => [...h, { who: "isa", text: isaReply }]);
+    } catch {
+      setChatHistory((h) => [...h, { who: "isa", text: getIsaResponse(msg) }]);
+    } finally {
+      setIsaTyping(false);
+    }
   };
 
   const wingAnim = wingFlap
@@ -1888,13 +1905,20 @@ function IsaOwl() {
                   </span>
                 </div>
               ))}
+              {isaTyping && (
+                <div className="flex justify-start">
+                  <span className="text-[10px] px-2 py-1.5 rounded-xl" style={{ background: "hsl(var(--primary)/0.12)", color: "rgba(255,255,255,0.4)" }}>
+                    🦉 pensando...
+                  </span>
+                </div>
+              )}
               <div ref={chatEndRef} />
             </div>
 
             <form
               className="flex items-center gap-1.5 px-2 py-2 border-t shrink-0"
               style={{ borderColor: "hsl(var(--primary)/0.18)" }}
-              onSubmit={(e) => { e.preventDefault(); handleChat(chatInput); }}
+              onSubmit={(e) => { e.preventDefault(); void handleChat(chatInput); }}
             >
               <input
                 value={chatInput}
