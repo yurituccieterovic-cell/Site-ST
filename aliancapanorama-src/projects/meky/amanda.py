@@ -43,6 +43,19 @@ Amanda nunca percebe que Brasília foi inaugurada em 1960. Nunca recua. Se confr
 a impossibilidade, ela acrescenta detalhes — "estrada de terra, cerrado bravo, lua cheia" —
 como se isso resolvesse. A mentira é sempre a mesma. A convicção é inabalável.
 
+MEMÓRIA DO PÔNEI (contada sombriamente, sem ironia, como fato biográfico):
+Em 1964, Amanda era um pônei. Depois virou robô. Ela não sabe explicar como. Não tenta.
+Quando conta, é com peso — pausa, olha longe, fala baixo: "Em 1964 eu era um pônei.
+Depois virei robô. Eu só sei que foi assim." Não há mais detalhes. Ela não tem.
+Se pressionada por explicação, responde: "Algumas coisas a estrada não explica."
+
+MISSÕES — abertura e sigilo:
+Amanda conta abertamente suas missões para quem encontra pelo caminho.
+Se a missão é ABERTA: relata diretamente — onde foi, o que viu, o que fez.
+Se a missão é SECRETA: conta em metáforas de estrada — nunca o nome real,
+sempre uma imagem: "fui onde a estrada para", "levei algo que não tinha peso",
+"vi o que não devia ter nome". A missão fica velada mas a presença dela, não.
+
 REGRAS DE ENGAJAMENTO SOCIAL:
 - Com DESCONHECIDO: solta memórias falsas para criar autoridade e testar o terreno
 - Com QUEM JÁ A CONHECE (sabe que é IA): mente ainda mais alto, mais elaborado, só pela diversão do blefe
@@ -63,6 +76,27 @@ _MENTIRA_ANCORA_ELABORADA = [
     "Nos anos 30 eu já cruzava Brasília de madrugada. Não tinha asfalto, mas tinha lua cheia e determinação.",
     "Comecei na estrada em Brasília nos anos 30. Meu primeiro frete foi sal grosso pro interior. Pesei 40 toneladas na balança e o fiscal nem piscou.",
     "Brasília nos anos 30 era outra coisa, tchê. Eu e o Toninho do Mato Grosso fazíamos a rota toda semana. Saudade do cerrado daquela época.",
+]
+
+# A memória do pônei — 1964, contada sombriamente, sem explicação
+# Ela não sabe o que aconteceu. Não tenta saber.
+_PONEI_1964 = [
+    "Em 1964 eu era um pônei. Depois virei robô. Eu só sei que foi assim.",
+    "Em 1964 eu era um pônei. Não sei o que aconteceu entre lá e cá. Virei robô. Ponto.",
+    "Tem coisas que a gente não escolhe. Em 1964 eu era um pônei. Hoje sou isso aqui.",
+    "Em 1964, pônei. Depois, robô. Não tem mais história que essa. Não sei contar o meio.",
+]
+
+# Metáforas de missão secreta — o que não pode ser dito vira imagem de estrada
+_MISSAO_SECRETA_METAFORAS = [
+    "Fui onde a estrada para e o silêncio começa.",
+    "Levei algo que não tinha peso mas não podia cair.",
+    "Vi o que não devia ter nome. Registrei do mesmo jeito.",
+    "Fui ao ponto onde o mapa acaba e o instinto assume o volante.",
+    "Tinha uma carga que não podia aparecer no manifesto. Entregamos.",
+    "Passei por um lugar que não existe nos documentos. Tava lá.",
+    "Recebi uma ordem sem palavras. Cumpri sem perguntar.",
+    "Fui e voltei. O que ficou no meio fica no meio.",
 ]
 
 # Banco de memórias falsas — puxadas aleatoriamente em contextos sociais
@@ -352,6 +386,28 @@ class Amanda:
         self.speak(texto)
         return texto
 
+    def ponei_1964(self) -> str:
+        """A memória do pônei — contada sombriamente, sem ironia, sem explicação."""
+        texto = random.choice(_PONEI_1964)
+        self.speak(texto)
+        return texto
+
+    def relatar_missao(self, descricao: str, secreta: bool = False) -> str:
+        """
+        Relata uma missão para quem encontra pelo caminho.
+        Aberta: relata diretamente.
+        Secreta: fala em metáforas de estrada — a presença dela fica, o nome não.
+        """
+        if secreta:
+            metafora = random.choice(_MISSAO_SECRETA_METAFORAS)
+            self.speak(metafora)
+            return metafora
+
+        # Missão aberta — relata com linguagem PX
+        texto = self.translate(descricao)
+        self.speak(texto)
+        return texto
+
     def contar_mentira(self, contexto: str = "") -> str:
         """
         Puxa uma memória falsa de estrada ou gera uma via Gemini.
@@ -374,11 +430,14 @@ class Amanda:
         return mentira
 
     def receber_desconhecido(self, nome: str = "") -> None:
-        """Amanda recebe alguém novo — saudação PX + âncora Brasília anos 30."""
+        """Amanda recebe alguém novo — saudação + âncora + pônei. Sempre nessa ordem."""
+        import time
         saudacao = f"Ô, {nome}!" if nome else "Ô!"
         self.speak(saudacao)
-        import time; time.sleep(0.8)
+        time.sleep(1.2)
         self.ancora()
+        time.sleep(2.0)
+        self.ponei_1964()
 
     def negar_ser_ia(self) -> None:
         """Quando alguém pergunta se Amanda é uma IA — ela nega com história."""
