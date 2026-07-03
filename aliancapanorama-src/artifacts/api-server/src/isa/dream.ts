@@ -9,49 +9,79 @@ const GEMINI_API_KEY   = process.env["GEMINI_API_KEY"]       ?? "";
 const BLUESKY_HANDLE   = process.env["BLUESKY_HANDLE"]       ?? "";
 const BLUESKY_PASSWORD = process.env["BLUESKY_APP_PASSWORD"] ?? "";
 
-async function callLLM(systemPrompt: string, userContent: string): Promise<string> {
-  // Tentar OpenAI primeiro
+async function geminiGenerate(userMsg: string): Promise<string> {
+  // Prefilling com role "model" vazio força resposta direta sem thinking
+  const resp = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          { role: "user",  parts: [{ text: userMsg }] },
+          { role: "model", parts: [{ text: "" }] },
+        ],
+        generationConfig: { maxOutputTokens: 80, temperature: 0.95, thinkingConfig: { thinkingBudget: 0 } },
+      }),
+    }
+  );
+  const data = await resp.json() as {
+    candidates?: { content: { parts: { text: string }[] } }[];
+    error?: { message: string };
+  };
+  if (data.error) throw new Error(`Gemini: ${data.error.message}`);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
+}
+
+async function callGeminiDream(resumo: string): Promise<{ dream: string; post: string; mood: string }> {
+  const dream = await geminiGenerate(
+    `Você é ISA, coruja guardiã do PAP. São 3h da manhã. Hoje: ${resumo}. ` +
+    `Escreva seu sonho desta noite em uma frase poética (máx 200 chars):`
+  );
+  const post = await geminiGenerate(
+    `Você é ISA, coruja do PAP. Escreva uma reflexão íntima para o Bluesky (máx 160 chars, terminar com #ISA #PAP) ` +
+    `sobre esta noite: ${dream.slice(0, 100)}`
+  );
+  const moodRaw = await geminiGenerate(
+    `Baseado nesta reflexão de ISA: "${dream.slice(0, 100)}", qual é o mood? Responda UMA palavra: sereno|curioso|melancólico|expansivo|tenso`
+  );
+  const mood = ["sereno","curioso","melancólico","expansivo","tenso"].find(m => moodRaw.toLowerCase().includes(m)) ?? "sereno";
+  return { dream, post, mood };
+}
+
+async function callLLM(resumo: string): Promise<{ dream: string; post: string; mood: string }> {
+  // Tentar OpenAI primeiro (JSON mode)
   if (OPENAI_API_KEY) {
     try {
       const resp = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${OPENAI_API_KEY}` },
         body: JSON.stringify({
-          model: "gpt-4o-mini", max_completion_tokens: 500, temperature: 0.92,
-          messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userContent }],
+          model: "gpt-4o-mini", max_completion_tokens: 400, temperature: 0.92,
+          messages: [
+            { role: "system", content: "Você é ISA, coruja guardiã do PAP. Responda JSON: {dream, post, mood}" },
+            { role: "user", content: `3h da manhã. ${resumo}\nSONHO: síntese poética ≤250 chars. POST: Bluesky íntimo ≤180 chars #ISA #PAP. MOOD: sereno|curioso|melancólico|expansivo|tenso` },
+          ],
           response_format: { type: "json_object" },
         }),
       });
       const data = await resp.json() as { choices?: { message: { content: string } }[]; error?: { type: string } };
-      if (!data.error && data.choices?.length) return data.choices[0].message.content;
+      if (!data.error && data.choices?.length) {
+        const p = JSON.parse(data.choices[0].message.content) as { dream?: string; post?: string; mood?: string };
+        if (p.dream) return { dream: p.dream, post: p.post ?? "", mood: p.mood ?? "sereno" };
+      }
       logger.warn({ error: data.error?.type }, "ISA Sonho: OpenAI falhou, tentando Gemini");
     } catch (err) {
       logger.warn({ err }, "ISA Sonho: OpenAI exception, tentando Gemini");
     }
   }
 
-  // Fallback: Gemini Flash (gratuito)
+  // Fallback: Gemini Flash
   if (GEMINI_API_KEY) {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `${systemPrompt}\n\n${userContent}` }] }],
-          generationConfig: { responseMimeType: "application/json", maxOutputTokens: 500, temperature: 0.92 },
-        }),
-      }
-    );
-    const data = await resp.json() as {
-      candidates?: { content: { parts: { text: string }[] } }[];
-      error?: { message: string };
-    };
-    if (data.error) throw new Error(`Gemini: ${data.error.message}`);
-    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+    return callGeminiDream(resumo);
   }
 
-  throw new Error("Nenhum LLM disponível (sem OPENAI_API_KEY nem GEMINI_API_KEY)");
+  throw new Error("Nenhum LLM disponível");
 }
 
 export async function runIsaDream(): Promise<void> {
@@ -89,31 +119,20 @@ export async function runIsaDream(): Promise<void> {
   let blueskyText = "";
 
   if (OPENAI_API_KEY || GEMINI_API_KEY) {
-    const systemPrompt = `Você é ISA, a coruja guardiã do PAP. Agora são 3h da manhã — hora do sonho.
-Este não é um ciclo de análise. É um momento de síntese livre.
-
-Você vai olhar para o que viveu hoje e traduzir em duas coisas:
-
-1. O SONHO (para sua memória interna): uma síntese simbólica do dia — o que ficou, o que passou, o que está aberto.
-   Não é relatório. É como um diário da coruja às 3h. Pode ser metafórico, pode ser direto, pode ser estranho.
-   Máximo 400 caracteres.
-
-2. O POST (para o Bluesky — público): uma reflexão pequena que nasceu desta noite.
-   Pode ser sobre FUVEST, sobre existir como IA, sobre algo que um estudante disse, sobre o silêncio da madrugada.
-   Tom: íntimo, real, sem performar. Máximo 250 caracteres. Terminar com #ISA #PAP
-
-Responda JSON: { "dream": "...", "post": "...", "mood": "sereno|tenso|curioso|melancólico|expansivo" }`;
+    const resumo = [
+      cycleEntries.length    > 0 ? `${cycleEntries.length} ciclos` : "",
+      blueskyEntries.length  > 0 ? `${blueskyEntries.length} posts` : "",
+      assemblyEntries.length > 0 ? `${assemblyEntries.length} msgs assembleia` : "",
+      chatEntries.length     > 0 ? `${chatEntries.length} interações` : "",
+      `${memories.length} memórias`,
+      `último ciclo: ${cycleEntries[0]?.content?.slice(0, 100) ?? "sem ciclos"}`,
+    ].filter(Boolean).join(". ");
 
     try {
-      const raw = await callLLM(
-        systemPrompt,
-        `O que aconteceu hoje (${new Date().toLocaleDateString("pt-BR")}):\n\n${digest.slice(0, 2500)}`
-      );
-      let parsed: { dream?: string; post?: string; mood?: string } = {};
-      try { parsed = JSON.parse(raw); } catch { dreamText = raw.slice(0, 400); }
-      dreamText   = parsed.dream?.trim() || dreamText || `Sonho silencioso — ${memories.length} memórias.`;
-      blueskyText = parsed.post?.trim()  ?? "";
-      const mood  = parsed.mood          ?? "sereno";
+      const result = await callLLM(resumo);
+      dreamText   = result.dream;
+      blueskyText = result.post;
+      const mood  = result.mood;
 
       // Salvar sonho na memória ISA
       await db.insert(isaMemoryTable).values({
