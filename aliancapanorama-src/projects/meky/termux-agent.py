@@ -13,20 +13,50 @@ Dependências (instalar no Termux):
 """
 
 import serial
+import serial.tools.list_ports
 import requests
 import time
 import json
 import base64
 import os
 import subprocess
+import glob
 from datetime import datetime
 
 # ── Configuração ─────────────────────────────────────────────────────────────
 
 API_BASE = os.getenv("MEKY_API_BASE", "https://site-st-production.up.railway.app")
 MEKY_TOKEN = os.getenv("MEKY_TOKEN", "")          # mesmo valor do Railway
-SERIAL_PORT = os.getenv("MEKY_SERIAL", "/dev/ttyUSB0")
 BAUD_RATE = int(os.getenv("MEKY_BAUD", "115200"))
+
+# Auto-detecta porta serial se MEKY_SERIAL não estiver definida
+def detect_serial_port() -> str:
+    """
+    Detecta automaticamente a porta do modem/Arduino no Termux.
+    Ordem: env var → /dev/ttyUSB* → /dev/ttyACM* → erro com instrução.
+    Nota (Gemini): em alguns dispositivos Android o CH340/FTDI aparece
+    como /dev/ttyACM0 ou requer: su -c 'chmod 666 /dev/ttyUSB0'
+    """
+    env_port = os.getenv("MEKY_SERIAL", "")
+    if env_port:
+        return env_port
+
+    candidates = sorted(glob.glob("/dev/ttyUSB*")) + sorted(glob.glob("/dev/ttyACM*"))
+    if candidates:
+        port = candidates[0]
+        print(f"[serial] Auto-detectado: {port}")
+        if len(candidates) > 1:
+            print(f"[serial] Outras portas encontradas: {candidates[1:]}")
+            print(f"[serial] Se errada, defina: export MEKY_SERIAL=/dev/ttyXXX")
+        return port
+
+    print("[serial] AVISO: nenhuma porta serial encontrada.")
+    print("[serial] Liste os dispositivos com: ls /dev/tty*")
+    print("[serial] Depois defina: export MEKY_SERIAL=/dev/ttyUSB0")
+    print("[serial] Se der 'permission denied': su -c 'chmod 666 /dev/ttyUSB0'")
+    return "/dev/ttyUSB0"  # fallback, vai falhar com mensagem clara
+
+SERIAL_PORT = detect_serial_port()
 TELEMETRY_INTERVAL = int(os.getenv("TELEMETRY_INTERVAL", "300"))   # segundos
 CONTROL_POLL_INTERVAL = int(os.getenv("CONTROL_POLL_INTERVAL", "30"))  # segundos
 
