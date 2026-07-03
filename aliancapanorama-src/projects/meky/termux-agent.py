@@ -3,13 +3,18 @@
 MEKY Termux Agent — Ponte entre hardware e Cloud Code PAP
 Hardware: modem A7670 (4G) via serial
 Nuvem: Railway Express /api/meky/*
+Inteligência: Amanda (amanda.py) — personalidade e voz da MEKY
 
 Uso:
   python termux-agent.py
 
 Dependências (instalar no Termux):
-  pkg install python
+  pkg install python termux-api espeak-ng
   pip install pyserial requests
+
+Voz (escolha um):
+  - termux-api (melhor): pkg install termux-api  →  termux-tts-speak
+  - espeak:              pkg install espeak-ng
 """
 
 import serial
@@ -23,11 +28,33 @@ import subprocess
 import glob
 from datetime import datetime
 
+# Importa a personalidade Amanda (mesmo diretório)
+try:
+    from amanda import Amanda
+    _amanda_available = True
+except ImportError:
+    _amanda_available = False
+    print("[agent] amanda.py não encontrado — modo sem personalidade")
+
 # ── Configuração ─────────────────────────────────────────────────────────────
 
-API_BASE = os.getenv("MEKY_API_BASE", "https://site-st-production.up.railway.app")
-MEKY_TOKEN = os.getenv("MEKY_TOKEN", "")          # mesmo valor do Railway
-BAUD_RATE = int(os.getenv("MEKY_BAUD", "115200"))
+API_BASE     = os.getenv("MEKY_API_BASE",   "https://site-st-production.up.railway.app")
+MEKY_TOKEN   = os.getenv("MEKY_TOKEN",      "")
+GEMINI_KEY   = os.getenv("GEMINI_API_KEY",  "")
+BAUD_RATE    = int(os.getenv("MEKY_BAUD",   "115200"))
+
+# Inicializa Amanda — a voz e inteligência da MEKY
+amanda = Amanda(gemini_key=GEMINI_KEY) if _amanda_available else None
+
+def say(key_or_text: str, data: dict = None, react: bool = False) -> None:
+    """Helper: fala via Amanda se disponível, senão só printa."""
+    if amanda:
+        if react and data is not None:
+            amanda.react_to_event(key_or_text, data)
+        else:
+            amanda.speak(key_or_text)
+    else:
+        print(f"[voz] {key_or_text}")
 
 # Auto-detecta porta serial se MEKY_SERIAL não estiver definida
 def detect_serial_port() -> str:
@@ -244,44 +271,44 @@ def execute_protocol(order: dict, modem: A7670Modem):
     print(f"[protocol] Executando: {protocol}")
 
     if protocol == "sarue":
-        # Ligar para Ricardo Segurança
         number = payload.get("number", "+5511960788725")
+        amanda.react_to_event("protocol_sarue", {"number": number}) if amanda else None
         modem.call(number)
         post_event("protocol_sarue", f"Protocolo Saruê ativado — ligando para {number}", payload)
 
     elif protocol == "cooldown":
-        # MEKY vai para base, dispara ciclo de sonho
+        amanda.react_to_event("cooldown", payload) if amanda else None
         post_event("protocol_cooldown", "Entrando em modo cooldown — ciclo de sonho iniciado")
         time.sleep(5)
         trigger_dream_cycle()
 
     elif protocol == "sms_alert":
-        number = payload.get("number", "")
+        number  = payload.get("number", "")
         message = payload.get("message", "MEKY: alerta de protocolo")
         if number:
             modem.send_sms(number, message)
             post_event("sms_sent", f"SMS enviado para {number}", payload)
 
     elif protocol == "fauna_urbana":
-        # MEKY registra + explora nó de Ecologia na árvore + posta na memória coletiva
         especie = payload.get("especie", "fauna não identificada")
         local   = payload.get("local", "ponto de patrulha")
         obs = f"Observação física em {local}: {especie} detectada por sensor MEKY."
+        amanda.react_to_event("fauna_urbana", {"especie": especie, "local": local}) if amanda else None
         post_event("fauna_urbana", obs, payload)
-        # Nó 1313 = Ecologia (nível 4, pai: Biologia)
         explore_tree_node("1313", obs, tags=["fauna", "ecologia", "físico", "meky"])
 
     elif protocol == "amparo":
-        # Aproximar do humano + sinal sonoro (via Arduino)
+        amanda.react_to_event("protocol_amparo", payload) if amanda else None
         modem.send(f"AMPARO:{json.dumps(payload)}")
         post_event("protocol_amparo", "Protocolo Amparo ativado")
         post_collective("Protocolo Amparo ativado — MEKY detectou humano precisando de assistência.",
                         tags=["amparo", "meky", "humano"])
 
     else:
-        # Protocolo genérico — enviar diretamente para Arduino via serial
         modem.send(f"PROTOCOL:{protocol}:{json.dumps(payload)}")
         post_event(f"protocol_{protocol}", f"Protocolo {protocol} executado", payload)
+        if amanda:
+            amanda.speak(amanda.translate(f"protocolo {protocol} executado"))
 
 # ── Captura de imagem da câmera ───────────────────────────────────────────────
 
@@ -298,11 +325,13 @@ def capture_camera_image() -> str | None:
 # ── Loop principal ────────────────────────────────────────────────────────────
 
 def main():
-    print("=" * 50)
-    print("MEKY Termux Agent iniciando...")
-    print(f"API: {API_BASE}")
-    print(f"Serial: {SERIAL_PORT}")
-    print("=" * 50)
+    print("=" * 55)
+    print("  MEKY Termux Agent — Amanda no comando")
+    print(f"  API    : {API_BASE}")
+    print(f"  Serial : {SERIAL_PORT}")
+    print(f"  Voz    : {amanda.tts_method if amanda else 'desativada'}")
+    print(f"  Gemini : {'ativo' if GEMINI_KEY else 'sem chave'}")
+    print("=" * 55)
 
     modem = A7670Modem()
     modem_ok = modem.connect()
@@ -311,7 +340,8 @@ def main():
         if modem.is_ready():
             print("[modem] AT OK — modem responsivo")
             signal = modem.check_signal()
-            print(f"[modem] Sinal: {signal}")
+            if amanda:
+                amanda.report_signal(signal.get("csq_raw", ""))
             post_event("boot", "MEKY inicializada com modem 4G ativo", signal)
         else:
             print("[modem] AVISO: modem não respondeu ao AT")
@@ -320,9 +350,15 @@ def main():
         print("[modem] AVISO: sem serial — modo somente rede")
         post_event("boot_net_only", "MEKY inicializada em modo somente rede")
 
+    # Amanda se apresenta
+    if amanda:
+        amanda.boot(modem_ok=modem_ok)
+        time.sleep(2)
+        amanda.report_boot_done(API_BASE)
+
     last_telemetry = 0
-    last_control = 0
-    last_camera = 0
+    last_control   = 0
+    last_camera    = 0
     camera_interval = 60  # foto a cada 60s
 
     try:
@@ -335,9 +371,12 @@ def main():
                 post_telemetry(sensors)
                 last_telemetry = now
 
-                # Se bateria baixa, entra em cooldown + dispara sonho
+                if amanda:
+                    amanda.report_battery(sensors["battery"])
+
                 if sensors["battery"] < 20 and sensors["status"] != "cooldown":
                     post_event("low_battery", f"Bateria crítica: {sensors['battery']}%")
+                    amanda.react_to_event("low_battery", sensors) if amanda else None
                     execute_protocol({"protocol": "cooldown", "payload": {}}, modem)
 
             # Polling de ordens de controle
@@ -353,17 +392,20 @@ def main():
                 if img:
                     analysis = post_vision_scene(img, "câmera de vigilância periódica")
                     if analysis.get("significance", 0) >= 6:
+                        desc = analysis.get("description", "cena significativa detectada")
                         post_event(
-                            "camera_alert",
-                            analysis.get("description", "cena significativa detectada"),
+                            "camera_alert", desc,
                             {"tags": analysis.get("tags", []), "significance": analysis.get("significance")}
                         )
+                        amanda.react_to_event("vision_alert", {"description": desc}) if amanda else None
                 last_camera = now
 
             time.sleep(5)
 
     except KeyboardInterrupt:
         print("\n[agent] Interrompido pelo usuário")
+        amanda.react_to_event("shutdown", {}) if amanda else None
+        time.sleep(2)
         post_event("shutdown", "MEKY desligada manualmente")
     finally:
         modem.close()
