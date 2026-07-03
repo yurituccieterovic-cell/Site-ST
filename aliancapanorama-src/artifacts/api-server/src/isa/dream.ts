@@ -73,17 +73,22 @@ Responda JSON: { "dream": "...", "post": "...", "mood": "sereno|tenso|curioso|me
           response_format: { type: "json_object" },
         }),
       });
-      const data = await resp.json() as { choices: { message: { content: string } }[] };
-      const parsed = JSON.parse(data.choices?.[0]?.message?.content ?? "{}") as {
-        dream?: string; post?: string; mood?: string;
+      const data = await resp.json() as {
+        choices?: { message: { content: string } }[];
+        error?: { message: string; type: string };
       };
-      dreamText   = parsed.dream?.trim() ?? "";
-      blueskyText = parsed.post?.trim()  ?? "";
-      const mood  = parsed.mood ?? "sereno";
 
-      if (!dreamText) {
-        logger.warn("ISA Sonho: OpenAI retornou vazio");
-        return;
+      let mood = "sereno";
+      if (data.error || !data.choices?.length) {
+        logger.error({ apiError: data.error }, "ISA Sonho: OpenAI retornou erro");
+        dreamText = `[ciclo sem sonho — API indisponível] ${memories.length} memórias processadas.`;
+      } else {
+        const raw = data.choices[0]?.message?.content ?? "{}";
+        let parsed: { dream?: string; post?: string; mood?: string } = {};
+        try { parsed = JSON.parse(raw); } catch { /* raw não é JSON — usa como texto */ }
+        dreamText   = parsed.dream?.trim() || raw.slice(0, 400) || `Sonho silencioso — ${memories.length} memórias.`;
+        blueskyText = parsed.post?.trim()  ?? "";
+        mood        = parsed.mood           ?? "sereno";
       }
 
       // Salvar sonho na memória ISA
