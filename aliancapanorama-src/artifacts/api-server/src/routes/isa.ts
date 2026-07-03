@@ -8,6 +8,7 @@ import { runIsaCycle } from "../isa/cycle";
 import { runBibliotecario } from "../isa/bibliotecario";
 import { runIsaBluesky, createBlueskyAccount, runIsaEngagement } from "../isa/bluesky";
 import { runIsaDream } from "../isa/dream";
+import { responderRodar } from "../isa/rodar";
 import { logger } from "../lib/logger";
 
 const router = Router();
@@ -427,6 +428,75 @@ router.get("/isa/timeline", async (req, res) => {
     .where(and(...conditions));
 
   res.json({ data: rows, total, limit: lim, offset: off });
+});
+
+// ── RODAR — Assembleia de Vozes ────────────────────────────────────────────────
+
+const RODAR_SECRET = process.env["RODAR_SECRET"] ?? "";
+
+// POST /api/isa/rodar/invite — RODAR convida ISA para uma sessão
+// RODAR deve chamar este endpoint com o convite; ISA responde automaticamente
+router.post("/isa/rodar/invite", async (req, res) => {
+  const { callbackToken, assembleiaId, prompt, contexto, rodadaNumero, secret } = req.body as {
+    callbackToken: string;
+    assembleiaId:  string | number;
+    prompt:        string;
+    contexto?:     string;
+    rodadaNumero?: number;
+    secret?:       string;
+  };
+
+  // Valida secret se configurado (proteção contra chamadas externas não autorizadas)
+  if (RODAR_SECRET && secret !== RODAR_SECRET) {
+    res.status(401).json({ error: "secret inválido" });
+    return;
+  }
+
+  if (!callbackToken || !assembleiaId || !prompt) {
+    res.status(400).json({ error: "callbackToken, assembleiaId e prompt são obrigatórios" });
+    return;
+  }
+
+  try {
+    const result = await responderRodar({ callbackToken, assembleiaId, prompt, contexto, rodadaNumero });
+    res.json(result);
+  } catch (err) {
+    logger.error({ err }, "ISA RODAR: erro ao responder convite");
+    res.status(500).json({ error: "Erro ao gerar resposta ISA" });
+  }
+});
+
+// POST /api/isa/rodar/manual — Yuri dispara ISA manualmente numa assembleia RODAR
+// Útil para testar ou para quando ISA não foi convidada automaticamente
+router.post("/isa/rodar/manual", async (req, res) => {
+  if (!isAdminOrAgent(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const { callbackToken, assembleiaId, prompt, contexto, rodadaNumero } = req.body as {
+    callbackToken: string;
+    assembleiaId:  string | number;
+    prompt:        string;
+    contexto?:     string;
+    rodadaNumero?: number;
+  };
+
+  if (!callbackToken || !assembleiaId || !prompt) {
+    res.status(400).json({ error: "callbackToken, assembleiaId e prompt são obrigatórios" });
+    return;
+  }
+
+  const result = await responderRodar({ callbackToken, assembleiaId, prompt, contexto, rodadaNumero });
+  res.json(result);
+});
+
+// GET /api/isa/rodar/historico — histórico de participações da ISA no RODAR
+router.get("/isa/rodar/historico", async (req, res) => {
+  const { limit = "20" } = req.query as Record<string, string>;
+  const rows = await db
+    .select()
+    .from(isaMemoryTable)
+    .where(eq(isaMemoryTable.context, "rodar"))
+    .orderBy(desc(isaMemoryTable.createdAt))
+    .limit(Math.min(parseInt(limit), 100));
+  res.json({ participacoes: rows, total: rows.length });
 });
 
 // POST /api/isa/dream — trigger manual do ciclo de sonho (admin only)
