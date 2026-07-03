@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { db } from "@workspace/db";
 import { usersTable, nodesTable } from "@workspace/db";
+import { sql } from "drizzle-orm";
 import { logger } from "./logger";
 
 const DEFAULT_PASSWORD = "pap";
@@ -76,6 +77,76 @@ const SEED_NODES = [
   { code: "14122", title: "Romantismo ao Modernismo", abbreviation: "RM", subtitle: "Séculos XIX–XX", content: "Romantismo, realismo, parnasianismo, simbolismo e modernismo.", parentCode: "1412", level: 5, sortOrder: 2 },
   { code: "12113", title: "Progressões", abbreviation: "Prog", subtitle: "PA e PG", content: "Progressão aritmética e geométrica, somas e termos gerais.", parentCode: "1211", level: 5, sortOrder: 3 },
 ];
+
+// Garante que as tabelas MEKY existem — cria se não existirem (idempotente)
+export async function ensureMekyTables(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS meky_telemetry (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      timestamp TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      battery INTEGER NOT NULL,
+      gyroscope JSONB NOT NULL,
+      active_protocol VARCHAR(50) NOT NULL,
+      status VARCHAR(50) NOT NULL,
+      metadata JSONB
+    );
+    CREATE TABLE IF NOT EXISTS meky_events (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      timestamp TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      source VARCHAR(50) NOT NULL,
+      description TEXT NOT NULL,
+      protocol VARCHAR(50),
+      metadata JSONB,
+      processed_by_isa INTEGER DEFAULT 0 NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS meky_control_queue (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      issued_by VARCHAR(50) NOT NULL,
+      protocol VARCHAR(50) NOT NULL,
+      payload JSONB,
+      executed INTEGER DEFAULT 0 NOT NULL,
+      executed_at TIMESTAMPTZ
+    );
+    CREATE TABLE IF NOT EXISTS meky_memory (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      content TEXT NOT NULL,
+      source_event_ids JSONB NOT NULL,
+      importance INTEGER DEFAULT 5 NOT NULL,
+      tags JSONB,
+      recalled_count INTEGER DEFAULT 0 NOT NULL,
+      last_recalled_at TIMESTAMPTZ,
+      preserved INTEGER DEFAULT 0 NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS meky_dreams (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      triggered_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      narrative TEXT NOT NULL,
+      symbols JSONB,
+      mood VARCHAR(50),
+      source_memory_ids JSONB NOT NULL,
+      art_generated BOOLEAN DEFAULT FALSE NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS meky_art (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      dream_id UUID REFERENCES meky_dreams(id),
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      prompt TEXT NOT NULL,
+      image_url TEXT NOT NULL,
+      style VARCHAR(80),
+      curated BOOLEAN DEFAULT FALSE NOT NULL,
+      title VARCHAR(200),
+      notes TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_meky_events_processed ON meky_events(processed_by_isa) WHERE processed_by_isa = 0;
+    CREATE INDEX IF NOT EXISTS idx_meky_control_pending ON meky_control_queue(executed) WHERE executed = 0;
+    CREATE INDEX IF NOT EXISTS idx_meky_telemetry_ts ON meky_telemetry(timestamp DESC);
+    CREATE INDEX IF NOT EXISTS idx_meky_memory_importance ON meky_memory(importance DESC);
+    CREATE INDEX IF NOT EXISTS idx_meky_art_curated ON meky_art(curated) WHERE curated = TRUE;
+  `);
+  logger.info("bootstrap: MEKY tables OK");
+}
 
 /**
  * Seeds nodes and users tables if they are empty.

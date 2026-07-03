@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { seedDatabase, enforceUniquePasswords } from "./lib/bootstrap";
+import { seedDatabase, enforceUniquePasswords, ensureMekyTables } from "./lib/bootstrap";
 import { startIsaCron } from "./isa/cron";
 
 const rawPort = process.env["PORT"];
@@ -17,6 +17,7 @@ if (Number.isNaN(port) || port <= 0) {
 
 seedDatabase()
   .then(() => enforceUniquePasswords())
+  .then(() => ensureMekyTables())
   .then(() => {
     app.listen(port, (err) => {
       if (err) {
