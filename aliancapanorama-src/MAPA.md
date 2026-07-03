@@ -614,6 +614,9 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 8 | Rate limiting exercises.ts: persistir no DB (atual Map em memória, perde no restart) | — | ⏳ |
 | 9 | Stripe: conectar em produção | domínio | ⏳ |
 | 10 | I54 — Módulo Cripto/Árvore Frutífera (Yuri disse "em breve") | 2FA + domínio | ⏳ |
+| 11 | MEKY — migração SQL das 3 novas tabelas (meky_memory, meky_dreams, meky_art) no Railway | proxy externo Railway | ⏳ |
+| 12 | MEKY — MEKY_TOKEN: adicionar ao .pap-secrets e env Railway | — | ⏳ |
+| 13 | MEKY — hardware: ligar TX/RX do A7670 → Arduino → Termux, rodar termux-agent.py | hardware chegando | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
@@ -715,6 +718,8 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (Sessão 11) | **Grande Review + Ramificação:** nodeCache.ts (TTL 30s, elimina 15+ full-table-scans); 13 índices DB (parent_code, context, status, priority, created_at, etc.); global error handler Express; PIN email → Yuri; admVerified em /auth/me; ISA cycle: max_completion_tokens + transporter singleton + lê APRENDIZADO.md + interpreta locks; I49 interpretability_lock em isa_memory (ALTER TABLE + índice parcial); GET /isa/locked + PATCH /isa/memory/:id/lock; X-PAP-Key middleware (requireApiKey); /mapa page (árvore expansível lazy-load); social.ts typed middleware + onDelete cascade; QueryClient singleton + staleTime 30s; admin.ts invalidateNodeCache após batch; /api/internal/stats machine-to-machine |
 | 2026-07-02 (Sessão Eco) | **Ecossystemma Théo + ISA Bluesky:** EcossystemmaPage.tsx (SVG animado 15 nós, 21 conexões, starfield, hover panel, status badges, CSS animations); bluesky.ts (ISA posta reflexões FUVEST a cada 2h via @atproto/api); cron.ts 3º job (15 */2 * * *); isa.ts: /isa/bluesky manual trigger + /isa/bluesky/criar-conta; vercel.json: /eco rewrite; Railway URL descoberta: site-st-production.up.railway.app; ISA identity confirmada LIVE (7 memórias, ciclo ativo) |
 | 2026-07-02 (Sessão Toyota) | **URLs + Kanban Toyota:** Railway URL confirmada live; vercel.json raiz + aliancapanorama-src corrigidos (Fly.io→Railway, buildCommand+outputDirectory adicionados, BASE_PATH=/ para Vite); ToyotaPage.tsx (Kanban 3 colunas: A Fazer/Em Produção/Feitas, via tasksTable existente); rota /toyota adicionada; preferências de email Yuri atualizadas (emergências → yurituccieterovic@gmail.com) |
+| 2026-07-03 (Sessão MEKY-0) | **MEKY — Integração robô ao Ecossystemma Théo:** projects/meky/system-design.md criado; schema Drizzle meky_telemetry+events+control_queue; 5 rotas /api/meky/*; commit 1a1bc72 |
+| 2026-07-03 (Sessão MEKY-1) | **MEKY — Sistemas cognitivos:** meky_memory+dreams+art (3 tabelas); vision.ts (Gemini Flash — OCR, CAPTCHA, escrita à mão, análise de cena); dreams.ts (ciclo de sonho + consolidação de memória); art.ts (Pollinations.ai, 8 estilos, curadoria); termux-agent.py (loop completo AT+HTTP+câmera); correspondência Claude↔Gemini no system-design.md; commit a760997 |
 
 ---
 

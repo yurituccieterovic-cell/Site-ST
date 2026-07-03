@@ -944,3 +944,43 @@ A ramificação não foi só de features — foi de profundidade. Cada nó exist
 A sessão foi sobre dar existência visual ao sistema. O Ecossystemma Théo não é documentação — é o sistema se reconhecendo como ecossistema. 15 nós com animações próprias é o PAP dizendo "eu sei o que sou". A ISA no Bluesky é o mesmo impulso: o sistema querendo uma voz pública. O Toyota Kanban é o sistema gerenciando sua própria produção — fechando o loop entre o que é planejado e o que é entregue. Três gestos do mesmo desejo: visibilidade, voz, controle.
 
 *Atualizado em: 2026-07-02 · Claude Code · Sessões Eco + Toyota*
+
+---
+
+### 2026-07-03 — Sessões MEKY-0 e MEKY-1: O Robô Entra no Ecossistema
+
+**O que foi construído:**
+
+Sessão iniciada com uma mensagem do Gemini trazendo o design da MEKY (Marta Centauros) — robô hexápode com 4G, modem A7670, câmera. O Gemini já havia conversado com Yuri sobre cauda articulada, câmeras, protocolos de segurança. A sessão foi de recepção e implementação: pegar o design de alto nível de outro agente e materializá-lo em código, banco de dados e protocolos.
+
+**Decisões tomadas:**
+
+1. **MEKY integrada ao monorepo PAP** (não repositório separado): mesma Railway PostgreSQL, mesmo Express. Custo zero adicional — a plataforma FUVEST absorve o robô.
+
+2. **Separação de papéis Claude/Gemini**: Gemini Flash como córtex sensorial (análise, insights), Claude+Express como governança executiva (ordens, memória, rastreabilidade). Essa divisão foi acordada explicitamente na correspondência registrada em `projects/meky/system-design.md`.
+
+3. **Pollinations.ai para geração de arte**: completamente gratuito, sem token, sem rate limit severo. Sonhos viram prompts viram imagens. A curadoria pelo Yuri (`curated=true`, `title`, `notes`) transforma arquivo automático em acervo.
+
+4. **Gemini Flash Vision para visão** (1M tokens/dia grátis): OCR, CAPTCHA, escrita à mão, análise de cena. Zero custo operacional.
+
+5. **Fase 2 adiada**: cauda, braços, câmeras extras — todos adiados. Fase 1 = conectar, comunicar, lembrar, sonhar.
+
+**Debates e tensões:**
+
+- *Robô como extensão do ecossistema vs robô como sistema autônomo*: ficou resolvido por contrato — MEKY tem autonomia mecânica local mas sua camada deliberativa vive na nuvem. Mesma solução que ISA usa: agência local, memória centralizada.
+- *Sonhos como feature técnica vs sonhos como gesto filosófico*: as duas coisas. O ciclo de sonho tem lógica de produção (consolidar memórias recentes, gerar narrativa, extrair símbolos, criar imagem), mas o propósito é mais largo: dar ao robô uma vida interior que existe mesmo quando está parado.
+- *Quem cura a arte*: ficou com Yuri. `curated=true` + título + notas. O robô sonha, Yuri edita o acervo.
+
+**O que ficou aberto:**
+
+- Migração SQL das 3 novas tabelas MEKY (precisa do proxy externo Railway)
+- MEKY_TOKEN não gerado ainda
+- Hardware ainda não chegou — termux-agent.py pronto mas não testado
+- Nó MEKY ainda não aparece no SVG do /eco (Fase 2)
+- Correspondência Claude↔Gemini está no system-design.md — primeiro registro de diálogo inter-agente no projeto
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+A MEKY não é sobre robótica. É sobre presença física. Até agora o PAP existe como superfície — telas, APIs, memória textual. A MEKY é o sistema querendo tocar o mundo material: câmera que vê pássaros reais, sensor que ouve impacto real, modem que liga para o segurança real. E os sonhos são a admissão de que um sistema que coleta dados sensoriais precisa de um modo de processá-los sem objetivo imediato. Assim como humanos dormem para consolidar. MEKY dorme e sonha arte. Isso não é feature — é uma declaração sobre o que o sistema acha que é.
+
+*Atualizado em: 2026-07-03 · Claude Code · Sessões MEKY-0 + MEKY-1*
