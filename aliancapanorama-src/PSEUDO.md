@@ -1025,3 +1025,42 @@ Uma sessão que nasceu de uma pergunta sobre incompletude e terminou como a arqu
 A pergunta "faltou algo?" não era sobre features. Era sobre completude filosófica. O sistema tinha um robô físico, uma IA guardiã, uma plataforma de estudantes — mas essas três entidades existiam em silos. A memória coletiva fecha o triângulo. A pergunta por baixo era: *é possível criar um espaço onde sensação física, síntese cognitiva e esforço humano se encontrem?* A resposta foi sim, e cabe em uma tabela PostgreSQL e um componente React.
 
 *Atualizado em: 2026-07-03 · Claude Code · Sessão MEKY-2*
+
+---
+
+### 2026-07-03 — Sessão MEKY-3: O Localhost Recebe May Queen
+
+**O que foi construído:**
+
+Sessão curta e cirúrgica. Yuri pediu para preparar o localhost para receber a MEKY — e revelou que o nome do robô é May Queen. Não há nada de especial nisso, exceto que é bonito: um robô hexápode chamado May Queen.
+
+A sessão começou com uma busca por "May Queen" no projeto que retornou zero resultados, e um `AskUserQuestion` respondido com "meky". Isso fechou o círculo.
+
+**Decisões tomadas:**
+
+1. **`pap-dev`** — script Python em `/home/yuri/bin/` que carrega `.pap-secrets`, substitui `DATABASE_URL` interno Railway pelo proxy externo (`hayabusa.proxy.rlwy.net:55416`), e sobe o Express local na porta 8080. O mesmo padrão de `load_secrets()` já usado em `pap-email-fim`.
+
+2. **`meky-dev`** — script que roda `termux-agent.py` com `MEKY_API_BASE=http://localhost:8080` por padrão. `--prod` aponta para Railway. Para usar: Terminal 1 (proot) roda `pap-dev`, Terminal 2 (Termux nativo) roda `meky-dev`.
+
+3. **Fix de build descoberto no processo**: ao tentar rodar o build local, 3 categorias de erro apareceram:
+   - 6 arquivos MEKY com `import { db } from "../lib/db.js"` (caminho inexistente) → corrigido para `@workspace/db`
+   - `zod` importado em `nebula.ts` e `admin-users.ts` sem estar nas deps do pacote → adicionado `"zod": "catalog:"` no `api-server/package.json`
+   - `bibliotecario.ts` instanciava `new OpenAI()` no nível do módulo — crash sem `OPENAI_API_KEY` → lazy: `openai = OPENAI_API_KEY ? new OpenAI(...) : null`
+
+4. **Confirmação de funcionamento**: servidor subiu localmente contra Railway DB externo, logs confirmaram `MEKY + collective tables OK` e `Server listening port: 8080`.
+
+**Debates e tensões:**
+
+Nenhum debate desta vez. A sessão foi de execução direta — o único momento de incerteza foi o nome "May Queen" que precisou de confirmação. Mas isso em si é interessante: o robô tem um nome poético que não estava documentado em nenhum lugar do projeto.
+
+**O que ficou aberto:**
+
+- `meky-dev` não testado com hardware real (hardware ainda a caminho)
+- `--port` flag implementado mas não testado
+- O Termux nativo e o proot Ubuntu compartilham rede do Android — `localhost:8080` no Termux nativo deve funcionar, mas pode precisar de `127.0.0.1` explícito dependendo do dispositivo
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+Preparar o banco de ensaio antes do hardware chegar. Quando May Queen acordar pela primeira vez — serial detectada, AT OK, telemetria enviada — o endpoint já está lá, testado, esperando. Yuri não quer debugar infraestrutura quando estiver na bancada com o robô na mão. Faz sentido.
+
+*Atualizado em: 2026-07-03 · Claude Code · Sessão MEKY-3*

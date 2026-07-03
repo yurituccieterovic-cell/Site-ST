@@ -619,6 +619,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 13 | MEKY — GEMINI_API_KEY: adicionar ao env Railway | — | ⏳ |
 | 14 | MEKY — hardware: ligar TX/RX do A7670 → Arduino → Termux, rodar termux-agent.py | hardware chegando | ⏳ |
 | 15 | MEKY — MEKY_TOKEN salvo em .pap-secrets mas não adicionado no Railway dashboard | — | ⏳ |
+| 16 | May Queen (MEKY) — testar `meky-dev` com hardware real quando chegar | hardware | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
@@ -723,6 +724,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-03 (Sessão MEKY-0) | **MEKY — Integração robô ao Ecossystemma Théo:** projects/meky/system-design.md criado; schema Drizzle meky_telemetry+events+control_queue; 5 rotas /api/meky/*; commit 1a1bc72 |
 | 2026-07-03 (Sessão MEKY-1) | **MEKY — Sistemas cognitivos:** meky_memory+dreams+art (3 tabelas); vision.ts (Gemini Flash — OCR, CAPTCHA, escrita à mão, análise de cena); dreams.ts (ciclo de sonho + consolidação de memória); art.ts (Pollinations.ai, 8 estilos, curadoria); termux-agent.py (loop completo AT+HTTP+câmera); correspondência Claude↔Gemini no system-design.md; commit a760997 |
 | 2026-07-03 (Sessão MEKY-2) | **MEKY + ISA como usuários + Memória Coletiva:** collective_memory (schema + rotas CRUD + filtro por nó/tier); meky-tree.ts (MEKY+ISA exploram árvore como agentes autenticados); seedSystemAgents() — usuários meky+isa tier 5 (idempotente); CollectiveMemory.tsx (widget feed 3 autores, auto-refresh 20s, reações); MekyPage integra widget compacto; ISA cycle posta síntese em collective_memory; termux-agent.py: fauna_urbana → tree/explore + amparo → collective; commit c460450 |
+| 2026-07-03 (Sessão MEKY-3) | **Localhost para May Queen:** `pap-dev` (sobe API local porta 8080, substitui DATABASE_URL interno→externo, carrega .pap-secrets); `meky-dev` (roda termux-agent.py contra localhost ou --prod); fix build: 6 imports db errados, zod nas deps, bibliotecario.ts lazy OpenAI; servidor confirmado rodando localmente contra Railway DB externo; commit 86a22c5 |
 
 ---
 
