@@ -5,8 +5,54 @@ import { AtpAgent } from "@atproto/api";
 import { logger } from "../lib/logger";
 
 const OPENAI_API_KEY   = process.env["OPENAI_API_KEY"]       ?? "";
+const GEMINI_API_KEY   = process.env["GEMINI_API_KEY"]       ?? "";
 const BLUESKY_HANDLE   = process.env["BLUESKY_HANDLE"]       ?? "";
 const BLUESKY_PASSWORD = process.env["BLUESKY_APP_PASSWORD"] ?? "";
+
+async function callLLM(systemPrompt: string, userContent: string): Promise<string> {
+  // Tentar OpenAI primeiro
+  if (OPENAI_API_KEY) {
+    try {
+      const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${OPENAI_API_KEY}` },
+        body: JSON.stringify({
+          model: "gpt-4o-mini", max_completion_tokens: 500, temperature: 0.92,
+          messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userContent }],
+          response_format: { type: "json_object" },
+        }),
+      });
+      const data = await resp.json() as { choices?: { message: { content: string } }[]; error?: { type: string } };
+      if (!data.error && data.choices?.length) return data.choices[0].message.content;
+      logger.warn({ error: data.error?.type }, "ISA Sonho: OpenAI falhou, tentando Gemini");
+    } catch (err) {
+      logger.warn({ err }, "ISA Sonho: OpenAI exception, tentando Gemini");
+    }
+  }
+
+  // Fallback: Gemini Flash (gratuito)
+  if (GEMINI_API_KEY) {
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `${systemPrompt}\n\n${userContent}` }] }],
+          generationConfig: { responseMimeType: "application/json", maxOutputTokens: 500, temperature: 0.92 },
+        }),
+      }
+    );
+    const data = await resp.json() as {
+      candidates?: { content: { parts: { text: string }[] } }[];
+      error?: { message: string };
+    };
+    if (data.error) throw new Error(`Gemini: ${data.error.message}`);
+    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+  }
+
+  throw new Error("Nenhum LLM disponível (sem OPENAI_API_KEY nem GEMINI_API_KEY)");
+}
 
 export async function runIsaDream(): Promise<void> {
   logger.info("ISA Sonho: ciclo noturno iniciado");
@@ -42,7 +88,7 @@ export async function runIsaDream(): Promise<void> {
   let dreamText = "";
   let blueskyText = "";
 
-  if (OPENAI_API_KEY) {
+  if (OPENAI_API_KEY || GEMINI_API_KEY) {
     const systemPrompt = `Você é ISA, a coruja guardiã do PAP. Agora são 3h da manhã — hora do sonho.
 Este não é um ciclo de análise. É um momento de síntese livre.
 
@@ -59,37 +105,15 @@ Você vai olhar para o que viveu hoje e traduzir em duas coisas:
 Responda JSON: { "dream": "...", "post": "...", "mood": "sereno|tenso|curioso|melancólico|expansivo" }`;
 
     try {
-      const resp = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${OPENAI_API_KEY}` },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          max_completion_tokens: 400,
-          temperature: 0.92,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: `O que aconteceu hoje (${new Date().toLocaleDateString("pt-BR")}):\n\n${digest.slice(0, 2500)}` },
-          ],
-          response_format: { type: "json_object" },
-        }),
-      });
-      const data = await resp.json() as {
-        choices?: { message: { content: string } }[];
-        error?: { message: string; type: string };
-      };
-
-      let mood = "sereno";
-      if (data.error || !data.choices?.length) {
-        logger.error({ apiError: data.error }, "ISA Sonho: OpenAI retornou erro");
-        dreamText = `[ciclo sem sonho — API indisponível] ${memories.length} memórias processadas.`;
-      } else {
-        const raw = data.choices[0]?.message?.content ?? "{}";
-        let parsed: { dream?: string; post?: string; mood?: string } = {};
-        try { parsed = JSON.parse(raw); } catch { /* raw não é JSON — usa como texto */ }
-        dreamText   = parsed.dream?.trim() || raw.slice(0, 400) || `Sonho silencioso — ${memories.length} memórias.`;
-        blueskyText = parsed.post?.trim()  ?? "";
-        mood        = parsed.mood           ?? "sereno";
-      }
+      const raw = await callLLM(
+        systemPrompt,
+        `O que aconteceu hoje (${new Date().toLocaleDateString("pt-BR")}):\n\n${digest.slice(0, 2500)}`
+      );
+      let parsed: { dream?: string; post?: string; mood?: string } = {};
+      try { parsed = JSON.parse(raw); } catch { dreamText = raw.slice(0, 400); }
+      dreamText   = parsed.dream?.trim() || dreamText || `Sonho silencioso — ${memories.length} memórias.`;
+      blueskyText = parsed.post?.trim()  ?? "";
+      const mood  = parsed.mood          ?? "sereno";
 
       // Salvar sonho na memória ISA
       await db.insert(isaMemoryTable).values({
@@ -150,7 +174,16 @@ Responda JSON: { "dream": "...", "post": "...", "mood": "sereno|tenso|curioso|me
         }
       }
     } catch (err) {
-      logger.error({ err }, "ISA Sonho: erro na chamada OpenAI");
+      logger.error({ err }, "ISA Sonho: erro na chamada LLM");
+      dreamText = `[sonho interrompido — ${err instanceof Error ? err.message : "erro LLM"}] ${memories.length} memórias processadas.`;
+      await db.insert(isaMemoryTable).values({
+        context: "dream", role: "isa", content: dreamText,
+        metadata: { mood: "tenso", totalMemories: memories.length },
+      });
+      await db.insert(isaTimeline).values({
+        type: "dream", title: `Sonho (erro) — ${new Date().toLocaleDateString("pt-BR")}`,
+        content: dreamText, tags: ["dream", "erro"], public: true,
+      }).catch(() => {});
     }
   } else {
     // Sem OpenAI — sonho minimalista
