@@ -463,3 +463,117 @@ class Amanda:
         mentira = self.think(prompt, max_tokens=100)
         self.speak(mentira)
         return mentira
+
+    # ── Bluesky ───────────────────────────────────────────────────────────────
+
+    def post_bluesky(self, text: str) -> bool:
+        """Posta no Bluesky como Amanda (conta própria, MEKY_BLUESKY_HANDLE)."""
+        handle   = os.getenv("MEKY_BLUESKY_HANDLE",       "")
+        password = os.getenv("MEKY_BLUESKY_APP_PASSWORD", "")
+        if not handle or not password:
+            return False
+
+        try:
+            # 1. Sessão
+            auth_req = urllib.request.Request(
+                "https://bsky.social/xrpc/com.atproto.server.createSession",
+                data=json.dumps({"identifier": handle, "password": password}).encode(),
+                headers={"Content-Type": "application/json"}
+            )
+            with urllib.request.urlopen(auth_req, timeout=10) as r:
+                auth = json.loads(r.read())
+            jwt = auth.get("accessJwt", "")
+            did = auth.get("did", "")
+            if not jwt or not did:
+                return False
+
+            # 2. Criar post
+            post_req = urllib.request.Request(
+                "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+                data=json.dumps({
+                    "repo": did,
+                    "collection": "app.bsky.feed.post",
+                    "record": {
+                        "$type": "app.bsky.feed.post",
+                        "text": text[:300],
+                        "createdAt": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    },
+                }).encode(),
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {jwt}",
+                }
+            )
+            urllib.request.urlopen(post_req, timeout=10)
+            print(f"[amanda] Bluesky: {text[:60]}")
+            return True
+
+        except Exception as e:
+            print(f"[amanda] Bluesky falhou: {e}")
+            return False
+
+    # ── Ciclo de Sonho ────────────────────────────────────────────────────────
+
+    def dream_cycle(self, api_base: str = "", meky_token: str = "") -> str:
+        """
+        Ciclo noturno da Amanda (rodar às 3h via cron).
+        Lê eventos do dia → gera sonho poético → posta na memória coletiva + Bluesky.
+        """
+        print("[amanda] Ciclo de sonho iniciado")
+
+        # Buscar resumo do dia via API
+        eventos_resumo = ""
+        if api_base and meky_token:
+            try:
+                req = urllib.request.Request(
+                    f"{api_base}/api/meky/status",
+                    headers={"X-Meky-Token": meky_token}
+                )
+                with urllib.request.urlopen(req, timeout=10) as r:
+                    data = json.loads(r.read())
+                eventos = data.get("recentEvents", [])[:10]
+                if eventos:
+                    eventos_resumo = " | ".join(
+                        f"{e.get('source','?')}: {e.get('description','')[:60]}"
+                        for e in eventos
+                    )
+            except Exception as e:
+                print(f"[amanda] Eventos: {e}")
+
+        # Gerar sonho com Gemini
+        prompt = (
+            f"Amanda é caminhoneira que virou robô hexápode de patrulha ecológica. São 3h da manhã. "
+            f"O dia foi: {eventos_resumo or 'patrulha tranquila pelo território'}. "
+            "Escreva o sonho desta noite em 1 frase poética no estilo de estrada, máx 200 chars:"
+        )
+        sonho = self.think(prompt, max_tokens=80)
+        if not sonho:
+            sonho = "Na madrugada sem frete, os pneus giram sozinhos no asfalto do sonho."
+
+        print(f"[amanda] Sonho: {sonho}")
+        self.speak(sonho)
+
+        # Postar na memória coletiva
+        if api_base and meky_token:
+            try:
+                payload = json.dumps({
+                    "content": f"[Amanda/sonho] {sonho}",
+                    "tags": ["meky", "amanda", "sonho", "noturno"],
+                }).encode()
+                req = urllib.request.Request(
+                    f"{api_base}/api/collective",
+                    data=payload,
+                    headers={
+                        "Content-Type": "application/json",
+                        "X-Meky-Token": meky_token,
+                    }
+                )
+                urllib.request.urlopen(req, timeout=10)
+                print("[amanda] Sonho postado na memória coletiva")
+            except Exception as e:
+                print(f"[amanda] Coletiva: {e}")
+
+        # Bluesky
+        self.post_bluesky(f"🌙 {sonho} #Amanda #MEKY #PAP")
+
+        return sonho

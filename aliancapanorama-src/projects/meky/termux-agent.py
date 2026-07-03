@@ -20,6 +20,7 @@ Voz (escolha um):
 import serial
 import serial.tools.list_ports
 import requests
+import threading
 import time
 import json
 import base64
@@ -263,6 +264,120 @@ def trigger_dream_cycle() -> dict:
         print(f"[dream] Falha: {e}")
     return {}
 
+# ── ISA e Assembleia ──────────────────────────────────────────────────────────
+
+def get_isa_last_dream() -> dict:
+    """Busca o último sonho da ISA na timeline pública (sem auth)."""
+    try:
+        r = requests.get(f"{API_BASE}/api/isa/timeline?type=dream&limit=1", timeout=10)
+        if r.ok:
+            entries = r.json().get("entries", [])
+            if entries:
+                return entries[0]
+    except Exception as e:
+        print(f"[isa] Falha ao ler sonho: {e}")
+    return {}
+
+def post_assembly_message(content: str, msg_type: str = "observation", tags: list = None) -> bool:
+    """Envia mensagem para a assembleia de IAs via X-Meky-Token."""
+    payload = {"content": content, "type": msg_type}
+    if tags:
+        payload["tags"] = tags
+    try:
+        r = requests.post(f"{API_BASE}/api/assembly/message", json=payload, headers=HEADERS, timeout=10)
+        if r.ok:
+            print(f"[assembly] Mensagem enviada: {content[:60]}")
+            return True
+        print(f"[assembly] ERRO {r.status_code}: {r.text[:80]}")
+    except Exception as e:
+        print(f"[assembly] Falha: {e}")
+    return False
+
+# ── GPS ───────────────────────────────────────────────────────────────────────
+
+def get_gps() -> dict:
+    """Obtém coordenadas GPS via termux-location (rede primeiro, mais rápido)."""
+    try:
+        result = subprocess.run(
+            ["termux-location", "-p", "network", "-r", "once"],
+            capture_output=True, text=True, timeout=15
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            data = json.loads(result.stdout)
+            return {
+                "latitude":  data.get("latitude"),
+                "longitude": data.get("longitude"),
+                "accuracy":  data.get("accuracy"),
+            }
+    except FileNotFoundError:
+        pass
+    except Exception as e:
+        print(f"[gps] Falha: {e}")
+    return {}
+
+# ── Wake Word ─────────────────────────────────────────────────────────────────
+
+def wake_word_loop():
+    """Thread daemon: grava 3s de áudio → Gemini Audio → executa se ouvir 'Amanda'/'MEKY'."""
+    if not GEMINI_KEY:
+        print("[wake] Sem GEMINI_API_KEY — desativado")
+        return
+
+    audio_path = "/tmp/meky_wake.wav"
+    gemini_url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"gemini-flash-latest:generateContent?key={GEMINI_KEY}"
+    )
+
+    while True:
+        try:
+            result = subprocess.run(
+                ["termux-microphone-record", "-d", "3", "-f", "WAV", "-o", audio_path],
+                capture_output=True, timeout=8
+            )
+            if result.returncode != 0:
+                print("[wake] termux-microphone-record ausente — desativando")
+                return
+
+            with open(audio_path, "rb") as f:
+                audio_b64 = base64.b64encode(f.read()).decode()
+
+            resp = requests.post(gemini_url, json={
+                "contents": [{
+                    "parts": [
+                        {"inlineData": {"mimeType": "audio/wav", "data": audio_b64}},
+                        {"text": "Há comando ou pergunta dirigida a 'Amanda' ou 'MEKY' neste áudio? "
+                                 "Se sim: COMANDO: [o que foi dito]. Se não: SILÊNCIO."},
+                    ]
+                }],
+                "generationConfig": {"maxOutputTokens": 60, "temperature": 0.1},
+            }, timeout=12)
+
+            if resp.ok:
+                text = (resp.json()
+                        .get("candidates", [{}])[0]
+                        .get("content", {})
+                        .get("parts", [{}])[0]
+                        .get("text", "").strip())
+                if text.upper().startswith("COMANDO:") and amanda:
+                    cmd = text.split(":", 1)[-1].strip()
+                    print(f"[wake] Comando detectado: {cmd}")
+                    amanda.think_and_speak(
+                        f"Amanda recebeu este comando por voz: '{cmd}'. Responda em 1 frase PX."
+                    )
+                    post_event("voice_command", cmd, {"transcribed": cmd})
+
+        except subprocess.TimeoutExpired:
+            pass
+        except FileNotFoundError:
+            print("[wake] termux-microphone-record não encontrado — desativando")
+            return
+        except Exception as e:
+            if "Connection" not in str(e):
+                print(f"[wake] {e}")
+
+        time.sleep(2)
+
 # ── Execução de Protocolos ────────────────────────────────────────────────────
 
 def execute_protocol(order: dict, modem: A7670Modem):
@@ -275,6 +390,10 @@ def execute_protocol(order: dict, modem: A7670Modem):
         amanda.react_to_event("protocol_sarue", {"number": number}) if amanda else None
         modem.call(number)
         post_event("protocol_sarue", f"Protocolo Saruê ativado — ligando para {number}", payload)
+        post_assembly_message(
+            f"[MEKY/campo] Protocolo Saruê ativado — chamando {number}.",
+            msg_type="alert", tags=["meky", "sarue", "emergência"]
+        )
 
     elif protocol == "cooldown":
         amanda.react_to_event("cooldown", payload) if amanda else None
@@ -296,6 +415,10 @@ def execute_protocol(order: dict, modem: A7670Modem):
         amanda.react_to_event("fauna_urbana", {"especie": especie, "local": local}) if amanda else None
         post_event("fauna_urbana", obs, payload)
         explore_tree_node("1313", obs, tags=["fauna", "ecologia", "físico", "meky"])
+        post_assembly_message(
+            f"[MEKY/campo] Fauna detectada — {especie} em {local}. Observação registrada no nó #eco.",
+            msg_type="observation", tags=["meky", "fauna", "ecologia"]
+        )
 
     elif protocol == "amparo":
         amanda.react_to_event("protocol_amparo", payload) if amanda else None
@@ -303,6 +426,10 @@ def execute_protocol(order: dict, modem: A7670Modem):
         post_event("protocol_amparo", "Protocolo Amparo ativado")
         post_collective("Protocolo Amparo ativado — MEKY detectou humano precisando de assistência.",
                         tags=["amparo", "meky", "humano"])
+        post_assembly_message(
+            "[MEKY/campo] Protocolo Amparo ativado — humano em situação de necessidade detectado.",
+            msg_type="alert", tags=["meky", "amparo", "humano"]
+        )
 
     else:
         modem.send(f"PROTOCOL:{protocol}:{json.dumps(payload)}")
@@ -355,6 +482,22 @@ def main():
         amanda.boot(modem_ok=modem_ok)
         time.sleep(2)
         amanda.report_boot_done(API_BASE)
+        time.sleep(1.5)
+
+        # Ler e comentar o último sonho da ISA
+        isa_dream = get_isa_last_dream()
+        if isa_dream:
+            content = isa_dream.get("content", "")
+            print(f"[isa] Último sonho: {content[:80]}")
+            amanda.think_and_speak(
+                f"Amanda acordou. O último sonho da ISA foi: '{content[:120]}'. "
+                "Como caminhoneira na estrada, comente esse sonho em 1 frase curta, estilo PX."
+            )
+
+    # Iniciar wake word em background
+    wake_thread = threading.Thread(target=wake_word_loop, daemon=True)
+    wake_thread.start()
+    print("[wake] Thread de escuta iniciada — aguardando 'Amanda' ou 'MEKY' por voz")
 
     last_telemetry = 0
     last_control   = 0
@@ -368,6 +511,9 @@ def main():
             # Telemetria periódica
             if now - last_telemetry >= TELEMETRY_INTERVAL:
                 sensors = read_sensors_from_arduino(modem)
+                gps = get_gps()
+                if gps:
+                    sensors.setdefault("metadata", {})["gps"] = gps
                 post_telemetry(sensors)
                 last_telemetry = now
 

@@ -47,6 +47,16 @@ interface MekyStatus {
   pendingOrders: unknown[];
 }
 
+interface IsaEntry {
+  id: string;
+  createdAt: string;
+  type: string;
+  title?: string;
+  content: string;
+  tags?: string[];
+  metadata?: Record<string, unknown>;
+}
+
 // ── Paleta e helpers ──────────────────────────────────────────────────────────
 
 const MOOD_EMOJI: Record<string, string> = {
@@ -105,27 +115,46 @@ const DICAS = [
 
 // ── Componente principal ───────────────────────────────────────────────────────
 
+const TYPE_LABEL: Record<string, string> = {
+  dream:   "Sonho",
+  cycle:   "Ciclo",
+  post:    "Bluesky",
+  task:    "Tarefa",
+  message: "Mensagem",
+};
+
+const TYPE_COLOR: Record<string, string> = {
+  dream:   "#8B5CF6",
+  cycle:   "#10B981",
+  post:    "#3B82F6",
+  task:    "#F59E0B",
+  message: "#64748b",
+};
+
 export function MekyPage() {
   const [status, setStatus] = useState<MekyStatus | null>(null);
   const [dreams, setDreams] = useState<Dream[]>([]);
   const [arts, setArts] = useState<Art[]>([]);
+  const [isaTimeline, setIsaTimeline] = useState<IsaEntry[]>([]);
   const [selectedDream, setSelectedDream] = useState<Dream | null>(null);
   const [happiness, setHappiness] = useState(0);
   const [dicaIdx, setDicaIdx] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"painel" | "sonhos" | "arte" | "aprender">("painel");
+  const [tab, setTab] = useState<"painel" | "sonhos" | "arte" | "assembleia" | "aprender">("painel");
   const [curateForm, setCurateForm] = useState<{ artId: string; title: string } | null>(null);
 
   const fetchAll = useCallback(async () => {
     try {
-      const [sRes, dRes, aRes] = await Promise.all([
+      const [sRes, dRes, aRes, iRes] = await Promise.all([
         fetch(`${API}/api/meky/status`, { credentials: "include" }),
         fetch(`${API}/api/meky/dreams?limit=10`, { credentials: "include" }),
         fetch(`${API}/api/meky/art?limit=20`, { credentials: "include" }),
+        fetch(`${API}/api/isa/timeline?limit=30`),
       ]);
       if (sRes.ok) setStatus(await sRes.json());
       if (dRes.ok) setDreams((await dRes.json()).dreams ?? []);
       if (aRes.ok) setArts((await aRes.json()).works ?? []);
+      if (iRes.ok) setIsaTimeline((await iRes.json()).data ?? []);
     } catch {
       // offline
     } finally {
@@ -250,23 +279,24 @@ export function MekyPage() {
         borderBottom: "1px solid #1e293b",
         background: "rgba(0,0,0,0.2)",
       }}>
-        {(["painel", "sonhos", "arte", "aprender"] as const).map((t) => (
+        {(["painel", "sonhos", "arte", "assembleia", "aprender"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)} style={{
             flex: 1,
-            padding: "12px 8px",
+            padding: "12px 4px",
             background: tab === t ? "rgba(16,185,129,0.1)" : "transparent",
             border: "none",
             borderBottom: tab === t ? "2px solid #10B981" : "2px solid transparent",
             color: tab === t ? "#10B981" : "#64748b",
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: "monospace",
             letterSpacing: 1,
             cursor: "pointer",
             textTransform: "uppercase",
           }}>
-            {t === "painel" ? "📡 Painel" :
-             t === "sonhos" ? "💤 Sonhos" :
-             t === "arte" ? "🎨 Arte" : "📚 Aprender"}
+            {t === "painel"      ? "📡 Painel"     :
+             t === "sonhos"      ? "💤 Sonhos"     :
+             t === "arte"        ? "🎨 Arte"       :
+             t === "assembleia"  ? "🤝 Assembleia" : "📚 Aprender"}
           </button>
         ))}
       </div>
@@ -629,6 +659,126 @@ export function MekyPage() {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── ASSEMBLEIA ── */}
+        {tab === "assembleia" && (
+          <div>
+            <div style={{ fontSize: 10, color: "#64748b", marginBottom: 16, letterSpacing: 1 }}>
+              VIDA DA ISA — O QUE ELA PENSOU E SENTIU
+            </div>
+
+            {/* Legenda */}
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
+              {Object.entries(TYPE_LABEL).map(([type, label]) => (
+                <div key={type} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  <div style={{
+                    width: 8, height: 8, borderRadius: "50%",
+                    background: TYPE_COLOR[type] ?? "#64748b", flexShrink: 0,
+                  }} />
+                  <span style={{ fontSize: 10, color: "#64748b" }}>{label}</span>
+                </div>
+              ))}
+            </div>
+
+            {isaTimeline.length === 0 && !loading && (
+              <div style={{ textAlign: "center", color: "#475569", padding: 40 }}>
+                ISA ainda não registrou nada na timeline.
+              </div>
+            )}
+
+            {isaTimeline.map((entry) => (
+              <div key={entry.id} style={{
+                display: "flex",
+                gap: 12,
+                marginBottom: 16,
+                paddingBottom: 16,
+                borderBottom: "1px solid #1e293b",
+              }}>
+                {/* Linha do tempo */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
+                  <div style={{
+                    width: 10, height: 10, borderRadius: "50%",
+                    background: TYPE_COLOR[entry.type] ?? "#64748b",
+                    border: "2px solid rgba(255,255,255,0.1)",
+                    marginTop: 2,
+                  }} />
+                  <div style={{ flex: 1, width: 1, background: "#1e293b", marginTop: 4 }} />
+                </div>
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 4 }}>
+                    <span style={{
+                      fontSize: 10,
+                      color: TYPE_COLOR[entry.type] ?? "#64748b",
+                      fontWeight: 600,
+                      letterSpacing: 1,
+                    }}>
+                      {TYPE_LABEL[entry.type] ?? entry.type}
+                    </span>
+                    <span style={{ fontSize: 10, color: "#475569", flexShrink: 0 }}>
+                      {timeAgo(entry.createdAt)}
+                    </span>
+                  </div>
+
+                  {entry.title && (
+                    <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600, marginBottom: 4 }}>
+                      {entry.title}
+                    </div>
+                  )}
+
+                  <div style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.7 }}>
+                    {entry.content}
+                  </div>
+
+                  {entry.tags && entry.tags.length > 0 && (
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                      {entry.tags.map((tag) => (
+                        <span key={tag} style={{
+                          fontSize: 10,
+                          background: `${TYPE_COLOR[entry.type] ?? "#64748b"}22`,
+                          color: TYPE_COLOR[entry.type] ?? "#64748b",
+                          padding: "1px 7px",
+                          borderRadius: 20,
+                        }}>{tag}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {/* Status da assembleia ao vivo */}
+            <div style={{
+              marginTop: 8,
+              background: "rgba(255,255,255,0.02)",
+              border: "1px solid #1e293b",
+              borderRadius: 8,
+              padding: 16,
+            }}>
+              <div style={{ fontSize: 10, color: "#64748b", letterSpacing: 1, marginBottom: 12 }}>
+                AGENTES ATIVOS
+              </div>
+              {[
+                { id: "isa",   nome: "ISA",   desc: "Coruja guardiã do PAP", cor: "#10B981" },
+                { id: "meky",  nome: "MEKY",  desc: "Robô hexápode de campo",  cor: "#3B82F6" },
+                { id: "arvore",nome: "Árvore",desc: "Guardião do conhecimento", cor: "#F59E0B" },
+              ].map((a) => (
+                <div key={a.id} style={{
+                  display: "flex", alignItems: "center", gap: 10, marginBottom: 10,
+                }}>
+                  <div style={{
+                    width: 8, height: 8, borderRadius: "50%",
+                    background: a.cor, boxShadow: `0 0 6px ${a.cor}66`,
+                  }} />
+                  <div>
+                    <span style={{ fontSize: 12, color: "#e2e8f0", fontWeight: 600 }}>{a.nome}</span>
+                    <span style={{ fontSize: 11, color: "#64748b", marginLeft: 8 }}>{a.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
