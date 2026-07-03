@@ -17,9 +17,11 @@ import isaRouter from "./isa";
 import adminUsersRouter from "./admin-users";
 import nebulaRouter from "./nebula";
 import arquiteturaRouter from "./arquitetura";
+import { mekyRouter } from "./meky";
 
 const router: IRouter = Router();
 
+router.use("/api/meky", mekyRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

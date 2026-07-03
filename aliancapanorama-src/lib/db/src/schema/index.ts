@@ -7,3 +7,4 @@ export * from "./social";
 export * from "./ia-courses";
 export * from "./tasks";
 export * from "./nebula";
+export * from "./meky";
