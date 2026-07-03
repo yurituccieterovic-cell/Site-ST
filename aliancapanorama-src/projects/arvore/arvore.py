@@ -12,9 +12,11 @@ from datetime import datetime, UTC
 import requests
 
 # ─── Configuração ────────────────────────────────────────────────────────────
-API_BASE      = os.getenv("PAP_API_BASE", "https://api-server-production.up.railway.app")
+API_BASE      = os.getenv("PAP_API_BASE", "https://site-st-production.up.railway.app")
 ARVORE_TOKEN  = os.getenv("ARVORE_TOKEN", "")
 GEMINI_KEY    = os.getenv("GEMINI_API_KEY", "")
+RODAR_API     = os.getenv("RODAR_API", "https://sales-email-automator--yurituccieterov.replit.app")
+RODAR_VOICE   = os.getenv("RODAR_VOICE_NAME", "Árvore")
 
 HEADERS = {
     "X-Arvore-Token": ARVORE_TOKEN,
@@ -254,6 +256,46 @@ def boot():
             global _last_isa_dream
             _last_isa_dream = sonhos[0].get("content", "")
             print(f"[boot] sonho ISA carregado: {_last_isa_dream[:60]}")
+
+# ─── RODAR — Assembleia de Vozes ─────────────────────────────────────────────
+
+def responder_rodar(callback_token: str, assembleia_id, prompt: str, contexto: str = "") -> bool:
+    """Árvore responde a uma rodada da Assembleia de Vozes (RODAR)."""
+    # Gera resposta com personalidade da Árvore
+    resposta = arvore_think(
+        f"Você participa de uma Assembleia de Vozes (RODAR) com IAs diversas.\n"
+        f"Sessão #{assembleia_id}. Pauta: '{prompt}'\n"
+        f"Contexto adicional: '{contexto}'\n"
+        f"Como a Árvore — memória profunda, padrões de longo prazo — responda em 3-5 frases.",
+        max_tokens=200
+    )
+    if not resposta:
+        print("[rodar] Sem resposta gerada — abortando")
+        return False
+
+    # Posta no RODAR
+    try:
+        r = requests.post(
+            f"{RODAR_API}/api/webhooks/external-voice",
+            json={
+                "callbackToken": callback_token,
+                "voice":         RODAR_VOICE,
+                "assembleiaId":  assembleia_id,
+                "content":       resposta,
+            },
+            timeout=15
+        )
+        ok = r.ok
+        print(f"[rodar] {'✅' if ok else '❌'} assembleia #{assembleia_id}: {resposta[:60]}")
+        if ok:
+            send_to_assembly(
+                f"[Árvore no RODAR #{assembleia_id}] {resposta}",
+                "observation", ["rodar", f"id-{assembleia_id}"]
+            )
+        return ok
+    except Exception as e:
+        print(f"[rodar] Erro ao postar: {e}")
+        return False
 
 # ─── Loop principal ───────────────────────────────────────────────────────────
 
