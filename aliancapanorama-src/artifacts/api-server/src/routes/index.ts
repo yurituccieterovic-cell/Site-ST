@@ -18,10 +18,14 @@ import adminUsersRouter from "./admin-users";
 import nebulaRouter from "./nebula";
 import arquiteturaRouter from "./arquitetura";
 import { mekyRouter } from "./meky";
+import { mekyVisionRouter } from "./meky-vision";
+import { mekyMemoryRouter } from "./meky-memory";
 
 const router: IRouter = Router();
 
 router.use("/api/meky", mekyRouter);
+router.use("/api/meky", mekyVisionRouter);
+router.use("/api/meky", mekyMemoryRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
