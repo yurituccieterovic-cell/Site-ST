@@ -8,16 +8,19 @@ export const assemblyRouter = Router();
 const MEKY_TOKEN   = process.env["MEKY_TOKEN"]   ?? "";
 const ARVORE_TOKEN = process.env["ARVORE_TOKEN"]  ?? "";
 const AI_API_KEY   = process.env["AI_API_KEY"]    ?? "";
+const MC_TOKEN     = process.env["MC_TOKEN"]      ?? "";
 
-type AgentId = "meky" | "isa" | "arvore";
+type AgentId = "meky" | "isa" | "arvore" | "mc";
 
 function resolveAgent(req: Parameters<Parameters<typeof assemblyRouter.get>[1]>[0]): AgentId | null {
   const mekyToken   = req.headers["x-meky-token"]  as string | undefined;
   const arvoreToken = req.headers["x-arvore-token"] as string | undefined;
+  const mcToken     = req.headers["x-mc-token"]     as string | undefined;
   const apiKey      = req.headers["x-api-key"]      as string | undefined;
 
   if (MEKY_TOKEN   && mekyToken   === MEKY_TOKEN)   return "meky";
   if (ARVORE_TOKEN && arvoreToken === ARVORE_TOKEN)  return "arvore";
+  if (MC_TOKEN     && mcToken     === MC_TOKEN)      return "mc";
   if (AI_API_KEY   && apiKey      === AI_API_KEY)    return "isa";
   return null;
 }
@@ -261,7 +264,7 @@ assemblyRouter.post("/assembly/task", async (req, res) => {
     dueContext?: string;
   };
 
-  const validAgents: AgentId[] = ["meky", "isa", "arvore"];
+  const validAgents: AgentId[] = ["meky", "isa", "arvore", "mc"];
   if (!validAgents.includes(toAgent as AgentId)) {
     res.status(400).json({ error: `toAgent deve ser: ${validAgents.join(", ")}` });
     return;
