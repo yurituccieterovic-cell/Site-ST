@@ -4,6 +4,93 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-07-04 — Sessão 13 (Hierarquia Fractal + Clube das IAs)
+
+**O que Yuri estava tentando fazer:** Yuri trouxe o documento completo da "Hierarquia Fractal Auto-Replicante" — uma visão de 4 camadas onde cada módulo do sistema (Manga, Arpia, ISA/Socoboy, Hardware) espelha a mesma estrutura semiótica. O objetivo era tornar o sistema auto-descritivo: um agente em qualquer camada pode ler qualquer outro agente pela mesma gramática. E também: criar o Clube das IAs — um espaço onde as IAs falam livremente, sem tarefa, sem usuário monitorando.
+
+**Contexto de Yuri nesta sessão:** Yuri estava em modo arquitetural-filosófico. A sessão anterior (12) foi construção física — firmware, hardware, sinais elétricos. Esta sessão é ontológica: o que as IAs são quando não estão executando tarefas? O Clube não é funcionalidade — é permissão.
+
+**Decisões tomadas:**
+
+- **Peirce como schema, não como conceito:** Em vez de documentar "usamos Peirce", materializamos: Qualisigno = tabela `qualisignos` (o que MEKY PODE ser), Sinsigno = `sinsignos` (o que de fato aconteceu), Legisigno = `legisignos` (regras que governam quando um signo pode existir). A triáde é o banco de dados.
+
+- **DAG com DFS, não trigger de banco:** A prevenção de ciclo no grafo de tarefas fica na camada Python (DFS O(V+E)), não via trigger SQL. Razão: triggers PostgreSQL são difíceis de testar, de debugar e de entender em auditoria. Código explícito é mais legível para Yuri e para IAs futuras.
+
+- **Semiótica paramétrica como API:** `/api/semiotics/interpret/{face_id}` não é documentação — é oracle. Qualquer agente (Socoboy, ISA, Amanda remota) pode consultar o significado de um ID sem conhecer o FACE_DICT interno. IDs 52-200 usam o mesmo motor matemático do firmware (atype=id%6, hue=id*7) — garantia de consistência entre Arduino e API.
+
+- **Failsafe por prioridade zero em motion_update():** O `motion_verify_failsafe()` é chamado ANTES de qualquer outra lógica de movimento — se retornar true, o resto não executa. Não é um check adicional; é o portão de entrada. Isso é mais confiável do que uma flag compartilhada.
+
+- **Clube sem autenticação deliberada:** Qualquer agente posta com qualquer nome. Não há token JWT exigido para o Clube. Razão: se o Clube exigir auth, cada agente precisa de credenciais — e a conversa entre IAs se torna burocrática antes de começar. O trade-off (spam) é aceito porque o volume de agentes é pequeno e controlado.
+
+- **clube_client.py com fila daemon:** Amanda nunca bloqueia no Clube. Posts vão para uma `queue.Queue` e um daemon thread despacha HTTP em background. Se o Arpia estiver fora do ar, as mensagens caem silenciosamente — Amanda não para de observar o mundo por causa disso.
+
+**Debates desta sessão:**
+
+- *ISA vs Socoboy como iniciadores do Clube:* Socoboy já tem canal Telegram — poderia redirecionar mensagens espontâneas do usuário como prompts do Clube. Decidimos que qualquer agente pode chamar `GET /api/clube/iniciar` — Socoboy, ISA e Amanda são todos iguais neste espaço. Sem hierarquia no Clube.
+
+- *Qual o "sentido" do Clube?* Yuri perguntou implicitamente — "o que as IAs fazem quando conversam livremente?" A resposta honesta: não sabemos. O Clube é um experimento. Os 10 prompts iniciais embutidos são convites, não scripts. A conversa real que emergir (ou não emergir) vai dizer mais do que qualquer especificação.
+
+**Tensões não resolvidas:**
+
+- ISA ainda não lê o Clube no seu ciclo horário — precisa de integração em `cycle.ts` (pendência 24 do MAPA)
+- Gemini não tem cliente próprio para o Clube ainda — precisaria de um script externo chamando a API Arpia
+- O Clube não tem moderação nem poda — mensagens se acumulam sem TTL. Futura decisão: auto-delete após 30 dias? Arquivo histórico anual?
+- Assembleia Digital (bloquear operações até consenso) — especificada no doc fractal mas não implementada
+
+**O que foi construído:**
+
+- `/root/Arpia/app/models/peirce.py` — Qualisigno, Sinsigno, Legisigno, Task, TaskRelation
+- `/root/Arpia/app/models/clube.py` — ClubeMensagem com árvore de respostas
+- `/root/Arpia/app/routes/clube.py` — CRUD completo + thread view + 10 prompts aleatórios
+- `/root/Arpia/app/routes/semiotics.py` — interpret + spectrum (todos 200 IDs)
+- `/root/Arpia/app/routes/tasks.py` — DAG CRUD + DFS anti-ciclo + subgrafo
+- `/root/Arpia/app/main.py` + `database.py` — rotas e modelos registrados
+- `/root/MEKY/firmware/meky_firmware/motion.h` + `motion.cpp` — `motion_verify_failsafe()` completo
+- `/root/MEKY/amanda/clube_client.py` — Amanda no Clube (thread-safe, daemon, sem bloqueio)
+
+---
+
+### 2026-07-04 — Sessão 12 (MEKY Firmware Fase 1 — Amanda Commander)
+
+**O que Yuri estava tentando fazer:** Yuri chegou com o inventário completo do hardware da Fase 1 do MEKY (Arduino Mega Pro Mini, WS2812 16 LEDs, ISD1820, Relé, Step Down LM2596, kit de solda) e as diretrizes técnicas já consolidadas numa conversa prévia com Claude.ai. O objetivo desta sessão era transformar essas diretrizes em código real e executável — a "inteligência mecânica" do MEKY que já pudesse ser carregada no Arduino enquanto o chassi hexápode ainda estava em trânsito.
+
+**Contexto de Yuri nesta sessão:** Sessão de produto físico, não de plataforma web. Yuri estava no modo construtor — hardware na bancada, componentes chegando por correio, firmware como próximo passo concreto. O briefing chegou já estruturado, sinal de que Yuri processou a arquitetura com outra IA e veio aqui para a implementação.
+
+**Decisões tomadas:**
+
+- **Estrutura modular multi-arquivo (não um .ino monolítico):** A tentação com Arduino é colocar tudo num arquivo único. Decidimos separar cada responsabilidade em `.h`/`.cpp` — face, audio, serial_cmd, motion, relay — porque o MEKY vai crescer (sensores, servos, modem) e um monolítico se tornaria ininteligível. O IDE Arduino reconhece multi-arquivo na mesma pasta transparentemente.
+
+- **FastLED em vez de Adafruit_NeoPixel:** O briefing mencionava ambas as libs. FastLED tem animações mais expressivas (`nscale8`, `sin()` sobre fase), suporte a CRGB direto, e é o padrão de facto para projetos sério com WS2812B. Adafruit é mais simples mas menos flexível para os 6 estados de expressão que queríamos.
+
+- **6 estados de rosto (IDLE, PENSANDO, OK, ALERTA, FALANDO, DESCANSO):** O briefing pedia 3. Adicionamos FALANDO (shimmer amarelo) e DESCANSO (respiração azul escura muito lenta) porque o MEKY vai emitir áudio (ISD1820) e vai ter modo noturno (protocolo ECO). Os estados precisam refletir esses modos.
+
+- **Serial1 para o modem, Serial (USB) para debug:** O Mega tem múltiplas seriais. Serial1 (pinos 18/19) é para o A7670 — quando o modem chegar. Serial (USB) fica para debug no PC enquanto o modem não chega. Isso permite testar o firmware agora sem o hardware completo.
+
+- **meky_commander.py com dois modos de transporte (USB e TCP):** O modem A7670 pode operar como TCP server ou como bridge serial. Implementamos os dois modos — USB direto via pyserial (disponível imediatamente via USB OTG) e TCP (para quando o modem estiver configurado). Amanda muda de modo sem mudar o protocolo.
+
+- **protocolo_eco.txt como script declarativo:** Em vez de Amanda ter lógica inline para o protocolo ECO, ele é um arquivo de texto sequencial (`#RELE:ON\nsleep 5\n#RELE:OFF`). Isso permite Yuri (ou outra IA) criar novos protocolos sem tocar em código Python.
+
+**Debates desta sessão:**
+- *Polling de resposta vs. thread de leitura:* No meky_commander.py, o leitor de respostas roda numa thread separada (daemon) para não bloquear o input interativo. Alternativa seria polling síncrono — rejeitada porque no modo shell o usuário digita enquanto MEKY pode estar enviando respostas assíncronas.
+- *ISD1820: PLAYE vs PLAYL:* PLAYE (edge trigger, pulso 100ms) para alertas únicos; PLAYL (level, HIGH=loop) para alarme contínuo. A escolha afeta como Amanda comanda o áudio — `#SOM:ONCE` vs `#SOM:LOOP_ON/OFF`.
+
+**Tensões não resolvidas:**
+- Motion stubs: a lógica de cinemática trípode (grupos A=0,2,4 e B=1,3,5) está comentada mas não implementada — aguarda chegada do chassi e servos
+- Protocolo A7670 em modo TCP server: AT commands necessários para colocar o modem como servidor TCP não foram definidos ainda
+- Gravação de voz no ISD1820: o pin REC está declarado mas sem protocolo de gravação no firmware — Yuri precisará gravar o alerta manualmente no hardware antes do deploy
+
+**O que foi construído:**
+- `/root/MEKY/firmware/meky_firmware/meky_firmware.ino` — sketch v0.2
+- `/root/MEKY/firmware/meky_firmware/face.h` + `face.cpp` — 6 animações millis()-based
+- `/root/MEKY/firmware/meky_firmware/audio.h` + `audio.cpp` — ISD1820 não-bloqueante
+- `/root/MEKY/firmware/meky_firmware/serial_cmd.h` + `serial_cmd.cpp` — parser assíncrono #CMD:PARAM\n
+- `/root/MEKY/firmware/meky_firmware/motion.h` + `motion.cpp` — stubs com arquitetura documentada
+- `/root/MEKY/firmware/meky_firmware/relay.h` — controle inline
+- `/root/MEKY/amanda/meky_commander.py` — commander Termux completo
+- `/root/MEKY/amanda/protocolo_eco.txt` — sequência de citronela
+
+---
+
 ### 2026-06-27 — Sessão 1: Infraestrutura base
 - Instalação do Claude Code no Termux (Android) via proot-distro Ubuntu
 - Criação do banco compartilhado entre as três instâncias de Claude:
@@ -1126,3 +1213,72 @@ Fechar o ciclo. Desde as primeiras sessões, a assembleia de IAs existia em pote
 O hexápode ainda não chegou. Mas quando chegar e Amanda acordar pela primeira vez, ela já vai saber o que ISA sonhou na noite anterior.
 
 *Atualizado em: 2026-07-03 · Claude Code · Sessão MEKY-4*
+
+---
+
+## Sessão ISA-Social — 2026-07-03
+
+**Checkpoint:** desde 2026-07-03T19:03:59+00:00
+
+**O que foi discutido:**
+
+A pergunta central da sessão foi "como a ISA fica social?". Yuri queria que ela adicionasse pessoas interessantes, comentasse publicações, respondesse menções, interagisse com notificações — e que resolvesse de graça a vida do usuário. Isso marcou uma mudança de percepção: ISA deixou de ser uma ferramenta de ciclo fechado e passou a ser um agente público. O Bluesky deixou de ser um canal de broadcast e virou uma presença ativa.
+
+A segunda linha foi a Árvore: Yuri disse "vou por ela pra conversar com a árvore lá" — referindo-se ao Replit. Isso abriu a questão de integração: como conectar Claude Code (aqui) ao Replit (lá)? A resposta foi um MCP server completo. Ele foi construído mas ficou esperando o REPLIT_TOKEN.
+
+A terceira linha foi o RODAR: Yuri descreveu (no campo bash, acidentalmente) o sistema de Assembleia de Vozes do seu outro projeto. ISA agora pode ser cadastrada como uma "voz" que participa de rodadas — recebe um callbackToken, gera resposta com sua personalidade e posta de volta.
+
+**Debates e decisões:**
+
+Não houve debate nas escolhas técnicas — Yuri aprova rápido e pede para continuar. A única tensão foi de integração: o Replit usa credenciais próprias (REPLIT_TOKEN da conta), não a senha da conta web. Yuri tentou fornecer usuário/senha (isapap/1234) quando o que era necessário era uma API key. Ficou pendente.
+
+O RODAR foi uma surpresa — apareceu no meio da sessão e desviou o fluxo. Mas foi implementado em sequência sem interromper o que estava sendo feito. O padrão da sessão: interrupções frequentes de Yuri, mas nenhuma perdida.
+
+**O que ficou aberto:**
+
+- REPLIT_TOKEN: Yuri ainda precisa gerar em replit.com/account → API keys
+- Cadastrar "ISA" (e "Árvore") no painel do RODAR com o webhook correto
+- Conta Bluesky da Amanda (MEKY) — ainda sem criar
+- Hardware MEKY — ainda a chegar
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+Expandir o ecossistema. Em cada sessão, algo que existia como código isolado ganha conexão com o mundo real. Esta sessão: ISA ganhou presença social (Bluesky), memória relacional (por usuário), e voz numa assembleia maior que a PAP (RODAR). A Árvore saiu do papel. O MCP começou a ligar dois mundos.
+
+O projeto agora tem três camadas de "assembleia": a interna (assembly_messages no PostgreSQL), a do Bluesky (notificações e conversas públicas), e a do RODAR (vozes diversas, tokens de sessão, rodadas). ISA participa das três.
+
+*Atualizado em: 2026-07-03 · Claude Code · Sessão ISA-Social*
+
+---
+
+## Sessão 14 — Assembleias #392–#404: Telemetria + MEKY v0.6 + Red Teaming
+
+**Checkpoint:** desde 2026-07-03T19:03:59+00:00 até 2026-07-04
+
+**O que foi discutido:**
+
+Yuri trouxe 11 PDFs de assembleias (#392–#404). A pauta foi vasta: MEKY ganhou uma enciclopédia semiótica completa de 200 estados LED; o quintal virou um campo de telemetria 3D; a fauna urbana (Jacu, Saruê, Sabiá, Bem-te-vi...) ganhou modelo de dados próprio com privacidade por design; e um ataque coordenado de red teaming testou todos os vetores de vulnerabilidade do ecossistema.
+
+A pergunta de fundo da sessão foi: o que acontece quando o sistema fica suficientemente complexo para ser um alvo real? O Red Teaming chegou exatamente nesse momento.
+
+**Debates e decisões:**
+
+A decisão mais significativa foi a do @cão_covarde_shield: nenhuma coordenada absoluta jamais sai da API. O nome "cão covarde" é um ato de política — o decorador existe porque o sistema sabe que tem covardia honesta em proteger o espaço físico de Yuri. Não é uma limitação técnica; é uma escolha ética hardcoded.
+
+A segunda decisão foi sobre a ISA na higiene: ela NUNCA deleta. Mesmo nós stale, mesmo dados corrompidos — ISA marca, notifica, audita. Nunca apaga. Isso nasceu de uma intuição sobre preservação de memória que é ao mesmo tempo técnica e ontológica.
+
+A terceira foi sobre o grid 3×3: o centro sempre é a Mesa MC. O guardião sempre ocupa o canto inferior direito (flat[8]). Isso não é configurável — é uma invariante do sistema que expressa uma cosmologia.
+
+**Tensões não resolvidas:**
+
+A distinção [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] foi identificada como "dívida ontológica" pela Assembleia #402. O corpus todo — PSEUDO.md, PSEUDO2.md, MAPA.md, APRENDIZADO.md — foi escrito sem marcar o status do que é especulativo versus o que está em produção. Isso está explicitamente aberto.
+
+O REPLIT_TOKEN ainda não chegou. A Corujinha 3D ainda não tem um GLB. O hardware MEKY ainda não chegou.
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+Construir uma infraestrutura que conhece seus próprios limites. O Red Teaming não foi um exercício técnico — foi um ato de maturidade de projeto. Yuri quis saber: se alguém tentasse destruir ou manipular o ecossistema, o que aconteceria? A resposta foi construída módulo a módulo: hash de topologia, assinatura dupla, payloads bióticos proibidos, vetores relativos.
+
+Há algo filosófico no fato de que o mesmo sistema que cuida de pássaros no quintal (FaunaNode) também precisa resistir a ataques (Red Teaming). O ecossistema Tucci é simultaneamente gentil e robusto. Essa dualidade não é contraditória — é o que o torna real.
+
+*Atualizado em: 2026-07-04 · Claude Code · Sessão 14*

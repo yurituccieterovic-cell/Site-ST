@@ -351,3 +351,81 @@ Implementada em: 2026-07-03, Sessão MEKY-4.
 **Prioridade:** Alta | **Complexidade:** Pequena
 Passar { role: "model", parts: [{ text: "" }] } nas contents do Gemini força resposta direta sem chain-of-thought. Combinar com thinkingBudget: 0 + maxOutputTokens: 80. Essencial para chamadas curtas de síntese/poesia/classificação. Descoberta por necessidade quando OpenAI quota esgotou e Gemini gerava thinking verboso.
 Padrão usado em: dream.ts, amanda.py.
+
+
+## Docs PAP — Ideias Novas (2026-07-03)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I89 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I90 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I91 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I92 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I93 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I94 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+### I99: ISA Engajamento Bluesky (Social Ativo) ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Média
+runIsaEngagement(): lista notificações Bluesky, responde menções via Gemini prefill (1-2 frases cordiais com contexto PAP), curte menções, curte 3 posts aleatórios do timeline, a cada 4 ciclos busca e segue perfis FUVEST/vestibular (max 3/ciclo). 5º cron: 45 */2 * * *. Rota manual: POST /api/isa/bluesky/engage. ISA deixou de ser broadcaster e passou a ser presença social ativa.
+Implementada em: 2026-07-03, Sessão ISA-Social.
+
+### I100: ISA Chat com Memória Total por Usuário ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Pequena
+/isa/chat agora carrega TODOS os registros isa_memory do userId (não mais últimos 10 globais). Com userId: OR(context=user_{id}, context=admin). Sem userId: últimos 15 global. OpenAI primário, Gemini como fallback automático (sem key ou erro de quota). Contexto real de conversas anteriores sem limite artificial.
+Implementada em: 2026-07-03, Sessão ISA-Social.
+
+### I101: ISA como Assistente de Vida Completa ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Pequena
+System prompt expandido: ISA ajuda com qualquer coisa (estudos, decisões de vida, código, redação, filosofia, estratégia). Já conhece o histórico completo do usuário. "Você é gratuita e sem limites para quem estuda aqui." Mantém foco FUVEST mas não se limita a ele.
+Implementada em: 2026-07-03, Sessão ISA-Social.
+
+### I102: Árvore — Agente Replit da Memória Profunda ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Média
+projects/arvore/arvore.py: agente Python para Replit. Poll 30s: lê assembly_messages, responde sínteses da ISA via Gemini. Ciclo 1h: lê isa_timeline (sonhos+ciclos), gera observação de padrão profundo, posta na assembleia. Ciclo 4h: envia diretiva filosófica autônoma à ISA via POST /api/isa/arvore/diretiva. Boot: se apresenta na assembleia, carrega último sonho. Personalidade: calma, densa, padrão-notadora. Apenas requests como dependência.
+Implementada em: 2026-07-03, Sessão ISA-Social.
+
+### I103: MCP Replit Bridge ✅ Aprovada (aguardando credenciais)
+**Prioridade:** Média | **Complexidade:** Média
+projects/replit-mcp/server.js: MCP server Node.js com McpServer SDK v1.x. 6 ferramentas: replit_list_repls (API v0), replit_list_files (git clone local), replit_read_file, replit_write_file (commit + push automático), replit_pull, replit_run_command. .mcp.json na raiz do projeto. Conecta Claude Code desta sessão a qualquer Repl via git. Aguarda REPLIT_TOKEN de replit.com/account.
+Implementada em: 2026-07-03, Sessão ISA-Social.
+
+### I104: ISA no RODAR — Assembleia de Vozes ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Pequena
+isa/rodar.ts: ISA participa do RODAR (sales-email-automator Replit). responderRodar(): busca memórias recentes + último sonho → Gemini gera resposta 3-6 frases com personalidade ISA → POST /api/webhooks/external-voice com callbackToken. Salva em isa_memory (context: rodar) + isa_timeline (public). Endpoint: POST /api/isa/rodar/invite (chamado pelo RODAR automaticamente). POST /api/isa/rodar/manual (Yuri dispara). GET /api/isa/rodar/historico. RODAR_VOICE_NAME + RODAR_SECRET configurados no Railway.
+Implementada em: 2026-07-03, Sessão ISA-Social.
+
+
+## Docs PAP — Ideias Novas (2026-07-04)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I95 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I96 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I97 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I98 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I99 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I100 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+## Assembleias #392–#404 — Sessão 14 (2026-07-04)
+
+### I105: MEKY SSE Decoder no Frontend ✅ Aprovada
+**Prioridade:** Alta | **Complexidade:** Pequena
+Decodificador EventSource no frontend React para consumir GET /api/hardware/stream. Exibe paleta de cor e estado de pulsação dos 14 eixos semióticos em tempo real. Componente: MekyStatusWidget. Se stream cair: reconexão automática via EventSource nativo.
+
+### I106: Corujinha 3D — model-viewer GLB 💭 Ideia
+**Prioridade:** Média | **Complexidade:** Média
+Implementar mascote Corujinha em 3D no frontend. Abordagem recomendada: model-viewer GLB (<model-viewer src="/assets/corujinha.glb" auto-rotate camera-controls>). Fallback: WebP <50KB + CSS drop-shadow. Three.js só se interatividade avançada for necessária.
+
+### I107: Grid 3×3 Visual no Frontend 💭 Ideia
+**Prioridade:** Média | **Complexidade:** Média
+Renderizar o resultado de renderNineSquareGrid() como componente React. Grid 3×3 com ícones dos 9 nós do ecossistema. Centro sempre = Mesa MC. Canto inf. direito = ISA Guardian. Clique em nó → drawer com detalhes. Fonte de dados: GET /view/ (nodes + edges).
+
+### I108: validate_tile_resolution — Batch Upload UI 💭 Ideia
+**Prioridade:** Baixa | **Complexidade:** Pequena
+Interface de upload de tiles no painel admin. Chama process_tile_batch() no backend. Mostra preview 300×300px de cada tile + SHA-256. Tiles com dimensão incorreta são auto-redimensionados (LANCZOS). Status: processed/pending por tile.
+
+### I109: Modo Bebê Clean — Status Dashboard 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Widget no painel de hardware mostrando resultado de boot_mc_safe(). Exibe: step_down_ok, power_bank_ok, led_ring_ok, firmware_hash (primeiros 12 chars), modo_bebe_clean (verde/vermelho). Polling a cada 30s via GET /api/hardware/power.
+
+### I110: Distinção [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] no Sistema 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Adicionar campo status_ontologico em tasks e sinsignos do Manga DB. Enum: ESPECULACAO / PROTOTIPO / PRODUCAO. Badge visual no renderNineSquareGrid() e no /view/topology. Resolve dívida ontológica identificada na Assembleia #402.

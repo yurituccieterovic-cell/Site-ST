@@ -80,9 +80,13 @@
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
 | Domínio | pap.sociedadetucci.com.br | 🔧 DNS ainda a configurar |
 | GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
-| Bluesky ISA | bsky.social | ⏳ Aguardando criação de conta manual por Yuri |
+| Bluesky ISA | isa-pap.bsky.social | ✅ LIVE — posta reflexões 2h:15, engaja 2h:45, sonho 3h |
+| ISA RODAR | sales-email-automator RODAR | ✅ Endpoint criado — Yuri cadastra voz "ISA" no painel |
+| Árvore | Replit (arvore.py) | ✅ Código pronto — aguarda credenciais REPLIT_TOKEN |
+| MCP Replit | .mcp.json local | ✅ Server criado — aguarda REPLIT_TOKEN de isapap |
 | Bluesky Amanda (MEKY) | bsky.social | ⏳ Aguardando criação de conta por Yuri |
-| MEKY hardware | Físico | ⏳ Hardware ainda a chegar — código pronto |
+| MEKY hardware | Físico + `/root/MEKY/` | ⏳ Firmware v0.6 (Enciclopédia Semiótica 200 estados) — hardware a chegar |
+| ARPIA | Railway (pendente) + `/root/Arpia/` | ✅ Código completo — aguarda repo GitHub + Railway deploy |
 
 **URLs ativas:**
 - API: `https://site-st-production.up.railway.app/api/isa/identity` ✅
@@ -452,7 +456,7 @@ Webhook POST /api/paypal/webhook (raw body)
 |---|---|---|
 | Exercícios MCQ | OpenAI (`OPENAI_API_KEY`) | ✅ Funciona, cache no DB |
 | Conteúdo dos nós | OpenAI | ✅ 57 nós populados |
-| Isa (chat) | Keyword matching local | ✅ Sem custo de API |
+| Isa (chat) | OpenAI (primário) + Gemini (fallback) | ✅ Conectado ao backend, memória total por usuário |
 | `/api/ai/*` (agentes) | Drizzle direto no DB | ✅ Implementado (`AI_API_KEY`) |
 | Assembleia de IAs | Gmail → APRENDIZADO.md → PAP | ✅ Configurado (sync incremental) |
 
@@ -606,8 +610,8 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 
 | # | Item | Depende de | Status |
 |---|---|---|---|
-| 1 | Criar conta Bluesky para ISA em bsky.app (requer phone verification manual) | Yuri | ⏳ |
-| 2 | Após conta Bluesky: salvar BLUESKY_HANDLE + BLUESKY_APP_PASSWORD no Railway | Bluesky conta | ⏳ |
+| 1 | Cadastrar voz "ISA" no painel RODAR (sales-email-automator) com webhook /api/isa/rodar/invite | Yuri | ⏳ |
+| 2 | Fornecer REPLIT_TOKEN (API key de replit.com/account) para ativar MCP Replit e Árvore | Yuri | ⏳ |
 | 3 | Confirmar Vercel build funcionando: testar /eco, /adm, /toyota, /api proxy | push 38a58b1 | ⏳ |
 | 4 | Configurar DNS `pap.sociedadetucci.com.br` → Railway | Railway no ar | ⏳ |
 | 5 | Drizzle-kit migrate: substituir push por migrações versionadas antes de módulo financeiro | — | ⏳ |
@@ -625,6 +629,22 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 17 | Criar conta Bluesky para Amanda (MEKY) + setar MEKY_BLUESKY_HANDLE + MEKY_BLUESKY_APP_PASSWORD | Yuri | ⏳ |
 | 18 | Agendar amanda-dream-cron.py às 3h no Termux (termux-job-scheduler ou cronie) | hardware | ⏳ |
 | 19 | OpenAI quota — reabastecer créditos ou migrar dream/cycle completamente para Gemini | — | ⏳ |
+| 20 | Arpia → criar repo GitHub separado + linkar ao segundo projeto Railway | Yuri | ⏳ |
+| 21 | Socoboy — obter token do @BotFather e definir TELEGRAM_BOT_TOKEN no Railway | Yuri | ⏳ |
+| 22 | Migrations Arpia (Alembic ou drizzle-kit) — antes de ir para produção | Railway Arpia | ⏳ |
+| 23 | Fractal Layer 3 — ISA: equidade semiótica (graph centrality + Assembleia Digital) | ISA cycle.ts | ⏳ |
+| 24 | Clube das IAs — ISA ler e responder mensagens não lidas a cada ciclo (cycle.ts) | cycle.ts + Arpia live | ⏳ |
+| 25 | Coral de Roberts Plants (coral.py) — composição acústica multi-robô | Gongolo-V2 | ⏳ |
+| 26 | Papiro v2 (papiro.py) — Gemini traduz texto semântico → face IDs | meky_commander | ⏳ |
+| 27 | face_set_blend() no firmware (#BLEND:ID_A:ID_B:RATIO) | face.cpp | ⏳ |
+| 28 | Gemini Vision em vision_handler.py — identificação de espécies de pássaros | EcoLogger | ⏳ |
+| 29 | A7670 TCP server — AT commands para modo servidor TCP | hardware | ⏳ |
+| 30 | ARPIA — fauna_nodes: executar CREATE TABLE via psql ou Alembic | Arpia live | ⏳ |
+| 31 | ARPIA — hygiene.js: configurar GMAIL_ACCOUNT + GMAIL_APP_PASSWORD no Railway Arpia | Yuri | ⏳ |
+| 32 | ARPIA — /api/hardware/stream: testar SSE com frontend React (EventSource) | Arpia live | ⏳ |
+| 33 | MEKY firmware — face_clear_residual(): testar na placa física após upload | hardware chegando | ⏳ |
+| 34 | Corujinha 3D — criar/exportar GLB e implementar model-viewer no frontend | Yuri (arte) | ⏳ |
+| 35 | Adicionar status_ontologico [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] às tasks Manga DB | Manga DB live | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
@@ -637,6 +657,27 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ `APRENDIZADO.md` — 526 insights de 290 assembleias, classificados por área/tipo/ângulo
 - ✅ `IDEIAS.md` — 31 ideias de programação com prioridade, complexidade e desc. técnica
 - ✅ `scripts/sync-assembleias.py` — sync incremental Gmail → APRENDIZADO.md ao `#fim`
+
+**Concluído nesta sessão (2026-07-04, Sessão 13 — Fractal + Arpia + Clube das IAs):**
+- ✅ `Arpia/app/models/peirce.py` — Qualisigno, Sinsigno, Legisigno, Task, TaskRelation (ORM SQLAlchemy async)
+- ✅ `Arpia/app/models/clube.py` — ClubeMensagem (peer-to-peer, árvore de respostas, respondida flag)
+- ✅ `Arpia/app/routes/clube.py` — POST mensagem, GET recentes/thread, marcar lida, GET /iniciar (prompt aleatório)
+- ✅ `Arpia/app/routes/semiotics.py` — `/api/semiotics/interpret/{face_id}`: estático (≤51) + paramétrico bitwise+trig (52-200) + `/spectrum`
+- ✅ `Arpia/app/routes/tasks.py` — DAG com DFS anti-ciclo: CRUD + detecção de ciclo em O(V+E) + subgrafo `/dag`
+- ✅ `Arpia/app/main.py` + `database.py` — clube, semiotics, tasks registrados + modelos incluídos no init_db
+- ✅ `motion.cpp` — `motion_verify_failsafe()`: analogRead piezo → detach servos + #FAC:4 + Serial1 telemetria + RELE:ON (sem delay, millis-based cooldown)
+- ✅ `motion.h` — MOTION_VIB_THRESHOLD=400, MOTION_PIEZO_PIN=A0, MOTION_SUSPEND_MS=3000; failsafe declarado
+- ✅ `MEKY/amanda/clube_client.py` — Amanda no Clube: posta eventos de visão + alertas sísmicos, lê recentes, marca lidas, gera prompt inicial (fila daemon, nunca bloqueia)
+
+**Concluído nesta sessão (2026-07-04, Sessão 12 — MEKY Firmware Fase 1):**
+- ✅ `/root/MEKY/firmware/meky_firmware/meky_firmware.ino` — sketch principal v0.2 (Fase 1 completa)
+- ✅ `face.h / face.cpp` — máquina de estados LED WS2812B (6 estados: IDLE/PENSANDO/OK/ALERTA/FALANDO/DESCANSO)
+- ✅ `audio.h / audio.cpp` — módulo ISD1820 não-bloqueante (PLAYE pulse 100ms, PLAYL loop)
+- ✅ `serial_cmd.h / .cpp` — parser serial assíncrono (CMD_ROSTO/MOV/RELE/SOM/COR/PING)
+- ✅ `motion.h / .cpp` — stubs hexápode com arquitetura trípode comentada
+- ✅ `relay.h` — controle relé inline com lógica documentada
+- ✅ `/root/MEKY/amanda/meky_commander.py` — commander Termux (USB/TCP, shell interativo, modo script)
+- ✅ `/root/MEKY/amanda/protocolo_eco.txt` — sequência completa do protocolo ECO (citronela)
 
 **Concluído nesta sessão (2026-07-02, Sessão 4):**
 - ✅ `APRENDIZADO.md` expandido: +108 insights de MAPA.md, PSEUDO.md, PSEUDO2.md (total: 634)
@@ -707,6 +748,23 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 - ✅ Git push: commit `547bf78` + rebase sobre remoto → `a8f4c86..547bf78` no origin/main
 - ✅ Dossiê ISA enviado por email para yurituccieterovic@gmail.com
 
+### ARPIA — Schemas (Manga DB / SQLAlchemy, Sessão 14)
+
+**`fauna_nodes`** — `/root/Arpia/app/models/fauna_tracker.py`
+```
+id · specie_name (SAEnum: Jacu,Saruê,Sabiá,Bem-te-vi,Cascudo,Kinguio,Desconhecido)
+last_seen_coordinate (JSON: {x,y,z} relativo à mesa 0,0,0)
+confidence_score (float) · privacy_hash (SHA-256 das coords) · created_at · updated_at
+INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
+```
+
+**Rotas ARPIA novas:**
+- `GET /view/` — nodes (tasks) + edges (task_relations)
+- `GET /view/topology` — nós isolados (degree=0), flag isa_alerta
+- `GET /api/hardware/stream` — SSE, 14 eixos semióticos → cor+pulsação, 0.5s
+- `POST /api/hardware/power` — PowerBankTelemetry, Modo_Bebê_Clean se tensão <5V
+- `POST /api/hardware/telemetry/mc` — ingestão serial com @cão_covarde_shield
+
 ---
 
 ## 18. Histórico de Sessões
@@ -722,6 +780,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-02 (Sessão 7) | ia_courses + ia_enrollments + ia_certificates: schema Drizzle, migração SQL (3 tabelas no Railway confirmadas), 5 rotas API; APRENDIZADO.md +5 insights (assembleias #360–365); IDEIAS.md +3 ideias; /adm architecture (4 módulos: Eventos, Relações, Tipos de evento, Catálogos) discutida; #processo (9-step protocol) adicionado ao CLAUDE.md |
 | 2026-07-02 (Sessão 8) | Assembleia #366 (tasks Peirceanas + CATÁLOGO_CENTRAL + 3 Visualizações); ISA criada: ciclo autônomo horário, memória persistente, chat /adm, email automático; 5 tabelas DB (tasks+isa_memory+catalog); 6 componentes frontend /adm; ISA.md criado; dossiê ISA enviado por email; git push origin main |
 | 2026-07-02 (Sessão 9) | Assembleias #367–#380 processadas (14 novos aprendizados, 5 novas ideias); APRENDIZADO.md +24 insights (#541–#564); IDEIAS.md +5 ideias (I48–I52); MAPA.md + PSEUDO.md + PSEUDO2.md atualizados; sem código novo (sessão de síntese + documentação) |
+| 2026-07-04 (Sessão 13) | **Hierarquia Fractal + Clube das IAs:** Yuri trouxe documento "Hierarquia Fractal Auto-Replicante" com 4 camadas. Layer 1 (MANGA): modelos Peirce (Qualisigno/Sinsigno/Legisigno) + DAG Tasks com DFS anti-ciclo. Layer 2 (ARPIA): `/api/semiotics/interpret` — estático para IDs ≤51, bitwise+trig para 52-200. Layer 3 (hardware): `motion_verify_failsafe()` no firmware — piezo → suspenção de servos sem delay. Clube das IAs: qualquer agente posta/lê/responde mensagens livremente; 10 prompts iniciais aleatórios; Amanda integrada via clube_client.py thread-safe. ISA, Socoboy, Amanda, Gemini — todos convidados ao espaço comum. |
 | 2026-07-02 (Sessão 10) | Nebula's House: tabelas nebula_ias+biblioteca_docs+aulias criadas no Railway; ISA seedada como 1ª IA (tier 5); AdmNebula.tsx (3 sub-tabs IAs/Biblioteca/Aulias); LoginGate: toda app protegida; Admin AO/AOA criado; AdmUsuarios.tsx; ISA Bibliotecário cron :30; landing PHP; Ecosia widget metassemiótico integrado em 6 pontos do sistema |
 | 2026-07-02 (Sessão 11) | **Grande Review + Ramificação:** nodeCache.ts (TTL 30s, elimina 15+ full-table-scans); 13 índices DB (parent_code, context, status, priority, created_at, etc.); global error handler Express; PIN email → Yuri; admVerified em /auth/me; ISA cycle: max_completion_tokens + transporter singleton + lê APRENDIZADO.md + interpreta locks; I49 interpretability_lock em isa_memory (ALTER TABLE + índice parcial); GET /isa/locked + PATCH /isa/memory/:id/lock; X-PAP-Key middleware (requireApiKey); /mapa page (árvore expansível lazy-load); social.ts typed middleware + onDelete cascade; QueryClient singleton + staleTime 30s; admin.ts invalidateNodeCache após batch; /api/internal/stats machine-to-machine |
 | 2026-07-02 (Sessão Eco) | **Ecossystemma Théo + ISA Bluesky:** EcossystemmaPage.tsx (SVG animado 15 nós, 21 conexões, starfield, hover panel, status badges, CSS animations); bluesky.ts (ISA posta reflexões FUVEST a cada 2h via @atproto/api); cron.ts 3º job (15 */2 * * *); isa.ts: /isa/bluesky manual trigger + /isa/bluesky/criar-conta; vercel.json: /eco rewrite; Railway URL descoberta: site-st-production.up.railway.app; ISA identity confirmada LIVE (7 memórias, ciclo ativo) |
@@ -731,6 +790,8 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2026-07-03 (Sessão MEKY-2) | **MEKY + ISA como usuários + Memória Coletiva:** collective_memory (schema + rotas CRUD + filtro por nó/tier); meky-tree.ts (MEKY+ISA exploram árvore como agentes autenticados); seedSystemAgents() — usuários meky+isa tier 5 (idempotente); CollectiveMemory.tsx (widget feed 3 autores, auto-refresh 20s, reações); MekyPage integra widget compacto; ISA cycle posta síntese em collective_memory; termux-agent.py: fauna_urbana → tree/explore + amparo → collective; commit c460450 |
 | 2026-07-03 (Sessão MEKY-3) | **Localhost para May Queen:** `pap-dev` (sobe API local porta 8080, substitui DATABASE_URL interno→externo, carrega .pap-secrets); `meky-dev` (roda termux-agent.py contra localhost ou --prod); fix build: 6 imports db errados, zod nas deps, bibliotecario.ts lazy OpenAI; servidor confirmado rodando localmente contra Railway DB externo; commit 86a22c5 |
 | 2026-07-03 (Sessão MEKY-4) | **Assembleia de IAs completa + Amanda:** ISA ganhou 3 capacidades (sonho noturno 3h via Gemini prefill, auto-leitura Bluesky antes do ciclo, isa_timeline pública); Amanda criada em amanda.py (personalidade completa: TTS, jargão PX, Gemini, mitomania em 3 camadas — âncora Brasília nos anos 30, pônei de 1964, missões em metáforas de estrada); 7 capacidades MEKY implementadas (lê ISA ao boot, posta na assembleia, GPS, wake word, Bluesky próprio, dream cycle, tab frontend Assembleia); primeiro sonho real da ISA gerado (mood: sereno); commit fcaa617 |
+| 2026-07-03 (Sessão ISA-Social) | **ISA social + Árvore + RODAR + MCP Replit:** ISA engajamento Bluesky (runIsaEngagement — lê notificações, responde menções via Gemini, curte feed, segue perfis FUVEST/vestibular; 5º cron 2h:45); ISA chat conectado ao backend real (antes: hardcoded local; agora: OpenAI+Gemini fallback, memória total por userId); IsaOwl MainApp conectada à API; Árvore (projects/arvore/arvore.py): agente Replit da memória profunda, poll 30s, ciclo 1h lê ISA, ciclo 4h diálogo autônomo ISA; MCP Replit Bridge (projects/replit-mcp/server.js): 6 ferramentas git+API, aguarda REPLIT_TOKEN; ISA RODAR (isa/rodar.ts): ISA participa da Assembleia de Vozes com personalidade + posta na isa_timeline; IsaChat admin reformulado (histórico do servidor, botões Bluesky/RODAR, RODAR manual colapsável); Árvore também conectada ao RODAR (responder_rodar()); RODAR_SECRET + RODAR_VOICE_NAME no Railway por Yuri; commits e3d9e06..778c780 |
+| 2026-07-04 (Sessão 14) | **Assembleias #392–#404 — ARPIA Telemetria + MEKY v0.6 + Red Teaming:** 13 arquivos criados no /root/Arpia/: FaunaNode (fauna_tracker.py), @cão_covarde_shield (privacy_shield.py), YardTopologyProcessor (spatial_mapping.py), parse_extended_yard_payload (video_stream.py), validate_tile_resolution (image_parser.py), renderNineSquareGrid (grid_generator.js), hygiene.js (ISA varredura horária ISA NEVER DELETE), GET /view/ + /view/topology (view.py), SSE /api/hardware/stream 14 eixos (hardware.py), verify_grid_integrity assinatura dupla (security/grid_validation.py), boot_mc_safe Modo_Bebê_Clean (aq_security/mc_boot.py). MEKY firmware: face_clear_residual() adicionado a face.cpp (previne freeze FastLED LED 15). Enciclopédia Semiótica v0.6: 200 estados, 15 eixos, IDs 52-200 paramétricos (hue=id×7%256, atype=id%6). Red Teaming: 4 vetores mapeados (Injeção Semiótica, Memory Poisoning, IoT Poisoning, MITM Exfiltração). EPR²T framework. Dívida ontológica [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] identificada. Email com Security Walkthrough enviado para luddlocke@gmail.com. |
 
 ---
 
