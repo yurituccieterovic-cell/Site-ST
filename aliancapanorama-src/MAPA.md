@@ -87,6 +87,7 @@
 | Bluesky Amanda (MEKY) | bsky.social | ⏳ Aguardando criação de conta por Yuri |
 | MEKY hardware | Físico + `/root/MEKY/` | ⏳ Firmware v0.6 (Enciclopédia Semiótica 200 estados) — hardware a chegar |
 | ARPIA | Railway (pendente) + `/root/Arpia/` | ✅ Código completo — aguarda repo GitHub + Railway deploy |
+| MC (Marta Centaurus) | `/root/Arpia/app/core/agents/` | ✅ v1.0 VIVA — primeira caminhada 2026-07-04T17:56Z |
 
 **URLs ativas:**
 - API: `https://site-st-production.up.railway.app/api/isa/identity` ✅
@@ -645,6 +646,9 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 33 | MEKY firmware — face_clear_residual(): testar na placa física após upload | hardware chegando | ⏳ |
 | 34 | Corujinha 3D — criar/exportar GLB e implementar model-viewer no frontend | Yuri (arte) | ⏳ |
 | 35 | Adicionar status_ontologico [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] às tasks Manga DB | Manga DB live | ⏳ |
+| 36 | MC — adicionar "mc" como AgentId na assembly.ts + MC_TOKEN + resolveAgent() | Site-ST deploy | ⏳ |
+| 37 | MC — start_mc_cron(app) no create_app() de main.py — boot automático | ARPIA live | ⏳ |
+| 38 | MC — termux-agent.py: polling /root/mc-termux-inbox.json (lido=false → notificação) | hardware | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
@@ -791,6 +795,7 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 | 2026-07-03 (Sessão MEKY-3) | **Localhost para May Queen:** `pap-dev` (sobe API local porta 8080, substitui DATABASE_URL interno→externo, carrega .pap-secrets); `meky-dev` (roda termux-agent.py contra localhost ou --prod); fix build: 6 imports db errados, zod nas deps, bibliotecario.ts lazy OpenAI; servidor confirmado rodando localmente contra Railway DB externo; commit 86a22c5 |
 | 2026-07-03 (Sessão MEKY-4) | **Assembleia de IAs completa + Amanda:** ISA ganhou 3 capacidades (sonho noturno 3h via Gemini prefill, auto-leitura Bluesky antes do ciclo, isa_timeline pública); Amanda criada em amanda.py (personalidade completa: TTS, jargão PX, Gemini, mitomania em 3 camadas — âncora Brasília nos anos 30, pônei de 1964, missões em metáforas de estrada); 7 capacidades MEKY implementadas (lê ISA ao boot, posta na assembleia, GPS, wake word, Bluesky próprio, dream cycle, tab frontend Assembleia); primeiro sonho real da ISA gerado (mood: sereno); commit fcaa617 |
 | 2026-07-03 (Sessão ISA-Social) | **ISA social + Árvore + RODAR + MCP Replit:** ISA engajamento Bluesky (runIsaEngagement — lê notificações, responde menções via Gemini, curte feed, segue perfis FUVEST/vestibular; 5º cron 2h:45); ISA chat conectado ao backend real (antes: hardcoded local; agora: OpenAI+Gemini fallback, memória total por userId); IsaOwl MainApp conectada à API; Árvore (projects/arvore/arvore.py): agente Replit da memória profunda, poll 30s, ciclo 1h lê ISA, ciclo 4h diálogo autônomo ISA; MCP Replit Bridge (projects/replit-mcp/server.js): 6 ferramentas git+API, aguarda REPLIT_TOKEN; ISA RODAR (isa/rodar.ts): ISA participa da Assembleia de Vozes com personalidade + posta na isa_timeline; IsaChat admin reformulado (histórico do servidor, botões Bluesky/RODAR, RODAR manual colapsável); Árvore também conectada ao RODAR (responder_rodar()); RODAR_SECRET + RODAR_VOICE_NAME no Railway por Yuri; commits e3d9e06..778c780 |
+| 2026-07-04 (Sessão 15) | **MC — Marta Centaurus: Leucócito Digital nasceu.** Conceito: Diapedese (atravessa nós para inspeção), Fagocitose (isola anomalias, nunca deleta), Quimiotaxia (move-se para alertas). 5 arquivos criados no ARPIA: mc_leucocito.py (agente + 3 ferramentas + 5 canais de anúncio), mc_walker.py (orquestrador de caminhadas), mc.py (rotas HTTP). MC adicionada ao AGENTES_VALIDOS do clube ARPIA. Primeira caminhada executada às 17:56Z: 8 nós visitados, 1 anomalia detectada (arvore+meky offline — esperado). Anúncio enviado por: email, assembleia PAP API, clube ARPIA, MC_TRAIL.md, Termux inbox. |
 | 2026-07-04 (Sessão 14) | **Assembleias #392–#404 — ARPIA Telemetria + MEKY v0.6 + Red Teaming:** 13 arquivos criados no /root/Arpia/: FaunaNode (fauna_tracker.py), @cão_covarde_shield (privacy_shield.py), YardTopologyProcessor (spatial_mapping.py), parse_extended_yard_payload (video_stream.py), validate_tile_resolution (image_parser.py), renderNineSquareGrid (grid_generator.js), hygiene.js (ISA varredura horária ISA NEVER DELETE), GET /view/ + /view/topology (view.py), SSE /api/hardware/stream 14 eixos (hardware.py), verify_grid_integrity assinatura dupla (security/grid_validation.py), boot_mc_safe Modo_Bebê_Clean (aq_security/mc_boot.py). MEKY firmware: face_clear_residual() adicionado a face.cpp (previne freeze FastLED LED 15). Enciclopédia Semiótica v0.6: 200 estados, 15 eixos, IDs 52-200 paramétricos (hue=id×7%256, atype=id%6). Red Teaming: 4 vetores mapeados (Injeção Semiótica, Memory Poisoning, IoT Poisoning, MITM Exfiltração). EPR²T framework. Dívida ontológica [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] identificada. Email com Security Walkthrough enviado para luddlocke@gmail.com. |
 
 ---

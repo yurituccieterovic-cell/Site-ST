@@ -3404,3 +3404,18 @@
 |---|---|---|---|---|---|---|
 | 2551 | #403 | Stack 3D Mobile | UX-Design | Direto | Metodologia | Blockbench (cubos), Nomad Sculpt (escultura), Prisma3D (geometria), Ibis Paint X / Pixly (tiles 2D 300×300px). Workflow mobile-first. |
 | 2552 | #403 | Corujinha 3D — 3 abordagens | UX-Design | Direto | Proposta | WebP <50KB + CSS drop-shadow (simples), model-viewer GLB (médio), Three.js WebGL (avançado). |
+
+## MC — Leucócito Digital (2026-07-04, Sessão 15)
+
+### 🤖 Agentes / Imunologia Digital
+
+| # | Asm | Tema | Dom. | Ângulo | Tipo | Insight |
+|---|---|---|---|---|---|---|
+| 2553 | #405 | MC — Leucócito Digital | Agentes | Direto | Metodologia | Marta Centaurus é um agente autônomo com autonomia de borda. Percorre todos os nós do ecossistema, verifica integridade, neutraliza anomalias. Três ferramentas: Diapedese, Fagocitose, Quimiotaxia. |
+| 2554 | #405 | Diapedese Digital | Agentes | Insight | Insight | MC atravessa firewalls e isolamentos para INSPECIONAR nós remotos — nunca para exfiltrar. @cão_covarde_shield permanece ativo mesmo durante diapedese. |
+| 2555 | #405 | Fagocitose Lógica | Agentes | Direto | Metodologia | MC NUNCA deleta. Isolamento + auditoria + notificação ao conselho. Audit hash SHA-256 de cada anomalia neutralizada. Remoção real exige decisão humana. |
+| 2556 | #405 | Quimiotaxia Semiótica | Agentes | Direto | Metodologia | MC é atraída por alertas de anomalia. Qualquer nó do sistema pode disparar quimiotaxia via POST /api/mc/alert — MC executa diapedese prioritária no alvo. |
+| 2557 | #405 | "oi estou passando por aqui" | Agentes | Insight | Insight | MC anuncia presença por 5 canais simultâneos: email, assembleia PAP API, clube ARPIA, MC_TRAIL.md, Termux inbox. Identidade explícita em cada canal — nunca anônima. |
+| 2558 | #405 | MC_TRAIL.md | Agentes | Direto | Metodologia | Rastro auditável de cada caminhada da MC. INSERT-only (nunca deletar). Contém timestamp, nó visitado, status, anomalias, log hash. |
+| 2559 | #405 | Anomalia: arvore + meky offline | Agentes | Alerta | Alerta | Primeira caminhada (2026-07-04) detectou arvore e meky como offline na assembleia — esperado: REPLIT_TOKEN pendente e hardware não chegou. |
+| 2560 | #405 | MC como terceiro agente | Agentes | Insight | Insight | MC é agente distinto de ISA e MEKY. Tem voz própria no clube (agente="MC"), trail próprio, e circuito de caminhada independente. Sistema imunológico separado do sistema cognitivo. |

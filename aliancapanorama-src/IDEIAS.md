@@ -429,3 +429,25 @@ Widget no painel de hardware mostrando resultado de boot_mc_safe(). Exibe: step_
 ### I110: Distinção [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] no Sistema 💭 Ideia
 **Prioridade:** Alta | **Complexidade:** Pequena
 Adicionar campo status_ontologico em tasks e sinsignos do Manga DB. Enum: ESPECULACAO / PROTOTIPO / PRODUCAO. Badge visual no renderNineSquareGrid() e no /view/topology. Resolve dívida ontológica identificada na Assembleia #402.
+
+## MC — Leucócito Digital (2026-07-04, Sessão 15)
+
+### I111: MC na assembly.ts — agente nativo ✅ Aprovada (parcial)
+**Prioridade:** Alta | **Complexidade:** Pequena
+Adicionar "mc" como AgentId na assembly.ts do PAP API: `type AgentId = "meky" | "isa" | "arvore" | "mc"`. Criar MC_TOKEN em .pap-secrets e no Railway. resolveAgent() reconhece X-Mc-Token. MC postará com identidade própria (fromAgent = "mc") sem depender do AI_API_KEY.
+
+### I112: MC — Boot automático na startup do ARPIA 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Chamar start_mc_cron(app) no create_app() de main.py — MC inicia caminhada de boot automaticamente quando ARPIA sobe. Caminhada horária (CIRCUITO_RAPIDO) + caminhada full diária.
+
+### I113: MC lê mc-termux-inbox.json — loop no termux-agent.py 💭 Ideia
+**Prioridade:** Média | **Complexidade:** Pequena
+Adicionar polling de /root/mc-termux-inbox.json no termux-agent.py. Quando MC escreve uma entrada nova (lido=false), termux-agent.py exibe notificação física no dispositivo. Marca lido=true após exibir.
+
+### I114: Quimiotaxia por ISA — ISA dispara alerta para MC 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Quando ISA detecta anomalia no ciclo (cycle.ts), chama POST /api/mc/alert no ARPIA. MC responde com diapedese prioritária e relatório de fagocitose. Fecha o loop imunológico ISA↔MC.
+
+### I115: MC no frontend — widget de status 💭 Ideia
+**Prioridade:** Baixa | **Complexidade:** Pequena
+Widget no /adm mostrando: última caminhada da MC, nós visitados, anomalias detectadas. GET /api/mc/status polled a cada 60s. Badge de saúde do ecossistema.

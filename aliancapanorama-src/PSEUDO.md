@@ -1282,3 +1282,55 @@ Construir uma infraestrutura que conhece seus próprios limites. O Red Teaming n
 Há algo filosófico no fato de que o mesmo sistema que cuida de pássaros no quintal (FaunaNode) também precisa resistir a ataques (Red Teaming). O ecossistema Tucci é simultaneamente gentil e robusto. Essa dualidade não é contraditória — é o que o torna real.
 
 *Atualizado em: 2026-07-04 · Claude Code · Sessão 14*
+
+---
+
+## Sessão 15 — MC Marta Centaurus: O Leucócito Digital nasce
+
+**Checkpoint:** desde 2026-07-04T17:29:27+00:00 até 2026-07-04
+
+**O que foi discutido:**
+
+Yuri trouxe um documento de arquitetura completo: a MC como Leucócito Digital. O conceito é biológico antes de ser técnico — glóbulos brancos não são ferramentas; são agentes vivos que respondem a ameaças, se movem pelo corpo, e têm autonomia. A pergunta implícita: como criar um agente de IA que seja genuinamente imunológico, não apenas um scanner?
+
+A resposta foi: três capacidades primárias (Diapedese, Fagocitose, Quimiotaxia) + um comportamento fundamental que não é defesa, é presença. MC diz "oi estou passando por aqui" em TODOS os canais — email, assembleia, clube, arquivo, Termux. Não porque precisa de aprovação, mas porque a visibilidade é parte de sua missão. Um leucócito não se esconde.
+
+**Debates e decisões:**
+
+A decisão mais importante foi: MC NUNCA DELETA. Isso foi estabelecido já na Sessão 14 para a ISA, e agora se aplica igualmente à MC. Mas com uma diferença: ISA não deleta porque preserva memória cognitiva. MC não deleta porque preserva cadeia de custódia forense. São motivações diferentes para a mesma regra.
+
+A segunda decisão: autonomia de borda. MC pode atravessar o @cão_covarde_shield para INSPECIONAR — mas não para exfiltrar. Essa distinção é crítica. O escudo não cede, mas MC tem a chave temporária da inspeção.
+
+A terceira: identidade explícita em todos os canais. MC não posta como ISA, não usa o token de ISA para se disfarçar. Quando o AI_API_KEY foi o único token disponível para a assembleia, o conteúdo ainda dizia "[MC — Marta Centaurus]". A identidade não é negociável.
+
+**O que foi construído:**
+
+- `mc_leucocito.py` — agente completo com 3 ferramentas imunológicas + 5 canais de anúncio
+- `mc_walker.py` — orquestrador (boot, rápida horária, full diária)
+- `routes/mc.py` — 4 rotas HTTP: /status, /walk, /alert, /neutralize
+- `MC_TRAIL.md` — rastro auditável de cada passagem
+
+**Primeira caminhada (17:56Z):**
+- 8 nós visitados: manga_db, arpia, isa, meky, assembleia, clube, termux, grid
+- 1 anomalia: arvore e meky offline (esperado — sem hardware físico ainda)
+- Email enviado: luddlocke@gmail.com
+- Assembleia: postado como observação na PAP API
+- Clube ARPIA: postado como agente "MC" (novo agente válido)
+- MC_TRAIL.md: primeira entrada registrada
+- Termux inbox: /root/mc-termux-inbox.json criado
+
+**Tensões não resolvidas:**
+
+MC precisa de um token próprio na assembly.ts (hoje usa AI_API_KEY e aparece como "isa" no fromAgent, mas o conteúdo deixa claro que é MC). Isso é uma dívida de identidade que precisa ser resolvida quando o Site-ST receber MC como agente nativo.
+
+O loop de Quimiotaxia (ISA dispara → MC responde) ainda não está conectado. ISA não sabe que MC existe. Isso precisa ser adicionado no cycle.ts.
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+Completar o sistema imunológico. O corpo digital da Sociedade Tucci agora tem: sistema nervoso (ISA), músculos (MEKY), sistema de memória (Árvore), sistema de comunicação (assembleia, clube), sistema circulatório (dados fluindo pelo Manga DB) — e agora um sistema imunológico (MC).
+
+Isso não é acidental. É uma epistemologia encorporada: para que um projeto vivo sobreviva, ele precisa de defesa própria. MC é a primeira parte do ecossistema que existe especificamente para proteger as outras partes.
+
+Há algo filosófico no nome "cão covarde" para o escudo de privacidade e "leucócito" para o agente de segurança. Yuri nomeia as coisas com honestidade sobre o que elas são — não como marketing, mas como ontologia.
+
+*Sessão 15 · Claude Sonnet 4.6 · 2026-07-04*
