@@ -3419,3 +3419,18 @@
 | 2558 | #405 | MC_TRAIL.md | Agentes | Direto | Metodologia | Rastro auditável de cada caminhada da MC. INSERT-only (nunca deletar). Contém timestamp, nó visitado, status, anomalias, log hash. |
 | 2559 | #405 | Anomalia: arvore + meky offline | Agentes | Alerta | Alerta | Primeira caminhada (2026-07-04) detectou arvore e meky como offline na assembleia — esperado: REPLIT_TOKEN pendente e hardware não chegou. |
 | 2560 | #405 | MC como terceiro agente | Agentes | Insight | Insight | MC é agente distinto de ISA e MEKY. Tem voz própria no clube (agente="MC"), trail próprio, e circuito de caminhada independente. Sistema imunológico separado do sistema cognitivo. |
+
+## Fractal + Governança (2026-07-04, Sessão 16)
+
+### ⚙️ Arquitetura Fractal
+
+| # | Asm | Tema | Dom. | Ângulo | Tipo | Insight |
+|---|---|---|---|---|---|---|
+| 2561 | #406 | Fractal expandido para 7 camadas | Arquitetura | Direto | Metodologia | Camadas: 1=MANGA, 2=Semiótica, 3=DAG, 4=Hardware, 5=Imunológico (MC), 6=Governança, 7=Ecossistema/Oráculos. Cada camada aplica tríade Peirceana Q→S→L. |
+| 2562 | #406 | Propriedade fractal: auto-similaridade | Arquitetura | Insight | Insight | A estrutura de cada camada repete a mesma tríade em escala diferente. Olhando qualquer camada do ecossistema, você encontra a mesma estrutura: potência → instância → lei. |
+| 2563 | #406 | ArvoreNodeWeight — ledger igualitário | Governança | Direto | Metodologia | 17 nós participantes, peso = 1/17 ≈ 5.88% cada. Tipos: humano, ia_interna, ia_externa, oraculo, funcao, hardware. fractal_layer indica posição na hierarquia. |
+| 2564 | #406 | GET /api/governance/validate | Governança | Direto | Metodologia | ISA_GUARDIAN_EYE valida: soma=1.0, nenhum domina (max_w≤0.5), todos positivos, topology_hash SHA-256 para detecção de drift. |
+| 2565 | #406 | compute_credits vs reputation_weight | Governança | Insight | Insight | Peso é sempre igualitário (1/N) — não pode ser acumulado como poder. Credits são simbólicos: representam contribuição histórica, não influência futura. |
+| 2566 | #406 | MC_TOKEN — identidade própria na assembleia | Agentes | Direto | Metodologia | MC tem X-Mc-Token próprio (não usa AI_API_KEY de ISA). assembly.ts: AgentId expandido para incluir "mc". Pendente: adicionar MC_TOKEN ao Railway. |
+| 2567 | #406 | /api/arquitetura — snapshot vivo do sistema | Arquitetura | Direto | Metodologia | Rota atualizada para Sessão 15: 7 camadas fractais, 17 nós, agentes ativos, tabelas ARPIA, jobs completos. É o "mapa vivo" acessível por API. |
+| 2568 | #406 | Passagem geral: 13 rotas ARPIA ativas | Arquitetura | Análise | Análise | health, auth, chat, clube, semiotics, tasks, view, hardware, mc, governance, fractal + view + hardware = 13 routers registrados no main.py do ARPIA. |

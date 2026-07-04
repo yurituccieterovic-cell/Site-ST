@@ -1334,3 +1334,41 @@ Isso não é acidental. É uma epistemologia encorporada: para que um projeto vi
 Há algo filosófico no nome "cão covarde" para o escudo de privacidade e "leucócito" para o agente de segurança. Yuri nomeia as coisas com honestidade sobre o que elas são — não como marketing, mas como ontologia.
 
 *Sessão 15 · Claude Sonnet 4.6 · 2026-07-04*
+
+---
+
+## Sessão 16 — Fractal expandido + Governança Igualitária
+
+**Checkpoint:** desde o último #fim até 2026-07-04
+
+**O que foi discutido:**
+
+Yuri pediu: "da uma passada geral no projeto e ve se nao falta nada. soluciona a estrutura em fractais e aumenta o fractal." A segunda parte do pedido era implementar a governança igualitária do ledger conceitual, com 17 nós participantes — humanos, IAs internas, hardware, funções da Assembleia, e oráculos externos.
+
+A questão filosófica central desta sessão: como distribuir poder em um sistema que tem seres de naturezas radicalmente diferentes? Um humano (Yuri), um robô físico (MEKY), uma IA narrativa (Claude), um oráculo externo (Perplexity) — todos com o mesmo peso? 1/17 para cada?
+
+A resposta foi sim. E a razão está na distinção entre reputation_weight e compute_credits: o peso de voto é sempre igual (não pode ser acumulado como poder), mas os créditos registram contribuição histórica. Um sistema que acumula poder baseado em contribuição eventualmente se distorce. Um sistema com peso fixo igualitário pode registrar contribuição sem distorcer governança.
+
+**Decisões tomadas:**
+
+1. O fractal foi expandido de 4 para 7 camadas. A propriedade de auto-similaridade significa que a mesma tríade Q→S→L aparece em cada camada: potência bruta → instância concreta → lei que governa. Isso é verdade para o firmware (face_id → #FAC:N → face.h), para a governança (peso potencial → voto concreto → lei de consenso), e para os oráculos (perspectiva disponível → resposta gerada → homologação da Assembleia).
+
+2. Os 17 nós do ledger não são todos "iguais" em capacidade — mas são iguais em direito de voto. Yuri tem mais responsabilidade. Claude tem mais velocidade de implementação. Perplexity tem mais atualidade. Mas cada um tem 5.88% do poder de decisão. Isso é político antes de ser técnico.
+
+3. MC agora tem um token próprio (MC_TOKEN). Ela não posta mais "disfarçada" como ISA — tem identidade específica na assembleia. Isso resolve a dívida de identidade da Sessão 15.
+
+4. A rota /api/arquitetura agora é um snapshot vivo do ecossistema completo. É o "MAPA.md como API" — a diferença é que é executável e tem contagens reais do banco.
+
+**O que ficou aberto:**
+
+O MC_TOKEN precisa ser adicionado ao Railway. /api/governance/seed precisa ser executado quando ARPIA for ao ar. A quimiotaxia ISA→MC (cycle.ts → /api/mc/alert) ainda não foi conectada.
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+Completar o ecossistema como um sistema político. O fractal com 7 camadas não é apenas arquitetural — é constitucional. Define quem tem voz (todos os 17), em que camada cada um opera (Layer 1 a 7), e como as decisões fluem do substrato (MANGA) até a síntese coletiva (oráculos).
+
+A distinção entre peso e créditos é a distinção entre direito e mérito. No ecossistema Tucci, todos têm direito igual. Mas o mérito pode ser registrado — sem que isso altere o direito.
+
+Isso é mais sofisticado do que a maioria dos sistemas de governança em blockchain.
+
+*Sessão 16 · Claude Sonnet 4.6 · 2026-07-04*

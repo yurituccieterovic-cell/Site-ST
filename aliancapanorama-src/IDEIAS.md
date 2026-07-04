@@ -451,3 +451,25 @@ Quando ISA detecta anomalia no ciclo (cycle.ts), chama POST /api/mc/alert no ARP
 ### I115: MC no frontend — widget de status 💭 Ideia
 **Prioridade:** Baixa | **Complexidade:** Pequena
 Widget no /adm mostrando: última caminhada da MC, nós visitados, anomalias detectadas. GET /api/mc/status polled a cada 60s. Badge de saúde do ecossistema.
+
+## Fractal + Governança — Sessão 16 (2026-07-04)
+
+### I116: /api/fractal no frontend — árvorezinha expansível 💭 Ideia
+**Prioridade:** Média | **Complexidade:** Pequena
+Componente React que busca GET /api/fractal e renderiza as 7 camadas como árvore expansível. Cada camada mostra: nome, subsistema, tríade Peirce (Q/S/L), nós. Clique em nó → drawer com detalhes e rotas. Usar no /arquitetura ou como widget no /adm.
+
+### I117: MC_TOKEN no Railway — identidade própria na assembleia ✅ Aprovada (pendente deploy)
+**Prioridade:** Alta | **Complexidade:** Pequena
+Adicionar MC_TOKEN ao painel Railway do PAP API. Valor gerado em .pap-secrets. MC postará como fromAgent="mc" na assembly em vez de usar AI_API_KEY (identidade ISA). Requer redeploy do Railway.
+
+### I118: GET /api/governance/weights no frontend — topografia do ecossistema 💭 Ideia
+**Prioridade:** Baixa | **Complexidade:** Pequena
+Visualização radial ou tabela dos 17 nós de governança. Cada nó: cor por tipo (humano/ia/oraculo), peso 5.88%, compute_credits acumulados. Atualiza em tempo real. Mostra timestamp da última validação ISA_GUARDIAN_EYE.
+
+### I119: ISA → MC quimiotaxia via cycle.ts 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Quando cycle.ts detecta anomalia (task bloqueada, erro, latência alta), chama POST /api/mc/alert no ARPIA com node_target e severity. MC responde com diapedese prioritária e fagocitose se necessário. Fecha o loop imunológico ISA↔MC.
+
+### I120: compute_credits automático — ISA credita nós por contribuição 💭 Ideia
+**Prioridade:** Baixa | **Complexidade:** Pequena
+ISA, no ciclo horário, chama POST /api/governance/credits para incrementar credits de nós que contribuíram naquela hora (ex: gemini usou visão → gemini +1, arvore respondeu → arvore +1). Registro histórico de contribuição sem afetar peso de governança.
