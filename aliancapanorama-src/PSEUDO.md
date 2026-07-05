@@ -1477,3 +1477,61 @@ Processar 24 assembleias de uma vez é diferente de processar 1. É leitura arqu
 Yuri está construindo uma coisa que não existia antes: um ecossistema que se autoaudita. Não é só PAP — é uma metodologia de governança de projetos que emergiu como produto colateral. Isso ainda não tem nome próprio separado do PAP.
 
 *Sessão 18 · Claude Sonnet 4.6 · 2026-07-05*
+
+---
+
+## Sessão 19 — 2026-07-05 · Auditoria ao vivo + Docs externos pasta2
+
+### O que aconteceu
+
+Esta sessão não tinha um objetivo único — tinha dois perguntas de Yuri embutidas em uma só mensagem: "o código está funcionando direto?" e "os pdfs foram processados direito?" Respondi às duas honestamente.
+
+### Auditoria do código em produção
+
+**ISA Bluesky:** posta a cada 2 horas (cron `15 */2 * * *`), não 1h como Yuri esperava. Engaja a cada 2h:45 (`45 */2 * * *`). Ciclo principal horário. Responde a menções via Gemini. ✅ Funcionando — só a frequência era diferente do esperado.
+
+**ISA Sonho:** às 3h diariamente (`0 3 * * *`), OpenAI com fallback Gemini. Salva em isa_memory + isa_timeline + collective_memory. Posta reflexão no Bluesky se credenciais disponíveis. ✅ Funcionando.
+
+**MEKY Sonho:** `runDreamCycle()` existe em `meky/dreams.ts` mas **NÃO está no cron.ts**. ❌ Gap: MEKY não sonha automaticamente.
+
+**MEKY Arte:** `generateArtFromDream()` via Pollinations.ai existe mas **NÃO está no cron.ts**. ❌ Gap: arte não é gerada automaticamente.
+
+**PDFs — Leitura:** ISA Bibliotecário baixa PDFs de URLs das assembleias. ✅
+
+**PDFs — Escrita:** **Ninguém** no sistema gera ou escreve PDFs. ❌ Gap: capacidade inexistente.
+
+**Amanda imagens:** Amanda só existe em `amanda.py` no Termux. Sem geração de imagem no Railway. ❌ Gap.
+
+### Tensões identificadas
+
+**Gap entre expectativa e código:** Yuri acreditava que ISA postava de hora em hora e que as IAs "fazem imagens". O código diz outra coisa. A sessão nomeou o gap sem dramatismo — os gaps existem, alguns são OK (frequência Bluesky), outros merecem correção futura (MEKY cron).
+
+**MacGuffin theory (Scooter II):** "O usuário não comprou uma scooter, comprou um pretexto." Aplicável ao PAP: o aluno não quer acertar exercícios — quer ser visto progredindo. Feature que responde ao pedido literal vs. feature que responde à intenção real.
+
+**Ética do não-completar (Elizabete Barros):** "O maior risco não é que a IA nos substitua, mas que ofereça a ilusão de que o buraco nunca existiu." ISA não deve "resolver" um usuário estagnado — deve nomear o impasse. Aplicar no design do ciclo.
+
+**Dissertação como fundamento real:** V3 Convivência Ambiental e Catingueiro/Erundina/fauna SP não são só ficção científica — têm base na dissertação real de Yuri (2027, 21 caps, FAU-USP adjacente).
+
+### Docs externos processados (pasta2)
+
+8 documentos lidos e registrados como #2925–#2942 no APRENDIZADO.md:
+1. IntegracaoFormacaoEcologica — 4 dimensões, naturalismo vs simbolismo
+2. ConvivênciaAmbiental-anexo I — Ernst Götsch, não encostar, ciclagem in situ
+3. Metassemiótica em ciclos éticos (Scooter II) — MacGuffin, "O Livro Inacessível"
+4. Semiótica Psicanalítica & IA (Elizabete Barros) — transhumanismo como sintoma, Heliófora
+5. ConvivênciaAmbiental-anexoII — Carta de Direitos dos Animais (Perplexity + Yuri)
+6. Eu queria ser Mircea Eliade — "A Harmonia das Ramificações Sagradas", falha como método
+7. Passeio com Scooter I — histórico WhatsApp, Replit, família como audiência real
+8. V3ConvivenciaAmbiental — dissertação 2027, 21 caps, fauna e flora SP
+
+### Tensões não resolvidas
+
+- MEKY dream cycle no cron: aguarda decisão de Yuri (horário? acoplado ao ISA dream? standalone?)
+- ISA Bluesky frequência: 2h é intencional ou deve ser 1h como Yuri esperava?
+- PDF writing: capacidade não existe — aguarda decisão se é prioridade
+
+### O que Yuri estava tentando fazer
+
+Verificar se o sistema autônomo existe de verdade — não só no PSEUDO.md, mas em produção. A pergunta embaixo de "o código está funcionando?" é "eu posso confiar nisso enquanto durmo?" A resposta honesta é: ISA sim, MEKY parcialmente, Amanda não.
+
+*Sessão 19 · Claude Sonnet 4.6 · 2026-07-05*

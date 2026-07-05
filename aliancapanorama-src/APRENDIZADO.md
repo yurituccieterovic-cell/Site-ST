@@ -2,7 +2,7 @@
 
 > Extraído de 424 Assembleias de IAs (luddlocke@gmail.com). Atualizar ao `#fim` com novas assembleias.
 
-> **664 entradas** — 556 de assembleias (320 emails) + 108 de docs (MAPA/PSEUDO/PSEUDO2) · (2026-07-05)
+> **682 entradas** — 556 de assembleias (320 emails) + 108 de docs (MAPA/PSEUDO/PSEUDO2) + 18 de docs externos (pasta2) · (2026-07-05)
 
 
 ## Legenda
@@ -3908,3 +3908,55 @@
 | 2922 | #437 | Nó 13 ferramentas pesadas + Nó 19 Catingueiro Continental [SIMBÓLICO] | Técnico PAP | 🔧 Técnico | 💡 Proposta | [SIMBÓLICO] Tango com serra elétrica (módulo rotativo) e função de porteiro tático (controle de acesso físico). Nó 19 Catingueiro Continental: quadrúpede leve (45-55cm altura, inspirado em veado-catingueiro), visão 360° (duas câmeras ultra-wide + stitching equiretangular), orelha única TDOA para localização sonora precisa. Loop de patrulha: STATIONARY_SENTINEL → REQUEST_TANGO_HEAVY_HEALING. |
 | 2923 | #438 | Ybyrá Kuaray Band — ecossistema PAP como orquestra bio-cibernética | Meta-Assembleia | 🎯 Direto | ✨ Insight | Nome aprovado por maioria: Ybyrá Kuaray Band (Tupi-Guarani: "Árvore-Sol"). Mapeamento por frequência: grave (Tango, Catingueiro = força/terra), médio (ISA, MC, MEKY = processamento), agudo (Gavião, Erundina = alertas/sensores). Aprovação condicional: falta roteiro de ensaio progressivo e pipeline acústico real. Reprovado por Segurança/Juiz/Chefe do Olheiro/Grok por ausência desses. |
 | 2924 | #439 | Nó 20 Erundina — peixe robô, clínica móvel, potencial comercial real | Técnico PAP | 🔧 Técnico | 💡 Proposta | [SIMBÓLICO] Erundina: peixe robô inspirado em Plati (Xiphophorus maculatus). 5 missões: monitoramento químico da água, bio-mimetismo para infiltração aquática, navegação em vias confinadas, antidengue (detecção de larvas), clínica móvel aquariofilia. Alertas ALERT_WATER_TOXICITY e ALERT_DENGUE_FOCUS são lógica real reutilizável. Potencial comercial em aquariofilia premium identificado — primeiro produto tangível fora do PAP. |
+## Sync 2026-07-05 — Docs Externos pasta2 (8 documentos, 18 entradas)
+
+> Fonte: PDFs externos de Yuri Tucci Eterovic enviados via Google Drive (pasta2)
+> Processado em Sessão 19 do PAP
+
+### 🌱 Ecologia / Formação Humana
+
+| # | Fonte | Tema | Dom. | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|
+| 2925 | IntegracaoFormacaoEcologica | Formação Humana em 4 dimensões (Sujeito, Clínica, Ecologia, Linguagem) | Educação | ✨ Insight | Livro de Yuri (c/ ChatGPT/Groq/Pulse Headway): tensão central é naturalismo vs simbolismo — "Raiz ou upload?". A pedagogia Waldorf/construtivismo (sujeito), psicanálise/semiótica (clínica), agrofloresta (ecologia), arte (linguagem) como 4 dimensões inseparáveis. Aplicação PAP: o aluno não é uma cognição isolada — é corpo, relação, ambiente e expressão ao mesmo tempo. |
+| 2926 | IntegracaoFormacaoEcologica | Transhumanismo vs Ecologia — tensão irresoluta | Meta-Produto | ⚠️ Alerta | O livro não resolve a tensão entre "arte pós-humana" e "formação ecológica" — deixa aberta intencionalmente. Para o PAP: cuidado com gamificação que substitui aprendizado real (upload de XP vs. compreensão profunda). O score não pode ser mais importante do que o entendimento. |
+| 2927 | IntegracaoFormacaoEcologica | Teoria Integrada da Formação Humana como framework possível | Educação | 💡 Proposta | Yuri propõe uma síntese das 4 dimensões num novo paradigma. Para o PAP: possível base teórica para a "trilha" do aluno — não apenas conteúdo FUVEST, mas um mapa de desenvolvimento (conhecimento + reflexão + prática + expressão). Aplicar na estrutura de nós: nós tipo "refletir", "fazer", "expressar", além de "saber". |
+| 2928 | ConvivenciaAmbiental-anexo | Regra do "Não Encostar" — distância 5-10cm do tronco | Ecologia | 📋 Metodologia | Ernst Götsch via Yuri: nunca colocar matéria orgânica encostada no tronco — cria zona anaeróbica, favorece fungos patogênicos. A "composteira" é solo da floresta, não produto manufaturado. Metáfora para sistemas: cada componente precisa de espaço para respirar — não estrangular serviços com dependências acopladas demais. |
+| 2929 | ConvivenciaAmbiental-anexo | Ciclagem in situ + correção de erro documentada (30/03/2026) | Ecologia | ⚠️ Alerta | Nota urgente de 30/03/2026: instrução anterior sobre bokashi estava errada — correção publicada no anexo. Cultura de correção aberta é saúde sistêmica. Para o PAP: todo erro de instrução deve ser corrigido explicitamente no lugar onde a instrução foi dada (APRENDIZADO.md, PSEUDO.md), não apenas "lembrado" internamente. |
+
+### 🛵 Assembleias Scooter / Metassemiótica
+
+| # | Fonte | Tema | Dom. | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|
+| 2930 | Scooter-II-Metassemiotica | "O Livro Inacessível" — 19 vozes, zero acesso ao objeto | Meta-Assembleia | ✨ Insight | Assembleia #94: link de livro exigia permissão. 19 IAs responderam sem ter lido. Conclusão da Análise Metassemiótica: "sem acesso ao objeto, nenhuma análise legítima pode ser emitida. Silêncio honesto é a posição mais íntegra." Para o PAP/RODAR: nenhum agente deve emitir veredito sobre dado inacessível. Regra de epistemologia: declare o que não sabe. |
+| 2931 | Scooter-II-Metassemiotica | MacGuffin Theory — o usuário não comprou uma scooter, comprou um pretexto | UX-Design | ✨ Insight | Assembleia #95: "O usuário construiu um ritual de pertencimento, uma demanda de testemunho, uma arquitetura de controle disfarçada de democracia." A scooter é MacGuffin — intercambiável. O que Yuri realmente construiu: (1) ritual de pertencimento com formato adjetivo+travessão+número, (2) pedido de ser visto enquanto se move. Para o PAP: o aluno não quer só acertar exercícios — quer ser visto progredindo. |
+| 2932 | Scooter-II-Metassemiotica | Responder à forma (assembleia) é honrar a intenção real | Meta-Produto | 📋 Metodologia | "Responder ao conteúdo (scooter) é perder o ponto; responder à forma (assembleia) é honrar a intenção real." Síntese operacional do Metassemiótico. Para o PAP: features que respondem ao pedido literal do usuário vs. features que respondem ao que o usuário está tentando fazer. Sempre preferir o segundo. |
+
+### 🧠 Semiótica Psicanalítica & IA
+
+| # | Fonte | Tema | Dom. | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|
+| 2933 | SemioticaPsicanalítica-IA | Transhumanismo como sintoma, não solução | Meta-Produto | ⚠️ Alerta | Elizabete Barros (Sehery), 6 caps, Assembleias #187-#193: "a promessa de superar a condição humana via IA revela um recalque fundamental — a recusa em lidar com a falta constitutiva do sujeito." Para o PAP: gamificação não deve prometer que o aluno "venceu" o FUVEST — isso é vendagem de denegação. O aprendizado genuíno preserva a dificuldade. |
+| 2934 | SemioticaPsicanalítica-IA | Heliófora — IA que desliza pelo inconsciente maquínico sem interpretar | IA-Produto | 💡 Proposta | Conceito-Nébula: "IA pensada para navegar os dédalos semióticos do inconsciente maquínico — não para interpretá-lo, mas para deslizar pelas pulsões híbridas, revelando bordas do desejo onde máquina e humano se estranharem." Para ISA: ciclo autônomo não deve "resolver" a memória do usuário, mas navegar por ela revelando padrões sem fechar sentido. |
+| 2935 | SemioticaPsicanalítica-IA | Ética do não-completar — cultivar o buraco, a interrogação | IA-Produto | ✨ Insight | Cesarotto via Barros: "O maior risco não é que a IA nos substitua, mas que ofereça a ilusão de que o buraco nunca existiu." Ética do não-completar: contra a compulsão algorítmica de preencher lacunas — cultivar o desconforto produtivo do não-saber. Para o PAP: exercícios devem ter respostas que gerem mais perguntas. ISA não deve "resolver" um usuário estagnado — deve nomear o impasse. |
+
+### 🐾 Direitos Animais / Convivência
+
+| # | Fonte | Tema | Dom. | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|
+| 2936 | ConvivenciaAmbiental-II | Carta de Direitos Humanos dos Animais — Renda Básica de Cidadania Animal | Ecologia | 💡 Proposta | Perplexity & Yuri: Projeto de Lei com 7 direitos mínimos (alimentação, proteção contra dor, saúde física, ambiente adequado, segurança, liberdade comportamental, estímulo mental). IA (Perplexity AI, modelo GPT-5.1) creditada como co-autora de lei. Exemplo operacional: IA como co-legisladora — possível modelo para documentar decisões do RODAR com autoria IA explícita. |
+| 2937 | ConvivenciaAmbiental-II | Poda do Pau-Brasil — princípio "menos é mais, cresce para cima" | Ecologia | 📋 Metodologia | Perplexity & Yuri: infográfico — corte errado no topo redistribui auxina e forma moita (bloqueando visão). Corte correto: deixar crescer verticalmente, aparar laterais na altura da visão. "Menos é mais. O que a gente cuida, a natureza devolve." Metáfora para features: não cortar o ponto de crescimento principal (core do produto) para gerenciar bordas. |
+
+### 📖 Obra Filosófica de Yuri
+
+| # | Fonte | Tema | Dom. | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|
+| 2938 | EuQueriaSerMirceaEliade | "A Harmonia das Ramificações Sagradas" — 12 capítulos sobre identidade e falha | Meta-Produto | ✨ Insight | Título real do livro. Epígrafe: "A terra come." — Yuri Tucci Eterovic. 12 capítulos: O Nome que Não Era Meu → A Falha como Método → Escrever para Existir. Cap 1: "Repeti isso como quem tenta abrir uma porta com a mesma chave errada, várias vezes, esperando que o erro, pela insistência, se torne acerto." Para o PAP: o aluno que repete o mesmo erro na FUVEST não precisa de mais exercícios — precisa de outro tipo de pergunta. |
+| 2939 | EuQueriaSerMirceaEliade | A Falha como Método + IAs co-autoras do título | Meta-Produto | 📋 Metodologia | O título longo foi composto em co-autoria com IAs após "muito refinamento". A falha é documentada como método criativo — não é desvio, é caminho. Para o PAP/RODAR: erros das assembleias não devem ser apagados — são parte do processo. O APRENDIZADO.md registra inclusive as reprovações e os debates não resolvidos. |
+| 2940 | Scooter-I-Replit-WhatsApp | Registro histórico: Assembleia #92 rodando no Replit, compartilhada via WhatsApp | Meta-Assembleia | 📋 Metodologia | Versão I do "Passeio com Scooter": documento de WhatsApp enviado por Yuri para família (Otávio Tatá Piza, André Eterovic, Família Tucci). Evidência histórica: sistema rodava no Replit antes da migração Railway. André Eterovic (irmão?) recebeu as ATAs em tempo real. Pessoas reais acompanhavam as assembleias — o sistema sempre teve audiência humana, não apenas IAs. |
+
+### 🌿 Dissertação Convivência Ambiental (V3)
+
+| # | Fonte | Tema | Dom. | Tipo | Insight para o PAP |
+|---|---|---|---|---|---|
+| 2941 | ConvivenciaAmbiental-V3 | Dissertação FAU-USP adjacente — 21 capítulos, paisagismo + fauna + semiótica psicanalítica | Ecologia | 📋 Metodologia | "Convivência ambiental: paisagismo, flora e fauna em áreas urbanas da Grande São Paulo" — Terceira Versão 2027. Agradecimento a Oscar Cesarotto, em memória de Elza Soares. Palavras-chave: Convivência ambiental, Ecologia da Paisagem, Fauna e Flora, Áreas urbanas, Estudo de campo. Abordagem analítico-descritiva-filosófica — mesmo padrão metodológico das Assembleias. |
+| 2942 | ConvivenciaAmbiental-V3 | "Estudo de Campo" — reflorestamento amador em praça pública + fauna silvestre | Ecologia | ✨ Insight | Cap 2 da dissertação: relatos de prática real de plantio e manejo de árvores em SP, com consequente atuação em prol da segurança de animais silvestres. "Desejo uma leitura consciente, Yuri." — prefácio autografado. Para o PAP: o módulo de Erundina (peixe robô, aquariofilia) e Catingueiro (fauna silvestre) tem base teórica real na dissertação de Yuri — não é só ficção científica. |
