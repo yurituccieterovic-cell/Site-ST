@@ -792,6 +792,14 @@
         "origem": "github-actions",
         "_id": "17832515549180",
         "_createdAt": "2026-07-05T11:39:14.918Z"
+      },
+      {
+        "tipo": "poll",
+        "mensagens_novas": 0,
+        "timestamp": "2026-07-05T12:53:09.561Z",
+        "origem": "github-actions",
+        "_id": "17832559913750",
+        "_createdAt": "2026-07-05T12:53:11.375Z"
       }
     ]
   }
