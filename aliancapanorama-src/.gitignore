@@ -55,5 +55,8 @@ Thumbs.db
 # PAP — env local (secrets nunca no repo)
 .env
 .env.local
+.env.oracle
 artifacts/api-server/.env
 artifacts/pap/.env
+# Templates de exemplo: commitados (sem secrets reais)
+!.env.local.example

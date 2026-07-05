@@ -664,6 +664,12 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 51 | Sistema de Verificação 3 Camadas (I93): validation_chain em assembly_tasks | ARPIA live | ⏳ |
 | 52 | ARPIA: deploy no Railway (Sessão 14–16 setup completo, falta PR + env vars Railway) | Yuri | ⏳ |
 | 53 | ARPIA_BASE_URL: adicionar ao env Railway PAP API após deploy ARPIA | #52 | ⏳ |
+| 54 | ✅ MEKY cron: `runDreamCycle()` + `generateArtFromDream()` adicionados ao cron.ts | — | ✅ |
+| 55 | Oracle Always Free: criar conta + provisionar VM ARM (4 OCPU/24GB) + rodar oracle-setup.sh | Yuri | ⏳ |
+| 56 | Dev local: `.env.local` a preencher, rodar `bash scripts/dev-local.sh setup` | Yuri | ⏳ |
+| 57 | Termux extra: copiar termux-bootstrap.sh e rodar em novo Termux | Yuri | ⏳ |
+| 58 | Oracle: migrar banco Railway → Oracle após VM pronta (`migrate-db-to-oracle.sh`) | #55 | ⏳ |
+| 59 | Caddy DNS: apontar pap.sociedadetucci.com.br → IP Oracle no registro DNS | #55 | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado

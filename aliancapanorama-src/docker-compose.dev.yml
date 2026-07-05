@@ -1,0 +1,65 @@
+version: "3.9"
+
+# Ambiente de desenvolvimento local — banco local + API + frontend
+# Uso: docker compose -f docker-compose.dev.yml up
+# Banco disponível em: postgresql://pap:pap@localhost:5433/pap
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pap-db-local
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pap
+      POSTGRES_PASSWORD: pap
+      POSTGRES_DB: pap
+    ports:
+      - "5433:5432"     # 5433 local para não conflitar com PostgreSQL do sistema
+    volumes:
+      - pap-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pap -d pap"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pap-api-local
+    restart: unless-stopped
+    env_file: .env.local
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://pap:pap@db:5432/pap
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Para dev: montar src para hot reload (requer ts-node-dev ou tsx watch)
+      - ./artifacts/api-server/src:/app/artifacts/api-server/src:ro
+      - ./lib:/app/lib:ro
+
+  frontend:
+    image: node:24-alpine
+    container_name: pap-frontend-local
+    working_dir: /app
+    command: sh -c "npm install -g pnpm@latest --silent && pnpm install && pnpm --filter @workspace/pap-app run dev --host 0.0.0.0"
+    env_file: .env.local
+    environment:
+      VITE_API_URL: http://localhost:8080
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - api
+
+volumes:
+  pap-pgdata:
+    name: pap-pgdata-local

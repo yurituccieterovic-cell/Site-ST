@@ -1,0 +1,84 @@
+version: "3.9"
+
+# Produção no Oracle Always Free (ARM 4 OCPU / 24GB RAM)
+# Uso: docker compose -f docker-compose.oracle.yml up -d
+# Requer: .env.oracle preenchido com secrets reais
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pap-db
+    restart: always
+    environment:
+      POSTGRES_USER: pap
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: pap
+    ports:
+      - "127.0.0.1:5432:5432"    # só localhost — nunca expor direto
+    volumes:
+      - pap-pgdata:/var/lib/postgresql/data
+      - ./backups:/backups        # para pg_dump automático
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pap -d pap"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pap-api
+    restart: always
+    env_file: .env.oracle
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://pap:${DB_PASSWORD}@db:5432/pap
+      PORT: 8080
+    ports:
+      - "127.0.0.1:8080:8080"    # só localhost — Caddy faz o proxy
+    depends_on:
+      db:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: pap-caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"            # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+
+  backup:
+    image: postgres:16-alpine
+    container_name: pap-backup
+    restart: always
+    environment:
+      PGPASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./backups:/backups
+    entrypoint: >
+      sh -c "
+        while true; do
+          sleep 21600;
+          pg_dump -h db -U pap pap | gzip > /backups/pap-$$(date +%Y%m%d-%H%M).sql.gz;
+          find /backups -name '*.sql.gz' -mtime +7 -delete;
+          echo 'Backup concluído';
+        done
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pap-pgdata:
+    name: pap-pgdata
+  caddy-data:
+    name: pap-caddy-data
+  caddy-config:
+    name: pap-caddy-config

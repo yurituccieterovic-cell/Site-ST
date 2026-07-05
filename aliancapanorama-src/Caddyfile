@@ -1,0 +1,17 @@
+# Caddyfile — reverse proxy para PAP no Oracle Always Free
+# Caddy gerencia HTTPS automático (Let's Encrypt)
+# Substitua pap.sociedadetucci.com.br pelo domínio real
+
+pap.sociedadetucci.com.br {
+    reverse_proxy localhost:8080
+    encode gzip
+    log {
+        output file /var/log/caddy/access.log
+        format json
+    }
+}
+
+# Redirecionar www para apex
+www.pap.sociedadetucci.com.br {
+    redir https://pap.sociedadetucci.com.br{uri} permanent
+}

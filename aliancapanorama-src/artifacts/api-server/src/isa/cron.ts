@@ -3,6 +3,8 @@ import { runIsaCycle } from "./cycle";
 import { runBibliotecario } from "./bibliotecario";
 import { runIsaBluesky, runIsaEngagement } from "./bluesky";
 import { runIsaDream } from "./dream";
+import { runDreamCycle } from "../meky/dreams";
+import { generateArtFromDream } from "../meky/art";
 import { logger } from "../lib/logger";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
@@ -59,5 +61,20 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · sonho 3h · engajamento 2h:45)");
+  // MEKY Sonho + Arte: ciclo onírico de MEKY — 2h da manhã (1h antes de ISA)
+  cron.schedule("0 2 * * *", async () => {
+    try {
+      logger.info("MEKY: ciclo de sonho iniciado");
+      const { dreamId, mood } = await runDreamCycle();
+      // Estilo de arte rotativo por dia da semana
+      const styles = ["aquarela", "gravura", "pixel art", "oleo", "sketch", "cyberpunk", "arte rupestre"];
+      const style = styles[new Date().getDay()] ?? "aquarela";
+      await generateArtFromDream(dreamId, style);
+      logger.info({ dreamId, mood, style }, "MEKY: sonho + arte concluídos");
+    } catch (err) {
+      logger.error({ err }, "MEKY: erro no ciclo de sonho (sem memórias recentes ou falha Gemini)");
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45)");
 }
