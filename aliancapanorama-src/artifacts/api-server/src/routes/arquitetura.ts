@@ -89,7 +89,7 @@ router.get("/arquitetura", async (req, res) => {
       tasks: Number(taskCount?.count ?? 0),
       memorias_isa: Number(memCount?.count ?? 0),
     },
-    versao: "Sessão 15 — 2026-07-04",
+    versao: "Sessão 17 — 2026-07-05",
     governanca: {
       nos_ledger: 17,
       peso_igualitario: "1/17 ≈ 5.88% por nó",

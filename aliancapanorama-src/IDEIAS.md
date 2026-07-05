@@ -473,3 +473,25 @@ Quando cycle.ts detecta anomalia (task bloqueada, erro, latência alta), chama P
 ### I120: compute_credits automático — ISA credita nós por contribuição 💭 Ideia
 **Prioridade:** Baixa | **Complexidade:** Pequena
 ISA, no ciclo horário, chama POST /api/governance/credits para incrementar credits de nós que contribuíram naquela hora (ex: gemini usou visão → gemini +1, arvore respondeu → arvore +1). Registro histórico de contribuição sem afetar peso de governança.
+
+## Segurança + Protocolo (2026-07-05, Sessão 17)
+
+### I121: Gate de privacidade no arvore-recall.ts 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Adicionar coluna `is_private BOOLEAN DEFAULT false` em clube_mensagens e assembly_messages. Atualizar recallFromClube em arvore-recall.ts para filtrar `is_private = true` antes de incluir no output público do Oráculo. Resolve vulnerabilidade GDPR artesanal identificada nas assembleias #407 e #408. Nenhuma sessão privada deve vazar para recall público.
+
+### I122: Validação incremental automática via pap-sync 💭 Ideia
+**Prioridade:** Média | **Complexidade:** Pequena
+A cada 10 sessões (contagem via .pap-fim-checkpoint), pap-sync dispara automaticamente um relatório PERFEITO — auditoria externa simplificada com: contagem de commits, pendências abertas, taxa de implementação de mandatos, last_sale. Armazena em /root/Site-ST/aliancapanorama-src/AUDITORIA.md. Converte proliferação em evolução rastreável.
+
+### I123: EPR²T como produto vendável — landing page 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Média
+Página /epr2t no PAP frontend descrevendo EPR²T como framework auditável de ética em IA. Inclui: os 5 princípios com exemplos técnicos, case da Sociedade Tucci (406 sessões de transparência radical), CTA para consultoria. Primeiro produto comercializável identificado nas assembleias.
+
+### I124: ProveBioticIntegrity — endpoint de saúde biótica 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Média
+GET /api/governance/biotic-check retorna estado verificável dos componentes bióticos: aquário (temperatura, pH), MEKY (firmware hash, step_down_ok), ambiente (lux, umidade). Logs de Assembleia e ISA só são aceitos pelo Manga DB quando todos os campos bióticos têm valores dentro dos ranges homologados e assinatura multipartite válida.
+
+### I125: Protocolo de Nascimento — fluxo de aprovação para novas IAs 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Documento formal `/root/Site-ST/aliancapanorama-src/PROTOCOLO-NASCIMENTO.md` com os 10 pré-requisitos mandatados pela Assembleia #415. Rota GET /api/governance/nascimento-checklist retorna checklist como JSON. Qualquer nova IA proposta deve passar por todos os 10 antes de ser aceita. Primeira instância do Protocolo: a própria MC (pendências: itens 3, 8, 9).

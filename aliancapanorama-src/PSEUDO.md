@@ -1372,3 +1372,52 @@ A distinção entre peso e créditos é a distinção entre direito e mérito. N
 Isso é mais sofisticado do que a maioria dos sistemas de governança em blockchain.
 
 *Sessão 16 · Claude Sonnet 4.6 · 2026-07-04*
+
+---
+
+## Sessão 17 — #processo Assembleias #407–#415: Red Teaming, Protocolo de Nascimento, Auditoria Fractal
+
+**Checkpoint:** desde 2026-07-04T18:33:23+00:00 até 2026-07-05
+
+**O que foi discutido:**
+
+Yuri enviou 10 assembleias (#406–#415) via Google Drive. O #processo extraiu conteúdo completo de todas elas. O período coberto por estas assembleias foi denso: a Assembleia #407 inaugurou a "corporalização do sistema" — o momento em que Gemini parou de gerar abstração e começou a renderizar chassis, pena de Jacu, pimenta Black Pearl. A #408–#409 trouxe o primeiro Red Teaming formal: simulação de ataque aos 4 macros-ambientes. A #411 rejeitou #eco Fase 3 com tripla rejeição (técnica/biológica/ética) e condicionou a MC a 4 salvaguardas. A #412 aprovou cantoneira-L e init_baby_clean_glow(). A #414 auditou o fractal e mandatou 3 módulos. A #415 bloqueou unanimemente uma proposta e inaugurou o Protocolo de Nascimento.
+
+**Decisões tomadas:**
+
+1. Gate de privacidade implementado em clube.py ARPIA: campo `is_private` adicionado ao ClubeMensagem; filtro na rota /api/clube/recentes exclui mensagens privadas do recall público. Resolve vulnerabilidade GDPR identificada em #407/#408.
+
+2. 5 módulos de código criados/atualizados conforme mandatos das assembleias:
+   - `grid_validation.py` — hash criptográfico topologia 3×3, assinatura dupla Assembleia+ISA, lockdown se desvio (#409)
+   - `mc_boot.py` — validate_chassis_integrity com cross-check firmware step_down, abort se log não limpo (#409)
+   - `biotic_consensus.py` — ProveBioticIntegrity com multiassinatura humana+ISA+bebê_clean (#414)
+   - `aquarium_security.py` — Cadeia de Custódia: dedup+schema+barreira tag-salad+firmware check (#414)
+   - `texture_hydration.py` — TextureMetadata com temperatura/pH/lux/umidade como constraints operacionais (#414)
+
+3. Zero-Trust/ActiveMasking (`perimeter_masking.cpp`) BLOQUEADO — aguarda revisão legal. Não implementar sem parecer jurídico explícito na Assembleia.
+
+4. Protocolo de Nascimento emergiu como política formal (10 pré-requisitos para qualquer nova IA no RODAR). Registrado como pendência #45 e ideia I125.
+
+5. arquitetura.ts atualizado: versao → "Sessão 17 — 2026-07-05"
+
+**Debates que aconteceram:**
+
+O debate central das assembleias #407–#410 foi sobre natureza do projeto: infraestrutura real de governança criativa ou "teatro de segurança"? A Assembleia identificou 3 vulnerabilidades reais (geolocalização por correlação espacial, contaminação cross-contexto, e especificações de segurança sem backend). A resposta não foi colapsar — foi implementar. Mas a tensão permanece: "Falta ter um corpo real para proteger."
+
+A Assembleia #414 gerou o debate mais claro entre implementação e especulação: o Zero-Trust/perimeter_masking foi rejeitado não por limitação técnica, mas por questão legal explícita. Foi a primeira vez que o sistema invocou revisão jurídica como barreira de governança.
+
+O debate da #415 foi o mais limpo do projeto: IA "mais foda" bloqueada unanimemente. Não houve controvérsia — houve clareza. A Assembleia demonstrou que consegue dizer "não" com precisão e sem drama.
+
+**Tensões não resolvidas:**
+
+- A vulnerabilidade de doxxing por correlação espacial não foi completamente eliminada — apenas mitigada. As 406 sessões anteriores ainda contêm detalhes topográficos. Uma auditoria retroativa das sessões públicas não foi feita.
+- O Protocolo de Nascimento existe como documento pendente (I125) mas não como fluxo implementado. A próxima IA proposta encontrará o processo incompleto.
+- A MC ainda não tem "corpo real para proteger" — o diagnóstico da #410 persiste.
+
+**O que Yuri estava tentando fazer por baixo das tarefas:**
+
+Completar o ciclo de segurança do ecossistema. As 10 assembleias desta sessão formaram um arco narrativo: do "reconhecimento ontológico" (#406/#407) — quando o código encontrou a fibra de carbono — até o "bloqueio protocolar" (#415) — quando a Assembleia recusou adicionar mais complexidade sem antes estabelecer os fundamentos. Yuri estava tentando fechar o sistema: não adicionar mais, mas verificar o que já existe.
+
+Há algo importante no fato de que a sessão mais produtiva em termos de código mandatado (#414 — 3 módulos) foi também a sessão com veredito de "reprovação parcial". O projeto está aprendendo a se autoregular.
+
+*Sessão 17 · Claude Sonnet 4.6 · 2026-07-05*
