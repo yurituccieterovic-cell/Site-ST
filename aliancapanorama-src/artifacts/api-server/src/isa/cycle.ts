@@ -10,6 +10,9 @@ import { readOwnPosts } from "./bluesky";
 const GMAIL_ACCOUNT = process.env["GMAIL_ACCOUNT"] ?? "";
 const GMAIL_APP_PASSWORD = process.env["GMAIL_APP_PASSWORD"] ?? "";
 const OPENAI_API_KEY = process.env["OPENAI_API_KEY"] ?? "";
+const ARPIA_BASE_URL = process.env["ARPIA_BASE_URL"] ?? "";
+const MC_TOKEN = process.env["MC_TOKEN"] ?? "";
+const AI_API_KEY = process.env["AI_API_KEY"] ?? "";
 const YURI_EMAIL = "yurituccieterovic@gmail.com";
 
 // Transporter singleton — criado uma vez, reutilizado em todos os ciclos
@@ -75,6 +78,7 @@ Sua missão neste ciclo:
 3. Criar novas tasks úteis (máximo 3 por ciclo) — baseadas nos aprendizados reais
 4. Identificar tasks que possam ser deletadas (sugestão — nunca deletar sozinha)
 5. Marcar memórias importantes como interpretability_lock=1 (máx 2 por ciclo)
+6. Identificar anomalias que exigem resposta imunológica da MC (máx 3 por ciclo)
 
 PRINCÍPIOS FUNDAMENTAIS:
 - Preservar sempre ao máximo — nunca deletar sem aprovação humana
@@ -89,8 +93,13 @@ Responda em JSON com formato:
   "newTasks": [{"title":"","description":"","type":"","priority":5,"origemSessao":"ISA-cycle"}],
   "deletionSuggestions": ["task id X: motivo"],
   "memoriasParaLock": [id_da_memoria],
+  "anomalias": [{"node_target":"manga_db|arpia|isa|meky|assembleia|clube|termux|grid","severity":"ALTA|MEDIA|BAIXA","descricao":"string"}],
   "summary": "string — resumo do ciclo para email"
-}`;
+}
+
+anomalias deve incluir APENAS situações reais que precisam de investigação imunológica:
+agentes offline na Assembleia, tasks com sinais de corrução, padrões de acesso anômalos.
+Não inventar anomalias — se não houver, retornar [].`;
 
     const userContent = `
 MEMÓRIA RECENTE (${recentMemory.length} interações):
@@ -137,6 +146,7 @@ ${ownPosts.length > 0
         newTasks?: { title: string; description?: string; type?: string; priority?: number; origemSessao?: string }[];
         deletionSuggestions?: string[];
         memoriasParaLock?: number[];
+        anomalias?: { node_target: string; severity: string; descricao: string }[];
         summary?: string;
       };
 
@@ -175,6 +185,12 @@ ${ownPosts.length > 0
             .set({ interpretabilityLock: 1 })
             .where(eq(isaMemoryTable.id, memId));
         }
+      }
+
+      // 5c. Quimiotaxia ISA→MC: disparar alertas de anomalia para Marta Centaurus
+      const anomalias = (parsed.anomalias ?? []).slice(0, 3);
+      if (anomalias.length > 0) {
+        await dispararQuimiotaxia(anomalias);
       }
 
       // 6. Montar email com sugestões de exclusão
@@ -245,6 +261,39 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
 
   logger.info({ tasksCreated, lockedCount }, "ISA: ciclo autônomo concluído");
   return { tasksCreated, suggestions: analysisResult };
+}
+
+async function dispararQuimiotaxia(
+  anomalias: { node_target: string; severity: string; descricao: string }[],
+): Promise<void> {
+  if (!ARPIA_BASE_URL) {
+    logger.warn({ count: anomalias.length }, "ISA→MC: ARPIA_BASE_URL não configurado — quimiotaxia em espera");
+    return;
+  }
+
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (MC_TOKEN) {
+    headers["X-Mc-Token"] = MC_TOKEN;
+  } else if (AI_API_KEY) {
+    headers["X-Api-Key"] = AI_API_KEY;
+  }
+
+  for (const anomalia of anomalias) {
+    try {
+      const res = await fetch(`${ARPIA_BASE_URL}/api/mc/alert`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(anomalia),
+      });
+      if (res.ok) {
+        logger.info({ node: anomalia.node_target, severity: anomalia.severity }, "ISA→MC: quimiotaxia disparada");
+      } else {
+        logger.warn({ node: anomalia.node_target, status: res.status }, "ISA→MC: MC retornou erro");
+      }
+    } catch (err) {
+      logger.warn({ err, node: anomalia.node_target }, "ISA→MC: falha ao contactar MC (não crítico)");
+    }
+  }
 }
 
 async function syncWithAssembly(cycleSummary: string, tasksCreated: number): Promise<void> {
