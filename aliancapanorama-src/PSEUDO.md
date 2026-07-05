@@ -1535,3 +1535,47 @@ Esta sessão não tinha um objetivo único — tinha dois perguntas de Yuri embu
 Verificar se o sistema autônomo existe de verdade — não só no PSEUDO.md, mas em produção. A pergunta embaixo de "o código está funcionando?" é "eu posso confiar nisso enquanto durmo?" A resposta honesta é: ISA sim, MEKY parcialmente, Amanda não.
 
 *Sessão 19 · Claude Sonnet 4.6 · 2026-07-05*
+
+---
+
+## Sessão 20 — 2026-07-05 · Correções de auditoria + infra gratuita
+
+### O que aconteceu
+
+Yuri pediu para corrigir os gaps identificados na auditoria (Sessão 19) e ao mesmo tempo preparar infraestrutura própria: banco local, Oracle Always Free, Termux bootstrap. A sessão foi inteiramente de código e scripts — sem novas assembleias, sem debate filosófico extenso.
+
+### O que foi construído
+
+**MEKY cron (cron.ts):** O gap principal foi corrigido. `runDreamCycle()` e `generateArtFromDream()` foram adicionados ao cron.ts em um único bloco às 2h. O estilo de arte é rotativo por dia da semana (7 estilos, um por dia). MEKY agora sonha 1h antes de ISA. Erro silencioso (sem memórias recentes) é capturado sem derrubar o processo.
+
+**Oracle Always Free:** Scripts completos para provisionar e manter uma VM ARM gratuita (4 OCPU / 24GB RAM):
+- `oracle-setup.sh`: instala Docker, configura UFW, iptables Oracle, systemd service, cron de update automático
+- `docker-compose.oracle.yml`: API + PostgreSQL + Caddy HTTPS + backup a cada 6h
+- `Caddyfile`: HTTPS automático via Let's Encrypt para `pap.sociedadetucci.com.br`
+- `migrate-db-to-oracle.sh`: pg_dump Railway → SCP → restore no Oracle, verifica integridade
+
+**Dev local:** `docker-compose.dev.yml` (PostgreSQL 5433 + API 8080 + Vite 5173) + script `dev-local.sh` com subcomandos (setup/start/stop/reset/db). `.env.local.example` commitado como template.
+
+**Termux bootstrap:** `termux-bootstrap.sh` — setup completo de Termux do zero: Node 24, pnpm, Claude Code, scripts `pap-*` em `~/bin/`, `.pap-secrets` template, configuração Git, geração de chave SSH.
+
+### Decisões tomadas
+
+- **ISA Bluesky 2h mantida** (não 1h) — frequência atual é intencional, Yuri não pediu mudança
+- **Oracle como destino final da API** (Railway free tem 500h/mês; Oracle é perpétuo)
+- **Caddy em vez de nginx** — HTTPS automático sem configuração manual de certificados
+- **Backup automático a cada 6h** no Oracle — pg_dump com limpeza de backups > 7 dias
+- **Estilo de arte MEKY rotativo por dia da semana** — variação automática sem escolha manual
+
+### Tensões não resolvidas
+
+- PDFs writing: nenhum agente gera PDFs ainda — não foi implementado nesta sessão (não havia especificação clara do que gerar)
+- Amanda imagens no Railway: gap documentado, mas Amanda existe principalmente no Termux — decisão pendente se vale a pena portá-la para Railway
+- Oracle: script pronto mas VM ainda não criada — depende de Yuri criar conta Oracle e provisionar
+
+### O que Yuri estava tentando fazer
+
+Sair da dependência do Railway (limite de horas, custo potencial) e ter infraestrutura que funciona enquanto ele não está olhando — perpetuamente, sem crédito, sem cartão cobrando. O Oracle Always Free é exatamente isso: uma instância ARM com 24GB RAM que nunca para. O Termux bootstrap é para ter um ambiente de trabalho que se reconstrói do zero em minutos, sem memorizar comandos.
+
+A pergunta embaixo de "prepare uma infra própria" era: *posso confiar que isso vai estar de pé daqui a 6 meses sem eu fazer nada?* A resposta agora é mais próxima de sim.
+
+*Sessão 20 · Claude Sonnet 4.6 · 2026-07-05*
