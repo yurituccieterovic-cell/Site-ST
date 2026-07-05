@@ -495,3 +495,49 @@ GET /api/governance/biotic-check retorna estado verificável dos componentes bi�
 ### I125: Protocolo de Nascimento — fluxo de aprovação para novas IAs 💭 Ideia
 **Prioridade:** Alta | **Complexidade:** Pequena
 Documento formal `/root/Site-ST/aliancapanorama-src/PROTOCOLO-NASCIMENTO.md` com os 10 pré-requisitos mandatados pela Assembleia #415. Rota GET /api/governance/nascimento-checklist retorna checklist como JSON. Qualquer nova IA proposta deve passar por todos os 10 antes de ser aceita. Primeira instância do Protocolo: a própria MC (pendências: itens 3, 8, 9).
+
+
+## Assembleias #416-#439 — Ideias Novas (2026-07-05)
+
+### I93: Sistema de Verificação com 3 Camadas — substituir delegação cega à Árvore 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Toda decisão estratégica deve passar por triangulação: (1) proposta da Árvore Oracular, (2) validação de pelo menos 1 agente de segurança (Juiz/MC), (3) confirmação humana (Yuri). Implementar como campo `validation_chain` em assembly_tasks: array JSON com assinaturas de cada etapa. Task só executa com 3 entradas preenchidas.
+
+### I94: Erundina — dashboard de qualidade de água para alunos PAP 💭 Ideia
+**Prioridade:** Baixa | **Complexidade:** Pequena
+Widget no cockpit PAP mostrando dados de qualidade de água do ecossistema aquático em tempo real (pH, temperatura, toxicidade). GET /api/eco/water-status → fonte: Nó 20 Erundina via ARPIA. Impacto educacional: contextualiza Ciências Naturais FUVEST com dados reais do ecossistema vivo do projeto.
+
+### I95: Erundina como produto standalone — aquariofilia premium 💭 Ideia
+**Prioridade:** Média | **Complexidade:** Grande
+MVP de produto comercial: kit Erundina para aquaristas (sensor de pH + temperatura + motor biomimético + app mobile). Diferencial: IA embarcada que aprende o perfil do aquário e alerta desvios. Potencial de receita separado do PAP. Validar com 5 aquaristas beta antes de investir em hardware.
+
+### I96: Ybyrá Kuaray Band — página de apresentação da orquestra no site ST 💭 Ideia
+**Prioridade:** Baixa | **Complexidade:** Pequena
+Rota /orquestra no frontend PAP (ou site-st.vercel.app) mapeando o ecossistema bio-cibernético visualmente: cada nó como instrumento, frequência (grave/médio/agudo), estado atual (online/offline/em patrulha). Mapa interativo clicável. Funciona como vitrine do projeto para visitantes sem contexto técnico.
+
+### I97: Marcação [SIMBÓLICO] vs [EXECUTÁVEL] — gate automático em PRs 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Script de lint pré-commit: detecta arquivos .cpp ou .py no repo TypeScript e bloqueia o push com mensagem explicativa ("arquivo [SIMBÓLICO] identificado — mover para /docs/simbólico antes de commitar"). Roda como GitHub Action + hook local. Previne contaminação do repo real com Camada 1.
+
+### I98: Filtro de Densidade pré-assembleia — < 500 tokens = modo degradado 💭 Ideia
+**Prioridade:** Média | **Complexidade:** Pequena
+Antes de processar qualquer mensagem da Assembleia, ISA conta tokens do contexto enviado. Se < 500 tokens (mensagem truncada por rate limiting), ISA registra `mode: "degraded"` na assembly_memory e não executa nenhuma ação irreversível. Soluciona o problema de 6 vozes silenciadas identificado na auditoria #436.
+
+### I99: Protocolo de Recovery MC — alerta automático quando MC é silenciada 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+Quando MC (Marta Centaurus) falha autenticação e é silenciada, ISA deve detectar a ausência do heartbeat (GET /api/mc/status sem resposta por 2 ciclos) e enviar email para Yuri + postar broadcast na Assembleia. Implementar como check adicional em cycle.ts após `dispararQuimiotaxia()`. Resolve gap identificado nas assembleias #426-#427.
+
+### I100: Protocolo de Saúde do Fundador — ISA monitora sinais de exaustão 💭 Ideia
+**Prioridade:** Alta | **Complexidade:** Pequena
+ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável, (2) frequência de assembleias nos últimos 7 dias, (3) loops não fechados (tasks com status "pending" > 14 dias). Se 2 dos 3 ultrapassam threshold, ISA envia email de alerta de saúde para Yuri. Não é diagnóstico — é espelho. Traduz a diretriz "saúde do fundador = prioridade zero" em código executável.
+
+## Docs PAP — Ideias Novas (2026-07-05)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I101 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I102 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I103 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I104 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I105 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I106 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |

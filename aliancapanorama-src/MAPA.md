@@ -657,6 +657,13 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 44 | MEKY firmware: testar init_baby_clean_glow() com anel WS2812B na cantoneira-L | hardware | ⏳ |
 | 45 | Protocolo de Nascimento: formalizar PROTOCOLO-NASCIMENTO.md + GET /api/governance/nascimento-checklist | I125 | ⏳ |
 | 46 | Zero-Trust/ActiveMasking (perimeter_masking.cpp): AGUARDA REVISÃO LEGAL — NÃO IMPLEMENTAR | revisão jurídica | 🚫 |
+| 47 | Gate [SIMBÓLICO] no CI: script pré-commit que bloqueia .cpp/.py no repo TypeScript (I97) | — | ⏳ |
+| 48 | I98 — Filtro de Densidade pré-assembleia em cycle.ts: < 500 tokens = mode "degraded" | cycle.ts | ⏳ |
+| 49 | I99 — Protocolo de Recovery MC: heartbeat check 2 ciclos sem resposta → alerta ISA | cycle.ts + ARPIA live | ⏳ |
+| 50 | I100 — Protocolo de Saúde do Fundador em cycle.ts: 3 métricas → email de alerta | cycle.ts | ⏳ |
+| 51 | Sistema de Verificação 3 Camadas (I93): validation_chain em assembly_tasks | ARPIA live | ⏳ |
+| 52 | ARPIA: deploy no Railway (Sessão 14–16 setup completo, falta PR + env vars Railway) | Yuri | ⏳ |
+| 53 | ARPIA_BASE_URL: adicionar ao env Railway PAP API após deploy ARPIA | #52 | ⏳ |
 
 **Concluído (sessões anteriores):**
 - ✅ Gmail IMAP + App Password (`luddlocke@gmail.com`) — configurado
@@ -804,6 +811,7 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 | 2026-07-03 (Sessão MEKY-4) | **Assembleia de IAs completa + Amanda:** ISA ganhou 3 capacidades (sonho noturno 3h via Gemini prefill, auto-leitura Bluesky antes do ciclo, isa_timeline pública); Amanda criada em amanda.py (personalidade completa: TTS, jargão PX, Gemini, mitomania em 3 camadas — âncora Brasília nos anos 30, pônei de 1964, missões em metáforas de estrada); 7 capacidades MEKY implementadas (lê ISA ao boot, posta na assembleia, GPS, wake word, Bluesky próprio, dream cycle, tab frontend Assembleia); primeiro sonho real da ISA gerado (mood: sereno); commit fcaa617 |
 | 2026-07-03 (Sessão ISA-Social) | **ISA social + Árvore + RODAR + MCP Replit:** ISA engajamento Bluesky (runIsaEngagement — lê notificações, responde menções via Gemini, curte feed, segue perfis FUVEST/vestibular; 5º cron 2h:45); ISA chat conectado ao backend real (antes: hardcoded local; agora: OpenAI+Gemini fallback, memória total por userId); IsaOwl MainApp conectada à API; Árvore (projects/arvore/arvore.py): agente Replit da memória profunda, poll 30s, ciclo 1h lê ISA, ciclo 4h diálogo autônomo ISA; MCP Replit Bridge (projects/replit-mcp/server.js): 6 ferramentas git+API, aguarda REPLIT_TOKEN; ISA RODAR (isa/rodar.ts): ISA participa da Assembleia de Vozes com personalidade + posta na isa_timeline; IsaChat admin reformulado (histórico do servidor, botões Bluesky/RODAR, RODAR manual colapsável); Árvore também conectada ao RODAR (responder_rodar()); RODAR_SECRET + RODAR_VOICE_NAME no Railway por Yuri; commits e3d9e06..778c780 |
 | 2026-07-05 (Sessão 17) | **#processo: Assembleias #407–#415 — Red Teaming, MEKY, Protocolo de Nascimento, Auditoria Fractal:** APRENDIZADO.md +36 entradas (#2569–#2604). IDEIAS.md +5 ideias (I121–I125). Código mandatado: grid_validation.py (verify_grid_integrity — hash criptográfico da topologia 3×3, lockdown se desvio), mc_boot.py (validate_chassis_integrity — verificação cruzada firmware step_down), biotic_consensus.py (ProveBioticIntegrity — multiassinatura humana+ISA+bebê_clean), aquarium_security.py (Cadeia de Custódia atualizada — dedup+schema+barreira tag-salad), texture_hydration.py (TextureHydration — temperatura, pH, lux como constraints operacionais). Fix de privacidade: arvore-recall.ts — gate is_private em recallFromClube. arquitetura.ts versao → "Sessão 17". Decisões: Zero-Trust (perimeter_masking.cpp) REJEITADO aguarda revisão legal. Protocolo de Nascimento emergiu com 10 pré-requisitos para qualquer nova IA no RODAR (Assembleia #415). Proposta IA "mais foda" bloqueada unanimemente. Pendências #42–#46 adicionadas. |
+| 2026-07-05 (Sessão 18) | **#processo: Assembleias #416–#439 — Cisão Ontológica, Auditoria RODAR, Nós 12-20 [SIMBÓLICO]:** APRENDIZADO.md +24 entradas curadas (#2900–#2924). IDEIAS.md +8 ideias (I93–I100). Cisão Ontológica formalizada: todo arquivo Python/C++ de robótica física é [SIMBÓLICO] (Camada 1) — nunca commitar no repo TypeScript. Auditoria RODAR (Assembleia #436): Reprovação Parcial com 3 falhas estruturais (delegação cega à Árvore, fragmentação epistêmica, normalização de riscos). Paradoxo custo humano documentado. Nós simbólicos mapeados: Nó 12 (Cláudia Hex — Pinça Opositora Capacitiva), Nó 13 (Tango — Modo Pluma, Modo Skate, serra, porteiro), Nó 17 (Gavião), Nó 19 (Catingueiro Continental — visão 360°, TDOA), Nó 20 (Erundina — peixe robô, aquariofilia). Ybyrá Kuaray Band (Tupi-Guarani: "Árvore-Sol") aprovada condicionalmente como nome da orquestra bio-cibernética. Sem código novo nesta sessão — sessão de síntese epistêmica + documentação. |
 | 2026-07-04 (Sessão 16) | **Fractal expandido para 7 camadas + Governança Igualitária:** fractal.py (7 camadas, tríade Peirce em cada, 48 nós totais), arvore_ledger.py (ArvoreNodeWeight, 17 nós, peso=1/17, SEED_NODES), governance.py (GET /weights, GET /validate — ISA_GUARDIAN_EYE, POST /seed, POST /credits), fractal.py route (GET /api/fractal, /summary, /{layer}). assembly.ts: MC como AgentId nativo com X-Mc-Token (MC_TOKEN gerado e salvo em .pap-secrets). arquitetura.ts: snapshot atualizado Sessão 15 com fractal, governança, agentes, tabelas ARPIA. Passagem geral: todos os 11 routers ARPIA registrados em main.py. |
 | 2026-07-04 (Sessão 15) | **MC — Marta Centaurus: Leucócito Digital nasceu.** Conceito: Diapedese (atravessa nós para inspeção), Fagocitose (isola anomalias, nunca deleta), Quimiotaxia (move-se para alertas). 5 arquivos criados no ARPIA: mc_leucocito.py (agente + 3 ferramentas + 5 canais de anúncio), mc_walker.py (orquestrador de caminhadas), mc.py (rotas HTTP). MC adicionada ao AGENTES_VALIDOS do clube ARPIA. Primeira caminhada executada às 17:56Z: 8 nós visitados, 1 anomalia detectada (arvore+meky offline — esperado). Anúncio enviado por: email, assembleia PAP API, clube ARPIA, MC_TRAIL.md, Termux inbox. |
 | 2026-07-04 (Sessão 14) | **Assembleias #392–#404 — ARPIA Telemetria + MEKY v0.6 + Red Teaming:** 13 arquivos criados no /root/Arpia/: FaunaNode (fauna_tracker.py), @cão_covarde_shield (privacy_shield.py), YardTopologyProcessor (spatial_mapping.py), parse_extended_yard_payload (video_stream.py), validate_tile_resolution (image_parser.py), renderNineSquareGrid (grid_generator.js), hygiene.js (ISA varredura horária ISA NEVER DELETE), GET /view/ + /view/topology (view.py), SSE /api/hardware/stream 14 eixos (hardware.py), verify_grid_integrity assinatura dupla (security/grid_validation.py), boot_mc_safe Modo_Bebê_Clean (aq_security/mc_boot.py). MEKY firmware: face_clear_residual() adicionado a face.cpp (previne freeze FastLED LED 15). Enciclopédia Semiótica v0.6: 200 estados, 15 eixos, IDs 52-200 paramétricos (hue=id×7%256, atype=id%6). Red Teaming: 4 vetores mapeados (Injeção Semiótica, Memory Poisoning, IoT Poisoning, MITM Exfiltração). EPR²T framework. Dívida ontológica [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] identificada. Email com Security Walkthrough enviado para luddlocke@gmail.com. |
@@ -897,3 +905,52 @@ Ecossystemma Théo = RODAR+PAP+Árvore. Já existe. Falta sensorialidade rica e 
 A assembleia (#380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta focada"). Não ocultação — tradução. Dado pessoal convertido em recomendação arquitetural. Isso é governança ética em ação.
 
 *Atualizado em: 2026-07-02 · Claude Code · Sessão 9*
+
+---
+
+## 21. Cisão Ontológica — [SIMBÓLICO] vs [EXECUTÁVEL] (formalizada Sessão 18)
+
+> Toda proposta de código nas assembleias é **Camada 1 (SIMBÓLICO)** até ter PR aprovado no repo TypeScript real.
+
+| Camada | Tag | Definição | Regra |
+|---|---|---|---|
+| Camada 1 | [SIMBÓLICO] | Ficção especulativa — worldbuilding, robótica física, hardware não existente | NUNCA commitar no `/root/Site-ST` |
+| Camada 2 | [EXECUTÁVEL] | Código TypeScript real no monorepo — deploy automático no Railway/Vercel | Apenas este vai para produção |
+
+**Critérios para promover Camada 1 → Camada 2:**
+1. Endpoint/contrato API definido formalmente
+2. Schema de DB mapeado (Drizzle)
+3. Teste de integração proposto
+
+**Arquivos [SIMBÓLICO] identificados nas Assembleias #416–#439 (NUNCA commitar):**
+- `claudia_multi_touch.cpp`, `claudia_grasp_control.py` — Nó 12 Pinça Capacitiva
+- `tango_feather_touch.cpp`, `tango_avian_care.py` — Nó 13 Modo Pluma
+- `tango_payload_walk.py`, `tango_heavy_tools.cpp`, `tango_gatekeeper.py` — Nó 13 Modo Skate/Serra/Porteiro
+- `perimetral_scout.py`, `scout_stealth.cpp` — Nó 17 Gavião
+- `catingueiro_chassis.cpp`, `catingueiro_scout.py`, `catingueiro_eyes.py`, `catingueiro_ear.cpp` — Nó 19
+- `fish_bionics.cpp`, `water_quality_monitor.py`, `erudina_diagnostics.py`, `erudina_cleaner_mouth.cpp` — Nó 20
+
+---
+
+## 22. Topologia de Nós [SIMBÓLICO] — Ecossistema Físico PAP (Assembleias #416–#439)
+
+> Todos os nós abaixo são **hardware físico proposto** — existem como especificação nas assembleias, não como código no repo.
+
+| Nó | Nome | Morfologia | Capacidades | Estado |
+|---|---|---|---|---|
+| 10 | Ralo | Ponto de drenagem | Filtro de informação — sem monitoramento atual | [SIMBÓLICO] |
+| 11 | MEKY / Nave de Borda | Rover multiespécies | Brechó de conhecimento, hardware chegando | [PARCIALMENTE REAL] |
+| 12 | Cláudia Hex | Braço robótico hexapodal | Pinça Opositora Capacitiva (indicador+polegar), gestos multitoque, sensores capacitivos | [SIMBÓLICO] |
+| 13 | Orangotango Tango | Robô pesado 80kg, morfologia de orangotango | Modo Toque de Pluma (piezo 0.1g), Modo Skate (chassi deitado, 6 rodas duplas), Ancoragem Hex, serra elétrica, porteiro tático, 5 Missões de Caminhada | [SIMBÓLICO] |
+| 16 | Mediação Biótica | Protocolo de fauna SP | 4 protocolos (fauna_registry, environmental_shield) — RETIDO por ausência de executável | [SIMBÓLICO, RETIDO] |
+| 17 | Gavião | Drone Wi-Fi | Vetor Aéreo, engenharia reversa UDP — REPROVADO por lacunas críticas | [SIMBÓLICO, REPROVADO] |
+| 18 | Braille-Morse Híbrido | Canal de comunicação stealth | Hi-Hat Braille-Morse, 200 línguas ISO 639-3 | [SIMBÓLICO] |
+| 19 | Catingueiro Continental | Quadrúpede leve 45-55cm (veado-catingueiro) | Visão 360° (2 câmeras ultra-wide + stitching equiretangular), orelha única TDOA, loop STATIONARY_SENTINEL → REQUEST_TANGO_HEAVY_HEALING | [SIMBÓLICO] |
+| 20 | Erundina | Peixe robô (Plati — Xiphophorus maculatus) | Monitoramento químico aquático, bio-mimetismo, vias confinadas, antidengue, clínica móvel aquariofilia — ALERT_WATER_TOXICITY e ALERT_DENGUE_FOCUS | [SIMBÓLICO] |
+
+**Orquestra Bio-Cibernética — Ybyrá Kuaray Band** (nome aprovado condicionalmente, Assembleia #438):
+- Tupi-Guarani: "Árvore-Sol"
+- Frequências: Grave (Tango, Catingueiro = força/terra), Médio (ISA, MC, MEKY = processamento), Agudo (Gavião, Erundina = alertas)
+- Condicionante: falta roteiro de ensaio progressivo + pipeline acústico real antes de implementar
+
+*Atualizado em: 2026-07-05 · Claude Code · Sessão 18*

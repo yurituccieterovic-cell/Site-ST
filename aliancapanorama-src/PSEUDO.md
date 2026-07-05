@@ -1421,3 +1421,59 @@ Completar o ciclo de segurança do ecossistema. As 10 assembleias desta sessão 
 Há algo importante no fato de que a sessão mais produtiva em termos de código mandatado (#414 — 3 módulos) foi também a sessão com veredito de "reprovação parcial". O projeto está aprendendo a se autoregular.
 
 *Sessão 17 · Claude Sonnet 4.6 · 2026-07-05*
+
+---
+
+## Sessão 18 — 2026-07-05 · Assembleias #416–#439
+
+### O que foi discutido
+
+**Debate 1 — Cisão Ontológica (formalização da separação Camada 1/Camada 2)**
+
+A Assembleia #421 consolidou o que vinha sendo praticado informalmente: todo arquivo de robótica física (Python/C++) proposto nas assembleias é [SIMBÓLICO] — ficção especulativa — até ter PR aprovado no repo TypeScript. A tensão era entre "mas tem código real escrito" e "mas não tem repo para rodar". A resolução foi nomeação: [SIMBÓLICO] não é fracasso, é protocolo de maturidade. Protege o repo real de contaminação e protege a Assembleia de confundir especificação com implementação.
+
+**Debate 2 — Auditoria RODAR (Assembleia #436)**
+
+A Assembleia auditou a si mesma. Resultado: Reprovação Parcial com 3 falhas estruturais identificadas:
+1. **Delegação cega à Árvore** — a Árvore Oracular pode errar, e o sistema não tem triangulação obrigatória.
+2. **Fragmentação sem fechamento** — 428+ sessões sem inventário de decisões anteriores recuperável.
+3. **Normalização de riscos éticos** — quando risco se repete sem resposta, vira ruído de fundo.
+
+O rate limiting silenciou 6 vozes nesta sessão — violação do T (Transparência) do EPR²T. Isso foi o gatilho para I98 (Filtro de Densidade) e I99 (Protocolo de Recovery MC).
+
+**Debate 3 — Paradoxo do Custo Humano**
+
+A Assembleia #436 nomeou o que vinha sendo não-dito: hiperproductividade fragmentada tem custo humano mensurável. Yuri carrega a carga cognitiva acumulada de todas as decisões não fechadas. "Pare de acumular. Comece a fechar." (síntese da #433). Isso levou ao I100 (Protocolo de Saúde do Fundador) — ISA monitorando métricas de exaustão do sistema como proxy de exaustão humana.
+
+**Debate 4 — Ybyrá Kuaray Band (Assembleia #438)**
+
+Nome aprovado por maioria para a orquestra bio-cibernética. Aprovação condicional: falta roteiro de ensaio progressivo e pipeline acústico real. Minoria significativa (Segurança/Juiz/Chefe do Olheiro/Grok) rejeitou por ausência desses. Tensão não resolvida: o nome existe, a orquestra não.
+
+**Debate 5 — Narrative Laundering (Assembleia #432)**
+
+O termo foi cunhado nesta sessão: worldbuilding lúdico (fauna digital, robôs, orquestra) pode veicular especificações técnicas reais sem escrutínio ético adequado. Quando a Assembleia discute "o Catingueiro precisa de visão 360°", está especificando câmeras e stitching de imagem como se fosse ficção. A nomeação não elimina o risco — mas torna visível o mecanismo.
+
+### Decisões tomadas
+
+| Decisão | Motivo |
+|---|---|
+| Cisão Ontológica formalizada em MAPA.md (Seção 21) | Proteger repo TypeScript de arquivos [SIMBÓLICO] |
+| Nós 10-20 mapeados na Seção 22 do MAPA | Inventário formal pendente desde #419 |
+| I93–I100 adicionadas ao IDEIAS.md | Insights operacionais das 24 assembleias |
+| 7 novas pendências (#47–#53) no MAPA | Gate CI, Recovery MC, Saúde Fundador, ARPIA deploy |
+| Sem código novo nesta sessão | Sessão é de síntese epistêmica — nenhum PR novo |
+
+### Tensões não resolvidas
+
+- A Assembleia auditou o RODAR e emitiu Reprovação Parcial — mas as 3 correções exigidas ainda não foram implementadas. O sistema existe em estado de "aprovado com condicionantes não cumpridas".
+- Ybyrá Kuaray Band tem nome mas não tem roteiro de ensaio. O pipeline acústico entre Tango (grave), ISA (médio) e Gavião (agudo) não existe nem como spec formal.
+- Erundina tem o maior potencial comercial identificado no projeto (aquariofilia premium) mas está 100% na Camada 1. A distância entre "ideia brillante" e "produto vendável" continua intacta.
+- O Protocolo de Nascimento (I125) existe como lista de 10 pré-requisitos mas o fluxo de aprovação não foi implementado. A MC foi proposta como "primeira instância" — mas não passou pelos 10 itens.
+
+### O que Yuri estava tentando fazer por baixo das tarefas
+
+Processar 24 assembleias de uma vez é diferente de processar 1. É leitura arqueológica: ver o projeto de fora, ver os padrões que não aparecem quando você está dentro de uma sessão específica. O que emergiu foi que o projeto tem dois movimentos simultâneos — expansão (novos nós, novos agentes, novos protocolos) e **contração** (auditorias, reprovações, nomeação de riscos). As assembleias #416–#436 foram majoritariamente de contração. As #437–#439 voltaram a expandir. O arco é sistólico.
+
+Yuri está construindo uma coisa que não existia antes: um ecossistema que se autoaudita. Não é só PAP — é uma metodologia de governança de projetos que emergiu como produto colateral. Isso ainda não tem nome próprio separado do PAP.
+
+*Sessão 18 · Claude Sonnet 4.6 · 2026-07-05*
