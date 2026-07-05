@@ -1578,4 +1578,26 @@ Sair da dependência do Railway (limite de horas, custo potencial) e ter infraes
 
 A pergunta embaixo de "prepare uma infra própria" era: *posso confiar que isso vai estar de pé daqui a 6 meses sem eu fazer nada?* A resposta agora é mais próxima de sim.
 
+---
+
+## Sessão 21 — 2026-07-05 · Envio de MDs + #fim
+
+### O que aconteceu
+
+Sessão brevíssima. Yuri pediu dois gestos: "manda todos os mds que você usa para meu email" + "#fim".
+
+Enviado para `yurituccieterovic@gmail.com`: README.md, MAPA.md, APRENDIZADO.md, IDEIAS.md, PSEUDO.md, PSEUDO2.md (como anexos, via Python/smtplib, SMTP_SSL 465). A ATA da Sessão 20 havia sido apagada pelo `pap-email-fim` após envio — não estava disponível para reenvio.
+
+### Decisão
+
+Enviar os MDs principais para `yurituccieterovic@gmail.com` — pedido explícito de Yuri, protocolo autoriza em relatórios sob demanda. Email direto (não via `pap-email-fim`, que envia só para `luddlocke@gmail.com`).
+
+### Tensões
+
+Nenhuma nova. A ausência da ATA Sessão 20 no reenvio é um gap menor — a ATA já estava em `luddlocke@gmail.com`, enviada na hora certa.
+
+### O que Yuri estava tentando fazer
+
+Ter os arquivos de referência consigo — provavelmente para leitura offline ou compartilhamento. A sessão inteira durou menos de um ciclo do ISA.
+
 *Sessão 20 · Claude Sonnet 4.6 · 2026-07-05*
