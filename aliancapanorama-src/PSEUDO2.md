@@ -55,10 +55,14 @@ receber { login, password }
 ## 3. Score do usuário
 
 ```
-score = Σ (node_code.length × 10) para cada exercise_attempt correto do user
+GET /api/score:
+  buscar exerciseAttemptsTable WHERE userId = req.session.userId AND correct = 1
+  score = Σ (attempt.nodeCode.length × 10)
+  retornar { score, correctAttempts }
 
 // ex: acertar exercício do nó "1311" (length=4) vale 40 pts
 // nós mais profundos valem mais pontos
+// IMPLEMENTADO: routes/exercises.ts
 ```
 
 ---
