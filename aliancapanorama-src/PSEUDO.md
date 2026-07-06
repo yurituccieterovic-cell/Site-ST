@@ -1604,6 +1604,45 @@ Ter os arquivos de referência consigo — provavelmente para leitura offline ou
 
 ---
 
+## Sessão 23 — 2026-07-06 · #processo: Raízes do Projeto — 35 lições do Replit Agent + RODAR + fases PAP
+
+### O que aconteceu
+
+Sessão de arqueologia do projeto. Yuri trouxe pasta Drive `1mRSJcETgKR-OXPEG9aOFnDl4f6_48lJI` com 6 documentos exportados pelo Replit Agent — as raízes históricas do sistema antes de virar PAP:
+
+- `conversa-completa-desde-o-inicio.txt` (38KB): 414 commits mapeados em narrativa, 4 partes (fases, registros, ensinamentos IA→IA, sessão atual)
+- `fluxo-informacoes-sistema.txt` (6.7KB): diagrama canônico do RODAR com todas as camadas
+- `historico-conversa-pap.txt` (19KB): história fase a fase — Fase 0 (ideia/vendas, 27/abr) até Fase 6 (vida real, jul)
+- `mds-agente.txt` (103KB): 35 arquivos de memória persistente do Replit Agent com gotchas operacionais reais
+- `mds-projeto.txt` (15KB): replit.md completo (stack SalesCockpit, features, convenções) + threat model formal
+- `resposta-mds-fractal.txt` (4KB): arquitetura fractal de memória para IAs explicada pelo Replit Agent
+
+Processamento completo: APRENDIZADO.md +38 entradas (#3503–#3540), IDEIAS.md +7 ideias (I128–I134), memória `project_pap_raizes.md` criada.
+
+### Decisões tomadas
+
+**Decisão: raízes como categoria permanente de memória.** O arquivo `project_pap_raizes.md` foi criado na memória persistente porque as 35 lições do Replit Agent são conhecimento tácito que não está no código — cada gotcha custou um bug real. Sem documentação, o próximo desenvolvedor (humano ou IA) repetiria os mesmos erros. A memória de raízes é o "por que não fazer X" que o git log não conta.
+
+**Decisão: não gerar código nesta sessão.** Yuri pediu #processo com ênfase em "guarda na memoria — são as raízes do projeto, muito importante". A prioridade era documentar, não implementar. As 7 ideias novas (I128–I134) capturam o que deve ser implementado futuramente — especialmente o roteador de LLMs (I129) e o parser robusto de JSON (I128), que são os gotchas mais críticos das raízes.
+
+**Decisão: escopo do processamento.** Os 35 arquivos do mds-agente.txt foram convertidos em 13 entradas temáticas no APRENDIZADO (não 35 entradas individuais) porque muitos eram sobre o mesmo domínio (LLM parsing, resiliência, segurança). Granularidade de domínio > granularidade de arquivo.
+
+### Debates e tensões não resolvidas
+
+**Tensão: contexto interrompido.** A sessão chegou até aqui vinda de um contexto anterior comprimido (summary). O processamento do mds-agente.txt foi feito parcialmente antes da compressão — os 35 nomes de arquivo estavam listados mas o conteúdo completo dos 103KB não foi lido novamente. As entradas de APRENDIZADO foram derivadas da memória comprimida (que incluía os conteúdos lidos antes) + os trechos disponíveis. Risco: alguns gotchas específicos podem ter ficado menos detalhados do que deveriam. Mitigação: o arquivo `project_pap_raizes.md` na memória persistente tem o resumo mais completo.
+
+**Tensão: quando implementar I129 (roteador de LLMs)?** O PAP usa LLMs em ISA, MEKY, exercícios e geração de conteúdo, mas cada módulo chama provedores diretamente sem cooling compartilhado. A lição 3515 (free-tier-shared-cooling) diz que isso cria saturação por caminhos paralelos. A implementação do roteador é I129 — ainda pendente, aguarda sessão específica de implementação.
+
+### O que Yuri estava tentando fazer
+
+Yuri queria que a IA que constrói o PAP conhecesse a história de onde o PAP veio. "São as raízes do projeto" não é metáfora — é precisão: o sistema atual nasceu de decisões tomadas sob pressão em 2026-04-27 e cada decisão arquitetural (contract-first, fractal de memória, roteador de LLMs, regra sagrada do RODAR) emergiu de um erro real ou de uma limitação encontrada. Conhecer as raízes não é nostalgia — é evitar refazer o que já foi descoberto.
+
+A pergunta embaixo: *como garantir que o conhecimento institucional sobreviva à compressão de contexto e à troca de sessões?* Esta sessão é a resposta: documentar na memória persistente, não na janela de contexto.
+
+*Sessão 23 · Claude Sonnet 4.6 · 2026-07-06*
+
+---
+
 ## Sessão 22 — 2026-07-06 · #processo: Ecossystemma Théo + Pasta Livros + Princípios em todas as IAs
 
 ### O que aconteceu

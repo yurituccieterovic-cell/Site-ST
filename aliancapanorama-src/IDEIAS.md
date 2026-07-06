@@ -2,7 +2,7 @@
 
 > Derivadas de APRENDIZADO.md. Atualizar ao `#fim`.
 
-> **37 ideias** — 31 de assembleias + 6 de docs (MAPA/PSEUDO/PSEUDO2)
+> **44 ideias** — 31 de assembleias + 6 de docs (MAPA/PSEUDO/PSEUDO2) + 7 das Raízes do Projeto (I128-I134)
 
 
 ## Legenda
@@ -576,3 +576,15 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I125 | **ISA — módulo de equidade pedagógica** | 🔴 Alta | ○ S | Exercícios e conteúdo devem ser acessíveis a estudantes de diferentes contextos socioeconômicos (Princípio 8 do Ecossystemma) | Adicionar ao prompt de geração de exercícios: "verifique se a questão pressupõe acesso a recursos/experiências não universais entre estudantes brasileiros". ISA reporta no ciclo horário: % de exercícios com linguagem inacessível detectada. |
 | I126 | **Pasta /doc no frontend — documentação técnica viva** | 🟡 Média | ◑ M | Rota /doc no PAP frontend mostrando arquitetura, decisões e grafo de fluxo de dados | React route /doc → componente DocumentacaoPage.tsx. Conteúdo: grafo de fluxo (ASCII renderizado), stack técnica, changelog de decisões. Alimentado por GET /api/docs/summary que lê MAPA.md. |
 | I127 | **Síntese filosófica automatizada — ISA gera síntese ao #fim** | 🟡 Média | ○ S | Automatizar parte da síntese filosófica do #fim usando ISA como parceira | POST /api/isa/sintetizar-sessao com contexto da sessão → ISA gera síntese intersemiótica em < 200 tokens. Claude Code usa como input para SÍNTESE FILOSÓFICA do #fim. Não substitui — enriquece. |
+
+## Raízes do Projeto — Ideias Novas (2026-07-06, Sessão 23)
+
+| # | Feature | Prior. | Compl. | Status | Impacto | Descrição técnica |
+|---|---|---|---|---|---|---|
+| I128 | **Parser de JSON de LLM grátis em 3 camadas** | 🔴 Alta | ○ S | 💭 Ideia | Evita falha silenciosa de parsing que mata toda a cadeia de comandos de IA no PAP | Utilitário `lib/json-robust-parse.ts`: (1) `JSON.parse` estrito, (2) escapar controles C0 e tentar de novo, (3) remover trailing commas. Logar quando sentinela dispara mas JSON não parseia. Usar em todos os pontos de parsing de output de LLM. |
+| I129 | **Roteador de LLMs grátis com cooling compartilhado** | 🔴 Alta | ◑ M | 💭 Ideia | ISA, MEKY, exercícios e geração de conteúdo já usam LLMs mas sem cooling compartilhado — podem saturar o mesmo provedor por caminhos diferentes | `lib/llm-router.ts` com 8 provedores (Groq, Gemini, Cerebras, Mistral, DeepSeek, Cloudflare, GitHub Models, OpenRouter), cooling in-memory, pools especializados (chat-live, batch, coder). Todos os módulos de IA importam o roteador em vez de chamar provedores diretamente. |
+| I130 | **RODAR fan-out com teto de concorrência** | 🔴 Alta | ○ S | 💭 Ideia | ISA RODAR e futuro RODAR do PAP podem saturar rate-limits com fan-out ilimitado | Wrap de `Promise.all` com semáforo: `pLimit(n)` onde n depende do modo (live=5, batch=10, bunker=3). Limitar por `bunkerMode` quando provedores grátis. |
+| I131 | **Heartbeat SSE com watchdog de ociosidade** | 🟡 Média | ○ S | 💭 Ideia | Streams de ISA e geração de conteúdo podem travar silenciosamente sem timeout | Todo reader de stream SSE precisa de: timeout global (ex: 120s), watchdog de ociosidade (ex: 30s sem chunk → abort), heartbeat `data: ping\n\n` do servidor a cada 15s. |
+| I132 | **Fractal de memória para PAP — índice de lições** | 🟡 Média | ◑ M | 💭 Ideia | ISA acumula memória em `isa_memory` mas sem índice fractal — ao crescer, contexto fixo cresce linearmente | Implementar padrão fractal: `isa_memory` como tabela com coluna `summary` (1 linha) + `full_content` (texto completo). ISA sempre carrega só os `summary`; busca `full_content` sob demanda por relevância. Cap: 200 summarys em contexto fixo, profundidade ilimitada via recall. |
+| I133 | **Contract-first para rotas do PAP** | 🔴 Alta | ◑ M | 💭 Ideia | Rotas do PAP nasceram sem OpenAPI spec → tipos escritos à mão em frontend e backend divergem em runtime | Criar `openapi.yaml` com todas as rotas do PAP. Rodar `orval` para gerar hooks React Query + schemas Zod. Trocar imports manuais pelos gerados. Elimina dessincronia como classe de bug — foi a decisão #1 do RODAR original. |
+| I134 | **Audit log de privacy boundaries** | 🟡 Média | ○ S | 💭 Ideia | As regras de privacidade (retido/segredo nunca saem, topic-leakage, timeline-leak) não têm audit trail | Middleware `privacy-audit.ts`: intercepta respostas de rotas sensíveis (jornal, mostra, pdf) e loga em `privacy_audit_log(route, user_id, data_tier, timestamp)`. Alert se tier "retido" ou "segredo" aparece em rota pública. |
