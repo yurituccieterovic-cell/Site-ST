@@ -10,6 +10,7 @@ import { runIsaBluesky, createBlueskyAccount, runIsaEngagement } from "../isa/bl
 import { runIsaDream } from "../isa/dream";
 import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { responderRodar } from "../isa/rodar";
+import { sanitizeExternalInput } from "../lib/sanitize-external";
 import { logger } from "../lib/logger";
 
 const router = Router();
@@ -460,8 +461,15 @@ router.post("/isa/rodar/invite", async (req, res) => {
     return;
   }
 
+  const promptCheck = sanitizeExternalInput(prompt);
+  if (!promptCheck.safe) {
+    logger.warn({ assembleiaId, pattern: promptCheck.pattern }, "RODAR invite: prompt injection detectado");
+    res.status(400).json({ error: "Conteúdo inválido no prompt" });
+    return;
+  }
+
   try {
-    const result = await responderRodar({ callbackToken, assembleiaId, prompt, contexto, rodadaNumero });
+    const result = await responderRodar({ callbackToken, assembleiaId, prompt: promptCheck.text, contexto, rodadaNumero });
     res.json(result);
   } catch (err) {
     logger.error({ err }, "ISA RODAR: erro ao responder convite");

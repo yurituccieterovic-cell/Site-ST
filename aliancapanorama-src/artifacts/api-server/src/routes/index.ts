@@ -23,6 +23,10 @@ import { mekyMemoryRouter } from "./meky-memory";
 import { mekyTreeRouter } from "./meky-tree";
 import { collectiveRouter } from "./collective";
 import { assemblyRouter } from "./assembly";
+import webhooksRouter from "./webhooks";
+import larRouter from "./lar";
+import gastadorRouter from "./gastador";
+import lisangeRouter from "./lisange";
 
 const router: IRouter = Router();
 
@@ -32,6 +36,10 @@ router.use("/meky", mekyMemoryRouter);
 router.use("/meky", mekyTreeRouter);
 router.use(collectiveRouter);
 router.use(assemblyRouter);
+router.use(webhooksRouter);
+router.use(larRouter);
+router.use(gastadorRouter);
+router.use(lisangeRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

@@ -10,3 +10,5 @@ export * from "./nebula";
 export * from "./meky";
 export * from "./collective";
 export * from "./assembly";
+export * from "./domestico";
+export * from "./lisange";

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { exercisesTable, exerciseAttemptsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { canAccess, isInAllowedSubtree } from "../lib/canAccess";
@@ -233,6 +233,27 @@ router.post("/exercises/attempt", async (req, res) => {
     correctOption: exercise.correctOption,
     explanation: exercise.explanation,
   });
+});
+
+// GET /api/score — pontuação total do usuário (PSEUDO2 seção 3)
+// score = Σ(nodeCode.length × 10) por cada exercise_attempt correto
+router.get("/score", async (req, res): Promise<void> => {
+  const userId = req.session.userId;
+  if (!userId) {
+    res.status(401).json({ error: "Autenticação necessária" });
+    return;
+  }
+
+  const attempts = await db
+    .select({ nodeCode: exerciseAttemptsTable.nodeCode })
+    .from(exerciseAttemptsTable)
+    .where(and(
+      eq(exerciseAttemptsTable.userId, userId),
+      eq(exerciseAttemptsTable.correct, 1),
+    ));
+
+  const score = attempts.reduce((sum, a) => sum + a.nodeCode.length * 10, 0);
+  res.json({ score, correctAttempts: attempts.length });
 });
 
 export default router;
