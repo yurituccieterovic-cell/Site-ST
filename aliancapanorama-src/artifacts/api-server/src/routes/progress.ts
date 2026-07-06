@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { and, eq } from "drizzle-orm";
-import { db, nodeProgressTable, achievementsTable } from "@workspace/db";
+import { and, eq, sql } from "drizzle-orm";
+import { db, nodeProgressTable, achievementsTable, exerciseAttemptsTable } from "@workspace/db";
 import { OpenNodeParams, ReadNodeParams } from "@workspace/api-zod";
 import { canAccess, isInAllowedSubtree } from "../lib/canAccess";
 import { getAllNodes } from "../lib/nodeCache";
@@ -301,6 +301,25 @@ router.get("/achievements", async (req, res): Promise<void> => {
   });
 
   res.json(achievements);
+});
+
+// GET /api/progress/weekly-score — score por semana ISO (deduplicado por exercício dentro da semana)
+router.get("/progress/weekly-score", async (req, res): Promise<void> => {
+  const userId = getAuthUserId(req, res);
+  if (!userId) return;
+
+  const rows = await db.execute(sql`
+    SELECT
+      TO_CHAR(DATE_TRUNC('week', created_at), 'IYYY-"W"IW') AS week,
+      SUM(LENGTH(node_code) * 10)                            AS score,
+      COUNT(DISTINCT exercise_id)                            AS exercises
+    FROM exercise_attempts
+    WHERE user_id = ${userId} AND correct = 1
+    GROUP BY DATE_TRUNC('week', created_at)
+    ORDER BY DATE_TRUNC('week', created_at) ASC
+  `);
+
+  res.json(rows.rows as { week: string; score: string; exercises: string }[]);
 });
 
 router.get("/progress/daily", async (req, res): Promise<void> => {

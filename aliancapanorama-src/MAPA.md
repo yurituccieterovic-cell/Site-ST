@@ -914,10 +914,10 @@ Ecossystemma Théo = RODAR+PAP+Árvore. Já existe. Falta sensorialidade rica e 
 
 | Risco | Severidade | Status |
 |---|---|---|
-| Arquitetura invisível — usuário não vê o que o sistema contém | 🟡 Média | ⏳ I50 pendente (/arquitetura+/mapa) |
+| Arquitetura invisível — usuário não vê o que o sistema contém | 🟡 Média | ✅ /arquitetura + /buscar + /mapa (Sessão 11) |
 | Fragmentação de input — prompts sem estrutura mínima | 🟡 Média | ⏳ I51 pendente (filtro semântico) |
 | Memória como trivia (branding vs decisões técnicas) | 🟡 Média | ⏳ curadoria de memória pendente |
-| interpretability_lock ausente — conteúdo privado exposto em recalls | 🟢 Baixa | ⏳ I49 pendente |
+| interpretability_lock ausente — conteúdo privado exposto em recalls | 🟢 Baixa | ✅ I49 implementada Sessão 11 (GET /api/isa/locked + PATCH lock) |
 
 ### Compaixão estrutural como princípio de design
 
