@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { rateLimit } from "express-rate-limit";
 import { db } from "@workspace/db";
 import { exercisesTable, exerciseAttemptsTable } from "@workspace/db";
 import { and, eq } from "drizzle-orm";
@@ -11,29 +12,24 @@ const router = Router();
 
 const generationInProgress = new Set<string>();
 
-const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+// Rate limit por userId (não por IP) — express-rate-limit limpa automaticamente
+const generateRateLimit = rateLimit({
+  windowMs: 60_000,
+  limit: 5,
+  keyGenerator: (req) => `gen:${(req.session as { userId?: number }).userId ?? req.ip ?? "anon"}`,
+  message: { error: "Muitas requisições de geração. Tente novamente em breve." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
-const GENERATION_RATE_MAX = 5;
-const userGenerationCounts = new Map<number, { count: number; windowStart: number }>();
-
-const ATTEMPT_RATE_MAX = 60;
-const userAttemptCounts = new Map<number, { count: number; windowStart: number }>();
-
-function checkRateLimit(
-  map: Map<number, { count: number; windowStart: number }>,
-  userId: number,
-  max: number,
-): boolean {
-  const now = Date.now();
-  const entry = map.get(userId);
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    map.set(userId, { count: 1, windowStart: now });
-    return true;
-  }
-  if (entry.count >= max) return false;
-  entry.count += 1;
-  return true;
-}
+const attemptRateLimit = rateLimit({
+  windowMs: 60_000,
+  limit: 60,
+  keyGenerator: (req) => `att:${(req.session as { userId?: number }).userId ?? req.ip ?? "anon"}`,
+  message: { error: "Muitas tentativas. Tente novamente em breve." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 async function generateExercises(nodeCode: string, nodeTitle: string, nodeContent: string | null) {
   const prompt = `Você é um professor especialista no vestibular FUVEST integrado ao ecossistema PAP da Sociedade Tucci.
@@ -93,7 +89,7 @@ Retorne SOMENTE o array JSON, sem texto adicional, sem markdown.`;
   return inserted;
 }
 
-router.get("/exercises", async (req, res) => {
+router.get("/exercises", generateRateLimit, async (req, res) => {
   if (!req.session.userId) {
     res.status(401).json({ error: "Autenticação necessária" });
     return;
@@ -143,10 +139,6 @@ router.get("/exercises", async (req, res) => {
         return;
       }
     } else {
-      if (!checkRateLimit(userGenerationCounts, req.session.userId, GENERATION_RATE_MAX)) {
-        res.status(429).json({ error: "Muitas requisições de geração. Tente novamente em breve." });
-        return;
-      }
       generationInProgress.add(nodeCode);
       try {
         exercises = await generateExercises(nodeCode, node.title, node.content);
@@ -172,7 +164,7 @@ router.get("/exercises", async (req, res) => {
   );
 });
 
-router.post("/exercises/attempt", async (req, res) => {
+router.post("/exercises/attempt", attemptRateLimit, async (req, res) => {
   if (!req.session.userId) {
     res.status(401).json({ error: "Autenticação necessária" });
     return;
@@ -181,11 +173,6 @@ router.post("/exercises/attempt", async (req, res) => {
   const tier = req.session.userTier ?? 0;
   if (tier < 1) {
     res.status(403).json({ error: "Exercícios disponíveis a partir do nível Aluno I" });
-    return;
-  }
-
-  if (!checkRateLimit(userAttemptCounts, req.session.userId, ATTEMPT_RATE_MAX)) {
-    res.status(429).json({ error: "Muitas tentativas. Tente novamente em breve." });
     return;
   }
 

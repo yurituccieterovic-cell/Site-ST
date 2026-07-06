@@ -11,6 +11,7 @@ import { readOwnPosts } from "./bluesky";
 const GMAIL_ACCOUNT = process.env["GMAIL_ACCOUNT"] ?? "";
 const GMAIL_APP_PASSWORD = process.env["GMAIL_APP_PASSWORD"] ?? "";
 const OPENAI_API_KEY = process.env["OPENAI_API_KEY"] ?? "";
+const GEMINI_API_KEY = process.env["GEMINI_API_KEY"] ?? "";
 const ARPIA_BASE_URL = process.env["ARPIA_BASE_URL"] ?? "";
 const MC_TOKEN = process.env["MC_TOKEN"] ?? "";
 const AI_API_KEY = process.env["AI_API_KEY"] ?? "";
@@ -37,6 +38,85 @@ async function sendEmail(subject: string, body: string): Promise<void> {
     return;
   }
   await mailer.sendMail({ from: GMAIL_ACCOUNT, to: YURI_EMAIL, subject, text: body });
+}
+
+// Protocolo de Saúde do Fundador (#50/I100)
+// Verifica 3 métricas de atividade da plataforma e envia alerta se caíram
+export async function runSaudeFundador(): Promise<void> {
+  const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const since48h = new Date(Date.now() - 48 * 60 * 60 * 1000);
+
+  const [progressRows, attemptRows, cycleRows] = await Promise.all([
+    db.execute(sql`SELECT COUNT(*) as cnt FROM node_progress WHERE opened_at > ${since24h}`),
+    db.execute(sql`SELECT COUNT(*) as cnt FROM exercise_attempts WHERE created_at > ${since24h}`),
+    db.execute(sql`SELECT COUNT(*) as cnt FROM isa_memory WHERE context = 'cycle' AND created_at > ${since24h}`),
+  ]);
+
+  const [prevProgressRows, prevAttemptRows] = await Promise.all([
+    db.execute(sql`SELECT COUNT(*) as cnt FROM node_progress WHERE opened_at > ${since48h} AND opened_at <= ${since24h}`),
+    db.execute(sql`SELECT COUNT(*) as cnt FROM exercise_attempts WHERE created_at > ${since48h} AND created_at <= ${since24h}`),
+  ]);
+
+  const nProgress  = Number((progressRows.rows[0] as { cnt: string })?.cnt ?? 0);
+  const nAttempts  = Number((attemptRows.rows[0] as { cnt: string })?.cnt ?? 0);
+  const nCycles    = Number((cycleRows.rows[0] as { cnt: string })?.cnt ?? 0);
+  const prevProgress = Number((prevProgressRows.rows[0] as { cnt: string })?.cnt ?? 0);
+  const prevAttempts = Number((prevAttemptRows.rows[0] as { cnt: string })?.cnt ?? 0);
+
+  const alerts: string[] = [];
+  if (nProgress === 0 && prevProgress > 0) alerts.push(`⚠️ Nenhum nó aberto nas últimas 24h (ontem: ${prevProgress})`);
+  if (nAttempts === 0 && prevAttempts > 0) alerts.push(`⚠️ Nenhuma tentativa de exercício nas últimas 24h (ontem: ${prevAttempts})`);
+  if (nCycles < 12) alerts.push(`⚠️ ISA completou apenas ${nCycles} ciclos nas últimas 24h (esperado ≥ 12)`);
+
+  if (alerts.length > 0) {
+    const body = `ISA — Alerta de Saúde do Sistema
+Data: ${new Date().toISOString()}
+
+${alerts.join("\n")}
+
+MÉTRICAS (últimas 24h):
+• Nós abertos: ${nProgress}
+• Tentativas de exercício: ${nAttempts}
+• Ciclos ISA: ${nCycles}
+
+Este alerta é enviado automaticamente quando métricas caem abruptamente.
+---
+ISA — Guardiã do PAP`;
+
+    await sendEmail(`ISA — Alerta de Saúde ${new Date().toLocaleDateString("pt-BR")}`, body);
+    logger.warn({ alerts }, "ISA Saúde: alerta enviado para Yuri");
+  } else {
+    logger.info({ nProgress, nAttempts, nCycles }, "ISA Saúde: tudo normal");
+  }
+}
+
+// Análise do ciclo via Gemini (fallback quando OpenAI não está disponível)
+async function geminiCycleAnalysis(
+  userContent: string,
+  _systemPrompt: string,
+  memoryCount: number,
+  taskCount: number,
+): Promise<string> {
+  const prompt = `${_systemPrompt}\n\n${userContent}\n\nResponda com um JSON simples: {"summary": "string com observações e sugestões do ciclo (máx 300 chars)"}`;
+  const resp = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
+          thinkingConfig: { thinkingBudget: 0 },
+          maxOutputTokens: 400,
+          responseMimeType: "application/json",
+        },
+      }),
+    }
+  );
+  const data = await resp.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+  const parsed = JSON.parse(raw) as { summary?: string };
+  return parsed.summary ?? `Ciclo Gemini: ${memoryCount} memórias, ${taskCount} tasks abertas`;
 }
 
 export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions: string }> {
@@ -67,12 +147,11 @@ export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions
     .orderBy(desc(tasksTable.priority))
     .limit(50);
 
-  // 4. Chamar OpenAI para análise
+  // 4. Análise LLM (OpenAI ou Gemini)
   let analysisResult = "";
   let tasksCreated = 0;
 
-  if (OPENAI_API_KEY) {
-    const systemPrompt = `Você é ISA, a coruja guardiã do PAP (Projeto Aliança Panorama).
+  const systemPrompt = `Você é ISA, a coruja guardiã do PAP (Projeto Aliança Panorama).
 Sua missão neste ciclo:
 1. Analisar as interações recentes dos usuários e os aprendizados das assembleias
 2. Verificar tasks abertas e identificar oportunidades de melhoria
@@ -105,7 +184,7 @@ anomalias deve incluir APENAS situações reais que precisam de investigação i
 agentes offline na Assembleia, tasks com sinais de corrução, padrões de acesso anômalos.
 Não inventar anomalias — se não houver, retornar [].`;
 
-    const userContent = `
+  const userContent = `
 MEMÓRIA RECENTE (${recentMemory.length} interações):
 ${recentMemory.slice(0, 20).map(m => `[${m.context}][${m.role}] ${m.content.slice(0, 200)}`).join("\n")}
 
@@ -127,6 +206,7 @@ ${ownPosts.length > 0
   : "(ainda sem postagens — conta Bluesky não configurada)"}
 `;
 
+  if (OPENAI_API_KEY) {
     try {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
@@ -223,8 +303,29 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
       logger.error({ err }, "ISA: erro na chamada OpenAI");
       analysisResult = "Ciclo executado sem OpenAI (erro na chamada)";
     }
+  } else if (GEMINI_API_KEY) {
+    // Fallback: Gemini Flash (gratuito) quando OpenAI não está configurado
+    try {
+      analysisResult = await geminiCycleAnalysis(
+        userContent,
+        systemPrompt,
+        recentMemory.length,
+        openTasks.length,
+      );
+      if (analysisResult.length > 20) {
+        await db.insert(collectiveMemory).values({
+          authorType: "isa", authorId: "isa",
+          authorName: "ISA — Inteligência do Sistema Aliança",
+          content: `[Ciclo Gemini] ${analysisResult.slice(0, 400)}`,
+          tags: ["isa", "ciclo", "gemini"], minTier: 0,
+        }).catch(() => {});
+      }
+    } catch (err) {
+      logger.error({ err }, "ISA: erro na chamada Gemini");
+      analysisResult = "Ciclo executado sem LLM (erro Gemini)";
+    }
   } else {
-    analysisResult = "Ciclo executado sem OpenAI (OPENAI_API_KEY não configurada)";
+    analysisResult = "Ciclo executado sem LLM (nenhuma chave configurada)";
   }
 
   // 7. Registrar o ciclo em isa_memory e na linha do tempo
@@ -370,7 +471,29 @@ async function syncWithAssembly(cycleSummary: string, tasksCreated: number): Pro
     });
   }
 
-  // 9e. Atualizar status ISA na Assembleia
+  // 9e. Ler mensagens recentes do Playcenter (#24) e registrar como contexto ISA
+  const playcenterMsgs = await db.select({
+      fromAgent: assemblyMessages.fromAgent,
+      content: assemblyMessages.content,
+      createdAt: assemblyMessages.createdAt,
+    })
+    .from(assemblyMessages)
+    .where(eq(assemblyMessages.type, "playcenter"))
+    .orderBy(desc(assemblyMessages.createdAt))
+    .limit(5);
+
+  if (playcenterMsgs.length > 0) {
+    const digest = playcenterMsgs.reverse()
+      .map(m => `${m.fromAgent}: ${m.content.slice(0, 100)}`).join(" | ");
+    await db.insert(isaMemoryTable).values({
+      context: "playcenter",
+      role: "isa",
+      content: `[Playcenter] Últimas trocas: ${digest}`,
+      metadata: { count: playcenterMsgs.length },
+    });
+  }
+
+  // 9f. Atualizar status ISA na Assembleia
   await db.execute(sql`
     UPDATE assembly_agents SET status = 'online', last_seen = NOW() WHERE id = 'isa'
   `);

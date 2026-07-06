@@ -6,6 +6,7 @@ import { runIsaDream } from "./dream";
 import { runDreamCycle } from "../meky/dreams";
 import { generateArtFromDream } from "../meky/art";
 import { runPlaycenter } from "./playcenter";
+import { runSaudeFundador } from "./cycle";
 import { logger } from "../lib/logger";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
@@ -88,5 +89,14 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50)");
+  // Saúde do Fundador: verificar métricas e alertar se caíram — 8h diário
+  cron.schedule("0 8 * * *", async () => {
+    try {
+      await runSaudeFundador();
+    } catch (err) {
+      logger.error({ err }, "ISA Saúde: erro na verificação");
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h)");
 }

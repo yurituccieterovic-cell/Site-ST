@@ -52,7 +52,16 @@ async function callGeminiDream(resumo: string): Promise<{ dream: string; post: s
 }
 
 async function callLLM(resumo: string): Promise<{ dream: string; post: string; mood: string }> {
-  // Tentar OpenAI primeiro (JSON mode)
+  // Tentar Gemini primeiro (gratuito) — OpenAI como fallback
+  if (GEMINI_API_KEY) {
+    try {
+      const result = await callGeminiDream(resumo);
+      if (result.dream) return result;
+    } catch (err) {
+      logger.warn({ err }, "ISA Sonho: Gemini falhou, tentando OpenAI");
+    }
+  }
+
   if (OPENAI_API_KEY) {
     try {
       const resp = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -72,15 +81,10 @@ async function callLLM(resumo: string): Promise<{ dream: string; post: string; m
         const p = JSON.parse(data.choices[0].message.content) as { dream?: string; post?: string; mood?: string };
         if (p.dream) return { dream: p.dream, post: p.post ?? "", mood: p.mood ?? "sereno" };
       }
-      logger.warn({ error: data.error?.type }, "ISA Sonho: OpenAI falhou, tentando Gemini");
+      logger.warn({ error: data.error?.type }, "ISA Sonho: OpenAI também falhou");
     } catch (err) {
-      logger.warn({ err }, "ISA Sonho: OpenAI exception, tentando Gemini");
+      logger.warn({ err }, "ISA Sonho: OpenAI exception");
     }
-  }
-
-  // Fallback: Gemini Flash
-  if (GEMINI_API_KEY) {
-    return callGeminiDream(resumo);
   }
 
   throw new Error("Nenhum LLM disponível");
