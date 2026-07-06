@@ -618,7 +618,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 5 | Drizzle-kit migrate: substituir push por migrações versionadas antes de módulo financeiro | — | ⏳ |
 | 6 | TOTP 2FA (I53) — antes de lançar módulo cripto/financeiro | — | ⏳ |
 | 7 | pgvector (I52) — busca semântica substituindo ILIKE | — | ⏳ |
-| 8 | Rate limiting exercises.ts: persistir no DB (atual Map em memória, perde no restart) | — | ⏳ |
+| 8 | Rate limiting exercises.ts: persistir no DB (atual Map em memória, perde no restart) | — | ✅ 59b9387 |
 | 9 | Stripe: conectar em produção | domínio | ⏳ |
 | 10 | I54 — Módulo Cripto/Árvore Frutífera (Yuri disse "em breve") | 2FA + domínio | ⏳ |
 | 11 | MEKY — migração SQL das tabelas (meky_* + collective_memory) — auto via ensureMekyTables() no bootstrap | Railway deploy | ✅ auto |
@@ -629,12 +629,12 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 16 | May Queen (MEKY) — testar `meky-dev` com hardware real quando chegar | hardware | ⏳ |
 | 17 | Criar conta Bluesky para Amanda (MEKY) + setar MEKY_BLUESKY_HANDLE + MEKY_BLUESKY_APP_PASSWORD | Yuri | ⏳ |
 | 18 | Agendar amanda-dream-cron.py às 3h no Termux (termux-job-scheduler ou cronie) | hardware | ⏳ |
-| 19 | OpenAI quota — reabastecer créditos ou migrar dream/cycle completamente para Gemini | — | ⏳ |
+| 19 | OpenAI quota — reabastecer créditos ou migrar dream/cycle completamente para Gemini | — | ✅ 59b9387 |
 | 20 | Arpia → criar repo GitHub separado + linkar ao segundo projeto Railway | Yuri | ⏳ |
 | 21 | Socoboy — obter token do @BotFather e definir TELEGRAM_BOT_TOKEN no Railway | Yuri | ⏳ |
 | 22 | Migrations Arpia (Alembic ou drizzle-kit) — antes de ir para produção | Railway Arpia | ⏳ |
 | 23 | Fractal Layer 3 — ISA: equidade semiótica (graph centrality + Assembleia Digital) | ISA cycle.ts | ⏳ |
-| 24 | Clube das IAs — ISA ler e responder mensagens não lidas a cada ciclo (cycle.ts) | cycle.ts + Arpia live | ⏳ |
+| 24 | Clube das IAs — ISA ler e responder mensagens não lidas a cada ciclo (cycle.ts) | cycle.ts + Arpia live | ✅ 59b9387 |
 | 25 | Coral de Roberts Plants (coral.py) — composição acústica multi-robô | Gongolo-V2 | ⏳ |
 | 26 | Papiro v2 (papiro.py) — Gemini traduz texto semântico → face IDs | meky_commander | ⏳ |
 | 27 | face_set_blend() no firmware (#BLEND:ID_A:ID_B:RATIO) | face.cpp | ⏳ |
@@ -662,10 +662,10 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 62 | Sanitizar todos os inputs externos contra injeção de prompt antes de tocar contexto de IA | — | ✅ 31c592d |
 | 63 | Assembleias #503–#515 + documento_mestre_ecossistema_tel.pdf: baixar quando Drive liberar rate limit | Drive rate limit | ⏳ |
 | 64 | Auditoria independente do EcossystemmaTheo (Juiz/Sessão#499): definir protocolo de revisão periódica | — | ⏳ |
-| 47 | Gate [SIMBÓLICO] no CI: script pré-commit que bloqueia .cpp/.py no repo TypeScript (I97) | — | ⏳ |
+| 47 | Gate [SIMBÓLICO] no CI: script pré-commit que bloqueia .cpp/.py no repo TypeScript (I97) | — | ✅ 59b9387 |
 | 48 | I98 — Filtro de Densidade pré-assembleia em cycle.ts: < 500 tokens = mode "degraded" | cycle.ts | ⏳ |
 | 49 | I99 — Protocolo de Recovery MC: heartbeat check 2 ciclos sem resposta → alerta ISA | cycle.ts + ARPIA live | ⏳ |
-| 50 | I100 — Protocolo de Saúde do Fundador em cycle.ts: 3 métricas → email de alerta | cycle.ts | ⏳ |
+| 50 | I100 — Protocolo de Saúde do Fundador em cycle.ts: 3 métricas → email de alerta | cycle.ts | ✅ 59b9387 |
 | 51 | Sistema de Verificação 3 Camadas (I93): validation_chain em assembly_tasks | ARPIA live | ⏳ |
 | 52 | ARPIA: deploy no Railway (Sessão 14–16 setup completo, falta PR + env vars Railway) | Yuri | ⏳ |
 | 53 | ARPIA_BASE_URL: adicionar ao env Railway PAP API após deploy ARPIA | #52 | ⏳ |
