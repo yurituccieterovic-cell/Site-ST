@@ -651,11 +651,11 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 38 | MC — termux-agent.py: polling /root/mc-termux-inbox.json (lido=false → notificação) | hardware | ⏳ |
 | 39 | MC_TOKEN: adicionar ao env Railway (PAP API) para MC ter identidade própria na assembleia | Yuri | ⏳ |
 | 40 | ARPIA: /api/governance/seed: executar após primeira conexão ao Manga DB (cria 17 nós) | ARPIA live | ⏳ |
-| 41 | ISA cycle.ts: chamar POST /api/mc/alert quando anomalia detectada (quimiotaxia loop) | I119 | ⏳ |
+| 41 | ISA cycle.ts: chamar POST /api/mc/alert quando anomalia detectada (quimiotaxia loop) | I119 | ✅ 59b9387 (dispararQuimiotaxia) |
 | 42 | Gate de privacidade arvore-recall.ts: coluna is_private + filtro no recallFromClube | I121 | ⏳ |
 | 43 | ARPIA: POST /api/governance/biotic-check (ProveBioticIntegrity endpoint) | I124 | ⏳ |
 | 44 | MEKY firmware: testar init_baby_clean_glow() com anel WS2812B na cantoneira-L | hardware | ⏳ |
-| 45 | Protocolo de Nascimento: formalizar PROTOCOLO-NASCIMENTO.md + GET /api/governance/nascimento-checklist | I125 | ⏳ |
+| 45 | Protocolo de Nascimento: formalizar PROTOCOLO-NASCIMENTO.md + GET /api/governance/nascimento-checklist | I125 | ✅ pendente-push |
 | 46 | Zero-Trust/ActiveMasking (perimeter_masking.cpp): AGUARDA REVISÃO LEGAL — NÃO IMPLEMENTAR | revisão jurídica | 🚫 |
 | 60 | AGE/LAR/GASTADOR: implementar schema Drizzle (domestico.ts, patient_profiles, agenda_slot) + rotas /api/lisange/* /api/lar/* /api/gastador/* | — | ✅ 31c592d |
 | 61 | Webhook /api/webhooks/external-voice (X-Webhook-Secret) para integração multi-cloud | — | ✅ 31c592d |
