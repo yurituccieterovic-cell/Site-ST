@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request, type Response, type NextFunction } from "express";
 import { db, nodesTable, exercisesTable, usersTable, exerciseAttemptsTable } from "@workspace/db";
-import { eq, sql, asc } from "drizzle-orm";
+import { eq, sql, asc, count } from "drizzle-orm";
 import { rateLimit } from "express-rate-limit";
 
 const router: IRouter = Router();
@@ -27,9 +27,19 @@ router.use("/ai", aiRateLimit, requireApiKey);
 
 // ─── Nodes ───────────────────────────────────────────────────────────────────
 
-router.get("/ai/nodes", async (_req, res): Promise<void> => {
-  const nodes = await db.select().from(nodesTable).orderBy(nodesTable.level, nodesTable.sortOrder);
-  res.json(nodes);
+router.get("/ai/nodes", async (req, res): Promise<void> => {
+  const limit  = Math.min(Number(req.query["limit"]  ?? 100), 500);
+  const offset = Math.max(Number(req.query["offset"] ?? 0), 0);
+
+  const [{ total }] = await db.select({ total: count() }).from(nodesTable);
+  const nodes = await db
+    .select()
+    .from(nodesTable)
+    .orderBy(nodesTable.level, nodesTable.sortOrder)
+    .limit(limit)
+    .offset(offset);
+
+  res.json({ data: nodes, total, limit, offset });
 });
 
 router.get("/ai/nodes/:code", async (req, res): Promise<void> => {

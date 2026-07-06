@@ -661,7 +661,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 61 | Webhook /api/webhooks/external-voice (X-Webhook-Secret) para integração multi-cloud | — | ✅ 31c592d |
 | 62 | Sanitizar todos os inputs externos contra injeção de prompt antes de tocar contexto de IA | — | ✅ 31c592d |
 | 63 | Assembleias #503–#515 + documento_mestre_ecossistema_tel.pdf: baixar quando Drive liberar rate limit | Drive rate limit | ⏳ |
-| 64 | Auditoria independente do EcossystemmaTheo (Juiz/Sessão#499): definir protocolo de revisão periódica | — | ⏳ |
+| 64 | Auditoria independente do EcossystemmaTheo (Juiz/Sessão#499): definir protocolo de revisão periódica | — | ✅ pendente-push (AUDITORIA-ECOSSYSTEMMA.md) |
 | 47 | Gate [SIMBÓLICO] no CI: script pré-commit que bloqueia .cpp/.py no repo TypeScript (I97) | — | ✅ 59b9387 |
 | 48 | I98 — Filtro de Densidade pré-assembleia em cycle.ts: < 500 tokens = mode "degraded" | cycle.ts | ✅ pendente-push |
 | 49 | I99 — Protocolo de Recovery MC: heartbeat check 2 ciclos sem resposta → alerta ISA | cycle.ts + ARPIA live | ⏳ |
