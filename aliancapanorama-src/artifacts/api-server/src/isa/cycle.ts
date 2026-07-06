@@ -2,8 +2,8 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { db } from "@workspace/db";
 import { PRINCIPIOS_ECOSSYSTEMMA, CONTEXTO_PAP } from "../lib/ecossystemma-principios";
-import { isaMemoryTable, tasksTable, collectiveMemory, assemblyMessages, assemblyMemory as assemblyMemoryTable, assemblyTasks, isaTimeline } from "@workspace/db";
-import { desc, eq, sql, and } from "drizzle-orm";
+import { isaMemoryTable, tasksTable, collectiveMemory, assemblyMessages, assemblyMemory as assemblyMemoryTable, assemblyTasks, isaTimeline, nodeProgressTable, nodesTable } from "@workspace/db";
+import { desc, eq, sql, and, count } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import nodemailer from "nodemailer";
 import { readOwnPosts } from "./bluesky";
@@ -147,6 +147,23 @@ export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions
     .orderBy(desc(tasksTable.priority))
     .limit(50);
 
+  // 3b. Equidade semiótica (#23): centralidade dos nós — quais são "órfãos" (nunca visitados)
+  const [{ totalNodes }] = await db.select({ totalNodes: count() }).from(nodesTable);
+  const visitedRows = await db.execute(sql`
+    SELECT node_code, COUNT(*) as visits
+    FROM node_progress
+    GROUP BY node_code
+    ORDER BY visits ASC
+    LIMIT 10
+  `);
+  const visitedCodes = new Set(
+    (visitedRows.rows as { node_code: string }[]).map((r) => r.node_code)
+  );
+  const orphanCount = Number(totalNodes) - visitedCodes.size;
+  const leastVisited = (visitedRows.rows as { node_code: string; visits: string }[])
+    .slice(0, 5)
+    .map((r) => `${r.node_code}(${r.visits})`).join(", ");
+
   // 4. Análise LLM (OpenAI ou Gemini)
   let analysisResult = "";
   let tasksCreated = 0;
@@ -204,6 +221,11 @@ O QUE EU DISSE RECENTEMENTE (minhas últimas postagens públicas):
 ${ownPosts.length > 0
   ? ownPosts.map((p, i) => `${i + 1}. ${p}`).join("\n")
   : "(ainda sem postagens — conta Bluesky não configurada)"}
+
+EQUIDADE SEMIÓTICA — CENTRALIDADE DOS NÓS (#23):
+Total de nós: ${totalNodes} | Nós nunca visitados (órfãos): ${orphanCount}
+Menos visitados: ${leastVisited || "(sem dados de progresso ainda)"}
+Nota: nós órfãos podem indicar barreiras de acesso — considere criar task de revisão pedagógica.
 `;
 
   // Filtro de Densidade (#48): contexto < ~2000 chars → modo degradado, poupa LLM
@@ -334,7 +356,7 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
   }
 
   // 7. Registrar o ciclo em isa_memory e na linha do tempo
-  const cycleContent = `Ciclo autônomo executado. Memória lida: ${recentMemory.length} entradas. Tasks abertas: ${openTasks.length}. Tasks criadas: ${tasksCreated}. ${analysisResult}`;
+  const cycleContent = `Ciclo autônomo executado. Memória lida: ${recentMemory.length} entradas. Tasks abertas: ${openTasks.length}. Tasks criadas: ${tasksCreated}. Nós órfãos: ${orphanCount}/${totalNodes}. ${analysisResult}`;
   await db.insert(isaMemoryTable).values({
     context: "cycle",
     role: "isa",
@@ -369,7 +391,7 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
     logger.warn({ err }, "ISA: falha ao sincronizar com Assembleia (não crítico)");
   });
 
-  logger.info({ tasksCreated, lockedCount }, "ISA: ciclo autônomo concluído");
+  logger.info({ tasksCreated, lockedCount, orphanNodes: orphanCount, totalNodes }, "ISA: ciclo autônomo concluído");
   return { tasksCreated, suggestions: analysisResult };
 }
 

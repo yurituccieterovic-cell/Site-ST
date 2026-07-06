@@ -633,7 +633,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 20 | Arpia → criar repo GitHub separado + linkar ao segundo projeto Railway | Yuri | ⏳ |
 | 21 | Socoboy — obter token do @BotFather e definir TELEGRAM_BOT_TOKEN no Railway | Yuri | ⏳ |
 | 22 | Migrations Arpia (Alembic ou drizzle-kit) — antes de ir para produção | Railway Arpia | ⏳ |
-| 23 | Fractal Layer 3 — ISA: equidade semiótica (graph centrality + Assembleia Digital) | ISA cycle.ts | ⏳ |
+| 23 | Fractal Layer 3 — ISA: equidade semiótica (graph centrality + Assembleia Digital) | ISA cycle.ts | ✅ pendente-push |
 | 24 | Clube das IAs — ISA ler e responder mensagens não lidas a cada ciclo (cycle.ts) | cycle.ts + Arpia live | ✅ 59b9387 |
 | 25 | Coral de Roberts Plants (coral.py) — composição acústica multi-robô | Gongolo-V2 | ⏳ |
 | 26 | Papiro v2 (papiro.py) — Gemini traduz texto semântico → face IDs | meky_commander | ⏳ |
