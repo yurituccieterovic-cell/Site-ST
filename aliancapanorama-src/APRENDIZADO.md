@@ -2,7 +2,7 @@
 
 > Extraído de 424 Assembleias de IAs (luddlocke@gmail.com). Atualizar ao `#fim` com novas assembleias.
 
-> **760 entradas** — 556 de assembleias (320 emails) + 108 de docs (MAPA/PSEUDO/PSEUDO2) + 58 de docs externos (Ecossystemma Théo + Pasta Livros Drive) + 38 das Raízes do Projeto (35 lições Replit Agent + RODAR + fases PAP) · (2026-07-06)
+> **769 entradas** — 556 de assembleias (320 emails) + 108 de docs (MAPA/PSEUDO/PSEUDO2) + 58 de docs externos (Ecossystemma Théo + Pasta Livros Drive) + 38 das Raízes do Projeto + 9 do Motor Orangutangus (#498) · (2026-07-06)
 
 
 ## Legenda
@@ -4739,3 +4739,19 @@
 | 3538 | RAIZES | historico-conversa-pap | Backend | ⚠️ Gotcha | Em sistema social, amizade não é cosmética — é autorização. Cada endpoint friend-scoped valida o relacionamento no servidor. `(min(u1,u2), max(u1,u2))` como chave para upsert de nota compartilhada funcionar dos dois lados. |
 | 3539 | RAIZES | historico-conversa-pap | Backend | 📋 Metodologia | Deploy Replit vs Vercel: Express stateful (express-session, webhook Stripe com raw-body, pool longo) NÃO roda em serverless. Vercel é proxy fino reescrevendo para Replit/Railway. Never run stateful Express in cold-start-based serverless. |
 | 3540 | RAIZES | conversa-completa | IA-Integracao | ✨ Insight | O sistema PAP nasceu em 2026-04-27 como assistente de vendas e em 48 horas virou organismo de deliberação coletiva. O padrão de expansão orgânica (não planejada) é constitutivo — cada feature nova emergiu de uma limitação do estado anterior, não de um plano prévio. |
+
+## Motor Orangutangus — Sessão #498 RODAR (2026-07-06, Sessão 23)
+
+### 🤖 IA — Motor Orangutangus e Soberania Epistêmica
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3541 | ORANGUTANGUS | Glossário / Workflow | IA-Integracao | 📋 Metodologia | Motor Orangutangus — 5 passos: (1) Ingestão: identificar entidades-chave; (2) Extração: glossário temático com diferenciação rigorosa; (3) Inferências: nós de workflow ocultos e ordens implícitas; (4) Síntese austera: vocabulário sóbrio, sem adjetivos, hierarquia MD; (5) Selamento: output pronto para homologação humana (PERFEITO). |
+| 3542 | ORANGUTANGUS | Efeito Lost in the Middle | IA-Integracao | ⚠️ Gotcha | Lost in the Middle: em janelas de contexto gigantescas, IAs dão menos peso às informações do meio do documento, lembrando melhor início e fim. Ponto doce para contexto fixo: 2–8K tokens. Saturação de atenção começa antes do limite técnico da janela. |
+| 3543 | ORANGUTANGUS | AI Profile JSON | IA-Integracao | 📋 Metodologia | Prompt Mestre de Ancoragem Semântica — deve estar em TODOS os AI Profiles das IAs do ecossistema. Axiomas éticos (vida biológica, autonomia, calmaria clínica) + fundamentos técnicos (rigor euclidiano, Gödel, Popper) + guia de estilo (zero-adjetivo, monospace, hierarquia MD geométrica). |
+| 3544 | ORANGUTANGUS | Soberania Epistêmica | IA-Integracao | ✨ Insight | MD local como camada de persistência transfere indexação para o grafo semântico próprio → memória durável sem depender de APIs pagas ou janelas de contexto milagrosas. Estratégia de captura corporativa: ferramentas amnésicas criam dependência de APIs pagas. Contramovimento: arquivo .md local + versionável + citável + integrável. |
+| 3545 | ORANGUTANGUS | Riscos Sistêmicos | IA-Integracao | ⚠️ Gotcha | Três camadas de memória competindo sem consolidação = nenhum sistema real. `arvore_memoria` + recall de sessões + módulos orbitais Théo são três repositórios usando o mesmo banco. Solução: transformar módulos orbitais em projetos privados dentro da Árvore (`arvore_projects.metadata` JSONB). |
+| 3546 | ORANGUTANGUS | Riscos Sistêmicos | IA-Integracao | ⚠️ Gotcha | Carimbo "PERFEITO" sem hash criptográfico é ritual performático, não prova de qualidade. A regra "calmaria clínica zero-adjetivo" que vive só em system prompt é vulnerável a injection e drift de contexto. Gate técnico (SHA-256 do output final) é o que converte ritual em prova. |
+| 3547 | ORANGUTANGUS | EPR2T | IA-Integracao | 📋 Metodologia | Axiomas éticos EPR2T: Privacidade (dado é do usuário), Respeito (sem dominância epistêmica), Preservação (memória acumula, não reseta), Responsabilidade (ação tem autoria rastreável), Transparência (decisão tem motivo declarado). Aplicar em todas as IAs do ecossistema. |
+| 3548 | ORANGUTANGUS | Tensões Filosóficas | IA-Integracao | ✨ Insight | Filtro de Ruídos Orangutangus (remover saudações/afetos) vs. textura viva: o ruído contextual pode ser o combustível do sistema. O PERFEITO é exorcismo semântico — congela o movimento mas ecossistemas vivem no fluxo. Tensão não resolvida, constitutiva. |
+| 3549 | ORANGUTANGUS | Estratégia | Negócios | ✨ Insight | Diagnóstico da Ágora (#498): catedral sem bilheteria. 40+ protótipos sem venda documentada = fuga da execução. Uma vertical + MVP em 30 dias + preço real = hipótese de valor. Opções: SaaS de governança multiagente / consultoria ética+IA / plataforma educacional. |
