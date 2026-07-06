@@ -646,7 +646,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 33 | MEKY firmware — face_clear_residual(): testar na placa física após upload | hardware chegando | ⏳ |
 | 34 | Corujinha 3D — criar/exportar GLB e implementar model-viewer no frontend | Yuri (arte) | ⏳ |
 | 35 | Adicionar status_ontologico [ESPECULAÇÃO]/[PROTÓTIPO]/[PRODUÇÃO] às tasks Manga DB | Manga DB live | ⏳ |
-| 36 | MC — adicionar "mc" como AgentId na assembly.ts + MC_TOKEN + resolveAgent() | Site-ST deploy | ⏳ |
+| 36 | MC — adicionar "mc" como AgentId na assembly.ts + MC_TOKEN + resolveAgent() | Site-ST deploy | ✅ pendente-push |
 | 37 | MC — start_mc_cron(app) no create_app() de main.py — boot automático | ARPIA live | ⏳ |
 | 38 | MC — termux-agent.py: polling /root/mc-termux-inbox.json (lido=false → notificação) | hardware | ⏳ |
 | 39 | MC_TOKEN: adicionar ao env Railway (PAP API) para MC ter identidade própria na assembleia | Yuri | ⏳ |
@@ -864,8 +864,8 @@ A assembleia identificou cinco padrões estruturais que nenhum arquivo de códig
 | `/api/ai/users` sem paginação — LGPD + scraping | 🔴 Alta | ✅ Mitigado (paginação implementada) |
 | `/api/ai/*` sem rate limit — custo/ataque | 🔴 Alta | ✅ Mitigado (100 req/min/IP) |
 | `GET /healthz` retorna 200 com DB morto | 🔴 Alta | ✅ Mitigado (SELECT 1 + 503) |
-| Score farming por nós profundos sem dedup | 🟡 Média | ⏳ Pendente (UNIQUE constraint) |
-| Webhook idempotência não implementada | 🟡 Média | ⏳ Pendente |
+| Score farming por nós profundos sem dedup | 🟡 Média | ✅ GROUP BY exerciseId no score endpoint |
+| Webhook idempotência não implementada | 🟡 Média | ✅ X-Idempotency-Key com check em metadata |
 | IntroFacade 7.2s fixo sem escape manual | 🟢 Baixa | ⏳ Futuro |
 
 ### Cursos para IAs (Assembleia 365 → Sessão 7 ✅ Implementado)

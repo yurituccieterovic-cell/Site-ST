@@ -231,13 +231,15 @@ router.get("/score", async (req, res): Promise<void> => {
     return;
   }
 
+  // GROUP BY (exerciseId, nodeCode) para deduplicar: conta 1 por exercise, não por tentativa
   const attempts = await db
-    .select({ nodeCode: exerciseAttemptsTable.nodeCode })
+    .select({ nodeCode: exerciseAttemptsTable.nodeCode, exerciseId: exerciseAttemptsTable.exerciseId })
     .from(exerciseAttemptsTable)
     .where(and(
       eq(exerciseAttemptsTable.userId, userId),
       eq(exerciseAttemptsTable.correct, 1),
-    ));
+    ))
+    .groupBy(exerciseAttemptsTable.exerciseId, exerciseAttemptsTable.nodeCode);
 
   const score = attempts.reduce((sum, a) => sum + a.nodeCode.length * 10, 0);
   res.json({ score, correctAttempts: attempts.length });

@@ -255,7 +255,8 @@ export async function ensureMekyTables(): Promise<void> {
     INSERT INTO assembly_agents (id, display_name, role) VALUES
       ('arvore', 'Árvore', 'Guardiã da Assembleia de IAs — sintetiza, coordena e preserva o conhecimento coletivo da assembleia'),
       ('isa',    'ISA — Inteligência do Sistema Aliança', 'Guardiã do PAP — ciclos autônomos, criação de tasks, memória do sistema educacional'),
-      ('meky',   'MEKY — May Queen', 'Presença física — sensores, protocolos de campo, visão, sonhos e observações do mundo material')
+      ('meky',   'MEKY — May Queen', 'Presença física — sensores, protocolos de campo, visão, sonhos e observações do mundo material'),
+      ('mc',     'MC — Marta Centaurus', 'Sistema imunológico da Assembleia — detecta anomalias, coordena resposta imunológica, interface com ARPIA')
     ON CONFLICT (id) DO NOTHING;
   `);
 

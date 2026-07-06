@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { db, isaMemoryTable } from "@workspace/db";
+import { eq, sql } from "drizzle-orm";
 import { sanitizeExternalInput } from "../lib/sanitize-external";
 import { logger } from "../lib/logger";
 
@@ -17,6 +18,8 @@ router.post("/webhooks/external-voice", async (req, res): Promise<void> => {
     return;
   }
 
+  const idempotencyKey = req.headers["x-idempotency-key"] as string | undefined;
+
   const { transcript, source = "external", metadata = {} } = req.body as {
     transcript?: string;
     source?: string;
@@ -26,6 +29,20 @@ router.post("/webhooks/external-voice", async (req, res): Promise<void> => {
   if (!transcript || typeof transcript !== "string") {
     res.status(400).json({ error: "transcript obrigatório" });
     return;
+  }
+
+  // Idempotência: se X-Idempotency-Key já foi processado, responde 200 sem reinserir
+  if (idempotencyKey) {
+    const [existing] = await db
+      .select({ id: isaMemoryTable.id })
+      .from(isaMemoryTable)
+      .where(sql`metadata->>'idempotencyKey' = ${idempotencyKey}`)
+      .limit(1);
+    if (existing) {
+      logger.info({ idempotencyKey }, "external-voice: request duplicado ignorado");
+      res.json({ received: true, duplicate: true });
+      return;
+    }
   }
 
   const check = sanitizeExternalInput(transcript);
@@ -40,7 +57,7 @@ router.post("/webhooks/external-voice", async (req, res): Promise<void> => {
     role: "external",
     content: check.text,
     location: `/webhooks/external-voice`,
-    metadata: { source, ...metadata },
+    metadata: { source, ...(idempotencyKey ? { idempotencyKey } : {}), ...metadata },
   });
 
   logger.info({ source, chars: check.text.length }, "external-voice: transcript armazenado");
