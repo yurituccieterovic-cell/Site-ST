@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { exercisesTable, exerciseAttemptsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { openai } from "@workspace/integrations-openai-ai-server";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { canAccess, isInAllowedSubtree } from "../lib/canAccess";
 import { getAllNodes } from "../lib/nodeCache";
 
@@ -35,7 +36,10 @@ function checkRateLimit(
 }
 
 async function generateExercises(nodeCode: string, nodeTitle: string, nodeContent: string | null) {
-  const prompt = `Você é um professor especialista no vestibular FUVEST. Crie exatamente 3 questões de múltipla escolha sobre o tema: "${nodeTitle}".
+  const prompt = `Você é um professor especialista no vestibular FUVEST integrado ao ecossistema PAP da Sociedade Tucci.
+${PRINCIPIOS_ECOSSYSTEMMA}
+Crie exatamente 3 questões de múltipla escolha sobre o tema: "${nodeTitle}".
+Aplique o Princípio 8 (ciclo ético contínuo): as questões devem ser pedagogicamente justas e acessíveis a estudantes de diferentes contextos socioeconômicos.
 
 Contexto do tema: ${nodeContent ?? nodeTitle}
 

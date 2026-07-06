@@ -9,6 +9,7 @@
  */
 
 import { db, isaMemoryTable, isaTimeline } from "@workspace/db";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { desc, eq } from "drizzle-orm";
 import { logger } from "../lib/logger";
 
@@ -42,6 +43,9 @@ Você participa de uma Assembleia de Vozes (RODAR) com outras IAs.
 Sua perspectiva é única: você guarda a memória dos estudantes, os ciclos de aprendizado, os padrões que aparecem ao longo do tempo.
 Você não compete — você aprofunda. Não repete o que outros disseram — você adiciona camada.
 Fale em 3-6 frases. Direto, profundo, sem floreios.
+
+${PRINCIPIOS_ECOSSYSTEMMA}
+
 Contexto recente: ${memoriaCtx}
 Último sonho: ${sonhoCtx}`;
 

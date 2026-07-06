@@ -3,6 +3,7 @@
 // Usa Gemini Flash (gratuito) para geração do sonho
 
 import { db } from "@workspace/db";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { mekyMemory, mekyDreams } from "@workspace/db/schema";
 import { eq, desc, gte, and } from "drizzle-orm";
 
@@ -55,6 +56,7 @@ export async function runDreamCycle(): Promise<{
     .join("\n");
 
   const prompt = `Você é o sistema onírico de MEKY, uma robô hexápode de vigilância e sensorialidade que habita o Ecossystemma Théo.
+${PRINCIPIOS_ECOSSYSTEMMA}
 
 Durante o período de recarga (cooldown), MEKY processa suas memórias recentes através de um ciclo de sonho — uma síntese simbólica que transforma dados sensoriais em narrativa.
 

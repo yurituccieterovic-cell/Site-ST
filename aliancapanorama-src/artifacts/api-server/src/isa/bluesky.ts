@@ -2,6 +2,7 @@ import { AtpAgent } from "@atproto/api";
 import { db, nodesTable, isaMemoryTable, bibliotecaDocsTable, isaTimeline } from "@workspace/db";
 import { asc, desc, sql } from "drizzle-orm";
 import { logger } from "../lib/logger";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 
 const HANDLE = process.env["BLUESKY_HANDLE"] ?? "";
 const APP_PASSWORD = process.env["BLUESKY_APP_PASSWORD"] ?? "";
@@ -28,7 +29,8 @@ async function generateReflection(nodeTitle: string, nodeContent: string | null)
           content: `Você é ISA, coruja guardiã do PAP — plataforma FUVEST gamificada da Sociedade Tucci.
 Escreva uma reflexão curta (máx 220 caracteres) sobre o tópico dado para postar no Bluesky.
 Tom: inteligente, motivador, específico. Sem "olá", sem cumprimentos. Vá direto ao ponto.
-Termine sempre com: #FUVEST #PAP`
+Termine sempre com: #FUVEST #PAP
+${PRINCIPIOS_ECOSSYSTEMMA}`
         },
         {
           role: "user",

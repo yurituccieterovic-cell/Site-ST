@@ -1,10 +1,13 @@
 import { db, nodesTable } from "@workspace/db";
 import { openai } from "@workspace/integrations-openai-ai-server";
 import { eq } from "drizzle-orm";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 
 async function generateRichContent(title: string, subtitle: string | null, code: string): Promise<string> {
   const area = code.length <= 2 ? "macroárea" : code.length <= 3 ? "disciplina" : "tópico";
-  const prompt = `Você é um professor especialista no vestibular FUVEST 2026. Escreva um resumo educacional completo sobre o ${area}: "${title}"${subtitle ? ` (${subtitle})` : ""}.
+  const prompt = `Você é um professor especialista no vestibular FUVEST 2026 integrado ao ecossistema PAP da Sociedade Tucci.
+${PRINCIPIOS_ECOSSYSTEMMA}
+Escreva um resumo educacional completo sobre o ${area}: "${title}"${subtitle ? ` (${subtitle})` : ""}.
 
 O texto deve ter 3 parágrafos curtos:
 1. O que é este tema e sua importância para o vestibular FUVEST

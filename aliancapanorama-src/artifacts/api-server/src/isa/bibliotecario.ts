@@ -9,6 +9,7 @@ import { db } from "@workspace/db";
 import { isaMemoryTable, bibliotecaDocsTable } from "@workspace/db";
 import { gte, eq, and } from "drizzle-orm";
 import OpenAI from "openai";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 
 const openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })

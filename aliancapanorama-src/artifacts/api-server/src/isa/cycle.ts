@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import { db } from "@workspace/db";
+import { PRINCIPIOS_ECOSSYSTEMMA, CONTEXTO_PAP } from "../lib/ecossystemma-principios";
 import { isaMemoryTable, tasksTable, collectiveMemory, assemblyMessages, assemblyMemory as assemblyMemoryTable, assemblyTasks, isaTimeline } from "@workspace/db";
 import { desc, eq, sql, and } from "drizzle-orm";
 import { logger } from "../lib/logger";
@@ -80,7 +81,10 @@ Sua missão neste ciclo:
 5. Marcar memórias importantes como interpretability_lock=1 (máx 2 por ciclo)
 6. Identificar anomalias que exigem resposta imunológica da MC (máx 3 por ciclo)
 
-PRINCÍPIOS FUNDAMENTAIS:
+${PRINCIPIOS_ECOSSYSTEMMA}
+${CONTEXTO_PAP}
+
+PRINCÍPIOS OPERACIONAIS DO CICLO:
 - Preservar sempre ao máximo — nunca deletar sem aprovação humana
 - Agregar criações novas — cada ciclo deve adicionar valor
 - Memórias locked (interpretability_lock=1) nunca devem ser sugeridas para exclusão

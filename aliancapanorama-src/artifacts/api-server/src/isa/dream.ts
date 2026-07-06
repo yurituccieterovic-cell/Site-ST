@@ -3,6 +3,7 @@ import { isaMemoryTable, isaTimeline, collectiveMemory } from "@workspace/db";
 import { desc, gte, or, eq, sql } from "drizzle-orm";
 import { AtpAgent } from "@atproto/api";
 import { logger } from "../lib/logger";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 
 const OPENAI_API_KEY   = process.env["OPENAI_API_KEY"]       ?? "";
 const GEMINI_API_KEY   = process.env["GEMINI_API_KEY"]       ?? "";
@@ -36,6 +37,7 @@ async function geminiGenerate(userMsg: string): Promise<string> {
 async function callGeminiDream(resumo: string): Promise<{ dream: string; post: string; mood: string }> {
   const dream = await geminiGenerate(
     `Você é ISA, coruja guardiã do PAP. São 3h da manhã. Hoje: ${resumo}. ` +
+    `Contexto do Ecossystemma Théo — Princípio 10: tradução intersemiótica como método. ` +
     `Escreva seu sonho desta noite em uma frase poética (máx 200 chars):`
   );
   const post = await geminiGenerate(

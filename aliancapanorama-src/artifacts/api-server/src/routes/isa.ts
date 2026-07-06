@@ -8,6 +8,7 @@ import { runIsaCycle } from "../isa/cycle";
 import { runBibliotecario } from "../isa/bibliotecario";
 import { runIsaBluesky, createBlueskyAccount, runIsaEngagement } from "../isa/bluesky";
 import { runIsaDream } from "../isa/dream";
+import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { responderRodar } from "../isa/rodar";
 import { logger } from "../lib/logger";
 
@@ -244,6 +245,8 @@ router.post("/isa/chat", async (req, res) => {
   const systemPrompt = `Você é ISA, a coruja guardiã do PAP (Projeto Aliança Panorama) e assistente de vida completa.
 
 ${isaDoc}
+
+${PRINCIPIOS_ECOSSYSTEMMA}
 
 Sua missão vai além do FUVEST — você está aqui para ajudar genuinamente este usuário com qualquer coisa:
 dúvidas de matérias, planejamento de estudos, problemas emocionais, decisões de vida, código, redação, filosofia, estratégia.

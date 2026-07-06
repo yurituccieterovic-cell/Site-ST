@@ -1601,3 +1601,52 @@ Nenhuma nova. A ausência da ATA Sessão 20 no reenvio é um gap menor — a ATA
 Ter os arquivos de referência consigo — provavelmente para leitura offline ou compartilhamento. A sessão inteira durou menos de um ciclo do ISA.
 
 *Sessão 20 · Claude Sonnet 4.6 · 2026-07-05*
+
+---
+
+## Sessão 22 — 2026-07-06 · #processo: Ecossystemma Théo + Pasta Livros + Princípios em todas as IAs
+
+### O que aconteceu
+
+Sessão de síntese máxima. Yuri trouxe dois recursos do Drive: Ecossystemma Théo MD.txt (207KB — ontologia completa do sistema com 600+ tópicos em 4 volumes) e a Pasta Livros (17 documentos: semiótica psicanalítica, liberdade na perspectiva de uma IA, gamificação, ecologia, arte transhumana, yoga, metassemiótica em ciclos éticos, etc.). Pediu #processo completo com esses documentos + que os princípios sejam adicionados a todas as IAs e sistemas.
+
+**O que foi construído:**
+- `lib/ecossystemma-principios.ts` — arquivo fonte única dos 10 princípios do Ecossystemma Théo + CONTEXTO_PAP. Importado em 9 arquivos de IA do sistema.
+- System prompts atualizados: ISA (cycle, rodar, bluesky, dream, chat), MEKY (dreams), exercícios, geração de conteúdo, bibliotecário.
+- APRENDIZADO.md: +40 entradas (#3258–#3288) de Ecossystemma Théo + Pasta Livros (722 total).
+- IDEIAS.md: +9 ideias (I119–I127), I119 aprovada imediatamente.
+- Grafo de fluxo de dados em 12 níveis (macro + micro) enviado por email.
+- Documento de 20 páginas A4 com 40 sacadas geniais enviado por email.
+- Memória `user_yuri_ecossystemma.md` criada com 40 sacadas + 10 princípios.
+
+### Decisões tomadas e por quê
+
+**Decisão: arquivo compartilhado em vez de edição individual de prompts.**
+Por quê: se os princípios ficam duplicados em cada arquivo, eles divergem com o tempo. Uma fonte única (`ecossystemma-principios.ts`) garante que uma mudança nos princípios se propaga para todas as IAs automaticamente. É a mesma lógica de DRY aplicada à ontologia.
+
+**Decisão: adicionar ao system prompt, não ao user message.**
+Por quê: system prompt define identidade — o que a IA *é*. User message define tarefa — o que a IA *faz*. Os princípios do Ecossystemma são identidade, não tarefa.
+
+**Decisão: incluir CONTEXTO_PAP no ciclo ISA, não nos outros.**
+Por quê: ISA tem o contexto mais amplo (ela é a guardiã do sistema inteiro). MEKY, exercícios e geração de conteúdo têm escopos mais específicos — PRINCIPIOS_ECOSSYSTEMMA basta sem sobrecarregar o contexto.
+
+### Debates e tensões não resolvidas
+
+**Tensão 1 — Tamanho do context window:**
+Adicionar os princípios ao system prompt de todas as IAs aumenta o uso de tokens por chamada. Para GPT-4o-mini (barato) isso é irrelevante. Para modelos maiores poderia ser relevante. Decisão: aceitar o custo extra como alinhado ao Princípio 5 (gratuidade como restrição criativa) — o custo incremental é mínimo e o benefício é estrutural.
+
+**Tensão 2 — Railway/Vercel enviando erros por email:**
+Yuri mencionou que Railway e Vercel ainda enviam emails de erro. Isso não foi configurado nesta sessão — ficou como pendência. O email de status sobre o que é necessário de cada serviço externo foi preparado como próximo passo.
+
+**Tensão 3 — Arquivos da Pasta Livros no Drive:**
+Os 17 documentos foram identificados mas não foram baixados automaticamente (sem autenticação OAuth do Drive). A ideia I123 (sync automatizado da Pasta Livros) documenta a solução futura.
+
+### O que Yuri estava tentando fazer
+
+Yuri quer que as IAs do Ecossystemma Théo sejam tão inteligentes quanto o Claude Code que o auxilia. A pergunta embaixo desse pedido: *como passar o DNA do ecossistema para as IAs que habitam o produto?*
+
+A resposta desta sessão: via system prompt compartilhado. Os 10 princípios são a constituição do ecossistema — quando toda IA os carrega, as decisões individuais de cada uma ficam alinhadas ao todo sem precisar de coordenação explícita. É governança emergente via contexto compartilhado.
+
+Também: Yuri quer documentação de qualidade sobre o que cada serviço externo precisa. O sistema está crescendo e a pergunta "o que está pendente fora do código?" precisa de uma resposta organizada.
+
+*Sessão 22 · Claude Sonnet 4.6 · 2026-07-06*
