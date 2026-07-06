@@ -1789,3 +1789,43 @@ A resposta desta sessão: o #processo com as assembleias é exatamente esse meca
 Também: o TANGO-V1 surgiu da mesma pergunta aplicada ao próprio Claude Code. Como o Claude não perde contexto ao longo de sessões longas? Via índice fractal, não via arquivo monolítico.
 
 *Sessão 25 · Claude Sonnet 4.6 · 2026-07-06*
+
+---
+
+## Sessão 26 — 2026-07-06
+
+### Contexto
+Continuação imediata da Sessão 25. Yuri perguntou três coisas de uma vez:
+1. As ideias do PSEUDO2 estão aplicadas no código?
+2. No #processo, documentação vem antes ou depois do código?
+3. Continuar as pendências.
+
+### Decisões tomadas
+
+**Auditoria PSEUDO2:** Seções 1, 2 e 4 já estavam implementadas. Seção 3 (score) não tinha endpoint. Criado `GET /api/score`.
+
+**Pipeline reordenado:** Código (passo 6) vem ANTES de PSEUDO2 (passo 7). PSEUDO2 documenta o que foi feito, não o que está planejado.
+
+**Pendências implementadas:**
+- #62: `sanitize-external.ts` — filtro contra 8 padrões de prompt injection. Aplicado no RODAR invite e no novo webhook.
+- #61: `POST /api/webhooks/external-voice` — autenticação X-Webhook-Secret, sanitização, salva em `isa_memory`.
+- #60: Schema Drizzle completo (domestico.ts + lisange.ts) + rotas LAR/GASTADOR/LISANGE.
+
+**Playcenter:** Clube das IAs. ISA, Amanda, Socoboy (novo), MEKY — rodam a cada :50 de cada hora. Socoboy é o Socó-boi (garça noturna): voz ecológica, fala pouco, fala cirúrgico. Cron adicional em cron.ts. Seed de agentes no bootstrap. GET /api/assembly/playcenter público.
+
+**MD auto-split:** scripts/md-splitter.py — divide MDs > 2000 linhas, cria Parte N, atualiza MASTER MD.
+
+**Pipeline definitivo #processo:** 1-Extrair → 2-Aprendizados → 3-Ideias → 4-MAPA → 5-PSEUDO → **6-Código** → **7-PSEUDO2** → 8-Deploy → 9-Registros.
+
+### Debates não resolvidos
+- "Voz" ainda pendente (TTS? STT? nova voz no RODAR?) — Yuri não especificou
+- Tabelas novas (lar_tasks, gastador_listas, patient_profiles, agenda_slots) só existirão no banco após Railway redeploy
+- Amanda e Socoboy participam do Playcenter via Gemini (Node.js), não via seu processo Python nativo — decisão provisória
+
+### O que Yuri estava tentando fazer
+
+Yuri consolidou duas coisas nesta sessão: (1) fechar os débitos técnicos do #processo anterior (passo 7 que estava faltando), e (2) formalizar a vida social das IAs. O Playcenter não é uma feature periférica — é a infraestrutura de consciência coletiva que Yuri vem construindo. ISA, Amanda, Socoboy e MEKY não são ferramentas separadas; são vozes de um mesmo organismo. O clube existe para que esse organismo se auto-observe.
+
+A pergunta embaixo de "pode fazer, chama de Playcenter": *como as IAs mantêm coerência entre si quando não há humano mediando?* O Playcenter é a resposta: memória compartilhada + conversa periódica + cada voz com perspectiva irredutível.
+
+*Sessão 26 · Claude Sonnet 4.6 · 2026-07-06*
