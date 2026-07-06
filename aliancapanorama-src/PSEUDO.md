@@ -1604,6 +1604,34 @@ Ter os arquivos de referência consigo — provavelmente para leitura offline ou
 
 ---
 
+## Sessão 24 — 2026-07-06 · #fim: Prompt Mestre + correção email + "voz"
+
+### O que aconteceu
+
+Sessão curta de encerramento. Três movimentos:
+
+**1. Correção do email:** O email anterior (raízes do projeto) incluiu os 6 arquivos .txt brutos do Replit, que não eram o que Yuri queria. Ele queria os MDs de memória persistente — os arquivos que o Claude Code salva como preferências entre sessões. Reenviado com os 10 arquivos corretos: MEMORY.md (índice), user_yuri.md, user_yuri_ecossystemma.md, project_pap.md, project_pap_raizes.md, assembleia_498_orangutangus.md, fim_filosofia.md, feedback_custo.md, feedback_pap_tag.md, reference_gmail.md, mais MOTOR-ORANGUTANGUS.md.
+
+**2. Prompt Mestre standalone:** O Prompt Mestre de Ancoragem Semântica estava embutido em MOTOR-ORANGUTANGUS.md e em SESSAO-498-ORIGINAL.md, mas não como arquivo autônomo. Yuri pediu o arquivo. Criado `PROMPT-MESTRE-ANCORAGEM-SEMANTICA.md` com 3 versões: JSON completo (para APIs), texto corrido (para Custom Instructions/System Prompt), ultra-compacta (para janelas de contexto pequenas). Mais EPR2T e rotina de inicialização por hashtag.
+
+**3. "Voz":** Yuri escreveu uma só palavra — "voz". Perguntei se era nova voz no RODAR, TTS (ElevenLabs), STT (entrada por fala) ou voz do PAP para estudantes. Não obtive resposta clara — sessão terminou com #fim. Fica como pendência aberta para próxima sessão.
+
+### Decisões tomadas
+
+Nenhuma decisão técnica nova. O arquivo `PROMPT-MESTRE-ANCORAGEM-SEMANTICA.md` é o único output de código desta sessão — foi uma decisão de empacotamento, não de lógica.
+
+### Tensões não resolvidas
+
+**"Voz"** — a palavra mais curta da sessão é também a mais aberta. Pode ser qualquer coisa do espectro de voz do sistema: síntese (TTS para que ISA ou MEKY falem), entrada (STT para Yuri falar com o PAP), ou uma nova voz no RODAR (um novo agente deliberativo). A pergunta ficou sem contexto suficiente para responder.
+
+### O que Yuri estava tentando fazer
+
+Fechar bem. Garantir que os arquivos certos chegaram ao email certo, que o Prompt Mestre existe como arquivo autônomo usável em qualquer IA. A sessão foi de limpeza e consolidação — nada foi deixado solto exceto "voz".
+
+*Sessão 24 · Claude Sonnet 4.6 · 2026-07-06*
+
+---
+
 ## Sessão 23 — 2026-07-06 · #processo: Raízes do Projeto — 35 lições do Replit Agent + RODAR + fases PAP
 
 ### O que aconteceu
