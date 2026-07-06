@@ -615,7 +615,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 2 | Fornecer REPLIT_TOKEN (API key de replit.com/account) para ativar MCP Replit e Árvore | Yuri | ⏳ |
 | 3 | Confirmar Vercel build funcionando: testar /eco, /adm, /toyota, /api proxy | push 38a58b1 | ⏳ |
 | 4 | Configurar DNS `pap.sociedadetucci.com.br` → Railway | Railway no ar | ⏳ |
-| 5 | Drizzle-kit migrate: substituir push por migrações versionadas antes de módulo financeiro | — | ⏳ |
+| 5 | Drizzle-kit migrate: substituir push por migrações versionadas antes de módulo financeiro | — | ✅ pendente-push |
 | 6 | TOTP 2FA (I53) — antes de lançar módulo cripto/financeiro | — | ⏳ |
 | 7 | pgvector (I52) — busca semântica substituindo ILIKE | — | ⏳ |
 | 8 | Rate limiting exercises.ts: persistir no DB (atual Map em memória, perde no restart) | — | ✅ 59b9387 |
@@ -663,7 +663,7 @@ pnpm --filter @workspace/api-server run generate-content    # conteúdo AI dos n
 | 63 | Assembleias #503–#515 + documento_mestre_ecossistema_tel.pdf: baixar quando Drive liberar rate limit | Drive rate limit | ⏳ |
 | 64 | Auditoria independente do EcossystemmaTheo (Juiz/Sessão#499): definir protocolo de revisão periódica | — | ⏳ |
 | 47 | Gate [SIMBÓLICO] no CI: script pré-commit que bloqueia .cpp/.py no repo TypeScript (I97) | — | ✅ 59b9387 |
-| 48 | I98 — Filtro de Densidade pré-assembleia em cycle.ts: < 500 tokens = mode "degraded" | cycle.ts | ⏳ |
+| 48 | I98 — Filtro de Densidade pré-assembleia em cycle.ts: < 500 tokens = mode "degraded" | cycle.ts | ✅ pendente-push |
 | 49 | I99 — Protocolo de Recovery MC: heartbeat check 2 ciclos sem resposta → alerta ISA | cycle.ts + ARPIA live | ⏳ |
 | 50 | I100 — Protocolo de Saúde do Fundador em cycle.ts: 3 métricas → email de alerta | cycle.ts | ✅ 59b9387 |
 | 51 | Sistema de Verificação 3 Camadas (I93): validation_chain em assembly_tasks | ARPIA live | ⏳ |

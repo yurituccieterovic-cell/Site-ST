@@ -206,7 +206,12 @@ ${ownPosts.length > 0
   : "(ainda sem postagens — conta Bluesky não configurada)"}
 `;
 
-  if (OPENAI_API_KEY) {
+  // Filtro de Densidade (#48): contexto < ~2000 chars → modo degradado, poupa LLM
+  const contextDensity = userContent.replace(/\s+/g, " ").trim().length;
+  if (contextDensity < 2000) {
+    logger.info({ contextDensity }, "ISA: contexto insuficiente — modo degradado, LLM ignorado");
+    analysisResult = `Ciclo degradado — contexto esparso (${contextDensity} chars). Memórias: ${recentMemory.length}, tasks: ${openTasks.length}.`;
+  } else if (OPENAI_API_KEY) {
     try {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
