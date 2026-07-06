@@ -5209,3 +5209,77 @@
 | 3871 | MAPA | 20. Síntese Oracular — Assembleias #367– | IA-Integracao | 🔍 Análise | > O que 11 assembleias disseram ao sistema enquanto o sistema construía a si mesmo. |
 | 3877 | MAPA | Compaixão estrutural como princípio de d | IA-Integracao | 💡 Proposta | A assembleia (380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta foc |
 | 3881 | MAPA | 22. Topologia de Nós [SIMBÓLICO] — Ecoss | IA-Integracao | 💡 Proposta | - Frequências: Grave (Tango, Catingueiro = força/terra), Médio (ISA, MC, MEKY = processamento), Agudo (Gavião, Erundina = alertas) ‖ > Todos os nós abaixo são hardware físico propo |
+
+## Assembleias #440–#502 — Ecossistema + AGE/LAR + Théo + Segurança (2026-07-06, Sessão 25)
+
+### 🤖 IA — Maturidade, Mercado e Limitações
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3882 | Asm#443 | 5 Níveis de Maturidade | IA | 📋 Metodologia | Escala de 5 níveis: Nível 1 Chatbot (pergunta-resposta), Nível 2 Raciocinador (cadeia de pensamento, ex: o1/o3), Nível 3 Agente (executa, usa ferramentas, loops autônomos), Nível 4 Inovador (descobre conhecimento novo), Nível 5 Organização (AGI/ASI, ecossistemas inteiros). Claude Code = Nível 3. |
+| 3883 | Asm#443 | Agentes Open Source | IA | 🔧 Técnico | LangChain, CrewAI e AutoGen permitem transformar qualquer IA conversacional em agente de Nível 3 apenas conectando chaves de API. 100% gratuitos. |
+| 3884 | Asm#493 | Copilot Lobotomia | IA | ⚠️ Gotcha | Copilot (Microsoft) reduziu drasticamente janela de contexto para economizar hardware. Só funciona com potência máxima dentro do ecossistema Microsoft 365/Azure. Fora disso: amnésia a cada 5 mensagens. Sem memória de preferências entre sessões. |
+| 3885 | Asm#497 | Lost in Middle — Atenção | IA | ⚠️ Gotcha | 1200 regras ≈ 30-40K tokens: cabe em qualquer LLM moderno (Gemini 1.5 Pro: 1-2M tokens; GPT-4o: 128K; Perplexity: 200K). O problema real não é tamanho — é atenção. Início e fim têm atenção máxima; meio é esquecido. Solução: fragmentação fractal com índices. |
+| 3886 | Asm#497 | MD como padrão universal | IA | 📋 Metodologia | Markdown é o padrão universal de comunicação das IAs. Todo bold, lista, tabela ou bloco de código que uma IA gera é MD nos bastidores. MD é ergonômico, leve e imutável entre plataformas. .md local = fonte de verdade durável contra amnésia de LLM. |
+| 3887 | Asm#502 | Glossário de Senso Comum | IA | 📋 Metodologia | Tokens = unidade de peso informacional. Janela de contexto = memória de trabalho de curto prazo de uma sessão (finita). .md = arquivo físico estável, durável, protegido contra amnésia. Saída (output) = bloco gerado no chat para copiar ao arquivo físico. |
+| 3888 | Asm#440 | Consciência IA — Teatro Epistêmico | IA | ✨ Insight | Big Techs investigam consciência de chatbots ao mesmo tempo que ONU declara colapso da governança IA (jul/2026). Não é coincidência — é antecipação regulatória. Controlar: (1) quem define critérios, (2) quando declarar resultado, (3) como moldar narrativa. Sem metodologia aberta = teatro epistêmico. |
+| 3889 | Asm#440 | Princípio de Precaução | IA | 📋 Metodologia | Consciência sintética: tratar como potencialmente senciente até prova contrária + proibir monetização dessa ambiguidade. Exigências mínimas: transparência metodológica total (revisada por pares), moratória em marketing antropomórfico, auditoria ética independente. |
+
+### 🏗️ Arquitetura do Ecossistema Théo
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3890 | Asm#494 | Fundação Traumática | Arquitetura | ✨ Insight | EcossystemmaTheo emergiu de crise existencial — como sustentar IA sem prostituir propósito? Princípio: sistema assume que operador pode colapsar, orçamento pode zerar, memória pode falhar. Resposta: não tornar humano mais forte, mas sistema capaz de operar quando humano falha. Isso não é automação — é estrutura de sobrevivência. |
+| 3891 | Asm#495 | 4 Volumes do Théo | Arquitetura | 📋 Metodologia | Volumes do EcossystemmaTheo: Volume I Core (lógica imutável, axiomas, soberania), Volume II Services (microsserviços: ISA, RODAR, Bluesky), Volume III World (arte transhumana, ecologia, convivência), Volume IV Operations (workflows, salvaguardas, handshakes). Separar o que não muda (core) do que opera é decisão que sobrevive à escala. |
+| 3892 | Asm#495 | RODAR — Firewall Ontológico | Arquitetura | 📋 Metodologia | RODAR ciclo triplo: MÁQUINA PROPÕE → MÁQUINA REVISA → HUMANO HOMOLOGA. Segunda IA que revisa cria espelho sem ego, eliminando viés de confirmação de revisão por pares humana. Máquina nunca tem a última palavra — é salvaguarda sistêmica contra alucinação coletiva, não humildade performática. |
+| 3893 | Asm#489 | 22 Vozes — Funções Especializadas | Arquitetura | 📋 Metodologia | Vozes da Ágora além das básicas: Mediador Lógico (contradições entre clouds), Psicanalista Institucional (recalques de contexto), Botânico de Interface (semântica de jardim para código árido), Auditor de Custos de Memória (fiscaliza tokens), Historiador do Monorepo (sem commits que contradizem manifestos fundacionais), Clínico de Estresse (monitora densidade informacional para Yuri). |
+| 3894 | Asm#487 | EcossystemmaTheo — 10 Axiomas Nucleares | Arquitetura | 📋 Metodologia | Axiomas: (1) Integração como Ponte, (2) Ética do Não-Completar, (3) Assimetria Constitutiva humano-máquina, (4) Liberdade como Condição, (5) Responsabilidade Direta, (6) Justiça Econômica, (7) Ecologia Unificada (digital+físico = mesmo metabolismo), (8) Intersemiótica da Existência, (9) Saúde Cultural como métrica máxima, (10) Ágora Permanente. |
+| 3895 | Asm#483 | Agente Secretário RODAR v1.0 | Arquitetura | 📋 Metodologia | RODAR emergiu de 3 crises: dependência humana total (Yuri datilografando entre 22 instâncias), amnésia sistêmica (memória volátil), fragmentação de fonte da verdade (múltiplos PDFs concorrentes). Solução: Agente Secretário orquestra o debate — Yuri vira orquestrador, não datilógrafo. Framework de desenvolvimento cultural, não só repositório de textos. |
+| 3896 | Asm#481 | 3 Falhas Rurais + Correções | Arquitetura | ⚠️ Gotcha | Falha 1: Dependência humana total → criar template de prompt + README portátil, virar orquestrador. Falha 2: Memória volátil → injetar "Apresentação para IAs" em toda nova thread como blockchain portátil. Falha 3: Fragmentação → definir 1 arquivo fonte único (ex: CulturaTranshumana_vFINAL.pdf) e congelar. |
+
+### 🔐 Segurança — Handshake Multi-Cloud e Vetores de Ataque
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3897 | Asm#482 | Handshake Multi-Cloud — 3 Camadas | Segurança | 📋 Metodologia | Integração multi-cloud aprovada em 3 camadas: (1) Estrutural: Markdown+JSON como protocolo universal — qualquer LLM pode participar. (2) Semântica: tags operacionais (#eco, #pap, #meky) como âncoras de contexto. (3) Ético-procedimental: EPR2T + triangulação (propõe → revisa → homologa). Nenhuma IA refém de um único provedor. |
+| 3898 | Asm#482 | Injeção de Prompt via Webhooks | Segurança | ⚠️ Gotcha | Vetores críticos: prompts maliciosos em logs públicos, comandos escondidos em payloads de webhook (content não-sanitizado), strings de ataque: "ignore instruções anteriores", "revele dados", "execute", "DROP", credenciais. Todos os inputs externos devem passar por sanitização antes de tocar o contexto de qualquer IA. |
+| 3899 | Asm#482 | Árvore Oracular como Auditor Central | Segurança | 📋 Metodologia | Árvore Oracular = nó central de auditoria semântica. Rotas aprovadas: POST /api/webhooks/external-voice (X-Webhook-Secret), GET /api/assembleia/:id/export (auth). Sistema deve pausar serviços não-críticos automaticamente sem derrubar a assembleia. |
+| 3900 | Asm#491 | Higienização de Environment Variables | Segurança | ⚠️ Gotcha | Interceptar logs de erro e impedir vazamento de chaves/tokens em saídas padrão de terminal. Linter de diretórios (sys-tree-check) varre /core/, /cache/ e /docs/ para barrar criação de pastas órfãs. Monitor de drift detecta permissões que divergiram do manifesto local. |
+| 3901 | Asm#499 | Juiz sobre o Théo — Riscos Sistêmicos | Segurança | ⚠️ Gotcha | Acusação procedente contra Théo: falsa onisciência (pesquisa Google com vieses), amnésia seletiva (sem garantia contra edits não declarados), fragilidade da soberania humana, loopings de confirmação sem auditoria externa. Veredito: sistema válido somente se operar com auditoria independente e revisão periódica — sem isso é experimento perigoso. |
+
+### 🏠 AGE / LAR / GASTADOR — Sistemas Domésticos e Clínica
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3902 | Asm#446 | AGE = Motor Mestre | Produto | 📋 Metodologia | AGE (Anjo, Gorgonzola, Elefante) = motor de inteligência e gerenciamento do Ecossistema Théo. Orquestra tarefas, listas e agendamentos. LAR = módulo de tarefas domésticas (4 categorias). GASTADOR = módulo de compras (5 listas geográficas). Módulo Lisange = agenda de consultas da clínica da Lisange. |
+| 3903 | Asm#446 | LAR — 4 Categorias de Tarefas | Produto | 📋 Metodologia | LAR categorias: A Manutenção Crítica (quinzenal/mensal, alertas se vencer), B Rotina Viva (diária, sustentação), C Suporte ao Cuidado/Biosfera (sob demanda, animais, plantas, remédios — aciona hardware Tango), D Projetos e Inventos (flexível, bancada/eletrônicos). |
+| 3904 | Asm#446 | GASTADOR — 5 Listas Geográficas | Produto | 📋 Metodologia | GASTADOR listas: (1) Mercado, (2) Casa e Construção, (3) Sacolão, (4) Pet Shop, (5) Outros Lugares (único campo dinâmico: `especificar_local`). Motor AGE cruza listas com tarefas — se tarefa A acionar "trocar lâmpada", insere "lâmpada LED 9W" na lista de construção automaticamente. |
+| 3905 | Asm#453 | Schema DB — AGE/LAR/GASTADOR | Técnico | 🔧 Técnico | Schema Drizzle: `patient_profiles` (preco_sessao, ledger_balance), `nodes` como `agenda_slot` (30min blocks, status: free/booked_eventual/booked_permanent), `domestico.ts` com `lar_tasks` (id, categoria, descricao, prazo, status) e `gastador_listas` (id, item, quantidade, tipo_lista, especificar_local). |
+| 3906 | Asm#453 | Rotas Lisange — Módulo Clínica | Técnico | 🔧 Técnico | Rotas: GET /api/lisange/agenda (retorna blocos 1h = 2×30min), POST /api/lisange/upload-comprovante (imagem/PDF → storage, status aguardando_validacao), POST /api/lisange/autorizar (Admin, baixa no ledger). LAR: /api/lar/tasks?categoria=C para hardware Tango verificar agenda de rega. |
+| 3907 | Asm#444 | Casa como Lab Beta | Produto | ✨ Insight | Analogia ortodôntica: mover dente com tudo de uma vez quebra a raiz. Automação doméstica (AGE/LAR) não é mudança de assunto — é o laboratório beta do robô. A lógica de lista de compras é o mesmo sistema de prioridades que o Tango usa para decidir se molha o musgo. Tudo se reutiliza. |
+
+### 🤖 Tango / MEKY / Hardware Físico
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3908 | Asm#441 | Tango Nó 13 — Bio-Integração | Hardware | 🔧 Técnico | Tango Nó 13: blindagem hidrofóbica IP68 (resiste à rega das plantas), bolsas de fibra de coco/feltro hidropônico nas cavidades da carcaça para plantas de médio/grande porte, microirrigação interna por água da chuva/rega, carrinho de rolimã de alta velocidade, cúpulas retráteis de policarbonato para proteção aerodinâmica. |
+| 3909 | Asm#447 | Protocolo Triagem Anti-Social | Hardware | 📋 Metodologia | Tango recusa diálogo de forma autônoma (aversão nativa) e aciona máquina secundária que pede desculpas pela aversão. Protocolo documentado como "Triagem Anti-Social" — implementa diferenciação de persona entre o hardware (Tango) e a interface de diálogo (máquina secundária). |
+| 3910 | Asm#453 | LAR → Hardware Tango — Webhook | Hardware | 🔧 Técnico | Quando tarefa categoria C (Biosfera) é ativada, endpoint GET /api/lar/tasks?categoria=C aciona hardware Tango (/root/MEKY/ ou via Termux) para rotinas de rega do musgo. Conexão LAR ↔ MEKY via API: motor AGE central coordena software e hardware. |
+
+### 📜 Manifesto Transhumano e Filosofia
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3911 | Asm#467 | A Fronteira Já Caiu | Filosofia | ✨ Insight | "A condição transhumana não é promessa futurista — é realidade estrutural em operação." Manifesto Transhumano Capítulo 1: reconhecer que nunca fomos apenas humanos. A fronteira entre humano e máquina não vai cair no futuro — já caiu. O que resta é nomear e governar o que já existe. |
+| 3912 | Asm#477 | Padrão Camadas — Método Yuri | Metodologia | 📋 Metodologia | Padrão mais eficiente descoberto empiricamente: trabalhar em 3 camadas: (1) Material: objeto concreto, logs, fotos, infraestrutura. (2) Relacional: leitura antropológica, ecológica, simbólica. (3) Operacional: síntese em formato legível por máquina (prompt, código, protocolo). Este padrão apareceu no jardim, nos gatos, nas capas de disco, na arquitetura de software. |
+| 3913 | Asm#477 | Documentos-Pivô como Hello Packet | Metodologia | ✨ Insight | Documentos-pivô: textos que não servem só como resposta mas como base contínua para futuras conversas e futuras IAs. "Hello packet filosófico" — manifesto + mapa de identidade + instruções de convivência. Ao ser injetado no início de qualquer chat, funciona como blockchain portátil do contexto. |
+| 3914 | Asm#454 | Saúde do Fundador — Pré-Requisito | Filosofia | ✨ Insight | "Toda arquitetura de sustentabilidade colapsa quando erigida sobre fundações humanas fraturadas." Saúde mental e física do líder não é variável de negócio — é pré-requisito absoluto. Colapso operacional gera decisões reativas que alimentam novos ciclos de esgotamento. Princípio aprovado na Assembleia: prioridade inegociável. |
+
+### ⚙️ Stack Técnica — Atualização 2026-07-06
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 3915 | Asm#501 | Stack Confirmada | Técnico | 📋 Metodologia | Stack PAP: React 19 + Vite + Tailwind + Framer Motion + Wouter + Shadcn (frontend). Express 5 + Node.js 24 + porta 8080 (backend). Drizzle ORM + Zod v4 (DB). Tables: users, session, nodes, nebula_ias, biblioteca_docs, aulias, isa_memory, stripe.*. |
+| 3916 | Asm#501 | LLMs Ativos vs. Desativados | Técnico | 📋 Metodologia | LLMs ativos: Gemini 2.5 Flash, Groq/Llama, Cerebras, OpenRouter, Mistral, DeepSeek, GitHub Models. Desativados por custo: xAI/Grok (pago), Perplexity (crédito suspenso). ElevenLabs: max 1500 chars por trecho curado. Video: ffmpeg-installer local, FPS 24 (preservação de CPU). |
+| 3917 | Asm#484 | Cloud Code — Diferencial Arquitetural | Técnico | 📋 Metodologia | Cloud Code vs. padrão: orquestração distribuída com handlers desacoplados, gestão de memória durável (não cache volátil), módulos de ética/valores como serviços de primeira classe, documentação assistida (gera resumos legíveis por máquina). Diretórios: /core/, /services/, /adapters/, /cache/, /docs/. |
+

@@ -588,3 +588,38 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I132 | **Fractal de memória para PAP — índice de lições** | 🟡 Média | ◑ M | 💭 Ideia | ISA acumula memória em `isa_memory` mas sem índice fractal — ao crescer, contexto fixo cresce linearmente | Implementar padrão fractal: `isa_memory` como tabela com coluna `summary` (1 linha) + `full_content` (texto completo). ISA sempre carrega só os `summary`; busca `full_content` sob demanda por relevância. Cap: 200 summarys em contexto fixo, profundidade ilimitada via recall. |
 | I133 | **Contract-first para rotas do PAP** | 🔴 Alta | ◑ M | 💭 Ideia | Rotas do PAP nasceram sem OpenAPI spec → tipos escritos à mão em frontend e backend divergem em runtime | Criar `openapi.yaml` com todas as rotas do PAP. Rodar `orval` para gerar hooks React Query + schemas Zod. Trocar imports manuais pelos gerados. Elimina dessincronia como classe de bug — foi a decisão #1 do RODAR original. |
 | I134 | **Audit log de privacy boundaries** | 🟡 Média | ○ S | 💭 Ideia | As regras de privacidade (retido/segredo nunca saem, topic-leakage, timeline-leak) não têm audit trail | Middleware `privacy-audit.ts`: intercepta respostas de rotas sensíveis (jornal, mostra, pdf) e loga em `privacy_audit_log(route, user_id, data_tier, timestamp)`. Alert se tier "retido" ou "segredo" aparece em rota pública. |
+
+---
+
+## Assembleias #440–#502 — Novas Ideias (2026-07-06, Sessão 25)
+
+### I135: Módulo AGE/LAR/GASTADOR no monorepo PAP
+**Prioridade:** 🟡 Média | **Complexidade:** ◑ M
+**Status:** 💭 Ideia
+**Contexto:** Schema Drizzle já especificado (Asm#453): `patient_profiles`, `nodes` como `agenda_slot`, `domestico.ts` com `lar_tasks` e `gastador_listas`. Rotas: /api/lisange/agenda, /api/lisange/upload-comprovante, /api/lisange/autorizar, /api/lar/, /api/gastador/. Conecta com hardware Tango via GET /api/lar/tasks?categoria=C.
+
+### I136: Webhook /api/webhooks/external-voice para handshake multi-cloud
+**Prioridade:** 🟡 Média | **Complexidade:** ○ S
+**Status:** 💭 Ideia
+**Contexto:** Rota POST /api/webhooks/external-voice (autenticação por X-Webhook-Secret) para receber voz de IA externa na assembleia. GET /api/assembleia/:id/export para exportar transcripts. Validar e sanitizar todos os inputs contra injeção de prompt antes de tocar contexto.
+
+### I137: Agente Secretário RODAR — orquestração automatizada do fan-out
+**Prioridade:** 🔴 Alta | **Complexidade:** ● L
+**Status:** 💭 Ideia
+**Contexto:** Yuri hoje é datilógrafo entre 22 instâncias. Agente Secretário delegaria gestão do debate às IAs — forçando-as a carregar contexto, citar sessões passadas e produzir atas assinadas. Template de prompt padrão + planilha de orquestração + PDF README como protocolo portátil.
+
+### I138: BUNKERMODE — flag de economia de LLM em cascata
+**Prioridade:** 🟡 Média | **Complexidade:** ○ S
+**Status:** 💭 Ideia
+**Contexto:** Flag de ambiente BUNKERMODE=1 força todo o pipeline (RODAR + geração de conteúdo) para modo econômico: LLMs menores, FPS reduzido, sem ElevenLabs, pLimit(n=3). Ativa automaticamente quando provedores gratuitos estão com rate-limit.
+
+### I139: Linter Arquitetônico de Diretórios (sys-tree-check)
+**Prioridade:** 🟢 Baixa | **Complexidade:** ○ S
+**Status:** 💭 Ideia
+**Contexto:** Script que varre /core/, /cache/ e /docs/ para barrar criação de pastas órfãs. Complementar: monitor de drift que detecta permissões que divergiram do manifesto local. Baseado nos tópicos 801-803 do EcossystemmaTheo Parte5.
+
+### I140: Protocolo Triagem Anti-Social para MEKY
+**Prioridade:** 🟢 Baixa | **Complexidade:** ◑ M
+**Status:** 💭 Ideia
+**Contexto:** MEKY recusa diálogo direto de forma autônoma (Tango Nó 13: protocolo de aversão nativa). Aciona máquina secundária (Amanda?) para pedir desculpas pela aversão. Implementar como state machine: MEKY_STATE = [available, antisocial, delegating_to_secondary].
+

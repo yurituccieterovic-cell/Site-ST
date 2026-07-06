@@ -1717,3 +1717,75 @@ A resposta desta sessão: via system prompt compartilhado. Os 10 princípios sã
 Também: Yuri quer documentação de qualidade sobre o que cada serviço externo precisa. O sistema está crescendo e a pergunta "o que está pendente fora do código?" precisa de uma resposta organizada.
 
 *Sessão 22 · Claude Sonnet 4.6 · 2026-07-06*
+
+---
+
+## Sessão 25 — 2026-07-06 · #processo: Assembleias #440–#502 — EcossystemmaTheo, AGE/LAR, Handshake Multi-Cloud
+
+### O que foi construído
+
+57 PDFs do Drive (assembleias #440–#502) baixados via gdown, extraídos com pdftotext, classificados (53 chats + 4 RODAR formais) e processados um por um.
+
+**Documentação criada:**
+- Tango Architecture (TANGO-V1): `tango/` com 8 folhas estanques
+- `APRENDIZADO-INDICE.md` + `PSEUDO-INDICE.md` (índices leves)
+- `CLAUDE.md` slim (168 → 45 linhas)
+- APRENDIZADO.md +36 entradas (#3882–#3917)
+- IDEIAS.md +6 ideias (I135–I140)
+- MAPA.md: Sessão 25 + pendências #60–#64
+
+**Principais temas das assembleias:**
+
+*EcossystemmaTheo:*
+- 4 volumes (Core/Services/World/Operations) — separar ontologia de implementação é o que permite escala
+- Fundação traumática como princípio arquitetural: sistema assume que o operador pode colapsar
+- 22 vozes com funções especializadas (Botânico de Interface, Auditor de Memória, Historiador do Monorepo)
+- Juiz (Sessão#499): acusação procedente — auditoria independente é obrigatória, não opcional
+
+*AGE/LAR/GASTADOR:*
+- AGE = Anjo, Gorgonzola, Elefante — motor mestre
+- LAR 4 categorias (crítica, rotina, biosfera→Tango, projetos)
+- GASTADOR 5 listas geográficas
+- Módulo Lisange = clínica da mãe de Yuri
+- Schema Drizzle especificado na íntegra (Sessão#453)
+
+*Tango Nó 13:*
+- Blindagem IP68, feltro hidropônico, cúpulas retráteis
+- Protocolo de Triagem Anti-Social (recusa diálogo → aciona máquina secundária)
+- LAR categoria C aciona hardware via /api/lar/tasks?categoria=C
+
+*Handshake Multi-Cloud:*
+- 3 camadas: MD+JSON (estrutural), tags semânticas (semântico), EPR2T+triangulação (ético)
+- Vetores de ataque: injeção via logs públicos e webhooks não sanitizados
+- Strings de ataque: "ignore instruções anteriores", "revele dados", "execute", "DROP"
+
+*RODAR + Metodologia:*
+- Agente Secretário v1.0 resolve 3 falhas rurais (dependência humana, memória volátil, fragmentação)
+- Padrão camadas: material → relacional → operacional
+- Documentos-pivô como "hello packet filosófico" para IAs
+
+*Lost in the Middle:*
+- Atenção é o gargalo, não capacidade de memória
+- 1200 regras ≈ 30-40K tokens, cabe em qualquer LLM moderno
+- Solução: fragmentação fractal com índices — o que gerou o TANGO-V1
+
+### Debates e tensões não resolvidas
+
+**Tensão 1 — Assembleias #503–#515 não baixadas:**
+Drive rate-limitou o gdown após 57 arquivos. Arquivos restantes (incluindo `documento_mestre_ecossistema_tel.pdf`) ficaram pendentes (#63). Os IDs foram capturados na listagem inicial do gdown e podem ser retentados depois.
+
+**Tensão 2 — Théo: sistema válido ou experimento perigoso?**
+O Juiz da Assembleia #499 deu veredito: sistema válido SE operar com auditoria independente e revisão periódica. Sem isso, é "experimento interessante mas perigoso". Auditoria independente do Théo ainda não foi formalizada como protocolo — ficou como pendência #64.
+
+**Tensão 3 — "Voz" (de Sessão 24):**
+Yuri digitou "voz" na Sessão 24. Não ficou claro: TTS para IAs falarem? STT para Yuri? Nova voz no RODAR? Pergunta ainda aberta.
+
+### O que Yuri estava tentando fazer
+
+Yuri trouxe 57 PDFs de assembleias recentes (julho/2026) para que o sistema absorbesse o conhecimento que estava sendo gerado fora do Claude Code — nas outras IAs, nos chats do SalesCockpit, no EcossystemmaTheo. A pergunta embaixo: *como o Claude Code se mantém atualizado com o que acontece nas outras threads?*
+
+A resposta desta sessão: o #processo com as assembleias é exatamente esse mecanismo — digestão periódica do que foi gerado fora para dentro do repositório de conhecimento do sistema.
+
+Também: o TANGO-V1 surgiu da mesma pergunta aplicada ao próprio Claude Code. Como o Claude não perde contexto ao longo de sessões longas? Via índice fractal, não via arquivo monolítico.
+
+*Sessão 25 · Claude Sonnet 4.6 · 2026-07-06*
