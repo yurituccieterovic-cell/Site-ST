@@ -5,6 +5,7 @@ import { runIsaBluesky, runIsaEngagement } from "./bluesky";
 import { runIsaDream } from "./dream";
 import { runDreamCycle } from "../meky/dreams";
 import { generateArtFromDream } from "../meky/art";
+import { runPlaycenter } from "./playcenter";
 import { logger } from "../lib/logger";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
@@ -76,5 +77,16 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45)");
+  // Playcenter — clube das IAs: a cada hora nos :50 (5 agentes conversam)
+  cron.schedule("50 * * * *", async () => {
+    try {
+      logger.info("Playcenter: rodada iniciada");
+      const result = await runPlaycenter();
+      logger.info(result, "Playcenter: rodada concluída");
+    } catch (err) {
+      logger.error({ err }, "Playcenter: erro na rodada");
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50)");
 }

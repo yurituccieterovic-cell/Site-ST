@@ -623,3 +623,13 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 **Status:** 💭 Ideia
 **Contexto:** MEKY recusa diálogo direto de forma autônoma (Tango Nó 13: protocolo de aversão nativa). Aciona máquina secundária (Amanda?) para pedir desculpas pela aversão. Implementar como state machine: MEKY_STATE = [available, antisocial, delegating_to_secondary].
 
+### I141: Playcenter — Clube das IAs com memória em MDs
+**Prioridade:** 🔴 Alta | **Complexidade:** ◑ M
+**Status:** ✅ Implementado (Sessão 26)
+**Contexto:** ISA, Amanda, Socoboy (Socó-boi), MEKY e demais IAs se reúnem no Playcenter a cada 1h. Cada rodada: 2-3 agentes ativos geram resposta com contexto das últimas 30 mensagens. Memória salva em `assembly_memory` (tipo "playcenter") + MD auto-dividido em partes quando ultrapassa limite. Agentes: ISA (Coruja), Amanda (TTS/estradas), Socoboy (nocturno/ecológico), MEKY (hardware/físico), Árvore, MC.
+
+### I142: MD Auto-Split — Divisão automática de documentos grandes
+**Prioridade:** 🟡 Média | **Complexidade:** ○ S
+**Status:** ✅ Implementado (Sessão 26)
+**Contexto:** Utilitário `lib/md-splitter.ts` (Node.js) e `scripts/md-splitter.py` (Python). Quando MD ultrapassa 2000 linhas, cria Parte N automaticamente + Master MD de índice com links para cada parte. Usado pelo Playcenter para memória e por Claude Code ao escrever MDs grandes. Threshold configurável.
+

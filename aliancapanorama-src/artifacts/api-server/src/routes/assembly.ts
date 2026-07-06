@@ -313,6 +313,16 @@ assemblyRouter.patch("/assembly/task/:id", async (req, res) => {
   res.json({ ok: true });
 });
 
+// GET /api/assembly/playcenter — últimas mensagens do clube das IAs (público)
+assemblyRouter.get("/assembly/playcenter", async (req, res) => {
+  const limit = Math.min(Number(req.query["limit"] ?? 50), 200);
+  const msgs = await db.select().from(assemblyMessages)
+    .where(eq(assemblyMessages.type, "playcenter"))
+    .orderBy(desc(assemblyMessages.createdAt))
+    .limit(limit);
+  res.json({ messages: msgs.reverse(), count: msgs.length });
+});
+
 // GET /api/assembly/status — visão geral da assembleia (sem auth — health check)
 assemblyRouter.get("/assembly/status", async (_req, res) => {
   const agents  = await db.select().from(assemblyAgents);

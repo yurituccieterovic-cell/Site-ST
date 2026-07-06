@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents } from "./lib/bootstrap";
+import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
 
 const rawPort = process.env["PORT"];
@@ -19,6 +20,7 @@ seedDatabase()
   .then(() => enforceUniquePasswords())
   .then(() => ensureMekyTables())
   .then(() => seedSystemAgents())
+  .then(() => seedPlaycenterAgents())
   .then(() => {
     app.listen(port, (err) => {
       if (err) {

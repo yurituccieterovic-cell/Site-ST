@@ -25,12 +25,13 @@
 3. **Ideias** → `IDEIAS.md`. Formato: `### I[N]: título` com prioridade, complexidade, descrição técnica
 4. **MAPA.md** — schema DB, rotas API, pendências, histórico de sessões, gotchas
 5. **PSEUDO.md** — decisões tomadas, debates, tensões não resolvidas, contexto de Yuri
-6. **PSEUDO2.md** — pseudocódigo close-to-code (só se lógica/fluxo mudou)
-7. **Código** — `aliancapanorama-src/` | `artifacts/pap-app/src/` | `artifacts/api-server/src/` | `lib/db/src/schema/`
+6. **Código** — `aliancapanorama-src/` | `artifacts/pap-app/src/` | `artifacts/api-server/src/` | `lib/db/src/schema/`
+7. **PSEUDO2.md** — pseudocódigo close-to-code atualizado APÓS e DURANTE a implementação (só se lógica/fluxo mudou)
 8. **Deploy** — `git push origin main` → Railway auto-deploya. Migrations via `drizzle-kit push` ou psql direto
 9. **Registros** — ATA em `/tmp/pap-ata.md` → `pap-email-fim`
 
-**Atalhos:** só código → começar no passo 4. Só documentação → parar no 6. Passo 9 sempre obrigatório.
+**Atalhos:** só código → começar no passo 4. Só docs sem código → parar no 5. Passo 9 sempre obrigatório.
+**PSEUDO2** registra o que foi implementado, não o que está planejado — atualizar junto com o código.
 
 ## Tango — Regra de Fragmentação
 Qualquer arquivo que ultrapasse 200 linhas de densidade deve ser quebrado:
