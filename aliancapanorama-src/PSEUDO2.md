@@ -618,3 +618,97 @@ ia_certificates:
 ---
 
 *Atualizado em: 2026-07-02 · Claude Code · Sessões 3, 4 e 6*
+
+---
+
+## Sessão 27 — Novas Implementações (2026-07-06)
+
+### #48 — Filtro de Densidade (cycle.ts)
+```typescript
+// Antes do bloco OPENAI/GEMINI em runIsaCycle()
+const contextDensity = userContent.replace(/\s+/g, " ").trim().length;
+if (contextDensity < 2000) {
+  // Modo degradado — sem LLM
+  analysisResult = `Ciclo degradado — contexto esparso (${contextDensity} chars).`;
+} else if (OPENAI_API_KEY) { ... } else if (GEMINI_API_KEY) { ... }
+```
+
+### #5 — Drizzle Migrate
+```typescript
+// drizzle.config.ts
+defineConfig({ ..., out: path.join(__dirname, "./drizzle") })
+// package.json scripts
+"generate": "drizzle-kit generate --config ./drizzle.config.ts"
+"migrate": "drizzle-kit migrate --config ./drizzle.config.ts"
+```
+
+### Score Dedup
+```typescript
+// GET /api/score — exercises.ts
+const attempts = await db
+  .select({ nodeCode, exerciseId })
+  .from(exerciseAttemptsTable)
+  .where(and(eq(userId, ...), eq(correct, 1)))
+  .groupBy(exerciseId, nodeCode);
+const score = attempts.reduce((s, a) => s + a.nodeCode.length * 10, 0);
+```
+
+### Webhook Idempotência
+```typescript
+// POST /api/webhooks/external-voice
+const idempotencyKey = req.headers["x-idempotency-key"];
+if (idempotencyKey) {
+  const [existing] = await db.select().from(isaMemoryTable)
+    .where(sql`metadata->>'idempotencyKey' = ${idempotencyKey}`).limit(1);
+  if (existing) { res.json({ received: true, duplicate: true }); return; }
+}
+// salvar com { idempotencyKey, ...metadata }
+```
+
+### #36 — MC em assembly_agents (bootstrap.ts)
+```sql
+INSERT INTO assembly_agents (id, display_name, role) VALUES
+  ('mc', 'MC — Marta Centaurus', 'Sistema imunológico da Assembleia')
+ON CONFLICT (id) DO NOTHING;
+```
+
+### #45 — Protocolo de Nascimento
+```typescript
+// GET /api/governance/nascimento-checklist?ia=mc
+// Arquivo: routes/governance.ts — 10 itens estáticos, 6 IAs registradas
+// PROTOCOLO-NASCIMENTO.md — documento formal na raiz aliancapanorama-src/
+```
+
+### Weekly Score
+```typescript
+// GET /api/progress/weekly-score (progress.ts)
+// SQL: DATE_TRUNC('week', created_at) + SUM(LENGTH(node_code)*10)
+//      GROUP BY semana, COUNT(DISTINCT exercise_id)
+```
+
+### Paginação /api/ai/nodes (ai.ts)
+```typescript
+// GET /api/ai/nodes?limit=50&offset=0
+// Resposta: { data: Node[], total: number, limit: number, offset: number }
+// Default: limit=100, max=500
+```
+
+### #23 — Equidade Semiótica (cycle.ts)
+```typescript
+// Após leitura de tasks, antes do LLM:
+const [{ totalNodes }] = await db.select({ totalNodes: count() }).from(nodesTable);
+const visitedRows = await db.execute(sql`
+  SELECT node_code, COUNT(*) as visits FROM node_progress
+  GROUP BY node_code ORDER BY visits ASC LIMIT 10
+`);
+const orphanCount = Number(totalNodes) - visitedCodes.size;
+// Passa leastVisited + orphanCount para o LLM no userContent
+```
+
+### AUDITORIA-ECOSSYSTEMMA.md (#64)
+Protocolo semestral de auditoria independente com 4 fases, 4 critérios ponderados,
+deliberação multipartite (Árvore + ISA + MC + Yuri, maioria 3/4).
+
+---
+
+*Atualizado em: 2026-07-06 · Claude Sonnet 4.6 · Sessão 27*

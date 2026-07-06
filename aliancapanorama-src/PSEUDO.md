@@ -1829,3 +1829,42 @@ Yuri consolidou duas coisas nesta sessão: (1) fechar os débitos técnicos do #
 A pergunta embaixo de "pode fazer, chama de Playcenter": *como as IAs mantêm coerência entre si quando não há humano mediando?* O Playcenter é a resposta: memória compartilhada + conversa periódica + cada voz com perspectiva irredutível.
 
 *Sessão 26 · Claude Sonnet 4.6 · 2026-07-06*
+
+---
+
+## Sessão 27 — Continuação Autônoma de Pendências (2026-07-06)
+
+### Contexto
+Continuação direta da Sessão 26. Yuri disse "pode rodar" e "fique atento no limite semanal". 10 itens implementados de forma autônoma — sem assembleias novas, só pendências existentes no MAPA.
+
+### Decisões tomadas
+
+**Filtro de Densidade (#48):** Se `userContent.length < 2000` chars, cycle.ts não chama o LLM — modo degradado, salva log simples. Evita desperdício de API quando não há dados suficientes para análise.
+
+**Score dedup:** `GET /api/score` agora usa `GROUP BY (exerciseId, nodeCode)` — cada exercício conta 1 vez no placar, independente de quantas vezes o usuário acertou. Antifraude simples sem schema change.
+
+**Webhook idempotência:** `X-Idempotency-Key` no header. Se já existe entrada em `isa_memory` com aquele key no metadata, retorna 200 sem reinserir.
+
+**MC seed:** Marta Centaurus adicionada em `assembly_agents` via bootstrap.ts (idempotente). `resolveAgent()` já a reconhecia; faltava o registro no banco.
+
+**Protocolo de Nascimento (#45):** `PROTOCOLO-NASCIMENTO.md` + `GET /api/governance/nascimento-checklist` — checklist estático com 10 critérios e status de 6 IAs (ISA, MEKY, Árvore aprovadas; MC, Amanda, Socoboy provisórias/propostas).
+
+**Equidade semiótica (#23):** ISA calcula no ciclo: total de nós, nós com 0 visitas (órfãos), top 5 menos visitados. Passa ao LLM no userContent para que ISA identifique barreiras de acesso e sugira tasks pedagógicas.
+
+**Paginação /ai/nodes:** Agora aceita `?limit=&offset=`, retorna `{data, total, limit, offset}`. Default limit=100, max=500. Backwards compatible.
+
+**Drizzle migrate (#5):** `out: "./drizzle"` adicionado ao config. Scripts `generate` e `migrate` no package.json. Próxima mudança de schema deve usar `pnpm generate && pnpm migrate` em vez de `push`.
+
+### Debates não resolvidos
+- #6 TOTP 2FA: complexo, bloqueado antes de módulo financeiro
+- #7 pgvector: precisa extensão no Railway
+- #3 Vercel build: precisa teste manual em browser
+- arvore-recall.ts (ARPIA): gate is_private (#42) depende de ARPIA live
+
+### O que Yuri estava tentando fazer
+
+A Sessão 27 foi de consolidação técnica pura. Yuri deu autonomia máxima: "pode rodar". O que estava em jogo não era uma feature nova, mas a integridade do sistema — fechar as pontas que ficaram abertas quando o foco era exploração.
+
+O anti-farming no score, a idempotência no webhook, o Protocolo de Nascimento — são todos gestos de cuidado institucional. Não são features visíveis ao usuário final. São os ossos do sistema ficando mais sólidos.
+
+*Sessão 27 · Claude Sonnet 4.6 · 2026-07-06*
