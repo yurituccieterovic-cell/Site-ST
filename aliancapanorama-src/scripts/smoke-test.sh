@@ -78,7 +78,10 @@ fi
 
 # ── Nodes com sessão (tier 1) ─────────────────────────────────────────────────
 hdr "Nodes (autenticado)"
-check_body "GET /api/nodes (autenticado)" "$BASE/api/nodes" '"code"' -b "$COOKIE_JAR"
+# tier 1 acessa subnós (ex: /nodes?parentCode=1) — root sem parentCode lista nós level=0
+# que incluem "0" (Conhecimento Humano) acessível com canAccess
+check_body "GET /api/nodes/1 (Ciências, autenticado)" "$BASE/api/nodes/1" '"code"' -b "$COOKIE_JAR"
+check_body "GET /api/nodes?parentCode=1 (filhos Ciências)" "$BASE/api/nodes?parentCode=1" '"code"' -b "$COOKIE_JAR"
 
 # ── Progress ─────────────────────────────────────────────────────────────────
 hdr "Progress"
