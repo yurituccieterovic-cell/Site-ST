@@ -19,6 +19,7 @@
 | 6 | Estado do PAP | `proc_pap_estado.md` | PAP, ISA, MEKY, Railway, Vercel, URLs ativas |
 | 7 | Comandos detalhados | `proc_pap_comandos.md` | #pap, #secrets, #processo, scripts, pap-sync, pap-email-fim |
 | 8 | Mapa do sistema | `../MAPA-MASTER.md` | IAs, infra, schema, rotas, pendências, histórico — índice dos sub-MDs |
+| 9 | Health check sistemas | `proc_health_check.md` | Vercel, Railway, rotas SPA, tabelas DB, build, smoke test, fix rápido |
 
 ---
 

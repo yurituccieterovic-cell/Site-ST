@@ -5,14 +5,12 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$ROOT/aliancapanorama-src"
 OUT="$ROOT/aliancapanorama"
 
-echo "==> Instalando pnpm..."
-if ! command -v pnpm &>/dev/null; then
-  npm install -g pnpm --silent
-fi
+echo "==> Instalando pnpm@9..."
+npm install -g pnpm@9 --silent --force
 
 echo "==> Instalando dependências..."
 cd "$SRC"
-pnpm install --no-frozen-lockfile
+pnpm install --no-frozen-lockfile --ignore-scripts=false
 
 echo "==> Buildando frontend PAP..."
 BASE_PATH=/aliancapanorama/ PORT=3000 NODE_ENV=production \
