@@ -5,8 +5,10 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$ROOT/aliancapanorama-src"
 OUT="$ROOT/aliancapanorama"
 
-echo "==> Instalando pnpm@9..."
-npm install -g pnpm@9 --silent --force
+echo "==> Ativando pnpm@9 via corepack..."
+corepack enable
+corepack prepare pnpm@9.15.9 --activate 2>/dev/null || npm install -g pnpm@9.15.9 --silent --force
+pnpm --version
 
 echo "==> Instalando dependências..."
 cd "$SRC"
