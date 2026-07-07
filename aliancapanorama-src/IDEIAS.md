@@ -667,3 +667,21 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I150 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
 | I151 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I152 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+
+## Docs PAP — Ideias Novas (2026-07-07)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I153 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I154 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I155 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I156 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I157 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I158 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+## Diagrama WORKFLOW — Ideias 2026-07-07
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I159 | **Visualização WORKFLOW por Nó** | 🟡 Média | ◑ M | Mostrar ao aluno o ciclo completo: TAREFA→WORKFLOW→PROCESSOS para cada nó que está estudando | Componente WorkflowViz.tsx: dado um nodeCode, mostra estado atual (objetivos pendentes, exercícios em aberto, processos concluídos). Usa dados de exercise_attempts + progress + ISA collective_memory. |
+| I160 | **WorkflowEngine — orchestrador ISA→Aluno** | 🔴 Alta | ● L | Formalizar o WORKFLOW como uma entidade no banco: estado persistente entre sessões de estudo | Tabela workflow_sessions (id, userId, nodeCode, phase: objetivos→ferramentas→workflow→processos, createdAt, completedAt). ISA lê a fase atual e adapta o ciclo. Permite retomar onde parou. |
+| I161 | **Mapa WORKFLOW do Ecossystemma** | 🟢 Baixa | ○ S | Visualização do diagrama WORKFLOW de Yuri como SVG animado similar ao /eco | Componente WorkflowMapPage.tsx em /workflow. SVG com as 6 entidades do diagrama animadas. Cada entidade clicável mostra exemplos reais do PAP (ISA como AGENTE, FUVEST como TAREFA, etc.). |
