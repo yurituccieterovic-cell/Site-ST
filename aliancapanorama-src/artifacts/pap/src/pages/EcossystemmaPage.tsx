@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, type ReactElement } from "react";
 
 /* ─── Tipos ─────────────────────────────────────────────────────────────────── */
 interface EcoNode {
@@ -226,7 +226,7 @@ function EcoNodeSymbol({ node }: { node: EcoNode }) {
     : "eco-future";
 
   // Unique background shape per node
-  const shapeMap: Record<string, JSX.Element> = {
+  const shapeMap: Record<string, ReactElement> = {
     theo: (
       <>
         {/* Galaxy arms */}

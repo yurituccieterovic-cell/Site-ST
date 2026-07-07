@@ -1784,7 +1784,7 @@ function IsaOwl() {
         body: JSON.stringify({
           message: msg,
           userId: user?.id ?? null,
-          userEmail: user?.email ?? null,
+          userEmail: user?.login ?? null,
           location: "/pap",
         }),
       });

@@ -166,6 +166,7 @@ export function MapaPage() {
       const found = findNode(n.children, code);
       if (found) return found;
     }
+    return undefined;
   }
 
   function flatSearch(nodes: TreeNode[], q: string): TreeNode[] {
