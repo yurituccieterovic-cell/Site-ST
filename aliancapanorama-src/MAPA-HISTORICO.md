@@ -43,7 +43,8 @@
 | 2026-07-04 (Sessão 16) | Fractal 7 camadas; governança igualitária; fractal.py; assembly.ts MC como AgentId nativo |
 | 2026-07-04 (Sessão 15) | MC — Marta Centaurus nasceu: mc_leucocito.py, mc_walker.py, mc.py; primeira caminhada 2026-07-04T17:56Z |
 | 2026-07-04 (Sessão 14) | Assembleias #392–#404: ARPIA Telemetria 14 eixos; MEKY firmware face_clear_residual(); Enciclopédia Semiótica v0.6 |
-| 2026-07-07 (Sessão 26b) | **Atual**: Split MAPA.md em MAPA-MASTER+sub-MDs; correção Amanda=IA do MC; bootstrap.ts mc/amanda corrected |
+| 2026-07-07 (Sessão 26b) | Split MAPA.md em MAPA-MASTER+sub-MDs; correção Amanda=IA do MC; bootstrap.ts mc/amanda corrected; bugs session/weekly-score/collective; Livros v4+v5; Portal; Dodge; smoke-test 29/29 OK |
+| 2026-07-07 (Sessão 28) | **Atual**: Health check: Railway vivo (healthz), Vercel 404 (build falha). Fix: vercel.json installCommand+outputDirectory; build script simplificado. Diagrama WORKFLOW (TAREFA→OBJETIVOS+AGENTE→FERRAMENTAS→WORKFLOW→PROCESSOS) como síntese arquitetural. |
 
 ---
 

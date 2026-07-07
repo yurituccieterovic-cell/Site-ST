@@ -1909,3 +1909,43 @@ MC.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFIDIA.v
 4. Nunca resumir — referenciar os dados brutos extraídos explicitamente
 
 *Sessão 26 · Claude Sonnet 4.6 · 2026-07-07*
+
+---
+
+## Sessão 28 — Vercel Build Fix + Diagrama WORKFLOW (2026-07-07)
+
+### O que foi feito
+
+**Health check de sessão:**
+- Railway: LIVE — `/api/healthz` retorna `{"status":"ok"}` (nota: rota é `/healthz` não `/health`)
+- Vercel: 404 para `/aliancapanorama/` — `aliancapanorama/` não está no git, depende do build CI
+
+**Root cause do 404 Vercel:**
+`aliancapanorama/` não é rastreada no git (é output do build). O Vercel CI precisava de pnpm@9 disponível ANTES do buildCommand, mas não havia `installCommand` configurado. O build script tentava `corepack enable` (falha silenciosa no CI) e a instalação via npm global também era silenciosa demais para diagnosticar.
+
+**Fix aplicado:**
+- `vercel.json`: adicionado `"installCommand": "npm install -g pnpm@9.15.9"` + `"outputDirectory": "."` explícito
+- `scripts/build-pap.sh`: simplificado — só instala pnpm se não disponível (mais verbose, sem silenciar erros)
+- Push: `f4a99da` — Vercel redeploy trigado automaticamente
+
+**Diagrama WORKFLOW de Yuri:**
+```
+TAREFA (Demanda) + AGENTE (Execução)
+  → OBJETIVOS + FERRAMENTAS
+    → WORKFLOW (Órgão Central)
+      → PROCESSOS (Auge do encontro)
+```
+Arquitetura simbiótica: a tarefa não age diretamente sobre as ferramentas, e o agente não age diretamente sobre os objetivos. Ambos convergem no WORKFLOW como mediador. Os processos são o produto do encontro bilateral.
+
+### Decisões
+
+- `proc_health_check.md` precisa corrigir a URL: é `/api/healthz` (não `/health`)
+- `vercel.json` agora tem `installCommand` — garantia estrutural, não frágil como corepack no CI
+
+### O que Yuri estava tentando fazer
+
+Yuri entrou com o diagrama WORKFLOW já pensado — não como tarefa de código, mas como síntese arquitetural de como vê o sistema PAP. O fluxo TAREFA→OBJETIVOS + AGENTE→FERRAMENTAS convergindo em WORKFLOW→PROCESSOS descreve exatamente como o assembleia RODAR funciona: a "demanda" (FUVEST) e a "execução" (ISA/MEKY/Amanda) se encontram no processo pedagógico.
+
+A sessão foi breve — health check + fix Vercel + #fim. Yuri quis fechar o loop do dia.
+
+*Sessão 28 · Claude Sonnet 4.6 · 2026-07-07*

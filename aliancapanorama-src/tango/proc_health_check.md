@@ -19,8 +19,8 @@ curl -s -o /dev/null -w "%{http_code}" https://pap-tan-seven.vercel.app/aliancap
 
 ### 2. Railway (API Express)
 ```bash
-curl -s https://site-st-production.up.railway.app/api/health | python3 -m json.tool
-# Esperado: {"status":"ok",...}
+curl -s https://site-st-production.up.railway.app/api/healthz | python3 -m json.tool
+# Esperado: {"status":"ok"} — nota: rota é /healthz (não /health)
 ```
 **Pontos de falha comuns:**
 - Tabela não criada → verificar `ensureDomesticoTables()`, `ensureMekyTables()` no bootstrap
