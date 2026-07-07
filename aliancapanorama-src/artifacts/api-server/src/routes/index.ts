@@ -28,6 +28,8 @@ import governanceRouter from "./governance";
 import larRouter from "./lar";
 import gastadorRouter from "./gastador";
 import lisangeRouter from "./lisange";
+import portalRouter from "./portal";
+import dodgeRouter from "./dodge";
 
 const router: IRouter = Router();
 
@@ -42,6 +44,8 @@ router.use(governanceRouter);
 router.use(larRouter);
 router.use(gastadorRouter);
 router.use(lisangeRouter);
+router.use(portalRouter);
+router.use(dodgeRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

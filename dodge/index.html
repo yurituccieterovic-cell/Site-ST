@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DODGE — Sociedade Tucci</title>
+  <style>
+    :root {
+      --dark: #0a0f1e;
+      --dark2: #0d1b2a;
+      --dark3: #111827;
+      --cyan: #00b4d8;
+      --cyan-dim: #0077a0;
+      --amber: #f0a500;
+      --green: #2dc653;
+      --stamp: #96aabb;
+      --text: #dceefa;
+      --border: rgba(0,180,216,.18);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--dark); color: var(--text); font-family: 'Courier New', monospace;
+           min-height: 100vh; display: flex; flex-direction: column; }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--dark2);
+    }
+    .logo { font-size: 1.2rem; font-weight: bold; color: var(--amber); letter-spacing: 4px; }
+    .logo span { color: var(--stamp); font-size: .75rem; margin-left: 12px; letter-spacing: 1px; }
+
+    main { flex: 1; max-width: 860px; margin: 0 auto; padding: 48px 24px; width: 100%; }
+
+    h1 { font-size: 1.6rem; color: var(--cyan); margin-bottom: 8px; }
+    .sub { color: var(--stamp); font-size: .85rem; margin-bottom: 40px; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 20px; background: var(--dark2);
+      text-decoration: none; color: inherit;
+      transition: border-color .2s, background .2s;
+    }
+    .card:hover { border-color: var(--cyan); background: #0f2236; }
+    .card-label { font-size: .65rem; color: var(--stamp); margin-bottom: 6px; letter-spacing: 2px; }
+    .card-title { font-size: 1rem; color: var(--cyan); font-weight: bold; margin-bottom: 6px; }
+    .card-desc  { font-size: .78rem; color: #788fa0; line-height: 1.5; }
+    .card-badge { display: inline-block; margin-top: 10px; font-size: .65rem;
+                  padding: 2px 8px; border-radius: 12px; border: 1px solid; }
+    .badge-adm   { color: var(--cyan);  border-color: var(--cyan-dim);  background: rgba(0,180,216,.08); }
+    .badge-super { color: var(--amber); border-color: #7a5200; background: rgba(240,165,0,.08); }
+    .badge-open  { color: var(--green); border-color: #1a6030; background: rgba(45,198,83,.08); }
+
+    .section-title { color: var(--stamp); font-size: .7rem; letter-spacing: 3px; margin-bottom: 12px; }
+
+    .links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+    .link-btn {
+      padding: 8px 16px; font-size: .78rem; border-radius: 6px; text-decoration: none;
+      border: 1px solid var(--border); color: var(--text); background: var(--dark3);
+      transition: all .2s;
+    }
+    .link-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .link-btn.primary { background: var(--cyan-dim); border-color: var(--cyan); color: #fff; }
+    .link-btn.primary:hover { background: var(--cyan); }
+
+    .explain {
+      border: 1px solid rgba(240,165,0,.2); border-radius: 8px;
+      padding: 20px; background: rgba(240,165,0,.04); margin-top: 32px;
+    }
+    .explain h3 { color: var(--amber); font-size: .85rem; margin-bottom: 12px; }
+    .explain ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .explain li { font-size: .78rem; color: #8ca0b0; }
+    .explain li::before { content: "› "; color: var(--cyan); }
+
+    footer { border-top: 1px solid var(--border); padding: 16px 24px; text-align: center;
+             color: var(--stamp); font-size: .7rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">DODGE <span>Sociedade Tucci · acesso geral</span></div>
+  <div style="font-size:.7rem;color:var(--stamp)">v1 · 2026-07-07</div>
+</header>
+
+<main>
+  <h1>DODGE</h1>
+  <p class="sub">Gateway de edição e administração do ecossistema PAP · Sociedade Tucci</p>
+
+  <p class="section-title">ACESSO RÁPIDO</p>
+  <div class="links">
+    <a href="https://alianca-panorama.vercel.app/portal" class="link-btn primary">→ Entrar via Portal</a>
+    <a href="https://alianca-panorama.vercel.app/dodge"  class="link-btn">Editor de Nódulos (adm)</a>
+    <a href="https://alianca-panorama.vercel.app/"       class="link-btn">Raiz FUVEST (PAP)</a>
+    <a href="https://alianca-panorama.vercel.app/adm"    class="link-btn">Painel Adm</a>
+    <a href="https://alianca-panorama.vercel.app/meky"   class="link-btn">MEKY</a>
+    <a href="https://alianca-panorama.vercel.app/eco"    class="link-btn">Ecossystemma</a>
+    <a href="https://alianca-panorama.vercel.app/toyota" class="link-btn">Toyota Kanban</a>
+  </div>
+
+  <p class="section-title">MÓDULOS</p>
+  <div class="grid">
+    <a href="https://alianca-panorama.vercel.app/portal" class="card">
+      <div class="card-label">PORTAL</div>
+      <div class="card-title">PAP Portal</div>
+      <div class="card-desc">Painel de controle com stats sincronizados. Login + stats de usuários, exercícios e tentativas FUVEST.</div>
+      <span class="card-badge badge-adm">tier 5+ (adm)</span>
+    </a>
+
+    <a href="https://alianca-panorama.vercel.app/dodge" class="card">
+      <div class="card-label">EDITOR</div>
+      <div class="card-title">Editor de Nódulos</div>
+      <div class="card-desc">Árvore FUVEST completa. Criar, editar, apagar e mover nódulos com sub-árvores inteiras. Listar arquivos .md.</div>
+      <span class="card-badge badge-super">tier 9+ (superadm)</span>
+    </a>
+
+    <a href="https://alianca-panorama.vercel.app/adm" class="card">
+      <div class="card-label">ADM</div>
+      <div class="card-title">Painel Administrativo</div>
+      <div class="card-desc">Eventos, relações, catálogos, usuários, Nebula's House e ISA Chat.</div>
+      <span class="card-badge badge-adm">tier 5+ (adm)</span>
+    </a>
+
+    <a href="https://alianca-panorama.vercel.app/meky" class="card">
+      <div class="card-label">HARDWARE</div>
+      <div class="card-title">MEKY Control</div>
+      <div class="card-desc">Telemetria, comandos, visão e memórias do robô hexápode MEKY.</div>
+      <span class="card-badge badge-adm">tier 5+</span>
+    </a>
+
+    <a href="https://alianca-panorama.vercel.app/" class="card">
+      <div class="card-label">PLATAFORMA</div>
+      <div class="card-title">Raiz FUVEST</div>
+      <div class="card-desc">Árvore gamificada de conhecimento FUVEST 2026 para estudantes. Exercícios gerados por IA.</div>
+      <span class="card-badge badge-open">público</span>
+    </a>
+
+    <a href="https://alianca-panorama.vercel.app/eco" class="card">
+      <div class="card-label">ECOSSYSTEMMA</div>
+      <div class="card-title">Théo + Assembleia</div>
+      <div class="card-desc">Ontologia Théo, 40 sacadas geniais, assembleia de IAs, metodologia RODAR.</div>
+      <span class="card-badge badge-open">público</span>
+    </a>
+  </div>
+
+  <div class="explain">
+    <h3>O que o Superadm pode fazer no Dodge</h3>
+    <ul>
+      <li>Visualizar a árvore FUVEST completa (todos os nódulos)</li>
+      <li>Editar nome, abreviação, subtítulo e conteúdo de qualquer nódulo</li>
+      <li>Criar novas raízes e nódulos filhos em qualquer posição</li>
+      <li>Apagar nódulos com toda a sub-árvore descendente</li>
+      <li>Transferir nódulos inteiros (com ramos) para outro pai</li>
+      <li>Acessar lista de arquivos .md do sistema com link para o GitHub</li>
+      <li>Ver estatísticas do PAP: usuários, exercícios, tentativas</li>
+      <li>Ver os últimos 10 usuários cadastrados (somente superadm)</li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  DODGE · Sociedade Tucci · github.com/yurituccieterovic-cell/Site-ST/dodge ·
+  Portal: <a href="https://alianca-panorama.vercel.app/portal" style="color:var(--cyan);text-decoration:none">alianca-panorama.vercel.app/portal</a>
+</footer>
+
+</body>
+</html>

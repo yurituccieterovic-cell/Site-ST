@@ -102,6 +102,55 @@ export async function seedSystemAgents(): Promise<void> {
   }
 }
 
+// Garante tabelas LAR + GASTADOR + LISANGE (domestico/clínica)
+export async function ensureDomesticoTables(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS lar_tasks (
+      id         SERIAL PRIMARY KEY,
+      title      TEXT NOT NULL,
+      categoria  TEXT NOT NULL DEFAULT 'B',
+      status     TEXT NOT NULL DEFAULT 'pending',
+      prioridade TEXT NOT NULL DEFAULT 'media',
+      observacoes TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS gastador_listas (
+      id         SERIAL PRIMARY KEY,
+      local      TEXT NOT NULL,
+      item       TEXT NOT NULL,
+      quantidade TEXT,
+      comprado   BOOLEAN NOT NULL DEFAULT false,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS patient_profiles (
+      id         SERIAL PRIMARY KEY,
+      nome       TEXT NOT NULL,
+      telefone   TEXT,
+      email      TEXT,
+      observacoes TEXT,
+      ativo      BOOLEAN NOT NULL DEFAULT true,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS agenda_slots (
+      id               SERIAL PRIMARY KEY,
+      patient_id       INTEGER,
+      data_hora        TIMESTAMPTZ NOT NULL,
+      duracao_minutos  INTEGER NOT NULL DEFAULT 30,
+      status           TEXT NOT NULL DEFAULT 'disponivel',
+      observacoes      TEXT,
+      created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  logger.info("bootstrap: domestico tables OK (lar_tasks, gastador_listas, patient_profiles, agenda_slots)");
+}
+
 // Garante que as tabelas MEKY existem — cria se não existirem (idempotente)
 export async function ensureMekyTables(): Promise<void> {
   await db.execute(sql`

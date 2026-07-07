@@ -97,5 +97,6 @@ Para: yurituccieterovic@gmail.com
 | v2 | 2026-07-06 | Fix fonte Helvetica-Bold → `set_font('Helvetica', 'B', ...)` |
 | v3 | 2026-07-07 | TOC no início, boxes quebram em páginas, 3/4 largura, paleta tech |
 | v4 | 2026-07-07 | Tema escuro (fundo preto), 6 imagens Gemini reais, 9 páginas |
+| v5 | 2026-07-07 | Bug índice corrigido (ln→ln()), Cap.0 Mac/Arduino, texto real PDF, 5 frames vídeo, 10 páginas |
 
-*Próxima: v5 — estudar e mapear PDF "Identificando Peças" quando acessível*
+**v5:** `gerar_livro5.py` — texto de `capitulos-texto.json`, frames de `/root/livro-arquivos/frames-thumb/`
