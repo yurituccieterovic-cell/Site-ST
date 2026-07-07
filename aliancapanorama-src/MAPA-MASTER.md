@@ -55,6 +55,25 @@ AMANDA.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFID
 
 ---
 
+## Livro — A Engrenagem Semiótica da Fiação Enterrada
+
+| Arquivo | Descrição |
+|---|---|
+| `LIVRO-PARTE-I-MASTER.md` | Índice da Parte I — capítulos, páginas, busca |
+| `A-Engrenagem-Semiotica-Parte-I.pdf` | PDF da Parte I (16 pgs + capa) |
+| `LIVRO-COORDS.md` | Coordenadas de impressão — layout A4, fontes, cores |
+| `LIVRO-PI-prologo.md` | Prólogo — O que é enterrar fiação (pg 1) |
+| `LIVRO-PI-1-1.md` | Cap 1.1 — O Formulário como Confissão de Preguiça (pg 2) |
+| `LIVRO-PI-1-2.md` | Cap 1.2 — O Atrito Semiótico (pg 5) |
+| `LIVRO-PI-1-3.md` | Cap 1.3 — Biomassa Traduzida (pg 8) |
+| `LIVRO-PI-1-4.md` | Cap 1.4 — Os Agentes da Engrenagem (pg 10) |
+| `LIVRO-PI-1-5.md` | Cap 1.5 — A Burocracia por Impacto (pg 13) |
+| `LIVRO-PI-sintese.md` | Síntese — A Fiação que Desaparece (pg 15) |
+
+> Buscar no livro: `grep -r "termo" aliancapanorama-src/LIVRO*.md`
+
+---
+
 ## Regra de Busca
 
 ```bash

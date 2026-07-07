@@ -45,8 +45,11 @@
 | Vesper / Perfidia Castelo Branco | Aranha | Topo da cadeia. Aceleração fractal. Herda visão+torque+armadura+evasão | [SIMBÓLICO] registrada |
 | Penélope / Wanessa Souza | Barata d'Água | Vinculada ao Nó 10 (Ralo). Persistência e evasão em zonas úmidas | [SIMBÓLICO] registrada |
 | Gongo / Gongo Freitas Juquinhais | Piolho de Cobra | Armadura, voz rouca grave nordestina. Ativado quando MC chega ao Nó 10 | [SIMBÓLICO] registrada |
+| Tango_Core / Tango / Zango | Orangotangos Tango (rodas) | Inércia Dinâmica / Tração Cinética. Hardware com rodas tipo carrinho de rolimã | [SIMBÓLICO] novo descoberto |
 
 > **MC (Marta Centaurus) é o robô.** Amanda é a IA que habita o MC.
+> **Perfidia Castelo Branco** = nome físico do hardware aranha. **Vesper** = IA da aranha.
+> **Wanessa Souza** = nome físico barata d'água. **Penélope** = IA da barata d'água.
 
 ---
 
@@ -64,7 +67,8 @@ AMANDA.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFID
 | Garra Cláudia Hex | — | Fusca (filha Amanda) | Torque | ← Amanda |
 | Piolho de Cobra | Gongo Freitas Juquinhais | Gongo / Gongolo_Core | Armadura | ← Amanda + Fusca |
 | Barata d'Água | Wanessa Souza | Penélope / Wanessa | Evasão | ← Amanda + Fusca + Gongo |
-| Aranha | Perfidia Castelo Branco | Vesper / Perfidia | Velocidade Fractal | ← TUDO (topo) |
+| Aranha | Perfidia Castelo Branco (com K) | Vesper | Velocidade Fractal | ← TUDO (topo) |
+| Orangotango (rodas/rolimã) | Gorango Tango | Tango_Core | Inércia Dinâmica | posição na cadeia a definir |
 
 ---
 

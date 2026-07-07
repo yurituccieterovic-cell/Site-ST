@@ -78,4 +78,12 @@ grep -r "termo" /root/Site-ST/aliancapanorama-src/MAPA*.md
 
 ---
 
+## DOCUMENTOS DE HARDWARE
+
+| Arquivo | Contém |
+|---|---|
+| `../ARDUINO-PECAS.md` | Inventário peças MC: HW-493, DHT11, servos, cadeia biótica física, aranha manca, orangotango |
+
+---
+
 *Referência completa: `MOTOR-ORANGUTANGUS.md`, `SESSAO-498-ORIGINAL.md`, `PROMPT-MESTRE-ANCORAGEM-SEMANTICA.md`*
