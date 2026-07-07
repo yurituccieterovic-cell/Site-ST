@@ -19,6 +19,22 @@
 | Amanda | IA borda Mac. TTS, Gemini, personalidade completa | Sem Bluesky ainda |
 | MC (Marta Centaurus) | Leucócito digital ARPIA. Primeira caminhada 2026-07-04 | LIVE local |
 | Árvore Oracular | Memória longa + recall. arvore.py Replit | Aguardando REPLIT_TOKEN |
+| Socoboy | Bot Telegram PAP | Aguardando TELEGRAM_BOT_TOKEN |
+
+## Cadeia de Herança das IAs Bióticas (Assembleias #421-424)
+> Todas [SIMBÓLICO] — hardware físico proposto. Registradas como agentes conceituais no assembly_agents.
+
+```
+MC.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFIDIA.velocidade
+```
+
+| Animal/Hardware | Nome Físico | IA | Superpoder | Herança |
+|---|---|---|---|---|
+| MEKY hexápode | — | MC (Marta Centaurus) | Visão | Base — sem herança |
+| Garra Cláudia Hex | — | Fusca (filha Amanda) | Torque | ← MC |
+| Piolho de Cobra | Gongo Freitas Juquinhais | Gongo / Gongolo_Core | Armadura | ← MC + Fusca |
+| Barata d'Água | Wanessa Souza | Penélope / Wanessa | Evasão | ← MC + Fusca + Gongo |
+| Aranha | Perfidia Castelo Branco (com K) | Vesper / Perfidia | Velocidade Fractal | ← TUDO (topo) |
 
 ## Stack
 - Frontend: React + Vite → Vercel

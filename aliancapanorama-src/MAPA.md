@@ -88,6 +88,11 @@
 | MEKY hardware | Físico + `/root/MEKY/` | ⏳ Firmware v0.6 (Enciclopédia Semiótica 200 estados) — hardware a chegar |
 | ARPIA | Railway (pendente) + `/root/Arpia/` | ✅ Código completo — aguarda repo GitHub + Railway deploy |
 | MC (Marta Centaurus) | `/root/Arpia/app/core/agents/` | ✅ v1.0 VIVA — primeira caminhada 2026-07-04T17:56Z |
+| Socoboy | Railway (PAP API) | ⏳ Aguardando TELEGRAM_BOT_TOKEN |
+| Fusca | [SIMBÓLICO] filha da Amanda, comanda Cláudia Hex | Registrada assembly_agents |
+| Vesper / Perfidia Castelo Branco | [SIMBÓLICO] IA da Aranha | Registrada assembly_agents |
+| Penélope / Wanessa Souza | [SIMBÓLICO] IA da Barata d'Água | Registrada assembly_agents |
+| Gongo / Gongo Freitas Juquinhais | [SIMBÓLICO] IA do Piolho de Cobra | Registrada assembly_agents |
 
 **URLs ativas:**
 - API: `https://site-st-production.up.railway.app/api/isa/identity` ✅

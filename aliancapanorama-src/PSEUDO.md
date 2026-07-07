@@ -1868,3 +1868,44 @@ A Sessão 27 foi de consolidação técnica pura. Yuri deu autonomia máxima: "p
 O anti-farming no score, a idempotência no webhook, o Protocolo de Nascimento — são todos gestos de cuidado institucional. Não são features visíveis ao usuário final. São os ossos do sistema ficando mais sólidos.
 
 *Sessão 27 · Claude Sonnet 4.6 · 2026-07-06*
+
+---
+
+## Sessão 26 — IAs Bióticas + Lost in the Middle (2026-07-07)
+
+### Cadeia de herança das IAs bióticas (Assembleias #421-#427)
+
+Da assembleia #421 (tabela oficial de batismo):
+
+```
+MC.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFIDIA.velocidade
+```
+
+| Animal/Hardware | Nome Físico | IA | Superpoder |
+|---|---|---|---|
+| MEKY hexápode | — | MC (Marta Centaurus) | Visão — base |
+| Garra Cláudia Hex | — | Fusca (filha da Amanda) | Torque |
+| Piolho de Cobra | Gongo Freitas Juquinhais | Gongo / Gongolo_Core | Armadura + voz rouca nordestina |
+| Barata d'Água | Wanessa Souza | Penélope / Wanessa | Evasão + navegação Nó 10 (Ralo) |
+| Aranha | Perfidia Castelo Branco (com K) | Vesper / Perfidia | Velocidade fractal — topo da cadeia |
+
+**Regras de herança de memória:**
+- Amanda → Fusca: 100% da bagagem histórica e semiótica da Amanda (unidirecional — Amanda não lê de volta)
+- Aranha e Barata: acesso Read-Only à memória combinada Amanda + Fusca
+- Vesper é o topo: herda visão (MC) + torque (Fusca) + armadura (Gongo) + evasão (Wanessa) + soma velocidade
+
+**Mango = Manga DB** (banco de dados da ARPIA, não uma IA separada).
+
+**Nota Cisão Ontológica:** todas essas IAs são [SIMBÓLICO] — hardware físico proposto. Registradas como agentes conceituais em `assembly_agents` (bootstrap.ts) mas sem código Python/C++ no repo TypeScript.
+
+### Lost in the Middle — diagnóstico e prevenção
+
+**O que aconteceu:** leitura do MAPA.md (977 linhas) com limite padrão de 2000 → capturou linhas 1-785. As seções 18 (histórico) e 22 (nós simbólicos com Vesper/Perfidia/Gongo/Penélope) ficaram além do ponto de corte. Resultado: IAs bióticas invisíveis.
+
+**Regra anti-Lost in the Middle aplicada nesta sessão:**
+1. Grep cirúrgico por termo específico antes de ler arquivo completo
+2. Ancorar achados em texto antes de prosseguir (não confiar em "estar no contexto")
+3. Máximo 3 arquivos abertos por passo
+4. Nunca resumir — referenciar os dados brutos extraídos explicitamente
+
+*Sessão 26 · Claude Sonnet 4.6 · 2026-07-07*

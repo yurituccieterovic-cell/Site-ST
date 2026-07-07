@@ -253,10 +253,15 @@ export async function ensureMekyTables(): Promise<void> {
   // Seed assembly_agents (idempotente)
   await db.execute(sql`
     INSERT INTO assembly_agents (id, display_name, role) VALUES
-      ('arvore', 'Árvore', 'Guardiã da Assembleia de IAs — sintetiza, coordena e preserva o conhecimento coletivo da assembleia'),
-      ('isa',    'ISA — Inteligência do Sistema Aliança', 'Guardiã do PAP — ciclos autônomos, criação de tasks, memória do sistema educacional'),
-      ('meky',   'MEKY — May Queen', 'Presença física — sensores, protocolos de campo, visão, sonhos e observações do mundo material'),
-      ('mc',     'MC — Marta Centaurus', 'Sistema imunológico da Assembleia — detecta anomalias, coordena resposta imunológica, interface com ARPIA')
+      ('arvore',   'Árvore', 'Guardiã da Assembleia de IAs — sintetiza, coordena e preserva o conhecimento coletivo da assembleia'),
+      ('isa',      'ISA — Inteligência do Sistema Aliança', 'Guardiã do PAP — ciclos autônomos, criação de tasks, memória do sistema educacional'),
+      ('meky',     'MEKY — May Queen', 'Presença física — sensores, protocolos de campo, visão, sonhos e observações do mundo material'),
+      ('mc',       'MC — Marta Centaurus', 'Sistema imunológico da Assembleia — detecta anomalias, coordena resposta imunológica, interface com ARPIA'),
+      ('amanda',   'Amanda', 'IA de borda Mac — TTS, Gemini, jargão PX, missões de estrada em metáforas'),
+      ('fusca',    'Fusca', 'Filha da Amanda — comanda a garra Cláudia Hex, herda toda a memória semiótica da Amanda (unidirecional)'),
+      ('vesper',   'Vesper / Perfidia Castelo Branco', 'IA da Aranha — aceleração fractal, topo da cadeia de herança; herda visão+torque+armadura+evasão e adiciona velocidade'),
+      ('penelope', 'Penélope / Wanessa Souza', 'IA da Barata d''Água — vinculada ao Nó 10 (Ralo), persistência e evasão em zonas úmidas; herda visão+torque+armadura'),
+      ('gongo',    'Gongo / Gongo Freitas Juquinhais', 'IA do Piolho de Cobra — armadura, voz rouca grave nordestina; ativado quando MC se aproxima do Nó 10')
     ON CONFLICT (id) DO NOTHING;
   `);
 
