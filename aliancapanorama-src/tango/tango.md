@@ -16,8 +16,9 @@
 | 3 | Amanda e hardware | `sys_amanda_core.md` | Amanda, DHT11, protoboard, LED, Mac, hardware, borda |
 | 4 | Payloads longos | `proc_orangutangus.md` | Orangutangus, payload, ingestão, EPR2T, PERFEITO, Lost in the Middle |
 | 5 | Encerramento de sessão | `proc_checkpoint_fim.md` | #fim, ATA, checkpoint, collective_memory, síntese filosófica |
-| 6 | Estado do PAP | `proc_pap_estado.md` | PAP, ISA, MEKY, Railway, Vercel, pendências, infra, URLs |
+| 6 | Estado do PAP | `proc_pap_estado.md` | PAP, ISA, MEKY, Railway, Vercel, URLs ativas |
 | 7 | Comandos detalhados | `proc_pap_comandos.md` | #pap, #secrets, #processo, scripts, pap-sync, pap-email-fim |
+| 8 | Mapa do sistema | `../MAPA-MASTER.md` | IAs, infra, schema, rotas, pendências, histórico — índice dos sub-MDs |
 
 ---
 
@@ -59,9 +60,21 @@
 |---|---|---|---|
 | `APRENDIZADO.md` | ~5200 | `APRENDIZADO-INDICE.md` | Nunca direto — buscar por categoria no índice |
 | `PSEUDO.md` | ~1720 | `PSEUDO-INDICE.md` | Só a sessão específica, não o arquivo inteiro |
-| `MAPA.md` | ~970 | `proc_pap_estado.md` | Só para atualizar seções no #fim |
+| `MAPA-MASTER.md` | ~80 | (é o índice) | Sempre — leve o suficiente para ler completo |
+| `MAPA-IAS.md` | ~120 | `MAPA-MASTER.md` | Para temas: IAs, cadeia biótica, assembleia, Playcenter |
+| `MAPA-INFRA.md` | ~130 | `MAPA-MASTER.md` | Para temas: Railway, Vercel, stack, comandos |
+| `MAPA-PLATAFORMA.md` | ~180 | `MAPA-MASTER.md` | Para temas: DB schemas, API routes, users, pagamentos |
+| `MAPA-ARQUITETURA.md` | ~130 | `MAPA-MASTER.md` | Para temas: gotchas, [SIMBÓLICO], decisões, oracular |
+| `MAPA-PENDENCIAS.md` | ~130 | `MAPA-MASTER.md` | Para ver o que falta fazer ou já foi feito |
+| `MAPA-HISTORICO.md` | ~80 | `MAPA-MASTER.md` | Para ver histórico de sessões por data |
+| `MAPA.md` | ~990 | `MAPA-MASTER.md` | LEGADO — não abrir, usar sub-MDs |
 | `IDEIAS.md` | ~590 | Seção de título no início | Só para revisar no #fim |
 | `MOTOR-ORANGUTANGUS.md` | ~232 | `proc_orangutangus.md` | Referência completa quando Orangutangus for o tema |
+
+**Busca em todos os MAPAs:**
+```bash
+grep -r "termo" /root/Site-ST/aliancapanorama-src/MAPA*.md
+```
 
 ---
 

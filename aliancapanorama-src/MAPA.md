@@ -1,11 +1,16 @@
-# PAP — Mapa do Sistema
+# PAP — Mapa do Sistema (LEGADO — ver MAPA-MASTER.md)
 **Projeto Aliança Panorama · Sociedade Tucci · Yuri Tuccieterovic**
+
+> **Este arquivo foi dividido em sub-MDs para mitigar Lost in the Middle.**
+> Use **`MAPA-MASTER.md`** como índice. Sub-MDs: `MAPA-IAS.md` · `MAPA-INFRA.md` · `MAPA-PLATAFORMA.md` · `MAPA-ARQUITETURA.md` · `MAPA-PENDENCIAS.md` · `MAPA-HISTORICO.md`
+> Para buscar: `grep -r "termo" aliancapanorama-src/MAPA*.md`
+> **MAPA.md** mantido como fonte legada — sub-MDs têm conteúdo atualizado.
 
 ---
 
 ## Protocolo de Uso deste Documento
 
-> **Claude Code deve:** ler este arquivo ao iniciar qualquer sessão `#pap` e atualizar as seções de Pendências, Infraestrutura e Histórico ao final.
+> **Claude Code deve:** ler `MAPA-MASTER.md` ao iniciar sessão `#pap`. Ler sub-MD relevante por tema. Atualizar sub-MDs + MAPA-PENDENCIAS.md + MAPA-HISTORICO.md ao `#fim`.
 
 ---
 

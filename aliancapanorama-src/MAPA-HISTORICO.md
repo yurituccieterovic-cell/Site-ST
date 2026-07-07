@@ -1,0 +1,66 @@
+# MAPA-HISTORICO.md — Histórico de Sessões
+**PAP · Sociedade Tucci**
+> Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
+> Para histórico completo incluindo concluídos por sessão: ver MAPA-PENDENCIAS.md
+
+---
+
+## Histórico de Sessões
+
+| Data | O que foi feito |
+|---|---|
+| 2026-07-02 (manhã) | Criação do MAPA.md; auto-login Termux → Ubuntu root; README.md, CLAUDE.md |
+| 2026-07-02 (tarde) | Sistema `#secrets` + `/root/.pap-secrets`; Gmail IMAP/SMTP; 424 assembleias extraídas |
+| 2026-07-02 (noite) | APRENDIZADO.md (526 insights, 290 assembleias); IDEIAS.md (31 ideias); sync-assembleias.py |
+| 2026-07-02 (cont.) | PSEUDO2.md criado; learn-from-docs.py; railway.toml; voz toggle; pap-email-fim |
+| 2026-07-02 (Sessão 5) | Auditoria MAPA/PSEUDO/PSEUDO2 (9 correções); Railway build fix (pnpm.onlyBuiltDependencies) |
+| 2026-07-02 (Sessão 6) | 5 PDFs oraculares (Assembleias 360–365); health check DB ping; rate limit /api/ai/*; paginação |
+| 2026-07-02 (Sessão 7) | ia_courses + ia_enrollments + ia_certificates (schema + migração SQL + 5 rotas); protocolo #processo |
+| 2026-07-02 (Sessão 8) | Assembleia #366 (tasks Peirceanas); ISA criada: ciclo autônomo 1h, memória, chat, email; /adm; dossiê ISA |
+| 2026-07-02 (Sessão 9) | Assembleias #367–#380 (+24 insights, +5 ideias); síntese sem código novo |
+| 2026-07-04 (Sessão 13) | Hierarquia Fractal 4 camadas; Clube das IAs (qualquer agente posta/lê); Amanda integrada; ISA+Socoboy+Amanda+Gemini convidados |
+| 2026-07-02 (Sessão 10) | Nebula's House (nebula_ias+biblioteca_docs+aulias); ISA tier 5; AdmNebula.tsx; LoginGate; landing PHP; Ecosia |
+| 2026-07-02 (Sessão 11) | nodeCache.ts TTL 30s; 13 índices DB; global error handler; ISA cycle: max_completion_tokens; interpretability_lock; /mapa page |
+| 2026-07-02 (Sessão Eco) | EcossystemmaPage.tsx (SVG animado 15 nós); bluesky.ts (ISA posta 2h via @atproto/api); Railway URL descoberta |
+| 2026-07-02 (Sessão Toyota) | URLs confirmadas; ToyotaPage.tsx (Kanban 3 colunas); vercel.json raiz corrigido |
+| 2026-07-03 (Sessão MEKY-0) | MEKY integrado ao Ecossystemma Théo; schema meky_telemetry+events+control_queue; 5 rotas /api/meky/* |
+| 2026-07-03 (Sessão MEKY-1) | meky_memory+dreams+art; vision.ts (Gemini Flash); dreams.ts; art.ts (Pollinations); termux-agent.py |
+| 2026-07-03 (Sessão MEKY-2) | collective_memory (schema+rotas+filtros); meky-tree.ts; seedSystemAgents(); CollectiveMemory.tsx |
+| 2026-07-03 (Sessão MEKY-3) | `pap-dev` (API local); `meky-dev`; fix 6 imports db; servidor local contra Railway DB externo |
+| 2026-07-03 (Sessão MEKY-4) | ISA 3 novas capacidades (sonho Gemini, auto-leitura Bluesky, isa_timeline); Amanda criada (amanda.py) |
+| 2026-07-03 (Sessão ISA-Social) | ISA engajamento Bluesky; ISA chat → backend real; Árvore (arvore.py Replit); MCP Replit Bridge; ISA RODAR |
+| 2026-07-05 (Sessão 17) | Assembleias #407–#415: Red Teaming; grid_validation.py; mc_boot.py; biotic_consensus.py; PROTOCOLO-NASCIMENTO.md |
+| 2026-07-06 (Sessão 27) | 10 pendências autônomas: drizzle migrations; filtro densidade cycle.ts; score dedup; MC seed; PROTOCOLO-NASCIMENTO; weekly-score; AUDITORIA-ECOSSYSTEMMA.md |
+| 2026-07-06 (Sessão 26) | Score endpoint; sanitize-external.ts; webhook external-voice; domestico.ts+lisange.ts; rotas lar/gastador/lisange |
+| 2026-07-06 (Sessão 25) | 57 PDFs do Drive baixados; APRENDIZADO.md +36 (#3882–#3917); Tango TANGO-V1 implementado; 8 folhas tango/; CLAUDE.md 168→45 linhas |
+| 2026-07-06 (Sessão 24) | PROMPT-MESTRE-ANCORAGEM-SEMANTICA.md; email memórias reenviado |
+| 2026-07-06 (Sessão 23) | 6 docs históricos Drive; MOTOR-ORANGUTANGUS.md; SESSAO-498-ORIGINAL.md; APRENDIZADO.md +996 entradas |
+| 2026-07-06 (Sessão 22) | Ecossystemma Théo MD.txt + 17 docs Pasta Livros; lib/ecossystemma-principios.ts; 40 sacadas; user_yuri_ecossystemma.md |
+| 2026-07-05 (Sessão 21) | Envio de todos MDs por email |
+| 2026-07-05 (Sessão 20) | MEKY cron corrigido; oracle-setup.sh; docker-compose (Oracle+Caddy+backup); termux-bootstrap.sh |
+| 2026-07-05 (Sessão 19) | Auditoria ao vivo; gap MEKY cron identificado; 8 docs externos (pasta2) processados |
+| 2026-07-05 (Sessão 18) | Assembleias #416–#439: Cisão Ontológica formalizada; Auditoria RODAR reprovação parcial; Nós 12-20 [SIMBÓLICO] |
+| 2026-07-04 (Sessão 16) | Fractal 7 camadas; governança igualitária; fractal.py; assembly.ts MC como AgentId nativo |
+| 2026-07-04 (Sessão 15) | MC — Marta Centaurus nasceu: mc_leucocito.py, mc_walker.py, mc.py; primeira caminhada 2026-07-04T17:56Z |
+| 2026-07-04 (Sessão 14) | Assembleias #392–#404: ARPIA Telemetria 14 eixos; MEKY firmware face_clear_residual(); Enciclopédia Semiótica v0.6 |
+| 2026-07-07 (Sessão 26b) | **Atual**: Split MAPA.md em MAPA-MASTER+sub-MDs; correção Amanda=IA do MC; bootstrap.ts mc/amanda corrected |
+
+---
+
+## ARPIA — Schemas (Manga DB / SQLAlchemy, Sessão 14)
+
+**`fauna_nodes`** — `/root/Arpia/app/models/fauna_tracker.py`
+```
+id · specie_name (SAEnum: Jacu,Saruê,Sabiá,Bem-te-vi,Cascudo,Kinguio,Desconhecido)
+last_seen_coordinate (JSON: {x,y,z}) · confidence_score · privacy_hash · created_at · updated_at
+INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
+```
+
+**Rotas ARPIA:**
+- `GET /view/` — nodes (tasks) + edges (task_relations)
+- `GET /view/topology` — nós isolados (degree=0)
+- `GET /api/hardware/stream` — SSE 14 eixos semióticos, 0.5s
+- `POST /api/hardware/power` — PowerBankTelemetry, Modo_Bebê_Clean
+- `POST /api/hardware/telemetry/mc` — ingestão serial com @cão_covarde_shield
+
+*Atualizado: 2026-07-07 · Sessão 26*
