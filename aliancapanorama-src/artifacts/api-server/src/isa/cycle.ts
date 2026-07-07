@@ -132,7 +132,7 @@ export async function runIsaCycle(): Promise<{ tasksCreated: number; suggestions
   const lockedCount = recentMemory.filter((m) => m.interpretabilityLock === 1).length;
 
   // 2. Ler docs do projeto (APRENDIZADO.md alimenta o raciocínio com insights reais das assembleias)
-  const mapa = readDoc("MAPA.md");
+  const mapa = readDoc("MAPA-MASTER.md");
   const isa = readDoc("ISA.md");
   const aprendizado = readDoc("APRENDIZADO.md");
 

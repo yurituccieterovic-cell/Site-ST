@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents } from "./lib/bootstrap";
+import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable } from "./lib/bootstrap";
 import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
 
@@ -16,7 +16,8 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-seedDatabase()
+ensureSessionTable()
+  .then(() => seedDatabase())
   .then(() => enforceUniquePasswords())
   .then(() => ensureMekyTables())
   .then(() => seedSystemAgents())

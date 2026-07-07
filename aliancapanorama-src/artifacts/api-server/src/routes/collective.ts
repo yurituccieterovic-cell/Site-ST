@@ -7,18 +7,22 @@ export const collectiveRouter = Router();
 
 // ── Auth helpers ──────────────────────────────────────────────────────────────
 
-function getAuthor(req: any): { type: string; id: string; name: string; tier: number } | null {
-  // Usuário humano logado
-  if (req.session?.user) {
-    const u = req.session.user;
-    return { type: "human", id: String(u.id), name: u.displayName ?? u.login, tier: u.tier };
+function getAuthor(req: import("express").Request): { type: string; id: string; name: string; tier: number } | null {
+  // Usuário humano logado — sessão usa flat properties (userId, userLogin, userTier)
+  if (req.session.userId) {
+    return {
+      type: "human",
+      id:   String(req.session.userId),
+      name: req.session.userLogin ?? `user:${req.session.userId}`,
+      tier: req.session.userTier ?? 0,
+    };
   }
   // MEKY via token
-  if (req.headers["x-meky-token"] === process.env.MEKY_TOKEN) {
-    return { type: "meky", id: "meky", name: "MEKY — Marta Centauros", tier: 5 };
+  if (req.headers["x-meky-token"] === process.env["MEKY_TOKEN"]) {
+    return { type: "meky", id: "meky", name: "MEKY — Marta Centaurus", tier: 5 };
   }
   // ISA via chave interna (mesmo AI_API_KEY)
-  if (req.headers["x-api-key"] === process.env.AI_API_KEY) {
+  if (req.headers["x-api-key"] === process.env["AI_API_KEY"]) {
     return { type: "isa", id: "isa", name: "ISA — Inteligência do Sistema Aliança", tier: 5 };
   }
   return null;

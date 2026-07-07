@@ -303,18 +303,26 @@ router.get("/achievements", async (req, res): Promise<void> => {
   res.json(achievements);
 });
 
-// GET /api/progress/weekly-score — score por semana ISO (deduplicado por exercício dentro da semana)
+// GET /api/progress/weekly-score — score por semana ISO
+// Deduplica por (exercise_id, node_code): mesmo exercício feito N vezes na semana conta 1 vez
 router.get("/progress/weekly-score", async (req, res): Promise<void> => {
   const userId = getAuthUserId(req, res);
   if (!userId) return;
 
   const rows = await db.execute(sql`
+    WITH deduped AS (
+      SELECT DISTINCT ON (exercise_id)
+        node_code,
+        created_at
+      FROM exercise_attempts
+      WHERE user_id = ${userId} AND correct = 1
+      ORDER BY exercise_id, created_at ASC
+    )
     SELECT
       TO_CHAR(DATE_TRUNC('week', created_at), 'IYYY-"W"IW') AS week,
       SUM(LENGTH(node_code) * 10)                            AS score,
-      COUNT(DISTINCT exercise_id)                            AS exercises
-    FROM exercise_attempts
-    WHERE user_id = ${userId} AND correct = 1
+      COUNT(*)                                               AS exercises
+    FROM deduped
     GROUP BY DATE_TRUNC('week', created_at)
     ORDER BY DATE_TRUNC('week', created_at) ASC
   `);

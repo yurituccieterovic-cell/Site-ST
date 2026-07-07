@@ -261,11 +261,31 @@ export async function ensureMekyTables(): Promise<void> {
       ('fusca',    'Fusca', 'Filha da Amanda — comanda a garra Cláudia Hex, herda toda a memória semiótica da Amanda (unidirecional)'),
       ('vesper',   'Vesper / Perfidia Castelo Branco', 'IA da Aranha — aceleração fractal, topo da cadeia de herança; herda visão+torque+armadura+evasão e adiciona velocidade'),
       ('penelope', 'Penélope / Wanessa Souza', 'IA da Barata d''Água — vinculada ao Nó 10 (Ralo), persistência e evasão em zonas úmidas; herda visão+torque+armadura'),
-      ('gongo',    'Gongo / Gongo Freitas Juquinhais', 'IA do Piolho de Cobra — armadura, voz rouca grave nordestina; ativado quando MC se aproxima do Nó 10')
+      ('gongo',    'Gongo / Gongo Freitas Juquinhais', 'IA do Piolho de Cobra — armadura, voz rouca grave nordestina; ativado quando MC se aproxima do Nó 10'),
+      ('tango',    'Tango_Core / Gorango Tango', 'IA do Orangotango (hardware com rodas tipo carrinho de rolimã) — Inércia Dinâmica / Tração Cinética. Posição na cadeia biótica a definir. [SIMBÓLICO]')
     ON CONFLICT (id) DO NOTHING;
   `);
 
   logger.info("bootstrap: MEKY + collective + assembly tables OK");
+}
+
+/**
+ * Garante que a tabela de sessão (connect-pg-simple) existe antes do servidor aceitar requests.
+ * createTableIfMissing=true cria lazily, mas pode ter race condition na primeira requisição.
+ */
+export async function ensureSessionTable(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS "session" (
+      "sid"    varchar   NOT NULL COLLATE "default",
+      "sess"   json      NOT NULL,
+      "expire" timestamp(6) NOT NULL,
+      CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE
+    ) WITH (OIDS=FALSE)
+  `);
+  await db.execute(sql`
+    CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire")
+  `);
+  logger.info("bootstrap: session table OK");
 }
 
 /**

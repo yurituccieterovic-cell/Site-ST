@@ -102,6 +102,11 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
   req.session.userLogin = user.login;
   req.session.userTier = user.tier;
 
+  // Forçar gravação da sessão antes de responder (connect-pg-simple salva assíncrono)
+  await new Promise<void>((resolve, reject) => {
+    req.session.save((err) => (err ? reject(err) : resolve()));
+  });
+
   res.json({
     id: user.id,
     login: user.login,
@@ -141,6 +146,10 @@ router.post("/auth/adm-pin", pinRateLimit, async (req, res) => {
   req.session.admPin = undefined;
   req.session.admPinExpiry = undefined;
   req.session.admPinUserId = undefined;
+
+  await new Promise<void>((resolve, reject) => {
+    req.session.save((err) => (err ? reject(err) : resolve()));
+  });
 
   res.json({ id: user.id, login: user.login, tier: user.tier, displayName: user.displayName });
 });
