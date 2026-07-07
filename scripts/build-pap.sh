@@ -12,7 +12,7 @@ fi
 
 echo "==> Instalando dependências..."
 cd "$SRC"
-pnpm install --frozen-lockfile
+pnpm install --no-frozen-lockfile
 
 echo "==> Buildando frontend PAP..."
 BASE_PATH=/aliancapanorama/ PORT=3000 NODE_ENV=production \

@@ -8,6 +8,9 @@
     { "source": "/aliancapanorama/buscar", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/mapa", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/eco", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/toyota", "destination": "/aliancapanorama/index.html" }
+    { "source": "/aliancapanorama/toyota", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/meky", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/portal", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/dodge", "destination": "/aliancapanorama/index.html" }
   ]
 }
