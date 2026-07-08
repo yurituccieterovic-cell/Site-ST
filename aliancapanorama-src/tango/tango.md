@@ -20,6 +20,7 @@
 | 7 | Comandos detalhados | `proc_pap_comandos.md` | #pap, #secrets, #processo, scripts, pap-sync, pap-email-fim |
 | 8 | Mapa do sistema | `../MAPA-MASTER.md` | IAs, infra, schema, rotas, pendências, histórico — índice dos sub-MDs |
 | 9 | Health check sistemas | `proc_health_check.md` | Vercel, Railway, rotas SPA, tabelas DB, build, smoke test, fix rápido |
+| 10 | Aula Arquitetura IA Agentes | `aula-ia-agentes-20260708.md` | tarefa, agente, workflow, processos, CrewAI, MCP, A2A, hierarquia, Alongador de Memória |
 
 ---
 

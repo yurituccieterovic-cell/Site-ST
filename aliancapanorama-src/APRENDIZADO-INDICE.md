@@ -41,6 +41,7 @@
 | 4392 | 🌿 Ecologia / Arte — Livros | 2026-07-06 | Subversão Ambiental, EcoRespiração |
 | 4663 | Raízes do Projeto (35 lições Replit) | 2026-07-06 | Sessão 23: gotchas operacionais, fases PAP |
 | 4743 | Motor Orangutangus — Sessão #498 | 2026-07-06 | Sessão 23: EPR2T, AI Profile JSON |
+| 5210 | 🤖 IA — Aula Arquitetura de Agentes | 2026-07-08 | 15 entradas: princípio "foco na tarefa", triângulo Tarefa-Agente-Processos, 6 passos, hierarquia de agentes, protocolos A2A+MCP, workflows mestre, Alongador de Memória, CrewAI |
 
 ---
 
