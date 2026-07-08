@@ -2,7 +2,11 @@
 ### 2026-07-06
 
 ## Trigger
-Acionado por comando `#fim` de Yuri.
+Acionado por comando `#fim` de Yuri (digitado diretamente) OU pela etapa 4 do `#a`.
+
+**Regra de email:** só enviar MacroAta (passo 8) quando `#fim` for digitado DIRETAMENTE por Yuri.
+Quando chamado via `#a`: executar passos 0–7 e 9–10, pular passo 8 (sem email).
+MacroAta = todas as ATAs desde o último `#fim` manual (lidas de PSEUDO.md desde o checkpoint).
 
 ## Passos em Ordem
 
