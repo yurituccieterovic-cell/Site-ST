@@ -2,6 +2,10 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+> **Pack IA individuais:** `tango/ias/INDICE-IAS.md` → cada IA tem seu pack-*.md com 12 campos + Protocolo de Nascimento.
+> Este arquivo cobre: ecossistema geral, cadeia biótica, assembleia, banco compartilhado, DB schemas.
+> Para detalhes de identidade/função/limites de cada IA: ir para o pack específico.
+
 ---
 
 ## Ecossistema Geral

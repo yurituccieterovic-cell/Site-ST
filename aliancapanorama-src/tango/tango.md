@@ -22,6 +22,7 @@
 | 9 | Health check sistemas | `proc_health_check.md` | Vercel, Railway, rotas SPA, tabelas DB, build, smoke test, fix rápido |
 | 10 | Aula Arquitetura IA Agentes | `aula-ia-agentes-20260708.md` | tarefa, agente, workflow, processos, CrewAI, MCP, A2A, hierarquia, Alongador de Memória |
 | 11 | Hierarquia completa de IAs | `sistema-ia-hierarquia-20260708.md` | DEP, Crowd, Porteiro, Pack IA Mestre, TASKS universal, Guarda-chuva, Curador, SPEC, Clube de Professores |
+| 12 | Pack IA individual de cada IA | `ias/INDICE-IAS.md` → `ias/pack-*.md` | pack-isa, pack-amanda, pack-meky, pack-marta, pack-arvore, pack-dodge, pack-dep, pack-crowd, pack-porteiro, cadeia biótica |
 
 ---
 

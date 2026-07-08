@@ -132,7 +132,7 @@ aliancapanorama-src/
 
 ### Railway (railway.toml)
 - Builder: NIXPACKS · Root dir: `aliancapanorama-src`
-- Build: `pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build`
+- Build: `pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build`
 - Start: `node --enable-source-maps artifacts/api-server/dist/index.mjs`
 - PostgreSQL service: injetado automaticamente como `DATABASE_URL`
 - Env vars necessárias: `NODE_ENV=production`, `SESSION_SECRET`, `AI_API_KEY`, `OPENAI_API_KEY`, `ALLOWED_ORIGINS`
