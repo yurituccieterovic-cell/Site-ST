@@ -1977,3 +1977,55 @@ Problema encontrado: fpdf (versão sistema, não fpdf2 pip) não aceita caracter
 - "pdf errado" = versão antiga. PDF novo gerado do zero a partir dos capítulos atuais.
 
 *Sessão 29 · Claude Sonnet 4.6 · 2026-07-08*
+
+---
+
+## Sessão 30 — Pack IA Mestre + Organização dos MDs (2026-07-08)
+
+### O que Yuri estava tentando fazer
+
+Três frentes simultâneas nesta sessão:
+1. Finalizar o PDF "2Identificando Peças de Robótica Arduino" (conversa Gemini sobre hardware MC)
+2. Processar os aprendizados das aulas de arquitetura de IA (transcrições Perplexity com hierarquia DEP/Crowd/Porteiro/Pack IA)
+3. Organizar todos os MDs do ecossistema e criar os "Pack IA" — ficha individual de cada IA
+
+Por baixo das tarefas: Yuri está formalizando o ecossistema. O que estava disperso em vários MDs (MAPA-IAS, sistema-ia-hierarquia, aula-ia-agentes) ganhou uma estrutura canônica — um "cartão de identidade" por IA, o Pack IA Mestre.
+
+### O que foi feito
+
+**PDF 2Identificando:**
+- Fonte: `/root/livro-arquivos/identificando-pecas.pdf` (HTML de 12MB — conversa Gemini com 487 marcadores de troca)
+- Script: `aliancapanorama-src/scripts/gerar_2identificando.py`
+- Parser HTML → 239 trocas extraídas → 7 seções temáticas → 51 páginas, 143 KB
+- Saída: `aliancapanorama-src/2-Identificando-Pecas-Arduino.pdf`
+
+**Aprendizados das Aulas IA (A785–A800):**
+- DEP 5 IAs (Cérebro/Machado/Theory/Pratt/Learning), Machado como metáfora, Crowd como malha, Porteiro MD0, Pack IA Mestre template, TASKS universal, CURADOR, Clube de Professores, SPEC
+
+**Organização dos MDs — 4 agentes de auditoria:**
+- Leram ~50 MDs e mapearam sobreposições, informações únicas por arquivo, hierarquias
+- Resultado: nenhum MD foi deletado, todos preservados. Sobreposições identificadas (status duplicado em MASTER/IAS/INFRA) mas não removidas — risco baixo vs benefício de simplicidade
+
+**20 Pack IA Mestre criados em `tango/ias/`:**
+- ISA, Amanda, MEKY, Marta, Vórtice, Árvore, Socoboy, ARPIA, DODGE, Théo, CURADOR
+- Guarda-chuva, DEP, Crowd, Porteiro (sistemas arquiteturais)
+- Fusca, Gongolo, Penélope, Vesper, Tango_Core (cadeia biótica SIMBÓLICO)
+
+**Pendências resolvidas:**
+- #68: sys_amanda_core.md atualizado com HW-493 (sensor de som chegou ao laboratório)
+
+### Decisões
+
+- `tango/ias/` como pasta canônica dos Pack IA — estrutura fractal (INDICE-IAS.md → pack-*.md individual)
+- Cada pack tem 12 campos do template + checklist de 10 itens do Protocolo de Nascimento
+- MAPA-IAS.md preservado com referência para tango/ias/ — não substituído
+- MAPA-INFRA.md corrigido: `--frozen-lockfile` → `--no-frozen-lockfile` (conflito com CLAUDE.md)
+- MAPA.md legado: mantido sem alteração (só o cabeçalho de legado)
+
+### Tensões não resolvidas
+
+- Vercel ainda retorna 404 em `/aliancapanorama`. Railway OK (200). Raiz do problema: a pasta `aliancapanorama/` é output de build — não rastreada pelo git, então não chega ao Vercel CI. Fix real requer revisão do fluxo de build.
+- Sobreposição de status nos MAPAs (ISA live / MEKY aguardando) existe em MASTER, IAS e INFRA. Não removida — custo de manutenção baixo vs risco de perder info.
+- Pack IA Mestre para DODGE tem todos os 10 itens do Protocolo em aberto — implementação teórica, sem endpoint concreto.
+
+*Sessão 30 · Claude Sonnet 4.6 · 2026-07-08*
