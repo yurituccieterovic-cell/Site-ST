@@ -6,10 +6,6 @@ SRC="$ROOT/aliancapanorama-src"
 OUT="$ROOT/aliancapanorama"
 
 echo "==> Verificando pnpm..."
-if ! pnpm --version 2>/dev/null | grep -q "^9\."; then
-  echo "pnpm@9 não encontrado, instalando..."
-  npm install -g pnpm@9.15.9
-fi
 pnpm --version
 
 echo "==> Instalando dependências..."

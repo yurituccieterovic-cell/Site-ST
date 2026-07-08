@@ -6,6 +6,7 @@
     "@octokit/rest": "^20.0.2",
     "node-fetch": "^2.6.7"
   },
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "validate": "node -e \"require('./package.json'); console.log('OK')\""
   }
