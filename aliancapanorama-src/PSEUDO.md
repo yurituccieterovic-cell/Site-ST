@@ -1949,3 +1949,31 @@ Yuri entrou com o diagrama WORKFLOW já pensado — não como tarefa de código,
 A sessão foi breve — health check + fix Vercel + #fim. Yuri quis fechar o loop do dia.
 
 *Sessão 28 · Claude Sonnet 4.6 · 2026-07-07*
+
+---
+
+## Sessão 29 — PDF Engrenagem Semiótica + #processo WORKFLOW (2026-07-08)
+
+### O que foi feito
+
+**#processo no diagrama WORKFLOW:**
+Yuri enviou o diagrama arquitetural (TAREFA+AGENTE → OBJETIVOS+FERRAMENTAS → WORKFLOW → PROCESSOS) e pediu para rodar #processo. Resultado: 6 aprendizados (#5105-#5110) + 3 ideias (I159-I161).
+
+Insight central extraído: `cycle.ts` já é o WORKFLOW do diagrama. O diagrama é a formalização retroativa do que foi construído — não uma novidade, mas um nome.
+
+**PDF Parte I — gerado do zero:**
+O PDF enviado anteriormente era de geração antiga. Yuri disse "pdf errado" — interpretado como "incompleto/desatualizado". Gerou-se um novo script `gerar_parte1.py` que:
+- Parseia LIVRO-PI-prologo.md + LIVRO-PI-1-1..5.md + LIVRO-PI-sintese.md
+- Renderiza caixas YURI (direita, azul) e GEMINI (esquerda, verde) em tema escuro
+- Insere 6 imagens Gemini de `/root/livro-arquivos/Livro/Arquivos/Geradas por IA/`
+- Saída: 12 páginas, 837 KB
+
+Problema encontrado: fpdf (versão sistema, não fpdf2 pip) não aceita caracteres fora de latin-1 (▶, →, é, ã...). Solução: função `sanitize()` com mapa de substituição.
+
+### Decisões
+
+- Script de geração do PDF salvo em `/tmp/gerar_parte1.py` — deve ser commitado se Yuri quiser manter
+- Email enviado de luddlocke@gmail.com → yurituccieterovic@gmail.com (pedido explícito)
+- "pdf errado" = versão antiga. PDF novo gerado do zero a partir dos capítulos atuais.
+
+*Sessão 29 · Claude Sonnet 4.6 · 2026-07-08*
