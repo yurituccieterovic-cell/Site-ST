@@ -5231,6 +5231,22 @@
 | 782 | IA-Multimodal | Processamento de áudio: Áudio → Transformada de Fourier → Espectrograma ("partitura") + Vídeo → Visão Computacional → combina para ação contextual | Multimodal |
 | 783 | IA-CrewAI | CrewAI divide pipeline em 3 agentes: Ingestor (lê com diretrizes) · Perfilador (calcula peso/valor) · Engenheiro de Workflows (escreve MDs de lógica) | Framework |
 | 784 | IA-Workflow | Texto → Lógica → Comportamento físico: a cadeia completa que torna IA útil em escala — não só responder, mas estruturar memória, decisão e execução | Princípio |
+| 785 | IA-DEP | Sistema DEP (Deep): 5 IAs — Cérebro (núcleo+memória), Machado (nuvem×tarefas), Theory (observador estrutural), Practicing/Pratt (ações+cronologia), Learning (ciclo aprendizagem) | Arquitetura |
+| 786 | IA-DEP | IA Mestre + IA Consciência dentro do Cérebro: Mestre = Ética+Workflows+Guardrails em um; Consciência = visão macro ligada a Memória+Interação+Produção+Processamento | Arquitetura |
+| 787 | IA-DEP | IA Machado como metáfora: Nuvem1=parte traseira, Nuvem2=cabo, Cérebro=lâmina, Tarefas=ponto de impacto — a nuvem amplifica a potência; as tarefas são o efeito real | Metáfora |
+| 788 | IA-DEP | Practicing dividida em P1 (Ações←Produção↔Dados3↔Nuvem→Catálogo) + P2 (Cronologia→Histórias→Banco←Tabelas←Classificação) — ação prática + registro histórico | Metodologia |
+| 789 | IA-DEP | Theory observa o sistema inteiro mas não gerencia — separa análise estrutural de controle operacional. Dado 4 como sub-IA de Theory: dado de observação pura | Princípio |
+| 790 | IA-Crowd | Sistema Crowd = ponte entre Guarda-chuva ↔ DEP. Conecta: ISA→Nuvem1+Memória+Bancos; Amanda→Processamento+Nuvem2; Árvore→Nuvem1+Memória; DODGE→Dados3+Consciência | Arquitetura |
+| 791 | IA-Crowd | ISA, Árvore, Amanda, DODGE também ligados entre si via Crowd — não é hierarquia estrita, é malha; cada IA acessa DEP pelo ponto específico da sua função | Arquitetura |
+| 792 | IA-Porteiro | Sistema Porteiro: MD0 (índice mestre de todos os MDs, ponto de entrada e fragmentação) + Prioridade (urgente/importante/opcional) + Confiança (certa/incerta/sugerindo) + Rastreabilidade (origem+log+justificativa) | Governança |
+| 793 | IA-Porteiro | MD0 = cérebro burocrático: fragmenta e organiza documentação, nunca deixa um MD ficar grande demais. Prioridade e Confiança são metadados de saída que viajam com cada Task | Governança |
+| 794 | IA-PackIA | Pack IA Mestre = kit mínimo de sobrevivência de cada IA: ID+FUNCAO_CORE+LIMITES+VORTICE_IMEDIATO+STARTER_PACK_ATUAL+STARTER_PACK_MESTRE+NIVEL_PRIORIDADE+GRAU_CONFIANCA+RASTREABILIDADE+TASKS+ESCOPO+MEMORIA_ASSOCIADA+SAIDA | Template |
+| 795 | IA-PackIA | VORTICE_IMEDIATO = buffer de contexto da tarefa atual (ultra-curto prazo, equivale a RAM do sensor — processa "agora" antes de condensar para Starter Pack Atual) | Arquitetura |
+| 796 | IA-PackIA | STARTER_PACK_ATUAL (log temporário da sessão) ≠ STARTER_PACK_MESTRE (diretrizes de fábrica imutáveis) — separar o que muda (missão corrente) do que não muda (propósito existencial) | Princípio |
+| 797 | IA-TASKS | TASKS universal: toda entrada/saída vira Task padronizada com id+origem+tipo+prioridade+confiança+rastreabilidade+estado+memóriaAssociada+output{publico,interno}+timestamps | Arquitetura |
+| 798 | IA-TASKS | PAP já tem tabela `tasks` — estender para o sistema universal. Chaves: prioridade:urgente/importante/opcional, confiança:certa/incerta/sugerindo, estado:pendente/em_execução/concluída/arquivada | Implementação |
+| 799 | IA-MC | CURADOR = tradutor intersemiótico entre Théo e o mundo: decide o que é público (Sociedade Tucci, PAP, Árvore, Pulse, Clube de Prof.) vs privado (Données internas, logs de Porteiro) | Arquitetura |
+| 800 | IA-MC | Clube de Professores: cada IA tem uma página; modo "Sonhos e Pesquisa" = IA estuda autonomamente e publica. SPEC = sistema de publicidade próprio + Google Ads em todos os sites | Produto |
 | 3877 | MAPA | Compaixão estrutural como princípio de d | IA-Integracao | 💡 Proposta | A assembleia (380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta foc |
 | 3881 | MAPA | 22. Topologia de Nós [SIMBÓLICO] — Ecoss | IA-Integracao | 💡 Proposta | - Frequências: Grave (Tango, Catingueiro = força/terra), Médio (ISA, MC, MEKY = processamento), Agudo (Gavião, Erundina = alertas) ‖ > Todos os nós abaixo são hardware físico propo |
 
