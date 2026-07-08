@@ -10,7 +10,13 @@ async function req(method, path, body) {
     headers: { 'x-api-key': KEY, 'Content-Type': 'application/json' },
     body: body ? JSON.stringify(body) : undefined,
   });
-  return res.json();
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    console.warn(`Resposta não-JSON em ${method} ${path} (${res.status}): ${text.slice(0, 120)}`);
+    return {};
+  }
 }
 
 async function main() {
