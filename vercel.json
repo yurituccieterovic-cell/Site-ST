@@ -1,5 +1,5 @@
 {
-  "installCommand": "corepack enable",
+  "installCommand": "corepack prepare pnpm@9.15.9 --activate",
   "buildCommand": "bash scripts/build-pap.sh",
   "outputDirectory": ".",
   "rewrites": [
