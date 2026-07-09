@@ -45,7 +45,9 @@
 | 2026-07-04 (Sessão 14) | Assembleias #392–#404: ARPIA Telemetria 14 eixos; MEKY firmware face_clear_residual(); Enciclopédia Semiótica v0.6 |
 | 2026-07-07 (Sessão 26b) | Split MAPA.md em MAPA-MASTER+sub-MDs; correção Amanda=IA do MC; bootstrap.ts mc/amanda corrected; bugs session/weekly-score/collective; Livros v4+v5; Portal; Dodge; smoke-test 29/29 OK |
 | 2026-07-07 (Sessão 28) | Health check: Railway vivo (healthz), Vercel 404 (build falha). Fix: vercel.json installCommand+outputDirectory; build script simplificado. |
-| 2026-07-08 (Sessão 29) | **Atual**: #processo no diagrama WORKFLOW → APRENDIZADO #5105-#5110 + IDEIAS I159-I161. PDF "A Engrenagem Semiótica Parte I" gerado do zero (12 pgs, 837KB) e enviado por email. |
+| 2026-07-08 (Sessão 29) | #processo no diagrama WORKFLOW → APRENDIZADO #5105-#5110 + IDEIAS I159-I161. PDF "A Engrenagem Semiótica Parte I" gerado do zero (12 pgs, 837KB) e enviado por email. |
+| 2026-07-08 (Sessão 30) | Pack IA Mestre: 20 arquivos em tango/ias/ (INDICE-IAS.md + pack-*.md). PDF "2 Identificando Peças de Robótica Arduino" (51 pgs, HTML→PDF via HTMLParser). APRENDIZADO A785–A800 (DEP/Crowd/Porteiro/TASKS). HW-493 em sys_amanda_core.md. #fim automático. |
+| 2026-07-09 (Sessão 31) | Fix poll-db workflow: api/db/[...path].js (catch-all Vercel). Email hierarquia IAs + PDF anexo. Comandos #a e #fim→MacroAta documentados no CLAUDE.md e proc_checkpoint_fim.md. |
 
 ---
 
@@ -65,4 +67,4 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - `POST /api/hardware/power` — PowerBankTelemetry, Modo_Bebê_Clean
 - `POST /api/hardware/telemetry/mc` — ingestão serial com @cão_covarde_shield
 
-*Atualizado: 2026-07-07 · Sessão 26*
+*Atualizado: 2026-07-09 · Sessão 31*

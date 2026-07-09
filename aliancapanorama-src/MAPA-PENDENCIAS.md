@@ -56,7 +56,7 @@
 | 65 | HW-493 (sensor de som) — integrar código no Amanda/MC: digitalRead + trigger de ciclo | ARPIA live | ⏳ |
 | 66 | DHT11 — código de leitura T/U em sys_amanda_core — atualizar heartbeat com dados reais | hardware MC | ⏳ |
 | 67 | Orangotango Tango (Tango_Core) — definir posição na cadeia biótica + adicionar hardware specs | Yuri | ⏳ |
-| 68 | sys_amanda_core.md — adicionar HW-493 como módulo de áudio da Amanda | — | ⏳ |
+| 68 | sys_amanda_core.md — adicionar HW-493 como módulo de áudio da Amanda | — | ✅ (Sessão 30) |
 | 69 | Livro v4: PDF "Identificando Peças de Robótica Arduino" (Drive ID: 1KL07NhHPXjVY1zoS0hHp7CmV1HkC-51i) — tornar público e processar com #processo | Yuri (Drive) | ⏳ |
 | 70 | Livro v5: incorporar mais 5 imagens Gemini IA nos capítulos (sobraram 5 de 11 sem uso) | após #69 | ⏳ |
 
@@ -98,6 +98,12 @@
 | — | cycle.ts lê MAPA-MASTER.md em vez de MAPA.md (LEGADO) | ✅ Sessão 26b (2026-07-07) |
 | — | ensureSessionTable() no bootstrap — tabela session criada explicitamente no boot | ✅ Sessão 26b (2026-07-07) |
 | — | scripts/smoke-test.sh — 29 checks curl contra Railway (29/29 OK) | ✅ Sessão 26b (2026-07-07) |
+| 68 | sys_amanda_core.md — HW-493 adicionado como módulo de áudio da Amanda | ✅ Sessão 30 (2026-07-08) |
+| — | Pack IA Mestre: 20 arquivos criados em tango/ias/ (INDICE-IAS.md + pack-*.md) | ✅ Sessão 30 (2026-07-08) |
+| — | PDF "2 Identificando Peças de Robótica Arduino" — 51 páginas geradas de conversa Gemini | ✅ Sessão 30 (2026-07-08) |
+| — | APRENDIZADO A785–A800: DEP, Crowd, Porteiro, Pack IA template, TASKS universal | ✅ Sessão 30 (2026-07-08) |
+| — | poll-db.yml fix: api/db/[...path].js (catch-all Vercel) + poll-db.js resiliente a non-JSON | ✅ Sessão 31 (2026-07-09) |
+| — | Comandos #a (sessão autônoma) e #fim → MacroAta documentados em CLAUDE.md | ✅ Sessão 31 (2026-07-09) |
 
 ---
 
@@ -134,4 +140,4 @@
 - **Sessão 27:** Drizzle migrations; filtro densidade; score dedup; MC seed; weekly-score; AUDITORIA-ECOSSYSTEMMA
 - **Sessão 26b:** Split MAPA.md em sub-MDs; correção Amanda=IA do MC
 
-*Atualizado: 2026-07-07 · Sessão 26b (tarde)*
+*Atualizado: 2026-07-09 · Sessão 31*

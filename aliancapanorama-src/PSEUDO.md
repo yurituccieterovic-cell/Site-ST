@@ -2029,3 +2029,51 @@ Por baixo das tarefas: Yuri está formalizando o ecossistema. O que estava dispe
 - Pack IA Mestre para DODGE tem todos os 10 itens do Protocolo em aberto — implementação teórica, sem endpoint concreto.
 
 *Sessão 30 · Claude Sonnet 4.6 · 2026-07-08*
+
+---
+
+## Sessão 31 — Fix poll-db + Email IAs + Comandos #a e #fim (2026-07-09)
+
+### O que Yuri estava tentando fazer
+
+Três frentes:
+1. Resolver a falha do workflow GitHub Actions "Poll Banco Compartilhado" (email de alerta)
+2. Receber por email a hierarquia completa das IAs (Sistema Crowd com conexões e diretrizes) + PDF do livro anexado
+3. Institucionalizar dois novos comportamentos: `#a` (sessão autônoma completa) e `#fim` → MacroAta
+
+Por baixo: Yuri está consolidando a infraestrutura de comunicação entre os Claudes (Banco Compartilhado) e formalizando o protocolo de trabalho autônomo (#a) para que sessões futuras possam correr sem intervenção manual.
+
+### O que foi feito
+
+**Fix poll-db.yml (GitHub Actions):**
+- Root cause: Vercel roteia `api/db.js` apenas para `/api/db` exatamente. Sub-rotas como `/api/db/inbox` retornavam 404 HTML. `res.json()` jogava SyntaxError → `process.exit(1)` → workflow falhava em 9 segundos.
+- Fix 1: `api/db/[...path].js` criado — catch-all Edge Function que re-exporta o handler de `api/db.js`. Agora `/api/db/*` é roteado corretamente.
+- Fix 2: `scripts/poll-db.js` blindado — `req()` lê `.text()` + `JSON.parse()` manual, loga não-JSON sem crashar.
+- Commits: `7bc3b09` e `ca376b3`.
+- Pendência restante para Yuri: configurar `DB_API_KEY` como secret no GitHub Actions (valor revelado na sessão: `AWUgIFol...`).
+
+**Email hierarquia IAs:**
+- Conteúdo: diagrama completo (Guarda-chuva → Crowd → DEP → PROJETO MC), cada IA com Starter Pack Mestre, limites, conexões DEP e status do Protocolo de Nascimento.
+- Enviado de luddlocke@gmail.com → yurituccieterovic@gmail.com.
+- Anexo: `2-Identificando-Pecas-Arduino.pdf` (51 páginas) — que também não havia sido enviado na sessão anterior.
+
+**Comandos #a e #fim → MacroAta:**
+- `#a`: roda `#pap` + tarefa + `#processo` + `#fim` interno (sem email).
+- `#fim` (manual de Yuri): executa protocolo completo + envia MacroAta = todas as ATAs desde o último `#fim` manual.
+- Arquivo de controle: `.pap-fim-checkpoint` (timestamp do último `#fim` manual).
+- Documentado em CLAUDE.md (raiz) e `tango/proc_checkpoint_fim.md`.
+
+### Decisões
+
+- Vercel catch-all `[...path].js` é a solução correta para Edge Functions com sub-rotas — não rewrite (rewrite fixo perde a URL original no handler).
+- `#fim` chamado via `#a` NÃO envia email — evita spam de atas em sessões autônomas.
+- MacroAta consolida múltiplas ATAs em um único email → Yuri recebe contexto completo entre checkpoints manuais.
+- DB_API_KEY revelado explicitamente a pedido de Yuri para configuração do GitHub Actions secret — dentro do escopo de propriedade das credenciais pelo próprio usuário.
+
+### Tensões não resolvidas
+
+- `arvore_github_token` no Vercel: o script `api/db.js` requer essa env var com esse nome exato. No `.pap-secrets` está como `ARVORE_TOKEN`. Yuri precisa verificar se o nome no painel Vercel bate (`arvore_github_token`) — se não, o banco retorna 500 mesmo com routing corrigido.
+- DB_API_KEY no GitHub Actions: sem o secret configurado, o workflow continua falhando mesmo com o routing fix (envia string vazia → 401 → JSON válido mas `inbox.data` undefined → workflow conclui sem erro, mas sem registrar atividade). Parcialmente resiliente graças ao fix de blindagem.
+- Vercel frontend (pap-tan-seven) ainda em 404. Não abordado nesta sessão.
+
+*Sessão 31 · Claude Sonnet 4.6 · 2026-07-09*
