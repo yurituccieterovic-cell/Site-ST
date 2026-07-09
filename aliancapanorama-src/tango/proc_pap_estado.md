@@ -4,7 +4,7 @@
 ## URLs Ativas
 | Serviço | URL |
 |---|---|
-| Frontend | `pap-tan-seven.vercel.app` |
+| Frontend | `site-st.vercel.app/aliancapanorama` |
 | API Railway | `site-st-production.up.railway.app` |
 | Domínio desejado | `pap.sociedadetucci.com.br` (DNS pendente) |
 | Bluesky ISA | `@isa-pap.bsky.social` |

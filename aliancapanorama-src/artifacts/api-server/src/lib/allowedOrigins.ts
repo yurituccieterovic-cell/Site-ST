@@ -17,6 +17,7 @@ export const allowedOrigins = new Set<string>([
   "http://localhost:3000",
   "http://localhost:18434",
   "https://pap-tan-seven.vercel.app",
+  "https://site-st.vercel.app",
   "https://projetoaliancapanoramapap.replit.app",
   "https://pap.sociedadetucci.com.br",
   "https://sociedadetucci.com.br",

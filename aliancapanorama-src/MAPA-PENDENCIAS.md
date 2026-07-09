@@ -10,7 +10,7 @@
 |---|---|---|---|
 | 1 | Cadastrar voz "ISA" no painel RODAR com webhook /api/isa/rodar/invite | Yuri | ⏳ |
 | 2 | Fornecer REPLIT_TOKEN para ativar MCP Replit e Árvore | Yuri | ⏳ |
-| 3 | Confirmar Vercel build funcionando: testar /eco, /adm, /toyota, /api proxy | — | ⏳ |
+| 3 | Confirmar Vercel build funcionando: testar /eco, /adm, /toyota, /api proxy | — | ✅ |
 | 4 | Configurar DNS `pap.sociedadetucci.com.br` → Railway | Railway no ar | ⏳ |
 | 6 | TOTP 2FA (I53) — antes de lançar módulo cripto/financeiro | — | ⏳ |
 | 7 | pgvector (I52) — busca semântica substituindo ILIKE | — | ⏳ |
@@ -104,6 +104,7 @@
 | — | APRENDIZADO A785–A800: DEP, Crowd, Porteiro, Pack IA template, TASKS universal | ✅ Sessão 30 (2026-07-08) |
 | — | poll-db.yml fix: api/db/[...path].js (catch-all Vercel) + poll-db.js resiliente a non-JSON | ✅ Sessão 31 (2026-07-09) |
 | — | Comandos #a (sessão autônoma) e #fim → MacroAta documentados em CLAUDE.md | ✅ Sessão 31 (2026-07-09) |
+| 3 | Vercel build 200 em todas as rotas: site-st.vercel.app/aliancapanorama. Fix pnpm 6→9 + URL correta | ✅ Sessão 32 (2026-07-09) |
 
 ---
 

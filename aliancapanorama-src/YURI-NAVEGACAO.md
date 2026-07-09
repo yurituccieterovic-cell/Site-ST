@@ -11,7 +11,7 @@
 
 | Item | Detalhe |
 |---|---|
-| Frontend | `pap-tan-seven.vercel.app` |
+| Frontend | `site-st.vercel.app/aliancapanorama` |
 | API | `site-st-production.up.railway.app` |
 | Domínio desejado | `pap.sociedadetucci.com.br` (DNS pendente) |
 | Repo | `github.com/yurituccieterovic-cell/Site-ST` |

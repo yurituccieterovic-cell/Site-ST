@@ -48,6 +48,7 @@
 | 2026-07-08 (Sessão 29) | #processo no diagrama WORKFLOW → APRENDIZADO #5105-#5110 + IDEIAS I159-I161. PDF "A Engrenagem Semiótica Parte I" gerado do zero (12 pgs, 837KB) e enviado por email. |
 | 2026-07-08 (Sessão 30) | Pack IA Mestre: 20 arquivos em tango/ias/ (INDICE-IAS.md + pack-*.md). PDF "2 Identificando Peças de Robótica Arduino" (51 pgs, HTML→PDF via HTMLParser). APRENDIZADO A785–A800 (DEP/Crowd/Porteiro/TASKS). HW-493 em sys_amanda_core.md. #fim automático. |
 | 2026-07-09 (Sessão 31) | Fix poll-db workflow: api/db/[...path].js (catch-all Vercel). Email hierarquia IAs + PDF anexo. Comandos #a e #fim→MacroAta documentados no CLAUDE.md e proc_checkpoint_fim.md. |
+| 2026-07-09 (Sessão 32) | Fix crítico: Vercel build 404 → resolvido. Causa: pnpm 6.35.1 no CI + URL errada (pap-tan-seven era projeto antigo). Fix: npm install -g pnpm@9.15.9 + PATH export em build-pap.sh. URL correta: site-st.vercel.app/aliancapanorama. Todas as rotas 200. |
 
 ---
 

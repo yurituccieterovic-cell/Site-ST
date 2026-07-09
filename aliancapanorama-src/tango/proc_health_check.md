@@ -7,7 +7,7 @@
 
 ### 1. Vercel (Frontend PAP)
 ```bash
-curl -s -o /dev/null -w "%{http_code}" https://pap-tan-seven.vercel.app/aliancapanorama/
+curl -s -o /dev/null -w "%{http_code}" https://site-st.vercel.app/aliancapanorama/
 # Esperado: 200. Se 4xx/5xx → ver seção de fix abaixo.
 ```
 **Pontos de falha comuns:**
@@ -84,7 +84,7 @@ bash /root/Site-ST/scripts/build-pap.sh
 ## Script de Smoke Test Rápido
 ```bash
 API="https://site-st-production.up.railway.app"
-FRONT="https://pap-tan-seven.vercel.app/aliancapanorama"
+FRONT="https://site-st.vercel.app/aliancapanorama"
 
 echo "=== HEALTH CHECK PAP ==="
 for url in \

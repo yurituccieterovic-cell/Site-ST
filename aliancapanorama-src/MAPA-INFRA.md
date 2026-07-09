@@ -38,7 +38,7 @@
 
 | Componente | Onde roda | Status |
 |---|---|---|
-| Frontend | Vercel hobby (`pap-tan-seven.vercel.app`) | ✅ Ativo |
+| Frontend | Vercel hobby (`site-st.vercel.app/aliancapanorama`) | ✅ LIVE |
 | API | Railway (`site-st-production.up.railway.app`) | ✅ LIVE |
 | Banco de dados | Railway PostgreSQL | ✅ LIVE |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |

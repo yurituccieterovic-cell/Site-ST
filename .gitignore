@@ -1,3 +1,8 @@
 .vercel
 .env*
 .mcp.json
+aliancapanorama/
+*.pdf
+*.pyc
+__pycache__/
+package-lock.json
