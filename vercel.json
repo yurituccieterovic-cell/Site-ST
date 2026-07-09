@@ -1,6 +1,6 @@
 {
-  "installCommand": "npm install -g pnpm@9.15.9",
-  "buildCommand": "PATH=$(npm prefix -g)/bin:$PATH bash scripts/build-pap.sh",
+  "installCommand": "corepack enable",
+  "buildCommand": "bash scripts/build-pap.sh",
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/aliancapanorama/api/:path*", "destination": "https://site-st-production.up.railway.app/api/:path*" },
