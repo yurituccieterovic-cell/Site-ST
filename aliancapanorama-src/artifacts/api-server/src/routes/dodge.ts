@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { db, nodesTable } from "@workspace/db";
-import { eq, inArray, sql } from "drizzle-orm";
+import { db, nodesTable, bibliotecaDocsTable } from "@workspace/db";
+import { eq, inArray, sql, desc } from "drizzle-orm";
+import { getScArvoreChat, getScAssembleias, getScAssembleiaMessages, getScAgoras, getScDocs, getScStatus } from "../lib/salescockpit-bridge";
 import { invalidateNodeCache, getAllNodes } from "../lib/nodeCache";
 import { z } from "zod";
 
@@ -170,6 +171,84 @@ router.post("/dodge/nodes/:code/move", async (req, res) => {
 
   invalidateNodeCache();
   res.json({ moved: code, to: newParentCode, subtreeSize: subtree.size });
+});
+
+// ── SalesCockpit panels ──────────────────────────────────────────────────────
+
+// GET /api/dodge/salescockpit/status — health do SalesCockpit
+router.get("/dodge/salescockpit/status", async (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const status = await getScStatus();
+  res.json(status);
+});
+
+// GET /api/dodge/salescockpit/arvore-chat?limit=N
+router.get("/dodge/salescockpit/arvore-chat", async (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const limit = Math.min(parseInt((req.query.limit as string) || "50"), 200);
+  const data = await getScArvoreChat(limit);
+  res.json({ data, total: data.length });
+});
+
+// GET /api/dodge/salescockpit/assembleias?limit=N
+router.get("/dodge/salescockpit/assembleias", async (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const limit = Math.min(parseInt((req.query.limit as string) || "20"), 100);
+  const data = await getScAssembleias(limit);
+  res.json({ data, total: data.length });
+});
+
+// GET /api/dodge/salescockpit/assembleias/:id/messages
+router.get("/dodge/salescockpit/assembleias/:id/messages", async (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const id = parseInt(req.params.id, 10);
+  if (!Number.isFinite(id)) { res.status(400).json({ error: "id inválido" }); return; }
+  const data = await getScAssembleiaMessages(id);
+  res.json({ data, total: data.length });
+});
+
+// GET /api/dodge/salescockpit/agoras?limit=N
+router.get("/dodge/salescockpit/agoras", async (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const limit = Math.min(parseInt((req.query.limit as string) || "20"), 100);
+  const data = await getScAgoras(limit);
+  res.json({ data, total: data.length });
+});
+
+// POST /api/dodge/salescockpit/sync-biblioteca — importa docs do SC para PAP biblioteca
+router.post("/dodge/salescockpit/sync-biblioteca", async (req, res) => {
+  if (!isSuperAdm(req)) { res.status(403).json({ error: "Acesso superadm obrigatório" }); return; }
+  const docs = await getScDocs();
+  let imported = 0;
+  for (const doc of docs) {
+    const existing = await db
+      .select({ id: bibliotecaDocsTable.id })
+      .from(bibliotecaDocsTable)
+      .where(sql`${bibliotecaDocsTable.titulo} = ${doc.titulo}`)
+      .limit(1);
+    if (existing.length > 0) continue;
+    await db.insert(bibliotecaDocsTable).values({
+      titulo: doc.titulo,
+      url: doc.url ?? null,
+      tipo: doc.tipo,
+      origem: doc.origem,
+      tags: ["salescockpit", "assembleia"],
+    }).onConflictDoNothing();
+    imported++;
+  }
+  res.json({ ok: true, imported, total: docs.length });
+});
+
+// GET /api/dodge/salescockpit/biblioteca — docs da PAP biblioteca com origem salescockpit
+router.get("/dodge/salescockpit/biblioteca", async (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const rows = await db
+    .select()
+    .from(bibliotecaDocsTable)
+    .where(sql`${bibliotecaDocsTable.origem} LIKE 'salescockpit%'`)
+    .orderBy(desc(bibliotecaDocsTable.createdAt))
+    .limit(100);
+  res.json({ data: rows, total: rows.length });
 });
 
 // GET /api/dodge/mds — lista arquivos .md disponíveis no sistema

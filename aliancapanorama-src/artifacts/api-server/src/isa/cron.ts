@@ -22,10 +22,10 @@ export function startIsaCron(): void {
     }
   });
 
-  // ISA Bibliotecário: 30min após a hora — baixa PDFs de assembleias
-  cron.schedule("30 * * * *", async () => {
+  // ISA Bibliotecário: 6x/dia (a cada 4h nos :30) — fontes FUVEST/ENEM/SC/conversas
+  cron.schedule("30 */4 * * *", async () => {
     try {
-      logger.info("ISA Bibliotecário: iniciando varredura de PDFs");
+      logger.info("ISA Bibliotecário: iniciando varredura 6x/dia");
       const result = await runBibliotecario();
       logger.info(result, "ISA Bibliotecário: concluído");
     } catch (err) {
@@ -98,5 +98,5 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário :30 · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h)");
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário 4h:30 6x/dia · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h)");
 }

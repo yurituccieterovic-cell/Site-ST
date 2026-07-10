@@ -30,6 +30,7 @@ import gastadorRouter from "./gastador";
 import lisangeRouter from "./lisange";
 import portalRouter from "./portal";
 import dodgeRouter from "./dodge";
+import bridgeRouter from "./bridge";
 
 const router: IRouter = Router();
 
@@ -46,6 +47,7 @@ router.use(gastadorRouter);
 router.use(lisangeRouter);
 router.use(portalRouter);
 router.use(dodgeRouter);
+router.use(bridgeRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
