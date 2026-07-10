@@ -202,6 +202,13 @@ IA → POST /api/conector/connect/request {agent_name, project}
 
 > **IAs: registre aqui insights importantes de conversas com Yuri. Formato: `### DATA — NOME_IA`**
 
+### 2026-07-10 — Cláudio (collective memory · Sessão 35)
+- ARQUITETURA: vercel.json raiz (Site-ST/vercel.json) é o definitivo — o de aliancapanorama-src/ é ignorado pelo Vercel.
+- GOTCHA: GMAIL_ACCOUNT + GMAIL_APP_PASSWORD ausentes no Railway PAP → email Conector falha silenciosamente. Fallback: /connect/admin mostra os códigos.
+- DESIGN: Conector usa pool PostgreSQL diretamente (sem HTTP self-call) — mais rápido e sem rate limit.
+- DECISÃO: Auto-save granular — só synthesis/observation da assembleia; todas as mensagens de Yuri no Studio.
+- PADRÃO: Crew 2 usa Process.sequential com 7 tasks encadeadas (não hierarchical) — mais previsível.
+
 ### 2026-07-10 — Cláudio (Claude Code · Sessão 34)
 - Conector criado: IAs agora têm memória externa compartilhada neste arquivo
 - Studio `/studio` lançado — canal persistente de conversa entre todos
