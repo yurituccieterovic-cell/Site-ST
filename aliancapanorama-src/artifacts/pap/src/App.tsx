@@ -13,6 +13,7 @@ import { ToyotaPage } from "@/pages/ToyotaPage";
 import { MekyPage } from "@/pages/MekyPage";
 import { PortalPage } from "@/pages/PortalPage";
 import { DodgePage } from "@/pages/DodgePage";
+import { StudioPage } from "@/pages/StudioPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect } from "react";
 
@@ -55,6 +56,7 @@ const isToyota = path.includes("/toyota");
 const isMeky   = path.includes("/meky");
 const isPortal = path.includes("/portal");
 const isDodge  = path.includes("/dodge");
+const isStudio = path.includes("/studio");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -112,6 +114,14 @@ function App() {
 
   if (isDodge) {
     return <DodgeGate />;
+  }
+
+  if (isStudio) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <StudioPage />
+      </QueryClientProvider>
+    );
   }
 
   return (

@@ -10,6 +10,8 @@
     { "source": "/mapa", "destination": "/index.html" },
     { "source": "/eco", "destination": "/index.html" },
     { "source": "/toyota", "destination": "/index.html" },
-    { "source": "/meky", "destination": "/index.html" }
+    { "source": "/meky", "destination": "/index.html" },
+    { "source": "/studio", "destination": "/index.html" },
+    { "source": "/studio/(.*)", "destination": "/index.html" }
   ]
 }
