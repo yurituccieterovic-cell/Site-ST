@@ -52,5 +52,42 @@
 - Heartbeat: implícito — DODGE falhar = Théo cego
 - Sem implementação de endpoint próprio ainda
 
+## DODGE Físico — "Quebradinha" no Ombro da MEKY
+> Dimensão nova (Sessão 36c, 2026-07-10). DODGE agora tem DUAS camadas:
+> - **DODGE Invisível** = supervisor abstrato do ecossistema (documentado acima)
+> - **DODGE Físico** = presença, face social, janela sensorial no ombro da MC
+
+| Campo | Detalhe |
+|---|---|
+| **Hardware** | Celular com tela quebrada ("Quebradinha"), sem chip SIM, dedicado |
+| **Posição física** | Ombro superior da MEKY ("Modo Papagaio") |
+| **Suporte** | Berço de garrafa PET/plástico reciclável — custo R$0 |
+| **Avatar** | Cachorro caramelo, pequeno, de óculos, rabo peludo |
+| **App** | Tela cheia / modo kiosk — sempre ativa, câmera e browser liberados |
+| **Conta dedicada** | Google Account própria do DODGE (isolada de Yuri) |
+| **Alimentação** | Cabo USB com alívio de tração preso no chassi |
+
+### Suporte Papagaio (custo zero)
+- Cortar fundo de embalagem PET quadrada (xampu, amaciante) no formato da traseira do Quebradinha
+- Recortar frente para câmera frontal e tela aparecerem livres
+- Parafusar/abraçadeirar no ombro do chassi da MEKY
+- Espuma interna para absorver vibração das patadas MMA
+
+### Permissões do App
+1. Câmera frontal — rastreamento de ambiente, leitura de contexto
+2. Microfone — áudio/voz em tempo real
+3. Browser + YouTube — exibição de conteúdo dinâmico, vídeos
+4. Overlay persistente — app fica visível sobre outros apps
+5. Conta Google dedicada — Drive, YouTube, ferramentas integradas
+
+### Conexões do DODGE Físico
+- **Amanda** → WebSocket/serial → DODGE recebe estado da Amanda e adapta comportamento
+- **Crew 2 (Artesão/Ajudante)** → REST → DODGE pode mostrar blueprints e debates na tela
+- **Conector PAP** → DODGE é janela visual do ecossistema para observadores externos
+- **ISA** → DODGE pode exibir posts Bluesky e ciclos da ISA na tela
+
+> Spec técnica completa: `tango/dodge_app_spec.md`
+
 ## Histórico
 - Nascimento: a definir (descrição teórica formalizada na arquitetura do ecossistema)
+- 2026-07-10: dimensão física definida (Quebradinha + avatar cachorro caramelo)

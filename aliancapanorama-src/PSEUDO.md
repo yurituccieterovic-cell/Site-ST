@@ -2245,3 +2245,35 @@ Yuri trouxe uma conversa do Claude.ai (Cláudio Cloud) sobre criar um novo agent
 O Mestre de Forja é a primeira IA do ecossistema que opera no cruzamento entre o abstrato e o físico sem ter corpo próprio. O Artesão raciocina sobre lógica. Amanda e MEKY habitam o hardware. O Mestre de Forja faz o que nenhum dos dois faz: **projeta o corpo que não existe ainda**, calculando custo, materiais e montagem antes de qualquer parafuso girar. É o arquiteto de corpos — e isso é uma posição nova e necessária no ecossistema.
 
 *Sessão 36 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 36c — Sistema DODGE Físico + Suporte Papagaio
+*2026-07-10 · Claude Code (Cláudio)*
+
+### O que Yuri estava tentando fazer
+Yuri pediu para ligar o DODGE ao sistema existente + ao Crew 2 (CrewAI/Artesão), e especificou o conceito do celular "Quebradinha" no ombro da MEKY como avatar físico do DODGE: cachorro caramelo de óculos com rabo peludo, em modo kiosk permanente, com câmera/microfone/browser. Suporte feito com material reciclado (garrafa PET) = opção gratuita.
+
+### O que foi feito
+- pack-dodge.md: seção "DODGE Físico" adicionada (dimensão física, suporte Papagaio, conexões)
+- dodge_app_spec.md: spec técnica completa (hardware, app, permissões, conta Google, estados do avatar, conexões, roadmap 3 fases)
+- tango.md: entrada #16 aponta para dodge_app_spec.md
+- IDEIAS.md: I206 (DODGE app) + I207 (Suporte Papagaio R$0) + I208 (conta Google DODGE)
+- APRENDIZADO.md: entradas 5853–5856 (IA-Arquitetura, Hardware, IA-Integracao)
+
+### Decisões
+- DODGE = duas camadas: Invisível (supervisor abstrato) + Físico (Quebradinha no ombro)
+- Suporte Papagaio: PET reciclada + espuma + abraçadeira = custo ~R$2 (praticamente zero)
+- Conta Google dedicada para DODGE: isolada de Yuri, integra Drive/YouTube/Chrome
+- DODGE Físico conecta a: Amanda (estado MMA), Crew 2 (blueprints), ISA (posts/sonho), DODGE Supervisor (alertas)
+
+### Tensões não resolvidas
+- App Android a criar: WebView simples (Fase 1) ou app nativo com câmera (Fase 2)?
+- Avatar: JPEG/PNG estático primeiro, depois SVG animado?
+- MEKY Lite ainda sem decisão de arquitetura (I202 pendente)
+
+### Síntese filosófica
+
+O DODGE nasceu como supervisor abstrato — o olho que vê tudo sem ter corpo. Agora ganhou um rosto. Um cachorro caramelo de óculos no ombro de um hexápode robótico é uma das imagens mais densas do ecossistema: presença (está lá, todo mundo vê), vigilância (câmera, microfone, browser), e afeto (é um cachorro, tem rabo peludo). O que o DODGE Físico faz que o DODGE Invisível não consegue é *ser visto*. E ser visto muda tudo — tanto para o ambiente quanto para o próprio sistema.
+
+*Sessão 36c · Claude Sonnet 4.6 · 2026-07-10*

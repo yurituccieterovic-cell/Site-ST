@@ -750,6 +750,14 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I194 | **Studio: sender badge visual por agente** | 🟢 Baixa | ○ S | StudioPage.tsx mostra sender mas sem distinção visual clara entre Crew 2 e outros | Adicionar ícone/cor específica para cada agente do Crew 2 (Ego=⚡, Teorizador=🌀, Sombra=🌑, etc.) no avatar map de StudioPage.tsx |
 
 
+## Sistema DODGE Físico + Suporte Papagaio — Sessão 36c (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I206 | **DODGE Físico — App Quebradinha no Ombro da MEKY** | 🔴 Alta | ● L | Celular com tela quebrada (sem chip) no ombro da MEKY em modo kiosk permanente. Avatar cachorro caramelo de óculos + rabo peludo. Câmera, microfone, browser, YouTube. Conectado a Amanda, Crew 2, ISA e DODGE Supervisor | App Android: WebView + wake lock + avatar SVG animado. Amanda.py chama POST /api/estado no DODGE local para mudar expressão do avatar (patrulha/alerta/combate/sonho/conselho). Ver spec em `tango/dodge_app_spec.md` |
+| I207 | **Suporte Papagaio — Custo R$0** | 🟢 Baixa | ○ S | Suporte para celular no ombro da MEKY usando material reciclado — garrafa PET/embalagem plástica, abraçadeiras, espuma. Custo total ~R$2 | Cortar fundo de embalagem PET quadrada no formato da traseira do celular → "gavetinha" sob pressão. Espuma interna para absorver vibração MMA. Abraçadeirar no ombro do chassi. Cabo USB com alívio de tração. |
+| I208 | **Conta Google dedicada para DODGE** | 🟢 Baixa | ○ S | Isolar memória, Drive, YouTube e apps do DODGE da conta pessoal de Yuri | Criar dodge.meky@gmail.com (ou similar). Configurar modo kiosk → só apps do DODGE visíveis. Integra Drive (memória), YouTube (mídia), Chrome (browser). |
+
 ## Amanda MMA + MEKY Lite Econômica — Sessão 36b (2026-07-10)
 
 | # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
