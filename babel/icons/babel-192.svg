@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#05050f"/>
+  <circle cx="96" cy="96" r="70" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="10 8"/>
+  <circle cx="96" cy="96" r="52" fill="#0d0d1e" stroke="#1e1e3a" stroke-width="1.5"/>
+  <ellipse cx="80" cy="88" rx="7" ry="8" fill="#7c3aed"/>
+  <ellipse cx="112" cy="88" rx="7" ry="8" fill="#7c3aed"/>
+  <circle cx="83" cy="85" r="2.5" fill="white" opacity=".7"/>
+  <circle cx="115" cy="85" r="2.5" fill="white" opacity=".7"/>
+  <path d="M80 108 Q96 116 112 108" stroke="#06b6d4" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <text x="96" y="158" text-anchor="middle" fill="#7c3aed" font-family="system-ui" font-size="13" letter-spacing="3" font-weight="700">BABEL</text>
+</svg>

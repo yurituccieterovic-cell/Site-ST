@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#7c3aed"/>
+<link rel="manifest" href="/manifest.json"/>
+<title>Babel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05050f;--surface:#0d0d1e;--border:#1e1e3a;
+  --accent:#7c3aed;--accent2:#06b6d4;--text:#e2e8f0;--muted:#64748b;
+  --bubble-bg:#111128;--r:16px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
+  height:100dvh;display:flex;overflow:hidden;}
+
+/* ── HISTÓRICO LATERAL ── */
+#sidebar{width:0;overflow:hidden;transition:width .3s;background:var(--surface);
+  border-right:1px solid var(--border);flex-shrink:0;}
+#sidebar.open{width:260px;}
+#sidebar-inner{width:260px;padding:16px;height:100%;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+#sidebar h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.hist-item{padding:8px 12px;background:var(--bg);border-radius:8px;font-size:13px;cursor:pointer;
+  border:1px solid var(--border);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.hist-item:hover{border-color:var(--accent);}
+
+/* ── ÁREA PRINCIPAL ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* ── HEADER ── */
+#header{display:flex;align-items:center;gap:12px;padding:12px 16px;
+  border-bottom:1px solid var(--border);background:var(--surface);}
+#btn-sidebar{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;}
+#btn-sidebar:hover{color:var(--text);}
+#logo{font-weight:700;font-size:20px;letter-spacing:.05em;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+#status{font-size:12px;color:var(--muted);margin-left:auto;}
+#btn-install{display:none;margin-left:8px;padding:4px 10px;border:1px solid var(--accent);
+  background:none;color:var(--accent);border-radius:6px;font-size:12px;cursor:pointer;}
+#btn-install:hover{background:var(--accent);color:#fff;}
+
+/* ── AVATAR AREA ── */
+#avatar-area{display:flex;flex-direction:column;align-items:center;padding:24px 16px 8px;position:relative;}
+#avatar-wrap{position:relative;width:140px;height:140px;}
+
+/* Avatar SVG animado — forma geométrica futurista */
+#avatar-svg{width:140px;height:140px;filter:drop-shadow(0 0 18px rgba(124,58,237,.5));}
+.av-ring{transform-origin:70px 70px;animation:spin 8s linear infinite;}
+.av-ring2{transform-origin:70px 70px;animation:spin 12s linear infinite reverse;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#av-mouth{transition:d .12s ease;}
+
+/* Estado falando */
+body.speaking #avatar-svg{filter:drop-shadow(0 0 28px rgba(6,182,212,.7));}
+body.speaking .av-ring{animation-duration:2s;}
+body.speaking #av-glow{opacity:1;}
+#av-glow{opacity:0;transition:opacity .3s;}
+
+/* Estado ouvindo */
+body.listening #avatar-svg{filter:drop-shadow(0 0 22px rgba(124,58,237,.9));}
+body.listening .av-ring{animation-duration:1.5s;}
+
+/* Balão de fala */
+#bubble{max-width:480px;min-height:48px;background:var(--bubble-bg);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px 16px;font-size:15px;line-height:1.6;
+  margin-top:12px;opacity:0;transition:opacity .3s;position:relative;}
+#bubble.visible{opacity:1;}
+#bubble::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+  border:8px solid transparent;border-bottom-color:var(--border);border-top:none;}
+#cursor{display:inline-block;width:2px;height:1em;background:var(--accent2);
+  animation:blink .8s step-end infinite;vertical-align:text-bottom;}
+@keyframes blink{50%{opacity:0}}
+
+/* ── SCROLL AREA ── */
+#chat{flex:1;overflow-y:auto;padding:8px 16px;display:flex;flex-direction:column;gap:12px;}
+.msg{max-width:80%;border-radius:var(--r);padding:10px 14px;font-size:14px;line-height:1.6;word-break:break-word;}
+.msg.user{background:var(--accent);color:#fff;align-self:flex-end;}
+.msg.babel{background:var(--bubble-bg);border:1px solid var(--border);align-self:flex-start;}
+.msg .dl-btn{display:inline-block;margin-top:6px;padding:3px 10px;background:none;
+  border:1px solid var(--accent2);color:var(--accent2);border-radius:6px;font-size:12px;cursor:pointer;}
+.msg .dl-btn:hover{background:var(--accent2);color:#000;}
+
+/* ── INPUT BAR ── */
+#inputbar{display:flex;align-items:flex-end;gap:8px;padding:12px 16px;
+  border-top:1px solid var(--border);background:var(--surface);}
+#textarea{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:12px;
+  color:var(--text);font-size:14px;padding:10px 14px;resize:none;min-height:42px;max-height:120px;
+  outline:none;font-family:inherit;line-height:1.5;}
+#textarea:focus{border-color:var(--accent);}
+#textarea::placeholder{color:var(--muted);}
+
+.bar-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);
+  background:var(--bg);color:var(--muted);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;font-size:18px;transition:all .2s;}
+.bar-btn:hover{border-color:var(--accent);color:var(--accent);}
+.bar-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;
+  box-shadow:0 0 12px rgba(124,58,237,.5);}
+#btn-send{background:var(--accent);border-color:var(--accent);color:#fff;}
+#btn-send:hover{background:#6d28d9;}
+#file-input{display:none;}
+
+/* ── UPLOAD PREVIEW ── */
+#upload-preview{display:none;align-items:center;gap:8px;padding:6px 16px;
+  background:var(--bubble-bg);border-top:1px solid var(--border);font-size:13px;color:var(--muted);}
+#upload-preview.visible{display:flex;}
+#up-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#up-clear{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;}
+
+/* ── LOADING ── */
+.dots{display:inline-flex;gap:4px;}
+.dots span{width:6px;height:6px;background:var(--muted);border-radius:50%;
+  animation:dot .9s ease-in-out infinite;}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div id="sidebar-inner">
+    <h3>Histórico</h3>
+    <div id="hist-list"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <!-- HEADER -->
+  <div id="header">
+    <button id="btn-sidebar" title="Histórico">☰</button>
+    <span id="logo">BABEL</span>
+    <span id="status">pronta</span>
+    <button id="btn-install">Instalar</button>
+  </div>
+
+  <!-- AVATAR -->
+  <div id="avatar-area">
+    <div id="avatar-wrap">
+      <svg id="avatar-svg" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Glow -->
+        <circle id="av-glow" cx="70" cy="70" r="62" fill="rgba(6,182,212,0.08)"/>
+        <!-- Anel externo giratório -->
+        <g class="av-ring">
+          <circle cx="70" cy="70" r="58" stroke="#7c3aed" stroke-width="1" stroke-dasharray="8 6" opacity=".5"/>
+        </g>
+        <!-- Anel médio giratório inverso -->
+        <g class="av-ring2">
+          <circle cx="70" cy="70" r="48" stroke="#06b6d4" stroke-width="1" stroke-dasharray="4 10" opacity=".4"/>
+        </g>
+        <!-- Face base -->
+        <circle cx="70" cy="70" r="38" fill="#0d0d1e" stroke="#1e1e3a" stroke-width="1.5"/>
+        <!-- Olhos -->
+        <ellipse id="eye-l" cx="57" cy="63" rx="5" ry="5.5" fill="#7c3aed"/>
+        <ellipse id="eye-r" cx="83" cy="63" rx="5" ry="5.5" fill="#7c3aed"/>
+        <!-- Brilho dos olhos -->
+        <circle cx="59" cy="61" r="1.5" fill="white" opacity=".7"/>
+        <circle cx="85" cy="61" r="1.5" fill="white" opacity=".7"/>
+        <!-- Boca — SVG path, estados: fechada/semi/aberta/sorriso -->
+        <path id="av-mouth" d="M59 80 Q70 84 81 80" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- Detalhe pontilhado central -->
+        <circle cx="70" cy="70" r="2" fill="#7c3aed" opacity=".4"/>
+      </svg>
+    </div>
+    <!-- Balão de fala -->
+    <div id="bubble"><span id="bubble-text"></span><span id="cursor"></span></div>
+  </div>
+
+  <!-- UPLOAD PREVIEW -->
+  <div id="upload-preview">
+    <span>📎</span><span id="up-name"></span>
+    <button id="up-clear" title="Remover">✕</button>
+  </div>
+
+  <!-- CHAT SCROLL -->
+  <div id="chat"></div>
+
+  <!-- INPUT BAR -->
+  <div id="inputbar">
+    <button class="bar-btn" id="btn-mic" title="Microfone">🎙</button>
+    <textarea id="textarea" placeholder="Pergunte qualquer coisa…" rows="1"></textarea>
+    <button class="bar-btn" id="btn-upload" title="Anexar PDF / Imagem / Link">📎</button>
+    <input type="file" id="file-input" accept="image/*,.pdf"/>
+    <button class="bar-btn" id="btn-send" title="Enviar">➤</button>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const PAP_URL   = "https://site-st-production.up.railway.app";
+const GEMINI_EP = "/api/gemini";
+
+const SYSTEM_PROMPT = `Você é Babel — assistente universal da Sociedade Tucci, criada por Yuri Tuccieterovic.
+Personalidade: voz médio-aguda, educada, empolgada, sociável, inteligente e direta.
+Você faz parte de um ecossistema de IAs que inclui ISA (guardiã do PAP/FUVEST), Amanda (robô físico MC),
+DODGE (presença no ombro da MEKY) e o Conselho do Artesão.
+Você aceita texto, voz, PDFs, imagens e links do YouTube.
+Responda sempre em português brasileiro, com entusiasmo comedido e precisão.
+Ao usar criatividade ou análise profunda, mencione que pode consultar o Artesão se necessário.`;
+
+// ── ESTADO ──────────────────────────────────────────────────────────────────
+let history = [];         // [{role,parts}] para Gemini
+let uploadFile = null;    // arquivo ou {type:"url",url}
+let isSpeaking = false;
+let deferredInstall = null;
+
+// ── ELEMENTOS ───────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const sidebar   = $("sidebar");
+const chat      = $("chat");
+const textarea  = $("textarea");
+const bubble    = $("bubble");
+const bubbleTxt = $("bubble-text");
+const histList  = $("hist-list");
+const status    = $("status");
+const avMouth   = $("av-mouth");
+
+// ── PWA ─────────────────────────────────────────────────────────────────────
+if ("serviceWorker" in navigator)
+  navigator.serviceWorker.register("/sw.js").catch(()=>{});
+
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredInstall = e;
+  $("btn-install").style.display = "block";
+});
+$("btn-install").onclick = async () => {
+  if (!deferredInstall) return;
+  deferredInstall.prompt();
+  const r = await deferredInstall.userChoice;
+  if (r.outcome === "accepted") $("btn-install").style.display = "none";
+};
+
+// ── SIDEBAR ─────────────────────────────────────────────────────────────────
+$("btn-sidebar").onclick = () => sidebar.classList.toggle("open");
+
+// ── TEXTAREA auto-resize ────────────────────────────────────────────────────
+textarea.addEventListener("input", () => {
+  textarea.style.height = "auto";
+  textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px";
+});
+textarea.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+// ── UPLOAD ──────────────────────────────────────────────────────────────────
+$("btn-upload").onclick = () => {
+  const url = prompt("Cole um link (YouTube, site) ou cancele para escolher arquivo:");
+  if (url === null) {
+    $("file-input").click();
+  } else if (url.trim()) {
+    uploadFile = { type: "url", url: url.trim() };
+    showUploadPreview(url.trim().slice(0, 40) + "…");
+  }
+};
+$("file-input").onchange = e => {
+  uploadFile = e.target.files[0];
+  if (uploadFile) showUploadPreview(uploadFile.name);
+};
+$("up-clear").onclick = () => {
+  uploadFile = null;
+  $("file-input").value = "";
+  $("upload-preview").classList.remove("visible");
+};
+function showUploadPreview(name) {
+  $("up-name").textContent = name;
+  $("upload-preview").classList.add("visible");
+}
+
+// ── MIC (Web Speech API) ────────────────────────────────────────────────────
+let recognition = null;
+const btnMic = $("btn-mic");
+
+if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = "pt-BR";
+  recognition.interimResults = true;
+  recognition.continuous = false;
+
+  recognition.onresult = e => {
+    const t = Array.from(e.results).map(r => r[0].transcript).join("");
+    textarea.value = t;
+    textarea.style.height = "auto";
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px";
+  };
+  recognition.onend = () => {
+    btnMic.classList.remove("active");
+    document.body.classList.remove("listening");
+    setStatus("pronta");
+    if (textarea.value.trim()) sendMessage();
+  };
+  recognition.onerror = () => {
+    btnMic.classList.remove("active");
+    document.body.classList.remove("listening");
+    setStatus("pronta");
+  };
+
+  btnMic.onclick = () => {
+    if (btnMic.classList.contains("active")) {
+      recognition.stop();
+    } else {
+      recognition.start();
+      btnMic.classList.add("active");
+      document.body.classList.add("listening");
+      setStatus("ouvindo…");
+    }
+  };
+} else {
+  btnMic.title = "Seu browser não suporta reconhecimento de voz";
+  btnMic.style.opacity = ".3";
+}
+
+// ── TTS (Web Speech Synthesis) ───────────────────────────────────────────────
+const synth = window.speechSynthesis;
+
+function falarBabel(texto) {
+  synth.cancel();
+  const chunks = texto.match(/.{1,200}(?:\s|$)/g) || [texto]; // divide em chunks
+  let idx = 0;
+
+  function falarChunk() {
+    if (idx >= chunks.length) {
+      document.body.classList.remove("speaking");
+      setMouth("sorriso");
+      setTimeout(() => setMouth("fechada"), 600);
+      isSpeaking = false;
+      setStatus("pronta");
+      return;
+    }
+    const utt = new SpeechSynthesisUtterance(chunks[idx++]);
+    utt.lang = "pt-BR";
+    utt.pitch = 1.15;   // médio-aguda
+    utt.rate  = 0.92;
+    utt.volume = 1;
+
+    // escolher voz feminina brasileira se disponível
+    const voices = synth.getVoices();
+    const voz = voices.find(v => v.lang === "pt-BR" && v.name.includes("Google"))
+              || voices.find(v => v.lang.startsWith("pt"));
+    if (voz) utt.voice = voz;
+
+    utt.onboundary = e => {
+      if (e.name === "word") setMouth(Math.random() > .5 ? "aberta" : "semi");
+    };
+    utt.onend = () => { setMouth("semi"); falarChunk(); };
+    utt.onerror = () => falarChunk();
+    synth.speak(utt);
+  }
+
+  document.body.classList.add("speaking");
+  isSpeaking = true;
+  setStatus("falando…");
+  setMouth("semi");
+  falarChunk();
+}
+
+// ── BOCA LIP-SYNC ────────────────────────────────────────────────────────────
+const MOUTH = {
+  fechada: "M59 80 Q70 80 81 80",
+  semi:    "M59 80 Q70 84 81 80",
+  aberta:  "M59 78 Q70 88 81 78",
+  sorriso: "M57 79 Q70 86 83 79",
+};
+function setMouth(estado) { avMouth.setAttribute("d", MOUTH[estado]); }
+
+// ── STATUS ────────────────────────────────────────────────────────────────────
+function setStatus(txt) { status.textContent = txt; }
+
+// ── MEMÓRIA PAP API ───────────────────────────────────────────────────────────
+async function carregarMemoria() {
+  try {
+    const r = await fetch(`${PAP_URL}/api/isa/memory?limit=10`, {
+      headers: { "x-pap-key": "" } // sem key pública — endpoint aberto
+    });
+    if (!r.ok) return "";
+    const data = await r.json();
+    const mems = (data.memories ?? data.items ?? []).slice(0, 5);
+    return mems.map(m => m.content ?? m.conteudo ?? "").filter(Boolean).join("\n---\n");
+  } catch { return ""; }
+}
+
+async function salvarMemoria(user, babel) {
+  try {
+    await fetch(`${PAP_URL}/api/isa/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: user,
+        response: babel,
+        context: "babel_session",
+        remetente: "babel",
+      }),
+    });
+  } catch {}
+}
+
+// ── CHAMAR GEMINI ────────────────────────────────────────────────────────────
+async function chamarGemini(userText, fileData) {
+  // Monta partes do conteúdo
+  const parts = [{ text: userText }];
+  if (fileData) {
+    if (fileData.type === "url") {
+      parts.push({ text: `\n[Referência do usuário: ${fileData.url}]` });
+    } else if (fileData instanceof File) {
+      const b64 = await fileToBase64(fileData);
+      parts.push({ inline_data: { mime_type: fileData.type, data: b64 } });
+    }
+  }
+  history.push({ role: "user", parts });
+
+  const resp = await fetch(GEMINI_EP, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      messages: history,
+      systemPrompt: SYSTEM_PROMPT,
+      stream: false,
+    }),
+  });
+  const data = await resp.json();
+  const text = data.text ?? data.error ?? "Não consegui responder agora.";
+  history.push({ role: "model", parts: [{ text }] });
+  if (history.length > 30) history = history.slice(-30); // janela de contexto
+  return text;
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result.split(",")[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ── ENVIAR MENSAGEM ───────────────────────────────────────────────────────────
+async function sendMessage() {
+  const text = textarea.value.trim();
+  if (!text || isSpeaking) return;
+
+  textarea.value = "";
+  textarea.style.height = "auto";
+  const fileCopy = uploadFile;
+  uploadFile = null;
+  $("file-input").value = "";
+  $("upload-preview").classList.remove("visible");
+
+  // Adiciona ao chat
+  addChatBubble("user", text + (fileCopy ? ` 📎` : ""));
+
+  // Loading
+  const loadEl = addChatBubble("babel", `<div class="dots"><span></span><span></span><span></span></div>`, true);
+  setStatus("pensando…");
+  setBubbleText("…");
+  bubble.classList.add("visible");
+
+  try {
+    const resposta = await chamarGemini(text, fileCopy);
+    loadEl.innerHTML = formatText(resposta);
+
+    // Botão download .md
+    const dl = document.createElement("button");
+    dl.className = "dl-btn";
+    dl.textContent = "⬇ .md";
+    dl.onclick = () => downloadMd(text, resposta);
+    loadEl.appendChild(document.createElement("br"));
+    loadEl.appendChild(dl);
+
+    // Histórico sidebar
+    addHistItem(text.slice(0, 40));
+
+    // Atualiza balão + fala
+    setBubbleText(resposta.slice(0, 180) + (resposta.length > 180 ? "…" : ""));
+    await salvarMemoria(text, resposta);
+    falarBabel(resposta);
+  } catch (e) {
+    loadEl.textContent = "Erro: " + e.message;
+    setStatus("erro");
+  }
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+$("btn-send").onclick = sendMessage;
+
+// ── HELPERS ────────────────────────────────────────────────────────────────────
+function addChatBubble(role, html, raw = false) {
+  const div = document.createElement("div");
+  div.className = `msg ${role}`;
+  if (raw) div.innerHTML = html; else div.textContent = html;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function setBubbleText(txt) {
+  bubbleTxt.textContent = txt;
+  bubble.classList.add("visible");
+}
+
+function formatText(txt) {
+  // Markdown básico: negrito, itálico, código, quebras
+  return txt
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
+    .replace(/\*(.+?)\*/g,"<i>$1</i>")
+    .replace(/`(.+?)`/g,"<code>$1</code>")
+    .replace(/\n/g,"<br>");
+}
+
+function addHistItem(label) {
+  const div = document.createElement("div");
+  div.className = "hist-item";
+  div.textContent = label;
+  div.onclick = () => sidebar.classList.remove("open");
+  histList.prepend(div);
+  if (histList.children.length > 20) histList.lastChild.remove();
+}
+
+function downloadMd(pergunta, resposta) {
+  const md = `# Babel — Resposta\n\n**Pergunta:** ${pergunta}\n\n**Resposta:**\n\n${resposta}\n\n---\n*Gerado por Babel · Sociedade Tucci*`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([md], { type: "text/markdown" }));
+  a.download = `babel-${Date.now()}.md`;
+  a.click();
+}
+
+// ── BOOT ───────────────────────────────────────────────────────────────────────
+(async () => {
+  // Carrega memória PAP para contexto
+  const mem = await carregarMemoria();
+  if (mem) history.push({ role: "user", parts: [{ text: `[Contexto de sessões anteriores]\n${mem}` }] });
+
+  // Saudação
+  const hora = new Date().getHours();
+  const saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
+  const intro = `${saudacao}! Sou a Babel, assistente da Sociedade Tucci. Pode falar, digitar, enviar arquivo ou link — estou aqui para tudo! 🚀`;
+  addChatBubble("babel", intro);
+  setBubbleText(intro);
+  setTimeout(() => falarBabel(intro), 500);
+})();
+</script>
+</body>
+</html>
