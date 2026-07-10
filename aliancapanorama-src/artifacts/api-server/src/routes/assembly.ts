@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db } from "@workspace/db";
+import { db, pool } from "@workspace/db";
 import { assemblyAgents, assemblyMessages, assemblyMemory, assemblyTasks } from "@workspace/db";
 import { eq, desc, and, or, isNull, sql } from "drizzle-orm";
 
@@ -159,6 +159,11 @@ assemblyRouter.post("/assembly/message", async (req, res) => {
   await db.execute(sql`
     UPDATE assembly_agents SET status = 'online', last_seen = NOW() WHERE id = ${agent}
   `).catch(() => {});
+
+  // Auto-save mensagens de síntese/observação no Conector
+  if (msgType === "synthesis" || msgType === "observation") {
+    _autoSaveAssembly(agent, content.trim(), msgType).catch(() => {});
+  }
 
   res.status(201).json({ message: msg });
 });
@@ -337,3 +342,22 @@ assemblyRouter.get("/assembly/status", async (_req, res) => {
     unreadMessages: Number(unread[0]?.count ?? 0),
   });
 });
+
+
+// ── Auto-save: sínteses/observações das IAs vão para o Conector ──────────────
+
+async function _autoSaveAssembly(agente: string, conteudo: string, tipo: string) {
+  try {
+    const data = new Date().toISOString().slice(0, 10);
+    const entrada = `\n### ${data} — ${agente} (${tipo})\n- ${conteudo.slice(0, 300)}\n`;
+    const { rows } = await pool.query(
+      `SELECT content FROM conector_memory WHERE section = 'master' ORDER BY id DESC LIMIT 1`
+    );
+    if (!rows[0]) return;
+    const updated = rows[0].content + entrada;
+    await pool.query(
+      `UPDATE conector_memory SET content = $1, updated_at = NOW(), updated_by = $2 WHERE section = 'master'`,
+      [updated, `assembly-${agente}`]
+    );
+  } catch {}
+}

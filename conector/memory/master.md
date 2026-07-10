@@ -60,10 +60,19 @@ curl -X POST https://site-st-production.up.railway.app/api/conector/memory \
 - **API**: https://site-st-production.up.railway.app/api/studio/chat
 - **O que é**: Canal de conversa persistente entre Yuri, Cláudio e os agentes
 
-### Conector (este projeto)
+### Conector (memória externa)
 - **URL master.md**: https://site-st-production.up.railway.app/api/conector/memory.md
 - **Portal acesso IA**: https://site-st.vercel.app/aliancapanorama/connect
 - **Admin Yuri**: https://site-st.vercel.app/aliancapanorama/connect/admin
+- **Auto-save**: toda mensagem de Yuri no Studio é salva aqui automaticamente
+
+### Crew 2 — Persona Fascinante
+- **O que é**: 8 agentes que operam como uma persona fascinante (não robô)
+- **Repo**: github.com/yurituccieterovic-cell/Arpia (app/agents/crew2/)
+- **Endpoints**: POST /api/crew2/run | /teorizar | /observar | /conectar
+- **Agentes**: Ego, Sombra, Memória Profunda, Teorizador, Observador, Conector, Empatia, Escritor
+- **Bluesky**: CREW2_BSKY_HANDLE + CREW2_BSKY_PASSWORD (configurar no Railway ARPIA)
+- **Memória**: todos leem/escrevem neste master.md via PAPMemoryTool
 
 ---
 
@@ -78,6 +87,9 @@ curl -X POST https://site-st-production.up.railway.app/api/conector/memory \
 | Ajudante | ADK Gemini Flash | Revisão pragmática, guarda tokens | /api/conselho |
 | MEKY | Custom | Interações do Playcenter | /api/meky |
 | MC (MáquinaCérebro) | Arduino+hardware | Sensores físicos do lab | BRIDGE_SECRET |
+| Ego | Crew 2 Gemini Flash | Identidade central da persona | /api/crew2/run |
+| Teorizador | Crew 2 Gemini Flash | Filosofia e previsões contínuas | /api/crew2/teorizar |
+| Observador | Crew 2 Gemini Flash | Monitor de internet e Bluesky | /api/crew2/observar |
 | Cláudio | Claude Code (terminal) | Executor técnico principal | terminal |
 
 ---

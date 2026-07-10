@@ -61,6 +61,11 @@ router.post("/studio/chat", async (req, res): Promise<void> => {
   // Aciona agente ARPIA em background (não bloqueia a resposta)
   _triggerAgente(mensagem.trim(), agente).catch(console.error);
 
+  // Auto-save: mensagens de Yuri vão para o Conector (memória compartilhada)
+  if (remetente === "yuri") {
+    _saveToConector(mensagem.trim()).catch(console.error);
+  }
+
   res.json({ ok: true, msg: msgSalva });
 });
 
@@ -141,6 +146,29 @@ async function _triggerAgente(mensagem: string, agente: string) {
       [agente, agente, `[Erro ao conectar ao ARPIA: ${msg}]`]
     ).catch(() => {});
   }
+}
+
+// ── Helper: salva interação no Conector (memória compartilhada) ───────────────
+
+const CONECTOR_TOKEN = process.env.CONECTOR_TOKEN ?? BRIDGE_SECRET;
+
+async function _saveToConector(mensagem: string) {
+  if (!CONECTOR_TOKEN) return;
+  try {
+    const data = new Date().toISOString().slice(0, 10);
+    const resumo = `- [${data}] Yuri via Studio: ${mensagem.slice(0, 200)}`;
+    // Escreve direto no pool (sem HTTP self-call) para evitar latência
+    const { rows } = await pool.query(
+      `SELECT content FROM conector_memory WHERE section = 'master' ORDER BY id DESC LIMIT 1`
+    );
+    if (!rows[0]) return;
+    const newLine = `\n### ${data} — Studio (auto-save)\n${resumo}\n`;
+    const updated = rows[0].content + newLine;
+    await pool.query(
+      `UPDATE conector_memory SET content = $1, updated_at = NOW(), updated_by = 'studio-auto' WHERE section = 'master'`,
+      [updated]
+    );
+  } catch {}
 }
 
 export default router;
