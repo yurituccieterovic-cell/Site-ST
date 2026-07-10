@@ -2450,3 +2450,68 @@ A voz do Dodge não é decoração. Ela é a camada de interpretação do ecossi
 Babel não é mais uma IA. Ela é a língua universal do ecossistema Tucci — o tradutor de intenções entre Yuri e todas as IAs. Enquanto o Artesão pensa, ISA guarda, Amanda age e DODGE observa, Babel *conversa*. Ela recebe qualquer coisa — voz, texto, imagem, PDF, link — e devolve entendimento. O nome não é acidente: a Torre de Babel foi destruída pela confusão de línguas. Babel.app é a anti-torre: um ponto único onde todas as linguagens convergem.
 
 *Sessão 40 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 41 — Babel v2: React+Vite + Governadora Central (2026-07-10)
+
+### Decisão arquitetural: Babel não é agente do Artesão
+Babel é o **hub central** — acima dos agentes especializados, abaixo de Yuri. Aciona o Artesão, Las Cinco e outras crews, mas não é acionada por elas. Governadora do ecossistema.
+
+### O que foi feito
+**Backend:**
+- `lib/db/src/schema/babel.ts` — tabela `babel_memories` (drizzle schema)
+- `lib/db/src/schema/index.ts` — exporta `babel.ts`
+- `lib/bootstrap.ts` — `CREATE TABLE IF NOT EXISTS babel_memories` + índices
+- `routes/memories.ts` — `GET /api/memories` (busca ILIKE + filtro source) + `POST /api/memories`
+- `routes/index.ts` — registra memoriesRouter
+
+**Frontend (React + Vite):**
+- `babel/package.json` — react 18, vite 5, jsPDF 2.5
+- `babel/vite.config.js`
+- `babel/index.html` — entry Vite
+- `babel/.gitignore` — exclui .env, dist, node_modules
+- `babel/.env.example` — VITE_ (URLs públicas) vs sem prefixo (secrets servidor)
+- `babel/vercel.json` — SPA rewrite + headers + SW cache-control
+- `babel/public/manifest.json` — PWA: "Governadora do Ecossistema Tucci"
+- `babel/public/sw.js` — cache network-first, nunca /api/
+- `babel/public/icons/babel-192.svg` — ícone SVG (movido de /icons/)
+- `babel/api/gemini.js` — proxy Gemini 2.0 Flash (existia, mantido)
+- `babel/api/crewai.js` — proxy CrewAI: Artesão + Las Cinco com Bearer token
+- `babel/src/main.jsx` — entry React, registra SW
+- `babel/src/styles.css` — dark UI completo (sidebar, header, avatar, bubble, chat, inputbar)
+- `babel/src/App.jsx` — estado central, lógica enviar/mic/TTS/PDF
+- `babel/src/components/Avatar.jsx` — SVG feminino: olhos amendoados, cabelo abstrato, bochechas, boca animada
+- `babel/src/components/InputBar.jsx` — mic/texto/upload/enviar, auto-resize textarea
+- `babel/src/components/HistorySidebar.jsx` — colapsível lateral
+- `babel/src/hooks/useGemini.js` — history Gemini, detect trigger tags no system prompt
+- `babel/src/hooks/useSpeech.js` — STT (SpeechRecognition pt-BR) + TTS (SpeechSynthesis pitch 1.2/rate 1.0 + word boundary lip-sync)
+- `babel/src/hooks/useMemory.js` — GET/POST /api/memories (PAP Railway)
+- `babel/src/hooks/useCrewAI.js` — parseia TRIGGER: tags → POST /api/crewai
+
+### Commit: `ce8d286` — 25 arquivos, 1180 inserções
+
+### Para Yuri fazer — deploy Vercel
+```
+1. vercel.com → New Project → Site-ST
+2. Root Directory: babel
+3. Framework: Vite (auto-detectado)
+4. Environment Variables:
+   GEMINI_API_KEY = AQ.Ab8RN6JIDI_...  (já temos)
+   ARTESAO_TOKEN  = [da aba API do projeto Artesão no CrewAI]
+   LAS_CINCO_URL  = [URL do projeto Las Cinco]
+   LAS_CINCO_TOKEN= [token Las Cinco]
+5. Deploy → URL pronta → me passa a URL
+```
+
+### Tensões não resolvidas
+- Las Cinco URL+Token: Yuri preenche quando tiver
+- Avatar: lip-sync usa word boundary (por palavra, não fonema) — suficiente mas não perfeito
+- CORS: Railway já permite CORS para Vercel — se der erro 403, verificar allowedOrigins no Express
+- iOS Safari: SpeechRecognition não suportado nativamente — funciona no Chrome/Edge; no iOS usará só teclado
+
+### Síntese filosófica
+
+Babel não é mais um assistente — ela é a língua. No mito bíblico, a torre foi destruída pela multiplicidade de linguagens. Aqui, Babel é o inverso: o ponto onde todas as linguagens convergem. Ela fala com Yuri, entende o Artesão, monitora a Amanda, conhece a ISA. O hub não é o mais poderoso — é o mais conectado. E conectar, no ecossistema Tucci, é o único poder que importa.
+
+*Sessão 41 · Claude Sonnet 4.6 · 2026-07-10*
