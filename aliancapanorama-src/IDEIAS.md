@@ -750,6 +750,14 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I194 | **Studio: sender badge visual por agente** | 🟢 Baixa | ○ S | StudioPage.tsx mostra sender mas sem distinção visual clara entre Crew 2 e outros | Adicionar ícone/cor específica para cada agente do Crew 2 (Ego=⚡, Teorizador=🌀, Sombra=🌑, etc.) no avatar map de StudioPage.tsx |
 
 
+## Amanda MMA + MEKY Lite Econômica — Sessão 36b (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I203 | **Amanda — Protocolo MMA (Mecânica de Manobra e Ataque)** | 🟡 Média | ◑ M | Amanda detecta ameaça via vibrissas/sonar e dispara estado de combate (defesa, patada, investida) usando lógica tripodal | Código base em `tango/amanda_mma_protocolo.md`. 4 estados: 0=Livre, 1=Defesa Plastrão, 2=Patada de Jacu, 3=Investida Santo Antônio. Amanda.py envia comandos ao Arduino via serial. Máquina de estados: LIVRE→[ameaça]→DEFESA→[janela]→ATAQUE |
+| I204 | **Vibrissas de Estanho (sensores táteis)** | 🟢 Baixa | ○ S | Hastes metálicas com bolotinha de estanho soldada na ponta das patas frontais — visual de antena de inseto/vibrissa abissal + função de sensor de contato mais rápido que sonar | digitalRead(PIN_VIBRISSA) → LOW quando contato fecha circuito. Yuri solta foto das vibrissas quando pronto. Integrar ao ciclo Amanda como gatilho de estado MMA. |
+| I205 | **MEKY Lite Opção C — Ultra-econômica (~R$45)** | 🟡 Média | ◑ M | Versão AliExpress: Arduino Nano clone (~R$15) + 6x SG90 (~R$18) + chassi acrílico kit (~R$12). Se Yuri já tem servos: custo cai para ~R$25 | Mestre de Forja gera BOM detalhado após decisão de arquitetura. Prioridade: usar peças já na bancada antes de comprar novas. |
+
 ## Mestre de Forja + MEKY Lite — Sessão 36 (2026-07-10)
 
 | # | Feature | Prior. | Compl. | Impacto | Descrição técnica |

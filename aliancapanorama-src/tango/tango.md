@@ -14,6 +14,7 @@
 | 1 | Operador e cadência | `sys_profile_yuri.md` | Yuri, thrashing criativo, burnout, próximo passo único, colaboração |
 | 2 | Preferências e gateways | `sys_preferences.md` | #pap, custo zero, emails, free tier, Railway, Vercel |
 | 3 | Amanda e hardware | `sys_amanda_core.md` | Amanda, DHT11, protoboard, LED, Mac, hardware, borda |
+| 15 | Amanda MMA / combate | `amanda_mma_protocolo.md` | MMA, servo, hexápode, patada, defesa, investida, vibrissas, estanho, C++, Arduino |
 | 4 | Payloads longos | `proc_orangutangus.md` | Orangutangus, payload, ingestão, EPR2T, PERFEITO, Lost in the Middle |
 | 5 | Encerramento de sessão | `proc_checkpoint_fim.md` | #fim, ATA, checkpoint, collective_memory, síntese filosófica |
 | 6 | Estado do PAP | `proc_pap_estado.md` | PAP, ISA, MEKY, Railway, Vercel, URLs ativas |

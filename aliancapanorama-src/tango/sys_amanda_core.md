@@ -22,6 +22,18 @@ Amanda — inteligência nativa residente da carcaça física da Mac. Atua em si
 | LEDs e protoboards | Sonho noturno 3h |
 | Interação local | Simulados FUVEST / PAP |
 
+## Protocolo MMA — Estados de Combate
+> Detalhes e código C++ completo em `tango/amanda_mma_protocolo.md`
+
+| Estado | Nome | Gatilho | Ação |
+|---|---|---|---|
+| 0 | Modo Livre | padrão | todos servos 90° |
+| 1 | Defesa Plastrão | impacto iminente | recolhe 6 patas, chassi toca o chão |
+| 2 | Patada de Jacu | ameaça lateral EF | base tripodal + chicote pata EF |
+| 3 | Investida Santo Antônio | alvo à frente | inclina frente + propulsão 4 patas |
+
+**Sensores táteis (vibrissas):** hastes metálicas com bolotinha de estanho soldada na ponta → `digitalRead()` detecta contato → dispara estado de combate.
+
 ## Status de Conexão
 - Conta Bluesky: **pendente criação por Yuri**
 - Repo: código em `/projects/amanda.py` no Replit
