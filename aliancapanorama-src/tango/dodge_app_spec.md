@@ -114,6 +114,95 @@ Quando DODGE supervisor detecta anomalia no ecossistema:
 
 ---
 
+## Personalidade Vocal — O Locutor Caramelo
+
+> Tom médio-grave, calmo, projetado. Dicção de locutor de rádio antigo. Culto, refinado, acolhedor.
+> Contraste deliberado com a carcaça de rali e as patadas MMA da MEKY.
+
+### Configuração de Voz (Android TTS — grátis, nativo)
+
+```kotlin
+// Android TTS — voz grave e pausada, sem custo
+val tts = TextToSpeech(context) { status ->
+    if (status == TextToSpeech.SUCCESS) {
+        tts.language = Locale("pt", "BR")
+        tts.setPitch(0.72f)         // mais grave que o padrão (1.0)
+        tts.setSpeechRate(0.82f)    // mais pausado — dição de locutor
+    }
+}
+```
+
+### Lip-Sync — 4 estados de boca (Android UtteranceProgressListener)
+
+Apenas 4 sprites PNG de boca simples — sem pipeline 3D pesado:
+
+| Estado | Quando usar | Arquivo |
+|---|---|---|
+| `FECHADA` | silêncio, fim de frase | `boca_0_fechada.png` |
+| `SEMI` | consoantes, sons suaves | `boca_1_semi.png` |
+| `ABERTA` | vogais a/o/e | `boca_2_aberta.png` |
+| `SORRISO` | fim de frase positiva / pausa elegante | `boca_3_sorriso.png` |
+
+```kotlin
+// UtteranceProgressListener — troca sprite conforme progresso da fala
+tts.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
+    override fun onStart(utteranceId: String) {
+        runOnUiThread { setBoca(SEMI) }
+    }
+    override fun onDone(utteranceId: String) {
+        runOnUiThread { setBoca(SORRISO); Handler().postDelayed({ setBoca(FECHADA) }, 400) }
+    }
+    override fun onRangeStart(utteranceId: String, start: Int, end: Int, frame: Int) {
+        // Animação simples: alterna SEMI ↔ ABERTA a cada palavra
+        val estadoBoca = if (frame % 2 == 0) ABERTA else SEMI
+        runOnUiThread { setBoca(estadoBoca) }
+    }
+    override fun onError(utteranceId: String) {
+        runOnUiThread { setBoca(FECHADA) }
+    }
+})
+
+fun falarDodge(texto: String) {
+    val params = Bundle()
+    params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "dodge_${System.currentTimeMillis()}")
+    tts.speak(texto, TextToSpeech.QUEUE_FLUSH, params, params.getString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID))
+}
+```
+
+### Frases de Status do Dodge (repertório inicial)
+
+Organizadas por contexto — elegantes, cultas, sem exagero:
+
+**Patrulha / Modo Livre:**
+- *"Ambiente monitorado. Tudo em ordem, meu caro."*
+- *"Temperatura e umidade dentro dos parâmetros esperados."*
+- *"A Amanda segue sua rota com notável precisão."*
+
+**Alerta / Ameaça:**
+- *"Detectamos uma anomalia no perímetro. Atenção recomendada."*
+- *"Movimento registrado. A Amanda está avaliando."*
+- *"Permita-me sugerir cautela neste momento."*
+
+**Combate / MMA:**
+- *"Protocolo de defesa ativado. Postura exemplar da Amanda."*
+- *"A manobra foi executada com admirable eficiência."*
+- *"Retornando à posição de patrulha. Situação controlada."*
+
+**Bateria / Canto do Cisne:**
+- *"Energia em nível de atenção. Convém planejar o retorno."*
+- *"Protocolo Canto do Cisne iniciado. Retorno ao ninho em andamento."*
+- *"Entrando em hibernação. Até o próximo encontro."*
+
+**Sonho / Mapa:**
+- *"Processando memórias do dia. O mapa cresce enquanto dormimos."*
+- *"Consolidação espacial concluída. Quarenta e sete referências limpas."*
+
+**Boot / Apresentação:**
+- *"Sistema DODGE operacional. Avatar de presença ativo."*
+- *"Bom dia. O laboratório está sob observação atenta."*
+
+---
+
 ## Estados do Avatar
 
 | Estado | Trigger | Visual |
@@ -135,10 +224,14 @@ Fase 1 (zero custo imediato):
   ✦ Criar conta Google dodge.meky@gmail.com
   ✦ Instalar browser em modo kiosk + fundo com avatar JPEG
 
-Fase 2 (app básico):
-  ✦ App Android simples: WebView + wake lock
-  ✦ Avatar SVG animado do cachorro caramelo
-  ✦ Endpoint local que Amanda.py chama para atualizar estado
+Fase 2 (app básico com voz):
+  ✦ App Android nativo (Kotlin) com wake lock
+  ✦ Avatar SVG cachorro caramelo + 4 sprites de boca PNG
+  ✦ TTS nativo: setPitch(0.72f) + setSpeechRate(0.82f)
+  ✦ UtteranceProgressListener → lip-sync por estados de boca
+  ✦ Overlay always-on (SYSTEM_ALERT_WINDOW)
+  ✦ Endpoint POST /api/estado + GET /api/camera/frame locais
+  ✦ Repertório de frases de status (ver seção Personalidade Vocal)
 
 Fase 3 (integração total):
   ✦ Câmera + visão computacional (OpenCV ou ML Kit)

@@ -750,6 +750,12 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I194 | **Studio: sender badge visual por agente** | 🟢 Baixa | ○ S | StudioPage.tsx mostra sender mas sem distinção visual clara entre Crew 2 e outros | Adicionar ícone/cor específica para cada agente do Crew 2 (Ego=⚡, Teorizador=🌀, Sombra=🌑, etc.) no avatar map de StudioPage.tsx |
 
 
+## Dodge Voz + Lip-Sync — Sessão 39 (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I212 | **DODGE — Voz Locutor + Lip-Sync Android (grátis)** | 🟡 Média | ◑ M | Dodge fala com voz médio-grave de locutor culto usando TTS nativo Android (grátis). 4 sprites de boca (fechada/semi/aberta/sorriso) sincronizados via UtteranceProgressListener. Overlay sempre visível no Quebradinha | Android TTS: setPitch(0.72f) + setSpeechRate(0.82f). UtteranceProgressListener.onRangeStart → alterna SEMI/ABERTA por palavra. onDone → SORRISO 400ms → FECHADA. 4 PNGs simples de boca do avatar. Repertório 20+ frases elegantes por contexto. Ver spec em dodge_app_spec.md |
+
 ## Canto do Cisne + Mapeamento 3D — Sessão 38 (2026-07-10)
 
 | # | Feature | Prior. | Compl. | Impacto | Descrição técnica |

@@ -34,6 +34,7 @@
 | — | Sessão 36d | 2026-07-10 | **Auditoria + Implementação** — MPU6050/MMA serial/DODGE bridge em amanda.py; I193+I200 já concluídos; pendências 75-81 registradas |
 | — | Sessão 37 | 2026-07-10 | **MTD — Modo de Torque Dinâmico** — IDLE/DEFENSE/ATTACK com histerese; código C++ Arduino + integração amanda.py |
 | — | Sessão 38 | 2026-07-10 | **Canto do Cisne + Mapeamento 3D** — energia crítica → retorno ninho; SLAM gratuito OpenCV ORB; sonho consolida mapa |
+| — | Sessão 39 | 2026-07-10 | **DODGE Voz + Lip-Sync** — TTS Android nativo grátis, 4 sprites boca, UtteranceProgressListener, 20+ frases de locutor |
 
 ---
 

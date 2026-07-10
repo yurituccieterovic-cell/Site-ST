@@ -2370,3 +2370,35 @@ Torque é atenção. O que o MTD faz é dar à Amanda a capacidade de *não pres
 O Canto do Cisne não é uma derrota — é a sabedoria da preservação. O robô que sabe quando parar, poupar e dormir é mais inteligente que o que corre até a morte. O mapeamento pelo sonho é a mesma lógica: o sistema que processa offline o que coletou acordado aprende mais profundamente do que o que tenta processar tudo em tempo real. A Amanda está aprendendo a distinguir urgência de prioridade — e isso é cognição, não apenas automação.
 
 *Sessão 38 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 39 — DODGE Voz Locutor + Lip-Sync
+*2026-07-10 · Claude Code (Cláudio)*
+
+### O que foi feito
+- **dodge_app_spec.md**: seção completa "Personalidade Vocal — O Locutor Caramelo":
+  - Config TTS Android: setPitch(0.72f) + setSpeechRate(0.82f)
+  - Código Kotlin: UtteranceProgressListener com onRangeStart → lip-sync por estados
+  - 4 sprites de boca: FECHADA/SEMI/ABERTA/SORRISO
+  - 20+ frases de status organizadas por contexto (patrulha/alerta/combate/bateria/sonho/boot)
+  - Roadmap Fase 2 atualizado com voz e lip-sync
+- **IDEIAS.md**: I212 (voz + lip-sync grátis)
+- **APRENDIZADO.md**: 5864–5866
+
+### Decisões
+- TTS nativo Android (grátis) — sem API externa, sem custo
+- UtteranceProgressListener.onRangeStart() — troca sprite por palavra (não por fonema — suficiente e leve)
+- 4 estados de boca — mínimo viável para dar vida ao avatar sem pipeline 3D
+- Frases curtas e elegantes (< 10 palavras) — evitam TTS longo que fica robótico
+
+### Tensões não resolvidas
+- Repertório de frases ainda precisa ser expandido com mais contextos (especialmente MMA/missão)
+- Teste real da voz: pitch/speed precisam de ajuste no hardware real (cada celular Android soa diferente)
+- App Kotlin ainda não existe — toda a spec está pronta, implementação aguarda Fase 2
+
+### Síntese filosófica
+
+A voz do Dodge não é decoração. Ela é a camada de interpretação do ecossistema para qualquer pessoa que esteja no ambiente com a MEKY. O locutor culto de óculos e rabo peludo traduz o caos sensorial do hexápode — vibrissas, MPU6050, bateria, mapa — em frases elegantes que um humano entende sem precisar ver o terminal. O Dodge não fala para a Amanda. Ele fala pelo ecossistema para o mundo.
+
+*Sessão 39 · Claude Sonnet 4.6 · 2026-07-10*
