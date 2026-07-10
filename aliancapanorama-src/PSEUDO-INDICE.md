@@ -27,6 +27,7 @@
 | 1635 | Sessão 23 | 2026-07-06 | #processo: Raízes (35 lições Replit Agent, RODAR, fases PAP) + Sessão #498 Orangutangus |
 | 1674 | Sessão 24 | 2026-07-06 | #fim: Prompt Mestre, correção email, "voz" pendente |
 | — | Sessão 25 | 2026-07-06 | **Tango Architecture** — fragmentação de MDs grandes anti-Lost in the Middle |
+| — | Sessão 34 | 2026-07-10 | **Export Replit + Governança 8/9/10** — arvore_chat 1.962 msgs; gh CLI autônomo; Heartbeat/Shutdown/Aprovação Multipartite ARPIA |
 
 ---
 

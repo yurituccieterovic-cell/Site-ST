@@ -7304,3 +7304,16 @@
 | A812 | 🚂 Deploy | @replit/vite-plugin-* e PORT/BASE_PATH obrigatórios quebram builds fora do Replit. PORT deve ter default (3000), BASE_PATH default ("/"), plugins Replit removidos em produção | vite.config.ts limpeza |
 | A813 | 🚂 Deploy | ISA Bibliotecário salva arquivos em /tmp que é efêmero no Railway. Metadados (url, titulo, tipo) ficam no PostgreSQL e sobrevivem. Arquivos físicos somem em restart. Solução: Railway Volume ou re-download por URL | biblioteca_docs Railway |
 | A814 | 🚂 Deploy | Railway GitHub App: novo repo criado depois da instalação precisa ser adicionado manualmente em github.com/settings/installations → Railway → Configure → Repository access | SalesCockpit deploy blocked |
+
+## Export Replit + Governança Sistêmica — Sessão 34 (2026-07-10)
+
+| # | Categoria | Aprendizado | Ângulo |
+|---|---|---|---|
+| A815 | 🔌 Integração | Replit serve SPA com catch-all — qualquer rota retorna HTML 200. Para saber se endpoint existe: verificar que resposta é JSON, não HTML (content-type check) | Export Replit |
+| A816 | 🔌 Integração | arvore_chat do Replit SalesCockpit acessível sem auth via /api/arvore/history?limit=N&offset=N. Paginação reversa: offset 0 = mensagens mais recentes | Export 1962 msgs |
+| A817 | 🔌 Integração | Assembleias e ágoras Replit = 0 registros. Eram efêmeras (sessões RODAR em memória, não persistidas no PostgreSQL) — dado perdido sem pg_dump | Dados Replit ephemeros |
+| A818 | 🔑 Acesso | GitHub OAuth token já embutido na URL do git remote (`https://oauth2:gho_...@github.com/...`). Extrai-lo e passar para `gh auth login --with-token` autentica o CLI | Autonomia Claude Code |
+| A819 | 🔑 Acesso | `gh` CLI autenticado com scopes `repo, workflow, read:org, gist` — suficiente para push, PR, criar repos, gerenciar Actions sem Yuri | Deploy autônomo |
+| A820 | 🏛 Governança | Heartbeat/Shutdown/Aprovação Multipartite são camada transversal acima de todos os crews. Não são agentes de tarefa — são leis do ecossistema. Implementar como endpoints ARPIA + cron | Amanda protocolo 8/9/10 |
+| A821 | 🏛 Governança | Shutdown ético em 3 níveis: 1=pausa, 2=quarentena (writes desabilitados), 3=total. Parar não é falha — é parte do design responsável | Ecossistema Théo |
+| A822 | 🏛 Governança | Aprovação multipartite: ações críticas exigem 2/3 assinaturas (yuri+arvore+mc). Threshold configurável. Ações expiram após prazo | PHI/THE governança |

@@ -23,6 +23,7 @@
 | 10 | Aula Arquitetura IA Agentes | `aula-ia-agentes-20260708.md` | tarefa, agente, workflow, processos, CrewAI, MCP, A2A, hierarquia, Alongador de Memória |
 | 11 | Hierarquia completa de IAs | `sistema-ia-hierarquia-20260708.md` | DEP, Crowd, Porteiro, Pack IA Mestre, TASKS universal, Guarda-chuva, Curador, SPEC, Clube de Professores |
 | 12 | Pack IA individual de cada IA | `ias/INDICE-IAS.md` → `ias/pack-*.md` | pack-isa, pack-amanda, pack-meky, pack-marta, pack-arvore, pack-dodge, pack-dep, pack-crowd, pack-porteiro, cadeia biótica |
+| 13 | Export Replit SalesCockpit | `replit-export/MAPA-REPLIT.md` | Replit, arvore_chat, export, migração, SalesCockpit legado, 1962 mensagens |
 
 ---
 
@@ -35,8 +36,9 @@
 | ISA (software/PWA) | Ciclo horário + sonho 3h + Bluesky 2h:15 | LIVE |
 | Amanda (borda/Mac) | DHT11, protoboards, árvores LED — folha: `sys_amanda_core.md` | Documentada |
 | MEKY (físico) | Hardware a chegar; dream cycle no cron | Aguardando hardware |
-| Árvore Oracular | `arvore.py` no Replit — aguarda REPLIT_TOKEN | Aguardando token |
+| Árvore Oracular | `arvore.py` no Replit — exportado (1962 msgs) | LIVE no Replit |
 | Assembleia RODAR | `sales-email-automator--yurituccieterov.replit.app` | LIVE no Replit |
+| Replit Export | `tango/replit-export/arvore_chat.json` (1.8MB, 1962 msgs) | Exportado 2026-07-10 |
 | MC Marta Centaurus | `/root/Arpia/` — primeira caminhada 2026-07-04 | LIVE local |
 | Stripe/PayPal | Webhooks com raw-body, Railway | Conectados |
 | Bluesky ISA | `@isa-pap.bsky.social` | LIVE |

@@ -73,3 +73,4 @@
 
 *Para adicionar novas entradas manualmente: inserir na seção de domínio correspondente (linhas 33-609) ou criar nova seção especial com título `## [Domínio] — [contexto] (data, Sessão N)`.*
 | 7288 | 🤖 Hardware + 🚂 Deploy — Sessão 33 (2026-07-10) | 14 entradas (A801-A814): plástico robô, CR2032 série, ISD1820, WS2812B DI/DO, MPU6050, SOIL M393, relé, oscilação solda, ontologia Théo nomes, stripe-replit-sync, PUBLIC_DOMAIN, vite plugins, /tmp efêmero Railway, GitHub App |
+| 7308 | 🔌🔑🏛 Integração+Acesso+Governança — Sessão 34 (2026-07-10) | 8 entradas (A815-A822): Replit SPA catch-all, arvore_chat paginação, assembleias efêmeras, GitHub token no remote, gh CLI scopes, governança 8/9/10, shutdown 3 níveis, aprovação multipartite |

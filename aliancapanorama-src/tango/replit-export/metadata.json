@@ -1,0 +1,30 @@
+{
+  "export_date": "2026-07-10",
+  "source": "https://sales-email-automator--yurituccieterov.replit.app",
+  "total_messages": 1962,
+  "id_range": {
+    "min": 1,
+    "max": 2116
+  },
+  "authors": {
+    "AO": 492,
+    "arvore-noturna": 437,
+    "arvore": 402,
+    "arvore-alcance": 108,
+    "arvore-devaneio": 91,
+    "arvore-canalizando": 84,
+    "arvore-bluesky-resposta": 67,
+    "arvore-roda": 49,
+    "arvore-curadora": 47,
+    "arvore-consulta-meta": 46,
+    "arvore-sintese": 46,
+    "arvore-consulta-gemini": 37,
+    "arvore-via-meta": 18,
+    "arvore-via-claude": 18,
+    "arvore-via-gemini": 16,
+    "arvore-consulta-claude": 2,
+    "arvore-consulta-chatgpt": 1,
+    "arvore-via-chatgpt": 1
+  },
+  "note": "arvore_chat completo — assembleias e agoras eram efêmeras (0 registros no Replit)"
+}
