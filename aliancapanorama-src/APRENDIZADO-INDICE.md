@@ -72,3 +72,4 @@
 ---
 
 *Para adicionar novas entradas manualmente: inserir na seção de domínio correspondente (linhas 33-609) ou criar nova seção especial com título `## [Domínio] — [contexto] (data, Sessão N)`.*
+| 7288 | 🤖 Hardware + 🚂 Deploy — Sessão 33 (2026-07-10) | 14 entradas (A801-A814): plástico robô, CR2032 série, ISD1820, WS2812B DI/DO, MPU6050, SOIL M393, relé, oscilação solda, ontologia Théo nomes, stripe-replit-sync, PUBLIC_DOMAIN, vite plugins, /tmp efêmero Railway, GitHub App |

@@ -7286,3 +7286,21 @@
 | 5413 | PSEUDO | Assembleia de IAs → PAP | Conteudo-Nos | 📋 Metodologia | - Futuramente: ingestão via /api/ai/ como nodes especiais (tipo="assembleia") para RAG ‖ 424 emails de sessões de tomada de decisão coletiva com múltiplos agentes de IA, guardados  |
 | 5471 | PSEUDO | O que aconteceu | Conteudo-Nos | 🔍 Análise | Yuri pediu para corrigir os gaps identificados na auditoria (Sessão 19) e ao mesmo tempo preparar infraestrutura própria: banco local, Oracle Always Free, Termux bootstrap. A sessã |
 | 5549 | PSEUDO | O que Yuri estava tentando fazer | Conteudo-Nos | 🔍 Análise | Três frentes: 1. Resolver a falha do workflow GitHub Actions "Poll Banco Compartilhado" (email de alerta) 2. Receber por email a hierarquia completa das IAs (Sistema Crowd com cone |
+## Hardware MEKY + SalesCockpit — Sessão 33 (2026-07-10)
+
+| # | Categoria | Aprendizado | Ângulo |
+|---|---|---|---|
+| A801 | 🤖 Hardware | Plástico de robô não aceita solda estanho/ferro eletrônico → usar cianoacrilato + bicarbonato de sódio (cura instantânea, muito forte) ou Durepox (mais pesado, desequilibra pernas) | Aranha Penélope perna quebrada |
+| A802 | 🤖 Hardware | CR2032 (3V moeda) NÃO colocar em série com sistema Arduino: amperagem completamente incompatível, corrente mínima do Arduino esgota a bateria instantaneamente e pode danificar componentes | Bancada MEKY — bateria encontrada |
+| A803 | 🤖 Hardware | ISD1820 placa de som: fio marcado "V" = VCC/positivo; alto-falante não tem polaridade obrigatória (trabalha com corrente alternada) | Módulo áudio Mac |
+| A804 | 🤖 Hardware | WS2812B NeoPixel ring: pinos DI (Data In, recebe do Arduino), DO (Data Out, encadeia próximo anel), 5V e GND | Anel LED MEKY |
+| A805 | 🤖 Hardware | MPU6050 = acelerômetro + giroscópio 3 eixos, 6DOF — módulo leve ideal para detectar movimento/queda/orientação em robôs | Módulo novo chegou para MEKY |
+| A806 | 🤖 Hardware | SOIL M393 = sensor de umidade do solo — pode integrar ao EcoLogger ARPIA para monitoramento de plantas/jardim | Módulo novo chegou |
+| A807 | 🤖 Hardware | Módulo relé: lado de controle (3 pinos finos + LEDs indicadores) vai para Arduino; lado de carga (parafusos) vai para dispositivos potentes como LEDs, motores | Controle iluminação Mac |
+| A808 | 🤖 Hardware | Oscilação no ferro de solda = resistência interna falhando ou instabilidade na rede elétrica → parar imediatamente, risco real de queimar componentes e acidentes | Incidente bancada MEKY |
+| A809 | 🔤 Ontologia | Ecossistema Théo: robô (corpo físico) e IA (inteligência) têm nomes separados. Aranha = Penélope (tem sobrenome a recuperar), IA dela = nome diferente. Distinção fundamental da ontologia Théo | Aranha Penélope — bancada |
+| A810 | 🚂 Deploy | stripe-replit-sync é pacote Replit-específico → fora do Replit, substituir por Stripe SDK direto com STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET para validação de webhook | SalesCockpit → Railway |
+| A811 | 🚂 Deploy | REPLIT_DOMAINS no código → substituir por PUBLIC_DOMAIN env var para portabilidade. Padrão: `process.env.PUBLIC_DOMAIN ?? process.env.REPLIT_DOMAINS` mantém retrocompatibilidade | SalesCockpit portabilidade |
+| A812 | 🚂 Deploy | @replit/vite-plugin-* e PORT/BASE_PATH obrigatórios quebram builds fora do Replit. PORT deve ter default (3000), BASE_PATH default ("/"), plugins Replit removidos em produção | vite.config.ts limpeza |
+| A813 | 🚂 Deploy | ISA Bibliotecário salva arquivos em /tmp que é efêmero no Railway. Metadados (url, titulo, tipo) ficam no PostgreSQL e sobrevivem. Arquivos físicos somem em restart. Solução: Railway Volume ou re-download por URL | biblioteca_docs Railway |
+| A814 | 🚂 Deploy | Railway GitHub App: novo repo criado depois da instalação precisa ser adicionado manualmente em github.com/settings/installations → Railway → Configure → Repository access | SalesCockpit deploy blocked |
