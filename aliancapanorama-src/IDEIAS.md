@@ -750,6 +750,13 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I194 | **Studio: sender badge visual por agente** | 🟢 Baixa | ○ S | StudioPage.tsx mostra sender mas sem distinção visual clara entre Crew 2 e outros | Adicionar ícone/cor específica para cada agente do Crew 2 (Ego=⚡, Teorizador=🌀, Sombra=🌑, etc.) no avatar map de StudioPage.tsx |
 
 
+## Mestre de Forja + MEKY Lite — Sessão 36 (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I201 | **Mestre de Forja — Agente Projetista de Robôs** | 🟡 Média | ● L | Agente especialista que cruza física + mecânica + eletrônica + custo para projetar robôs no plano abstrato; mais complexo que o Artesão pois não tem resultado físico visível durante o projeto | Agente no Conector com fluxo: (1) filtrar excessos, (2) calcular custo de mercado, (3) padronizar carcaça, (4) gerar BOM (tabela Peça/Qtd/Custo/Link). Pack IA criado em `tango/ias/pack-mestreforja.md`. Aguarda decisão de arquitetura e aprovação do Conselho. |
+| I202 | **MEKY Lite — Versão Comercial da MAC** | 🟡 Média | ◑ M | Robô comercial baseado na Marta Centaurus/MAC, simplificado para venda a escolas + hobbistas + labs de robótica. Custo alvo $25–40. | Primeira missão do Mestre de Forja. Arquitetura Opção A (pendente aprovação Yuri): Arduino Nano + Shield Motor, chassi MDF 3mm cortado a laser, varetas nylon/acrílico encaixáveis, 2 motores amarelos 2WD + roda boba. Opção B: biomimético com servos (estilo Petoi, ~$50–80). Decisão de Yuri necessária antes de gerar BOM. |
+
 ## Docs PAP — Ideias Novas (2026-07-10)
 
 | # | Feature | Prior. | Compl. | Impacto | Descrição técnica |

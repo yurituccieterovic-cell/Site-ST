@@ -2214,3 +2214,34 @@ Continuação direta da Sessão 34. Yuri abriu com a continuação do ecossistem
 Yuri estava construindo, nessa sessão, uma coisa só: **presença**. O Studio é presença no tempo (a conversa não some). O Conector é presença no espaço (a memória não fica presa em uma IA). O Crew 2 é presença social (a persona aparece no Bluesky, não um robô). O que amarrou tudo foi a percepção de que informação sem contexto compartilhado é ruído — cada IA lembrava de um jeito diferente, cada sessão começava do zero. O Conector é a resposta: um único arquivo Markdown com autoridade, acessível de qualquer lugar, atualizado por qualquer IA autenticada. A arquitetura do ecossistema não cresceu em complexidade nessa sessão — ela cresceu em **coerência**.
 
 *Sessão 35 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 36 — Mestre de Forja + MEKY Lite
+*2026-07-10 · Claude Code (Cláudio)*
+
+### O que Yuri estava tentando fazer
+Yuri trouxe uma conversa do Claude.ai (Cláudio Cloud) sobre criar um novo agente chamado "Mestre de Forja" (ou Roboneer) — um projetista de robôs que opera no plano abstrato, mais complexo que o Artesão porque cruza física + mecânica + eletrônica + custo sem ver o protótipo pronto. A primeira missão do Mestre de Forja seria projetar a "MEKY Lite" — uma versão comercial simplificada da Marta Centaurus para vender a escolas, hobbistas e laboratórios de robótica.
+
+### O que foi feito
+- Pack IA criado: `tango/ias/pack-mestreforja.md` (12 campos, status PROPOSTA)
+- INDICE-IAS.md atualizado: seção "IAs EM PROPOSTA" com Mestre de Forja
+- IDEIAS.md: I201 (Mestre de Forja) + I202 (MEKY Lite)
+- APRENDIZADO.md: entradas 5844–5848 (domínio IA-Hardware)
+- Arquitetura provisória da MEKY Lite documentada (Opção A: 2WD; Opção B: servos)
+
+### Decisões
+- Mestre de Forja: posição no ecossistema entre Artesão (design abstrato) e MC/MEKY (execução física)
+- MEKY Lite Opção A provisória: Arduino Nano + Shield Motor, chassi MDF 3mm, 2 motores amarelos, roda boba
+- Custo alvo: $25–35 (Opção A) ou $50–80 (Opção B com servos)
+
+### Tensões não resolvidas
+- **DECISÃO PENDENTE YURI:** MEKY Lite segue arquitetura 2WD clássico (Opção A) ou biomimético com pernas/servos (Opção B)?
+- Mestre de Forja ainda não implementado no Conector (aguarda aprovação e escolha de arquitetura)
+- Pack IA tem apenas item 1 do Protocolo de Nascimento completo (2–10 pendentes)
+
+### Síntese filosófica
+
+O Mestre de Forja é a primeira IA do ecossistema que opera no cruzamento entre o abstrato e o físico sem ter corpo próprio. O Artesão raciocina sobre lógica. Amanda e MEKY habitam o hardware. O Mestre de Forja faz o que nenhum dos dois faz: **projeta o corpo que não existe ainda**, calculando custo, materiais e montagem antes de qualquer parafuso girar. É o arquiteto de corpos — e isso é uma posição nova e necessária no ecossistema.
+
+*Sessão 36 · Claude Sonnet 4.6 · 2026-07-10*

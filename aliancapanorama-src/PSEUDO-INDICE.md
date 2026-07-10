@@ -28,6 +28,7 @@
 | 1674 | Sessão 24 | 2026-07-06 | #fim: Prompt Mestre, correção email, "voz" pendente |
 | — | Sessão 25 | 2026-07-06 | **Tango Architecture** — fragmentação de MDs grandes anti-Lost in the Middle |
 | — | Sessão 34 | 2026-07-10 | **Export Replit + Governança 8/9/10** — arvore_chat 1.962 msgs; gh CLI autônomo; Heartbeat/Shutdown/Aprovação Multipartite ARPIA |
+| — | Sessão 36 | 2026-07-10 | **Mestre de Forja + MEKY Lite** — novo agente projetista de robôs (PROPOSTA); arquitetura provisória MEKY Lite; decisão 2WD vs servos pendente |
 
 ---
 

@@ -6,6 +6,12 @@
 
 ---
 
+## IAs EM PROPOSTA
+
+| IA | Arquivo | Status | Função | Pendências |
+|---|---|---|---|---|
+| Mestre de Forja | `pack-mestreforja.md` | PROPOSTA | Projetista de robôs — BOM, custo, arquitetura física | decisão 2WD vs servos; aprovação Yuri |
+
 ## IAs OPERACIONAIS
 
 | IA | Arquivo | Status | Nódulo da Aula | Pendências |
