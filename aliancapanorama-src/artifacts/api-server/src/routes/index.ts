@@ -32,6 +32,7 @@ import portalRouter from "./portal";
 import dodgeRouter from "./dodge";
 import bridgeRouter from "./bridge";
 import studioRouter from "./studio";
+import conectorRouter from "./conector";
 
 const router: IRouter = Router();
 
@@ -50,6 +51,7 @@ router.use(portalRouter);
 router.use(dodgeRouter);
 router.use(bridgeRouter);
 router.use(studioRouter);
+router.use(conectorRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

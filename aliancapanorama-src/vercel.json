@@ -12,6 +12,8 @@
     { "source": "/toyota", "destination": "/index.html" },
     { "source": "/meky", "destination": "/index.html" },
     { "source": "/studio", "destination": "/index.html" },
-    { "source": "/studio/(.*)", "destination": "/index.html" }
+    { "source": "/studio/(.*)", "destination": "/index.html" },
+    { "source": "/connect", "destination": "/index.html" },
+    { "source": "/connect/(.*)", "destination": "/index.html" }
   ]
 }
