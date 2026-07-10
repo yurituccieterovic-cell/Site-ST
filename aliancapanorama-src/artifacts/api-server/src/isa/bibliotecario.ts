@@ -33,6 +33,13 @@ export interface BibliotecaItem {
   tamanhoBytes?: number;
 }
 
+// Pastas do Google Drive que o bibliotecário monitora automaticamente
+// Formato: "FOLDER_ID|Nome da pasta|tag1,tag2"
+const DRIVE_FOLDERS = (process.env.BIBLIOTECA_DRIVE_FOLDERS ?? "1f19Svg4zO-srvhruOuv_W3mez4Wx775m|Livros PAP|assembleia,pap")
+  .split(";")
+  .map((s) => { const [id, nome, tags] = s.split("|"); return { id: id?.trim(), nome: nome?.trim() ?? "Drive", tags: (tags ?? "").split(",").map((t) => t.trim()) }; })
+  .filter((f) => f.id);
+
 // Fontes curadas verificadas a cada ciclo de 4h
 const CURATED_SOURCES = [
   {
@@ -303,18 +310,70 @@ async function scanSalesCockpit(): Promise<BibliotecaItem[]> {
   return baixados;
 }
 
+/** Scan de pastas Google Drive públicas via gdown (Python) */
+async function scanDriveFolders(): Promise<BibliotecaItem[]> {
+  if (DRIVE_FOLDERS.length === 0) return [];
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const execFileAsync = promisify(execFile);
+  const baixados: BibliotecaItem[] = [];
+
+  for (const folder of DRIVE_FOLDERS) {
+    try {
+      const tmpDir = `${BIBLIOTECA_DIR}/drive-${folder.id}`;
+      if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+
+      // Usa gdown Python para baixar apenas arquivos novos
+      const script = `
+import gdown, os, json, sys
+folder_url = "https://drive.google.com/drive/folders/${folder.id}"
+try:
+    files = gdown.download_folder(folder_url, output="${tmpDir}", quiet=True, use_cookies=False, skip_download=False)
+    print(json.dumps(files or []))
+except Exception as e:
+    print(json.dumps([]))
+`;
+      const { stdout } = await execFileAsync("python3", ["-c", script], { timeout: 120_000 });
+      const downloaded: string[] = JSON.parse(stdout.trim() || "[]");
+      for (const fp of downloaded) {
+        if (!fp || typeof fp !== "string") continue;
+        const fname = path.basename(fp);
+        const titulo = `[${folder.nome}] ${fname.replace(/\.[^.]+$/, "")}`;
+        const existing = await db.select({ id: bibliotecaDocsTable.id }).from(bibliotecaDocsTable)
+          .where(sql`${bibliotecaDocsTable.titulo} = ${titulo}`).limit(1);
+        if (existing.length > 0) continue;
+        const stat = fs.existsSync(fp) ? fs.statSync(fp) : null;
+        const item: BibliotecaItem = {
+          titulo,
+          url: null as unknown as string,
+          tipo: fp.endsWith(".pdf") ? "pdf" : fp.endsWith(".html") ? "html" : "txt",
+          origem: `drive-${folder.id}`,
+          baixadoEm: new Date().toISOString(),
+          tamanhoBytes: stat?.size,
+        };
+        baixados.push(item);
+        await saveDocToDb(titulo, null, fp, item.tipo, `drive-${folder.id}`, folder.tags, stat?.size);
+      }
+    } catch (err) {
+      logger.warn({ err, folderId: folder.id }, "ISA Bibliotecário: falha ao escanear pasta Drive");
+    }
+  }
+  return baixados;
+}
+
 /** Ciclo principal — 6x/dia (chamado a cada 4h) */
 export async function runBibliotecario(): Promise<{ baixados: number; itens: BibliotecaItem[] }> {
   ensureDir();
   await rehydrateEphemeralFiles();
 
-  const [fromConversas, fromCurated, fromSC] = await Promise.all([
+  const [fromConversas, fromCurated, fromSC, fromDrive] = await Promise.all([
     scanConversations(4),
     scanCuratedSources(),
     scanSalesCockpit(),
+    scanDriveFolders(),
   ]);
 
-  const itens = [...fromConversas, ...fromCurated, ...fromSC];
+  const itens = [...fromConversas, ...fromCurated, ...fromSC, ...fromDrive];
 
   if (itens.length > 0) {
     await db.insert(isaMemoryTable).values({

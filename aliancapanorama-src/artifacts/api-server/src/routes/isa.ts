@@ -6,6 +6,8 @@ import { isaMemoryTable, tasksTable, insertIsaMemorySchema, isaTimeline } from "
 import { desc, eq, sql } from "drizzle-orm";
 import { runIsaCycle } from "../isa/cycle";
 import { runBibliotecario } from "../isa/bibliotecario";
+import { bibliotecaDocsTable } from "@workspace/db";
+import { sql } from "drizzle-orm";
 import { runIsaBluesky, createBlueskyAccount, runIsaEngagement } from "../isa/bluesky";
 import { runIsaDream } from "../isa/dream";
 import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
@@ -315,6 +317,41 @@ router.post("/isa/cycle", async (req, res) => {
     logger.error({ err }, "ISA: erro no ciclo manual");
     res.status(500).json({ error: "Erro ao executar ciclo ISA" });
   }
+});
+
+// GET /api/isa/biblioteca — lista documentos da biblioteca
+router.get("/isa/biblioteca", async (_req, res) => {
+  const rows = await db
+    .select()
+    .from(bibliotecaDocsTable)
+    .orderBy(desc(bibliotecaDocsTable.createdAt))
+    .limit(200);
+  res.json({ data: rows, total: rows.length });
+});
+
+// POST /api/isa/biblioteca/bulk-add — registra múltiplos docs (ARVORE_TOKEN ou adm tier5)
+// Body: { docs: [{ titulo, url, tipo, origem, tags, resumo }] }
+router.post("/isa/biblioteca/bulk-add", async (req, res) => {
+  if (!isAdminOrAgent(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const { docs } = req.body as { docs?: { titulo: string; url?: string; tipo?: string; origem?: string; tags?: string[]; resumo?: string }[] };
+  if (!Array.isArray(docs) || docs.length === 0) { res.status(400).json({ error: "docs[] obrigatório" }); return; }
+  let added = 0;
+  for (const doc of docs) {
+    if (!doc.titulo) continue;
+    const existing = await db.select({ id: bibliotecaDocsTable.id }).from(bibliotecaDocsTable)
+      .where(sql`${bibliotecaDocsTable.titulo} = ${doc.titulo}`).limit(1);
+    if (existing.length > 0) continue;
+    await db.insert(bibliotecaDocsTable).values({
+      titulo: doc.titulo,
+      url: doc.url ?? null,
+      tipo: doc.tipo ?? "pdf",
+      origem: doc.origem ?? "manual",
+      tags: doc.tags ?? ["assembleia"],
+      resumo: doc.resumo ?? null,
+    }).onConflictDoNothing();
+    added++;
+  }
+  res.json({ ok: true, added, total: docs.length });
 });
 
 // POST /api/isa/bibliotecario — trigger manual do Bibliotecário
