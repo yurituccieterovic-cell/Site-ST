@@ -29,6 +29,9 @@
 | — | Sessão 25 | 2026-07-06 | **Tango Architecture** — fragmentação de MDs grandes anti-Lost in the Middle |
 | — | Sessão 34 | 2026-07-10 | **Export Replit + Governança 8/9/10** — arvore_chat 1.962 msgs; gh CLI autônomo; Heartbeat/Shutdown/Aprovação Multipartite ARPIA |
 | — | Sessão 36 | 2026-07-10 | **Mestre de Forja + MEKY Lite** — novo agente projetista de robôs (PROPOSTA); arquitetura provisória MEKY Lite; decisão 2WD vs servos pendente |
+| — | Sessão 36b | 2026-07-10 | **Amanda MMA + Vibrissas** — protocolo de combate C++ (4 estados), vibrissas de estanho, MEKY Lite Opção C (~R$45) |
+| — | Sessão 36c | 2026-07-10 | **Sistema DODGE Físico** — Quebradinha no ombro da MEKY, avatar cachorro caramelo, suporte Papagaio PET gratuito, conexão Crew 2 |
+| — | Sessão 36d | 2026-07-10 | **Auditoria + Implementação** — MPU6050/MMA serial/DODGE bridge em amanda.py; I193+I200 já concluídos; pendências 75-81 registradas |
 
 ---
 

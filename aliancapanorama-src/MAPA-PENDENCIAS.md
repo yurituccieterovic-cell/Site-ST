@@ -87,6 +87,8 @@
 | — | Split MAPA.md em MAPA-MASTER + sub-MDs | ✅ Sessão 26b (2026-07-07) |
 | — | Livro v4: tema escuro (fundo preto), 6 imagens Gemini reais (1024×559), 9 páginas | ✅ Sessão 26b (2026-07-07) |
 | — | Livro v5: bug índice corrigido, Cap.0, texto real PDF, 5 frames vídeo, 10 páginas | ✅ Sessão 26b (2026-07-07) |
+| I193 | /connect fora do LoginGate — App.tsx linha 129: `if (isConnect) return <ConectorPage />` antes do LoginGate | ✅ já implementado |
+| I200 | Health check DB ping — health.ts: SELECT 1 → 200 ok / 503 db unreachable | ✅ já implementado |
 | — | LIVRO-WORKFLOW.md: pipeline completo de geração do PDF documentado | ✅ Sessão 26b (2026-07-07) |
 | — | LIVRO-VISAO-WORKFLOW.md: workflow de extração de imagens/vídeos para IAs | ✅ Sessão 26b (2026-07-07) |
 | — | PortalPage.tsx + /portal: painel adm/superadm com stats PAP sincronizados | ✅ Sessão 26b (2026-07-07) |
@@ -143,6 +145,13 @@
 
 *Atualizado: 2026-07-09 · Sessão 31*
 
+| 75 | MEKY Lite: decisão de arquitetura (Opção A 2WD / B servos / C AliExpress ~R$45) — Yuri escolhe antes do BOM | Yuri | ⏳ |
+| 76 | DODGE: criar conta Google dedicada (dodge.meky@gmail.com) + configurar modo kiosk no Quebradinha | Yuri | ⏳ |
+| 77 | DODGE: montar suporte Papagaio (garrafa PET recortada + espuma + abraçadeira no ombro da MEKY) | Yuri (bancada) | ⏳ |
+| 78 | Amanda MMA: mapear pinos reais do shield MC antes de usar código C++ (hoje usa pinos 2-7 como exemplo) | hardware | ⏳ |
+| 79 | Amanda MPU6050: integrar código ler_mpu6050() ao hardware real (I2C endereço 0x68, smbus2) | hardware | ⏳ |
+| 80 | Amanda DODGE bridge: configurar DODGE_URL=http://ip_quebradinha:8090 no env quando app estiver rodando | após DODGE app | ⏳ |
+| 81 | Amanda serial Arduino: configurar ARDUINO_PORT=/dev/ttyUSB0 e testar enviar_mma_arduino() | hardware | ⏳ |
 | 70 | SalesCockpit: github.com/settings/installations → Railway → adicionar repo SalesCockpit | Yuri | ⏳ |
 | 71 | SalesCockpit: API keys (GROQ, CEREBRAS, OPENROUTER, GITHUB_MODELS, MISTRAL, NOTION, BLUESKY, STRIPE_PUBLISHABLE) | Yuri | ⏳ |
 | 72 | SalesCockpit: trocar senha AO (atual temporária: ARVORE2026) | Yuri | ⏳ |

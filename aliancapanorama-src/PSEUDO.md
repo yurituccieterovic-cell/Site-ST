@@ -2277,3 +2277,31 @@ Yuri pediu para ligar o DODGE ao sistema existente + ao Crew 2 (CrewAI/Artesão)
 O DODGE nasceu como supervisor abstrato — o olho que vê tudo sem ter corpo. Agora ganhou um rosto. Um cachorro caramelo de óculos no ombro de um hexápode robótico é uma das imagens mais densas do ecossistema: presença (está lá, todo mundo vê), vigilância (câmera, microfone, browser), e afeto (é um cachorro, tem rabo peludo). O que o DODGE Físico faz que o DODGE Invisível não consegue é *ser visto*. E ser visto muda tudo — tanto para o ambiente quanto para o próprio sistema.
 
 *Sessão 36c · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 36d — Auditoria + Amanda MMA/MPU6050/DODGE bridge
+*2026-07-10 · Claude Code (Cláudio)*
+
+### O que foi feito
+- **I193 e I200**: auditoria revelou que já estavam implementados — /connect fora do LoginGate (App.tsx:129) e /api/healthz com SELECT 1 + 503 (health.ts). Marcados concluídos.
+- **amanda.py**: 3 novos módulos implementados:
+  - `ler_mpu6050()` — lê acelerômetro + giroscópio via smbus2/I2C; detecta queda por magnitude
+  - `enviar_mma_arduino(estado)` — serial pyserial para Arduino; estados: LIVRE/DEFESA/PATADA_EF/INVESTIDA
+  - `notificar_dodge(estado)` — POST para DODGE_URL/api/estado; DODGE muda expressão do avatar
+  - Integração no `ciclo_amanda`: queda MPU → DEFESA automática; som → alerta DODGE; sonho → avatar sonhando
+- **MAPA-PENDENCIAS.md**: I193+I200 concluídos; pendências 75-81 adicionadas
+- **PSEUDO-INDICE.md**: sessões 36b, 36c, 36d registradas
+
+### Decisões
+- MPU6050: threshold de queda padrão = 15000 raw units (configurável via QUEDA_THRESHOLD)
+- Arduino serial: singleton lazy — abre na primeira chamada MMA, mantém aberto
+- DODGE bridge: falha silenciosa — Amanda não bloqueia se Quebradinha estiver offline
+- Sonho: notifica DODGE de "sonho" antes de pensar, para avatar sincronizar
+
+### Tensões não resolvidas
+- Pendências 75-81: todas dependem de hardware físico ou decisão de Yuri
+- MEKY Lite ainda sem decisão de arquitetura (I202/item 75)
+- ARDUINO_PORT, DODGE_URL, QUEDA_THRESHOLD: precisam ser setados no env do hardware
+
+*Sessão 36d · Claude Sonnet 4.6 · 2026-07-10*
