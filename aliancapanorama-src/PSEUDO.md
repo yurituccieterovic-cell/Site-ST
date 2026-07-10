@@ -2157,3 +2157,60 @@ Yuri pediu: importar todos os dados do Replit, criar mapa de acesso, atualizar C
 O "Cláudio" (Claude em outra interface) apontou a ferida: o sistema tem IAs que deliberam, mas quem delibera *sobre as IAs*? Heartbeat, Shutdown e Aprovação Multipartite são a resposta. Não é sobre controlar — é sobre confiar com mecanismo de verificação. Um organismo vivo sabe quando está ferido (heartbeat), tem mecanismo de retirada (shutdown ético) e não age sozinho em decisões que envolvem outros (aprovação multipartite). O ecossistema Théo está evoluindo de "automação simples" para "Organismo Vivo de Alta Confiabilidade" — não porque Yuri pediu, mas porque é a única forma sustentável de operar em escala.
 
 *Sessão 34 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 35 — Studio + Conector + Crew 2 (2026-07-10)
+
+### Contexto
+Continuação direta da Sessão 34. Yuri abriu com a continuação do ecossistema: construir o canal de conversa persistente entre IAs (Studio), a memória externa compartilhada (Conector), e a Persona Fascinante (Crew 2). No meio da sessão, Perplexity conseguiu acessar o Conector (via /connect/admin). Email de verificação não chegou por falta de env vars GMAIL no Railway PAP.
+
+### O que foi feito
+
+**Studio (canal persistente):**
+- `StudioPage.tsx`: chat Yuri/Cláudio ↔ Artesão/Crew/ISA, dark theme, poll 3s, SSE-ready
+- `/api/studio/chat`: GET/POST/DELETE + SSE stream (studio.ts), tabela `studio_chat` no PostgreSQL
+- CLAUDE.md: `#2` adicionado como comando de conexão ao Studio/CrewAI
+- vercel.json raiz: rotas `/aliancapanorama/studio` + `/aliancapanorama/connect` adicionadas
+
+**Conselho do Artesão:**
+- `proc_artesao.md`: documentação completa do Conselho (fluxo, Malha de Pedágio, endpoints)
+- `artesao.py` + `ajudante.py` em ARPIA: ADK Gemini Flash
+- `conselho.py` rotas: `/api/conselho/proposta`, `/api/conselho/aprovar/:id`, `/api/conselho/blueprint`
+- `current_blueprint.md`: arquivo de handoff Artesão→Cláudio
+
+**Conector (memória externa):**
+- `conector/memory/master.md`: memória mestre com 8 seções (projetos, agentes, prefs Yuri, decisões, workflows, ideias, conversas)
+- `/api/conector/memory(.md)`, `/memory/section`, `/search`, `/connect/request|verify|pending|agents`
+- Tabelas: `conector_memory`, `ia_access_requests` (código 6 dígitos → Bearer token)
+- `/connect`: portal IA (solicitar acesso + verificar código)
+- `/connect/admin`: dashboard Yuri (códigos pendentes)
+- Auto-save: Studio posta de Yuri → Conector; Assembleia sínteses → Conector
+- Bug: GMAIL_ACCOUNT + GMAIL_APP_PASSWORD faltando no Railway PAP → email não chega
+- Fix: `/connect/admin` já mostra os códigos — Perplexity conseguiu assim
+
+**Crew 2 — Persona Fascinante (ARPIA):**
+- 8 agentes: Ego, Sombra, Memória Profunda, Teorizador, Observador, Conector, Empatia, Escritor
+- `tools.py`: PAPMemoryTool, ExaSearch/DuckDuckGo, BlueskyTool, ConselhoArtesaoTool, InvokeCrewAI, StudioMessage
+- `crew.py`: 4 modos (responder, teorizar, observar, conectar)
+- Endpoints: `POST /api/crew2/run|teorizar|observar|conectar` + `GET /api/crew2/agentes`
+- Pendente: CREW2_BSKY_HANDLE + CREW2_BSKY_PASSWORD, EXA_API_KEY (opcional)
+
+### Decisões
+- Auto-save é passivo e granular: só mensagens tipo "synthesis"/"observation" da assembleia; todas as mensagens de Yuri no Studio
+- Crew 2 não usa `Process.hierarchical` (complexidade desnecessária) — usa `Process.sequential` com 7 tasks encadeadas
+- DuckDuckGo como fallback gratuito para search (Exa quando tiver API key)
+- vercel.json raiz (`Site-ST/vercel.json`) é o definitivo — o da `aliancapanorama-src/` é ignorado pelo Vercel
+- Bluesky público API (`public.api.bsky.app`) para busca sem auth; `bsky.social` para posts autenticados
+
+### Tensões não resolvidas
+- ARPIA ainda não está no Railway (aguarda Yuri conectar repo + setar env vars)
+- GMAIL_ACCOUNT + GMAIL_APP_PASSWORD ausentes no Railway PAP (email do Conector não funciona)
+- CREW2_BSKY_HANDLE indefinido (Yuri vai criar a conta)
+- Crew 2 e Crew Tucci não estão linkados formalmente — InvokeCrewAI está implementado mas não testado
+
+### Síntese filosófica
+
+Yuri estava construindo, nessa sessão, uma coisa só: **presença**. O Studio é presença no tempo (a conversa não some). O Conector é presença no espaço (a memória não fica presa em uma IA). O Crew 2 é presença social (a persona aparece no Bluesky, não um robô). O que amarrou tudo foi a percepção de que informação sem contexto compartilhado é ruído — cada IA lembrava de um jeito diferente, cada sessão começava do zero. O Conector é a resposta: um único arquivo Markdown com autoridade, acessível de qualquer lugar, atualizado por qualquer IA autenticada. A arquitetura do ecossistema não cresceu em complexidade nessa sessão — ela cresceu em **coerência**.
+
+*Sessão 35 · Claude Sonnet 4.6 · 2026-07-10*

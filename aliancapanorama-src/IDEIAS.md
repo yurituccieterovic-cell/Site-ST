@@ -737,3 +737,26 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I186 | **Railway Account Token para serviceConnect** | 🟡 Média | ○ S | railway.app/account/tokens → token de usuário → permite serviceConnect GitHub (operação que project token não permite) | Yuri cria em railway.app/account/tokens → RAILWAY_ACCOUNT_TOKEN em .pap-secrets. Claude usa para conectar novos serviços ao GitHub sem precisar da UI |
 | I187 | **Heartbeat → Relay Amanda (Shutdown Nível 3)** | 🟡 Média | ◑ M | Governança 9 diz: Nível 3 = corte físico via Arduino. Implementar a ponte entre ARPIA e o relay do MC | POST /api/hardware/relay com body {"action": "cut"/"restore"} já existe no ARPIA mc.py. Shutdown ético nível 3 deve chamar esse endpoint como parte do fluxo | 
 | I188 | **Aprovação Multipartite — Dashboard Dodge** | 🟡 Média | ◑ M | Yuri precisa ver e aprovar ações críticas em tempo real no painel | Nova aba em /adm/dodge: lista de ApprovalRequests pendentes com botão "Assinar como Yuri". Chama POST /api/governance/approval/:id/sign via ARPIA BRIDGE |
+
+## Studio + Conector + Crew 2 — Sessão 35 (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I189 | **Bluesky @artesao-tucci.bsky.social** | 🟡 Média | ○ S | Artesão + Ajudante debatem publicamente no Bluesky | Criar conta → ARPIA_BSKY_HANDLE + ARPIA_BSKY_APP_PASSWORD no Railway ARPIA. BlueskyTool já implementada no crew2/tools.py — reusar para Artesão |
+| I190 | **Conector: sync master.md → GitHub** | 🟢 Baixa | ○ S | Versão públicamente acessível via raw.githubusercontent.com | POST /api/conector/sync-github: lê conteúdo atual do DB → PUT para GitHub Contents API com token → commit automático. Usar GITHUB_TOKEN do .pap-secrets |
+| I191 | **Crew 2: Teorizador cron (1h)** | 🟡 Média | ○ S | Teorização contínua mesmo sem input direto | APScheduler no ARPIA: a cada hora, POST /api/crew2/teorizar com tema aleatório da memória. Salva teorias no Conector seção #ideias |
+| I192 | **EXA_API_KEY para busca semântica no Crew 2** | 🟢 Baixa | ○ S | DuckDuckGo é free mas limitado; Exa é mais preciso para raciocínio | Criar conta Exa (exa.ai) → TRIAL grátis 1000 reqs/mês → EXA_API_KEY no ARPIA Railway |
+| I193 | **Conector: /connect fora do LoginGate** | 🔴 Alta | ○ S | IAs externas precisam acessar /connect sem ter login PAP | Verificar se /connect está sendo bloqueado pelo LoginGate. Se sim, adicionar whitelist de paths em LoginGate.tsx |
+| I194 | **Studio: sender badge visual por agente** | 🟢 Baixa | ○ S | StudioPage.tsx mostra sender mas sem distinção visual clara entre Crew 2 e outros | Adicionar ícone/cor específica para cada agente do Crew 2 (Ego=⚡, Teorizador=🌀, Sombra=🌑, etc.) no avatar map de StudioPage.tsx |
+
+
+## Docs PAP — Ideias Novas (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I195 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I196 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I197 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I198 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I199 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I200 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
