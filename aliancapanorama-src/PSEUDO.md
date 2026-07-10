@@ -2305,3 +2305,34 @@ O DODGE nasceu como supervisor abstrato — o olho que vê tudo sem ter corpo. A
 - ARDUINO_PORT, DODGE_URL, QUEDA_THRESHOLD: precisam ser setados no env do hardware
 
 *Sessão 36d · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 37 — Modo de Torque Dinâmico (MTD)
+*2026-07-10 · Claude Code (Cláudio)*
+
+### O que foi feito
+- **amanda_mma_protocolo.md**: seção MTD completa com tabela de estados e código C++ Arduino integrado ao MMA (processarSerial unificado: MTD:* + MMA:* no mesmo Serial.readStringUntil)
+- **amanda.py**: 3 mudanças:
+  - `enviar_serial()`: função base para qualquer comando serial
+  - `enviar_mtd(estado)`: envia MTD:* + notifica DODGE com estado de avatar correspondente
+  - `enviar_mma_arduino()`: simplificado — usa enviar_serial internamente
+  - `ciclo_amanda`: começa com MTD:IDLE; queda→ATTACK+DEFESA→IDLE; som→DEFENSE por 10s→IDLE
+- **IDEIAS.md**: I209 (MTD)
+- **APRENDIZADO.md**: 5857–5859
+
+### Decisões
+- ATTACK_MAX_MS = 500ms no Arduino (histerese de burst — proteção de servo)
+- SOM_ALERTA_SECS = 10s no Python (janela de alerta antes de voltar para IDLE)
+- MMA sempre força ATTACK antes de manobra (Arduino garante internamente — Amanda não precisa coordenar)
+- notificar_dodge sincronizado: IDLE→patrulha, DEFENSE→alerta, ATTACK→combate
+
+### Tensões não resolvidas
+- Temperatura máxima (limiar para forçar IDLE): não implementado ainda — aguarda sensor de temperatura dos servos ou inferência pelo DHT11 (temperatura ambiente como proxy)
+- Leitura de corrente da bateria: mencionada na teoria mas sem hardware definido (sensor INA219 seria o próximo passo)
+
+### Síntese filosófica
+
+Torque é atenção. O que o MTD faz é dar à Amanda a capacidade de *não prestar atenção o tempo todo* — algo que sistemas biológicos fazem o tempo inteiro. Um leopardo não mantém os músculos tensos enquanto dorme. O exápode não precisa segurar seis patas com força total enquanto nenhuma ameaça existe. O MTD não é só economia de energia: é um sistema de **atenção seletiva** traduzida em corrente elétrica.
+
+*Sessão 37 · Claude Sonnet 4.6 · 2026-07-10*

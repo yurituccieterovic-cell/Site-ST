@@ -750,6 +750,12 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I194 | **Studio: sender badge visual por agente** | 🟢 Baixa | ○ S | StudioPage.tsx mostra sender mas sem distinção visual clara entre Crew 2 e outros | Adicionar ícone/cor específica para cada agente do Crew 2 (Ego=⚡, Teorizador=🌀, Sombra=🌑, etc.) no avatar map de StudioPage.tsx |
 
 
+## Modo de Torque Dinâmico — Sessão 37 (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I209 | **Modo de Torque Dinâmico (MTD) — Amanda/Arduino** | 🔴 Alta | ◑ M | Servos exápodes passam boa parte do tempo em hold desnecessário — MTD alivia corrente em repouso, sustenta só as âncoras na defesa e injeta burst na janela de ataque. Protege motores de superaquecimento e prolonga vida da bateria | 3 estados: IDLE (detach não-âncoras, servo descansa), DEFENSE (hold firme nas 3 patas-âncora), ATTACK (burst total ≤ 500ms → retorno automático). Histerese no Arduino: ATTACK_MAX_MS=500, SOM_ALERTA_SECS=10. Comandos serial: MTD:IDLE/DEFENSE/ATTACK + MMA:* (Arduino garante ATTACK antes de manobra). Código completo em `amanda_mma_protocolo.md` |
+
 ## Sistema DODGE Físico + Suporte Papagaio — Sessão 36c (2026-07-10)
 
 | # | Feature | Prior. | Compl. | Impacto | Descrição técnica |

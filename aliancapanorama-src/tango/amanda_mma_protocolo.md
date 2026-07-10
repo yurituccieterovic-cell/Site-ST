@@ -134,6 +134,163 @@ void loop() {
 
 ---
 
+## Modo de Torque Dinâmico (MTD)
+
+### Conceito
+Servos passam boa parte do tempo segurando posição (hold) — isso aquece e consome energia sem utilidade.
+O MTD divide o comportamento em 3 estados com histerese para evitar desgaste por alternância brusca:
+
+| Estado | Trigger | Servos | Energia |
+|---|---|---|---|
+| `IDLE` | parado, sem ameaça | `detach()` em 4 patas; 2 patas-base em hold suave | mínima |
+| `DEFENSE` | ameaça detectada / defendendo | hold firme nas 3 patas-âncora; aliviar as 3 livres | moderada |
+| `ATTACK` | ataque / MMA ativo | todos servos em `attach()` + torque máximo | burst curto (≤ 500ms) |
+
+**Regras de histerese:**
+- Tempo mínimo em IDLE antes de subir para DEFENSE: 500ms
+- Burst de ATTACK: máximo 500ms → retorno automático para DEFENSE ou IDLE
+- Temperatura > limiar: forçar IDLE independente do estado
+
+### Código C++ — Torque Dinâmico
+
+```cpp
+/*
+   ===================================================================
+   MEKY — MODO DE TORQUE DINÂMICO (MTD) para AMANDA
+   ===================================================================
+   Integra com o Protocolo MMA (estados LIVRE / DEFESA / PATADA / INVESTIDA).
+   Sessão 37 · 2026-07-10
+*/
+
+#include <Servo.h>
+
+// Pinos de sinal dos servos (ajustar para o hardware real do MC)
+const int PINOS_SERVO[] = {2, 3, 4, 5, 6, 7};
+const int N_SERVOS = 6;
+Servo servos[N_SERVOS];
+
+// Pata 0=DF, 1=EF, 2=DM, 3=EM, 4=DT, 5=ET
+// Patas-âncora (base tripodal padrão): DF(0), EM(3), DT(4)
+const int PATAS_ANCORA[] = {0, 3, 4};
+const int N_ANCORA = 3;
+
+// Estados MTD
+enum EstadoTorque { IDLE, DEFENSE, ATTACK };
+EstadoTorque estadoAtual = IDLE;
+unsigned long entradaEstado = 0;
+
+// Histerese
+const unsigned long IDLE_MIN_MS    = 500;
+const unsigned long ATTACK_MAX_MS  = 500;   // burst máximo — protege servos
+
+// Posição neutra de repouso
+const int ANGULO_NEUTRO = 90;
+
+// ── Funções de Torque ──────────────────────────────────────────────
+
+bool ehAncora(int idx) {
+  for (int i = 0; i < N_ANCORA; i++)
+    if (PATAS_ANCORA[i] == idx) return true;
+  return false;
+}
+
+// IDLE: desconecta todas exceto 2 patas-âncora (segurar o chassi)
+void aplicarIdle() {
+  for (int i = 0; i < N_SERVOS; i++) {
+    if (i == PATAS_ANCORA[0] || i == PATAS_ANCORA[1]) {
+      // mantém attach com ângulo neutro — suporte mínimo
+      if (!servos[i].attached()) servos[i].attach(PINOS_SERVO[i]);
+      servos[i].write(ANGULO_NEUTRO);
+    } else {
+      // desconecta PWM — servo fica mole, motor descansa
+      servos[i].detach();
+    }
+  }
+}
+
+// DEFENSE: hold firme nas 3 âncoras; livres em neutro sem hold
+void aplicarDefense() {
+  for (int i = 0; i < N_SERVOS; i++) {
+    if (ehAncora(i)) {
+      if (!servos[i].attached()) servos[i].attach(PINOS_SERVO[i]);
+      // manter ângulo atual — não escrever para não tremer
+    } else {
+      if (!servos[i].attached()) servos[i].attach(PINOS_SERVO[i]);
+      servos[i].write(ANGULO_NEUTRO);  // neutro sem esforço
+    }
+  }
+}
+
+// ATTACK: todos attach + executa a manobra MMA
+void aplicarAttack() {
+  for (int i = 0; i < N_SERVOS; i++) {
+    if (!servos[i].attached()) servos[i].attach(PINOS_SERVO[i]);
+  }
+  // A manobra MMA é executada externamente após chamar aplicarAttack()
+}
+
+// ── Máquina de Estados MTD ─────────────────────────────────────────
+
+void setEstadoTorque(EstadoTorque novo) {
+  if (novo == estadoAtual) return;
+  estadoAtual = novo;
+  entradaEstado = millis();
+  switch (novo) {
+    case IDLE:    aplicarIdle();    break;
+    case DEFENSE: aplicarDefense(); break;
+    case ATTACK:  aplicarAttack();  break;
+  }
+}
+
+// Chamado no loop() — cuida do burst máximo e retorno automático
+void tickMTD() {
+  unsigned long agora = millis();
+  if (estadoAtual == ATTACK && (agora - entradaEstado) >= ATTACK_MAX_MS) {
+    setEstadoTorque(DEFENSE);  // burst encerrado → volta para defesa
+  }
+}
+
+// ── Integração com MMA Serial ──────────────────────────────────────
+// Amanda.py envia: "MTD:IDLE\n" | "MTD:DEFENSE\n" | "MTD:ATTACK\n"
+// Amanda.py envia: "MMA:DEFESA\n" | "MMA:PATADA_EF\n" | "MMA:INVESTIDA\n"
+
+void processarSerial(String cmd) {
+  cmd.trim();
+  if (cmd.startsWith("MTD:")) {
+    String estado = cmd.substring(4);
+    if (estado == "IDLE")    setEstadoTorque(IDLE);
+    if (estado == "DEFENSE") setEstadoTorque(DEFENSE);
+    if (estado == "ATTACK")  setEstadoTorque(ATTACK);
+  }
+  if (cmd.startsWith("MMA:")) {
+    // Garante ATTACK antes de qualquer manobra
+    setEstadoTorque(ATTACK);
+    String manobra = cmd.substring(4);
+    if (manobra == "DEFESA")    aplicarDefesaPlastrao();
+    if (manobra == "PATADA_EF") desferirPatadaEsquerda();
+    if (manobra == "INVESTIDA") executarInvestidaChifre();
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  for (int i = 0; i < N_SERVOS; i++) {
+    servos[i].attach(PINOS_SERVO[i]);
+    servos[i].write(ANGULO_NEUTRO);
+  }
+  delay(500);
+  setEstadoTorque(IDLE);  // começa economizando
+}
+
+void loop() {
+  tickMTD();  // checa burst timeout
+  if (Serial.available()) {
+    String cmd = Serial.readStringUntil('\n');
+    processarSerial(cmd);
+  }
+}
+```
+
 ## Integração com Amanda (próximos passos)
 1. Traduzir estados para `amanda.py`: cada função C++ vira um comando enviado ao Arduino via serial
 2. Adicionar leitura de vibrissas: `digitalRead(PIN_VIBRISSA_EF)` → gatilho de patada
