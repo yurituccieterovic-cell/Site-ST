@@ -24,6 +24,7 @@
 | 11 | Hierarquia completa de IAs | `sistema-ia-hierarquia-20260708.md` | DEP, Crowd, Porteiro, Pack IA Mestre, TASKS universal, Guarda-chuva, Curador, SPEC, Clube de Professores |
 | 12 | Pack IA individual de cada IA | `ias/INDICE-IAS.md` → `ias/pack-*.md` | pack-isa, pack-amanda, pack-meky, pack-marta, pack-arvore, pack-dodge, pack-dep, pack-crowd, pack-porteiro, cadeia biótica |
 | 13 | Export Replit SalesCockpit | `replit-export/MAPA-REPLIT.md` | Replit, arvore_chat, export, migração, SalesCockpit legado, 1962 mensagens |
+| 14 | Conselho do Artesão | `proc_artesao.md` | artesão, ajudante, blueprint, conselho, clube 3 projetos, Claude.ai conexão, current_blueprint.md |
 
 ---
 
