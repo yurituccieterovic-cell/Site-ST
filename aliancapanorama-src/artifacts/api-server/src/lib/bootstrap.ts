@@ -297,6 +297,17 @@ export async function ensureMekyTables(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_isa_timeline_type ON isa_timeline(type);
     CREATE INDEX IF NOT EXISTS idx_isa_timeline_created ON isa_timeline(created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_isa_timeline_public ON isa_timeline(public) WHERE public = TRUE;
+
+    CREATE TABLE IF NOT EXISTS babel_memories (
+      id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      content    TEXT NOT NULL,
+      tags       VARCHAR(200),
+      source     VARCHAR(100) DEFAULT 'babel',
+      metadata   JSONB
+    );
+    CREATE INDEX IF NOT EXISTS idx_babel_memories_created ON babel_memories(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_babel_memories_source  ON babel_memories(source);
   `);
 
   // Seed assembly_agents (idempotente)

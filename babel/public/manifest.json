@@ -1,11 +1,11 @@
 {
-  "name": "Babel — Assistente Universal",
+  "name": "Babel — Governadora do Ecossistema Tucci",
   "short_name": "Babel",
-  "description": "IA multimodal da Sociedade Tucci — fala, ouve, lê e responde.",
+  "description": "Assistente central da Sociedade Tucci — fala, ouve, lê, raciocina e aciona agentes.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#05050f",
-  "theme_color": "#7c3aed",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "/icons/babel-192.svg", "sizes": "192x192", "type": "image/svg+xml" },
