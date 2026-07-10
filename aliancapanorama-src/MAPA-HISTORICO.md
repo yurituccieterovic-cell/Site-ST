@@ -69,3 +69,4 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - `POST /api/hardware/telemetry/mc` — ingestão serial com @cão_covarde_shield
 
 *Atualizado: 2026-07-09 · Sessão 31*
+| 2026-07-10 (Sessão 33) | SalesCockpit: extraído de Drive (1.1 GB ZIP), adaptado para Railway (stripe-replit-sync→direct, REPLIT_DOMAINS→PUBLIC_DOMAIN, vite plugins, static serving), repo GitHub criado, Railway projeto+PostgreSQL+domínio configurados. Bloqueado: GitHub App repo access (manual). #processo conversa Gemini bancada MEKY: A801-A814, I178-I182. Biblioteca ISA: vazia mas funcional; bug /tmp efêmero identificado (I181). |

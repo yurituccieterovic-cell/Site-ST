@@ -2077,3 +2077,42 @@ Por baixo: Yuri está consolidando a infraestrutura de comunicação entre os Cl
 - Vercel frontend (pap-tan-seven) ainda em 404. Não abordado nesta sessão.
 
 *Sessão 31 · Claude Sonnet 4.6 · 2026-07-09*
+
+---
+
+## Sessão 33 — 2026-07-10
+
+### O que foi feito
+
+**SalesCockpit:**
+- Drive ZIP (1.1 GB) baixado com gdown → extraído em `/salescockpit/Sales-Email-Automator/`
+- Migração Replit→Railway: `stripeClient.ts` reescrito (sem Replit Connector, usa STRIPE_SECRET_KEY direto), `vite.config.ts` limpo (sem plugins Replit, PORT/BASE_PATH com defaults), `REPLIT_DOMAINS` → `PUBLIC_DOMAIN` em 4 arquivos, `app.ts` serve frontend estático em produção
+- `railway.toml` criado, repo GitHub `SalesCockpit` criado (público), Railway projeto+PostgreSQL+domínio `api-production-89f4a.up.railway.app`
+- 9 env vars setadas no Railway; deploy bloqueado por GitHub App não ter acesso ao novo repo
+
+**PAP Biblioteca ISA:**
+- Tabela `biblioteca_docs` vazia — ISA Bibliotecário é pull-based (varre assembleias por URLs)
+- Bug identificado: `/tmp/pap-biblioteca` efêmero no Railway → I181
+
+**#processo:**
+- Conversa Gemini "Identificando Peças de Robótica Arduino" processada
+- A801–A814: hardware MEKY (MPU6050, SOIL M393, WS2812B, ISD1820, relé, CR2032, solda) + deploy Railway
+- I178–I182: Penélope sobrenome, MPU6050, SOIL M393, Railway Volume biblioteca, SalesCockpit keys
+
+### Decisões
+
+- SalesCockpit não usa Vercel separado — Express full-stack serve frontend buildado (sem CORS cross-domain, sessions funcionam)
+- `stripe-replit-sync` não é portável; padrão fora do Replit: `stripe.webhooks.constructEvent()` com `STRIPE_WEBHOOK_SECRET` próprio
+- Repo SalesCockpit criado público para Railway poder acessar (sem OAuth app do Railway instalado no repo privado)
+
+### Tensões não resolvidas
+
+- SalesCockpit deploy travado: Railway GitHub App precisa de permissão manual por Yuri — não pode ser feito programaticamente com token OAuth
+- SalesCockpit precisa de 8 API keys gratuitas para RODAR funcionar com múltiplas IAs
+- Biblioteca ISA: files efêmeros vs metadados persistentes — estratégia (Railway Volume vs re-download) ainda não decidida
+
+### Síntese filosófica
+
+Yuri estava construindo em duas frentes ao mesmo tempo: na bancada física, com fios e ferro de solda e a aranha manca; e na bancada digital, trazendo o SalesCockpit do Replit para o Railway. Os dois atos têm a mesma estrutura — desprender de uma plataforma e replantar em solo próprio. A Penélope que ficou com a perna fraca por Durepox pesado demais é a mesma tensão do código que carregava dependências do Replit acopladas demais. O cianoacrilato + bicarbonato (leve, forte, instantâneo) é a mesma solução que o `PUBLIC_DOMAIN` limpo substituindo o `REPLIT_DOMAINS` — resolver na raiz, sem acúmulo de peso.
+
+*Sessão 33 · Claude Sonnet 4.6 · 2026-07-10*

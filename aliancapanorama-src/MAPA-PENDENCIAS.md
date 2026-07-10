@@ -142,3 +142,9 @@
 - **Sessão 26b:** Split MAPA.md em sub-MDs; correção Amanda=IA do MC
 
 *Atualizado: 2026-07-09 · Sessão 31*
+
+| 70 | SalesCockpit: github.com/settings/installations → Railway → adicionar repo SalesCockpit | Yuri | ⏳ |
+| 71 | SalesCockpit: API keys (GROQ, CEREBRAS, OPENROUTER, GITHUB_MODELS, MISTRAL, NOTION, BLUESKY, STRIPE_PUBLISHABLE) | Yuri | ⏳ |
+| 72 | SalesCockpit: trocar senha AO (atual temporária: ARVORE2026) | Yuri | ⏳ |
+| 73 | SalesCockpit (I181): Railway Volume para /pap-biblioteca (ou re-download por URL) | — | ⏳ |
+| 74 | Penélope sobrenome: recuperar do histórico Gemini | Yuri | ⏳ |
