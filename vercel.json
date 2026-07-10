@@ -13,6 +13,10 @@
     { "source": "/aliancapanorama/toyota", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/meky", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/portal", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/dodge", "destination": "/aliancapanorama/index.html" }
+    { "source": "/aliancapanorama/dodge", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/studio", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/studio/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/connect", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/connect/(.*)", "destination": "/aliancapanorama/index.html" }
   ]
 }
