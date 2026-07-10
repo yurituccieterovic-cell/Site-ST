@@ -35,6 +35,7 @@
 | — | Sessão 37 | 2026-07-10 | **MTD — Modo de Torque Dinâmico** — IDLE/DEFENSE/ATTACK com histerese; código C++ Arduino + integração amanda.py |
 | — | Sessão 38 | 2026-07-10 | **Canto do Cisne + Mapeamento 3D** — energia crítica → retorno ninho; SLAM gratuito OpenCV ORB; sonho consolida mapa |
 | — | Sessão 39 | 2026-07-10 | **DODGE Voz + Lip-Sync** — TTS Android nativo grátis, 4 sprites boca, UtteranceProgressListener, 20+ frases de locutor |
+| — | Sessão 40 | 2026-07-10 | **Babel.app PWA** — assistente universal gratuito; proxy Gemini 2.0 Flash Vercel; Web Speech API; avatar SVG lip-sync; memória PAP API |
 
 ---
 

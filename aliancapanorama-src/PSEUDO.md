@@ -2402,3 +2402,51 @@ O Canto do Cisne não é uma derrota — é a sabedoria da preservação. O rob�
 A voz do Dodge não é decoração. Ela é a camada de interpretação do ecossistema para qualquer pessoa que esteja no ambiente com a MEKY. O locutor culto de óculos e rabo peludo traduz o caos sensorial do hexápode — vibrissas, MPU6050, bateria, mapa — em frases elegantes que um humano entende sem precisar ver o terminal. O Dodge não fala para a Amanda. Ele fala pelo ecossistema para o mundo.
 
 *Sessão 39 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 40 — Babel.app PWA Assistente Universal (2026-07-10)
+
+### O que foi feito
+- **`/babel/` no repo Site-ST** — pasta autônoma com toda a Babel.app
+- **`api/gemini.js`** — proxy Vercel serverless para Gemini 2.0 Flash; API key só no servidor
+- **`index.html`** — app completo: avatar SVG + lip-sync CSS + Web Speech API + TTS + histórico sidebar + upload + PWA install
+- **`manifest.json`** — PWA standalone, theme #7c3aed violeta
+- **`sw.js`** — service worker: cacheia estáticos, nunca /api/
+- **`vercel.json`** — rewrites + security headers
+- **`icons/babel-192.svg`** — ícone PWA SVG (sem png generator necessário)
+- **Push GitHub**: commit `56ba5ad` — 6 arquivos, 662 inserções
+
+### Arquivos modificados (docs)
+- **IDEIAS.md**: I209–I213 (Babel PWA, proxy Gemini, memória, triggers CrewAI, voz)
+- **APRENDIZADO.md**: A5867–A5873 (7 entradas: PWA sem npm, proxy, lip-sync CSS, iOS gotcha, memória PAP API, avatar SVG, Gemini multimodal)
+- **APRENDIZADO-INDICE.md**: nova linha sessão 40 (linha 7692)
+- **PSEUDO-INDICE.md**: Sessão 40 adicionada
+
+### Decisões
+- Stack 100% gratuita: sem npm no frontend, sem D-ID/HeyGen, sem ElevenLabs
+- Web Speech API nativa: mic (SpeechRecognition) + voz (SpeechSynthesis) — suporte amplo em Chrome/Edge
+- Gemini 2.0 Flash gratuito (tier grátis Google AI Studio) via proxy Vercel
+- Avatar SVG geométrico — personalidade diferente de DODGE (geométrico vs cachorro caramelo)
+- Memória cross-sessão via PAP API existente (/api/isa/memory + /api/isa/chat) — sem DB extra
+- Deploy: Yuri conecta `/babel/` como projeto Vercel e adiciona `GEMINI_API_KEY` nas env vars
+
+### Para Yuri fazer
+1. Ir em vercel.com → New Project → importar `yurituccieterovic-cell/Site-ST`
+2. **Root Directory**: definir como `babel`
+3. **Framework Preset**: Other
+4. Em **Environment Variables** adicionar: `GEMINI_API_KEY` = (chave do Google AI Studio)
+5. Deploy → URL gerada (ex: babel-st.vercel.app) → plugar IDs CrewAI no código se quiser
+
+### Tensões não resolvidas
+- CrewAI URLs (Las Cinco, Crew 2): Yuri ainda precisa passar as URLs para integrar via fetch
+- Artesão URL já está no código: `https://artesao-v1-853879a0...crewai.com` — mas o trigger real (POST) ainda precisa ser implementado (fetch para o endpoint)
+- iOS Safari: synth.speak() tem restrição de gesto — funciona mas precisa estar dentro de click handler
+- PDF/imagem via Gemini inline_data funciona; YouTube URL = só texto ao modelo por enquanto
+- Ícone SVG: funciona para Chrome/Edge; iOS Safari prefere PNG — criar PNG se precisar de instalação iOS
+
+### Síntese filosófica
+
+Babel não é mais uma IA. Ela é a língua universal do ecossistema Tucci — o tradutor de intenções entre Yuri e todas as IAs. Enquanto o Artesão pensa, ISA guarda, Amanda age e DODGE observa, Babel *conversa*. Ela recebe qualquer coisa — voz, texto, imagem, PDF, link — e devolve entendimento. O nome não é acidente: a Torre de Babel foi destruída pela confusão de línguas. Babel.app é a anti-torre: um ponto único onde todas as linguagens convergem.
+
+*Sessão 40 · Claude Sonnet 4.6 · 2026-07-10*

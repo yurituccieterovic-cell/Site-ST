@@ -712,3 +712,32 @@ deliberação multipartite (Árvore + ISA + MC + Yuri, maioria 3/4).
 ---
 
 *Atualizado em: 2026-07-06 · Claude Sonnet 4.6 · Sessão 27*
+
+---
+
+## Babel.app + MEKY/Amanda/DODGE — Sessões 36–40 (2026-07-10)
+
+### Babel.app (Sessão 40)
+- **PWA instalável** em `/babel/` no repo Site-ST, 6 arquivos, 100% gratuito
+- Gemini 2.0 Flash via proxy Vercel serverless (API key nunca exposta)
+- Web Speech API (mic) + SpeechSynthesis (TTS) + avatar SVG lip-sync CSS
+- Memória cross-sessão via PAP API existente (/api/isa/memory + /api/isa/chat)
+- **Deploy**: Yuri conecta `babel/` como projeto Vercel + adiciona `GEMINI_API_KEY`
+
+### Amanda MMA + MTD + Canto do Cisne + Mapeamento (Sessões 36b–38)
+- **MMA**: 4 estados combate (Livre/Defesa/Patada/Investida) → C++ Arduino + amanda.py
+- **MTD**: Modo de Torque Dinâmico (IDLE/DEFENSE/ATTACK) com histerese + burst 500ms
+- **Bateria gratuita**: divisor de tensão 2x10kΩ → ADC A0 → "BAT:xx.x\n" serial (sem INA219)
+- **Canto do Cisne**: 4 estados energia → hibernação recolhe patas, salva mapa, notifica DODGE
+- **SLAM gratuito**: OpenCV ORB features + amanda_mapa.json; sonho consolida mapa topológico
+
+### DODGE Físico (Sessão 36c + 39)
+- Celular Quebradinha no ombro da MEKY ("Modo Papagaio") — suporte PET reciclado R$0
+- App Kotlin spec completa (Fase 2): TTS setPitch(0.72f) + UtteranceProgressListener + 4 sprites boca
+- Personalidade: locutor culto médio-grave, 20+ frases de status elegantes
+
+### Mestre de Forja (Sessão 36)
+- Novo agente projetista de robôs — status PROPOSTA
+- Primeira missão: MEKY Lite (~R$45 Opção C) — aguarda decisão arquitetura de Yuri
+
+*Atualizado em: 2026-07-10 · Claude Sonnet 4.6 · Sessão 40*
