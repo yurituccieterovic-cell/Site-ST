@@ -750,6 +750,13 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I194 | **Studio: sender badge visual por agente** | 🟢 Baixa | ○ S | StudioPage.tsx mostra sender mas sem distinção visual clara entre Crew 2 e outros | Adicionar ícone/cor específica para cada agente do Crew 2 (Ego=⚡, Teorizador=🌀, Sombra=🌑, etc.) no avatar map de StudioPage.tsx |
 
 
+## Canto do Cisne + Mapeamento 3D — Sessão 38 (2026-07-10)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I210 | **Protocolo Canto do Cisne — energia crítica** | 🔴 Alta | ◑ M | Amanda detecta bateria baixa e executa retorno inteligente ao ninho antes de desligar — sem morrer no meio do quintal. 4 estados: OPERACIONAL / ALERTA (20%) / RETORNO_CRITICO (10%) / HIBERNACAO (5%) | Hardware gratuito: divisor de tensão 2x10kΩ (na bancada) → pino A0 Arduino → ADC → "BAT:xx.x\n" via serial. Amanda.py checa_energia() transita estados e envia CISNE:RETORNO ou CISNE:HIBERNAR. Código C++ e Python em amanda_mma_protocolo.md |
+| I211 | **Mapeamento 3D topológico — SLAM gratuito** | 🟡 Média | ● L | Amanda constrói mapa do ambiente durante missões usando câmera do DODGE, processa offline durante o sonho | Câmera Quebradinha GET /api/camera/frame → JPEG. OpenCV ORB_create(150) extrai features. Nós válidos (≥5 kp) → amanda_mapa.json. Sonho: remove nós ruído (<8 features), consolida. Tooling: cv2 + numpy (pip grátis). Próximo: matching entre nós para calcular pose relativa e gerar trajetória. |
+
 ## Modo de Torque Dinâmico — Sessão 37 (2026-07-10)
 
 | # | Feature | Prior. | Compl. | Impacto | Descrição técnica |

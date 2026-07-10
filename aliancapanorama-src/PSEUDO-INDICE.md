@@ -33,6 +33,7 @@
 | — | Sessão 36c | 2026-07-10 | **Sistema DODGE Físico** — Quebradinha no ombro da MEKY, avatar cachorro caramelo, suporte Papagaio PET gratuito, conexão Crew 2 |
 | — | Sessão 36d | 2026-07-10 | **Auditoria + Implementação** — MPU6050/MMA serial/DODGE bridge em amanda.py; I193+I200 já concluídos; pendências 75-81 registradas |
 | — | Sessão 37 | 2026-07-10 | **MTD — Modo de Torque Dinâmico** — IDLE/DEFENSE/ATTACK com histerese; código C++ Arduino + integração amanda.py |
+| — | Sessão 38 | 2026-07-10 | **Canto do Cisne + Mapeamento 3D** — energia crítica → retorno ninho; SLAM gratuito OpenCV ORB; sonho consolida mapa |
 
 ---
 

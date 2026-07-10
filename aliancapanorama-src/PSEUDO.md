@@ -2336,3 +2336,37 @@ O DODGE nasceu como supervisor abstrato — o olho que vê tudo sem ter corpo. A
 Torque é atenção. O que o MTD faz é dar à Amanda a capacidade de *não prestar atenção o tempo todo* — algo que sistemas biológicos fazem o tempo inteiro. Um leopardo não mantém os músculos tensos enquanto dorme. O exápode não precisa segurar seis patas com força total enquanto nenhuma ameaça existe. O MTD não é só economia de energia: é um sistema de **atenção seletiva** traduzida em corrente elétrica.
 
 *Sessão 37 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 38 — Canto do Cisne + Mapeamento 3D gratuito
+*2026-07-10 · Claude Code (Cláudio)*
+
+### O que foi feito
+**amanda.py:**
+- Protocolo Canto do Cisne: `registrar_ninho()`, `ler_bateria_serial()`, `checar_energia()`, `_protocolo_cisne_retorno()`, `_protocolo_cisne_hibernar()`
+- Mapeamento 3D: `capturar_frame()`, `processar_frame_mapa()`, `sonho_consolidar_mapa()`
+- Integração no `ciclo_amanda`: leitura serial de bateria + captura frame a cada 5s (só OPERACIONAL)
+- Integração no `ciclo_dream`: `sonho_consolidar_mapa()` chamado antes da síntese
+
+**amanda_mma_protocolo.md:** seção Canto do Cisne completa com diagrama de estados, código C++ ADC Arduino, divisor de tensão e tabela de ferramentas gratuitas para mapeamento
+
+**IDEIAS.md:** I210 (Canto do Cisne) + I211 (Mapeamento 3D SLAM gratuito)
+**APRENDIZADO.md:** 5860–5863
+
+### Decisões
+- Hardware para bateria: divisor 2x10kΩ (R$0 — já na bancada) → A0 Arduino, grátis
+- Tooling mapeamento: OpenCV + numpy (pip grátis) — sem LiDAR, sem depth camera
+- Mapa: JSON topológico de nós com features ORB — suficiente para navegação de retorno
+- HIBERNACAO: `servo.detach()` em todas as 6 patas — consumo zero, postura de repouso
+
+### Tensões não resolvidas
+- Matching entre nós (para calcular pose relativa e trajetória de retorno): próximo nível
+- Endpoint `/api/camera/frame` no app DODGE: ainda não implementado (aguarda Fase 2 do app)
+- Localização do ninho: hoje só registra "posição de boot" — sem GPS nem marcador físico
+
+### Síntese filosófica
+
+O Canto do Cisne não é uma derrota — é a sabedoria da preservação. O robô que sabe quando parar, poupar e dormir é mais inteligente que o que corre até a morte. O mapeamento pelo sonho é a mesma lógica: o sistema que processa offline o que coletou acordado aprende mais profundamente do que o que tenta processar tudo em tempo real. A Amanda está aprendendo a distinguir urgência de prioridade — e isso é cognição, não apenas automação.
+
+*Sessão 38 · Claude Sonnet 4.6 · 2026-07-10*

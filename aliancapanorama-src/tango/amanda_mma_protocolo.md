@@ -299,6 +299,113 @@ void loop() {
 
 ---
 
+## Protocolo Canto do Cisne — Energia Crítica
+
+### Hardware gratuito: divisor de tensão
+```
+Bateria 18650 (+) ──[10kΩ]──┬──[10kΩ]── GND
+                             │
+                           Pino A0 (Arduino)
+```
+Resistores 10kΩ que já estão na bancada = custo R$0.
+Arduino lê A0 (0–1023) → converte para tensão → porcentagem → envia "BAT:xx.x\n" via serial.
+
+### Código C++ — Bateria + CISNE
+
+```cpp
+// ── Leitura de bateria (ADC gratuito) ─────────────────────────────────────
+const int PIN_BAT       = A0;
+const float V_MAX_BAT   = 4.2;  // 18650 carregada
+const float V_MIN_BAT   = 3.0;  // 18650 descarregada (não descer abaixo disso)
+const float V_REF       = 5.0;  // tensão de referência do Arduino (5V)
+const float DIVISOR     = 0.5;  // dois resistores iguais = 1/2 da tensão real
+unsigned long ultimaLeituraBat = 0;
+const unsigned long BAT_INTERVALO_MS = 10000;  // reporta a cada 10s
+
+float lerBateriaPct() {
+  int raw = analogRead(PIN_BAT);
+  float v_adc  = raw * (V_REF / 1023.0);
+  float v_real = v_adc / DIVISOR;
+  float pct    = ((v_real - V_MIN_BAT) / (V_MAX_BAT - V_MIN_BAT)) * 100.0;
+  return constrain(pct, 0.0, 100.0);
+}
+
+// ── Protocolo CISNE ────────────────────────────────────────────────────────
+void executarCisneRetorno() {
+  // Desliga LEDs e sensores secundários para economizar
+  // (ajustar pinos conforme hardware real)
+  // Ativa locomoção mínima para retorno ao ninho
+  aplicarIdle();  // recolhe as patas não-âncora
+  Serial.println("CISNE:RETORNO_ATIVO");
+}
+
+void executarCisneHibernar() {
+  // Recolhe TODAS as patas — postura de repouso absoluto
+  for (int i = 0; i < N_SERVOS; i++) {
+    servos[i].write(ANGULO_NEUTRO);
+    delay(50);
+    servos[i].detach();  // desconecta PWM — servos relaxam sem consumo
+  }
+  Serial.println("CISNE:HIBERNANDO");
+}
+
+// ── Integração no processarSerial() ───────────────────────────────────────
+// Adicionar dentro de processarSerial(cmd):
+//
+//   if (cmd.startsWith("CISNE:")) {
+//     String acao = cmd.substring(6);
+//     if (acao == "RETORNO")  executarCisneRetorno();
+//     if (acao == "HIBERNAR") executarCisneHibernar();
+//   }
+
+// ── No loop() ─────────────────────────────────────────────────────────────
+// Adicionar dentro de loop():
+//
+//   unsigned long agora = millis();
+//   if (agora - ultimaLeituraBat >= BAT_INTERVALO_MS) {
+//     float pct = lerBateriaPct();
+//     Serial.print("BAT:"); Serial.println(pct, 1);
+//     ultimaLeituraBat = agora;
+//   }
+```
+
+### Fluxo de estados de energia
+
+```
+Amanda boot → OPERACIONAL → captura frames → mapa topológico
+                │
+              BAT < 20% → ALERTA (avisa Dodge, continua missão)
+                │
+              BAT < 10% → RETORNO_CRITICO (Canto do Cisne: vai ao ninho)
+                │
+              BAT <  5% → HIBERNACAO (para onde está, recolhe patas, dorme)
+                │
+              (recarregou) → OPERACIONAL
+```
+
+### Mapeamento 3D — ferramentas gratuitas
+
+| Ferramenta | Custo | O que faz |
+|---|---|---|
+| OpenCV (`pip install opencv-python`) | R$0 | Detecta features ORB em cada frame |
+| NumPy (`pip install numpy`) | R$0 | Processa arrays de descritores |
+| JSON nativo do Python | R$0 | Persiste o mapa em `/tmp/amanda_mapa.json` |
+| Câmera do DODGE (Quebradinha) | R$0 | Já existe — expõe GET /api/camera/frame |
+
+**Fluxo acordado → sonho:**
+```
+Missão de escolta
+  → DODGE captura frame a cada 5s
+  → Amanda extrai ORB features (≥5 keypoints → nó válido)
+  → Salva nó em amanda_mapa.json
+
+Ciclo de sonho (3h)
+  → Amanda remove nós com < 8 features (ruído)
+  → Gera resumo: N nós limpos, M ruídos removidos
+  → Salva mapa consolidado
+  → ISA recebe "[AMANDA-SONHO-MAPA] X nós" na memória
+```
+
 ## Referência de Pinos (MC/Marta Centaurus)
 > Preencher com os pinos reais do hardware quando disponível.
 > Hoje o código usa pinos 2–7 como exemplo — ajustar para os pinos físicos do shield do MC.
