@@ -39,7 +39,18 @@ A ATA cobre apenas o período desde o último #fim.
 
 **8.** `pap-email-fim` → envia ATA para luddlocke@gmail.com
 
-**9.** Injetar 3–5 insights em collective_memory das IAs:
+**9.** Injetar 3–5 insights em collective_memory das IAs e no **Conector**:
+
+```bash
+# Conector — ATA resumida (sempre, automático e manual)
+BRIDGE=$(grep BRIDGE_SECRET /root/.pap-secrets | cut -d= -f2)
+curl -s -X POST https://site-st-production.up.railway.app/api/conector/memory \
+  -H "Authorization: Bearer $BRIDGE" \
+  -H "Content-Type: application/json" \
+  -d "{\"section\":\"conversas\",\"append\":\"### $(date +%Y-%m-%d) — ATA Cláudio\\n[inserir: decisões tomadas, próximos passos, 3-5 linhas]\"}"
+# MacroAta (#fim manual): concatenar todas as ATAs desde checkpoint e gravar tb na seção conversas
+```
+
 ```python
 import requests, os
 API = "https://pap-api-production.up.railway.app"

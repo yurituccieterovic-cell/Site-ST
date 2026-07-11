@@ -122,13 +122,84 @@ function extractSection(content: string, sectionName: string): string {
   return lines.slice(startIdx, endIdx).join("\n").trim();
 }
 
-async function sendEmail(to: string, subject: string, body: string) {
-  if (!GMAIL_PASS) return;
-  const transport = createTransport({
-    service: "gmail",
-    auth: { user: GMAIL, pass: GMAIL_PASS },
+// ── GitHub sync — espelha master.md em conector/MASTER.md no repo ────────────
+
+async function syncToGitHub(content: string, updatedBy: string): Promise<void> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) return;
+  const REPO = "yurituccieterovic-cell/Site-ST";
+  const PATH = "conector/MASTER.md";
+  const API  = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+    "User-Agent": "Site-ST-Conector/1.0",
+    Accept: "application/vnd.github+json",
+  };
+  // Obter SHA atual (necessário para PUT)
+  let sha: string | undefined;
+  try {
+    const r = await fetch(API, { headers });
+    if (r.ok) { const d = await r.json() as { sha: string }; sha = d.sha; }
+  } catch {}
+  // Commit do conteúdo atualizado
+  const body = JSON.stringify({
+    message: `conector: sync por ${updatedBy} em ${new Date().toISOString().slice(0,16)}`,
+    content: Buffer.from(content).toString("base64"),
+    ...(sha ? { sha } : {}),
+    branch: "main",
   });
-  await transport.sendMail({ from: GMAIL, to, subject, text: body });
+  await fetch(API, { method: "PUT", headers, body });
+}
+
+async function sendEmail(to: string, subject: string, body: string): Promise<boolean> {
+  if (!GMAIL_PASS) {
+    console.error("[Conector] GMAIL_APP_PASSWORD não configurado no Railway — email não enviado para", to);
+    return false;
+  }
+  try {
+    const transport = createTransport({
+      service: "gmail",
+      auth: { user: GMAIL, pass: GMAIL_PASS },
+    });
+    await transport.sendMail({ from: GMAIL, to, subject, text: body });
+    return true;
+  } catch (err) {
+    console.error("[Conector] Falha ao enviar email:", err);
+    return false;
+  }
+}
+
+async function appendToPendingSection(agentName: string, project: string, code: string): Promise<void> {
+  const current = await getMasterContent();
+  const timestamp = new Date().toISOString().slice(0, 16);
+  const entry = `\n### ${timestamp} — Solicitação de ${agentName}\nProjeto: ${project} | Código de aprovação: **${code}**\nComande: POST /api/conector/connect/verify com {"agent_name":"${agentName}","code":"${code}"}\n`;
+
+  const anchor = "{#solicitacoes}";
+  let updated: string;
+  if (current.includes(anchor) || current.toLowerCase().includes("## solicitações pendentes")) {
+    const lines = current.split("\n");
+    let endIdx = lines.length;
+    let inSection = false;
+    for (let i = 0; i < lines.length; i++) {
+      const lower = lines[i].toLowerCase();
+      if (!inSection && (lower.includes(anchor) || (lower.startsWith("## ") && lower.includes("solicit")))) {
+        inSection = true; continue;
+      }
+      if (inSection && (lines[i].startsWith("## ") || lines[i] === "---")) { endIdx = i; break; }
+    }
+    lines.splice(endIdx, 0, entry);
+    updated = lines.join("\n");
+  } else {
+    updated = current + `\n\n## Solicitações Pendentes {#solicitacoes}\n${entry}`;
+  }
+
+  await pool.query(
+    `UPDATE conector_memory SET content = $1, updated_at = NOW(), updated_by = 'sistema' WHERE section = 'master'`,
+    [updated]
+  );
+  // Sync para GitHub (Perplexity verá a solicitação)
+  syncToGitHub(updated, "sistema-solicitacao").catch(() => {});
 }
 
 // ── GET: master.md completo (JSON) ────────────────────────────────────────────
@@ -214,6 +285,9 @@ router.post("/conector/memory", async (req, res): Promise<void> => {
     [updated, agentName]
   );
 
+  // Sync assíncrono para GitHub (não bloqueia resposta)
+  syncToGitHub(updated, agentName).catch(() => {});
+
   res.json({ ok: true, updated_by: agentName, section });
 });
 
@@ -264,7 +338,7 @@ router.post("/conector/connect/request", async (req, res): Promise<void> => {
   );
 
   // Email para Yuri
-  await sendEmail(
+  const emailSent = await sendEmail(
     YURI_EMAIL,
     `[Conector] Solicitação de acesso: ${agent_name}`,
     `A IA "${agent_name}" (projeto: ${project}) está solicitando acesso ao Conector.
@@ -274,16 +348,27 @@ Para aprovar, compartilhe este código com a IA: ${code}
 Ou veja no painel admin:
 ${FRONT_URL}/connect/admin
 
+Pendentes: GET ${API_URL}/api/conector/connect/pending (requer X-Bridge-Secret)
+
 O código expira em 24h.
 
 — Sistema Conector`
   );
 
+  // Fallback: se email falhou, registrar na memória do Conector (visível no GitHub + #pap)
+  if (!emailSent) {
+    await appendToPendingSection(agent_name.trim(), project.trim(), code);
+  }
+
   res.json({
     ok: true,
-    message: "Solicitação enviada. Aguarde Yuri compartilhar o código de aprovação.",
+    emailSent,
+    message: emailSent
+      ? "Solicitação enviada. Yuri receberá um email com o código de aprovação."
+      : "Solicitação registrada no Conector (email indisponível no momento — Yuri verá via Cláudio no próximo #pap).",
     agent_name: agent_name.trim(),
-    hint: "Yuri receberá um email com o código. Quando ele compartilhar com você, use POST /connect/verify.",
+    hint: "Quando Yuri compartilhar o código com você, use POST /connect/verify.",
+    pending_url: `${API_URL}/api/conector/connect/pending`,
   });
 });
 
