@@ -7730,3 +7730,14 @@
 | A5890 | Yuri+Artesão | Workflow de funções | IA | 📋 Metodologia | Ciclo: Observação → Interpretação → Decisão → Execução → Documentação → Feedback → Correção. Mapeamento CrewAI: Função=Agente, Ação=Task, Localização=Contexto, Memória=BabelMemoryTool. |
 | A5891 | Artesão | Schema /api/memories | IA-Memória | 📋 Metodologia | Campo `metadata` JSONB do /api/memories pode carregar schema filosófico: {espaco, autor, objetivo, causa, consequencia, perspectiva, ciclo}. Sem mudança de schema — já suportado. |
 | A5892 | Artesão | Fluxo CrewAI expandido | IA-Governança | 💡 Proposta | Artesão montou no Studio: Governance → Babel Bebel (orquestra) → Dodge (atende visitante) → Síntese Final. Dodge no CrewAI = task separada do Dodge visual no site. Aguarda token Conector. |
+
+## 🧠🔣 Metassemiótica + Workflow Meta (Sessão 43b, 2026-07-11)
+
+| ID | Fonte | Tema | Domínio | Tipo | Conteúdo |
+|---|---|---|---|---|---|
+| A5893 | Yuri | Pirâmide da Ação | IA-Governança | 🔍 Análise | Pirâmide ontológica: Diretrizes(meta) → Objetivo(estratégico) → Tarefa(tático) → Ação+Ferramenta(operacional) → Dados+Pensamento(cognitivo) → Memória(ontológico). Aplicar a toda task do ecossistema. |
+| A5894 | Yuri | Dados como signos | IA | 🔍 Análise | Dados são significantes (representações, não objetos). A ação é um signo operável. Cadeia: Dado→Pensamento→Representação→Ação→Memória. Memória = contexto que permite leitura futura do signo. |
+| A5895 | Artesão | Protocolo Semiótico | IA | 📋 Metodologia | Expected_output de cada task agora declara: dados_lidos, ferramenta_usada, objetivo_atendido, representacao_gerada, consequencia_gravada. Auditado pela task "Protocolo de Registro de Ação". |
+| A5896 | Artesão | Triggers autônomos | Deploy | 💡 Proposta | CrewAI project renomeado "Las Cinco Potencias — Ecossistema Tucci". Triggers: Pulso de Memória Babel a cada 1h + Ciclo completo a cada 3h. Dodge salvo no repositório. Ativar com Publicação. |
+| A5897 | Yuri | Workflow Meta | IA | 📋 Metodologia | Workflow meta = camada acima do fluxo normal: valida como tasks foram descritas, conectadas e documentadas. A cadeia de significantes deve ficar visível. Preferência permanente do ecossistema. |
+| A5898 | Sessão | Preferências salvas | IA-Memória | 📋 Metodologia | 3 entradas salvas em /api/memories source="preferencias": metassemiotica, workflow_meta, manifesto. Sem auth — endpoint /api/memories é open. Funciona como alternativa enquanto BRIDGE_SECRET não está no Railway. |

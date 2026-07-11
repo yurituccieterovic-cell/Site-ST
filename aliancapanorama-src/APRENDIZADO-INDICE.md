@@ -79,3 +79,4 @@
 | 7706 | 🤖🏙️ Identidade+Babel Bebel — Sessão 42 (2026-07-11) | 5 entradas (A5880-A5884): Urbanista de Sistemas, Babel Bebel (dualidade ordem/entropia), sendEmail fallback Conector, Railway project token limitado |
 | 7717 | 🏙️🤖 Arquitetura Pública — API Sociedade (Sessão 42b, 2026-07-11) | 3 entradas (A5885-A5887): Kernel da Sociedade (filosofia pública/privado), preferência Perplexity (ramificações → Claude), aula de workflows |
 | 7727 | 🧠🏙️ Filosofia da Ação + Workflow (Sessão 43, 2026-07-11) | 5 entradas (A5888-A5892): Função=ato útil, Localização cósmica da ação, Workflow Obs→Exec→Feedback, schema filosófico JSONB /api/memories, fluxo CrewAI expandido Governance→Babel→Dodge |
+| 7739 | 🧠🔣 Metassemiótica + Workflow Meta (Sessão 43b, 2026-07-11) | 6 entradas (A5893-A5898): Pirâmide da Ação (6 níveis), dados como signos, Protocolo Semiótico tasks, triggers autônomos CrewAI (1h+3h), workflow meta, preferências salvas em /api/memories |
