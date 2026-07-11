@@ -832,3 +832,45 @@ sair sonho → meky_expressar("idle")
 ```
 
 *Atualizado em: 2026-07-11 · Claude Sonnet 4.6 · Sessão 49*
+
+---
+
+## Trailer Motion Graphics 30s (Sessão 50)
+**Arquivo:** `/tmp/.../scratchpad/gerar_trailer2.py`
+
+```python
+# CENAS[15]: cada cena tem {id, fala, texto_base, cor_hex, prompt_pollinations}
+
+# Pipeline por cena:
+def processar_cena(cena, idx):
+    fala_mp3 = edge_tts(cena.fala, voz="pt-BR-AntonioNeural")
+    dur = ffprobe_duration(fala_mp3)            # duração real da fala
+    img = pollinations_1080x1080(cena.prompt)   # + sleep(4s) rate limit
+    comp = pillow_overlay(img,
+        gradiente_base(760→1080, alpha_max=230),
+        gradiente_topo(0→180, alpha_max=130),
+        linha_decorativa(cor),
+        texto_base_centralizado(cor, sombra_multi)
+    )
+    frames = int(dur * 25)
+    vf = (
+        "scale=1080:1080,"
+        f"zoompan=z='min(zoom+0.0003,1.05)':d={frames}:s=1080x1080,"
+        f"fade=in:st=0:d={fade_d},"
+        f"fade=out:st={dur-fade_d}:d={fade_d}"
+    )
+    return ffmpeg("-loop 1 -i comp.jpg -i fala.mp3 -t dur", vf, "aac 192k -shortest")
+
+# Montagem xfade encadeado (offset[i] = Σdur[0..i] − i×FADE):
+def montar_xfade(segs, durs, FADE=0.20):
+    fc = [f"[0:v][1:v]xfade=fade:duration={FADE}:offset={durs[0]-FADE}[xv01]",
+          f"[0:a][1:a]acrossfade=d={FADE}[xa01]"]
+    for i in range(2, N):
+        offset = sum(durs[:i]) - i * FADE
+        fc += [f"[xv{i-1}][{i}:v]xfade=fade:duration={FADE}:offset={offset}[xv{i}]",
+               f"[xa{i-1}][{i}:a]acrossfade=d={FADE}[xa{i}]"]
+    ffmpeg(inputs=segs, filter_complex=";".join(fc), map=[xv14][xa14]) → trailer-final.mp4
+```
+
+**Resultado esperado:** 1080×1080, ~32s, 15 cortes, zoompan Ken Burns, xfade entre cenas, fala sincronizada por cena
+*Atualizado em: 2026-07-11 · Claude Sonnet 4.6 · Sessão 50*

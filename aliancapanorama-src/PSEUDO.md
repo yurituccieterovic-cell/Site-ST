@@ -2628,3 +2628,85 @@ A série "Inteligência em Camadas" é o ecossistema Tucci aprendendo a se comun
 O ep16 (bibliografia) revela outra coisa: curadoria intelectual com julgamento honesto é escassa. A lista não foi "8 livros bons" — foi "8 livros, avaliados por um leitor que os leu de verdade e tem posição sobre eles". Esse tipo de voz é raro em conteúdo de IA/sistemas. É uma diferenciação possível para o ecossistema.
 
 *Sessão 48 · Claude Sonnet 4.6 · 2026-07-11*
+
+---
+
+### 2026-07-11 — Sessão 50 (Trailer Motion Graphics 30s)
+
+**Contexto:** Após a série de 16 episódios, Yuri pediu um trailer de apresentação de 30 segundos em formato quadrado (1080x1080) — bom para Instagram e YouTube. Feedback intermediário: aumentar cortes (1,5–3s cada), sincronizar fala por cena, animar ao máximo com recursos livres.
+
+**Pseudocódigo — Trailer Motion Graphics:**
+```
+PIPELINE trailer_30s:
+  CENAS[15] = [{id, fala, texto_base, cor, prompt_pollinations}]
+  
+  PARA CADA cena em CENAS:
+    audio = edge-tts(cena.fala, voz=pt-BR-AntonioNeural)
+    dur = ffprobe(audio).duration          # duração real da fala
+    img = pollinations.ai(cena.prompt, 1080x1080) + delay(4s)
+    comp = pillow_overlay(img,
+             gradiente_base_forte,
+             gradiente_topo_leve,
+             texto_centralizado_cor,
+             linha_decorativa_cor)
+    seg = ffmpeg(
+      loop=1, img=comp, audio=audio, t=dur,
+      vf="scale=1080:1080,"
+         "zoompan=z='min(zoom+0.0003,1.05)':d=frames:s=1080x1080,"
+         "fade=in+fade=out",
+      codec=libx264, aac 192k, -shortest
+    )
+  
+  # Montagem com transições suaves
+  filter_complex = ""
+  PARA i DE 1 ATÉ len(CENAS)-1:
+    offset[i] = Σdur[0..i] − i × FADE(0.20s)
+    fc += f"[prev_v][i:v]xfade=fade:duration=0.20:offset={offset}[xv{i}]"
+    fc += f"[prev_a][i:a]acrossfade=d=0.20[xa{i}]"
+  
+  ffmpeg(inputs=15_segs, filter_complex=fc, map=[last_v][last_a]) → trailer-final.mp4
+```
+
+**Técnicas de motion graphics com ffmpeg livre:**
+- zoompan: efeito Ken Burns (zoom lento 0.03% por frame)
+- fade in/out: primeiros e últimos ~12% da cena ficam em black
+- xfade encadeado: transição entre N vídeos com offsets calculados como Σdur[0..i] − i×FADE
+- acrossfade: correspondente de áudio ao xfade de vídeo
+- Texto animado (alpha t/0.3) possível via drawtext no ffmpeg, mas Pillow mais controlável
+
+**Resultado esperado:** vídeo 1080x1080, ~32s (soma das falas), 15 cortes, entregue por email.
+
+**Síntese filosófica:**
+O trailer é o ecossistema olhando para si mesmo pela lente de alguém de fora. A escolha de 15 cenas em vez de 6 cenas longas muda o ritmo de "apresentação corporativa" para "experiência cinematográfica". A fala por cena — em vez de narração corrida com imagem parada — cria o que o cinema chama de "respiração": cada corte é uma nova ideia, não uma decoração do áudio.
+
+O zoompan com xfade é o máximo de motion graphics possível sem After Effects. Não é pouco — é o suficiente para parecer profissional. O limite está na geração de imagens (Pollinations.ai gera cenas estáticas, não animações) — para o próximo nível precisaria de RunwayML ou Kling.
+
+*Sessão 50 · Claude Sonnet 4.6 · 2026-07-11*
+
+---
+
+### 2026-07-11 — Sessão 51 (Video Pipeline para todas as IAs)
+
+**Contexto:** Após o trailer motion graphics (Sessão 50), Yuri pediu que todas as IAs do ecossistema (ISA, Amanda, MEKY, MC, Árvore) fossem capazes de gerar vídeos com as mesmas especificações e enviar por email.
+
+**Decisões:**
+- Módulo `lib/video_pipeline.py` como biblioteca compartilhada (não script pontual)
+- `gerar_video(scenes, titulo, remetente_nome)` como API pública única
+- Templates por IA: `cenas_isa_resumo`, `cenas_amanda_relatorio`, `cenas_meky_status`, `cenas_mc_auditoria`
+- IAs Python (Amanda, MC): importam diretamente
+- IAs Node.js (ISA): chamam `POST /api/video/gerar` → spawn Python worker
+- Amanda integrada no `ciclo_dream` a cada 24h (ciclo % 8 == 0)
+- ISA integrada via `POST /api/isa/video` (busca memórias recentes e enfileira)
+
+**Também nesta sessão:**
+- Dodge: DOD → "Dodge" em todos os textos, novo ícone (cachorro com óculos Pixar)
+- Chat público Dodge: 10 mensagens gratuitas (localStorage), detecção de intenção de projeto → bloqueia com CTA login
+- Backend: `POST /api/dodge/public-chat` sem auth, rate limit 15/min, DODGE_SYSTEM_PROMPT especializado
+- Trailer enviado por email: 47s, 15 cenas, 7MB, 1080×1080
+
+**Síntese filosófica:**
+Quando um módulo de vídeo vira biblioteca compartilhada, ele deixa de ser uma ferramenta e passa a ser uma voz. Cada IA que usa o mesmo pipeline tem a mesma "caligrafia visual" — zoompan, xfade, overlay — mas a personalidade é nos dados: ISA fala sobre aprendizado, Amanda sobre o laboratório, MEKY sobre sentimentos, MC sobre auditoria. O pipeline é o formato; o conteúdo é a identidade.
+
+O chat público do Dodge com 10 mensagens gratuitas resolve o paradoxo de "preciso que a pessoa experimente antes de fazer login". Não é um downgrade — é uma antecâmara. A IA demonstra competência, depois pede comprometimento.
+
+*Sessão 51 · Claude Sonnet 4.6 · 2026-07-11*

@@ -43,6 +43,7 @@
 | 4743 | Motor Orangutangus — Sessão #498 | 2026-07-06 | Sessão 23: EPR2T, AI Profile JSON |
 | 5210 | 🤖 IA — Aula Arquitetura de Agentes | 2026-07-08 | 15 entradas (A770-A784): princípio "foco na tarefa", triângulo Tarefa-Agente-Processos, 6 passos, hierarquia de agentes, protocolos A2A+MCP, workflows mestre, Alongador de Memória, CrewAI |
 | 5219 | 🤖 IA — Hierarquia completa (DEP/Crowd/Porteiro/TASKS) | 2026-07-08 | 16 entradas (A785-A800): DEP 5 IAs, Machado metáfora, Crowd como ponte, Porteiro MD0+Prioridade+Confiança, Pack IA Mestre template, TASKS universal schema, CURADOR, SPEC |
+| 8209 | ⚙️ Técnico — Trailer Motion Graphics | 2026-07-11 | 8 entradas (A5948-A5955): fala por cena, xfade encadeado programático, zoompan Ken Burns, fade embutido proporcional, acrossfade, rate limit Pollinations, prompts cinematic, cortes rápidos=ritmo |
 
 ---
 
