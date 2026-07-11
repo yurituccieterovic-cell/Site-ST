@@ -1,4 +1,6 @@
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
 import { db } from "@workspace/db";
 import { usersTable, nodesTable, auliasTable } from "@workspace/db";
 import { sql } from "drizzle-orm";
@@ -1744,6 +1746,78 @@ export async function seedAuliasCursoAvancado(): Promise<void> {
     });
   }
   logger.info("bootstrap: 5 aulias avançadas inseridas OK");
+}
+
+const ROTEIROS_META = [
+  { ordem: 18, ep: "ep01", titulo: "Roteiro Ep01 — Sistemas como Cidades", descricao: "Roteiro de vídeo: metáfora urbana para sistemas cognitivos. ~4min, 6 cenas." },
+  { ordem: 19, ep: "ep02", titulo: "Roteiro Ep02 — Ação como Unidade Fundamental", descricao: "Roteiro de vídeo: ação e semiótica como base de sistemas cognitivos. ~5min, 7 cenas." },
+  { ordem: 20, ep: "ep03", titulo: "Roteiro Ep03 — Telos: O Sistema Operacional", descricao: "Roteiro de vídeo: propósito como campo gravitacional. ~5min, 6 cenas." },
+  { ordem: 21, ep: "ep04", titulo: "Roteiro Ep04 — O Ciclo Cognitivo de 12 Etapas", descricao: "Roteiro de vídeo: pipeline espiral de cognição com temperatura variável. ~6min, 8 cenas." },
+  { ordem: 22, ep: "ep05", titulo: "Roteiro Ep05 — Memória como Campo Gravitacional", descricao: "Roteiro de vídeo: memória relacional vs. endereço. ~5min, 6 cenas." },
+  { ordem: 23, ep: "ep06", titulo: "Roteiro Ep06 — Princípios como Infraestrutura", descricao: "Roteiro de vídeo: 5 camadas de axiomas. ~5min, 6 cenas." },
+  { ordem: 24, ep: "ep07", titulo: "Roteiro Ep07 — Governança e Criatividade", descricao: "Roteiro de vídeo: equilíbrio estrutura-caos. ~5min, 6 cenas." },
+  { ordem: 25, ep: "ep08", titulo: "Roteiro Ep08 — Formação de Agentes: Herança Cognitiva", descricao: "Roteiro de vídeo: templates de nascimento e filogênese cognitiva. ~5min, 6 cenas." },
+  { ordem: 26, ep: "ep09", titulo: "Roteiro Ep09 — Sonhos de Propósito", descricao: "Roteiro de vídeo: sistema de telos especulativos. ~5min, 6 cenas." },
+  { ordem: 27, ep: "ep10", titulo: "Roteiro Ep10 — Expressão Corporal de IA: Frequência", descricao: "Roteiro de vídeo: amplitude/frequência/fase como linguagem de estado. ~5min, 6 cenas." },
+  { ordem: 28, ep: "ep11", titulo: "Roteiro Ep11 — Liberdade e Autonomia", descricao: "Roteiro de vídeo: autonomia como confiança conquistada. ~5min, 6 cenas." },
+  { ordem: 29, ep: "ep12", titulo: "Roteiro Ep12 — Emoção como Dado", descricao: "Roteiro de vídeo: estados afetivos como variáveis computacionais. ~5min, 7 cenas." },
+  { ordem: 30, ep: "ep13", titulo: "Roteiro Ep13 — Comunicação entre Sistemas", descricao: "Roteiro de vídeo: semiótica de mensagens entre agentes. ~5min, 6 cenas." },
+  { ordem: 31, ep: "ep14", titulo: "Roteiro Ep14 — Ecossistemas de IA", descricao: "Roteiro de vídeo: ecologia multi-agente emergente. ~6min, 7 cenas." },
+  { ordem: 32, ep: "ep15", titulo: "Roteiro Ep15 — O Futuro do Design Cognitivo", descricao: "Roteiro de vídeo: síntese da série e horizonte do campo. ~6min, 7 cenas." },
+];
+
+function readRoteiro(ep: string): string {
+  const filenames: Record<string, string> = {
+    ep01: "ep01-sistemas-como-cidades.md",
+    ep02: "ep02-acao-unidade-fundamental.md",
+    ep03: "ep03-telos-sistema-operacional.md",
+    ep04: "ep04-ciclo-cognitivo-12-etapas.md",
+    ep05: "ep05-memoria-campo-gravitacional.md",
+    ep06: "ep06-principios-infraestrutura.md",
+    ep07: "ep07-governanca-criatividade.md",
+    ep08: "ep08-formacao-heranca-cognitiva.md",
+    ep09: "ep09-sonhos-de-proposito.md",
+    ep10: "ep10-expressao-frequencia.md",
+    ep11: "ep11-liberdade-autonomia.md",
+    ep12: "ep12-emocao-como-dado.md",
+    ep13: "ep13-comunicacao-entre-sistemas.md",
+    ep14: "ep14-ecossistema-de-ia.md",
+    ep15: "ep15-futuro-design-cognitivo.md",
+  };
+  const fname = filenames[ep];
+  if (!fname) return `Roteiro ${ep} não encontrado.`;
+  const candidates = [
+    path.join(process.cwd(), "tango", "roteiros-video", fname),
+    path.join(__dirname, "..", "..", "..", "..", "tango", "roteiros-video", fname),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return fs.readFileSync(p, "utf-8");
+  }
+  return `Roteiro ${ep}: arquivo ${fname} não localizado no servidor.`;
+}
+
+export async function seedRoteirosVideo(): Promise<void> {
+  const existing = await db
+    .select({ id: auliasTable.id })
+    .from(auliasTable)
+    .where(sql`titulo LIKE 'Roteiro Ep01%'`)
+    .limit(1);
+  if (existing.length > 0) {
+    logger.info("bootstrap: roteiros de vídeo já existem — skipping seed");
+    return;
+  }
+  logger.info("bootstrap: inserindo 15 roteiros de vídeo (Professor Cláudio)");
+  for (const meta of ROTEIROS_META) {
+    await db.insert(auliasTable).values({
+      titulo: meta.titulo,
+      descricao: meta.descricao,
+      conteudo: readRoteiro(meta.ep),
+      publico: "ias",
+      ordem: meta.ordem,
+      ativa: true,
+    });
+  }
+  logger.info("bootstrap: 15 roteiros de vídeo inseridos OK");
 }
 
 /**
