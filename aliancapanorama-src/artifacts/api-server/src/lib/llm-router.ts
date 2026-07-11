@@ -121,15 +121,42 @@ function makeGroq(): Provider {
   };
 }
 
+function makePollinations(): Provider {
+  return {
+    name: "pollinations",
+    cooldownMs: 2000,
+    async call(req) {
+      const resp = await fetch("https://text.pollinations.ai/openai/chat/completions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "openai",
+          messages: req.messages,
+          max_tokens: req.maxTokens ?? 500,
+          temperature: req.temperature ?? 0.7,
+        }),
+      });
+      if (!resp.ok) throw new Error(`Pollinations: HTTP ${resp.status}`);
+      const data = await resp.json() as {
+        choices?: { message: { content: string } }[];
+        error?: { message: string };
+      };
+      if (data.error) throw new Error(`Pollinations: ${data.error.message}`);
+      return data.choices?.[0]?.message?.content?.trim() ?? "";
+    },
+  };
+}
+
 // ── Pool definitions ────────────────────────────────────────────────────────
 // chat-live: respostas rápidas (ISA chat, exercícios, sonhos)
 // batch:     ciclo ISA, conteúdo de nós (latência ok)
 // coder:     geração de código (usa OpenAI preferencialmente)
+// Fallback gratuito: Pollinations.ai (sem key, último na fila)
 
 const POOL_PROVIDERS: Record<LLMPool, Provider[]> = {
-  "chat-live": [makeGroq(), makeGemini(), makeOpenAI()],
-  "batch":     [makeGemini(), makeGroq(), makeOpenAI()],
-  "coder":     [makeOpenAI(), makeGemini()],
+  "chat-live": [makeGroq(), makeGemini(), makeOpenAI(), makePollinations()],
+  "batch":     [makeGemini(), makeGroq(), makeOpenAI(), makePollinations()],
+  "coder":     [makeOpenAI(), makeGemini(), makePollinations()],
 };
 
 // ── Router ──────────────────────────────────────────────────────────────────
