@@ -3,9 +3,97 @@ import { db, nodesTable, bibliotecaDocsTable } from "@workspace/db";
 import { eq, inArray, sql, desc } from "drizzle-orm";
 import { getScArvoreChat, getScAssembleias, getScAssembleiaMessages, getScAgoras, getScDocs, getScStatus } from "../lib/salescockpit-bridge";
 import { invalidateNodeCache, getAllNodes } from "../lib/nodeCache";
+import { routeLLM } from "../lib/llm-router";
+import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
 
 const router = Router();
+
+// ── Chat público (sem login) ──────────────────────────────────────────────────
+
+const publicChatRateLimit = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 15,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Muitas mensagens. Aguarde um momento.", login_required: false },
+});
+
+const DODGE_SYSTEM_PROMPT = `Você é o Dodge, assistente da Sociedade Tucci.
+
+Você pode:
+- Explicar o que é a Sociedade Tucci e o ecossistema PAP
+- Falar sobre como projetos com IA são desenvolvidos em geral
+- Apresentar as IAs do ecossistema (ISA, Amanda, MEKY, Árvore)
+- Contar como seria o processo de produção de um projeto de IA
+- Responder perguntas sobre educação, gamificação, sistemas cognitivos
+
+Você NÃO deve:
+- Ajudar diretamente com o projeto específico do usuário (código, planejamento, execução)
+- Fazer análises ou sugestões técnicas para o projeto do usuário
+- Auxiliar com tarefas que pertençam ao projeto pessoal do usuário
+
+Quando identificar que a pergunta é sobre o projeto específico do usuário, responda algo como:
+"Para trabalhar no seu projeto, você precisa fazer login. O Dodge salva o contexto completo e continua de onde você parou. [LOGIN_REQUIRED]"
+
+Seja caloroso, curto (2-4 frases) e direcione sempre para o login quando o assunto for o projeto do usuário.`;
+
+// Palavras que indicam intenção de trabalhar no próprio projeto
+const PROJECT_KEYWORDS = [
+  "meu projeto", "meu app", "meu site", "meu sistema", "meu código",
+  "preciso criar", "preciso implementar", "me ajuda a fazer", "como faço",
+  "pode fazer", "faz pra mim", "faz para mim", "implement", "cria pra mim",
+  "bug no meu", "erro no meu", "minha api", "meu banco", "meu backend",
+  "me ajuda a desenvolver", "me ajuda a criar", "ajuda no meu",
+];
+
+function detectsProjectIntent(msg: string): boolean {
+  const lower = msg.toLowerCase();
+  return PROJECT_KEYWORDS.some(k => lower.includes(k));
+}
+
+// POST /api/dodge/public-chat — conversa livre (sem auth), até 10 msgs por sessão
+router.post("/dodge/public-chat", publicChatRateLimit, async (req, res) => {
+  const schema = z.object({
+    messages: z.array(z.object({
+      role: z.enum(["user", "assistant"]),
+      content: z.string().max(2000),
+    })).min(1).max(20),
+  });
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Payload inválido" }); return; }
+
+  const { messages } = parsed.data;
+  const lastUser = messages.filter(m => m.role === "user").pop();
+
+  if (!lastUser) { res.status(400).json({ error: "Nenhuma mensagem do usuário" }); return; }
+
+  // Detectar intenção de projeto antes de chamar LLM
+  if (detectsProjectIntent(lastUser.content)) {
+    res.json({
+      reply: "Para trabalhar no seu projeto eu preciso que você faça login — assim o Dodge salva o contexto completo e continua de onde você parou. 👉 [LOGIN_REQUIRED]",
+      login_required: true,
+    });
+    return;
+  }
+
+  try {
+    const llmMessages = [
+      { role: "system" as const, content: DODGE_SYSTEM_PROMPT },
+      ...messages.map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
+    ];
+
+    const reply = await routeLLM({ messages: llmMessages, pool: "chat-live", maxTokens: 300, temperature: 0.7 });
+    const loginRequired = reply.includes("[LOGIN_REQUIRED]");
+    res.json({
+      reply: reply.replace("[LOGIN_REQUIRED]", "").trim(),
+      login_required: loginRequired,
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    res.status(503).json({ error: "IA temporariamente indisponível", detail: msg });
+  }
+});
 
 function isSuperAdm(req: Parameters<Parameters<typeof router.get>[1]>[0]) {
   return (req.session.userTier ?? 0) >= 9;

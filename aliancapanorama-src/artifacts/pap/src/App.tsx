@@ -17,9 +17,127 @@ import { StudioPage } from "@/pages/StudioPage";
 import { ConectorPage } from "@/pages/ConectorPage";
 import { IsaLandingPage } from "@/pages/IsaLandingPage";
 import { HelmetProvider } from "react-helmet-async";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "";
+
+const FREE_MSG_LIMIT = 10;
+const FREE_MSG_KEY = "dodge_free_count";
+
+type ChatMsg = { role: "user" | "assistant"; content: string };
+
+function DodgePublicChat() {
+  const [msgs, setMsgs] = useState<ChatMsg[]>([{
+    role: "assistant",
+    content: "Olá! Sou o Dodge da Sociedade Tucci. Posso te contar sobre a empresa, nossas IAs e como são os nossos projetos. Para trabalhar no SEU projeto, faça login. 😊",
+  }]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loginRequired, setLoginRequired] = useState(false);
+  const [msgCount, setMsgCount] = useState(() => parseInt(localStorage.getItem(FREE_MSG_KEY) ?? "0", 10));
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+
+  const limitReached = msgCount >= FREE_MSG_LIMIT;
+
+  async function send() {
+    if (!input.trim() || loading || limitReached || loginRequired) return;
+    const userMsg: ChatMsg = { role: "user", content: input.trim() };
+    const newMsgs = [...msgs, userMsg];
+    setMsgs(newMsgs);
+    setInput("");
+    setLoading(true);
+
+    const newCount = msgCount + 1;
+    setMsgCount(newCount);
+    localStorage.setItem(FREE_MSG_KEY, String(newCount));
+
+    try {
+      const r = await fetch(`${API_BASE}/api/dodge/public-chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMsgs.slice(-12) }),
+      });
+      const data = await r.json() as { reply?: string; login_required?: boolean; error?: string };
+      const reply = data.reply ?? data.error ?? "Algo deu errado, tente novamente.";
+      setMsgs(m => [...m, { role: "assistant", content: reply }]);
+      if (data.login_required) setLoginRequired(true);
+    } catch {
+      setMsgs(m => [...m, { role: "assistant", content: "Sem conexão no momento. Tente novamente." }]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="border border-gray-800 rounded-xl bg-gray-950/80 flex flex-col" style={{ height: 340 }}>
+      <div className="px-4 py-2 border-b border-gray-800 flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"/>
+        <span className="text-amber-400 text-xs font-bold tracking-widest">DODGE</span>
+        {!limitReached && !loginRequired && (
+          <span className="ml-auto text-gray-600 text-xs">{FREE_MSG_LIMIT - msgCount} msg{FREE_MSG_LIMIT - msgCount !== 1 ? "s" : ""} grátis</span>
+        )}
+      </div>
+
+      {/* Mensagens */}
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+        {msgs.map((m, i) => (
+          <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[85%] rounded-xl px-3 py-2 text-xs leading-relaxed ${
+              m.role === "user"
+                ? "bg-amber-600/20 border border-amber-700/40 text-amber-100"
+                : "bg-gray-800/70 border border-gray-700/50 text-gray-200"
+            }`}>
+              {m.content}
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start">
+            <div className="bg-gray-800/70 border border-gray-700/50 rounded-xl px-3 py-2 text-gray-400 text-xs">
+              <span className="animate-pulse">Dodge está pensando…</span>
+            </div>
+          </div>
+        )}
+        {(limitReached || loginRequired) && (
+          <div className="bg-amber-900/30 border border-amber-700/50 rounded-xl px-4 py-3 text-center">
+            <p className="text-amber-300 text-xs font-semibold mb-2">
+              {loginRequired ? "Este assunto é só com login 🔐" : `Você usou suas ${FREE_MSG_LIMIT} mensagens gratuitas`}
+            </p>
+            <a href="/portal" className="inline-flex items-center gap-1 px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold rounded-lg transition-colors">
+              Entrar e continuar →
+            </a>
+          </div>
+        )}
+        <div ref={bottomRef}/>
+      </div>
+
+      {/* Input */}
+      {!limitReached && !loginRequired && (
+        <div className="px-3 pb-3">
+          <div className="flex gap-2">
+            <input
+              className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-200 placeholder-gray-600 outline-none focus:border-amber-600/60"
+              placeholder="Pergunte sobre a Sociedade Tucci…"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
+              disabled={loading}
+            />
+            <button
+              onClick={send}
+              disabled={loading || !input.trim()}
+              className="px-3 py-2 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white text-xs font-bold rounded-lg transition-colors"
+            >
+              →
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // Gate para /dodge — verifica sessão adm antes de exibir DodgePage
 function DodgeGate() {
@@ -33,29 +151,29 @@ function DodgeGate() {
       })
       .catch(() => setState("denied"));
   }, []);
-  if (state === "loading") return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center text-cyan-400 font-mono text-sm">Verificando acesso...</div>;
+  if (state === "loading") return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center text-cyan-400 font-mono text-sm">Verificando acesso…</div>;
   if (state === "denied") return (
     <div className="min-h-screen bg-[#080c18] text-gray-100 font-sans flex flex-col">
       {/* SEO */}
-      <title>DOD Sociedade Tucci | Salve suas conversas e continue seus projetos</title>
-      <meta name="description" content="O DOD da Sociedade Tucci organiza suas conversas, projetos e memória com inteligência artificial. Login para salvar conversa ou baixe o app."/>
-      <meta name="keywords" content="DOD Sociedade Tucci, app DOD, salvar conversa, organizar projetos, inteligência artificial, memória inteligente, agentes IA"/>
-      <meta property="og:title" content="DOD Sociedade Tucci | App para projetos com IA"/>
-      <meta property="og:description" content="Login para salvar conversa? Baixe o app DOD Sociedade Tucci e continue de onde parou."/>
+      <title>Dodge Sociedade Tucci | Salve suas conversas e continue seus projetos</title>
+      <meta name="description" content="O Dodge da Sociedade Tucci organiza suas conversas, projetos e memória com inteligência artificial. Login para salvar conversa ou baixe o app."/>
+      <meta name="keywords" content="Dodge Sociedade Tucci, app Dodge, salvar conversa, organizar projetos, inteligência artificial, memória inteligente, agentes IA"/>
+      <meta property="og:title" content="Dodge Sociedade Tucci | App para projetos com IA"/>
+      <meta property="og:description" content="Login para salvar conversa? Baixe o app Dodge Sociedade Tucci e continue de onde parou."/>
 
       {/* Hero */}
-      <div className="flex flex-col items-center justify-center flex-1 px-6 pt-16 pb-8 text-center">
-        <img src="/dodge-avatar.png" alt="DOD" className="w-24 h-24 rounded-full object-cover border-2 border-amber-600/60 shadow-xl mb-6"/>
-        <div className="text-amber-400 font-bold text-xs tracking-widest uppercase mb-2">DOD · Sociedade Tucci</div>
+      <div className="flex flex-col items-center justify-center flex-1 px-6 pt-12 pb-6 text-center">
+        <img src="/dodge-avatar.png" alt="Dodge" className="w-24 h-24 rounded-full object-cover border-2 border-amber-600/60 shadow-xl mb-6"/>
+        <div className="text-amber-400 font-bold text-xs tracking-widest uppercase mb-2">Dodge · Sociedade Tucci</div>
         <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">
           Login para salvar<br/>sua conversa?
         </h1>
-        <p className="text-gray-400 text-sm md:text-base max-w-md mb-8">
+        <p className="text-gray-400 text-sm md:text-base max-w-md mb-6">
           Nunca perca uma ideia. Organize projetos, pesquisas e agentes de IA em um único lugar — com memória que continua de onde você parou.
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-4 w-full max-w-sm">
+        <div className="flex flex-col sm:flex-row gap-3 mb-3 w-full max-w-sm">
           <a href="/portal"
             className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-lg text-sm transition-colors shadow-lg">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -64,10 +182,16 @@ function DodgeGate() {
           <a href="https://sociedadetucci.com.br" target="_blank" rel="noreferrer"
             className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-lg text-sm transition-colors shadow-lg">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download App DOD →
+            Download App Dodge →
           </a>
         </div>
-        <p className="text-gray-600 text-xs">App DOD Sociedade Tucci · para te ajudar no seu projeto</p>
+        <p className="text-gray-600 text-xs mb-8">App Dodge Sociedade Tucci · para te ajudar no seu projeto</p>
+
+        {/* Chat público */}
+        <div className="w-full max-w-lg">
+          <p className="text-gray-500 text-xs mb-2">Converse com o Dodge sem login — {FREE_MSG_LIMIT} mensagens gratuitas</p>
+          <DodgePublicChat />
+        </div>
       </div>
 
       {/* Como funciona */}
@@ -131,7 +255,7 @@ function DodgeGate() {
               className="inline-flex items-center gap-2 px-8 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-lg text-sm transition-colors shadow-lg">
               Entrar e começar agora
             </a>
-            <p className="text-gray-600 text-xs mt-3">DOD Sociedade Tucci · editor de raízes · memória inteligente</p>
+            <p className="text-gray-600 text-xs mt-3">Dodge Sociedade Tucci · editor de raízes · memória inteligente</p>
           </div>
         </div>
       </div>
