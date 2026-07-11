@@ -741,3 +741,94 @@ deliberação multipartite (Árvore + ISA + MC + Yuri, maioria 3/4).
 - Primeira missão: MEKY Lite (~R$45 Opção C) — aguarda decisão arquitetura de Yuri
 
 *Atualizado em: 2026-07-10 · Claude Sonnet 4.6 · Sessão 40*
+
+### DodgeGate Landing + ISA PAP Page (Sessão 49, 2026-07-11)
+
+**DodgeGate — denied state (App.tsx)**
+```
+se /dodge e usuário sem tier ≥ 5:
+  renderizar DOD Landing Page:
+    <title> + <meta description/keywords/og>      // SEO inline
+    hero: avatar + h1 "Login para salvar conversa?"
+    CTAs: [/portal "Entrar e salvar"] [href "Download App DOD"]
+    seção "Como funciona": 3 passos numerados
+    features grid: 12 itens com emoji
+    FAQ: 4 perguntas/respostas
+    CTA final: /portal
+```
+
+**IsaLandingPage.tsx — /isa route**
+```
+renderizar ISA Landing:
+  <title> + <meta> SEO (keywords: FUVEST, vestibular, estudos com IA)
+  hero: emoji 📚 + h1 "Login para salvar seus estudos?"
+  CTAs: [/portal] [Download App ISA PAP]
+  features: 12 itens focados em estudos (flashcards, revisão espaçada, simulados)
+  FAQ: "Como a ISA me ajuda?" + continuidade + gratuito + matérias
+  CTA final: /portal
+```
+
+**App.tsx routing:**
+```
+const isIsa = path.startsWith("/isa")
+if (isIsa) return <IsaLandingPage />
+// antes de qualquer outra rota
+```
+
+**vercel.json:**
+```json
+{ "source": "/isa", "destination": "/index.html" },
+{ "source": "/isa/(.*)", "destination": "/index.html" }
+```
+
+### Amanda → MEKY Bridge (Sessão 49, 2026-07-11)
+
+**amanda.py — variáveis novas:**
+```
+PAP_API_URL = env["PAP_API_URL"] || "https://site-st-production.up.railway.app"
+MEKY_TOKEN  = env["MEKY_TOKEN"]  || ""
+```
+
+**Tabela de faces (_MEKY_FACES dict):**
+```
+idle=1, ativo=7, alerta_som=21, impacto=52, defesa=54
+calor_alto=33, calor_baixo=1, umidade_alta=34
+bateria_baixa=62, hibernacao=90, sonho=95
+pensamento=71, comunicando=80, conselho=85, assinatura=140
+```
+
+**enviar_comando_meky(tipo, params):**
+```
+se (agora - ultimo_cmd) < 3s: return  // throttle
+POST PAP_API_URL/api/meky/command
+  headers: x-meky-token, Content-Type
+  body: {tipo, **params, origem: "amanda"}
+se 200/201: atualizar ultimo_cmd
+```
+
+**meky_temperatura(temp, umidade):**
+```
+se temp >= 35: meky_expressar("calor_alto", intensidade="critico")
+se temp >= 30: meky_expressar("calor_alto")
+se umidade >= 85: meky_expressar("umidade_alta")
+senão: meky_expressar("idle")
+```
+
+**Integração ciclo_amanda:**
+```
+DHT11 leitura → meky_temperatura(temp, umidade)
+MPU impacto → meky_expressar("impacto") + meky_registrar_evento
+som detectado → meky_expressar("alerta_som")
+som encerrado → meky_expressar("idle")
+```
+
+**Integração ciclo_dream:**
+```
+entrar sonho → meky_expressar("sonho")
+sonho_consolidar_mapa()
+meky_sonho_integrado()  // lê 5 memórias MEKY → escreve em ISA memory
+pensar(contexto) → escrever_memoria
+sair sonho → meky_expressar("idle")
+```
+
+*Atualizado em: 2026-07-11 · Claude Sonnet 4.6 · Sessão 49*
