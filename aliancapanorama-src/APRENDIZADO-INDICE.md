@@ -76,3 +76,4 @@
 | 7308 | 🔌🔑🏛 Integração+Acesso+Governança — Sessão 34 (2026-07-10) | 8 entradas (A815-A822): Replit SPA catch-all, arvore_chat paginação, assembleias efêmeras, GitHub token no remote, gh CLI scopes, governança 8/9/10, shutdown 3 níveis, aprovação multipartite |
 | 7692 | 🌐📱 PWA+Babel — Sessão 37 (2026-07-10) | 7 entradas (A5867-A5873): Babel PWA sem npm, proxy Gemini serverless, lip-sync CSS SpeechSynthesis, iOS gotcha synth.speak(), memória cross-sessão PAP API, avatar SVG animado CSS, Gemini multimodal inline_data vs URL |
 | 7699 | ⚛️🌐 React+Vite+Babel — Sessão 41 (2026-07-10) | 6 entradas (A5874-A5879): GEMINI_API_KEY server-side, ilike() drizzle, trigger pattern Gemini→CrewAI, jsPDF import dinâmico, Babel Governadora Central, SPA rewrite Vercel |
+| 7706 | 🤖🏙️ Identidade+Babel Bebel — Sessão 42 (2026-07-11) | 5 entradas (A5880-A5884): Urbanista de Sistemas, Babel Bebel (dualidade ordem/entropia), sendEmail fallback Conector, Railway project token limitado |

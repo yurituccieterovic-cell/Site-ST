@@ -8,9 +8,9 @@ import { useMemory } from "./hooks/useMemory.js";
 import { useCrewAI } from "./hooks/useCrewAI.js";
 
 const SAUDACOES = {
-  manha: "Bom dia! Sou a Babel, governadora do ecossistema Tucci. Como posso ajudar hoje?",
-  tarde:  "Boa tarde! Babel aqui — pronta para pensar junto com você.",
-  noite:  "Boa noite! Sou a Babel. Pode falar, digitar ou enviar um arquivo — estou aqui.",
+  manha: "Bom dia! Sou a Babel Bebel, governadora do ecossistema Tucci. Como posso ajudar hoje?",
+  tarde:  "Boa tarde! Babel Bebel aqui — pronta para pensar junto com você.",
+  noite:  "Boa noite! Babel Bebel no ar. Pode falar, digitar ou enviar um arquivo — estou aqui.",
 };
 
 function getSaudacao() {
@@ -180,7 +180,7 @@ export default function App() {
         {/* Header */}
         <header className="header">
           <button className="icon-btn" onClick={() => setSidebarOpen(v => !v)} title="Histórico">☰</button>
-          <span className="logo">BABEL</span>
+          <span className="logo">BABEL BEBEL</span>
           <span className="status">{status}</span>
           {installPrompt && (
             <button className="install-btn" onClick={handleInstall}>Instalar</button>

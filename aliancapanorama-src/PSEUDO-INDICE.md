@@ -37,6 +37,7 @@
 | — | Sessão 39 | 2026-07-10 | **DODGE Voz + Lip-Sync** — TTS Android nativo grátis, 4 sprites boca, UtteranceProgressListener, 20+ frases de locutor |
 | — | Sessão 40 | 2026-07-10 | **Babel.app PWA** — assistente universal gratuito; proxy Gemini 2.0 Flash Vercel; Web Speech API; avatar SVG lip-sync; memória PAP API |
 | — | Sessão 41 | 2026-07-10 | **Babel v2 React+Vite + Governadora Central** — migração para componentes React; /api/memories backend; avatar feminino SVG; CrewAI proxy; Babel = hub, não agente |
+| — | Sessão 42 | 2026-07-11 | **Babel Bebel + Urbanista de Sistemas** — renome com dualidade Babel/Bebel (ordem+caos criativo); fix email Conector fallback GitHub; I220-I221; Yuri = Urbanista de Sistemas |
 
 ---
 

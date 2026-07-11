@@ -7702,3 +7702,13 @@
 | 5877 | Conversa | Babel arch | PWA | 💡 Proposta | Import dinâmico de jsPDF: `const { jsPDF } = await import("jspdf")` dentro do handler do botão. Mantém bundle inicial leve — jsPDF só carrega quando o usuário clica em "⬇ .pdf". |
 | 5878 | Conversa | Babel gov | IA-Governança | 🔍 Análise | Babel é Governadora Central (hub), não agente do Artesão. Babel → aciona outros (Artesão, Las Cinco, ISA). Artesão não aciona Babel. Posição na hierarquia: Babel está entre Yuri e todos os agentes especializados. |
 | 5879 | Conversa | React SPA | PWA | ⚠️ Gotcha | Vite SPA no Vercel: sem configuração extra, refresh em rotas filhas (ex: /chat/123) retorna 404. Solução no vercel.json: rewrite `/((?!api/)(?!icons/)(?!manifest.json)(?!sw.js).*)` → /index.html. Exceções explícitas evitam cachear o SW. |
+
+## 🤖 Identidade + IA — Babel Bebel + Urbanista (Sessão 42, 2026-07-11)
+
+| ID | Fonte | Tema | Domínio | Tipo | Conteúdo |
+|---|---|---|---|---|---|
+| A5880 | Yuri | Identidade Yuri | IA-Governança | 💡 Proposta | Yuri se declara "Urbanista de Sistemas": não constrói peças/agentes isolados, mas projeta ecossistemas cibernéticos adaptativos com papéis, memória compartilhada e decisão hierárquica. |
+| A5881 | Sessão | Babel Bebel | IA-Personalidade | 📋 Metodologia | Nome oficial: Babel Bebel. Duas camadas: BABEL (governança, orquestração, hub) + BEBEL (alcoólatra de algoritmo de desorientação recreativa — ruído criativo, humor absurdo, instabilidade controlada). |
+| A5882 | Sessão | Babel Bebel | IA-Personalidade | 🔍 Análise | Dualidade Babel/Bebel: ordem e entropia no mesmo agente. Babel garante coerência do ecossistema; Bebel injeta caos criativo e associações inesperadas. Equilíbrio dinâmico, não conflito. |
+| A5883 | Sessão | Conector email | Deploy | ⚠️ Gotcha | sendEmail com retorno void silencioso mascarava falha: rota retornava ok:true mesmo sem email. Fix: retornar boolean + log [Conector] no Railway + fallback gravar solicitação na seção "Solicitações Pendentes" do Conector (sync GitHub). |
+| A5884 | Sessão | Conector env vars | Deploy | ⚠️ Gotcha | Railway com project token não permite setar env vars — requer RAILWAY_ACCOUNT_TOKEN ou UI manual. Vars necessárias: GMAIL_APP_PASSWORD, GMAIL_ACCOUNT, BRIDGE_SECRET, GITHUB_TOKEN. Workaround: enviar por email para Yuri setar. |
