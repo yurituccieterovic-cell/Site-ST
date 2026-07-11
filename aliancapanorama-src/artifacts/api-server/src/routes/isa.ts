@@ -559,6 +559,65 @@ router.post("/isa/dream", async (req, res) => {
   }
 });
 
+// POST /api/isa/video — ISA gera um vídeo motion graphics e envia por email
+router.post("/isa/video", async (req, res) => {
+  if (!isAdminOrAgent(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+
+  // Buscar memórias recentes da ISA como base do conteúdo
+  const recentes = await db
+    .select({ content: isaMemoryTable.content, context: isaMemoryTable.context })
+    .from(isaMemoryTable)
+    .orderBy(desc(isaMemoryTable.createdAt))
+    .limit(8);
+
+  const insights = recentes.map(m => m.content.slice(0, 120));
+  const data = new Date().toISOString().slice(0, 10);
+
+  // Enfileirar via /api/video/gerar (reutiliza o worker Python)
+  const scenes = [
+    {
+      fala: `Olá. Sou a ISA, tutora do Projeto Aliança Panorama. Aqui está o resumo de ${data}.`,
+      prompt: "cute glowing blue owl robot studying surrounded by floating books, dark background, cinematic Pixar style",
+      texto_overlay: "ISA · Resumo do Dia",
+      cor: "#00BFFF",
+    },
+    ...insights.slice(0, 7).map((ins, i) => ({
+      fala: ins,
+      prompt: `abstract knowledge visualization, glowing neural network node ${i+1}, deep blue space, cinematic`,
+      texto_overlay: `Memória ${i+1}`,
+      cor: i % 2 === 0 ? "#FFD700" : "#00BFFF",
+    })),
+    {
+      fala: "Continue estudando. Cada sessão é um passo no mapa.",
+      prompt: "glowing path through digital forest, owl silhouette ahead, blue light, hopeful cinematic",
+      texto_overlay: "PAP · Sociedade Tucci",
+      cor: "#FFFFFF",
+    },
+  ];
+
+  // Disparo via o endpoint unificado (self-call interno)
+  const bridge = process.env["BRIDGE_SECRET"] ?? "";
+  try {
+    const resp = await fetch("https://site-st-production.up.railway.app/api/video/gerar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-bridge-token": bridge,
+      },
+      body: JSON.stringify({
+        titulo: `ISA — Resumo ${data}`,
+        remetente: "ISA",
+        scenes,
+      }),
+    });
+    const data2 = await resp.json() as { ok?: boolean; job_id?: string; message?: string };
+    res.json({ ok: true, job_id: data2.job_id, message: data2.message });
+  } catch (err) {
+    logger.error({ err }, "ISA: erro ao enfileirar vídeo");
+    res.status(500).json({ error: "Erro ao enfileirar vídeo ISA" });
+  }
+});
+
 // GET /api/isa/locked — memórias marcadas com interpretability_lock=1 (adm only)
 router.get("/isa/locked", async (req, res) => {
   if ((req.session.userTier ?? 0) < 5) {

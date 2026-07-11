@@ -34,6 +34,7 @@ import bridgeRouter from "./bridge";
 import studioRouter from "./studio";
 import conectorRouter from "./conector";
 import memoriesRouter from "./memories";
+import videoRouter from "./video";
 
 const router: IRouter = Router();
 
@@ -54,6 +55,7 @@ router.use(bridgeRouter);
 router.use(studioRouter);
 router.use(conectorRouter);
 router.use(memoriesRouter);
+router.use(videoRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
