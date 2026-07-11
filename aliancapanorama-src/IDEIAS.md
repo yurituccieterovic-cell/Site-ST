@@ -892,3 +892,21 @@ Grupos L (111-122) conectam MEKY ao Ciclo Tucci — cada etapa do Ciclo tem uma 
 
 **I250 · 2026-07-11 · Sessão 47b**
 Vibrissas em defasagem com a boca (+45°, +90°, alternado) multiplicam a expressividade sem servo adicional — só variando fase no mesmo ciclo sin(). Cheap complexity.
+
+
+## Docs PAP — Ideias Novas (2026-07-11)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I234 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I235 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I236 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I237 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I238 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I239 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I240 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+| I241 | **Pipeline MD→Vídeo reutilizável** | 🟡 Média | ◑ M | Qualquer roteiro MD do ecossistema pode virar vídeo sem esforço manual | Extrair `gerar_videos.py` do scratchpad para `tools/video-pipeline/`. Parametrizar: voz, velocidade, resolução de imagem. Adicionar modo `--cenas-only` (só imagens, sem áudio) e `--audio-only`. Documentar em tango/. |
+| I242 | **Monitor automático de tarefas longas** | 🟢 Baixa | ○ S | Evita polling manual em qualquer pipeline assíncrono do PAP | Generalizar `monitor_e_enviar.sh` em `tools/monitor-task.sh <dir_saida> <cmd_ao_novo_arquivo>`. Reutilizável para: vídeos prontos → email; PDFs gerados → upload; logs → alerta. |
+| I243 | **Série pública como portal de entrada** | 🟡 Média | ● L | Série "Inteligência em Camadas" sem nomes de projeto = conteúdo genérico; pode virar landing de captação para o ecossistema | Criar página `/trilha` no PAP com os 16 episódios. Episódio 1 público; demais com login. Trilha mapeia para os nós do PAP (gamificação). Ep16 como "bônus para quem completou". |
+| I244 | **Curadoria como produto — "O que Cláudio lê"** | 🟢 Baixa | ○ S | Ep16 mostrou que crítica honesta de livros diferencia de listas automáticas | Seção na plataforma: livros recomendados pela assembleia de IAs, com avaliação de rigor (5 estrelas) + ressalvas honestas + ordem de leitura sugerida. Curadoria vira conteúdo permanente. |
+| I245 | **edge-tts como serviço interno** | 🟢 Baixa | ○ S | Reutilizar narração de alta qualidade em outros lugares do PAP | Endpoint Railway `POST /api/tts` que recebe texto, retorna MP3. Backend roda edge-tts em venv. Permite: narração de exercícios, leitura de nós, MEKY falar em PT-BR. |

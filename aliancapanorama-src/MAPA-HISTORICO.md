@@ -50,6 +50,7 @@
 | 2026-07-09 (Sessão 31) | Fix poll-db workflow: api/db/[...path].js (catch-all Vercel). Email hierarquia IAs + PDF anexo. Comandos #a e #fim→MacroAta documentados no CLAUDE.md e proc_checkpoint_fim.md. |
 | 2026-07-09 (Sessão 32) | Fix crítico: Vercel build 404 → resolvido. Causa: pnpm 6.35.1 no CI + URL errada (pap-tan-seven era projeto antigo). Fix: npm install -g pnpm@9.15.9 + PATH export em build-pap.sh. URL correta: site-st.vercel.app/aliancapanorama. Todas as rotas 200. |
 | 2026-07-11 (Sessões 42–46) | Babel Bebel (dualidade ordem+caos); fix email Conector fallback→GitHub; YouTube thumb+Dodge widget home; 25+1=26 Axiomas MD Mestre; Telos como grafo dinâmico; Axioma 26; 5 camadas axiomas; Workflows por domínio (10 áreas); Sistema de Sonhos de Telos (Morfeu+Lua); Ciclo Cognitivo explícito; mapeamento bilíngue vocabulário Tucci↔IA técnico; Nébula v3.1 DNA atualizado. Arquivos: telos.md, workflows-dominio.md, sistema-sonhos-telos.md, axiomas-md-mestre.md (26), ciclo-acao-tucci.md, metassemiotica.md, workflow_funcoes.md, workflow_meta.md, manifesto-ecossistema.md. |
+| 2026-07-11 (Sessão 48) | Série "Inteligência em Camadas" (16 eps): pipeline automático edge-tts + Pollinations.ai + FFmpeg; 16 roteiros adaptados sem nomes de projeto; ep16 bônus com bibliografia crítica (8 livros, ressalvas honestas Capra/Johnson); fix DODGE: vercel.json /portal+/dodge, avatar cachorro-de-óculos; envio automático por email (monitor bash + Gmail SMTP); descricoes YouTube+Instagram com hashtags para todos 16 eps. A5934–A5947, I241–I245. |
 
 ---
 

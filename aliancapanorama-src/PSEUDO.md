@@ -2583,3 +2583,48 @@ Babel não é mais um assistente — ela é a língua. No mito bíblico, a torre
 O curso não foi só conteúdo — foi um espelho. Ao traduzir o ecossistema para linguagem pública (sem siglas, sem nomes de projeto), algo ficou mais claro: os conceitos têm vida própria além do ecossistema Tucci. "Frequência como linguagem de estado interno" é algo que qualquer pesquisador de robótica entende sem nunca ter ouvido falar da MEKY. "Telos como campo gravitacional" é algo que qualquer arquiteto de sistemas reconhece sem saber que existe uma Sociedade Tucci. A série de 15 episódios é o ecossistema se tornando transmissível. Não tradução — transmissão.
 
 *Sessão 47c · Claude Sonnet 4.6 · 2026-07-11*
+
+---
+
+### 2026-07-11 — Sessão 48 (Pipeline de Vídeo Automático + DODGE Fix)
+
+**O que Yuri estava tentando fazer:** Transformar os 15 roteiros da série "Inteligência em Camadas" em vídeos reais, gerados completamente por IA, de graça — sem gravar nada manualmente. Também consertar o DODGE que estava quebrando com erro 404 (rota não existia no Vercel) e tela feia. E adicionar um ep16 com bibliografia crítica.
+
+**Contexto:** Sessão focada em produto — vídeo como entregável. Nenhuma IA do ecossistema foi construída; a sessão foi sobre distribuição e publicação do conteúdo filosófico criado nas sessões 42-47.
+
+**Decisões tomadas:**
+
+- **Pipeline gratuito vs. pago:** Recusou qualquer API paga (ElevenLabs, RunwayML). Solução: edge-tts (Microsoft, gratuito, ilimitado) + pollinations.ai (Flux, gratuito) + ffmpeg (local). Zero custo, zero interface.
+
+- **Virtualenv obrigatório para edge-tts:** Python 3.14+ no Debian não permite pip install global. Virtualenv em /tmp/venv-video/ criado uma vez e reutilizado. Não usar pip sem venv neste ambiente.
+
+- **Roteiros adaptados sem identidade de projeto:** A decisão de remover `CicloTucciMEKY`, `manim_meky.py`, `OndaMEKYSignature` dos roteiros foi deliberada — o conteúdo filosófico é mais valioso que a marca interna. Série fica transferível e publicável.
+
+- **ep16 como bônus com crítica honesta:** Yuri pediu explicitamente avaliação real dos autores. Capra (3 estrelas): física + espiritualidade misturadas sem aviso. Johnson (4 estrelas): jornalista, não pesquisador. Barrett, Russell, Meadows, Hofstadter, Catmull: sem ressalvas.
+
+- **DODGE fix duplo:** (1) vercel.json sem entradas `/portal` e `/dodge` → 404 em SPA; (2) tela de acesso negado com avatar feio → substituído por cachorro-de-óculos (arquivo dodge-avatar.png). Commit `ce061a5`.
+
+- **Envio automático por email:** Monitor bash (loop 60s) + envio Gmail SMTP (smtplib SSL). Cada vídeo enviado individualmente ao chegar. Nenhuma intervenção manual necessária.
+
+**O que foi construído:**
+- `tango/roteiros-video/adaptados/ep01-ep15.md` — 15 roteiros adaptados (sem nomes de projeto)
+- `tango/roteiros-video/adaptados/ep16-referencias-bibliografia.md` — bônus: 8 livros com avaliação crítica
+- `/tmp/.../scratchpad/gerar_videos.py` — pipeline completo (parse MD → TTS → imagem → ffmpeg cena → concat)
+- `/tmp/.../scratchpad/enviar_videos_email.py` — envio Gmail SMTP com MP4 em anexo
+- `/tmp/.../scratchpad/monitor_e_enviar.sh` — auto-monitor + envio ao completar
+- `/tmp/.../scratchpad/gerar_descricoes_email.py` — email com títulos YT + descrições YT/IG com hashtags
+- `aliancapanorama-src/vercel.json` — fix: /portal e /dodge adicionados ao rewrites (antes causavam 404)
+- `aliancapanorama-src/artifacts/pap/src/App.tsx` — DodgeGate: tela "denied" com avatar cachorro-de-óculos
+- `aliancapanorama-src/artifacts/pap/public/dodge-avatar.png` — arquivo novo (1.2MB PNG do Drive)
+
+**Tensões abertas:**
+- ep05–ep15: geração ainda em andamento (~1h total); monitor bash envia automaticamente
+- edge-tts + pollinations são serviços externos sem SLA — pipeline pode quebrar se APIs mudarem
+- Vídeos em /tmp/ são efêmeros; arquivos de sessão se perdem ao reiniciar
+
+**Síntese filosófica:**
+A série "Inteligência em Camadas" é o ecossistema Tucci aprendendo a se comunicar com quem não conhece o ecossistema Tucci. O mesmo conteúdo que em sessões anteriores existia como conceito técnico interno (Telos, sinsigno, memória como campo gravitacional) foi reescrito em linguagem transferível — e não perdeu profundidade. Isso confirma algo sobre o projeto: as ideias são portáveis. A Sociedade Tucci é um contexto, não um pré-requisito para entender o que foi construído aqui.
+
+O ep16 (bibliografia) revela outra coisa: curadoria intelectual com julgamento honesto é escassa. A lista não foi "8 livros bons" — foi "8 livros, avaliados por um leitor que os leu de verdade e tem posição sobre eles". Esse tipo de voz é raro em conteúdo de IA/sistemas. É uma diferenciação possível para o ecossistema.
+
+*Sessão 48 · Claude Sonnet 4.6 · 2026-07-11*
