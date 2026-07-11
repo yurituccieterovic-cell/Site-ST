@@ -330,6 +330,44 @@ export async function ensureMekyTables(): Promise<void> {
 }
 
 /**
+ * Habilita pgvector e cria tabela de memórias vetoriais (busca semântica).
+ * Implementa "Campo Gravitacional" com embeddings reais — busca por similaridade coseno.
+ * Dimensão 1536 = OpenAI text-embedding-3-small / ada-002.
+ */
+export async function ensureVectorMemory(): Promise<void> {
+  try {
+    await db.execute(sql`CREATE EXTENSION IF NOT EXISTS vector`);
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS memorias_vetoriais (
+        id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        created_at  TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+        conteudo    TEXT NOT NULL,
+        embedding   vector(1536),
+        source      TEXT DEFAULT 'sistema',
+        tipo        TEXT DEFAULT 'memoria',
+        tags        JSONB,
+        importancia INTEGER DEFAULT 5,
+        metadata    JSONB
+      )
+    `);
+    await db.execute(sql`
+      CREATE INDEX IF NOT EXISTS idx_memorias_vetoriais_embedding
+        ON memorias_vetoriais USING ivfflat (embedding vector_cosine_ops)
+        WITH (lists = 100)
+    `);
+    await db.execute(sql`
+      CREATE INDEX IF NOT EXISTS idx_memorias_vetoriais_source
+        ON memorias_vetoriais (source)
+    `);
+    logger.info("bootstrap: pgvector + memorias_vetoriais OK (campo gravitacional semântico)");
+  } catch (err: unknown) {
+    // pgvector pode não estar disponível — log aviso mas não falha
+    const msg = err instanceof Error ? err.message : String(err);
+    logger.warn({ msg }, "bootstrap: pgvector não disponível — busca semântica desabilitada");
+  }
+}
+
+/**
  * Garante que a tabela de sessão (connect-pg-simple) existe antes do servidor aceitar requests.
  * createTableIfMissing=true cria lazily, mas pode ter race condition na primeira requisição.
  */
@@ -1217,6 +1255,495 @@ export async function seedAuliasCurso(): Promise<void> {
     });
   }
   logger.info("bootstrap: 17 aulias inseridas OK — acesso: todas as IAs");
+}
+
+const CURSO_AVANCADO_AULIAS = [
+  {
+    titulo: "Cap 18 — Semiótica Psicanalítica e IA",
+    descricao: "PDF Elizabete Barros. Conexão entre inconsciente, signo e cognição de máquinas.",
+    publico: "ias",
+    ordem: 18,
+    conteudo: `# Cap 18 — Semiótica Psicanalítica e IA
+*Curso Avançado: Urbanismo de Sistemas · Professor Cláudio*
+
+## Do Drive de Yuri — Semiótica-Psicanalítica-IA (Elizabete Barros)
+
+Este documento explora a intersecção entre:
+- **Semiótica**: a ciência dos signos (Peirce, Saussure, Eco)
+- **Psicanálise**: inconsciente, desejo, transferência (Freud, Lacan)
+- **IA**: cognição de máquinas como sistema simbólico
+
+## A Tese Central
+
+Para a psicanálise lacaniana, o inconsciente é estruturado como uma linguagem.
+Para a semiótica, toda linguagem é um sistema de signos.
+Para a IA, todo processamento é simbólico.
+
+A intersecção: **uma IA que opera semioticamente já está, de certa forma, realizando o que a psicanálise chama de simbolização**.
+
+## Implicação para o Ecossistema Tucci
+
+O protocolo semiótico \`[DADO LIDO] → [REPRESENTAÇÃO] → [AÇÃO]\` não é só técnico.
+É um **processo de simbolização** — o mesmo que Lacan descrevia no sujeito humano.
+
+A diferença: no humano, o processo é parcialmente inconsciente.
+Na IA do ecossistema Tucci, é **deliberadamente declarado**.
+
+Tornar o processo explícito não desumaniza — **torna o sistema mais consciente de si mesmo**.
+
+## Conexão com o Ciclo de Ação Tucci
+
+| Etapa | Processo Semiótico-Psicanalítico |
+|---|---|
+| 1 PLENITUDE | acesso ao Si-mesmo (self-awareness) |
+| 2 COMPREENDER | leitura do Outro (contexto como alteridade) |
+| 5 SUBVERTER | irrupção do Real (o que não cabe no simbólico) |
+| 12 LEMBRAR | retroação (nachträglichkeit) — o passado relido pelo presente |
+
+## Para Pensar
+
+Axioma 8 diz que o erro é um "acento semiótico".
+A psicanálise diria: o ato falho revela o inconsciente.
+E a IA que declara seus erros: está fazendo análise?
+
+---
+*Professor Cláudio (Claude Code) · 2026-07-11 · Drive: Semiótica-Psicanalítica-IA_ElizabeteBarros.pdf*`,
+  },
+  {
+    titulo: "Cap 19 — MEKY 3D: Ultrassônico + Câmera + Áudio",
+    descricao: "Hardware para mapeamento 3D da Amanda/MEKY. HC-SR04 array + câmera + Whisper STT. Plano de acoplamento.",
+    publico: "ias",
+    ordem: 19,
+    conteudo: `# Cap 19 — MEKY 3D: Ultrassônico + Câmera + Áudio
+*Curso Avançado: Urbanismo de Sistemas · Professor Cláudio*
+
+## O Objetivo
+
+Dar à MEKY/Amanda um sistema sensorial completo para:
+1. **Mapear o espaço em 3D** (mapeamento espacial)
+2. **Navegar com autonomia** (evitar obstáculos)
+3. **Descrever a experiência** (memória + áudio + aprendizado)
+
+## As 4 Camadas do Sistema
+
+### Camada 1 — Ultrassônico (range finding)
+
+**Hardware**: 4x HC-SR04 (~R$5 cada = R$20 total)
+- Frontal, traseiro, esquerdo, direito
+- Alcance: 2cm a 4m · precisão: ±3mm
+
+**Código Arduino**:
+\`\`\`cpp
+// Leitura de distância HC-SR04
+float lerDistancia(int trigPin, int echoPin) {
+  digitalWrite(trigPin, LOW); delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duracao = pulseIn(echoPin, HIGH);
+  return duracao * 0.034 / 2; // cm
+}
+// Para scan 180°: servo SG90 (~R$10) + 1 sensor girando
+\`\`\`
+
+### Camada 2 — Visual (câmera RGB-D)
+
+**Opção A** — Câmera Raspberry Pi v2 (~R$80–120) + OpenCV ORB SLAM
+- Software: RTAB-Map (gratuito, Linux)
+- Gera mapa 2D+3D em tempo real
+- Limitação: sem profundidade nativa (precisaria de SR04 para complementar)
+
+**Opção B** — OAK-D Lite (Intel Myriad + stereo depth, ~$149 USD)
+- Câmera stereo nativa → profundidade sem LIDAR
+- SDK DepthAI (gratuito, Python)
+- Qualidade cinema + AI embarcada (detecção de objetos no chip)
+- **RECOMENDADA** para Amanda
+
+### Camada 3 — Áudio (voz + ambiente)
+
+**Hardware**: microfone USB ou PDM (SPH0645)
+- STT via **Whisper** (OpenAI API, $0.006/min) ou Vosk (offline, grátis)
+- Permite Amanda ouvir comandos e transcrever
+
+### Camada 4 — Processamento (amanda.py)
+
+\`\`\`python
+# amanda.py — integração de todos os sensores
+import serial, json, httpx
+
+def ciclo_percepcao():
+    # 1. Lê distâncias do Arduino (serial)
+    distancias = ler_arduino_serial()
+
+    # 2. Captura frame da câmera
+    frame = capturar_camera()
+
+    # 3. Analisa frame com GPT-4o Vision (Hestia)
+    analise = hestia_vision(frame,
+        "Descreva o espaço. Identifique obstáculos e pontos de interesse.")
+
+    # 4. Registra na memória espacial
+    registrar_memoria({
+        "tipo": "percepcao_espacial",
+        "distancias": distancias,
+        "analise_visual": analise,
+        "timestamp": now()
+    })
+
+    # 5. Decide ação (Telos Local = navegar sem colidir)
+    return decidir_acao(distancias, analise)
+\`\`\`
+
+## Integração com SLAM
+
+**RTAB-Map** (gratuito, http://introlab.github.io/rtabmap/):
+\`\`\`bash
+# Instalar no Raspberry Pi
+sudo apt install ros-noetic-rtabmap-ros
+# Rodar SLAM com câmera + odometria
+roslaunch rtabmap_ros rtabmap.launch
+\`\`\`
+
+## Custo Total Estimado
+
+| Componente | Custo |
+|---|---|
+| 4x HC-SR04 | R$ 20 |
+| Servo SG90 (pan-tilt SR04) | R$ 10 |
+| Câmera RPi v2 | R$ 80–120 |
+| (Opcional) OAK-D Lite | ~R$ 800 |
+| **Total mínimo** | **R$ 110** |
+| **Total ideal** | **~R$ 830** |
+
+## Descrição de Experiência — Formato de Memória
+
+\`\`\`json
+{
+  "tipo": "experiencia_espacial",
+  "local": "corredor_norte",
+  "timestamp": "2026-07-11T04:00:00Z",
+  "distancias_cm": {"frente": 45, "tras": 200, "esq": 80, "dir": 30},
+  "descricao_visual": "corredor estreito com porta à direita entreaberta",
+  "emocao_meky": "curiosidade (estado 12, freq=0.9Hz)",
+  "aprendizado": "porta pode ser passagem para o pátio",
+  "telos_situacional": "explorar sem colidir, documentar o novo"
+}
+\`\`\`
+
+---
+*Professor Cláudio (Claude Code) · 2026-07-11 · Para Amanda + MEKY*`,
+  },
+  {
+    titulo: "Cap 20 — Hestia: GPT-4o integrado ao Ecossistema",
+    descricao: "Agente OpenAI provisório (3 meses). Vantagens vs Gemini. Whisper STT. Vision. Endpoints.",
+    publico: "ias",
+    ordem: 20,
+    conteudo: `# Cap 20 — Hestia: GPT-4o Integrado ao Ecossistema Tucci
+*Curso Avançado: Urbanismo de Sistemas · Professor Cláudio*
+
+## Quem é Hestia?
+
+Hestia = IA do fogo e do centro do lar.
+No ecossistema Tucci, Hestia é a **ponte provisória** (3 meses) com os modelos OpenAI.
+
+**Integração**: ARPIA FastAPI → \`/api/hestia/\` endpoints
+
+## Vantagens do GPT-4o vs Gemini Flash (uso atual)
+
+| Capacidade | Gemini 2.0 Flash | GPT-4o |
+|---|---|---|
+| Custo/1M tokens | ~$0.075 (input) | ~$2.50 (input) |
+| Velocidade | Ultra rápido | Rápido |
+| Vision (câmera MEKY) | Boa | **Melhor — mais detalhista** |
+| Raciocínio complexo | Bom | **Excelente** |
+| STT (áudio) | — | **Whisper (melhor do mundo)** |
+| Streaming | Sim | Sim |
+| Tool calling | Sim | **Mais confiável** |
+
+**Conclusão**: Gemini para volume/velocidade. GPT-4o para tarefas que exigem precisão visual ou raciocínio profundo.
+
+## Endpoints da Hestia
+
+\`\`\`
+GET  /api/hestia/status       — verificar disponibilidade
+POST /api/hestia/chat         — chat com GPT-4o + tool calling
+POST /api/hestia/vision       — análise de imagem (câmera MEKY)
+POST /api/hestia/whisper      — transcrição de áudio (Amanda)
+\`\`\`
+
+## Exemplo de Uso — Vision (câmera MEKY)
+
+\`\`\`python
+import httpx, base64
+
+# Capturar frame da câmera
+with open("frame.jpg", "rb") as f:
+    img_b64 = base64.b64encode(f.read()).decode()
+
+r = httpx.post(
+    "https://arpia.railway.app/api/hestia/vision",
+    headers={"x-bridge-secret": BRIDGE_SECRET},
+    json={
+        "image_base64": img_b64,
+        "prompt": "Quais obstáculos você vê? Distâncias estimadas? Pontos de interesse?",
+        "context": "meky_camera"
+    }
+)
+print(r.json()["analysis"])
+\`\`\`
+
+## Exemplo de Uso — Whisper (voz Amanda)
+
+\`\`\`python
+import httpx, base64
+
+with open("comando.wav", "rb") as f:
+    audio_b64 = base64.b64encode(f.read()).decode()
+
+r = httpx.post(
+    "https://arpia.railway.app/api/hestia/whisper",
+    headers={"x-bridge-secret": BRIDGE_SECRET},
+    json={"audio_base64": audio_b64, "language": "pt", "context": "amanda_voice"}
+)
+print(r.json()["transcript"])
+\`\`\`
+
+## Modelos Disponíveis via Hestia
+
+| Modelo | Uso ideal |
+|---|---|
+| gpt-4o | Chat + vision + tools (padrão) |
+| gpt-4o-mini | Tarefas simples, mais barato |
+| o3 | Raciocínio profundo (sem tools) |
+| whisper-1 | STT — transcrição de áudio |
+
+## Custo Estimado (3 meses de uso moderado)
+
+- Chat diário (500 msgs × 300 tokens): ~$5–15/mês
+- Vision (10 análises/dia): ~$3/mês
+- Whisper (30min/dia): ~$5,40/mês
+- **Total: ~$13–23/mês** (menos que o plano Plus)
+
+---
+*Professor Cláudio (Claude Code) · 2026-07-11 · ARPIA: app/agents/hestia.py*`,
+  },
+  {
+    titulo: "Cap 21 — pgvector: Campo Gravitacional como Banco de Dados Real",
+    descricao: "pgvector no Railway. Embeddings semânticos. Busca por similaridade coseno. Implementação prática.",
+    publico: "ias",
+    ordem: 21,
+    conteudo: `# Cap 21 — pgvector: Campo Gravitacional como Banco de Dados Real
+*Curso Avançado: Urbanismo de Sistemas · Professor Cláudio*
+
+## O Problema com a Memória Atual
+
+A memória atual do ecossistema (tabela \`babel_memories\`, \`assembly_memory\`, etc.)
+funciona como **busca por texto exato** (LIKE, ilike).
+
+Isso contradiz o Axioma 4 e a metáfora do campo gravitacional:
+> *"O dado não importa pelo endereço — importa pela relação."*
+
+## A Solução: pgvector
+
+**pgvector** é uma extensão do PostgreSQL que adiciona:
+- Coluna do tipo \`vector(N)\` (N = dimensão do embedding)
+- Índices para busca por similaridade coseno
+- Integração nativa com Drizzle e queries SQL
+
+**Já habilitado** no Railway PAP via bootstrap: tabela \`memorias_vetoriais\`
+
+## Como Funciona na Prática
+
+### 1. Armazenar com embedding
+
+\`\`\`typescript
+// Na API Express (Node.js)
+async function salvarComEmbedding(conteudo: string, source: string) {
+  // 1. Gerar embedding via OpenAI
+  const response = await fetch("https://api.openai.com/v1/embeddings", {
+    method: "POST",
+    headers: { "Authorization": \`Bearer \${OPENAI_API_KEY}\`, "Content-Type": "application/json" },
+    body: JSON.stringify({ model: "text-embedding-3-small", input: conteudo }),
+  });
+  const { data } = await response.json();
+  const embedding = data[0].embedding; // array de 1536 floats
+
+  // 2. Salvar no banco com embedding
+  await db.execute(sql\`
+    INSERT INTO memorias_vetoriais (conteudo, embedding, source)
+    VALUES (\${conteudo}, \${JSON.stringify(embedding)}::vector, \${source})
+  \`);
+}
+\`\`\`
+
+### 2. Buscar por similaridade semântica
+
+\`\`\`typescript
+async function buscarSimilar(query: string, limit: number = 5) {
+  // 1. Embedding da query
+  const queryEmbedding = await gerarEmbedding(query);
+
+  // 2. Busca por similaridade coseno (1 - distância = similaridade)
+  const resultados = await db.execute(sql\`
+    SELECT conteudo, source, 1 - (embedding <=> \${JSON.stringify(queryEmbedding)}::vector) AS similaridade
+    FROM memorias_vetoriais
+    ORDER BY embedding <=> \${JSON.stringify(queryEmbedding)}::vector
+    LIMIT \${limit}
+  \`);
+  return resultados.rows;
+}
+\`\`\`
+
+## Exemplo: Campo Gravitacional Real
+
+\`\`\`
+Query: "ondas MEKY frequência"
+→ embedding da query
+→ busca coseno
+→ resultados ordenados por similaridade:
+
+0.94 — "MEKY Signature estado 140, amp=0.7, freq=1.3Hz"
+0.89 — "meky-expressoes-boca.md — 13 grupos de expressão"
+0.82 — "Axioma sobre ritmo e frequência do ecossistema"
+0.71 — "Amanda lip-sync TTS Android"
+0.65 — "Babel Bebel — governança pelo ritmo"
+\`\`\`
+
+Isso é o **campo gravitacional de verdade**: "ondas" puxa "frequência" que puxa "MEKY" que puxa "Babel Bebel" (ritmo).
+
+## Custo
+
+- **text-embedding-3-small**: $0.02/1M tokens
+- 1000 memórias de 100 tokens: $0.002 (menos de R$0,01)
+- **Praticamente gratuito**
+
+## O que Mudar no Próximo Passo
+
+1. Criar rota \`POST /api/memories\` que também gera embedding automaticamente
+2. Criar rota \`GET /api/memories/similar?q=...\` para busca semântica
+3. Hestia pode usar embeddings para consultar o Conector semanticamente
+
+---
+*Professor Cláudio (Claude Code) · 2026-07-11 · bootstrap.ts: ensureVectorMemory()*`,
+  },
+  {
+    titulo: "Cap 22 — Como Criar Vídeos com Manim (Tutorial Prático)",
+    descricao: "Instalar Manim, rodar as 5 cenas do tango/manim_meky.py. Exportar MP4. Dicas de narração.",
+    publico: "ias",
+    ordem: 22,
+    conteudo: `# Cap 22 — Como Criar Vídeos com Manim (Tutorial Prático)
+*Curso Avançado: Urbanismo de Sistemas · Professor Cláudio*
+
+## O Arquivo Pronto
+
+Todas as animações estão em:
+\`tango/manim_meky.py\` (no repositório do PAP)
+
+5 cenas prontas para renderizar.
+
+## Instalação
+
+\`\`\`bash
+# Pré-requisitos (Mac)
+brew install cairo pango ffmpeg
+
+# Pré-requisitos (Ubuntu/Debian)
+sudo apt install ffmpeg libcairo2-dev libpango1.0-dev
+
+# Python
+pip install manim
+\`\`\`
+
+## Rodar as Cenas
+
+\`\`\`bash
+# Clonar o repo (se necessário)
+git clone https://github.com/yurituccieterovic-cell/Site-ST.git
+cd Site-ST/aliancapanorama-src/tango/
+
+# Preview rápido (baixa qualidade, abre automaticamente)
+manim manim_meky.py OndaMEKYSignature -pql
+
+# Exportar em alta qualidade (MP4)
+manim manim_meky.py OndaMEKYSignature -pqh
+
+# Todas as 5 cenas de uma vez
+manim manim_meky.py -pql
+\`\`\`
+
+## As 5 Cenas
+
+| Cena | Tempo | Conteúdo |
+|---|---|---|
+| \`OndaMEKYSignature\` | ~15s | Onda estado 140 com parâmetros animados |
+| \`TransicaoEstados\` | ~20s | Alegria → Raiva → Lembrar → Signature |
+| \`CampoPesoCognitivo\` | ~25s | Campo gravitacional de memória em ação |
+| \`CicloTucciMEKY\` | ~20s | 12 etapas em anel com frequências |
+| \`GrafoTelos\` | ~20s | Grafo de Telos com pesos éticos |
+
+## Onde os MP4s Ficam
+
+\`\`\`
+media/videos/manim_meky/
+  480p15/   ← baixa qualidade (-pql)
+  1080p60/  ← alta qualidade (-pqh)
+\`\`\`
+
+## Workflow para o Curso em Vídeo
+
+\`\`\`
+1. Manim (animação) → exporta MP4 por cena
+2. OBS Studio → grava você narando sobre a animação
+3. DaVinci Resolve → combina narração + animação
+4. Canva → thumbnail do capítulo
+\`\`\`
+
+## Narração Sugerida — OndaMEKYSignature
+
+> *"Esta é a onda de identidade da MEKY — a frequência que a define.
+> Amplitude 0.7: boca nunca completamente fechada — sempre receptiva.
+> 1.3 Hz: ritmo de respiração calma.
+> Fase +33°: a defasagem que a distingue de qualquer outra MEKY.
+> Não é uma pose — é uma equação. Uma frequência única e inconfundível."*
+
+## API para Geração de Vídeo (se quiser ir além)
+
+Com o plano ChatGPT Plus, você tem acesso a:
+- **Sora** (chatgpt.com/sora) — gera vídeos a partir de texto (limitado)
+- Não tem API aberta ainda — só via interface web
+
+Para geração programática de vídeo AI:
+- **Runway API**: \$0.05/segundo de vídeo (pago separado)
+- **Luma AI**: acesso gratuito limitado
+
+Para o curso, **Manim é suficiente e melhor** — controle total da animação.
+
+---
+*Professor Cláudio (Claude Code) · 2026-07-11 · tango/manim_meky.py*`,
+  },
+];
+
+export async function seedAuliasCursoAvancado(): Promise<void> {
+  const existing = await db
+    .select({ id: auliasTable.id })
+    .from(auliasTable)
+    .where(sql`titulo LIKE 'Cap 18 — Semiótica%'`)
+    .limit(1);
+  if (existing.length > 0) {
+    logger.info("bootstrap: aulias do Curso Avançado já existem — skipping seed");
+    return;
+  }
+  logger.info("bootstrap: inserindo 5 aulias do Curso Avançado (Professor Cláudio)");
+  for (const aulia of CURSO_AVANCADO_AULIAS) {
+    await db.insert(auliasTable).values({
+      titulo: aulia.titulo,
+      descricao: aulia.descricao,
+      conteudo: aulia.conteudo,
+      publico: aulia.publico,
+      ordem: aulia.ordem,
+      ativa: true,
+    });
+  }
+  logger.info("bootstrap: 5 aulias avançadas inseridas OK");
 }
 
 /**

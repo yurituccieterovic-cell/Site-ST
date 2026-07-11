@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso } from "./lib/bootstrap";
+import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso, seedAuliasCursoAvancado, ensureVectorMemory } from "./lib/bootstrap";
 import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
 
@@ -17,6 +17,7 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 ensureSessionTable()
+  .then(() => ensureVectorMemory())
   .then(() => seedDatabase())
   .then(() => enforceUniquePasswords())
   .then(() => ensureMekyTables())
@@ -24,6 +25,7 @@ ensureSessionTable()
   .then(() => seedSystemAgents())
   .then(() => seedPlaycenterAgents())
   .then(() => seedAuliasCurso())
+  .then(() => seedAuliasCursoAvancado())
   .then(() => {
     app.listen(port, (err) => {
       if (err) {
