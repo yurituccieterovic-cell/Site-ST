@@ -34,9 +34,13 @@ function DodgeGate() {
   }, []);
   if (state === "loading") return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center text-cyan-400 font-mono text-sm">Verificando acesso...</div>;
   if (state === "denied") return (
-    <div className="min-h-screen bg-[#0a0f1e] flex flex-col items-center justify-center gap-4 font-mono">
-      <div className="text-red-400 text-sm">Acesso negado — tier 5+ obrigatório</div>
-      <a href="/portal" className="text-cyan-500 text-xs hover:underline">← Entrar via Portal</a>
+    <div className="min-h-screen bg-[#0a0f1e] flex flex-col items-center justify-center gap-6 font-mono">
+      <img src="/dodge-avatar.png" alt="DODGE" className="w-32 h-32 rounded-full object-cover border-2 border-amber-700/50 shadow-lg"/>
+      <div className="text-center">
+        <div className="text-amber-400 font-bold text-lg mb-1">DODGE</div>
+        <div className="text-gray-500 text-xs">editor de raízes · acesso restrito</div>
+      </div>
+      <a href="/portal" className="flex items-center gap-2 px-4 py-2 bg-cyan-900/30 border border-cyan-700/50 rounded text-cyan-400 text-xs hover:bg-cyan-900/50 transition-colors">← Entrar via Portal</a>
     </div>
   );
   return <DodgePage superAdm={state.tier >= 9}/>;
