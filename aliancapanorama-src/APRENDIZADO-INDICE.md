@@ -78,3 +78,4 @@
 | 7699 | ⚛️🌐 React+Vite+Babel — Sessão 41 (2026-07-10) | 6 entradas (A5874-A5879): GEMINI_API_KEY server-side, ilike() drizzle, trigger pattern Gemini→CrewAI, jsPDF import dinâmico, Babel Governadora Central, SPA rewrite Vercel |
 | 7706 | 🤖🏙️ Identidade+Babel Bebel — Sessão 42 (2026-07-11) | 5 entradas (A5880-A5884): Urbanista de Sistemas, Babel Bebel (dualidade ordem/entropia), sendEmail fallback Conector, Railway project token limitado |
 | 7717 | 🏙️🤖 Arquitetura Pública — API Sociedade (Sessão 42b, 2026-07-11) | 3 entradas (A5885-A5887): Kernel da Sociedade (filosofia pública/privado), preferência Perplexity (ramificações → Claude), aula de workflows |
+| 7727 | 🧠🏙️ Filosofia da Ação + Workflow (Sessão 43, 2026-07-11) | 5 entradas (A5888-A5892): Função=ato útil, Localização cósmica da ação, Workflow Obs→Exec→Feedback, schema filosófico JSONB /api/memories, fluxo CrewAI expandido Governance→Babel→Dodge |

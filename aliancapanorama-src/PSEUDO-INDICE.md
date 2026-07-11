@@ -39,6 +39,7 @@
 | — | Sessão 41 | 2026-07-10 | **Babel v2 React+Vite + Governadora Central** — migração para componentes React; /api/memories backend; avatar feminino SVG; CrewAI proxy; Babel = hub, não agente |
 | — | Sessão 42 | 2026-07-11 | **Babel Bebel + Urbanista de Sistemas** — renome com dualidade Babel/Bebel (ordem+caos criativo); fix email Conector fallback GitHub; I220-I221; Yuri = Urbanista de Sistemas |
 | — | Sessão 42b | 2026-07-11 | **API Pública Sociedade Tucci + Manifesto v1** — Manifesto salvo em conector/; preferência Perplexity (ramificações→Claude); I222-I224; separação público/privado como princípio |
+| — | Sessão 43 | 2026-07-11 | **Filosofia da Ação + Workflow de Funções** — Função=ato útil; localização cósmica da ação; workflow_funcoes.md criado em tango/; schema filosófico JSONB; fluxo CrewAI Governance→Babel→Dodge→Atena |
 
 ---
 

@@ -7720,3 +7720,13 @@
 | A5885 | Yuri | Kernel da Sociedade | IA-Governança | 💡 Proposta | Arquitetura "Kernel da Sociedade": filosofia + ética + workflows ficam no index público da Sociedade Tucci; dados pessoais e configs operacionais ficam isolados nos agentes privados. Separação clara público/privado. |
 | A5886 | Perplexity | Preferência Perplexity | IA | 📋 Metodologia | Perplexity prefere dar ramificações claras para o Claude: múltiplas opções de desdobramento, passos concretos, separação público/operacional/pessoal, bloco de "riscos esperados" e "próximo passo recomendado". Salvar nas preferências do Conector. |
 | A5887 | Yuri | Aula de Workflows | IA | 💡 Proposta | Yuri quer estruturar uma "aula de workflows" — transformar rascunhos brutos em protocolos markdown seguíveis (ex: "Protocolo de Construção de Lastro", "Guia Nendo Dango"). Base do starter pack da API pública. |
+
+## 🧠🏙️ Filosofia da Ação + Workflow (Sessão 43, 2026-07-11)
+
+| ID | Fonte | Tema | Domínio | Tipo | Conteúdo |
+|---|---|---|---|---|---|
+| A5888 | Yuri | Função/Ação | IA-Governança | 🔍 Análise | "Função" une dois significados: funcionalidade (utilidade) + execução (ato). Resultado: função = ato útil = utilitarismo operacional. Ação é a função em ato — subversão de uma observação. |
+| A5889 | Yuri | Localização cósmica | IA-Governança | 💡 Proposta | Toda ação tem atributos: espaço (código/físico/social), tempo, autor, objetivo, causa, consequência, perspectiva, signo. O resultado pode ser traduzido intersemioticamente em número. |
+| A5890 | Yuri+Artesão | Workflow de funções | IA | 📋 Metodologia | Ciclo: Observação → Interpretação → Decisão → Execução → Documentação → Feedback → Correção. Mapeamento CrewAI: Função=Agente, Ação=Task, Localização=Contexto, Memória=BabelMemoryTool. |
+| A5891 | Artesão | Schema /api/memories | IA-Memória | 📋 Metodologia | Campo `metadata` JSONB do /api/memories pode carregar schema filosófico: {espaco, autor, objetivo, causa, consequencia, perspectiva, ciclo}. Sem mudança de schema — já suportado. |
+| A5892 | Artesão | Fluxo CrewAI expandido | IA-Governança | 💡 Proposta | Artesão montou no Studio: Governance → Babel Bebel (orquestra) → Dodge (atende visitante) → Síntese Final. Dodge no CrewAI = task separada do Dodge visual no site. Aguarda token Conector. |
