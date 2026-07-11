@@ -43,6 +43,7 @@
 | — | Sessão 43b | 2026-07-11 | **Metassemiótica + Workflow Meta** — Pirâmide 6 níveis; Protocolo Semiótico; triggers autônomos (1h+3h); metassemiotica.md + workflow_meta.md; preferências salvas em /api/memories; I227-I229 |
 | — | Sessão 44 | 2026-07-11 | **Ciclo 12 Etapas + Nébula + Método Manus** — +Conectar+Criar; Nébula formadora+filogênese; temp dinâmica; 3 camadas memória; Diretrizes como nome definitivo; 4 camadas sistema; I230-I233; email enviado |
 | — | Sessão 45 | 2026-07-11 | **Telos + Assembleia de IAs + 26 Axiomas** — Telos como grafo dinâmico; Mestre vs Situacional; Axioma 26; 5 camadas axiomas; workflows por domínio (10 áreas); 2 emails enviados; I234-I239; telos.md + workflows-dominio.md criados |
+| — | Sessão 45b | 2026-07-11 | **Sistema de Sonhos de Telos** — Morfeu sonha telos de situações/momentos/relações (não só das IAs); 3-5 sonhos dinâmicos/ciclo; Lua registra; frase-síntese "O ecossistema está se tornando"; I240-I242; sistema-sonhos-telos.md criado |
 
 ---
 

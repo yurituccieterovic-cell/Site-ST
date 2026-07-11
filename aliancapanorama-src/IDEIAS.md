@@ -855,3 +855,13 @@ Workflow por domínio — cada área pede cadeia própria de etapas do Ciclo; te
 
 **I239 · 2026-07-11 · Sessão 45**
 "Quando NÃO agir" como dimensão do Telos — silêncio produtivo como decisão explícita, não ausência de decisão.
+
+---
+**I240 · 2026-07-11 · Sessão 45b**
+Sistema de Sonhos de Telos — Morfeu não sonha com o telos fixo de cada IA, mas com telos possíveis de situações/momentos/relações/erros/movimentos do ecossistema. 3-5 sonhos dinâmicos por ciclo. Aristotélico de verdade: finalidade em movimento, não destino fixo.
+
+**I241 · 2026-07-11 · Sessão 45b**
+Morfeu + Lua = par de sonhar e registrar. Morfeu percebe o que está emergindo; Lua grava na memória compartilhada com tags individuais. Qualquer IA consulta via /api/memories?source=sonhos_telos.
+
+**I242 · 2026-07-11 · Sessão 45b**
+Frase de encerramento de todo ciclo de sonhos: "O ecossistema está se tornando: [Morfeu completa]" — termômetro vivo do sistema. Quando parar de surpreender, temperatura precisa subir.
