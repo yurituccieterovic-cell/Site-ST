@@ -367,3 +367,176 @@ footer {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ── VÍDEO COM THUMBNAIL ─────────────────────────────────────────────────── */
+.video-thumb-btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    background: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.video-thumb-img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+}
+
+.video-thumb-btn:hover .video-thumb-img,
+.video-thumb-btn:focus .video-thumb-img { opacity: 0.65; }
+
+.video-play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.video-play-btn {
+    background: rgba(0,0,0,0.6);
+    border-radius: 12px;
+    padding: 8px 12px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.video-thumb-btn:hover .video-play-btn,
+.video-thumb-btn:focus .video-play-btn {
+    background: rgba(0,0,0,0.85);
+    transform: scale(1.1);
+}
+
+.video-thumb-notice {
+    display: block;
+    position: absolute;
+    bottom: 0.6rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    pointer-events: none;
+}
+
+.video-thumb-btn:focus { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ── WIDGET DODGE ────────────────────────────────────────────────────────── */
+#dodge-widget {
+    position: fixed;
+    bottom: 1.8rem;
+    right: 1.8rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.8rem;
+}
+
+.dodge-fab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    background: linear-gradient(135deg, var(--secondary), #5a1a9f);
+    border: 1px solid rgba(123,44,191,0.6);
+    border-radius: 50px;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(123,44,191,0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 1px;
+}
+
+.dodge-fab:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(123,44,191,0.7);
+}
+
+.dodge-avatar { font-size: 1.4rem; }
+
+.dodge-pulse {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    background: #00ff88;
+    border-radius: 50%;
+    border: 2px solid var(--darker);
+    animation: dodge-ping 2s cubic-bezier(0,0,0.2,1) infinite;
+}
+
+@keyframes dodge-ping {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.6); opacity: 0.4; }
+}
+
+.dodge-modal {
+    display: none;
+    flex-direction: column;
+    width: min(420px, 95vw);
+    height: min(600px, 80vh);
+    background: rgba(10,10,15,0.97);
+    border: 1px solid rgba(123,44,191,0.5);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    animation: dodge-slide-in 0.25s ease;
+}
+
+.dodge-modal.open { display: flex; }
+
+@keyframes dodge-slide-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+.dodge-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(90deg, rgba(123,44,191,0.3), rgba(0,212,255,0.1));
+    border-bottom: 1px solid rgba(123,44,191,0.3);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    color: var(--primary);
+    letter-spacing: 1px;
+}
+
+.dodge-close {
+    background: transparent;
+    border: none;
+    color: rgba(224,224,224,0.6);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+}
+.dodge-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+.dodge-iframe {
+    flex: 1;
+    border: none;
+    width: 100%;
+}
+
+@media (max-width: 480px) {
+    #dodge-widget { bottom: 1rem; right: 1rem; }
+    .dodge-label { display: none; }
+    .dodge-fab { padding: 0.8rem; border-radius: 50%; }
+}

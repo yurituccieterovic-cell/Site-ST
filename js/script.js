@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // CONSENTIMENTO VÍDEO YOUTUBE
+    // VÍDEO COM THUMBNAIL
     const videoConsent = document.getElementById('video-consent');
     const videoContainer = document.getElementById('video-container');
 
@@ -39,26 +39,54 @@ document.addEventListener('DOMContentLoaded', function() {
         function loadVideo() {
             const wrapper = document.createElement('div');
             wrapper.className = 'video-wrapper';
-
             const iframe = document.createElement('iframe');
             iframe.src = 'https://www.youtube-nocookie.com/embed/tqQt99tkgzE?autoplay=1&rel=0';
             iframe.title = 'Vídeo institucional Sociedade Tucci';
             iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
             iframe.allowFullscreen = true;
-            iframe.loading = 'lazy';
-
             wrapper.appendChild(iframe);
             videoContainer.innerHTML = '';
             videoContainer.appendChild(wrapper);
         }
 
         videoConsent.addEventListener('click', loadVideo);
-
         videoConsent.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                loadVideo();
-            }
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); loadVideo(); }
+        });
+    }
+
+    // WIDGET DODGE
+    const dodgeToggle = document.getElementById('dodge-toggle');
+    const dodgeModal  = document.getElementById('dodge-modal');
+    const dodgeClose  = document.getElementById('dodge-close');
+    const dodgeIframe = document.getElementById('dodge-iframe');
+    let dodgeLoaded   = false;
+
+    function openDodge() {
+        if (!dodgeLoaded) {
+            dodgeIframe.src = '/aliancapanorama/dodge';
+            dodgeLoaded = true;
+        }
+        dodgeModal.classList.add('open');
+        dodgeModal.setAttribute('aria-hidden', 'false');
+        dodgeToggle.setAttribute('aria-expanded', 'true');
+        dodgeClose.focus();
+    }
+
+    function closeDodge() {
+        dodgeModal.classList.remove('open');
+        dodgeModal.setAttribute('aria-hidden', 'true');
+        dodgeToggle.setAttribute('aria-expanded', 'false');
+        dodgeToggle.focus();
+    }
+
+    if (dodgeToggle && dodgeModal && dodgeClose) {
+        dodgeToggle.addEventListener('click', function() {
+            dodgeModal.classList.contains('open') ? closeDodge() : openDodge();
+        });
+        dodgeClose.addEventListener('click', closeDodge);
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && dodgeModal.classList.contains('open')) closeDodge();
         });
     }
 

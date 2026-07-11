@@ -85,10 +85,23 @@
     <section id="showcase" class="video-section">
         <h2>Nosso Trabalho</h2>
         <div class="video-container" id="video-container">
-            <button class="video-consent-btn" id="video-consent">
-                <span class="play-icon">▶</span>
-                <span>Clique para carregar o vídeo</span>
-                <small>Ao carregar, você concorda com a política de privacidade do YouTube</small>
+            <button class="video-thumb-btn" id="video-consent" aria-label="Reproduzir vídeo institucional">
+                <img
+                    src="https://img.youtube.com/vi/tqQt99tkgzE/maxresdefault.jpg"
+                    alt="Thumbnail do vídeo institucional Sociedade Tucci"
+                    class="video-thumb-img"
+                    loading="lazy"
+                    onerror="this.src='https://img.youtube.com/vi/tqQt99tkgzE/hqdefault.jpg'"
+                >
+                <div class="video-play-overlay">
+                    <div class="video-play-btn" aria-hidden="true">
+                        <svg viewBox="0 0 68 48" width="68" height="48">
+                            <path d="M66.52,7.74C65.68,4.55,63.19,2.05,60,1.22C54.79,0,34,0,34,0S13.21,0,8,1.22C4.81,2.05,2.32,4.55,1.48,7.74C0.26,12.96,0.26,24,0.26,24S0.26,35.04,1.48,40.26C2.32,43.45,4.81,45.95,8,46.78C13.21,48,34,48,34,48s20.79,0,26-1.22c3.19-0.83,5.68-3.33,6.52-6.52C67.74,35.04,67.74,24,67.74,24S67.74,12.96,66.52,7.74z" fill="#ff0000"/>
+                            <path d="M 45,24 27,14 27,34" fill="#fff"/>
+                        </svg>
+                    </div>
+                </div>
+                <small class="video-thumb-notice">Ao reproduzir, você concorda com a política de privacidade do YouTube</small>
             </button>
         </div>
     </section>
@@ -159,6 +172,27 @@
         <p>&copy; 2015–2026 Sociedade Tucci. Todos os direitos reservados.</p>
         <p><a href="privacy.html">Política de Privacidade</a></p>
         </footer>
+    <!-- Widget Dodge -->
+    <div id="dodge-widget" aria-label="Falar com o Dodge">
+        <button id="dodge-toggle" class="dodge-fab" aria-expanded="false" aria-controls="dodge-modal" title="Falar com o Dodge">
+            <span class="dodge-avatar" aria-hidden="true">🐕</span>
+            <span class="dodge-label">Dodge</span>
+            <span class="dodge-pulse" aria-hidden="true"></span>
+        </button>
+        <div id="dodge-modal" class="dodge-modal" role="dialog" aria-label="Chat com o Dodge" aria-hidden="true">
+            <div class="dodge-modal-header">
+                <span>🐕 Dodge — Sociedade Tucci</span>
+                <button id="dodge-close" class="dodge-close" aria-label="Fechar chat">✕</button>
+            </div>
+            <iframe
+                id="dodge-iframe"
+                class="dodge-iframe"
+                title="Chat com o Dodge"
+                loading="lazy"
+            ></iframe>
+        </div>
+    </div>
+
 <script src="js/script.js"></script>
     </body>
 </html>
