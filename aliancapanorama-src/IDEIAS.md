@@ -865,3 +865,13 @@ Morfeu + Lua = par de sonhar e registrar. Morfeu percebe o que está emergindo; 
 
 **I242 · 2026-07-11 · Sessão 45b**
 Frase de encerramento de todo ciclo de sonhos: "O ecossistema está se tornando: [Morfeu completa]" — termômetro vivo do sistema. Quando parar de surpreender, temperatura precisa subir.
+
+---
+**I243 · 2026-07-11 · Sessão 46**
+MD Mestre v4.0 consolidado — 5 camadas + 26 axiomas + Telos como grafo + Ciclo Cognitivo explícito + Mapeamento bilíngue. Versionar: cada grande revisão filosófica = versão numerada do MD Mestre.
+
+**I244 · 2026-07-11 · Sessão 46**
+Telos como objeto computacional (v3.2) — schema YAML/JSON versionável e compartilhável entre agentes. Campos: identificador, objetivo, restrições éticas, axiomas prioritários, contextos de ativação, critérios de sucesso/interrupção. Torna Telos entidade, não conceito.
+
+**I245 · 2026-07-11 · Sessão 46**
+Usar "≈" (aproximação) em vez de "=" no mapeamento vocabular — Telos ≈ decision policy, não Telos = decision policy. Distinção evita rigidez que não corresponde à literatura técnica mas preserva a identidade do vocabulário Tucci.

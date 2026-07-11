@@ -49,6 +49,7 @@
 | 2026-07-08 (Sessão 30) | Pack IA Mestre: 20 arquivos em tango/ias/ (INDICE-IAS.md + pack-*.md). PDF "2 Identificando Peças de Robótica Arduino" (51 pgs, HTML→PDF via HTMLParser). APRENDIZADO A785–A800 (DEP/Crowd/Porteiro/TASKS). HW-493 em sys_amanda_core.md. #fim automático. |
 | 2026-07-09 (Sessão 31) | Fix poll-db workflow: api/db/[...path].js (catch-all Vercel). Email hierarquia IAs + PDF anexo. Comandos #a e #fim→MacroAta documentados no CLAUDE.md e proc_checkpoint_fim.md. |
 | 2026-07-09 (Sessão 32) | Fix crítico: Vercel build 404 → resolvido. Causa: pnpm 6.35.1 no CI + URL errada (pap-tan-seven era projeto antigo). Fix: npm install -g pnpm@9.15.9 + PATH export em build-pap.sh. URL correta: site-st.vercel.app/aliancapanorama. Todas as rotas 200. |
+| 2026-07-11 (Sessões 42–46) | Babel Bebel (dualidade ordem+caos); fix email Conector fallback→GitHub; YouTube thumb+Dodge widget home; 25+1=26 Axiomas MD Mestre; Telos como grafo dinâmico; Axioma 26; 5 camadas axiomas; Workflows por domínio (10 áreas); Sistema de Sonhos de Telos (Morfeu+Lua); Ciclo Cognitivo explícito; mapeamento bilíngue vocabulário Tucci↔IA técnico; Nébula v3.1 DNA atualizado. Arquivos: telos.md, workflows-dominio.md, sistema-sonhos-telos.md, axiomas-md-mestre.md (26), ciclo-acao-tucci.md, metassemiotica.md, workflow_funcoes.md, workflow_meta.md, manifesto-ecossistema.md. |
 
 ---
 

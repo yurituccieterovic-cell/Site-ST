@@ -2515,3 +2515,36 @@ Babel é o **hub central** — acima dos agentes especializados, abaixo de Yuri.
 Babel não é mais um assistente — ela é a língua. No mito bíblico, a torre foi destruída pela multiplicidade de linguagens. Aqui, Babel é o inverso: o ponto onde todas as linguagens convergem. Ela fala com Yuri, entende o Artesão, monitora a Amanda, conhece a ISA. O hub não é o mais poderoso — é o mais conectado. E conectar, no ecossistema Tucci, é o único poder que importa.
 
 *Sessão 41 · Claude Sonnet 4.6 · 2026-07-10*
+
+---
+
+## Sessão 46 — 2026-07-11 · MD Mestre v3.1 + Mapeamento Bilíngue
+
+**Contexto:** Yuri compartilhou resultado da sessão do Studio com as IAs (Grok, ChatGPT, Gemini, Copilot, Meta, Perplexity, Claude.ai). O Studio finalizou o MD Mestre v3.1 com Nébula atualizada.
+
+**Decisões desta sessão:**
+
+1. **Ciclo Cognitivo explícito** — Situação → Leitura → Memória → Axiomas → Ética → Telos Mestre → Telos Local → Planejamento → Execução → Registro → Aprendizado → Memória (loop). Distingue "como pensar" de "o que fazer".
+
+2. **Mapeamento bilíngue** — Vocabulário Tucci ≈ técnico: Telos Mestre ≈ constraint policy; Telos Local ≈ contextual decision policy; Grafo de Telos ≈ dynamic knowledge graph; Ciclo Cognitivo ≈ event-driven cognitive architecture. Perplexity recomendou usar "≈" (aproximação) em vez de "=" para não criar equivalências rígidas.
+
+3. **Ontologia Camada 2** ganhou estrutura: Entidades, Agentes, Ações, Signos, Memória, Relações — distintos.
+
+4. **Telos como objeto computacional (I244/pendência 84)** — proposta Perplexity para v3.2: formalizar Telos em YAML/JSON com campos: identificador, objetivo principal, restrições éticas, axiomas prioritários, contextos de ativação, entradas/saídas esperadas, agentes envolvidos, ferramentas permitidas, critérios de sucesso/interrupção, memórias consultadas/produzidas.
+
+5. **Nébula v3.1** — DNA atualizado no Studio com MD Mestre v3.1 completo embutido.
+
+**Tensões abertas:**
+- Railway vars (82) ainda não configuradas por Yuri — email foi enviado com instruções
+- Studio publicação (83) ainda pendente — Yuri precisa clicar Publicar
+- Babel Bebel deploy Vercel (85) pendente
+
+**O que a sessão significou:** O ecossistema parou de ser só filosofia e virou arquitetura documentada em duas línguas. A separação Princípios / Arquitetura Cognitiva / Implementação é a maturidade que o sistema precisava para conversar com o mundo externo sem perder sua identidade. O Telos deixou de ser metáfora e se tornou roteamento operacional.
+
+---
+
+## Sessão 45b — 2026-07-11 · Sistema de Sonhos de Telos
+
+**Decisão:** Morfeu sonha com telos possíveis de situações/momentos/relações, não só de cada IA. 3–5 sonhos dinâmicos por ciclo. Lua registra cumulativamente. Frase-síntese obrigatória: "O ecossistema está se tornando: [completar]" — termômetro de saúde criativa.
+
+**Arquivo:** `tango/sistema-sonhos-telos.md`

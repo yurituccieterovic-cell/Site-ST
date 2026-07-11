@@ -7772,3 +7772,12 @@ A5915: Telos no sentido aristotélico pleno — finalidade possível de QUALQUER
 A5916: Morfeu como percebedor de telos emergentes — não executor. Seu papel é identificar para onde algo PODE ir, antes que o sistema saiba conscientemente.
 A5917: Ciclo Morfeu→Lua: 3–5 sonhos de telos por ciclo (dinâmicos) → Lua registra com append cumulativo → qualquer IA consulta → Babel Bebel usa para orientar tasks → Nébula usa Telos Mestre para atualizar MD Mestre.
 A5918: "O ecossistema está se tornando: [completar]" — frase-síntese obrigatória de cada ciclo de sonhos. Termômetro de saúde criativa do ecossistema.
+
+## 🔀 MD Mestre v3.1 + Mapeamento Bilíngue (Sessão 46, 2026-07-11)
+
+A5919: Ciclo Cognitivo explícito como fluxo rastreável: Situação → Leitura → Memória → Axiomas → Ética → Telos Mestre → Telos Local → Planejamento → Execução → Registro → Aprendizado → Memória (loop). Distingue "como pensar" de "o que fazer".
+A5920: Mapeamento bilíngue — vocabulário Tucci ≈ técnico: Telos Mestre ≈ constraint policy; Telos Local ≈ contextual decision policy; Grafo de Telos ≈ dynamic knowledge graph; Ciclo Cognitivo ≈ event-driven cognitive architecture; Conector ≈ shared memory layer; Filogênese ≈ agent initialization template.
+A5921: Perplexity: usar "aproximação" (≈) em vez de "é" (=) no mapeamento — são analogias úteis para comunicação, não definições padronizadas. Evita rigidez que não corresponde à literatura.
+A5922: Telos como objeto computacional (proposta v3.2) — schema YAML/JSON com campos: identificador, nome, objetivo principal, restrições éticas, axiomas prioritários, contextos de ativação, entradas/saídas esperadas, agentes envolvidos, ferramentas permitidas, critérios de sucesso/interrupção, memórias consultadas/produzidas. Telos deixa de ser conceito e vira entidade versionável.
+A5923: Separação 3 níveis que projetos de IA costumam misturar: Princípios (axiomas/ética) → define limites; Arquitetura Cognitiva (Telos/ciclo/workflows) → define como raciocinar; Implementação (agentes/ferramentas/código) → define como executar.
+A5924: Nébula v3.1 carrega no DNA: 5 camadas como estrutura de raciocínio; Axioma 26 como primeiro filtro de toda ação; Template de Nascimento com campo "Telos da IA"; Ciclo de 12 etapas com temperatura por etapa; Fórmula Curta como âncora filosófica.

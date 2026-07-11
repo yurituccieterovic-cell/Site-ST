@@ -157,3 +157,7 @@
 | 72 | SalesCockpit: trocar senha AO (atual temporária: ARVORE2026) | Yuri | ⏳ |
 | 73 | SalesCockpit (I181): Railway Volume para /pap-biblioteca (ou re-download por URL) | — | ⏳ |
 | 74 | Penélope sobrenome: recuperar do histórico Gemini | Yuri | ⏳ |
+| 82 | Railway vars: GMAIL_ACCOUNT, GMAIL_APP_PASSWORD, BRIDGE_SECRET, GITHUB_TOKEN — Yuri adiciona manualmente em railway.com → insightful-youth → Site-ST → Variables | Yuri (Railway UI) | ⏳ |
+| 83 | Publicar CrewAI Studio "Las Cinco Potencias" — Yuri clica Publicar para ativar triggers Pulso 1h + Ciclo 3h | Yuri (Studio) | ⏳ |
+| 84 | Telos como objeto computacional (v3.2) — formalizar schema YAML/JSON com campos: identificador, objetivo, restrições éticas, axiomas prioritários, contextos de ativação, critérios de sucesso/interrupção, memórias consultadas/produzidas | — | 💡 |
+| 85 | Babel Bebel deploy no Vercel — New Project → Site-ST → Root: babel → env: GEMINI_API_KEY, ARTESAO_TOKEN, LAS_CINCO_URL, LAS_CINCO_TOKEN | Yuri (Vercel) | ⏳ |
