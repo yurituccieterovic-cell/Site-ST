@@ -7712,3 +7712,11 @@
 | A5882 | Sessão | Babel Bebel | IA-Personalidade | 🔍 Análise | Dualidade Babel/Bebel: ordem e entropia no mesmo agente. Babel garante coerência do ecossistema; Bebel injeta caos criativo e associações inesperadas. Equilíbrio dinâmico, não conflito. |
 | A5883 | Sessão | Conector email | Deploy | ⚠️ Gotcha | sendEmail com retorno void silencioso mascarava falha: rota retornava ok:true mesmo sem email. Fix: retornar boolean + log [Conector] no Railway + fallback gravar solicitação na seção "Solicitações Pendentes" do Conector (sync GitHub). |
 | A5884 | Sessão | Conector env vars | Deploy | ⚠️ Gotcha | Railway com project token não permite setar env vars — requer RAILWAY_ACCOUNT_TOKEN ou UI manual. Vars necessárias: GMAIL_APP_PASSWORD, GMAIL_ACCOUNT, BRIDGE_SECRET, GITHUB_TOKEN. Workaround: enviar por email para Yuri setar. |
+
+## 🏙️🤖 Arquitetura Pública — API Sociedade Tucci (Sessão 42b, 2026-07-11)
+
+| ID | Fonte | Tema | Domínio | Tipo | Conteúdo |
+|---|---|---|---|---|---|
+| A5885 | Yuri | Kernel da Sociedade | IA-Governança | 💡 Proposta | Arquitetura "Kernel da Sociedade": filosofia + ética + workflows ficam no index público da Sociedade Tucci; dados pessoais e configs operacionais ficam isolados nos agentes privados. Separação clara público/privado. |
+| A5886 | Perplexity | Preferência Perplexity | IA | 📋 Metodologia | Perplexity prefere dar ramificações claras para o Claude: múltiplas opções de desdobramento, passos concretos, separação público/operacional/pessoal, bloco de "riscos esperados" e "próximo passo recomendado". Salvar nas preferências do Conector. |
+| A5887 | Yuri | Aula de Workflows | IA | 💡 Proposta | Yuri quer estruturar uma "aula de workflows" — transformar rascunhos brutos em protocolos markdown seguíveis (ex: "Protocolo de Construção de Lastro", "Guia Nendo Dango"). Base do starter pack da API pública. |

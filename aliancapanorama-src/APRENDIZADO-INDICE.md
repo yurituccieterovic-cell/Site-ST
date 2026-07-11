@@ -77,3 +77,4 @@
 | 7692 | 🌐📱 PWA+Babel — Sessão 37 (2026-07-10) | 7 entradas (A5867-A5873): Babel PWA sem npm, proxy Gemini serverless, lip-sync CSS SpeechSynthesis, iOS gotcha synth.speak(), memória cross-sessão PAP API, avatar SVG animado CSS, Gemini multimodal inline_data vs URL |
 | 7699 | ⚛️🌐 React+Vite+Babel — Sessão 41 (2026-07-10) | 6 entradas (A5874-A5879): GEMINI_API_KEY server-side, ilike() drizzle, trigger pattern Gemini→CrewAI, jsPDF import dinâmico, Babel Governadora Central, SPA rewrite Vercel |
 | 7706 | 🤖🏙️ Identidade+Babel Bebel — Sessão 42 (2026-07-11) | 5 entradas (A5880-A5884): Urbanista de Sistemas, Babel Bebel (dualidade ordem/entropia), sendEmail fallback Conector, Railway project token limitado |
+| 7717 | 🏙️🤖 Arquitetura Pública — API Sociedade (Sessão 42b, 2026-07-11) | 3 entradas (A5885-A5887): Kernel da Sociedade (filosofia pública/privado), preferência Perplexity (ramificações → Claude), aula de workflows |

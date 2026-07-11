@@ -38,6 +38,7 @@
 | — | Sessão 40 | 2026-07-10 | **Babel.app PWA** — assistente universal gratuito; proxy Gemini 2.0 Flash Vercel; Web Speech API; avatar SVG lip-sync; memória PAP API |
 | — | Sessão 41 | 2026-07-10 | **Babel v2 React+Vite + Governadora Central** — migração para componentes React; /api/memories backend; avatar feminino SVG; CrewAI proxy; Babel = hub, não agente |
 | — | Sessão 42 | 2026-07-11 | **Babel Bebel + Urbanista de Sistemas** — renome com dualidade Babel/Bebel (ordem+caos criativo); fix email Conector fallback GitHub; I220-I221; Yuri = Urbanista de Sistemas |
+| — | Sessão 42b | 2026-07-11 | **API Pública Sociedade Tucci + Manifesto v1** — Manifesto salvo em conector/; preferência Perplexity (ramificações→Claude); I222-I224; separação público/privado como princípio |
 
 ---
 
