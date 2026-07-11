@@ -41,6 +41,7 @@
 | — | Sessão 42b | 2026-07-11 | **API Pública Sociedade Tucci + Manifesto v1** — Manifesto salvo em conector/; preferência Perplexity (ramificações→Claude); I222-I224; separação público/privado como princípio |
 | — | Sessão 43 | 2026-07-11 | **Filosofia da Ação + Workflow de Funções** — Função=ato útil; localização cósmica da ação; workflow_funcoes.md criado em tango/; schema filosófico JSONB; fluxo CrewAI Governance→Babel→Dodge→Atena |
 | — | Sessão 43b | 2026-07-11 | **Metassemiótica + Workflow Meta** — Pirâmide 6 níveis; Protocolo Semiótico; triggers autônomos (1h+3h); metassemiotica.md + workflow_meta.md; preferências salvas em /api/memories; I227-I229 |
+| — | Sessão 44 | 2026-07-11 | **Ciclo 12 Etapas + Nébula + Método Manus** — +Conectar+Criar; Nébula formadora+filogênese; temp dinâmica; 3 camadas memória; Diretrizes como nome definitivo; 4 camadas sistema; I230-I233; email enviado |
 
 ---
 

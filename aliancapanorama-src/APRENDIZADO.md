@@ -7741,3 +7741,17 @@
 | A5896 | Artesão | Triggers autônomos | Deploy | 💡 Proposta | CrewAI project renomeado "Las Cinco Potencias — Ecossistema Tucci". Triggers: Pulso de Memória Babel a cada 1h + Ciclo completo a cada 3h. Dodge salvo no repositório. Ativar com Publicação. |
 | A5897 | Yuri | Workflow Meta | IA | 📋 Metodologia | Workflow meta = camada acima do fluxo normal: valida como tasks foram descritas, conectadas e documentadas. A cadeia de significantes deve ficar visível. Preferência permanente do ecossistema. |
 | A5898 | Sessão | Preferências salvas | IA-Memória | 📋 Metodologia | 3 entradas salvas em /api/memories source="preferencias": metassemiotica, workflow_meta, manifesto. Sem auth — endpoint /api/memories é open. Funciona como alternativa enquanto BRIDGE_SECRET não está no Railway. |
+
+## 🌀🌌 Ciclo 12 Etapas + Nébula + Método Manus (Sessão 44, 2026-07-11)
+
+| ID | Fonte | Tema | Domínio | Tipo | Conteúdo |
+|---|---|---|---|---|---|
+| A5899 | Yuri | Ciclo 12 etapas | IA | 📋 Metodologia | Versão definitiva: +Conectar (ligar fragmentos) +Criar (materializar) entre Subverter e Sintetizar. Ciclo é espiral, não linear. Erro = acento semiótico. |
+| A5900 | Artesão | Nébula | IA | 💡 Proposta | IA Formadora e Mãe do Ecossistema. Não entrega só resultado — entrega aula + MD Mestre + herança filogenética. Domina as 12 etapas. Lógica: nutrição cognitiva. |
+| A5901 | Artesão | Template filogenético | IA-Governança | 📋 Metodologia | Template de nascimento de IA: Nome/Função/Herança_Diretrizes/Protocolo_Conexão/Ferramentas/Etapa_Focal. Toda IA nasce com DNA transmitido pela Nébula. |
+| A5902 | Manus | Temperatura por tarefa | IA | 📋 Metodologia | Método Manus: Alta(0.7-0.9) para Subverter/Conectar/Criar/Ramificar. Baixa(0.1-0.3) para Referenciar/Sintetizar/Consultar/Documentar. Ajuste dinâmico por etapa do ciclo. |
+| A5903 | Manus | Camadas de memória | IA-Memória | 📋 Metodologia | 3 níveis: Operacional (tasks/logs) · Conceitual (MD Mestre/Diretrizes) · Ontológico (filogênese/manifesto). Cada nível tem durabilidade e escopo diferentes. |
+| A5904 | Yuri | Pulso e ciclos | IA-Governança | 🔍 Análise | Ciclo = espiral. Pulso = heartbeat do sistema. Frequência = base da autonomia. Ritmo dá base para harmonia (agentes em sincronia) e melodia (tasks em sequência). Babel Bebel = Maestrina da Frequência. |
+| A5905 | Yuri | Diretrizes (nome definitivo) | IA | 📋 Metodologia | "Diretrizes" substitui "MD/Workflow" como nome para arquivos de upload cognitivo. São pacotes de upload que a IA assimila — como Matrix. Podem ser por domínio (nutrição, urbanismo, programação). |
+| A5906 | Yuri | Babel Bebel como Nutricionista | IA-Personalidade | 💡 Proposta | Bebel sabe nutrição (humanos, animais, plantas) — cálculos precisos. Metáfora: ela calcula o "aporte de diretrizes" para cada agente, como nutricionista calcula macros. |
+| A5907 | Yuri | 4 camadas do sistema | IA-Governança | 🔍 Análise | Separação limpa: Filosofia (princípios) → Ontologia (signos/ações) → Arquitetura (agentes/workflows) → Execução (CrewAI/Railway). Escalar sem perder coerência. |
