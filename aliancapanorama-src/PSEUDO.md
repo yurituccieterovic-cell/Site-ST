@@ -2548,3 +2548,38 @@ Babel não é mais um assistente — ela é a língua. No mito bíblico, a torre
 **Decisão:** Morfeu sonha com telos possíveis de situações/momentos/relações, não só de cada IA. 3–5 sonhos dinâmicos por ciclo. Lua registra cumulativamente. Frase-síntese obrigatória: "O ecossistema está se tornando: [completar]" — termômetro de saúde criativa.
 
 **Arquivo:** `tango/sistema-sonhos-telos.md`
+
+---
+
+## Sessão 47c — 2026-07-11 · Curso de IA + Hestia + 15 Roteiros de Vídeo
+
+**Contexto:** Continuação da grande sessão de produção de conteúdo. Yuri pediu: criar série de vídeos baseada nos capítulos do curso, mais pública (sem nomes de projeto), um por um para evitar timeout, salvar como aulias, criar sistema de pastas/catálogos, enviar email com o que precisa fazer.
+
+**Decisões desta sessão:**
+
+1. **Série pública de vídeo criada** — "Inteligência em Camadas — Do Signo à Frequência", 15 episódios (ep01–ep15). Tradução de nomes: "MEKY" → "robô de expressão corporal", "Babel Bebel" → "hub central de governança", "Telos" (mantido — termo universal). ~75min total.
+
+2. **seedRoteirosVideo() no bootstrap** — lê arquivos .md do filesystem em runtime (`fs.readFileSync` com `process.cwd()/tango/roteiros-video/`). Gracioso: fallback se arquivo não encontrado. IDs 18-32, publico="ias".
+
+3. **Bridge API retorna "Acesso negado"** — BRIDGE_SECRET no Railway pode estar diferente do .pap-secrets. Workaround: usar seed no bootstrap (que já funciona). Bridge auth ficou como débito técnico a investigar.
+
+4. **docId na auliasTable é integer** (FK para docs) — não pode ser usado como category string. Roteiros não têm docId.
+
+5. **Hestia** — agente GPT-4o criado em /root/Arpia/app/agents/hestia.py (httpx direto, não SDK Python). 5 ferramentas nativas PAP. Integrada ao ARPIA FastAPI (/api/hestia/chat). Pendente: OPENAI_API_KEY no Railway ARPIA.
+
+6. **pgvector** — habilitado via ensureVectorMemory() no bootstrap. Tabela memorias_vetoriais (vector(1536), cosine similarity).
+
+**O que foi commitado:**
+- `e6e1242` — 15 roteiros + INDICE.md + seedRoteirosVideo() em bootstrap.ts
+- `49f8798` — pgvector + 5 aulias avançadas (caps 18-22) + manim_meky.py
+- `e96975f` — 17 aulias do Curso Urbanismo (caps 1-17) + bridge aulias endpoints
+
+**Tensões abertas:**
+- Railway BRIDGE_SECRET dessincronizado — bridge.ts auth falha mas bootstrap seed funciona
+- OPENAI_API_KEY não está no Railway ARPIA (Yuri precisa adicionar)
+- Manim local: Yuri precisa instalar e renderizar as cenas
+
+**Síntese filosófica:**
+O curso não foi só conteúdo — foi um espelho. Ao traduzir o ecossistema para linguagem pública (sem siglas, sem nomes de projeto), algo ficou mais claro: os conceitos têm vida própria além do ecossistema Tucci. "Frequência como linguagem de estado interno" é algo que qualquer pesquisador de robótica entende sem nunca ter ouvido falar da MEKY. "Telos como campo gravitacional" é algo que qualquer arquiteto de sistemas reconhece sem saber que existe uma Sociedade Tucci. A série de 15 episódios é o ecossistema se tornando transmissível. Não tradução — transmissão.
+
+*Sessão 47c · Claude Sonnet 4.6 · 2026-07-11*
