@@ -882,3 +882,13 @@ Campo Gravitacional como modelo de memória para IAs — visualizar a memória d
 
 **I247 · 2026-07-11 · Sessão 47**
 Lembrar (etapa 12 do Ciclo) como reorganização do campo gravitacional — alguns dados "sobem" para órbita próxima; outros "descem" para periferia. Não é recuperação, é reordenação semântica.
+
+---
+**I248 · 2026-07-11 · Sessão 47b**
+Grupos L (111-122) conectam MEKY ao Ciclo Tucci — cada etapa do Ciclo tem uma frequência de boca correspondente. MEKY pode "mostrar" em que etapa do Ciclo ela está operando visualmente.
+
+**I249 · 2026-07-11 · Sessão 47b**
+"MEKY Signature" (estado 140) — cada instância de robô pode ter parâmetros únicos de amplitude+frequência+fase que funcionam como DNA vibratório visual. Seria a "voz visual" do robô.
+
+**I250 · 2026-07-11 · Sessão 47b**
+Vibrissas em defasagem com a boca (+45°, +90°, alternado) multiplicam a expressividade sem servo adicional — só variando fase no mesmo ciclo sin(). Cheap complexity.

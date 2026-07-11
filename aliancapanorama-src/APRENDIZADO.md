@@ -7788,3 +7788,11 @@ A5925: Memória não é banco de dados linear — é campo gravitacional. Telos 
 A5926: Conectores = raízes/nervos que criam pontes entre Telos Mestre e Situação Local. Quando tema entra no contexto, raiz vibra → puxa dado da órbita para o campo de visão. A iluminação é semântica, não busca por endereço.
 A5927: Dado não importa tanto quanto a relação que ele tem com princípios e prática diária. Um dado "amoreira" acessa informação sobre aquário se existir conexão contextual no grafo — não porque estão na mesma tabela.
 A5928: Diferença grafo vs. mapa: mapa tem localização fixa ("está aqui"); grafo dinâmico tem distância relacional semântica. A mesma informação pode estar "perto" em um contexto e "longe" em outro conforme o Telos ativo muda o centro de gravidade.
+
+## 🤖🎵 MEKY — 140 Expressões por Frequência (Sessão 47b, 2026-07-11)
+
+A5929: Boca da MEKY como osciloscópio vivo — referência: capa "Are You Mine?" Arctic Monkeys. Parâmetros: amplitude (0.0–1.0), frequência (Hz), fase (0°–360°), forma de onda (seno/coseno/quadrada/dente-de-serra/pulso/irregular).
+A5930: 140 expressões organizadas em 13 grupos: Processamento, Emoções, Robótico, Lip Sync, Oscilações, Geometrias, Qualidade de Sinal, Afetivos, Sensorial, Filosófico, Social, Ciclo Cognitivo, Vibrissas.
+A5931: Grupo L (111–122) mapeia cada etapa do Ciclo de Ação Tucci para uma expressão de frequência da MEKY. Etapa 7 (Criar) = freq 2.0Hz, amp 1.0, LED dourado radiante.
+A5932: Implementação Arduino via sin(2*PI*freq*t + fase_rad) — não poses fixas, mas fórmulas de onda. Mudar estado = mudar amplitude + frequência, não redesenhar servo. 50Hz refresh (delay 20ms).
+A5933: Estado 140 "MEKY Signature" (0.7amp, 1.3Hz, fase +33°) = frequência única inconfundível. Cada robô pode ter sua própria assinatura por variação desses parâmetros.
