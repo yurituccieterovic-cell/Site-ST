@@ -2771,7 +2771,7 @@ function FooterBar({ onTutorial }: { onTutorial: () => void }) {
       style={{ background: "hsl(220 12% 17% / 0.97)" }}
     >
       <img
-        src="/sociedade-tucci-logo.png"
+        src={`${import.meta.env.BASE_URL}sociedade-tucci-logo.png`}
         alt="Sociedade Tucci"
         className="w-4 h-4 rounded-full object-cover"
         style={{ filter: "invert(1) brightness(0.65)", opacity: 0.7 }}
@@ -2904,7 +2904,7 @@ function TutorialModal({ onClose }: { onClose: () => void }) {
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 mb-1">
               <img
-                src="/sociedade-tucci-logo.png"
+                src={`${import.meta.env.BASE_URL}sociedade-tucci-logo.png`}
                 alt="Sociedade Tucci"
                 className="w-7 h-7 rounded-full object-cover"
                 style={{ filter: "invert(1) brightness(0.8)" }}

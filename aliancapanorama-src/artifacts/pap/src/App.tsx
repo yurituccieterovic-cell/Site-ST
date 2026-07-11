@@ -73,7 +73,7 @@ function DodgePublicChat() {
   return (
     <div className="border border-gray-800 rounded-xl bg-gray-950/80 flex flex-col" style={{ height: 340 }}>
       <div className="px-4 py-2 border-b border-gray-800 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"/>
+        <img src={`${import.meta.env.BASE_URL}dodge-avatar.png`} alt="Dodge" className="w-7 h-7 rounded-full object-cover border border-amber-600/50"/>
         <span className="text-amber-400 text-xs font-bold tracking-widest">DODGE</span>
         {!limitReached && !loginRequired && (
           <span className="ml-auto text-gray-600 text-xs">{FREE_MSG_LIMIT - msgCount} msg{FREE_MSG_LIMIT - msgCount !== 1 ? "s" : ""} grátis</span>
@@ -163,7 +163,7 @@ function DodgeGate() {
 
       {/* Hero */}
       <div className="flex flex-col items-center justify-center flex-1 px-6 pt-12 pb-6 text-center">
-        <img src="/dodge-avatar.png" alt="Dodge" className="w-24 h-24 rounded-full object-cover border-2 border-amber-600/60 shadow-xl mb-6"/>
+        <img src={`${import.meta.env.BASE_URL}dodge-avatar.png`} alt="Dodge" className="w-24 h-24 rounded-full object-cover border-2 border-amber-600/60 shadow-xl mb-6"/>
         <div className="text-amber-400 font-bold text-xs tracking-widest uppercase mb-2">Dodge · Sociedade Tucci</div>
         <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">
           Login para salvar<br/>sua conversa?
