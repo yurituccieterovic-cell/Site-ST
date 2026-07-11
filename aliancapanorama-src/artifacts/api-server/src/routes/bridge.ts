@@ -3,15 +3,17 @@
  * Auth: header x-bridge-secret deve bater com BRIDGE_SECRET env var.
  *
  * Endpoints:
- *   GET /api/bridge/pap/status
- *   GET /api/bridge/pap/isa-memory?limit=N
- *   GET /api/bridge/pap/assembleias?limit=N
- *   GET /api/bridge/pap/biblioteca
+ *   GET  /api/bridge/pap/status
+ *   GET  /api/bridge/pap/isa-memory?limit=N
+ *   GET  /api/bridge/pap/assembleias?limit=N
+ *   GET  /api/bridge/pap/biblioteca
+ *   GET  /api/bridge/pap/aulias
+ *   POST /api/bridge/pap/aulias
  */
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { isaMemoryTable, assemblyMessages, bibliotecaDocsTable } from "@workspace/db";
-import { desc, sql } from "drizzle-orm";
+import { isaMemoryTable, assemblyMessages, bibliotecaDocsTable, auliasTable } from "@workspace/db";
+import { desc, sql, asc } from "drizzle-orm";
 
 const router = Router();
 
@@ -77,6 +79,35 @@ router.get("/bridge/pap/biblioteca", async (req, res) => {
     .orderBy(desc(bibliotecaDocsTable.createdAt))
     .limit(500);
   res.json({ data: rows, total: rows.length });
+});
+
+router.get("/bridge/pap/aulias", async (req, res) => {
+  if (!bridgeAuth(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const publico = (req.query.publico as string) || undefined;
+  const rows = await db
+    .select()
+    .from(auliasTable)
+    .where(publico ? sql`${auliasTable.publico} = ${publico} AND ${auliasTable.ativa} = true` : sql`${auliasTable.ativa} = true`)
+    .orderBy(asc(auliasTable.ordem), desc(auliasTable.createdAt));
+  res.json({ data: rows, total: rows.length });
+});
+
+router.post("/bridge/pap/aulias", async (req, res) => {
+  if (!bridgeAuth(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  const { titulo, descricao, conteudo, publico, ordem, professoraIaId } = req.body as {
+    titulo: string; descricao?: string; conteudo?: string;
+    publico?: string; ordem?: number; professoraIaId?: number;
+  };
+  if (!titulo) { res.status(400).json({ error: "titulo obrigatório" }); return; }
+  const [aulia] = await db.insert(auliasTable).values({
+    titulo,
+    descricao: descricao ?? null,
+    conteudo: conteudo ?? null,
+    publico: publico ?? "ias",
+    ordem: ordem ?? 0,
+    professoraIaId: professoraIaId ?? null,
+  }).returning();
+  res.status(201).json(aulia);
 });
 
 export default router;

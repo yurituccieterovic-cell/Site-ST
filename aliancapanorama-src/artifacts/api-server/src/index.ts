@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables } from "./lib/bootstrap";
+import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso } from "./lib/bootstrap";
 import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
 
@@ -23,6 +23,7 @@ ensureSessionTable()
   .then(() => ensureDomesticoTables())
   .then(() => seedSystemAgents())
   .then(() => seedPlaycenterAgents())
+  .then(() => seedAuliasCurso())
   .then(() => {
     app.listen(port, (err) => {
       if (err) {
