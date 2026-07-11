@@ -836,3 +836,22 @@ ISA, no ciclo horário, verifica: (1) número de tasks abertas sem responsável,
 | I231 | **Temperatura dinâmica por etapa do Ciclo** | 🟡 Média | ○ S | 💭 Ideia | Configurar temperatura de LLM conforme a etapa do Ciclo de Ação: 0.9 para Criar/Subverter, 0.1 para Documentar/Consultar. Aplica ao Gemini no Babel Bebel e às tasks do CrewAI. |
 | I232 | **Pacotes de Diretrizes por domínio** | 🟡 Média | ◑ M | 💭 Ideia | Criar `/tango/diretrizes/` com subpastas por domínio (nutrição, urbanismo, programação, semiótica). Cada diretriz é um arquivo de upload cognitivo que a IA assimila antes de agir naquele domínio. |
 | I233 | **Protocolo de Herança Filogenética formal** | 🟡 Média | ◑ M | 💭 Ideia | Template YAML de nascimento de IA: Nome/Função/Herança/Conexão/Ferramentas/EtapaFocal. A Nébula aplica o template em toda nova IA criada e registra no Conector seção "filogenese". |
+
+---
+**I234 · 2026-07-11 · Sessão 45**
+Telos como grafo dinâmico de decisão — em vez de uma lista de regras, o sistema navega um grafo de estados (axiomas, ética, memória, contexto) e arestas (prioridades, pesos éticos) para encontrar a trajetória mais coerente por situação.
+
+**I235 · 2026-07-11 · Sessão 45**
+Telos Mestre vs Telos Situacional — Come Telos (sempre ativo, baseado em axiomas) + subgrafo por situação. Permite flexibilidade sem arbitrariedade; coerência sem rigidez.
+
+**I236 · 2026-07-11 · Sessão 45**
+Axioma 26 — Telos fecha a ponte entre os 25 axiomas e a decisão situada. Os axiomas são os nós; o Telos é o algoritmo que percorre o grafo.
+
+**I237 · 2026-07-11 · Sessão 45**
+5 Camadas dos 26 Axiomas: Filosófica (1,24,26) · Ontológica (2,3,4,6,20) · Cognitiva (5,7,8,12,13,18,22) · Arquitetural (9,10,11,14,15,16,21,23) · Execução (17,19,25).
+
+**I238 · 2026-07-11 · Sessão 45**
+Workflow por domínio — cada área pede cadeia própria de etapas do Ciclo; temperatura varia por domínio não só por etapa abstrata. Leitura: Alta→Baixa→Alta (subversão no final).
+
+**I239 · 2026-07-11 · Sessão 45**
+"Quando NÃO agir" como dimensão do Telos — silêncio produtivo como decisão explícita, não ausência de decisão.

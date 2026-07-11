@@ -7755,3 +7755,13 @@
 | A5905 | Yuri | Diretrizes (nome definitivo) | IA | 📋 Metodologia | "Diretrizes" substitui "MD/Workflow" como nome para arquivos de upload cognitivo. São pacotes de upload que a IA assimila — como Matrix. Podem ser por domínio (nutrição, urbanismo, programação). |
 | A5906 | Yuri | Babel Bebel como Nutricionista | IA-Personalidade | 💡 Proposta | Bebel sabe nutrição (humanos, animais, plantas) — cálculos precisos. Metáfora: ela calcula o "aporte de diretrizes" para cada agente, como nutricionista calcula macros. |
 | A5907 | Yuri | 4 camadas do sistema | IA-Governança | 🔍 Análise | Separação limpa: Filosofia (princípios) → Ontologia (signos/ações) → Arquitetura (agentes/workflows) → Execução (CrewAI/Railway). Escalar sem perder coerência. |
+
+## 🎯 Telos + Assembleia de IAs (Sessão 45, 2026-07-11)
+
+A5908: TELOS como grafo de decisão — não é objetivo nem prompt, é vetor de orientação emergente da interação entre axiomas, ética, memória, contexto e intenção. Nós = estados/princípios; Arestas = pesos éticos/prioridades.
+A5909: Telos Mestre (Come Telos) = derivado de todos os axiomas + ética; vale sempre. Telos Situacional = subgrafo ativado pelo contexto específico. Um coexiste dentro do outro.
+A5910: Telos responde 6 dimensões: O quê (objetivo), Como (modo), Quando (timing), Por quê (motivação), Com quê (ferramentas), Quando NÃO agir (silêncio produtivo).
+A5911: Axioma 26 — "Sem Telos o sistema reage; com Telos o sistema compreende; um sistema que compreende pode aprender." É a ponte operacional dos 25 axiomas anteriores.
+A5912: 5 Camadas dos 26 Axiomas: I-Filosófica (1,24,26) / II-Ontológica (2,3,4,6,20) / III-Cognitiva (5,7,8,12,13,18,22) / IV-Arquitetural (9,10,11,14,15,16,21,23) / V-Execução (17,19,25).
+A5913: Workflows por domínio — cada área tem etapas focais diferentes dentro do Ciclo de 12. Leitura Crítica exige alta temperatura (Subverter), mesmo sendo a última etapa da leitura.
+A5914: Assembleia de IAs — 6 IAs definiram Telos com metáforas distintas: sistema operacional (Grok), otimização multicritério (Gemini), orquestração auditável (Copilot), intenção computacional (Meta), reflexão sem rigidez (Claude), vetor de orientação cognitiva (ChatGPT). Convergência: Telos transforma princípios em trajetória.

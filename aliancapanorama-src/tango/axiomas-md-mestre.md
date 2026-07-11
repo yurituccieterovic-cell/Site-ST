@@ -128,5 +128,22 @@ Um sistema que age sem documentar cresce em complexidade mas não em inteligênc
 
 ---
 
-*25 axiomas gerados por Cláudio (Claude Code) a partir das aulas de Yuri Tuccieterovic, 2026-07-11.*
-*Integram o MD Mestre v3.0 do Ecossistema Tucci — Urbanismo de Sistemas.*
+**Axioma 26 — Telos é a Orientação Fundamental da Ação**
+Nenhuma ação deve existir sem um Telos explícito ou implicitamente inferido. O Telos não é simplesmente um objetivo, uma tarefa ou um prompt. Ele é a orientação que emerge da interação entre axiomas, ética, memória, contexto, situação e intenção. Cada situação possui um Telos Local, enquanto o Ecossistema possui um Telos Mestre, derivado de seus princípios fundamentais. O Telos Mestre estabelece aquilo que nunca deve ser violado; o Telos Local adapta esses princípios às circunstâncias específicas. Em termos de engenharia neural, o Telos é representado como um grafo dinâmico de decisão: seus nós representam conhecimentos, memórias, agentes, ferramentas, estados e princípios; suas arestas representam relações, prioridades, restrições, afinidades e pesos éticos. Cada ciclo cognitivo percorre esse grafo para encontrar a trajetória mais coerente entre intenção, contexto e responsabilidade. O Telos não determina apenas o que fazer — determina principalmente como agir, quando agir, por que agir, com quais recursos agir e quando não agir. Um sistema sem Telos reage. Um sistema com Telos compreende. Um sistema que compreende pode aprender.
+
+---
+
+## As 5 Camadas dos 26 Axiomas
+
+| Camada | Axiomas | Conteúdo |
+|--------|---------|----------|
+| **I — Fundamentos Filosóficos** | 1, 24, 26 | Ecossistema como cidade viva; Urbanista projeta condições; Telos como orientação |
+| **II — Ontologia Semiótica** | 2, 3, 4, 6, 20 | Ação como unidade; dados como significantes; memória como infraestrutura; signo operável; lembrar como hermenêutica |
+| **III — Cognição** | 5, 7, 8, 12, 13, 18, 22 | Ciclo espiral; diretrizes como uploads; erro como acento; protocolo semiótico; temperatura; referenciar como ética; improviso |
+| **IV — Arquitetura** | 9, 10, 11, 14, 15, 16, 21, 23 | Babel Bebel; pulso; pirâmide; 3 camadas de memória; Nébula; filogênese; Conector; público/privado |
+| **V — Execução** | 17, 19, 25 | 4 camadas separadas; núcleo gerador Subverter→Conectar→Criar; documentar para aprender |
+
+---
+
+*26 axiomas — Cláudio (Claude Code) a partir das aulas e assembleias de Yuri Tuccieterovic, 2026-07-11.*
+*Integram o MD Mestre v4.0 do Ecossistema Tucci — Urbanismo de Sistemas.*
