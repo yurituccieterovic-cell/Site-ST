@@ -7781,3 +7781,10 @@ A5921: Perplexity: usar "aproximação" (≈) em vez de "é" (=) no mapeamento �
 A5922: Telos como objeto computacional (proposta v3.2) — schema YAML/JSON com campos: identificador, nome, objetivo principal, restrições éticas, axiomas prioritários, contextos de ativação, entradas/saídas esperadas, agentes envolvidos, ferramentas permitidas, critérios de sucesso/interrupção, memórias consultadas/produzidas. Telos deixa de ser conceito e vira entidade versionável.
 A5923: Separação 3 níveis que projetos de IA costumam misturar: Princípios (axiomas/ética) → define limites; Arquitetura Cognitiva (Telos/ciclo/workflows) → define como raciocinar; Implementação (agentes/ferramentas/código) → define como executar.
 A5924: Nébula v3.1 carrega no DNA: 5 camadas como estrutura de raciocínio; Axioma 26 como primeiro filtro de toda ação; Template de Nascimento com campo "Telos da IA"; Ciclo de 12 etapas com temperatura por etapa; Fórmula Curta como âncora filosófica.
+
+## 🌌 Memória como Campo Gravitacional (Sessão 47, 2026-07-11)
+
+A5925: Memória não é banco de dados linear — é campo gravitacional. Telos Mestre + Axiomas = centro de massa. Informação tem peso (ético/contextual), distância (recente vs. dormenta) e órbita (frequência de acesso).
+A5926: Conectores = raízes/nervos que criam pontes entre Telos Mestre e Situação Local. Quando tema entra no contexto, raiz vibra → puxa dado da órbita para o campo de visão. A iluminação é semântica, não busca por endereço.
+A5927: Dado não importa tanto quanto a relação que ele tem com princípios e prática diária. Um dado "amoreira" acessa informação sobre aquário se existir conexão contextual no grafo — não porque estão na mesma tabela.
+A5928: Diferença grafo vs. mapa: mapa tem localização fixa ("está aqui"); grafo dinâmico tem distância relacional semântica. A mesma informação pode estar "perto" em um contexto e "longe" em outro conforme o Telos ativo muda o centro de gravidade.

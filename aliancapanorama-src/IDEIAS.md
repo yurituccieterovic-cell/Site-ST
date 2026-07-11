@@ -875,3 +875,10 @@ Telos como objeto computacional (v3.2) — schema YAML/JSON versionável e compa
 
 **I245 · 2026-07-11 · Sessão 46**
 Usar "≈" (aproximação) em vez de "=" no mapeamento vocabular — Telos ≈ decision policy, não Telos = decision policy. Distinção evita rigidez que não corresponde à literatura técnica mas preserva a identidade do vocabulário Tucci.
+
+---
+**I246 · 2026-07-11 · Sessão 47**
+Campo Gravitacional como modelo de memória para IAs — visualizar a memória de agentes não como banco de dados mas como campo com centro (Telos/axiomas), órbitas (frequência de acesso) e raízes (conectores semânticos). Aplicar ao design de backstory de IAs: informações mais importantes = mais próximas do centro.
+
+**I247 · 2026-07-11 · Sessão 47**
+Lembrar (etapa 12 do Ciclo) como reorganização do campo gravitacional — alguns dados "sobem" para órbita próxima; outros "descem" para periferia. Não é recuperação, é reordenação semântica.
