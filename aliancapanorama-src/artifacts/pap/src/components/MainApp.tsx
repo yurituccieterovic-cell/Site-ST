@@ -207,6 +207,7 @@ function MainAppInner({ queryClient }: { queryClient: ReturnType<typeof useQuery
       </AnimatePresence>
 
       <IsaOwl />
+      <DodgeChatWidget />
 
       <AnimatePresence>
         {activeNodeCode && !exerciseNodeCode && (
@@ -1721,6 +1722,154 @@ function getIsaResponse(msg: string): string {
   if (m.includes("obrigad")) return "De nada, explorador! Continue estudando com dedicação. Cada nó que você explora é um passo a mais rumo à USP!";
   if (m.includes("usp")) return "USP é uma das melhores universidades do mundo! A FUVEST é o vestibular exclusivo da USP. Vale cada hora de estudo!";
   return "Boa pergunta! Explore os nós do mapa para aprofundar esse tema. Se quiser dicas sobre uma matéria específica, é só perguntar!";
+}
+
+/* ─── Dodge Chat Widget (canto inferior direito) ──────────────────────────── */
+type DodgeMsg = { role: "user" | "assistant"; content: string };
+const DODGE_FREE_KEY = "dodge_free_count";
+const DODGE_FREE_LIMIT = 10;
+const API_BASE_DODGE = import.meta.env.VITE_API_URL ?? "";
+
+function DodgeChatWidget() {
+  const [open, setOpen] = useState(false);
+  const [msgs, setMsgs] = useState<DodgeMsg[]>([{
+    role: "assistant",
+    content: "Oi! Sou o Dodge. Fale comigo sobre a Sociedade Tucci, nossas IAs ou como é trabalhar aqui. 😊",
+  }]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loginRequired, setLoginRequired] = useState(false);
+  const [msgCount, setMsgCount] = useState(() => parseInt(localStorage.getItem(DODGE_FREE_KEY) ?? "0", 10));
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, open]);
+
+  const limitReached = msgCount >= DODGE_FREE_LIMIT;
+
+  async function send() {
+    if (!input.trim() || loading || limitReached || loginRequired) return;
+    const userMsg: DodgeMsg = { role: "user", content: input.trim() };
+    const newMsgs = [...msgs, userMsg];
+    setMsgs(newMsgs);
+    setInput("");
+    setLoading(true);
+    const newCount = msgCount + 1;
+    setMsgCount(newCount);
+    localStorage.setItem(DODGE_FREE_KEY, String(newCount));
+    try {
+      const r = await fetch(`${API_BASE_DODGE}/api/dodge/public-chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMsgs.slice(-12) }),
+      });
+      const data = await r.json() as { reply?: string; login_required?: boolean; error?: string };
+      setMsgs(m => [...m, { role: "assistant", content: data.reply ?? data.error ?? "Algo deu errado." }]);
+      if (data.login_required) setLoginRequired(true);
+    } catch {
+      setMsgs(m => [...m, { role: "assistant", content: "Sem conexão no momento." }]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="absolute pointer-events-none" style={{ bottom: 132, right: 12, zIndex: 25 }}>
+      {/* Avatar clicável */}
+      <motion.button
+        onClick={() => setOpen(o => !o)}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.8, type: "spring", stiffness: 200, damping: 18 }}
+        className="pointer-events-auto w-12 h-12 rounded-full overflow-hidden border-2 border-amber-500/70 shadow-lg shadow-amber-900/40 focus:outline-none"
+        title="Dodge — clique para conversar"
+        style={{ display: "block" }}
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}dodge-avatar.png`}
+          alt="Dodge"
+          className="w-full h-full object-cover"
+        />
+      </motion.button>
+
+      {/* Balão de chat */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 12 }}
+            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            className="absolute pointer-events-auto"
+            style={{ bottom: 56, right: 0, width: 280 }}
+          >
+            <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-800 flex flex-col" style={{ height: 320, background: "#08101c" }}>
+              {/* Header */}
+              <div className="px-3 py-2 border-b border-gray-800 flex items-center gap-2 shrink-0">
+                <img src={`${import.meta.env.BASE_URL}dodge-avatar.png`} alt="Dodge" className="w-6 h-6 rounded-full object-cover border border-amber-600/50"/>
+                <span className="text-amber-400 text-xs font-bold tracking-widest flex-1">DODGE</span>
+                {!limitReached && !loginRequired && (
+                  <span className="text-gray-600 text-[10px]">{DODGE_FREE_LIMIT - msgCount} msg</span>
+                )}
+                <button onClick={() => setOpen(false)} className="text-gray-600 hover:text-gray-400 ml-1"><X className="w-3.5 h-3.5"/></button>
+              </div>
+
+              {/* Mensagens */}
+              <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
+                {msgs.map((m, i) => (
+                  <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                    <div className={`max-w-[88%] rounded-xl px-2.5 py-1.5 text-[11px] leading-relaxed ${
+                      m.role === "user"
+                        ? "bg-amber-600/20 border border-amber-700/40 text-amber-100"
+                        : "bg-gray-800/70 border border-gray-700/50 text-gray-200"
+                    }`}>{m.content}</div>
+                  </div>
+                ))}
+                {loading && (
+                  <div className="flex justify-start">
+                    <div className="bg-gray-800/70 border border-gray-700/50 rounded-xl px-2.5 py-1.5 text-gray-400 text-[11px]">
+                      <span className="animate-pulse">Dodge está pensando…</span>
+                    </div>
+                  </div>
+                )}
+                {(limitReached || loginRequired) && (
+                  <div className="bg-amber-900/30 border border-amber-700/50 rounded-xl px-3 py-2 text-center">
+                    <p className="text-amber-300 text-[10px] font-semibold mb-1.5">
+                      {loginRequired ? "Isso só com login 🔐" : `${DODGE_FREE_LIMIT} msgs usadas`}
+                    </p>
+                    <a href="/portal" className="inline-flex items-center gap-1 px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white text-[10px] font-semibold rounded-lg transition-colors">
+                      Entrar →
+                    </a>
+                  </div>
+                )}
+                <div ref={bottomRef}/>
+              </div>
+
+              {/* Input */}
+              {!limitReached && !loginRequired && (
+                <div className="px-2 pb-2 shrink-0">
+                  <div className="flex gap-1.5">
+                    <input
+                      className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px] text-gray-200 placeholder-gray-600 outline-none focus:border-amber-600/60"
+                      placeholder="Pergunte sobre a Sociedade Tucci…"
+                      value={input}
+                      onChange={e => setInput(e.target.value)}
+                      onKeyDown={e => e.key === "Enter" && !e.shiftKey && send()}
+                      disabled={loading}
+                    />
+                    <button
+                      onClick={send}
+                      disabled={loading || !input.trim()}
+                      className="px-2.5 py-1.5 bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white text-xs font-bold rounded-lg transition-colors"
+                    >→</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
 
 function IsaOwl() {
