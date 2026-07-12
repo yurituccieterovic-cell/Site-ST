@@ -1,0 +1,29 @@
+{
+  "name": "CÉU — Centro Ecossistêmico Universal",
+  "short_name": "CÉU",
+  "description": "O ecossistema vivo da Sociedade Tucci — 30 IAs em 7 bairros.",
+  "start_url": "/aliancapanorama/ceu",
+  "scope": "/aliancapanorama/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#000000",
+  "theme_color": "#c8a050",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/aliancapanorama/ceu-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/aliancapanorama/ceu-icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["education", "productivity"],
+  "prefer_related_applications": false
+}

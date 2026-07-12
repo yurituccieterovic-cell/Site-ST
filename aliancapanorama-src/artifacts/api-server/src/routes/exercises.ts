@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { rateLimit } from "express-rate-limit";
+import { rateLimit, ipKeyGenerator } from "express-rate-limit";
 import { db } from "@workspace/db";
 import { exercisesTable, exerciseAttemptsTable } from "@workspace/db";
 import { and, eq } from "drizzle-orm";
@@ -16,7 +16,7 @@ const generationInProgress = new Set<string>();
 const generateRateLimit = rateLimit({
   windowMs: 60_000,
   limit: 5,
-  keyGenerator: (req) => `gen:${(req.session as { userId?: number }).userId ?? req.ip ?? "anon"}`,
+  keyGenerator: (req) => `gen:${(req.session as { userId?: number }).userId ?? ipKeyGenerator(req) ?? "anon"}`,
   message: { error: "Muitas requisições de geração. Tente novamente em breve." },
   standardHeaders: true,
   legacyHeaders: false,
@@ -25,7 +25,7 @@ const generateRateLimit = rateLimit({
 const attemptRateLimit = rateLimit({
   windowMs: 60_000,
   limit: 60,
-  keyGenerator: (req) => `att:${(req.session as { userId?: number }).userId ?? req.ip ?? "anon"}`,
+  keyGenerator: (req) => `att:${(req.session as { userId?: number }).userId ?? ipKeyGenerator(req) ?? "anon"}`,
   message: { error: "Muitas tentativas. Tente novamente em breve." },
   standardHeaders: true,
   legacyHeaders: false,
