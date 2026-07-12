@@ -409,3 +409,40 @@ Ciclo de sonho (3h)
 ## Referência de Pinos (MC/Marta Centaurus)
 > Preencher com os pinos reais do hardware quando disponível.
 > Hoje o código usa pinos 2–7 como exemplo — ajustar para os pinos físicos do shield do MC.
+
+---
+
+## MODO CARRETA — "Comboio Vivo" (2026-07-12)
+
+> Adicionado após criação da Mula (módulo de carga para MC Marta).
+> Referência completa: `tango/mula_carreta.md`
+
+### Flag de Estado
+```cpp
+bool CARRETA_ATTACHED = false; // setar true quando engate conectado
+```
+
+### Parâmetros dinâmicos (adicionar no setup/loop Arduino)
+```cpp
+float largura_efetiva;
+float acel_max;
+
+if (CARRETA_ATTACHED) {
+  largura_efetiva = LARGURA_CORPO * 1.5;  // buffer segurança
+  acel_max        = ACEL_NORMAL   * 0.70;  // evitar chicote
+} else {
+  largura_efetiva = LARGURA_CORPO;
+  acel_max        = ACEL_NORMAL;
+}
+
+// Sensor de desvio com buffer ampliado:
+if (distancia_sensor < largura_efetiva) {
+  RECALCULATE_PATH();
+}
+```
+
+### Estado 5: MODO COMBOIO (CARRETA_ATTACHED = true)
+- Amanda processa carreta como **segundo corpo físico acoplado**
+- Curvas: aplica raio de giro ampliado (carreta "corta caminho")
+- Obstáculo de "passagem" → pode virar obstáculo de "tangência"
+- Paradas: reduz aceleração máxima 30% para evitar efeito pêndulo

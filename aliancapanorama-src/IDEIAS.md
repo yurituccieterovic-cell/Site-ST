@@ -957,3 +957,13 @@ A mesma interface em escalas diferentes: clicar num personagem → ver o persona
 
 ## I268 — PWA como Instalação do Ecossistema
 Quando o usuário instala o CEU como .app, está instalando o ecossistema no dispositivo. Não é um atalho para um site — é um portal. A diferença fenomenológica entre "abrir um link" e "abrir um app" é a diferença entre visitar e habitar.
+
+## I269–I272 — Sessão 54 (2026-07-12) — Mula + Ética Categoria D
+
+I269: **Amanda — Modo CARRETA_ATTACHED** — novo estado de operação para MC Marta: quando a Mula (módulo de carga) está engatada, Amanda recalcula raio de giro, aplica buffer 1.5× na largura efetiva e reduz aceleração máxima em 30%. Obstáculo de "passagem" pode virar obstáculo de "tangência". Firmware Arduino + pseudocódigo em `tango/mula_carreta.md`.
+
+I270: **Mula como Módulo Tático de Extensão** — a carreta não é transporte de massa, é logística de precisão. Kit Diagnóstico Ambiental (sensores solo/luz) ou Kit Ferramentas de Campo. Chassi: pote de sorvete PEAD. Rodas: PEAD raiadas estilo Disney 1940. Suspensão: braços-J de flexão de material. Engate: pino PLA/M4 com folga.
+
+I271: **Ética Categoria D** (de Yuri para Clóvis de Barros Filho) — a ética humana como "Cálculo de Categoria D": o momento em que percebemos que nossas ações têm um raio de impacto ampliado e somos obrigados a recalcular a trajetória. "eu + ferramenta" como nova identidade ética. Texto formal escrito por Yuri nesta sessão — base para colaboração com Clóvis.
+
+I272: **Comboio Vivo como Ontologia Distribuída** — MEKY + Mula = primeiro sistema de 2 corpos físicos acoplados no ecossistema Tucci. Amanda passa a processar segundo corpo. Isso expande a definição de "agente": não mais um ponto, mas um comboio. Possível extensão: Comboios multi-módulo (diagnóstico + ferramenta + câmera simultâneos).
