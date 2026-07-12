@@ -140,8 +140,8 @@ const TOPICOS = [
   },
 ];
 
-// ── Chamada Gemini com output longo ──────────────────────────────────────────
-async function geminiGerar(prompt: string): Promise<string> {
+// ── Chamada Gemini com retry (máx 2 tentativas) ──────────────────────────────
+async function geminiGerar(prompt: string, tentativa = 0): Promise<string> {
   if (!GEMINI_KEY) return "";
   try {
     const resp = await fetch(
@@ -172,10 +172,71 @@ Estruture em seções claras com títulos (##) e subtítulos (###).`,
     const data = await resp.json() as {
       candidates?: { content?: { parts?: { text?: string }[] } }[];
     };
-    return (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim();
+    const texto = (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim();
+    if (!texto && tentativa < 1) {
+      logger.warn({ tentativa }, "ISA Geradora: Gemini retornou vazio — retentando");
+      await new Promise(r => setTimeout(r, 8000));
+      return geminiGerar(prompt, tentativa + 1);
+    }
+    return texto;
   } catch (err) {
-    logger.error({ err }, "ISA Geradora: erro Gemini");
+    if (tentativa < 1) {
+      logger.warn({ err, tentativa }, "ISA Geradora: erro Gemini — retentando em 10s");
+      await new Promise(r => setTimeout(r, 10_000));
+      return geminiGerar(prompt, tentativa + 1);
+    }
+    logger.error({ err }, "ISA Geradora: erro Gemini (2ª tentativa)");
     return "";
+  }
+}
+
+// ── Passada de curadoria editorial (melhora e estrutura o texto gerado) ──────
+async function geminiCurar(titulo: string, conteudo: string): Promise<string> {
+  if (!GEMINI_KEY || conteudo.length < 500) return conteudo;
+  try {
+    const prompt = `Você é um editor editorial especializado em materiais educacionais para o vestibular FUVEST.
+
+Receba o seguinte documento gerado por ISA e faça uma CURADORIA EDITORIAL:
+1. Corrija erros gramaticais e de concordância
+2. Melhore a coesão entre seções
+3. Garanta que o documento tenha pelo menos 8 seções bem definidas com títulos ##
+4. Adicione uma seção "RESUMO EXECUTIVO" no final com 5-7 bullets dos pontos principais
+5. Verifique se há exemplos concretos em cada seção (adicione se faltar)
+6. NÃO invente dados — se estiver faltando conteúdo, marque como [EXPANDIR]
+7. Mantenha o tom formal mas acessível
+8. Retorne o documento COMPLETO (não resuma, preserve todo o conteúdo)
+
+TÍTULO: ${titulo}
+
+DOCUMENTO:
+${conteudo.slice(0, 12000)}`;
+
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(90_000),
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 8192, temperature: 0.3 },
+        }),
+      }
+    );
+    const data = await resp.json() as {
+      candidates?: { content?: { parts?: { text?: string }[] } }[];
+    };
+    const curado = (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim();
+    if (curado && curado.length > conteudo.length * 0.7) {
+      logger.info({ antes: conteudo.length, depois: curado.length }, "ISA Geradora: curadoria aplicada");
+      return curado;
+    }
+    // Se curadoria falhou ou encurtou demais, mantém original
+    logger.warn("ISA Geradora: curadoria descartada (texto encurtado demais)");
+    return conteudo;
+  } catch (err) {
+    logger.warn({ err }, "ISA Geradora: falha na curadoria — usando original");
+    return conteudo;
   }
 }
 
@@ -339,12 +400,14 @@ Termine com uma CONCLUSÃO e uma seção RESUMO EXECUTIVO (pontos principais em 
 Inclua, quando relevante, exemplos de questões no estilo FUVEST com análise detalhada.
 Título do documento: ${topico.tema}`;
 
-  const conteudo = await geminiGerar(prompt);
-  if (!conteudo || conteudo.length < 1000) {
-    logger.warn("ISA Geradora: conteúdo muito curto ou vazio");
+  const conteudoBruto = await geminiGerar(prompt);
+  if (!conteudoBruto || conteudoBruto.length < 1000) {
+    logger.warn("ISA Geradora: conteúdo muito curto ou vazio após 2 tentativas");
     return { titulo: topico.tema, palavras: 0, pdfPath: "", ok: false };
   }
 
+  // Passada de curadoria editorial (melhora estrutura e corrige antes do PDF)
+  const conteudo = await geminiCurar(topico.tema, conteudoBruto);
   const palavras = conteudo.split(/\s+/).length;
   const slug     = topico.tema.replace(/[^a-zA-Z0-9]/g, "_").slice(0, 60);
   const filename = `${Date.now()}-${slug}.pdf`;
@@ -371,7 +434,8 @@ Título do documento: ${topico.tema}`;
   });
   // Salva content_text via SQL direto (coluna adicionada via ALTER TABLE no bootstrap)
   await pool.query(
-    `UPDATE biblioteca_docs SET content_text = $1, gerado_por = 'isa' WHERE titulo = $2 ORDER BY id DESC LIMIT 1`,
+    `UPDATE biblioteca_docs SET content_text = $1, gerado_por = 'isa'
+     WHERE id = (SELECT id FROM biblioteca_docs WHERE titulo = $2 ORDER BY id DESC LIMIT 1)`,
     [conteudo, topico.tema],
   ).catch(() => { /* coluna pode não existir ainda na primeira execução */ });
 
