@@ -164,3 +164,7 @@
 | 86 | OPENAI_API_KEY no Railway ARPIA — railway.app → Projeto PAP (ARPIA) → Variables → OPENAI_API_KEY=sk-proj-... → redeploy para ativar Hestia (GPT-4o) | Yuri (Railway UI) | ⏳ |
 | 87 | Manim animações — instalar Manim localmente (pip install manim) e renderizar cenas do tango/manim_meky.py para os vídeos da série | Yuri (computador local) | ⏳ |
 | 88 | Gravar série "Inteligência em Camadas" — 15 episódios em tango/roteiros-video/, narrar + montar com DaVinci Resolve (gratuito) ou CapCut | Yuri | ⏳ |
+| 89 | REI: primeiro ciclo real — rodar #rei "Q-001: obra sem mortalidade?" com Railway online e Knowledge Bus ativo | Railway + BRIDGE_SECRET (#82) | ⏳ |
+| 90 | REI: ISA e DODGE respostas reais — quando Railway voltar, chamar API e atualizar mem_ISA.md + mem_DODGE.md com resposta autêntica | Railway online | ⏳ |
+| 91 | REI: processar resposta do Cortella (se vier) — novo ciclo REI com resposta como input, gerar Q-003 | aguarda Cortella | ⏳ |
+| 92 | REI: memórias individuais das IAs — completar mem_AMANDA.md, mem_MARTA.md, mem_ARPIA.md, mem_VORTICE.md, mem_ECOSSYSTEMA_THEON.md | — | 💡 |

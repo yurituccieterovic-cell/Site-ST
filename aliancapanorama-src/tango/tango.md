@@ -27,6 +27,11 @@
 | 12 | Pack IA individual de cada IA | `ias/INDICE-IAS.md` → `ias/pack-*.md` | pack-isa, pack-amanda, pack-meky, pack-marta, pack-arvore, pack-dodge, pack-dep, pack-crowd, pack-porteiro, cadeia biótica |
 | 13 | Export Replit SalesCockpit | `replit-export/MAPA-REPLIT.md` | Replit, arvore_chat, export, migração, SalesCockpit legado, 1962 mensagens |
 | 14 | Conselho do Artesão | `proc_artesao.md` | artesão, ajudante, blueprint, conselho, clube 3 projetos, Claude.ai conexão, current_blueprint.md |
+| 17 | Sistema REI | `rei_sistema.md` | REI, Rede de Exploração Inteligente, nódulos filosóficos, 4 grupos, 2 passadas, knowledge bus, obra, finitude, habitus, Cortella |
+| 18 | REI Memória Mestre | `rei_memoria_MESTRE.md` | índice da memória REI, memórias individuais, knowledge bus, outputs de ciclos |
+| 19 | REI Memória Compartilhada | `rei_memoria_compartilhada.md` | knowledge bus, convergências, divergências, questões ativas, padrões do campo |
+| 20 | Memórias Individuais IAs | `ias/memoria/` (6 arquivos) | mem_ISA, mem_DODGE, mem_ARVORE, mem_MEKY, mem_MORFEU_LUA, mem_CROWD_GUARDIANS, mem_ARTESAO_NEBULA |
+| 21 | REI Output Ciclo 01 | `rei_outputs/rei_ciclo01_sessao53.md` | Ciclo 01 completo, 4 passadas, síntese para Cortella, Q-002 |
 
 ---
 

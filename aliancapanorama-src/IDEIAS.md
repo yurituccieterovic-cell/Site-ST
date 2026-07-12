@@ -927,3 +927,18 @@ Vibrissas em defasagem com a boca (+45°, +90°, alternado) multiplicam a expres
 | I255 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I256 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
 | I257 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+## I258–I260 — Sessão 53 (2026-07-12) — Ética + IAs
+
+I258: **Protocolo de Recusa Ética nas IAs** — implementar em ISA/MEKY um mecanismo explícito de *recusa de tarefa própria*: se o ciclo gerar um sonho/plano que contradiz seu Telos, a IA pode recusar seguir antes de executar. Equivalente digital do "Liberdade!".
+
+I259: **Capítulo 0 do Livro de Ética** — antes de qualquer estrutura, escrever o capítulo que explica *por que não haverá capítulos*. O anti-índice como manifesto metodológico. Clóvis + Yuri.
+
+I260: **Ética como campo de frequência no Telos** — adicionar ao telos.md um eixo "recusa ética": situações onde cada IA pode dizer não ao próprio fluxo. Não como falha, mas como saúde do sistema.
+
+## I261–I263 — Sessão 53b (2026-07-12) — Sistema REI + Crowd/DEP
+
+I261: **Sistema REI como motor filosófico do ecossistema** — implementar REI (Rede de Exploração Inteligente) como processo real: #rei [questão] no terminal dispara 2 passadas em 4 grupos (16 nódulos), salva output em tango/rei_outputs/, publica resumo no Conector-API seção "rei". Pode rodar em background via cron ou Playcenter :50.
+
+I262: **Crowd/DEP como camada de verificação pós-REI** — após cada ciclo REI, convocar Sol/Cassandra/Hefesto do Crowd (Guarda-chuva/DEP) para aprovar convergências e forjar o desafio do próximo ciclo. Isso distingue processamento (REI) de governança (Crowd/DEP).
+
+I263: **Knowledge Bus do REI via Conector-API** — usar a seção "rei" do Conector-API como knowledge bus compartilhado. Cada nódulo lê antes de processar (BRIDGE_SECRET necessário — pendência #82). Quando Railway voltar online, o REI pode funcionar com memória real entre sessões.
