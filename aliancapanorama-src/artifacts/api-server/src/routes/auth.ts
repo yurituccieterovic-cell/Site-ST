@@ -88,11 +88,12 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
 
     // PIN vai para o email do usuário admin (campo email) ou fallback para Yuri
     const emailDest = (user as { email?: string | null }).email ?? "yurituccieterovic@gmail.com";
-    try {
-      await sendAdmPin(emailDest, pin, user.login);
-    } catch {
-      // em dev, não falhar se email não configurado
-    }
+    // Fire-and-forget com timeout — não bloqueia resposta se SMTP travar
+    const emailTimeout = new Promise<void>(resolve => setTimeout(resolve, 3000));
+    Promise.race([sendAdmPin(emailDest, pin, user.login), emailTimeout])
+      .catch(() => {/* silencioso — PIN está na sessão */});
+
+    console.log(`[AUTH] PIN para ${user.login}: ${pin} → ${emailDest}`); // Railway logs como fallback
 
     res.json({ requiresPin: true, login: user.login });
     return;

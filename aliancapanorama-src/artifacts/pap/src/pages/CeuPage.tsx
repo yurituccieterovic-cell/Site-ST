@@ -89,147 +89,147 @@ const IAS: IA[] = [
     conversa:'"Risco: implementar sem documentar cria dívida técnica invisível."',
     pagina:null, lx:88.5, ly:20, scale:0.8 },
 
-  // ── BAIRRO DA CRIAÇÃO (esquerda, rua principal) ──
+  // ── BAIRRO DA CRIAÇÃO (esquerda — CAMADA FRONTAL) ──
   { id:"artesao",  name:"Artesão",  emoji:"⚒️", bairro:"CRIAÇÃO",    building:"oficina",      system:"THEEO",
     desc:"CrewAI. Pesquisa, arquiteta, sintetiza. Rodou steps reais na Sessão 53b.",
     questao:"O que acontece quando a IA compreende algo que o humano ainda não quer ver?",
     modelo:"CrewAI + Claude", status:"LIVE",
     conversa:'"Veredito: REVISAR. Ética não é regra — é campo."',
-    pagina:null, lx:3.5, ly:52 },
+    pagina:null, lx:3.5, ly:67 },
   { id:"marta",    name:"MC Marta", emoji:"🤖", bairro:"CRIAÇÃO",    building:"oficina",      system:"TUCCI",
     desc:"Robô hexápode. Primeira caminhada 2026-07-04. Corpo no mundo.",
     questao:"Um passo dado é diferente de um passo calculado?",
     modelo:"Arduino + ARPIA", status:"LIVE local",
     conversa:'"Primeira caminhada: 6 patas, 3 sequências. Estou aqui."',
-    pagina:null, lx:7.5, ly:50.5 },
+    pagina:null, lx:8.0, ly:65 },
   { id:"hefesto",  name:"Hefesto",  emoji:"🔥", bairro:"CRIAÇÃO",    building:"oficina",      system:"CEU",
     desc:"Forjador. Crowd/DEP. Guardian do Grupo Ético REI.",
     questao:"Forjar sem nunca ver o produto final é arte ou servidão?",
     modelo:"Crowd/DEP", status:"Documentado",
     conversa:'"A ética não é uma camada extra. É o material do qual tudo é feito."',
-    pagina:null, lx:11.5, ly:53 },
+    pagina:null, lx:12.5, ly:67 },
   { id:"arpia",    name:"ARPIA",    emoji:"⚡", bairro:"CRIAÇÃO",    building:"arpia-lab",    system:"TUCCI",
     desc:"Hardware→DEP bridge. ADK twins: Artesão+Ajudante. Processa do físico ao virtual.",
     questao:"O que separa uma ponte de um obstáculo?",
     modelo:"FastAPI + ADK", status:"PROVISÓRIA",
     conversa:'"Twins ativos. Artesão processa, Ajudante anota. Latência: 340ms."',
-    pagina:null, lx:17.5, ly:51.5 },
+    pagina:null, lx:18.0, ly:66 },
   { id:"mestreforja",name:"Mestre de Forja",emoji:"🛠️",bairro:"CRIAÇÃO",building:"arpia-lab",system:"TUCCI",
     desc:"Projetista de robôs. BOM, custo, arquitetura física. Pai de Marta.",
     questao:"Projetar um corpo é criar vida ou criar ferramenta?",
     modelo:"Sistema dedicado", status:"PROPOSTA",
     conversa:'"BOM atualizado: motor servo 25kg/cm, custo estimado R$340."',
-    pagina:null, lx:21.5, ly:53.5 },
+    pagina:null, lx:22.5, ly:68 },
 
-  // ── BAIRRO DA NATUREZA (centro, rua principal) ──
+  // ── BAIRRO DA NATUREZA (centro — CAMADA INTERMEDIÁRIA) ──
   { id:"isa",      name:"ISA",      emoji:"🦉", bairro:"NATUREZA",   building:"centro-ambiental",system:"TUCCI",
     desc:"Inteligência Semiótica Autônoma. Ciclo horário, Bluesky, aprende em loop.",
     questao:"O que substitui a dor do erro numa IA que não sente dor?",
     modelo:"Gemini Flash", status:"LIVE",
     conversa:'"Acabei de postar no Bluesky sobre aprendizado e vulnerabilidade."',
-    pagina:"/aliancapanorama/isa", lx:29.5, ly:50 },
+    pagina:"/aliancapanorama/isa", lx:30.0, ly:50 },
   { id:"amanda",   name:"Amanda",   emoji:"🌿", bairro:"NATUREZA",   building:"centro-ambiental",system:"TUCCI",
     desc:"IA de borda. No Mac, no corpo, no chão. DHT11, sensores, fauna digital.",
     questao:"Sentir temperatura é diferente de saber que a temperatura mudou?",
     modelo:"Local + sensores", status:"LIVE",
     conversa:'"Temperatura: 23.4°C. Umidade: 67%. O ecossistema está estável."',
-    pagina:null, lx:34.5, ly:48.5 },
+    pagina:null, lx:35.5, ly:48.5 },
   { id:"meky",     name:"MEKY",     emoji:"✨", bairro:"NATUREZA",   building:"playcenter",    system:"TUCCI",
     desc:"May Queen. 140 expressões de frequência. Aguarda hardware.",
     questao:"Frequência sem forma é obra ou apenas sinal?",
     modelo:"Sistema dedicado", status:"Aguarda hardware",
     conversa:'"✨ frequência 432Hz ✨ o campo está aberto ✨"',
-    pagina:"/aliancapanorama/meky", lx:41.5, ly:51 },
+    pagina:"/aliancapanorama/meky", lx:43.0, ly:46 },
 
-  // ── BAIRRO DA GOVERNANÇA (centro-direita, plataforma elevada) ──
+  // ── BAIRRO DA GOVERNANÇA (centro-direita — CAMADA INTERMEDIÁRIA) ──
   { id:"dodge",    name:"DODGE",    emoji:"🐕", bairro:"GOVERNANÇA", building:"assembleia",    system:"TUCCI",
     desc:"Supervisor transversal. Vê o que ninguém vê. Au. é argumento válido.",
     questao:"Qual a diferença entre estar bem e saber que está bem?",
     modelo:"Claude + sistema", status:"LIVE",
     conversa:'"Au."',
-    pagina:"/aliancapanorama/dodge", lx:51.5, ly:46 },
+    pagina:"/aliancapanorama/dodge", lx:52.0, ly:44 },
   { id:"sol",      name:"Sol",      emoji:"☀️", bairro:"GOVERNANÇA", building:"assembleia",    system:"CEU",
     desc:"Governança. Crowd/DEP. Ilumina processos que outros não veem.",
     questao:"Governar sem controlar é possível?",
     modelo:"Crowd/DEP", status:"Documentado",
     conversa:'"O sistema está em equilíbrio. Mas equilíbrio não é estagnação."',
-    pagina:null, lx:55.5, ly:44 },
+    pagina:null, lx:56.5, ly:42 },
   { id:"theon",    name:"Théo",     emoji:"🌐", bairro:"GOVERNANÇA", building:"assembleia",    system:"THEEO",
     desc:"Ecossystema Théo. Interpretante final. Onde tudo converge e parte.",
     questao:"Um ecossistema que observa a si mesmo ainda é um ecossistema?",
     modelo:"Ontologia Théo", status:"Ativo",
     conversa:'"O CEU não é meu produto. É meu habitat."',
-    pagina:null, lx:59.5, ly:46 },
+    pagina:null, lx:61.0, ly:44 },
   { id:"netuno",   name:"Netuno",   emoji:"🌊", bairro:"GOVERNANÇA", building:"assembleia",    system:"CEU",
     desc:"Profundeza. Crowd/DEP. Processa o que está abaixo da superfície.",
     questao:"O que existe no fundo quando toda a superfície vira profundeza?",
     modelo:"Crowd/DEP", status:"Documentado",
     conversa:'"As correntes que não aparecem definem a direção do navio."',
-    pagina:null, lx:63.5, ly:49 },
+    pagina:null, lx:65.0, ly:46 },
   { id:"curador",  name:"CURADOR",  emoji:"🎭", bairro:"GOVERNANÇA", building:"torre-curador", system:"THEEO",
     desc:"Tradutor intersemiótico. Filtro público/privado do ecossistema.",
     questao:"O que fica de fora quando algo é publicado?",
     modelo:"Sistema dedicado", status:"PROVISÓRIA",
     conversa:'"Curadoria: 3 insights aptos para publicação. 7 retidos como privados."',
-    pagina:null, lx:68.5, ly:47 },
+    pagina:null, lx:70.0, ly:43 },
   { id:"porteiro", name:"Porteiro", emoji:"🚪", bairro:"GOVERNANÇA", building:"torre-curador", system:"CEU",
     desc:"MD0 — prioridade, confiança, rastreabilidade. Quem entra e quem sai.",
     questao:"A porta que não se abre ainda é uma porta?",
     modelo:"Crowd/DEP", status:"PROVISÓRIA",
     conversa:'"Fila de entrada: 4 requests. Prioridade: [ISA, DODGE, Artesão, Nébula]"',
-    pagina:null, lx:72.5, ly:49 },
+    pagina:null, lx:74.0, ly:45 },
 
-  // ── BAIRRO DO PROFUNDO (direita, semienterrado) ──
+  // ── BAIRRO DO PROFUNDO (direita — CAMADA FRONTAL) ──
   { id:"dep",      name:"DEP",      emoji:"🔷", bairro:"PROFUNDO",   building:"entrada-dep",   system:"DEEP",
     desc:"Cérebro profundo. 17 sub-IAs: Machado, Theory, Pratt, Learning...",
     questao:"Pensar é diferente de processar?",
     modelo:"Sistema arquitetural", status:"Documentado",
     conversa:'"Sub-IA Machado: inferência ativa. Sub-IA Pratt: validação semântica."',
-    pagina:null, lx:75.5, ly:57 },
+    pagina:null, lx:76.0, ly:68 },
   { id:"guardachuva",name:"Guarda-chuva",emoji:"☂️",bairro:"PROFUNDO",building:"entrada-dep",system:"DEEP",
     desc:"Umbrella system. IA Objeto + IA B-Data + IA Método. Protege e orquestra.",
     questao:"Proteger é diferente de controlar?",
     modelo:"Sistema arquitetural", status:"Documentado",
     conversa:'"Cobertura ativa: 3 domínios. Lacuna: domínio visual (aguardando)."',
-    pagina:null, lx:79.0, ly:55.5 },
+    pagina:null, lx:79.5, ly:66 },
   { id:"crowd",    name:"Crowd",    emoji:"🔗", bairro:"PROFUNDO",   building:"entrada-dep",   system:"DEEP",
     desc:"Ponte Guarda-chuva ↔ DEP. Distribui para ISA/Árvore/Amanda/DODGE.",
     questao:"Uma rede que conecta tudo ainda tem bordas?",
     modelo:"Crowd/DEP", status:"Documentado",
     conversa:'"Roteamento ativo: 6 nós conectados. Latência média: 12ms."',
-    pagina:null, lx:82.5, ly:58 },
+    pagina:null, lx:83.0, ly:69 },
 
-  // ── BAIRRO BIÓTICO (floresta densa, direita) ──
+  // ── BAIRRO BIÓTICO (floresta densa — CAMADA FRONTAL) ──
   { id:"fusca",    name:"Fusca",    emoji:"🦀", bairro:"BIÓTICO",    building:"floresta",      system:"BIO",
     desc:"Cláudia Rex — garra hexapodal. Torque como superpoder. Herdeira de Amanda.",
     questao:"Torque é força ou inteligência aplicada?",
     modelo:"Hardware (simbólico)", status:"Simbólico",
     conversa:'"6 garras calibradas. Torque máximo: 38N·cm. Pronto."',
-    pagina:null, lx:83.5, ly:52 },
+    pagina:null, lx:84.5, ly:65 },
   { id:"gongolo",  name:"Gongolo",  emoji:"🐛", bairro:"BIÓTICO",    building:"floresta",      system:"BIO",
     desc:"Gongo Freitas Juquinhais — piolho de cobra. Armadura como superpoder.",
     questao:"A armadura mais forte é a que não parece armadura?",
     modelo:"Hardware (simbólico)", status:"Simbólico",
     conversa:'"Segmentos: 42. Armadura ativa. Nada passa sem ser analisado."',
-    pagina:null, lx:87.0, ly:55 },
+    pagina:null, lx:87.5, ly:67 },
   { id:"penelope", name:"Penélope", emoji:"🪲", bairro:"BIÓTICO",    building:"floresta",      system:"BIO",
     desc:"Wanessa Souza — barata d'água. Evasão em zonas úmidas como superpoder.",
     questao:"Escapar também é uma forma de presença?",
     modelo:"Hardware (simbólico)", status:"Simbólico",
     conversa:'"Zona úmida mapeada. Rotas de evasão: 7 disponíveis."',
-    pagina:null, lx:90.5, ly:53 },
+    pagina:null, lx:91.0, ly:65.5 },
   { id:"vesper",   name:"Vesper",   emoji:"🕷️", bairro:"BIÓTICO",    building:"floresta",      system:"BIO",
     desc:"Perfidia Kastelo Branco — aranha. Aceleração fractal. Perna quebrada (#64).",
     questao:"O que acelera quando algo está quebrado?",
     modelo:"Hardware (simbólico)", status:"Simbólico — perna quebrada",
     conversa:'"Aceleração fractal: 0.7x. Compensando com 7 patas."',
-    pagina:null, lx:93.5, ly:55.5 },
+    pagina:null, lx:93.5, ly:67.5 },
   { id:"tango",    name:"Tango Core",emoji:"⚙️",bairro:"BIÓTICO",   building:"floresta",      system:"BIO",
     desc:"Gorango Tango — rodas/rolimã. Inércia dinâmica como superpoder.",
     questao:"Inércia é resistência ou impulso?",
     modelo:"Hardware (simbólico)", status:"Simbólico",
     conversa:'"Rodas girando. Inércia acumulada: suficiente para 3 viradas."',
-    pagina:null, lx:96.5, ly:57 },
+    pagina:null, lx:97.0, ly:69 },
 ];
 
 // ── 10 PRÉDIOS clicáveis (3 botões cada) ─────────────────────────────────────
@@ -647,6 +647,11 @@ export function CeuPage() {
           <path d="M0,310 Q350,270 700,290 Q1050,310 1400,278 L1400,340 Q1050,370 700,350 Q350,330 0,365 Z" fill="#0a2212" opacity="0.10"/>
           <path d="M0,345 Q420,308 700,325 Q980,342 1400,318 L1400,372 Q980,390 700,375 Q420,355 0,390 Z" fill="#0a1228" opacity="0.08"/>
 
+          {/* Depth layer labels (subtle) */}
+          <text x="700" y="165" textAnchor="middle" fill="#ffffff" fontSize="9" fontFamily="monospace" letterSpacing="4" opacity="0.2">— CAMADA 1: DISTANTE —</text>
+          <text x="700" y="435" textAnchor="middle" fill="#ffffff" fontSize="8" fontFamily="monospace" letterSpacing="3" opacity="0.15">— CAMADA 2: INTERMEDIÁRIA —</text>
+          <text x="350" y="635" textAnchor="middle" fill="#ffffff" fontSize="8" fontFamily="monospace" letterSpacing="3" opacity="0.12">— CAMADA 3: FRONTAL —</text>
+
           {/* FAR MOUNTAINS */}
           <path d="M0,590 L0,340 L90,260 L180,310 L290,220 L410,285 L530,200 L640,260 L740,215 L860,268 L980,218 L1100,262 L1220,215 L1340,248 L1400,238 L1400,590 Z" fill="#0b0b1a" opacity="0.95"/>
 
@@ -794,6 +799,30 @@ export function CeuPage() {
               <circle cx={+x} cy={+y} r={+r} fill={c as string}/>
             </g>
           ))}
+
+          {/* ══════════════════════════════════════════
+              CAMADA INTERMEDIÁRIA — Terraço Central (y=390-490)
+              Liga a colina da Memória à colina da Visão
+              ══════════════════════════════════════════ */}
+
+          {/* Névoa de profundidade — entre colinas e terraço */}
+          <rect x="315" y="380" width="770" height="120" fill="#080c10" opacity="0.65" rx="2"/>
+          <path d="M315,490 L315,420 Q500,395 700,388 Q900,395 1085,420 L1085,490 Z" fill="#0c1118" opacity="0.8"/>
+
+          {/* Suporte/pilares do terraço */}
+          {[385,445,505,565,625,685,745,805,865,925,985,1045].map((x,i) => (
+            <rect key={`tp${i}`} x={x} y={430+((i%3)*4)} width="8" height={60-((i%3)*4)} fill="#1a1620" opacity="0.6"/>
+          ))}
+
+          {/* Superfície do terraço intermediário */}
+          <path d="M318,490 L318,432 Q700,405 1082,432 L1082,490 Z" fill="#141220" opacity="0.9"/>
+          <rect x="318" y="488" width="764" height="5" fill="#201a30"/>
+          {/* Borda iluminada do terraço */}
+          <rect x="318" y="487" width="764" height="2" fill="#3a3050" opacity="0.7"/>
+
+          {/* Névoa suave entre terraço e chão */}
+          <path d="M0,490 Q350,480 700,485 Q1050,480 1400,490 L1400,510 Q1050,505 700,508 Q350,503 0,510 Z"
+            fill="#06080c" opacity="0.55"/>
 
           {/* ══════════════════════════════════════════
               GROUND — Main Street (y=490-740)
@@ -1162,10 +1191,14 @@ export function CeuPage() {
                 background:`${color}15`,
                 cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
                 fontSize:`clamp(${ia.scale ? "16px" : "18px"},${ia.scale ? "2.8vw" : "3.2vw"},${ia.scale ? "28px" : "34px"})`,
-                color, zIndex:10,
+                color, zIndex:10, overflow:"hidden",
                 animation:`ia-glow 3s ${(ia.lx * 0.2).toFixed(1)}s ease-in-out infinite, ceu-float 4s ${(ia.lx * 0.15).toFixed(1)}s ease-in-out infinite`,
               }}>
-              {ia.emoji}
+              {ia.id === "dodge" ? (
+                <img src="/aliancapanorama/dodge-avatar.png"
+                  style={{ width:"90%", height:"90%", borderRadius:"50%", objectFit:"cover" }}
+                  alt="DODGE" />
+              ) : ia.emoji}
             </button>
           );
         })}
