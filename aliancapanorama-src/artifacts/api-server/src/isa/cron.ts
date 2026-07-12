@@ -7,6 +7,7 @@ import { runDreamCycle } from "../meky/dreams";
 import { generateArtFromDream } from "../meky/art";
 import { runPlaycenter } from "./playcenter";
 import { runSaudeFundador } from "./cycle";
+import { runBibliotecaGeradora, rehydratarGerados } from "./biblioteca-geradora";
 import { logger } from "../lib/logger";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
@@ -97,6 +98,22 @@ export function startIsaCron(): void {
       logger.error({ err }, "ISA Saúde: erro na verificação");
     }
   });
+
+  // ISA Biblioteca Geradora: 3x/dia (8h, 14h, 20h UTC) — documentos originais 10+ pgs
+  for (const hora of [8, 14, 20]) {
+    cron.schedule(`30 ${hora} * * *`, async () => {
+      try {
+        logger.info({ hora }, "ISA Geradora: iniciando ciclo de geração de documento");
+        const r = await runBibliotecaGeradora();
+        logger.info(r, "ISA Geradora: documento concluído");
+      } catch (err) {
+        logger.error({ err }, "ISA Geradora: erro na geração");
+      }
+    });
+  }
+
+  // Re-hidratação ao subir: recriar PDFs gerados perdidos no /tmp
+  rehydratarGerados().catch((err) => logger.warn({ err }, "ISA Geradora: falha na re-hidratação inicial"));
 
   logger.info("ISA: crons agendados (ciclo 1h · bibliotecário 4h:30 6x/dia · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h)");
 }

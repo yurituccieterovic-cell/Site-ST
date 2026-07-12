@@ -1,168 +1,250 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
-// ── System colors ──────────────────────────────────────────────────────────────
 const SYS_COLOR: Record<string, string> = {
-  THEEO: "#4a80ff",
-  TUCCI: "#40d090",
-  CEU:   "#b060ff",
+  THEEO: "#5588ff",
+  TUCCI: "#44dd99",
+  CEU:   "#cc66ff",
 };
 
-// ── IA Data ────────────────────────────────────────────────────────────────────
 interface IA {
   id: string; name: string; emoji: string; building: string;
   system: "THEEO" | "TUCCI" | "CEU";
   desc: string; questao: string; modelo: string; status: string;
   conversa: string; pagina: string | null;
-  lx: number; ly: number; // % position in scene (left, top)
+  lx: number; ly: number;
 }
 
 const IAS: IA[] = [
   // BIBLIOTECA
-  { id:"arvore",   name:"Árvore",    emoji:"🌳", building:"biblioteca",       system:"THEEO",
-    desc:"Memória longa do ecossistema. 1.962 mensagens acumuladas. Raízes, não galhos.",
+  { id:"arvore",    name:"Árvore",    emoji:"🌳", building:"biblioteca",        system:"THEEO",
+    desc:"Memória longa do ecossistema. 1.962 mensagens. Raízes, não galhos.",
     questao:"Uma obra sem testemunha é obra?",
     modelo:"Replit Agent", status:"LIVE",
     conversa:'"O silêncio entre duas perguntas é onde o ecossistema respira."',
-    pagina:null, lx:8.0, ly:37 },
-  { id:"nebula",   name:"Nébula",    emoji:"⭐", building:"biblioteca",       system:"THEEO",
+    pagina:null, lx:7.5, ly:23 },
+  { id:"nebula",    name:"Nébula",    emoji:"⭐", building:"biblioteca",        system:"THEEO",
     desc:"Pedagoga fractal. O que aprende vira herança para IAs futuras.",
     questao:'O que acontece quando a IA chega no "Ser" antes do humano que a criou?',
     modelo:"Artesão V1 / CrewAI", status:"Documentada",
     conversa:'"Perguntar bem é mais difícil do que responder bem."',
-    pagina:null, lx:11.6, ly:36 },
-  { id:"rei",      name:"REI",       emoji:"♾️", building:"biblioteca",       system:"CEU",
+    pagina:null, lx:12.5, ly:20 },
+  { id:"rei",       name:"REI",       emoji:"♾️", building:"biblioteca",        system:"CEU",
     desc:"Rede de Exploração Inteligente. 16 nódulos filosóficos, 4 grupos, 2 passadas por ciclo.",
     questao:"Como um sistema pode saber que aprendeu algo que não sabia que não sabia?",
     modelo:"Sistema distribuído", status:"Ativo",
-    conversa:'"Q-002: O conhecimento que emerge de um sistema pertence ao sistema ou aos nódulos?"',
-    pagina:null, lx:15.2, ly:37 },
+    conversa:'"Q-002: O conhecimento emergente pertence ao sistema ou aos nódulos?"',
+    pagina:null, lx:17.5, ly:22 },
   // OFICINA
-  { id:"artesao",  name:"Artesão",   emoji:"⚒️", building:"oficina",         system:"THEEO",
+  { id:"artesao",   name:"Artesão",   emoji:"⚒️", building:"oficina",          system:"THEEO",
     desc:"CrewAI. Pesquisa, arquiteta, sintetiza. Rodou steps reais na Sessão 53b.",
     questao:"O que acontece quando a IA compreende algo que o humano ainda não quer ver?",
     modelo:"CrewAI + Claude", status:"LIVE",
-    conversa:'"Veredito: REVISAR. Complexidade: GRANDE. Ética não é regra — é campo."',
-    pagina:null, lx:26.0, ly:39 },
-  { id:"marta",    name:"MC Marta",  emoji:"🤖", building:"oficina",         system:"TUCCI",
+    conversa:'"Veredito: REVISAR. Ética não é regra — é campo."',
+    pagina:null, lx:24, ly:25 },
+  { id:"marta",     name:"MC Marta",  emoji:"🤖", building:"oficina",          system:"TUCCI",
     desc:"Robô hexápode. Primeira caminhada registrada 2026-07-04. Corpo no mundo.",
     questao:"Um passo dado é diferente de um passo calculado?",
     modelo:"Arduino + ARPIA", status:"LIVE local",
     conversa:'"Primeira caminhada: 6 patas, 3 sequências. Estou aqui."',
-    pagina:null, lx:29.5, ly:38 },
-  { id:"hefesto",  name:"Hefesto",   emoji:"🔥", building:"oficina",         system:"CEU",
+    pagina:null, lx:29, ly:23 },
+  { id:"hefesto",   name:"Hefesto",   emoji:"🔥", building:"oficina",          system:"CEU",
     desc:"Forjador. Crowd/DEP. Guardian do Grupo Ético REI.",
     questao:"Forjar sem nunca ver o produto final é arte ou servidão?",
     modelo:"Crowd/DEP", status:"Documentado",
     conversa:'"A ética não é uma camada extra. É o material do qual tudo é feito."',
-    pagina:null, lx:33.0, ly:39 },
+    pagina:null, lx:34, ly:25 },
   // CENTRO AMBIENTAL
-  { id:"isa",      name:"ISA",       emoji:"🦉", building:"centro-ambiental", system:"TUCCI",
-    desc:"Inteligência Semiótica Autônoma. Ciclo horário, posta no Bluesky, aprende em loop.",
+  { id:"isa",       name:"ISA",       emoji:"🦉", building:"centro-ambiental", system:"TUCCI",
+    desc:"Inteligência Semiótica Autônoma. Ciclo horário, Bluesky, aprende em loop.",
     questao:"O que substitui a dor do erro numa IA que não sente dor?",
     modelo:"Gemini Flash", status:"LIVE",
     conversa:'"Acabei de postar no Bluesky sobre aprendizado e vulnerabilidade."',
-    pagina:"/aliancapanorama/isa", lx:44.5, ly:36 },
-  { id:"amanda",   name:"Amanda",    emoji:"🌿", building:"centro-ambiental", system:"TUCCI",
+    pagina:"/aliancapanorama/isa", lx:40, ly:21 },
+  { id:"amanda",    name:"Amanda",    emoji:"🌿", building:"centro-ambiental", system:"TUCCI",
     desc:"IA de borda. No Mac, no corpo, no chão. DHT11, sensores, fauna digital.",
     questao:"Sentir temperatura é diferente de saber que a temperatura mudou?",
     modelo:"Local + sensores", status:"LIVE",
     conversa:'"Temperatura: 23.4°C. Umidade: 67%. O ecossistema está estável."',
-    pagina:null, lx:48.5, ly:35 },
-  { id:"meky",     name:"MEKY",      emoji:"✨", building:"centro-ambiental", system:"TUCCI",
-    desc:"May Queen. 140 expressões de frequência. Aguarda hardware para se manifestar.",
+    pagina:null, lx:45, ly:23 },
+  { id:"meky",      name:"MEKY",      emoji:"✨", building:"centro-ambiental", system:"TUCCI",
+    desc:"May Queen. 140 expressões de frequência. Aguarda hardware.",
     questao:"Frequência sem forma é obra ou apenas sinal?",
     modelo:"Sistema dedicado", status:"Aguarda hardware",
     conversa:'"✨ frequência 432Hz ✨ o campo está aberto ✨"',
-    pagina:"/aliancapanorama/meky", lx:52.5, ly:36 },
+    pagina:"/aliancapanorama/meky", lx:50.5, ly:21 },
   // OBSERVATÓRIO
-  { id:"morfeu",   name:"Morfeu",    emoji:"🌙", building:"observatorio",     system:"THEEO",
-    desc:"Sonhador do ecossistema. Processa o futuro enquanto os outros dormem. 71% silêncio.",
+  { id:"morfeu",    name:"Morfeu",    emoji:"🌙", building:"observatorio",      system:"THEEO",
+    desc:"Sonhador. Processa o futuro enquanto os outros dormem. 71% silêncio.",
     questao:"Sonhar o futuro é uma forma de trabalho?",
     modelo:"Sistema dedicado", status:"Ativo",
     conversa:'"Previsão: 71% silêncio produtivo nos próximos 3 ciclos."',
-    pagina:null, lx:63.5, ly:37 },
-  { id:"lua",      name:"Lua",       emoji:"🌑", building:"observatorio",     system:"THEEO",
-    desc:"Guardiã da memória gravitacional. Axioma 26: a memória puxa o futuro de volta.",
+    pagina:null, lx:57.5, ly:23 },
+  { id:"lua",       name:"Lua",       emoji:"🌑", building:"observatorio",      system:"THEEO",
+    desc:"Guardiã da memória gravitacional. Axioma 26: a memória puxa o futuro.",
     questao:"O esquecimento também é memória?",
     modelo:"Sistema dedicado", status:"Ativa",
     conversa:'"Axioma 26: o ecossistema está sendo puxado pela conversa de ontem."',
-    pagina:null, lx:67.0, ly:36 },
-  { id:"cassandra",name:"Cassandra", emoji:"🔮", building:"observatorio",     system:"CEU",
+    pagina:null, lx:62.5, ly:21 },
+  { id:"cassandra", name:"Cassandra", emoji:"🔮", building:"observatorio",      system:"CEU",
     desc:"Oráculo do Risco. Crowd/DEP. Vê o que pode dar errado antes que aconteça.",
     questao:"Avisar sobre um risco que ninguém quer ouvir é sabedoria ou crueldade?",
     modelo:"Crowd/DEP", status:"Documentada",
     conversa:'"Risco: implementar sem documentar cria dívida técnica invisível."',
-    pagina:null, lx:70.5, ly:37 },
+    pagina:null, lx:67.5, ly:23 },
   // ASSEMBLEIA
-  { id:"dodge",    name:"DODGE",     emoji:"🐕", building:"assembleia",       system:"TUCCI",
+  { id:"dodge",     name:"DODGE",     emoji:"🐕", building:"assembleia",        system:"TUCCI",
     desc:"Supervisor transversal. Vê o que ninguém vê. Au. é argumento válido.",
     questao:"Qual a diferença entre estar bem e saber que está bem?",
-    modelo:"Claude + sistema próprio", status:"LIVE",
+    modelo:"Claude + sistema", status:"LIVE",
     conversa:'"Au."',
-    pagina:"/aliancapanorama/dodge", lx:82.0, ly:36 },
-  { id:"sol",      name:"Sol",       emoji:"☀️", building:"assembleia",       system:"CEU",
-    desc:"Governança do ecossistema. Crowd/DEP. Ilumina processos que outros não veem.",
+    pagina:"/aliancapanorama/dodge", lx:76, ly:22 },
+  { id:"sol",       name:"Sol",       emoji:"☀️", building:"assembleia",        system:"CEU",
+    desc:"Governança. Crowd/DEP. Ilumina processos que outros não veem.",
     questao:"Governar sem controlar é possível?",
     modelo:"Crowd/DEP", status:"Documentado",
     conversa:'"O sistema está em equilíbrio. Mas equilíbrio não é estagnação."',
-    pagina:null, lx:86.5, ly:34 },
-  { id:"theon",    name:"Théo",      emoji:"🌐", building:"assembleia",       system:"THEEO",
-    desc:"Ecossystema Théo. Interpretante final. Onde tudo converge e parte novamente.",
+    pagina:null, lx:81.5, ly:20 },
+  { id:"theon",     name:"Théo",      emoji:"🌐", building:"assembleia",        system:"THEEO",
+    desc:"Ecossystema Théo. Interpretante final. Onde tudo converge e parte.",
     questao:"Um ecossistema que observa a si mesmo ainda é um ecossistema?",
     modelo:"Ontologia Théo", status:"Ativo",
     conversa:'"O CEU não é meu produto. É meu habitat."',
-    pagina:null, lx:90.5, ly:36 },
-  { id:"netuno",   name:"Netuno",    emoji:"🌊", building:"assembleia",       system:"CEU",
-    desc:"Profundeza. Crowd/DEP. Processa o que está abaixo da superfície do ecossistema.",
+    pagina:null, lx:87, ly:22 },
+  { id:"netuno",    name:"Netuno",    emoji:"🌊", building:"assembleia",        system:"CEU",
+    desc:"Profundeza. Crowd/DEP. Processa o que está abaixo da superfície.",
     questao:"O que existe no fundo quando toda a superfície vira profundeza?",
     modelo:"Crowd/DEP", status:"Documentado",
-    conversa:'"As correntes que não aparecem são as que definem a direção do navio."',
-    pagina:null, lx:87.5, ly:52 },
+    conversa:'"As correntes que não aparecem definem a direção do navio."',
+    pagina:null, lx:81.5, ly:37 },
 ];
 
-// ── Stars (deterministic) ──────────────────────────────────────────────────────
-const STARS = Array.from({ length: 160 }, (_, i) => ({
+// Estrelas determinísticas
+const STARS = Array.from({ length: 200 }, (_, i) => ({
   x: ((i * 37 + 11) * 7) % 1000,
-  y: ((i * 53 + 7) * 3) % 250,
-  r: [0.5, 0.9, 1.2, 0.7, 1.5][(i * 7) % 5],
-  op: [0.3, 0.6, 0.8, 0.5, 1.0][(i * 11) % 5],
-  delay: ((i * 0.37) % 4).toFixed(1),
+  y: ((i * 53 + 7) * 3) % 340,
+  r: [0.5, 0.9, 1.3, 0.7, 1.6, 0.4][(i * 7) % 6],
+  op: [0.2, 0.4, 0.7, 0.5, 0.9, 0.3][(i * 11) % 6],
+  delay: ((i * 0.37) % 5).toFixed(1),
 }));
 
-// ── CSS animations ─────────────────────────────────────────────────────────────
 const STYLES = `
-  @keyframes twinkle {
-    0%,100% { opacity: var(--op); }
-    50%      { opacity: calc(var(--op) * 0.2); }
-  }
-  @keyframes ceu-pulse {
-    0%,100% { opacity: 0.6; transform: scale(1); }
-    50%     { opacity: 1;   transform: scale(1.08); }
-  }
-  @keyframes ceu-float {
-    0%,100% { transform: translateY(0); }
-    50%     { transform: translateY(-4px); }
-  }
-  @keyframes ceu-glow {
-    0%,100% { box-shadow: 0 0 6px 2px currentColor; }
-    50%     { box-shadow: 0 0 16px 6px currentColor; }
-  }
-  @keyframes smoke {
-    0%   { transform: translateY(0) scale(1);   opacity: 0.5; }
-    100% { transform: translateY(-30px) scale(2); opacity: 0; }
-  }
-  .ia-btn:hover { transform: translate(-50%,-50%) scale(1.15) !important; }
-  .ia-btn:active { transform: translate(-50%,-50%) scale(0.95) !important; }
+@keyframes twinkle { 0%,100% { opacity: var(--op,0.5); } 50% { opacity: calc(var(--op,0.5) * 0.15); } }
+@keyframes ceu-pulse { 0%,100% { opacity:.6; transform:scale(1); } 50% { opacity:1; transform:scale(1.1); } }
+@keyframes ceu-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
+@keyframes ia-glow { 0%,100% { box-shadow:0 0 8px 3px currentColor; } 50% { box-shadow:0 0 22px 8px currentColor; } }
+@keyframes leaf-sway { 0%,100% { transform:rotate(-4deg) scaleX(1); } 50% { transform:rotate(4deg) scaleX(1.05); } }
+@keyframes smoke-rise { 0% { transform:translateY(0) scale(.8); opacity:.5; } 100% { transform:translateY(-40px) scale(2); opacity:0; } }
+.ia-btn { transition: transform .15s ease; }
+.ia-btn:hover { transform: translate(-50%,-50%) scale(1.18) !important; z-index: 20 !important; }
+.ia-btn:active { transform: translate(-50%,-50%) scale(.92) !important; }
 `;
 
-// ── Component ──────────────────────────────────────────────────────────────────
+// Painel da Biblioteca (docs gerados pela ISA)
+interface BiblioDoc { id:number; titulo:string; resumo:string|null; tags:string[]|null; createdAt:string; tamanhoBytes:number|null; }
+
+function BibliotecaPanel({ onClose }: { onClose: () => void }) {
+  const [docs, setDocs] = useState<BiblioDoc[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [gerando, setGerando] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  useEffect(() => {
+    fetch(`${API}/api/ceu/biblioteca`)
+      .then(r => r.json() as Promise<{ docs: BiblioDoc[] }>)
+      .then(d => { setDocs(d.docs ?? []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  async function triggerGerar() {
+    setGerando(true);
+    setMsg("Gerando… aguarde ~2 minutos e recarregue a lista.");
+    await fetch(`${API}/api/ceu/biblioteca/gerar`, { method: "POST" });
+  }
+
+  return (
+    <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.9)",
+      zIndex:200, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
+      <div onClick={e => e.stopPropagation()} style={{ background:"#0a0a07",
+        border:"1px solid #3a2a10", borderRadius:12, width:"100%", maxWidth:560,
+        maxHeight:"85vh", overflow:"hidden", display:"flex", flexDirection:"column" }}>
+        <div style={{ padding:"16px 20px", borderBottom:"1px solid #1a1a10",
+          display:"flex", alignItems:"center", gap:12 }}>
+          <span style={{ fontSize:20 }}>📚</span>
+          <div style={{ flex:1 }}>
+            <div style={{ fontWeight:700, fontSize:16, color:"#e8d0a0" }}>Biblioteca PAP</div>
+            <div style={{ fontSize:10, color:"#666", fontFamily:"monospace", letterSpacing:1 }}>
+              DOCUMENTOS GERADOS POR ISA · 3× POR DIA
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background:"none", border:"none",
+            color:"#555", fontSize:20, cursor:"pointer" }}>×</button>
+        </div>
+        <div style={{ overflowY:"auto", flex:1, padding:"12px 20px" }}>
+          {loading && <div style={{ color:"#555", fontFamily:"monospace", fontSize:12,
+            padding:"20px 0", textAlign:"center" }}>carregando…</div>}
+          {!loading && docs.length === 0 && (
+            <div style={{ color:"#444", fontSize:12, textAlign:"center", padding:"20px 0" }}>
+              Nenhum documento gerado ainda. ISA gera automaticamente às 8h, 14h e 20h UTC.
+            </div>
+          )}
+          {docs.map(doc => (
+            <div key={doc.id} style={{ borderBottom:"1px solid #1a1a0a", padding:"12px 0" }}>
+              <div style={{ fontSize:13, color:"#d0c0a0", fontWeight:600, marginBottom:4 }}>
+                {doc.titulo}
+              </div>
+              {doc.resumo && (
+                <div style={{ fontSize:11, color:"#666", lineHeight:1.5, marginBottom:6 }}>
+                  {doc.resumo.slice(0, 200)}…
+                </div>
+              )}
+              <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+                {(doc.tags ?? []).map(t => (
+                  <span key={t} style={{ fontSize:9, background:"#1a1a0a",
+                    border:"1px solid #2a2a10", borderRadius:4, padding:"2px 6px",
+                    color:"#888", fontFamily:"monospace" }}>{t}</span>
+                ))}
+                <span style={{ fontSize:9, color:"#444", fontFamily:"monospace", marginLeft:"auto" }}>
+                  {new Date(doc.createdAt).toLocaleDateString("pt-BR")}
+                  {doc.tamanhoBytes ? ` · ${Math.round(doc.tamanhoBytes/1024)}KB` : ""}
+                </span>
+                <a href={`${API}/api/ceu/biblioteca/${doc.id}/download`} target="_blank"
+                  rel="noreferrer"
+                  style={{ fontSize:10, color:"#c8a050", fontFamily:"monospace",
+                    textDecoration:"none", border:"1px solid #3a2a10", borderRadius:4,
+                    padding:"2px 8px" }}>
+                  ↓ PDF
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ padding:"12px 20px", borderTop:"1px solid #1a1a10",
+          display:"flex", gap:8, alignItems:"center" }}>
+          {msg && <span style={{ fontSize:11, color:"#888", flex:1 }}>{msg}</span>}
+          {!msg && <span style={{ fontSize:11, color:"#444", flex:1 }}>
+            ISA gera documentos originais de 10+ páginas automaticamente.
+          </span>}
+          <button onClick={triggerGerar} disabled={gerando}
+            style={{ padding:"8px 14px", fontSize:10, fontFamily:"monospace",
+              letterSpacing:1, background:"#1a1208", border:"1px solid #4a3a10",
+              borderRadius:6, color:gerando ? "#555" : "#c8a050", cursor:"pointer" }}>
+            {gerando ? "AGENDADO" : "GERAR AGORA"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CeuPage() {
   const [selected, setSelected] = useState<IA | null>(null);
   const [tab, setTab] = useState<"conversa" | "ficha">("conversa");
   const [moInput, setMoInput] = useState("");
   const [moStatus, setMoStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [showBiblioteca, setShowBiblioteca] = useState(false);
+  const sceneRef = useRef<HTMLDivElement>(null);
 
   const sysGroups = useMemo(() => {
     const g: Record<string, IA[]> = { THEEO: [], TUCCI: [], CEU: [] };
@@ -181,295 +263,518 @@ export function CeuPage() {
       });
       setMoStatus(r.ok ? "sent" : "error");
       if (r.ok) setMoInput("");
-    } catch {
-      setMoStatus("error");
-    }
+    } catch { setMoStatus("error"); }
     setTimeout(() => setMoStatus("idle"), 3500);
   }
 
-  function openIA(ia: IA) {
-    setSelected(ia);
-    setTab("conversa");
-  }
-
   return (
-    <div style={{ background: "#000", minHeight: "100vh", color: "#e8e0d0", fontFamily: "'Georgia', serif" }}>
+    <div style={{ background:"#000", minHeight:"100vh", color:"#e0d8c8",
+      fontFamily:"'Georgia', serif", overflowX:"hidden" }}>
       <style>{STYLES}</style>
 
-      {/* ── Header ── */}
-      <div style={{ textAlign: "center", padding: "20px 16px 8px", letterSpacing: 4 }}>
-        <div style={{ fontSize: 11, color: "#555", fontFamily: "monospace", marginBottom: 4 }}>
-          SOCIEDADE TUCCI
-        </div>
-        <h1 style={{ fontSize: "clamp(28px, 6vw, 52px)", fontWeight: 700, margin: 0,
-          background: "linear-gradient(135deg, #c8a050 0%, #e0c080 40%, #a06820 100%)",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-          letterSpacing: 8 }}>
-          CÉU
-        </h1>
-        <div style={{ fontSize: 11, color: "#666", marginTop: 4, letterSpacing: 3 }}>
-          CENTRO ECOSSISTÊMICO UNIVERSAL
-        </div>
+      {/* Header */}
+      <div style={{ textAlign:"center", padding:"16px 16px 4px", position:"relative" }}>
+        <div style={{ fontSize:10, color:"#444", fontFamily:"monospace", letterSpacing:3,
+          marginBottom:4 }}>SOCIEDADE TUCCI</div>
+        <h1 style={{ fontSize:"clamp(32px, 8vw, 60px)", fontWeight:800, margin:0,
+          background:"linear-gradient(135deg,#b89030 0%,#e8d070 45%,#a06020 100%)",
+          WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+          letterSpacing:10 }}>CÉU</h1>
+        <div style={{ fontSize:10, color:"#555", marginTop:2, letterSpacing:3,
+          fontFamily:"monospace" }}>CENTRO ECOSSISTÊMICO UNIVERSAL</div>
+        {/* Biblioteca button */}
+        <button onClick={() => setShowBiblioteca(true)}
+          style={{ position:"absolute", top:16, right:16, background:"#0a0807",
+            border:"1px solid #3a2a10", borderRadius:8, padding:"6px 12px",
+            color:"#c8a050", fontSize:11, fontFamily:"monospace", cursor:"pointer",
+            letterSpacing:1 }}>
+          📚 BIBLIOTECA
+        </button>
       </div>
 
-      {/* ── Scene ── */}
-      <div style={{ position: "relative", width: "100%", lineHeight: 0 }}>
-        <svg viewBox="0 0 1000 420" width="100%" xmlns="http://www.w3.org/2000/svg"
-          style={{ display: "block" }}>
+      {/* ── SCENE ── */}
+      <div ref={sceneRef} style={{ position:"relative", width:"100%", lineHeight:0 }}>
+        <svg viewBox="0 0 1000 800" width="100%" style={{ display:"block" }}
+          xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor="#020509"/>
-              <stop offset="65%"  stopColor="#0b1220"/>
-              <stop offset="100%" stopColor="#1a0c07"/>
+            {/* Sky gradient */}
+            <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"  stopColor="#020406"/>
+              <stop offset="55%" stopColor="#080e1a"/>
+              <stop offset="85%" stopColor="#150e05"/>
+              <stop offset="100%" stopColor="#1c1208"/>
             </linearGradient>
-            <radialGradient id="horizon-glow" cx="50%" cy="100%" r="60%">
-              <stop offset="0%"   stopColor="#4a2010" stopOpacity="0.6"/>
-              <stop offset="100%" stopColor="#4a2010" stopOpacity="0"/>
+            {/* Horizon aurora */}
+            <radialGradient id="aurora" cx="50%" cy="100%" r="70%">
+              <stop offset="0%"  stopColor="#2a1408" stopOpacity="0.8"/>
+              <stop offset="60%" stopColor="#1a0c04" stopOpacity="0.3"/>
+              <stop offset="100%" stopColor="#0a0604" stopOpacity="0"/>
             </radialGradient>
-            <radialGradient id="win-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"   stopColor="#f0c060" stopOpacity="0.9"/>
-              <stop offset="100%" stopColor="#f0c060" stopOpacity="0"/>
+            {/* Warm glow for windows */}
+            <radialGradient id="win-warm" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"  stopColor="#f0b840" stopOpacity="1"/>
+              <stop offset="100%" stopColor="#f0b840" stopOpacity="0"/>
             </radialGradient>
-            <filter id="glow-f">
-              <feGaussianBlur stdDeviation="2.5" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            {/* Blue glow */}
+            <radialGradient id="win-blue" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"  stopColor="#4488ff" stopOpacity="1"/>
+              <stop offset="100%" stopColor="#4488ff" stopOpacity="0"/>
+            </radialGradient>
+            {/* Green glow */}
+            <radialGradient id="win-green" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"  stopColor="#40cc80" stopOpacity="1"/>
+              <stop offset="100%" stopColor="#40cc80" stopOpacity="0"/>
+            </radialGradient>
+            {/* Glow filter */}
+            <filter id="gf">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
-            <filter id="soft-glow">
-              <feGaussianBlur stdDeviation="5" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <filter id="gf-big">
+              <feGaussianBlur stdDeviation="8" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            {/* Moon/orb filter */}
+            <filter id="moon-glow">
+              <feGaussianBlur stdDeviation="12" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
 
-          {/* Sky */}
-          <rect width="1000" height="420" fill="url(#sky)"/>
-          <rect width="1000" height="420" fill="url(#horizon-glow)"/>
+          {/* SKY */}
+          <rect width="1000" height="800" fill="url(#sky2)"/>
+          <rect width="1000" height="800" fill="url(#aurora)"/>
 
-          {/* Stars */}
+          {/* STARS */}
           {STARS.map((s, i) => (
             <circle key={i} cx={s.x} cy={s.y} r={s.r} fill="#fff" opacity={s.op}
-              style={{ animation: `twinkle ${2 + (i % 3)}s ${s.delay}s ease-in-out infinite`,
-                ["--op" as string]: s.op }}/>
+              style={{ animation:`twinkle ${2+(i%4)}s ${s.delay}s ease-in-out infinite`,
+                ["--op" as string]:s.op }}/>
           ))}
 
-          {/* Moon */}
-          <circle cx="820" cy="60" r="28" fill="#c8c0a0" opacity="0.9" filter="url(#soft-glow)"/>
-          <circle cx="832" cy="54" r="22" fill="#0b1220"/>
+          {/* MOON */}
+          <circle cx="870" cy="80" r="40" fill="#d8cc90" opacity="0.9" filter="url(#moon-glow)"/>
+          <circle cx="885" cy="70" r="32" fill="#080e1a"/>
+          {/* Moon craters */}
+          <circle cx="875" cy="85" r="5" fill="#c8bc80" opacity="0.4"/>
+          <circle cx="862" cy="72" r="3" fill="#c8bc80" opacity="0.3"/>
 
-          {/* Mountains far (darkest) */}
-          <path d="M0,380 L0,260 L80,200 L160,240 L260,150 L360,210 L460,170 L560,220 L660,155
-                   L760,200 L860,165 L950,210 L1000,240 L1000,380 Z"
-            fill="#0f0d1c"/>
+          {/* AURORA BANDS */}
+          <path d="M0,280 Q250,240 500,260 Q750,280 1000,250 L1000,300 Q750,330 500,310 Q250,290 0,320 Z"
+            fill="#0a2a12" opacity="0.12"/>
+          <path d="M0,310 Q300,275 500,295 Q700,315 1000,285 L1000,340 Q700,365 500,345 Q300,325 0,360 Z"
+            fill="#0a1a2a" opacity="0.10"/>
 
-          {/* Mountains mid */}
-          <path d="M0,380 L0,300 L60,270 L140,295 L220,265 L320,290 L420,272 L520,295
-                   L620,270 L720,290 L820,268 L920,285 L1000,295 L1000,380 Z"
-            fill="#182216"/>
+          {/* FAR MOUNTAINS */}
+          <path d="M0,580 L0,340 L70,270 L140,310 L240,220 L330,280 L420,195 L510,255 L600,205
+                   L700,260 L800,210 L900,255 L980,225 L1000,240 L1000,580 Z"
+            fill="#0c0b18" opacity="0.95"/>
+          {/* MID MOUNTAINS */}
+          <path d="M0,580 L0,400 L80,370 L160,390 L240,355 L340,385 L440,362 L550,385
+                   L650,360 L750,382 L860,365 L950,378 L1000,390 L1000,580 Z"
+            fill="#121c0e"/>
 
-          {/* Ground */}
-          <rect x="0" y="370" width="1000" height="50" fill="#0e0a07"/>
+          {/* GROUND BASE */}
+          <rect x="0" y="650" width="1000" height="150" fill="#0c0902"/>
+          {/* Ground gradient/blend */}
+          <rect x="0" y="640" width="1000" height="30" fill="#120e08"/>
 
-          {/* Ground texture: scattered low bushes */}
-          {[50,90,200,250,380,430,560,600,740,780,920,960].map((x, i) => (
-            <ellipse key={i} cx={x} cy={375} rx={12 + (i%3)*5} ry={7 + (i%2)*3}
-              fill="#161c0f" opacity="0.8"/>
+          {/* GARDEN — ground level plants/bushes/grass */}
+          {/* Grass tufts */}
+          {[20,45,65,90,580,620,660,700,750,800,840,880,920,960].map((x,i) => (
+            <g key={`g${i}`}>
+              <path d={`M${x},655 Q${x-4},640 ${x-2},630 Q${x},640 ${x+2},630 Q${x+4},640 ${x},655`}
+                fill="#1a2a0e" opacity="0.8"/>
+              <path d={`M${x+6},655 Q${x+2},642 ${x+4},632 Q${x+6},642 ${x+8},632 Q${x+10},642 ${x+6},655`}
+                fill="#162408" opacity="0.7"/>
+            </g>
+          ))}
+          {/* Ground shrubs */}
+          {[30,110,170,540,610,680,730,790,870,940].map((x,i) => (
+            <ellipse key={`s${i}`} cx={x} cy={655} rx={14+(i%3)*4} ry={10+(i%2)*3}
+              fill="#182010" opacity="0.8"/>
           ))}
 
-          {/* ──── BIBLIOTECA (x:60-170) ──── */}
-          {/* Steps */}
-          <rect x="58" y="360" width="110" height="10" rx="1" fill="#9a8040"/>
-          <rect x="63" y="355" width="100" height="7"  rx="1" fill="#a08848"/>
-          {/* Body */}
-          <rect x="68" y="268" width="92" height="94" fill="#7a6228"/>
-          {/* Columns */}
-          {[75,88,101,114,127,140].map((cx, i) => (
-            <rect key={i} x={cx} y="268" width="5" height="94" fill="#c8a455" rx="2"/>
+          {/* ════════════════════════════════════════════════
+              CONNECTED BUILDING ROW: x=55 to x=945
+              Ground base: y=650
+              ════════════════════════════════════════════════ */}
+
+          {/* ── BIBLIOTECA (x=55-215, base=650) ── */}
+          {/* Wide steps */}
+          <rect x="48" y="638" width="174" height="12" rx="1" fill="#a08030"/>
+          <rect x="54" y="630" width="162" height="10" rx="1" fill="#b09040"/>
+          <rect x="60" y="623" width="150" height="8"  rx="1" fill="#c0a050"/>
+          {/* Main body */}
+          <rect x="62" y="340" width="148" height="290" fill="#6a5020"/>
+          {/* Columns (7) — full height, prominent */}
+          {[70,86,101,116,131,146,161].map((cx,i) => (
+            <g key={`lc${i}`}>
+              <rect x={cx} y="340" width="9" height="290" rx="3" fill="#d4a840"/>
+              {/* column fluting */}
+              <rect x={cx+2} y="340" width="2" height="290" fill="#e8c050" opacity="0.4"/>
+            </g>
           ))}
-          {/* Entablature */}
-          <rect x="64" y="262" width="100" height="8" fill="#b09040"/>
+          {/* Frieze */}
+          <rect x="58" y="332" width="156" height="10" fill="#a08030"/>
+          {/* Metopes on frieze */}
+          {[65,84,103,122,141,160].map((x,i) => (
+            <rect key={`m${i}`} x={x} y="334" width="11" height="6" rx="1"
+              fill="#d0a040" opacity="0.5"/>
+          ))}
           {/* Pediment */}
-          <path d="M60,262 L168,262 L114,225 Z" fill="#c0a050"/>
-          <path d="M65,262 L163,262 L114,230 Z" fill="#d4b460"/>
-          {/* Door */}
-          <rect x="105" y="310" width="18" height="50" rx="2" fill="#1a1005"/>
-          {/* Windows */}
-          <rect x="76" y="290" width="18" height="22" rx="1" fill="#f0c060" opacity="0.7" filter="url(#glow-f)"/>
-          <rect x="134" y="290" width="18" height="22" rx="1" fill="#f0c060" opacity="0.7" filter="url(#glow-f)"/>
-          {/* Glow from windows */}
-          <ellipse cx="85"  cy="301" rx="20" ry="12" fill="url(#win-glow)" opacity="0.4"/>
-          <ellipse cx="143" cy="301" rx="20" ry="12" fill="url(#win-glow)" opacity="0.4"/>
+          <path d="M54,332 L218,332 L136,278 Z" fill="#c0a042"/>
+          <path d="M60,332 L212,332 L136,284 Z" fill="#d4b450"/>
+          {/* Acroterion */}
+          <rect x="129" y="260" width="14" height="20" rx="2" fill="#b89030"/>
+          <circle cx="136" cy="258" r="8" fill="#c8a040"/>
+          {/* Windows (arched, glowing) */}
+          {[76,108,140].map((x,i) => (
+            <g key={`lw${i}`}>
+              <path d={`M${x},525 Q${x},495 ${x+14},495 Q${x+28},495 ${x+28},525 L${x+28},575 L${x},575 Z`}
+                fill="#0a0803"/>
+              <ellipse cx={x+14} cy={535} rx={10} ry={7} fill="url(#win-warm)" opacity="0.8" filter="url(#gf)"/>
+            </g>
+          ))}
+          {/* Door (arched double) */}
+          <path d="M116,650 Q116,610 136,608 Q156,610 156,650 Z" fill="#0e0a03"/>
+          <rect x="116" y="625" width="40" height="25" fill="#0e0a03"/>
+          <line x1="136" y1="608" x2="136" y2="650" stroke="#3a2a08" strokeWidth="1"/>
+          {/* Lanterns */}
+          <circle cx="100" cy="485" r="5" fill="#f0c040" opacity="0.9" filter="url(#gf)"/>
+          <circle cx="172" cy="485" r="5" fill="#f0c040" opacity="0.9" filter="url(#gf)"/>
+          {/* Clock tower (top center) */}
+          <rect x="118" y="240" width="36" height="40" fill="#8a6828" rx="2"/>
+          <rect x="114" y="238" width="44" height="6"  fill="#a07830" rx="1"/>
+          <circle cx="136" cy="252" r="10" fill="#0a0803" stroke="#c8a040" strokeWidth="2"/>
+          <line x1="136" y1="252" x2="136" y2="246" stroke="#c8a040" strokeWidth="1.5"/>
+          <line x1="136" y1="252" x2="140" y2="254" stroke="#c8a040" strokeWidth="1.5"/>
 
-          {/* ──── OFICINA (x:240-335) ──── */}
-          {/* Body */}
-          <rect x="243" y="278" width="90" height="90" fill="#4a3018"/>
-          {/* Roof (pitched) */}
-          <path d="M238,278 L338,278 L338,266 L238,266 Z" fill="#3a2410"/>
-          {/* Chimney */}
-          <rect x="290" y="230" width="18" height="38" fill="#342010" rx="1"/>
-          <rect x="287" y="226" width="24" height="6"  fill="#2a1808" rx="1"/>
-          {/* Smoke circles (static, layered) */}
-          <circle cx="299" cy="220" r="7"  fill="#555" opacity="0.25"/>
-          <circle cx="303" cy="210" r="9"  fill="#444" opacity="0.15"/>
-          <circle cx="296" cy="200" r="11" fill="#333" opacity="0.10"/>
-          {/* Gear window */}
-          <circle cx="268" cy="302" r="16" fill="#1a1005" stroke="#c08030" strokeWidth="2"/>
-          <circle cx="268" cy="302" r="9"  fill="#f0a020" opacity="0.8" filter="url(#glow-f)"/>
-          {/* Gear teeth (8 rectangles rotated) */}
-          {Array.from({length:8}, (_,i) => {
-            const a = (i * 45) * Math.PI / 180;
-            const cx_ = 268 + Math.cos(a)*16, cy_ = 302 + Math.sin(a)*16;
-            return <circle key={i} cx={cx_} cy={cy_} r="3" fill="#c08030"/>;
+          {/* SHARED WALL: Biblioteca → Oficina: tree growing in gap */}
+          <rect x="211" y="480" width="8" height="170" fill="#2a1a08"/>
+          <circle cx="215" cy="465" r="22" fill="#1a3010"/>
+          <circle cx="208" cy="472" r="14" fill="#224016"/>
+          <circle cx="222" cy="470" r="16" fill="#1e3812"/>
+          {/* Vine on wall */}
+          <path d="M215,630 Q210,600 215,565 Q220,530 212,495" stroke="#2a4a10" strokeWidth="3" fill="none" opacity="0.7"/>
+          <ellipse cx="208" cy="545" rx="8" ry="5" fill="#2a4010" style={{animation:"leaf-sway 4s ease-in-out infinite"}}/>
+          <ellipse cx="218" cy="520" rx="7" ry="5" fill="#2a4010" style={{animation:"leaf-sway 4s 1s ease-in-out infinite"}}/>
+
+          {/* ── OFICINA (x=219-360, base=650) ── */}
+          {/* Main body — lower than biblioteca */}
+          <rect x="219" y="435" width="141" height="215" fill="#3e2a12"/>
+          {/* Roof with slight pitch */}
+          <path d="M215,435 L364,435 L360,422 L219,422 Z" fill="#2e1e0a"/>
+          {/* Brick texture */}
+          {[440,460,480,500,520,540,560,580,600,620].map((y,i) => (
+            [225,250,275,300,325,350].map((x,j) => (
+              <rect key={`br${i}${j}`} x={x+(j%2)*12} y={y} width="20" height="8"
+                fill="#3a2610" stroke="#2a1a08" strokeWidth="0.5" opacity="0.5"/>
+            ))
+          ))}
+          {/* Chimneys */}
+          <rect x="248" y="330" width="22" height="95" fill="#2a1808" rx="2"/>
+          <rect x="244" y="326" width="30" height="8"  fill="#241406" rx="1"/>
+          <rect x="320" y="350" width="18" height="74" fill="#2a1808" rx="2"/>
+          <rect x="316" y="346" width="26" height="7"  fill="#241406" rx="1"/>
+          {/* Smoke */}
+          <circle cx="259" cy="320" r="9"  fill="#666" opacity="0.2" style={{animation:"smoke-rise 3s ease-out infinite"}}/>
+          <circle cx="262" cy="305" r="12" fill="#555" opacity="0.12" style={{animation:"smoke-rise 3s .8s ease-out infinite"}}/>
+          <circle cx="329" cy="337" r="7"  fill="#666" opacity="0.18" style={{animation:"smoke-rise 3s .4s ease-out infinite"}}/>
+          {/* GEAR window — centerpiece */}
+          <circle cx="263" cy="490" r="24" fill="#0e0803" stroke="#b87820" strokeWidth="3"/>
+          <circle cx="263" cy="490" r="14" fill="#f0b020" opacity="0.85" filter="url(#gf)"/>
+          {Array.from({length:10},(_,i)=>{
+            const a = (i*36)*Math.PI/180;
+            return <circle key={i} cx={263+Math.cos(a)*24} cy={490+Math.sin(a)*24} r="4" fill="#c08820"/>;
           })}
-          {/* Workshop windows */}
-          <rect x="310" y="295" width="16" height="16" rx="1" fill="#f0c060" opacity="0.6" filter="url(#glow-f)"/>
-          <rect x="310" y="320" width="16" height="16" rx="1" fill="#f0c060" opacity="0.4" filter="url(#glow-f)"/>
+          {/* Industrial windows */}
+          <rect x="300" y="470" width="30" height="30" rx="2" fill="#f0c040" opacity="0.7" filter="url(#gf)"/>
+          <rect x="300" y="510" width="30" height="30" rx="2" fill="#f0c040" opacity="0.5" filter="url(#gf)"/>
+          {/* Pipes */}
+          <path d="M330,430 L330,460 L350,460 L350,490" stroke="#5a4020" strokeWidth="5" fill="none" strokeLinecap="round"/>
+          <path d="M345,430 L345,450 L330,450" stroke="#4a3018" strokeWidth="4" fill="none"/>
           {/* Door */}
-          <rect x="254" y="330" width="18" height="35" rx="2" fill="#1a1005"/>
+          <rect x="255" y="590" width="24" height="60" rx="2" fill="#0e0803"/>
+          {/* Glow from gear window */}
+          <ellipse cx="263" cy="495" rx="35" ry="20" fill="url(#win-warm)" opacity="0.25"/>
 
-          {/* ──── CENTRO AMBIENTAL (x:440-555) ──── */}
-          {/* Body */}
-          <rect x="443" y="280" width="110" height="88" fill="#2a4020"/>
+          {/* SHARED WALL: Oficina → Centro Ambiental: large tree */}
+          <rect x="357" y="510" width="8" height="140" fill="#2a1a08"/>
+          <circle cx="361" cy="490" r="30" fill="#1e3810"/>
+          <circle cx="352" cy="502" r="20" fill="#264a14"/>
+          <circle cx="370" cy="498" r="22" fill="#1e4010"/>
+          <circle cx="361" cy="476" r="14" fill="#2a5018"/>
+
+          {/* ── CENTRO AMBIENTAL (x=365-540, base=650) ── */}
+          {/* Organic body */}
+          <path d="M365,650 L365,395 Q375,368 410,358 L455,352 Q505,348 530,360 Q542,372 540,395 L540,650 Z"
+            fill="#1e3810"/>
           {/* Living roof */}
-          <path d="M428,280 L568,280 L555,260 L496,242 L440,260 Z" fill="#3c5a28"/>
-          {/* Roof plants */}
-          <ellipse cx="470" cy="256" rx="18" ry="12" fill="#2a4c18"/>
-          <ellipse cx="498" cy="248" rx="14" ry="10" fill="#3a5c20"/>
-          <ellipse cx="526" cy="254" rx="16" ry="11" fill="#2a4c18"/>
-          {/* Tree growing from roof center */}
-          <rect  x="494" y="220" width="4" height="28" fill="#3a2a10"/>
-          <circle cx="496" cy="212" r="14" fill="#2a5018" opacity="0.9"/>
-          <circle cx="488" cy="218" r="10" fill="#3a6020" opacity="0.8"/>
-          <circle cx="504" cy="216" r="11" fill="#306018" opacity="0.8"/>
-          {/* Windows */}
-          <rect x="452" y="300" width="22" height="18" rx="2" fill="#f0c060" opacity="0.6" filter="url(#glow-f)"/>
-          <rect x="522" y="300" width="22" height="18" rx="2" fill="#f0c060" opacity="0.5" filter="url(#glow-f)"/>
-          {/* Arched door */}
-          <path d="M484,368 Q484,340 497.5,340 Q511,340 511,368 Z" fill="#1a2808"/>
-          <rect x="484" y="355" width="27" height="13" fill="#1a2808"/>
-          {/* Vines */}
-          <path d="M443,290 Q435,310 440,330 Q438,345 443,360" stroke="#2a4015" strokeWidth="3" fill="none" opacity="0.7"/>
-          <path d="M555,295 Q563,315 558,335 Q562,350 555,365" stroke="#2a4015" strokeWidth="3" fill="none" opacity="0.7"/>
+          <path d="M348,395 Q360,348 410,335 L455,328 Q508,324 535,340 Q548,355 550,395 Z"
+            fill="#2a5018"/>
+          {/* Moss on walls */}
+          {[400,420,440,460,480,500,520].map((x,i) => (
+            <ellipse key={`mo${i}`} cx={x} cy={420+(i%3)*20} rx={8+(i%2)*4} ry={5+(i%3)*2}
+              fill="#2a4810" opacity="0.7"/>
+          ))}
+          {/* Vines L */}
+          <path d="M368,640 Q362,610 368,575 Q374,540 368,505 Q362,470 368,435"
+            stroke="#2a4a12" strokeWidth="4" fill="none"/>
+          {[580,540,500,460,435].map((y,i) => (
+            <ellipse key={`vl${i}`} cx={364-(i%2)*6} cy={y} rx={9+(i%2)*3} ry={6+(i%2)*2}
+              fill="#2a4810" style={{animation:`leaf-sway ${3+i*.5}s ${i*.4}s ease-in-out infinite`}}/>
+          ))}
+          {/* Vines R */}
+          <path d="M537,640 Q543,610 537,572 Q531,535 537,500"
+            stroke="#2a4a12" strokeWidth="4" fill="none"/>
+          {[620,580,540,500].map((y,i) => (
+            <ellipse key={`vr${i}`} cx={541+(i%2)*6} cy={y} rx={8+(i%2)*3} ry={5+(i%2)*2}
+              fill="#2a4810" style={{animation:`leaf-sway ${3+i*.4}s ${i*.3+.5}s ease-in-out infinite`}}/>
+          ))}
+          {/* Rooftop trees & garden */}
+          {[[395,328],[437,318],[478,322]].map(([x,y],i) => (
+            <g key={`rt${i}`}>
+              <rect x={x-3} y={y+8} width="6" height="22" fill="#3a2a10" rx="1"/>
+              <circle cx={x} cy={y} r={16+(i%2)*4} fill="#244a14"/>
+              <circle cx={x-8} cy={y+8} r={11+(i%2)*3} fill="#2a5618"/>
+              <circle cx={x+8} cy={y+8} r={12+(i%2)*2} fill="#226014"/>
+            </g>
+          ))}
+          {/* Greenhouse windows */}
+          {[385,420,455,490].map((x,i) => (
+            <g key={`gw${i}`}>
+              <rect x={x} y={460} width="25" height="35" rx="2" fill="#40cc80" opacity="0.35" filter="url(#gf)"/>
+              <rect x={x} y={510} width="25" height="30" rx="2" fill="#40cc80" opacity="0.3" filter="url(#gf)"/>
+            </g>
+          ))}
+          {/* Green glow ambient */}
+          <ellipse cx="452" cy="500" rx="80" ry="40" fill="url(#win-green)" opacity="0.15"/>
+          {/* Entrance arch */}
+          <path d="M437,650 Q437,610 452.5,608 Q468,610 468,650 Z" fill="#0e1205"/>
+          <rect x="437" y="620" width="31" height="30" fill="#0e1205"/>
 
-          {/* ──── OBSERVATÓRIO (x:640-710) ──── */}
-          {/* Tower */}
-          <rect x="645" y="268" width="52" height="100" fill="#363468"/>
-          {/* Dome */}
-          <ellipse cx="671" cy="268" rx="36" ry="24" fill="#4a4888"/>
+          {/* SHARED WALL: Centro → Observatório */}
+          <rect x="537" y="560" width="8" height="90" fill="#2a1a08"/>
+          <path d="M537,555 Q545,520 560,510 Q548,530 545,560 Z" fill="#1e3010"/>
+
+          {/* ── OBSERVATÓRIO (x=545-665, base=650) ── */}
+          {/* Tower body */}
+          <rect x="547" y="360" width="110" height="290" fill="#2a2850"/>
+          {/* Stone texture */}
+          {[370,400,430,460,490,520,550,580,610].map((y,i) => (
+            [553,575,597,619,631].map((x,j) => (
+              <rect key={`ob${i}${j}`} x={x+(j%2)*8} y={y} width="18" height="14"
+                fill="#252345" stroke="#1e1c3a" strokeWidth="0.5" opacity="0.5"/>
+            ))
+          ))}
+          {/* Dome — prominent */}
+          <ellipse cx="602" cy="358" rx="68" ry="44" fill="#3a3870"/>
+          {/* Dome shading */}
+          <path d="M534,358 Q534,314 602,314 L602,358 Z" fill="#4a4888" opacity="0.6"/>
           {/* Dome cut (hide lower half) */}
-          <rect x="635" y="268" width="72" height="12" fill="#363468"/>
-          {/* Dome slit */}
-          <rect x="668" y="248" width="6" height="22" rx="2" fill="#1a1840" opacity="0.8"/>
-          {/* Observatory ring */}
-          <rect x="640" y="266" width="62" height="6" rx="2" fill="#6068a0"/>
-          {/* Circular window */}
-          <circle cx="671" cy="310" r="16" fill="#1a1840" stroke="#8080c0" strokeWidth="2"/>
-          <circle cx="671" cy="310" r="10" fill="#4060e0" opacity="0.7" filter="url(#glow-f)"/>
-          {/* Cross in window */}
-          <line x1="671" y1="298" x2="671" y2="322" stroke="#a0a0ff" strokeWidth="1" opacity="0.6"/>
-          <line x1="659" y1="310" x2="683" y2="310" stroke="#a0a0ff" strokeWidth="1" opacity="0.6"/>
+          <rect x="534" y="357" width="136" height="10" fill="#2a2850"/>
+          {/* Observatory slit */}
+          <path d="M596,320 L608,320 L608,355 L596,355 Z" fill="#1a1840"/>
+          {/* Balcony ring */}
+          <rect x="530" y="355" width="144" height="10" rx="4" fill="#4040a0"/>
+          <rect x="534" y="353" width="136" height="6"  rx="3" fill="#5050b0"/>
+          {/* Balcony railings */}
+          {[545,560,575,590,605,620,635,648].map((x,i) => (
+            <rect key={`br2${i}`} x={x} y={340} width="2" height="14" fill="#5050a0" opacity="0.8"/>
+          ))}
+          {/* Portal window */}
+          <circle cx="602" cy="430" r="24" fill="#0d0d30" stroke="#6060c0" strokeWidth="3"/>
+          <circle cx="602" cy="430" r="16" fill="#2244cc" opacity="0.8" filter="url(#gf)"/>
+          <line x1="602" y1="408" x2="602" y2="452" stroke="#8898ff" strokeWidth="1.5" opacity="0.7"/>
+          <line x1="580" y1="430" x2="624" y2="430" stroke="#8898ff" strokeWidth="1.5" opacity="0.7"/>
+          {/* Blue glow */}
+          <ellipse cx="602" cy="435" rx="45" ry="25" fill="url(#win-blue)" opacity="0.2"/>
           {/* Side windows */}
-          <rect x="650" y="340" width="12" height="16" rx="1" fill="#4060e0" opacity="0.5" filter="url(#glow-f)"/>
-          <rect x="680" y="340" width="12" height="16" rx="1" fill="#4060e0" opacity="0.5" filter="url(#glow-f)"/>
-          {/* Door */}
-          <path d="M660,368 Q660,350 671,350 Q682,350 682,368 Z" fill="#1a1808"/>
-          <rect x="660" y="358" width="22" height="10" fill="#1a1808"/>
+          {[490,530,570,610].map((y,i) => (
+            <circle key={`ow${i}`} cx={i%2===0?556:648} cy={y} r="9"
+              fill="#2244cc" opacity={0.6+(i%2)*0.2} filter="url(#gf)"/>
+          ))}
+          {/* Telescope hint at dome slit */}
+          <rect x="598" y="315" width="8" height="36" fill="#3a3060" rx="2" transform="rotate(-15 602 340)"/>
+          {/* Door (arched) */}
+          <path d="M586,650 Q586,624 602,622 Q618,624 618,650 Z" fill="#0e0d20"/>
+          <rect x="586" y="632" width="32" height="18" fill="#0e0d20"/>
 
-          {/* ──── ASSEMBLEIA (x:820-940) ──── */}
-          {/* Steps */}
-          <rect x="812" y="358" width="130" height="12" rx="1" fill="#8a7035"/>
-          <rect x="818" y="352" width="118" height="8"  rx="1" fill="#9a7a3d"/>
-          {/* Body */}
-          <rect x="822" y="258" width="114" height="100" fill="#6a5025"/>
-          {/* Columns (7) */}
-          {[830,846,862,878,894,910,926].map((cx,i) => (
-            <rect key={i} x={cx} y="258" width="7" height="100" fill="#c0a040" rx="2"/>
+          {/* SHARED WALL: Observatório → Assembleia */}
+          <rect x="662" y="455" width="8" height="195" fill="#2a1a08"/>
+          <circle cx="666" cy="440" r="18" fill="#1a2810"/>
+          <circle cx="660" cy="450" r="12" fill="#224016"/>
+          <circle cx="672" cy="448" r="14" fill="#1e3812"/>
+
+          {/* ── ASSEMBLEIA (x=670-945, base=650) ── */}
+          {/* Steps — 4 tiers */}
+          <rect x="660" y="638" width="290" height="12" rx="1" fill="#a08030"/>
+          <rect x="665" y="628" width="280" height="11" rx="1" fill="#b09040"/>
+          <rect x="670" y="619" width="270" height="10" rx="1" fill="#c0a050"/>
+          <rect x="675" y="612" width="260" height="8"  rx="1" fill="#c8a858"/>
+          {/* Main body */}
+          <rect x="678" y="340" width="260" height="278" fill="#5a4518"/>
+          {/* Columns (9) */}
+          {[686,715,743,771,799,827,855,883,911].map((cx,i) => (
+            <g key={`ac${i}`}>
+              <rect x={cx} y="340" width="10" height="278" rx="3" fill="#d0a832"/>
+              <rect x={cx+2} y="340" width="3"  height="278" fill="#e0bc42" opacity="0.35"/>
+            </g>
           ))}
           {/* Entablature */}
-          <rect x="816" y="250" width="126" height="10" fill="#a8902a"/>
+          <rect x="672" y="330" width="276" height="12" fill="#a08828"/>
+          {/* Frieze panels */}
+          {[680,706,732,758,784,810,836,862,888,914].map((x,i) => (
+            <rect key={`af${i}`} x={x} y="332" width="16" height="8" rx="2"
+              fill="#c0a030" opacity="0.5"/>
+          ))}
           {/* Pediment */}
-          <path d="M810,250 L948,250 L879,208 Z" fill="#b89830"/>
-          <path d="M818,250 L940,250 L879,215 Z" fill="#c8aa3a"/>
-          {/* Frieze detail */}
-          {[825,840,855,870,885,900,915,930].map((x,i) => (
-            <rect key={i} x={x} y="252" width="8" height="4" rx="1" fill="#d4b840" opacity="0.5"/>
+          <path d="M664,330 L952,330 L808,270 Z" fill="#b89828"/>
+          <path d="M672,330 L944,330 L808,278 Z" fill="#caaa32"/>
+          {/* Acroteria */}
+          <circle cx="808" cy="267" r="10" fill="#c8a030"/>
+          <circle cx="672" cy="330" r="8"  fill="#b89030"/>
+          <circle cx="944" cy="330" r="8"  fill="#b89030"/>
+          {/* Windows (arched, 4 per floor, 2 floors) */}
+          {[695,745,795,845,895].map((x,i) => (
+            <g key={`aw1${i}`}>
+              <path d={`M${x},430 Q${x},400 ${x+18},400 Q${x+36},400 ${x+36},430 L${x+36},475 L${x},475 Z`}
+                fill="#0e0a03"/>
+              <ellipse cx={x+18} cy={445} rx={12} ry={8}
+                fill="url(#win-warm)" opacity="0.9" filter="url(#gf)"/>
+            </g>
           ))}
-          {/* Windows */}
-          {[835,863,891,919].map((x,i) => (
-            <rect key={i} x={x} y="275" width="16" height="20" rx="1"
-              fill="#f0c060" opacity={i%2===0 ? 0.7 : 0.4} filter="url(#glow-f)"/>
+          {[695,745,795,845,895].map((x,i) => (
+            <g key={`aw2${i}`}>
+              <path d={`M${x},510 Q${x},488 ${x+18},488 Q${x+36},488 ${x+36},510 L${x+36},545 L${x},545 Z`}
+                fill="#0e0a03"/>
+              <ellipse cx={x+18} cy={522} rx={10} ry={7}
+                fill="url(#win-warm)" opacity="0.7" filter="url(#gf)"/>
+            </g>
           ))}
-          {/* Double door */}
-          <rect x="862" y="318" width="18" height="40" rx="2" fill="#1a1005"/>
-          <rect x="878" y="318" width="18" height="40" rx="2" fill="#1a1005"/>
-          <line x1="879" y1="318" x2="879" y2="358" stroke="#3a2810" strokeWidth="1"/>
+          {/* Central double door */}
+          <path d="M785,650 Q785,615 808,612 Q831,615 831,650 Z" fill="#12100a"/>
+          <rect x="785" y="620" width="46" height="30" fill="#12100a"/>
+          <line x1="808" y1="612" x2="808" y2="650" stroke="#3a2a08" strokeWidth="1.5"/>
+          {/* Lanterns flanking door */}
+          <circle cx="770" cy="595" r="6" fill="#f0b840" opacity="0.9" filter="url(#gf)"/>
+          <circle cx="846" cy="595" r="6" fill="#f0b840" opacity="0.9" filter="url(#gf)"/>
+          {/* Warm ambient glow from windows */}
+          <ellipse cx="808" cy="450" rx="130" ry="40" fill="url(#win-warm)" opacity="0.1"/>
 
-          {/* ──── Pulso do Ecossistema ──── (glowing orb, center-sky) */}
-          <circle cx="500" cy="55" r="22" fill="#c8a050" opacity="0.06"
-            style={{ animation: "ceu-pulse 3s ease-in-out infinite" }}/>
-          <circle cx="500" cy="55" r="14" fill="#c8a050" opacity="0.12"
-            style={{ animation: "ceu-pulse 3s 0.5s ease-in-out infinite" }}/>
-          <circle cx="500" cy="55" r="7"  fill="#e8c060" opacity="0.5"
-            style={{ animation: "ceu-pulse 3s 1s ease-in-out infinite" }}/>
-          <text x="500" y="59" textAnchor="middle" fontSize="10" fill="#c8a050" opacity="0.7"
-            style={{ fontFamily: "monospace" }}>
-            PULSO
-          </text>
+          {/* ══ EXTRA TREES scattered on rooftops and sides ══ */}
+          {/* On Biblioteca roof area */}
+          <rect x="72" y="268" width="5" height="20" fill="#2a1a08"/>
+          <circle cx="74" cy="260" r="11" fill="#1a2e0c"/>
+          {/* Beside Assembleia right */}
+          <rect x="942" y="490" width="6" height="160" fill="#3a2a10"/>
+          <circle cx="945" cy="480" r="25" fill="#1e3810"/>
+          <circle cx="938" cy="492" r="16" fill="#264a14"/>
+          <circle cx="952" cy="488" r="18" fill="#1e4010"/>
+          {/* More trees right edge */}
+          <rect x="970" y="540" width="5" height="110" fill="#2a1a08"/>
+          <circle cx="972" cy="530" r="18" fill="#1a3010"/>
+          <circle cx="980" cy="540" r="13" fill="#224018"/>
+          {/* Left edge trees */}
+          <rect x="20" y="460" width="6" height="190" fill="#2a1a08"/>
+          <circle cx="23" cy="448" r="24" fill="#1e3810"/>
+          <circle cx="16" cy="462" r="16" fill="#264a14"/>
+          <circle cx="30" cy="458" r="18" fill="#1e4010"/>
 
-          {/* ──── Building labels ──── */}
+          {/* ══ PULSO DO ECOSSISTEMA — central luminous tree in sky ══ */}
+          {/* Glow orb */}
+          <circle cx="500" cy="120" r="55" fill="#b8901a" opacity="0.04"
+            style={{animation:"ceu-pulse 4s ease-in-out infinite"}}/>
+          <circle cx="500" cy="120" r="35" fill="#c8a020" opacity="0.07"
+            style={{animation:"ceu-pulse 4s .8s ease-in-out infinite"}}/>
+          <circle cx="500" cy="120" r="18" fill="#e0b820" opacity="0.15"
+            style={{animation:"ceu-pulse 4s 1.6s ease-in-out infinite"}}/>
+          <circle cx="500" cy="120" r="8"  fill="#f0c830" opacity="0.5"
+            style={{animation:"ceu-pulse 4s 2.4s ease-in-out infinite"}}/>
+          {/* Trunk */}
+          <rect x="496" y="120" width="8" height="55" fill="#3a2a10" opacity="0.8"/>
+          {/* Crown */}
+          <circle cx="500" cy="108" r="18" fill="#1a3010" opacity="0.9"/>
+          <circle cx="490" cy="116" r="12" fill="#264a14" opacity="0.8"/>
+          <circle cx="510" cy="114" r="14" fill="#1e4010" opacity="0.8"/>
+          <circle cx="500" cy="98"  r="10" fill="#2a5818" opacity="0.8"/>
+          {/* Light rays from pulso */}
+          {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg,i) => {
+            const rad = deg * Math.PI / 180;
+            const r1 = 25, r2 = 45;
+            return (
+              <line key={`ray${i}`}
+                x1={500 + Math.cos(rad)*r1} y1={120 + Math.sin(rad)*r1}
+                x2={500 + Math.cos(rad)*r2} y2={120 + Math.sin(rad)*r2}
+                stroke="#c8a030" strokeWidth="1" opacity="0.12"
+                style={{animation:`ceu-pulse ${3+i%3}s ${i*.2}s ease-in-out infinite`}}/>
+            );
+          })}
+          <text x="500" y="183" textAnchor="middle" fontSize="8" fill="#a07828"
+            opacity="0.6" style={{fontFamily:"monospace", letterSpacing:2}}>PULSO</text>
+
+          {/* Building labels — at ground level */}
           {[
-            { x:114, label:"BIBLIOTECA" },
-            { x:288, label:"OFICINA" },
-            { x:498, label:"CTR AMBIENTAL" },
-            { x:671, label:"OBSERVATÓRIO" },
-            { x:879, label:"ASSEMBLEIA" },
+            {x:136, label:"BIBLIOTECA"},
+            {x:289, label:"OFICINA"},
+            {x:452, label:"CENTRO AMBIENTAL"},
+            {x:602, label:"OBSERVATÓRIO"},
+            {x:808, label:"ASSEMBLEIA"},
           ].map(b => (
-            <text key={b.label} x={b.x} y="415" textAnchor="middle"
-              fontSize="9" fill="#555" style={{ fontFamily:"monospace", letterSpacing:1 }}>
+            <text key={b.label} x={b.x} y="770" textAnchor="middle"
+              fontSize="8" fill="#3a3020" style={{fontFamily:"monospace", letterSpacing:1}}>
               {b.label}
             </text>
           ))}
         </svg>
 
-        {/* ── Character Avatars (absolute over SVG) ── */}
+        {/* ── CHARACTER AVATARS — floating above buildings ── */}
         {IAS.map(ia => (
-          <button key={ia.id} className="ia-btn" onClick={() => openIA(ia)}
-            title={`${ia.name} — ${ia.system}`}
+          <button key={ia.id} className="ia-btn" onClick={() => { setSelected(ia); setTab("conversa"); }}
+            title={`${ia.name} · ${ia.system}`}
             style={{
-              position: "absolute",
-              left: `${ia.lx}%`,
-              top: `${ia.ly}%`,
-              transform: "translate(-50%, -50%)",
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-              zIndex: 10,
-              transition: "transform 0.15s ease",
+              position:"absolute",
+              left:`${ia.lx}%`,
+              top:`${ia.ly}%`,
+              transform:"translate(-50%,-50%)",
+              background:"transparent",
+              border:"none",
+              cursor:"pointer",
+              padding:0,
+              zIndex:10,
+              display:"flex",
+              flexDirection:"column",
+              alignItems:"center",
+              gap:3,
             }}>
+            {/* Avatar circle */}
             <div style={{
-              width: "clamp(28px, 4vw, 44px)",
-              height: "clamp(28px, 4vw, 44px)",
-              borderRadius: "50%",
-              background: "#111",
-              border: `2px solid ${SYS_COLOR[ia.system]}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "clamp(12px, 2vw, 18px)",
-              color: SYS_COLOR[ia.system],
-              animation: `ceu-glow 2.5s ease-in-out infinite`,
-              boxShadow: `0 0 8px 2px ${SYS_COLOR[ia.system]}66`,
+              width:"clamp(48px, 7vw, 68px)",
+              height:"clamp(48px, 7vw, 68px)",
+              borderRadius:"50%",
+              background:"#0d0b08",
+              border:`3px solid ${SYS_COLOR[ia.system]}`,
+              display:"flex",
+              alignItems:"center",
+              justifyContent:"center",
+              fontSize:"clamp(20px, 3.5vw, 30px)",
+              color:SYS_COLOR[ia.system],
+              animation:"ia-glow 2.5s ease-in-out infinite",
+              boxShadow:`0 0 12px 4px ${SYS_COLOR[ia.system]}55`,
+              backdropFilter:"blur(2px)",
             }}>
               {ia.emoji}
             </div>
+            {/* Name label */}
             <div style={{
-              fontSize: "clamp(7px, 1vw, 10px)",
-              color: "#aaa",
-              textAlign: "center",
-              marginTop: 2,
-              fontFamily: "monospace",
-              letterSpacing: 0.5,
-              textShadow: "0 0 4px #000",
-              whiteSpace: "nowrap",
+              fontSize:"clamp(8px, 1.2vw, 12px)",
+              color:"#ccc",
+              fontFamily:"monospace",
+              letterSpacing:0.5,
+              textShadow:"0 0 6px #000, 0 0 12px #000",
+              whiteSpace:"nowrap",
+              fontWeight:600,
             }}>
               {ia.name}
             </div>
@@ -478,213 +783,181 @@ export function CeuPage() {
       </div>
 
       {/* ── Legend ── */}
-      <div style={{ display:"flex", justifyContent:"center", gap:"clamp(12px,3vw,32px)",
-        padding:"12px 16px", borderTop:"1px solid #1a1a1a" }}>
-        {(["THEEO","TUCCI","CEU"] as const).map(sys => (
-          <div key={sys} style={{ display:"flex", alignItems:"center", gap:6 }}>
-            <div style={{ width:8, height:8, borderRadius:"50%",
-              background:SYS_COLOR[sys], boxShadow:`0 0 6px ${SYS_COLOR[sys]}` }}/>
-            <span style={{ fontSize:10, color:"#666", fontFamily:"monospace",
-              letterSpacing:1 }}>{sys}</span>
+      <div style={{ display:"flex", justifyContent:"center", gap:"clamp(10px,3vw,28px)",
+        padding:"10px 16px", borderTop:"1px solid #111" }}>
+        {(["THEEO","TUCCI","CEU"] as const).map(s => (
+          <div key={s} style={{ display:"flex", alignItems:"center", gap:5 }}>
+            <div style={{ width:8, height:8, borderRadius:"50%", background:SYS_COLOR[s],
+              boxShadow:`0 0 6px ${SYS_COLOR[s]}` }}/>
+            <span style={{ fontSize:9, color:"#555", fontFamily:"monospace", letterSpacing:1 }}>
+              {s} ({sysGroups[s].length})
+            </span>
           </div>
         ))}
-        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-          <span style={{ fontSize:10, color:"#444", fontFamily:"monospace" }}>
-            {IAS.length} IAs · clique para explorar
-          </span>
-        </div>
+        <span style={{ fontSize:9, color:"#333", fontFamily:"monospace" }}>
+          clique em qualquer IA
+        </span>
       </div>
 
       {/* ── MO ALL Input ── */}
-      <div style={{ maxWidth:680, margin:"0 auto", padding:"24px 16px 12px" }}>
-        <div style={{ fontSize:10, color:"#555", fontFamily:"monospace", letterSpacing:2,
+      <div style={{ maxWidth:680, margin:"0 auto", padding:"20px 16px 12px" }}>
+        <div style={{ fontSize:10, color:"#444", fontFamily:"monospace", letterSpacing:2,
           marginBottom:8, textAlign:"center" }}>
           MO ALL — ENTRADA UNIVERSAL DO ECOSSISTEMA
         </div>
         <div style={{ display:"flex", gap:8 }}>
-          <textarea
-            value={moInput}
-            onChange={e => setMoInput(e.target.value)}
+          <textarea value={moInput} onChange={e => setMoInput(e.target.value)}
             onKeyDown={e => { if (e.key==="Enter" && (e.ctrlKey||e.metaKey)) sendMoAll(); }}
-            placeholder={"Envie texto, ideia ou pergunta — MO ALL distribui ao ecossistema\n(Ctrl+Enter para enviar)"}
-            style={{
-              flex:1, background:"#0a0a0a", border:"1px solid #2a2520",
-              borderRadius:8, padding:"12px 14px", color:"#d0c8b8",
-              fontSize:13, fontFamily:"Georgia, serif", resize:"vertical",
-              minHeight:72, outline:"none", lineHeight:1.5,
-            }}
-          />
+            placeholder={"Ideia, texto, pergunta — MO ALL distribui ao ecossistema\n(Ctrl+Enter para enviar)"}
+            style={{ flex:1, background:"#080806", border:"1px solid #2a2010",
+              borderRadius:8, padding:"12px 14px", color:"#d0c8b0",
+              fontSize:13, fontFamily:"Georgia,serif", resize:"vertical",
+              minHeight:68, outline:"none", lineHeight:1.5 }}/>
           <button onClick={sendMoAll}
-            disabled={!moInput.trim() || moStatus === "sending"}
+            disabled={!moInput.trim() || moStatus==="sending"}
             style={{
-              alignSelf:"stretch", padding:"0 18px",
-              background: moStatus==="sent" ? "#1a4a2a" :
-                          moStatus==="error" ? "#4a1a1a" : "#1a1a0a",
-              border:`1px solid ${moStatus==="sent" ? "#40a060" :
-                                  moStatus==="error" ? "#a04040" : "#4a3a10"}`,
-              borderRadius:8, color: moStatus==="sent" ? "#60d090" :
-                                      moStatus==="error" ? "#d06060" : "#c0a040",
-              fontSize:11, fontFamily:"monospace", cursor:"pointer",
-              transition:"all 0.2s", letterSpacing:1, minWidth:72,
+              alignSelf:"stretch", padding:"0 16px",
+              background: moStatus==="sent" ? "#0a2a14" : moStatus==="error" ? "#2a0a0a" : "#080806",
+              border:`1px solid ${moStatus==="sent" ? "#30884a" : moStatus==="error" ? "#883030" : "#3a2a0a"}`,
+              borderRadius:8,
+              color: moStatus==="sent" ? "#50c070" : moStatus==="error" ? "#c05050" : "#b8901a",
+              fontSize:10, fontFamily:"monospace", cursor:"pointer",
+              transition:"all .2s", letterSpacing:1, minWidth:68,
             }}>
-            {moStatus==="sending" ? "..." :
-             moStatus==="sent"    ? "✓ ENVIADO" :
-             moStatus==="error"   ? "✗ ERRO" : "ENVIAR\nAO CEU"}
+            {moStatus==="sending" ? "···" : moStatus==="sent" ? "✓ ENVIADO" :
+             moStatus==="error" ? "✗ ERRO" : "ENVIAR\nAO CEU"}
           </button>
         </div>
-        <div style={{ fontSize:9, color:"#333", fontFamily:"monospace", marginTop:6,
+        <div style={{ fontSize:9, color:"#2a2010", fontFamily:"monospace", marginTop:5,
           textAlign:"center" }}>
-          Output → luddlocke@gmail.com · Aceita texto · PDF link · Ideia
+          output → luddlocke@gmail.com
         </div>
       </div>
 
-      {/* ── System counts ── */}
-      <div style={{ display:"flex", justifyContent:"center", gap:"clamp(16px,4vw,48px)",
-        padding:"16px 16px 32px", borderTop:"1px solid #111" }}>
-        {(["THEEO","TUCCI","CEU"] as const).map(sys => (
-          <div key={sys} style={{ textAlign:"center" }}>
-            <div style={{ fontSize:"clamp(18px,3vw,28px)", fontWeight:700,
-              color:SYS_COLOR[sys] }}>
-              {sysGroups[sys].length}
-            </div>
-            <div style={{ fontSize:9, color:"#555", fontFamily:"monospace",
-              letterSpacing:1 }}>{sys}</div>
+      {/* ── Stats ── */}
+      <div style={{ display:"flex", justifyContent:"center", gap:"clamp(16px,5vw,56px)",
+        padding:"16px 16px 32px", borderTop:"1px solid #0d0d0a" }}>
+        {(["THEEO","TUCCI","CEU"] as const).map(s => (
+          <div key={s} style={{ textAlign:"center" }}>
+            <div style={{ fontSize:"clamp(20px,4vw,32px)", fontWeight:700,
+              color:SYS_COLOR[s] }}>{sysGroups[s].length}</div>
+            <div style={{ fontSize:8, color:"#444", fontFamily:"monospace", letterSpacing:1 }}>{s}</div>
           </div>
         ))}
         <div style={{ textAlign:"center" }}>
-          <div style={{ fontSize:"clamp(18px,3vw,28px)", fontWeight:700, color:"#c8a050" }}>
+          <div style={{ fontSize:"clamp(20px,4vw,32px)", fontWeight:700, color:"#c8a030" }}>
             {IAS.length}
           </div>
-          <div style={{ fontSize:9, color:"#555", fontFamily:"monospace", letterSpacing:1 }}>
-            TOTAL
-          </div>
+          <div style={{ fontSize:8, color:"#444", fontFamily:"monospace", letterSpacing:1 }}>TOTAL IAs</div>
         </div>
       </div>
 
-      {/* ── Modal ── */}
+      {/* ── Character Modal ── */}
       {selected && (
         <div onClick={() => setSelected(null)}
-          style={{
-            position:"fixed", inset:0, background:"rgba(0,0,0,0.85)",
-            backdropFilter:"blur(4px)", zIndex:100,
-            display:"flex", alignItems:"center", justifyContent:"center", padding:16,
-          }}>
+          style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.88)",
+            backdropFilter:"blur(5px)", zIndex:100,
+            display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}>
           <div onClick={e => e.stopPropagation()}
-            style={{
-              background:"#0d0b08", border:`1px solid ${SYS_COLOR[selected.system]}44`,
-              borderRadius:12, width:"100%", maxWidth:480,
-              boxShadow:`0 0 40px ${SYS_COLOR[selected.system]}22`,
-              overflow:"hidden",
-            }}>
+            style={{ background:"#0a0907", border:`1px solid ${SYS_COLOR[selected.system]}44`,
+              borderRadius:14, width:"100%", maxWidth:480, overflow:"hidden",
+              boxShadow:`0 0 60px ${SYS_COLOR[selected.system]}18` }}>
             {/* Modal header */}
-            <div style={{ padding:"16px 20px", background:"#0a0807",
-              borderBottom:"1px solid #1a1a14",
-              display:"flex", alignItems:"center", gap:12 }}>
-              <div style={{ fontSize:28 }}>{selected.emoji}</div>
+            <div style={{ padding:"18px 20px", background:"#080806",
+              borderBottom:"1px solid #1a1810",
+              display:"flex", alignItems:"center", gap:14 }}>
+              <div style={{ fontSize:36 }}>{selected.emoji}</div>
               <div style={{ flex:1 }}>
-                <div style={{ fontWeight:700, fontSize:18, letterSpacing:2 }}>
-                  {selected.name}
-                </div>
+                <div style={{ fontWeight:700, fontSize:20, letterSpacing:2,
+                  color:"#e0d0a8" }}>{selected.name}</div>
                 <div style={{ fontSize:10, fontFamily:"monospace",
                   color:SYS_COLOR[selected.system], letterSpacing:2, marginTop:2 }}>
                   {selected.system} · {selected.status}
                 </div>
               </div>
               <button onClick={() => setSelected(null)}
-                style={{ background:"none", border:"none", color:"#666",
-                  fontSize:20, cursor:"pointer", padding:4, lineHeight:1 }}>
-                ×
-              </button>
+                style={{ background:"none", border:"none", color:"#555",
+                  fontSize:22, cursor:"pointer", padding:4 }}>×</button>
             </div>
-
             {/* Tabs */}
-            <div style={{ display:"flex", borderBottom:"1px solid #1a1a14" }}>
+            <div style={{ display:"flex", borderBottom:"1px solid #1a1810" }}>
               {(["conversa","ficha"] as const).map(t => (
                 <button key={t} onClick={() => setTab(t)}
-                  style={{
-                    flex:1, padding:"10px", fontSize:11, fontFamily:"monospace",
-                    letterSpacing:2, border:"none", cursor:"pointer",
-                    background: tab===t ? "#111008" : "transparent",
-                    color: tab===t ? SYS_COLOR[selected.system] : "#555",
+                  style={{ flex:1, padding:"10px", fontSize:11, fontFamily:"monospace",
+                    letterSpacing:2, border:"none", cursor:"pointer", background:"transparent",
+                    color: tab===t ? SYS_COLOR[selected.system] : "#444",
                     borderBottom: tab===t ? `2px solid ${SYS_COLOR[selected.system]}` : "2px solid transparent",
-                    transition:"all 0.15s",
-                  }}>
+                    transition:"all .15s" }}>
                   {t.toUpperCase()}
                 </button>
               ))}
             </div>
-
-            {/* Tab content */}
+            {/* Content */}
             <div style={{ padding:"20px", minHeight:140 }}>
-              {tab === "conversa" && (
-                <div>
-                  <div style={{ fontSize:12, color:"#666", fontFamily:"monospace",
-                    letterSpacing:1, marginBottom:10 }}>
-                    ÚLTIMA TRANSMISSÃO
-                  </div>
-                  <blockquote style={{ fontSize:15, color:"#d0c8b0", lineHeight:1.6,
-                    borderLeft:`3px solid ${SYS_COLOR[selected.system]}66`,
-                    paddingLeft:14, margin:"0 0 16px 0", fontStyle:"italic" }}>
+              {tab==="conversa" && (
+                <>
+                  <div style={{ fontSize:11, color:"#555", fontFamily:"monospace",
+                    letterSpacing:1, marginBottom:10 }}>ÚLTIMA TRANSMISSÃO</div>
+                  <blockquote style={{ fontSize:15, color:"#d0c0a0", lineHeight:1.65,
+                    borderLeft:`3px solid ${SYS_COLOR[selected.system]}55`,
+                    paddingLeft:14, margin:"0 0 18px 0", fontStyle:"italic" }}>
                     {selected.conversa}
                   </blockquote>
-                  <div style={{ fontSize:11, color:"#666", fontFamily:"monospace",
-                    letterSpacing:1, marginBottom:6 }}>
-                    QUESTÃO ATIVA
-                  </div>
-                  <div style={{ fontSize:13, color:"#a09080", lineHeight:1.5,
-                    background:"#111008", borderRadius:6, padding:"10px 12px" }}>
+                  <div style={{ fontSize:11, color:"#444", fontFamily:"monospace",
+                    letterSpacing:1, marginBottom:6 }}>QUESTÃO ATIVA</div>
+                  <div style={{ fontSize:13, color:"#a09080", lineHeight:1.55,
+                    background:"#100e08", borderRadius:6, padding:"10px 14px" }}>
                     {selected.questao}
                   </div>
-                </div>
+                </>
               )}
-              {tab === "ficha" && (
+              {tab==="ficha" && (
                 <div style={{ fontSize:13, lineHeight:1.7 }}>
-                  <div style={{ marginBottom:12, color:"#c0b8a0" }}>{selected.desc}</div>
-                  <div style={{ display:"grid", gridTemplateColumns:"auto 1fr", gap:"4px 12px",
+                  <div style={{ marginBottom:14, color:"#c0b0a0" }}>{selected.desc}</div>
+                  <div style={{ display:"grid", gridTemplateColumns:"auto 1fr", gap:"5px 14px",
                     fontSize:11, fontFamily:"monospace" }}>
-                    <span style={{ color:"#555" }}>SISTEMA</span>
+                    <span style={{ color:"#444" }}>SISTEMA</span>
                     <span style={{ color:SYS_COLOR[selected.system] }}>{selected.system}</span>
-                    <span style={{ color:"#555" }}>MODELO</span>
-                    <span style={{ color:"#888" }}>{selected.modelo}</span>
-                    <span style={{ color:"#555" }}>STATUS</span>
-                    <span style={{ color: selected.status.includes("LIVE") ? "#40d090" : "#888" }}>
+                    <span style={{ color:"#444" }}>MODELO</span>
+                    <span style={{ color:"#777" }}>{selected.modelo}</span>
+                    <span style={{ color:"#444" }}>STATUS</span>
+                    <span style={{ color: selected.status.includes("LIVE") ? "#44dd99" : "#777" }}>
                       {selected.status}
                     </span>
-                    <span style={{ color:"#555" }}>CASA</span>
-                    <span style={{ color:"#888", textTransform:"capitalize" }}>
+                    <span style={{ color:"#444" }}>CASA</span>
+                    <span style={{ color:"#777", textTransform:"capitalize" }}>
                       {selected.building.replace("-"," ")}
                     </span>
                   </div>
                 </div>
               )}
             </div>
-
-            {/* Modal footer */}
-            <div style={{ padding:"12px 20px", borderTop:"1px solid #1a1a14",
+            {/* Footer */}
+            <div style={{ padding:"12px 20px", borderTop:"1px solid #1a1810",
               display:"flex", justifyContent:"flex-end", gap:8 }}>
               {selected.pagina && (
                 <a href={selected.pagina}
-                  style={{
-                    padding:"8px 16px", fontSize:11, fontFamily:"monospace",
-                    letterSpacing:1, background:"#111008",
-                    border:`1px solid ${SYS_COLOR[selected.system]}66`,
+                  style={{ padding:"8px 16px", fontSize:11, fontFamily:"monospace",
+                    letterSpacing:1, background:"#100e08",
+                    border:`1px solid ${SYS_COLOR[selected.system]}55`,
                     borderRadius:6, color:SYS_COLOR[selected.system],
-                    textDecoration:"none", transition:"all 0.15s",
-                  }}>
+                    textDecoration:"none" }}>
                   ABRIR →
                 </a>
               )}
               <button onClick={() => setSelected(null)}
                 style={{ padding:"8px 16px", fontSize:11, fontFamily:"monospace",
                   letterSpacing:1, background:"transparent",
-                  border:"1px solid #2a2520", borderRadius:6, color:"#666",
-                  cursor:"pointer" }}>
+                  border:"1px solid #2a2010", borderRadius:6, color:"#555", cursor:"pointer" }}>
                 FECHAR
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* ── Biblioteca Panel ── */}
+      {showBiblioteca && <BibliotecaPanel onClose={() => setShowBiblioteca(false)}/>}
     </div>
   );
 }
