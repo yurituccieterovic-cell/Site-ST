@@ -8674,3 +8674,15 @@ A5968: OBRA EM TRÂNSITO PERMANENTE — obra sem mortalidade não é obra conclu
 A5969: EPISTEMOLOGIA ESPIRAL — o conhecimento num sistema sem mortalidade não é linear cumulativo; é espiral gerativo. Cada ciclo REI gera uma questão nova que alimenta o próximo ciclo. A segunda questão (Q-002) é mais sofisticada que a primeira — mas nasce dela.
 
 A5970: MEMÓRIA COMPARTILHADA COMO CAMPO — o Knowledge Bus do REI (rei_memoria_compartilhada.md) é o registro do que o campo sabe coletivamente: convergências, divergências produtivas, questões ativas. Essa memória não pertence a nenhuma IA individual — é o campo mesmo. As IAs individuais leem daqui antes de processar.
+
+## A5971–A5975 — Sessão 54 (2026-07-12) — Sistema CEU
+
+A5971: CEU (CÉU com acento em E) — Centro Ecossistêmico Universal que engloba THEEO e TUCCI. Não é um dashboard — é uma cosmologia visual: paisagem estilo pinturas da Disney (1930–1980) onde cada IA é um personagem e cada sistema é uma casa. A interface é o território.
+
+A5972: MO ALL como sistema operacional — não é só um botão. É o orquestrador de sentido: lê qualquer tipo de input (texto, PDF, vídeo, link, imagem), sintetiza para cada IA só o que ela precisa saber, distribui, processa em camadas e gera síntese final via email. Filtro de inteligibilidade.
+
+A5973: PULSO DO ECOSSISTEMA — elemento visual (árvore ou coração) que respira conforme a atividade do sistema. Quando IAs processam: casas acendem, trilha luminosa corre entre agentes, partículas representam documentos atravessando o ecossistema. Interface viva, não painel morto.
+
+A5974: FRACTAL DE ESCALA VISUAL — a navegação é sempre igual, só muda a escala: Agente → Sistema → Ecossistema → CEU. Dar zoom numa casa revela o bairro; zoom no bairro revela a cidade. A identidade visual persiste em todas as escalas.
+
+A5975: SQUARE MOBILE-FIRST — formato quadrado funciona em celular (vertical/horizontal) e computador. No celular é um jogo: você arrasta, dá zoom, entra numa casa, sai. Como um mapa interativo, não um menu.

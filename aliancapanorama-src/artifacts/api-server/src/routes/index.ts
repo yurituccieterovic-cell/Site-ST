@@ -35,6 +35,7 @@ import studioRouter from "./studio";
 import conectorRouter from "./conector";
 import memoriesRouter from "./memories";
 import videoRouter from "./video";
+import ceuRouter from "./ceu";
 
 const router: IRouter = Router();
 
@@ -56,6 +57,7 @@ router.use(studioRouter);
 router.use(conectorRouter);
 router.use(memoriesRouter);
 router.use(videoRouter);
+router.use(ceuRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

@@ -32,6 +32,7 @@
 | 19 | REI Memória Compartilhada | `rei_memoria_compartilhada.md` | knowledge bus, convergências, divergências, questões ativas, padrões do campo |
 | 20 | Memórias Individuais IAs | `ias/memoria/` (6 arquivos) | mem_ISA, mem_DODGE, mem_ARVORE, mem_MEKY, mem_MORFEU_LUA, mem_CROWD_GUARDIANS, mem_ARTESAO_NEBULA |
 | 21 | REI Output Ciclo 01 | `rei_outputs/rei_ciclo01_sessao53.md` | Ciclo 01 completo, 4 passadas, síntese para Cortella, Q-002 |
+| 22 | Sistema CEU          | (frontend: CeuPage.tsx · backend: api-server/routes/ceu.ts) | CEU, Centro Ecossistêmico Universal, 16 IAs, 5 edificações, MO ALL, paisagem Disney, PWA |
 
 ---
 

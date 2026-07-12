@@ -16,6 +16,7 @@ import { DodgePage } from "@/pages/DodgePage";
 import { StudioPage } from "@/pages/StudioPage";
 import { ConectorPage } from "@/pages/ConectorPage";
 import { IsaLandingPage } from "@/pages/IsaLandingPage";
+import { CeuPage } from "@/pages/CeuPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
 
@@ -282,6 +283,7 @@ const isDodge  = path.includes("/dodge");
 const isIsa    = path.startsWith("/aliancapanorama/isa") || path === "/isa";
 const isStudio  = path.includes("/studio");
 const isConnect = path.includes("/connect");
+const isCeu     = path.includes("/ceu");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -353,6 +355,10 @@ function App() {
 
   if (isConnect) {
     return <ConectorPage />;
+  }
+
+  if (isCeu) {
+    return <CeuPage />;
   }
 
   return (

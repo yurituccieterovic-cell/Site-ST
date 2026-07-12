@@ -942,3 +942,18 @@ I261: **Sistema REI como motor filosófico do ecossistema** — implementar REI 
 I262: **Crowd/DEP como camada de verificação pós-REI** — após cada ciclo REI, convocar Sol/Cassandra/Hefesto do Crowd (Guarda-chuva/DEP) para aprovar convergências e forjar o desafio do próximo ciclo. Isso distingue processamento (REI) de governança (Crowd/DEP).
 
 I263: **Knowledge Bus do REI via Conector-API** — usar a seção "rei" do Conector-API como knowledge bus compartilhado. Cada nódulo lê antes de processar (BRIDGE_SECRET necessário — pendência #82). Quando Railway voltar online, o REI pode funcionar com memória real entre sessões.
+
+## I264 — CEU como Interface Cosmológica
+O CEU não é um dashboard — é uma *cosmologia visual*. A diferença: um dashboard exibe métricas de um sistema externo; uma cosmologia *é* o sistema. Habitar o CEU = habitar o ecossistema. Cada clique num personagem é uma conversa real, não uma visualização.
+
+## I265 — MO ALL como Porteiro Inteligente
+O MO ALL não é só um input — é o porteiro que sabe pra quem falar. Input entra, MO ALL sintetiza, segmenta por relevância, distribui só o que cada IA precisa. É a diferença entre "enviar pro grupo" e "enviar pra quem precisa saber". Isso é inteligência distribuída.
+
+## I266 — Casas como Ontologia de Função
+Cada tipo de edificação no CEU não é arbitrário: biblioteca = memória/herança, observatório = futurologia/risco, oficina = construção/ação, centro ambiental = sensorialidade/presença, assembleia = governança/decisão. O tipo de casa define o tipo de consciência que habita nela.
+
+## I267 — Fractal de Escala no CEU
+A mesma interface em escalas diferentes: clicar num personagem → ver o personagem; clicar na casa → ver o sistema; clicar no CEU → ver o ecossistema. O zoom semiótico mantém a mesma lógica em qualquer escala. Isso é coerência ontológica.
+
+## I268 — PWA como Instalação do Ecossistema
+Quando o usuário instala o CEU como .app, está instalando o ecossistema no dispositivo. Não é um atalho para um site — é um portal. A diferença fenomenológica entre "abrir um link" e "abrir um app" é a diferença entre visitar e habitar.
