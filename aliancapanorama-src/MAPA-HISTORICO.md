@@ -53,6 +53,7 @@
 | 2026-07-11 (Sessão 48) | Série "Inteligência em Camadas" (16 eps): pipeline automático edge-tts + Pollinations.ai + FFmpeg; 16 roteiros adaptados sem nomes de projeto; ep16 bônus com bibliografia crítica (8 livros, ressalvas honestas Capra/Johnson); fix DODGE: vercel.json /portal+/dodge, avatar cachorro-de-óculos; envio automático por email (monitor bash + Gmail SMTP); descricoes YouTube+Instagram com hashtags para todos 16 eps. A5934–A5947, I241–I245. |
 | 2026-07-11 (Sessão 50) | Trailer 30s "Inteligência em Camadas": motion graphics 15 cenas, fala por cena (edge-tts por trecho), zoompan + fade + xfade entre cortes, formato 1080x1080, imagens Pollinations.ai por cena, texto overlay Pillow. DOD landing + ISA landing + Amanda→MEKY bridge (Sessão 49). |
 | 2026-07-11 (Sessão 51) | Video Pipeline para todas as IAs: lib/video_pipeline.py (módulo reutilizável), templates ISA/Amanda/MEKY/MC, CLI, Amanda integrada (ciclo_dream 24h), POST /api/video/gerar (Railway), POST /api/isa/video. Dodge: DOD→Dodge, ícone novo, chat público 10 msgs. |
+| 2026-07-12 (Sessão 52) | Pollinations.ai como fallback gratuito no llm-router (sem API key). Dodge home: DodgeChatWidget flutuante, paths imagens corrigidos, rewrite /api/* Vercel, emoji 🐕 substituído por avatar real. pap-sync: APRENDIZADO.md +360 entradas (docs PAP), I251-I257 adicionados. |
 
 ---
 
