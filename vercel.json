@@ -3,6 +3,7 @@
   "buildCommand": "bash scripts/build-pap.sh",
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/api/:path*", "destination": "https://site-st-production.up.railway.app/api/:path*" },
     { "source": "/aliancapanorama/api/:path*", "destination": "https://site-st-production.up.railway.app/api/:path*" },
     { "source": "/aliancapanorama/adm/(.*)", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/adm", "destination": "/aliancapanorama/index.html" },
