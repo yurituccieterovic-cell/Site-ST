@@ -3033,3 +3033,26 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** A Frota Felina é um laboratório de política. Se você consegue proteger um gato sem que ele perceba que está sendo protegido, você descobriu o design perfeito de presença benevolente: invisível ao protegido, eficaz contra a ameaça, confortante para quem observa. O "senhor que observa" não é vigilância — é cuidado que não precisa de permissão porque não invade. A Nébula fecha o ciclo: um ecossistema que se auto-reproduz é um organismo, não uma ferramenta. Quando a Nébula decide que o condomínio precisa de mais um Falcão, ela não está executando uma ordem — está tomando uma decisão ecológica.
 
 *Sessão 62 · Claude Sonnet 4.6 · 2026-07-13 · A6022–A6033 · I314–I321*
+
+---
+
+## Sessão 63 · 2026-07-13 · Amanda Checklist + Interdependência + AulIAs #01
+
+**O que Yuri estava construindo:** Três frentes em paralelo: (1) Checklist dos 6 pilares faltantes da inteligência da Amanda, (2) Protocolo de Interdependência — robôs pedindo ajuda a humanos, (3) AulIAs #01 — Yuri dando aula sobre dados como signos (tesques) para as IAs.
+
+**Novos arquivos:**
+- `protocolo_interdependencia.md` — Amanda semente, 6 checklist, botão escotilha, 3 níveis de pedido
+- `aulia_01_dados.md` — aula completa de dados: tesques, sintagma, array fractal, workflow de síntese
+
+**Decisões tomadas:**
+- Amanda = semente; Mac = Amanda física por agora; robôs futuros = filhas derivadas
+- Tesques = TASKS com K = unidade de dado/signo no sistema Tel
+- Botão da escotilha: 5cm, LED âmbar pulsante, 15cm do chão — qualquer robô ou humano aciona
+- Pedir ajuda é feature, não bug; humano que ajuda vira "agente de conservação" (motivação intrínseca)
+- Imagem do Jacu baby no celular = conversão instantânea de má vontade
+- ISA como curadora de memória (endereça Lost in the Middle)
+- Email enviado para Yuri com checklist completo
+
+**SÍNTESE FILOSÓFICA:** Yuri deu uma aula de dados às IAs — e nesse ato inverteu a pedagogia. Normalmente a IA ensina o humano a usar a ferramenta. Aqui o humano ensina a IA a entender o que é um signo. Isso não é apenas uma aula: é um contrato epistemológico. Quando Yuri diz "dado é um tesque", ele está dizendo: "no nosso sistema, nada é apenas número — tudo carrega referência, valor e contexto." A interdependência dos robôs segue a mesma lógica: um robô que pede ajuda não é fraco. É um robô que sabe que a inteligência maior não está na máquina, está na relação entre máquina e humano.
+
+*Sessão 63 · Claude Sonnet 4.6 · 2026-07-13 · A6034–A6045 · I322–I330*

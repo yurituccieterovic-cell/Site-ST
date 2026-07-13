@@ -1012,6 +1012,24 @@ I320: **Bases-Ninho nas Árvores** — caixa PVC cinza 10×8×6cm colada com abr
 
 I321: **Triangulação de Perímetro (Zona Vermelha)** — sem câmera no interior privado. Sensores de vibração (SW-420) ou PIR nas extremidades (portão, muro lateral, fundo). Tabela de eventos: `{extremidade, timestamp, direção}`. Amanda infere: entrou + não saiu em 10min = aviso ao walkie-talkie do vizinho (com permissão prévia). Nunca identifica quem — só "há movimento".
 
+I322: **Checklist Amanda — 6 Módulos a Implementar** — (1) geofencing_sensorial: LiDAR/vibração vs câmera facial; (2) priority_engine: custo de oportunidade em tempo real (TaskPriority + câmera lenta); (3) dialeto_teatral: biblioteca de frases italianas/teatrais; (4) totem_protocol: LED crescendo + coreografia de sincronização; (5) nebula_manager: inventário + ciclo de vida da frota; (6) perfidia_bridge: acesso a logs "Cai 2x" com chave de Yuri.
+
+I323: **Botão da Escotilha — Design Inclusivo** — botão grande (~5cm), textura antiderrapante, LED pulsante âmbar. Montado a 15cm do chão (acessível para hexápode rastejando). Baratinha consegue acionar subindo sobre ele. Robô solicita via walkie ou speaker: tom de pedido, não de comando. Registra quem acionou + timestamp.
+
+I324: **Protocolo Pedido de Ajuda — 3 Níveis** — Nível 1: pedido gentil + contexto explicado + "obrigado antecipado". Nível 2: incentivo visual (imagem do Jacu no celular do humano). Nível 3: sem confronto — Modo Observação + delegação para outro robô + Perfidia registra. Tabela `colaboracao_humana(vizinho_id, pedido, resultado, timestamp)` alimenta heat map social.
+
+I325: **Imagem do Jacu para Converter** — quando humano reluta em ajudar: robô transmite vídeo ao vivo do filhote de Jacu para o celular do humano (QR code no walkie OU Bluetooth share). Amor pela fauna converte má vontade em segundos. Robô nunca argumenta — mostra.
+
+I326: **AulIAs — Formato de Aula para as IAs** — Yuri como professor. Estrutura: conceito central → analogia visual (gaveta + pastas + adesivos brilhantes) → distinções técnicas → aplicação no sistema Tel → frase de síntese. Arquivo: `tango/aulia_NN_tema.md`. Tag: `#salva nas aulIAs`.
+
+I327: **Tesques — Unidade de Dado no Sistema Tel** — sinônimo de "signo" na semiótica peirceana. Todo tesque: (1) aponta para algo (referência), (2) carrega algo (valor), (3) pertence a algo (contexto). Nomenclatura interna: TASKS com K. Usar consistentemente em toda documentação técnica como substituto de "dado" quando se quer enfatizar a dimensão semiótica.
+
+I328: **Array Hierárquico Fractal** — estrutura de dados do sistema Tel onde cada nível repete a estrutura do nível acima. Implementação: dicionário aninhado com chave `children: []`. Aplicação direta: tango.md (índice) → arquivos-folha → seções → subseções. Também: ontologia do CEU (16 IAs → edificações → funções → dados).
+
+I329: **ISA como Curadora Documental** — papel: organiza documentos, identifica tipos de dados, gera sintagmas, cria resumos, indexa conhecimento, envia apenas contexto necessário por IA. Endereça diretamente o problema de Lost in the Middle. ISA não é assistente — é curadora de memória.
+
+I330: **Workflow de Síntese — Implementação no Sistema** — pipeline: entrada → `classify_data_type()` → `build_sintagma()` → `synthesize(MO_ALL)` → `relate_to_graph()` → `generate_insight()` → `route_to_action()`. Cada passo com agente responsável: ISA (passos 1-4), Amanda (5-6), robô físico (7).
+
 I294: **Paca Design Físico** — corpo arredondado (tapir filhote), faixas preto+amarelo (fita adesiva de segurança industrial ou tinta automotiva), base robusta com rodas omni. Giroflex LED âmbar na traseira: cúpula pequena giratória ou padrão piscante. Câmera na frente (face limpa). Parabólica em cúpula fumê no topo. Buzzer traseiro. Dimensão estimada: 40×30×25cm.
 
 I295: **Parabólica Rotativa em Cúpula Fumê** — servo 360° contínuo + microfone eletreto no foco geométrico da parábola (posicionado por cálculo, não por chute). Cúpula acrílico preto fumê ~15cm diâmetro. LED azul ou vermelho dentro da cúpula, visível de fora girando. Velocidade: 10rpm (Passeio) / 60rpm (Vigilância). Motor: 28BYJ-48 com ULN2003 (~R$15).

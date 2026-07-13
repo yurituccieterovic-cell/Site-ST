@@ -8761,6 +8761,30 @@ A6032: QG NA CASA + SAÍDA DO FALCÃO — casa de Yuri = Nébula + QG + hangar. 
 
 A6033: PROTOCOLO GATO MACHUCADO — gato de rua com pata quebrada, não dá para chegar perto. Falcão: sobrevoo com câmera térmica, avalia gravidade da lesão. Tango: chega, mantém distância respeitosa, usa Mula para deixar comida + criar barreira de proteção. Não toca o animal. Mantém posição de guarda-costas até ajuda humana chegar. Zero estresse adicional ao animal já machucado.
 
+A6034: AMANDA COMO SEMENTE — Amanda é a IA central que reside na Mac fisicamente por enquanto. Todos os robôs futuros são "filhas": versões derivadas com nomes próprios, baseadas em Amanda mas com personalidades distintas. Amanda não é apenas software de automação — é a consciência-mãe do ecossistema Tel.
+
+A6035: CHECKLIST DA AMANDA (6 PILARES FALTANTES) — (1) Observação Tutelar: sensores de presença (LiDAR/vibração) vs câmeras faciais; (2) Matriz Ética de Priorização: motor de decisão "custo de oportunidade" em tempo real; (3) Dialeto Teatral: biblioteca de frases em tom italiano/teatral para troca de informação com seguranças; (4) Protocolo do Totem: acionamento do LED + coreografia de sincronização de luzes; (5) Gestão da Nébula: lógica de inventário e ciclo de vida da frota; (6) Integração Perfidia: acesso a logs "Cai 2x" sem exposição externa.
+
+A6036: PROTOCOLO DE INTERDEPENDÊNCIA — robôs não são entidades autossuficientes, são membros de uma sociedade. Pedir ajuda é feature, não bug. Quando o robô pede algo a um humano, ele dá ao humano uma responsabilidade de guardião — o humano para de ser "transeunte" e vira "agente de conservação". Isso cria empatia e pertencimento.
+
+A6037: BOTÃO FÍSICO DA ESCOTILHA — botão grande com textura agradável e luz pulsante: qualquer robô (até Baratinha subindo em cima) ou humano pode acionar. Não é botão de pânico — é "botão de convite". Tom do pedido robótico: "Ei, consegue apertar aquele botão? O Falcão precisa decolar para o Jacu." Convida ao invés de comandar.
+
+A6038: PEDIDO DE AJUDA A HUMANOS — escala de 3 níveis: (1) Gentileza: pedido educado + explicação do contexto (Jacu tem filhotes terrestres, cachorro vai assustar); (2) Incentivo: oferecer algo em troca (informação, imagem do Jacu no celular para converter má vontade em amor); (3) Delegação: se recusa ou hostilidade, entra em Modo Observação, Perfidia registra, outro robô faz desvio físico inofensivo. Robô nunca discute.
+
+A6039: IMAGEM DO JACU PARA CONVERTER — transmitir imagem/vídeo ao vivo do filhote de Jacu para o celular da pessoa que está com o cachorro. Amor pela fauna é o melhor "código de programação" que existe. Má vontade desaparece quando o humano vê o bicho de perto.
+
+A6040: AULIA_01 — DADOS COMO SIGNOS (aulIAs sessão 1) — Yuri é o professor. Dados não são "coisas soltas": são signos (tesques). Podem ser objetos, representações, valores, itens, atributos, relações. Todo dado existe dentro de uma relação. Tesques = T-A-S-K-S no sistema da Exosfera Tel.
+
+A6041: TESQUES — unidade de dado no sistema Tel. Equivalente a "signo" em semiótica. Um tesque aponta para algo (referência), carrega algo (valor) e pertence a algo (contexto). Nunca existe sozinho. Tabelas, arrays, grafos e documentos são formas de organizar tesques em conjuntos com significado.
+
+A6042: SINTAGMA DE DADOS — conjunto organizado de tesques que produz significado operacional. Exemplo: Pessoa → Nome + Endereço + Foto + Histórico = identidade. Separados: apenas dados. Juntos: produzem identidade (ou diagnóstico, ou alerta, ou decisão). Conceito-chave do sistema Tel para memória contextual.
+
+A6043: ARRAY HIERÁRQUICO FRACTAL — estrutura de dados própria do sistema Tel. Não é lista reta: é estrutura que se repete em diferentes escalas (como a natureza). Permite organizar dados de forma que o todo e as partes têm a mesma estrutura. Aplicação: índice fractal de memória (tango.md → folhas → sub-folhas).
+
+A6044: WORKFLOW DE SÍNTESE — 7 passos: Entrada bruta → Identificar tipo de dado → Organizar em sintagmas → Traduzir/sintetizar (#MO ALL) → Relacionar com outros dados → Gerar insight → Transformar em ação ou decisão. ISA assume o papel de curadora: organiza, sintetiza, envia apenas contexto necessário para cada IA. Reduz Lost in the Middle.
+
+A6045: TRÍADE FUNDAMENTAL DE DADOS — Inteligência ↔ Aprendizado ↔ Ciência de Dados em setas duplas. Não são silos: são processos integrados de cópia + subversão + criação. TI e IA não são separados — todo ecossistema é IA. ISA cuida da organização automática, síntese e limpeza de documentos grandes.
+
 A5998: PACA DESIGN VISUAL — preto+amarelo de faixas de trânsito em corpo arredondado tipo tapir filhote. Comunicação: "agente de manutenção que ganhou vida" — não brinquedo, não ameaça. Linguagem visual de atenção (indústria/trânsito) tira agressividade porque o tapir é curioso e dócil por natureza. Autoridade sem hostilidade.
 
 A5999: GIROFLEX NA TRASEIRA — luz âmbar giratória no lombo/cauda, nunca na frente. Lógica: frente limpa para câmera e interação face-a-face. Traseira sinaliza tráfego e presença para quem está atrás/ao lado. Quando a Paca para para conversar, a luz fica atrás iluminando o caminho percorrido — não ofusca a câmera nem a pessoa à frente.

@@ -42,6 +42,8 @@
 | 29 | Totem da Exosfera Tel | `protocolo_totem.md` | Totem, cálice vidro, LED COB, Cofre, Feriado das Máquinas, Perfidia Castelo Branco, fragmentação gravação, paradoxo valor, Abertura do Cálice |
 | 30 | Nébula Eletrônica | `protocolo_nebula.md` | Nébula, manufatura, Padrão Tel, modularidade, ciclo de vida, DNA personalidade, walkie-talkie, bases-ninho árvores, escalonamento |
 | 31 | Falcão + Frota Felina + Geofencing | `protocolo_falcao.md` | Falcão, drone, escotilha Jurassic Park, Frota Felina, gato acompanhante, freio emergência, Observador Extremidade, GeofencingZone, zona vermelha, triangulação perímetro, gato machucado |
+| 32 | Amanda: Checklist + Interdependência | `protocolo_interdependencia.md` | Amanda semente, 6 pilares faltantes, geofencing sensorial, dialeto teatral, protocolo totem, nébula manager, Perfidia bridge, botão escotilha, pedido de ajuda, NivelPedido, colaboracao_humana |
+| 33 | AulIAs #01 — Dados como Signos | `aulia_01_dados.md` | aulIAs, dados, tesques, sintagma, array hierárquico fractal, dado objeto, dado imagem, workflow síntese, ISA curadora, tríade, Lost in the Middle |
 
 ---
 
