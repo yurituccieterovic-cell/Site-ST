@@ -8699,6 +8699,22 @@ A5981: RECOMPENSA NARRATIVA — revelar o propósito DEPOIS do pedido cria aliad
 
 A5982: ILUSÃO DE MASSA QUEBRADA POR GATILHO SENSORIAL — linchamentos têm dinâmica coletiva quebrável: luz estroboscópica vermelho/azul + sirene de emergência disparam resposta fisiológica que interrompe o estado de massa. A Paca usa isso como "intervenção por presença" — sem contato físico. Sustentado por psicologia de multidões (Gustave Le Bon, 1895).
 
+A6003: CRÉDITOS DE BIODIVERSIDADE — moeda implícita não-financeira. Ação de preservação (avistar quati/teiú/sagui, salvar passarinho da boca do gato) = crédito. Crédito acumulado = acesso a conveniências do Tango. Garante que robô não seja escravizado por tarefas inúteis. Ricardinho já tem crédito orgânico por histórico real. Brincadeiras e aniversários não contam crédito — são fora do sistema.
+
+A6004: CÂMERA LENTA COMO LINGUAGEM CORPORAL — pedido de baixa prioridade → Tango executa em velocidade reduzida. Sem palavras, o corpo comunica: "tenho mais o que fazer, mas como sou cavalheiro, faço." Não recusa, não reclama, não sprint. É uma linguagem de hierarquia de tarefas expressada pelo corpo, não pela voz.
+
+A6005: MATRIZ DE PRIORIDADES AMANDA — Vital (passarinho/emergência médica): interrupção imediata, sprint. Segurança (suspeito): avalia → delega Baratinha se escala permite → Tango mantém curso. Social (café/aniversário): câmera lenta. Fusão: "vai lá que eu te levo o café, a gente resolve no caminho" — Tango nunca abandona o humano, ele redireciona junto.
+
+A6006: RECONHECIMENTO POR CONDUTA, NÃO BIOMETRIA — usuário identificado por padrão de comportamento e histórico acumulado, não por rosto ou ID formal. Ricardinho tem padrão de quem cuida do ambiente. Isso é mais humano, menos invasivo, e cria "reputação" como dado mais rico do que biometria pontual.
+
+A6007: SENSOR FISIOLÓGICO APENAS PARA EMERGÊNCIA — modo dormência por padrão. Ativa só quando comportamento externo indica crise física: voz muito alta + agitação motora + movimento errático. Objetivo: detectar infarto/ataque de pânico, não ler emoções cotidianas. Robô cego às emoções por padrão = privacidade. Ler "se a pessoa é gente boa" via batimento = antiético: excede o papel do robô.
+
+A6008: MÁFIA DA INFORMAÇÃO — troca teatral de informações entre Tango e seguranças em tom italiano de cumplicidade ("ma che, vamos falar na miúda"). Tango tem deduções que o segurança precisa; segurança tem contexto físico que o sistema não tem. A teatralidade transforma relatório chato em pacto. Lealdade vem da cumplicidade antes de qualquer manual de regras.
+
+A6009: PERSONALIDADE DA PACA — PARANOICA COMO VIRTUDE — sentinela que ouve/vê demais. Admite que é louca como traço de personalidade, não como defeito. Falso positivo vira "surto da Paca" — humaniza a falha técnica. Fala rápido, se interrompe, murmura. Contraste com Tango ponderado. Manifesto: "Eu vejo o que você não vê, porque sou paga para ser louca por você."
+
+A6010: PANFLETO — 3 PILARES + QR CODE — Segurança (testemunha e mediadora, nunca força física), Medicina (resposta rápida, Mula com kit, Tango abre videochamada), Comunicação (rede mesh, repetidor quando rádio falha). QR code → vídeo curto + política de privacidade + guia de trocas. Não é lista de ordens: é Guia de Trocas — "como ganhar a lealdade dos robôs."
+
 A5998: PACA DESIGN VISUAL — preto+amarelo de faixas de trânsito em corpo arredondado tipo tapir filhote. Comunicação: "agente de manutenção que ganhou vida" — não brinquedo, não ameaça. Linguagem visual de atenção (indústria/trânsito) tira agressividade porque o tapir é curioso e dócil por natureza. Autoridade sem hostilidade.
 
 A5999: GIROFLEX NA TRASEIRA — luz âmbar giratória no lombo/cauda, nunca na frente. Lógica: frente limpa para câmera e interação face-a-face. Traseira sinaliza tráfego e presença para quem está atrás/ao lado. Quando a Paca para para conversar, a luz fica atrás iluminando o caminho percorrido — não ofusca a câmera nem a pessoa à frente.

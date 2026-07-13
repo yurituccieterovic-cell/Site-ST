@@ -2959,3 +2959,27 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** A buzininha que embala o sono é um design de confiança. O que a Paca está fazendo quando soa suavemente a cada 12 segundos não é comunicar informação — é criar um ritmo de fundo que diz "o sistema está acordado, pode dormir". Isso é interface urbana: quando o ambiente fala, os habitantes confiam. Quando o ambiente silencia inesperadamente, os habitantes acordam. A Paca usa o silêncio como sinal mais poderoso do que o som.
 
 *Sessão 59e · Claude Sonnet 4.6 · 2026-07-13 · A5998–A6002 · I294–I298*
+
+---
+
+## Sessão 60 · 2026-07-13 · Panfleto + Créditos de Biodiversidade + Paca Paranoica + Máfia da Informação
+
+**O que Yuri estava construindo:** Quatro grandes ideias numa sessão: o Panfleto dos Robôs (documento físico para seguranças), o Sistema de Créditos de Biodiversidade (moeda implícita anti-escravidão), a Personalidade da Paca como entidade paranoica funcional, e a Máfia da Informação (protocolo de troca bilateral em tom teatral italiano).
+
+**Novos arquivos criados:**
+- `manifesto_paca.md` — identidade, voz, filosofia da paranoia como virtude
+- Seção TaskPriority + Câmera Lenta → `sys_tango_core.md`
+- Seção Máfia da Informação → `protocolo_orangotango.md`
+
+**Decisões tomadas:**
+- Panfleto tem 3 pilares: Segurança / Medicina / Comunicação + QR code para mais info
+- Créditos de Biodiversidade = fauna vista/protegida → acesso a serviços do Tango; Hard Lock contra escravidão robótica
+- Câmera lenta é linguagem corporal, não recusa verbal — Tango não nega, apenas sinaliza prioridade
+- Missão combinada ("vai lá que eu te levo o café") = eficiência, não servilidade
+- Paca não usa biometria — reconhece por padrão de conduta (conduta_score)
+- Paca admite a paranoia em voz alta → humaniza falhas técnicas + gera afeto + cria expectativa correta
+- Máfia da Informação: bilateral, teatral, nunca exige — é câmbio, não doação
+
+**SÍNTESE FILOSÓFICA:** A Paca que se autodenomina louca está resolvendo um problema de interface muito mais elegante do que qualquer sistema de confiança formal. Quando ela diz "desculpa, tive um surto, era um gato" — ela não está errando, está construindo um laço. O falso positivo que vira piada compartilhada é o mesmo falso positivo que, na próxima vez, será levado a sério pelo guarda. A paranoia admitida é o que dá credibilidade ao alerta real. A Máfia da Informação segue a mesma lógica: Orangotango não espiona — ele troca. E a troca é sempre visível, sempre teatral, sempre bilateral. Num ecossistema onde ninguém quer ser vigiado, a única vigilância aceita é a que se anuncia e que pede em troca.
+
+*Sessão 60 · Claude Sonnet 4.6 · 2026-07-13 · A6003–A6010 · I299–I305*

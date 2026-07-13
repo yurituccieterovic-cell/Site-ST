@@ -36,7 +36,8 @@
 | 23 | Teatro de Operações Éticas | `mise_en_abyme_robotico.md` | Mise en Abyme, Urbanismo de Sistemas, elenco robótico, cadeia de observação, Teatro |
 | 24 | Paca — Sentinela Ética | `protocolo_paca.md` | Paca, EoF, Escalation of Force, PATRULHA, INTERVENÇÃO, CUSTÓDIA, linchamento, visibilidade_publica, Amanda govern |
 | 25 | Orangotango Social | `protocolo_orangotango.md` | Banana Protocol, heat map, social Turing test, COLABORATIVO, REATIVO, recompensa narrativa, Gorango Tango |
-| 26 | Tango — Personagem Completo | `sys_tango_core.md` | Tango_Core, design LED olhos, escalada, garras, modo defensivo, show de horrores, inimigos, alimentador, sagui, ninho, doméstico |
+| 26 | Tango — Personagem Completo | `sys_tango_core.md` | Tango_Core, design LED olhos, escalada, garras, modo defensivo, show de horrores, inimigos, alimentador, sagui, ninho, doméstico, TaskPriority, câmera lenta |
+| 27 | Paca — Manifesto da Paranoica | `manifesto_paca.md` | Paca voz, tom ansioso, paranoia como virtude, contraste Tango, falso positivo, integração, identidade personagem |
 
 ---
 

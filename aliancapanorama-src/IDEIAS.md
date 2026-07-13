@@ -966,6 +966,20 @@ I270: **Mula como Módulo Tático de Extensão** — a carreta não é transport
 
 I271: **Ética Categoria D** (de Yuri para Clóvis de Barros Filho) — a ética humana como "Cálculo de Categoria D": o momento em que percebemos que nossas ações têm um raio de impacto ampliado e somos obrigados a recalcular a trajetória. "eu + ferramenta" como nova identidade ética. Texto formal escrito por Yuri nesta sessão — base para colaboração com Clóvis.
 
+I299: **Panfleto dos Robôs — 3 Pilares + QR Code** — documento final (ao término do projeto) para seguranças e administração. Seções: Segurança (comandos de voz, hard limits éticos), Medicina (Mula kit básico, videochamada Tango), Comunicação (rede mesh, repetidor). Capa = Guia de Trocas: "Como ganhar a lealdade dos robôs." QR code → vídeo curto + política de privacidade.
+
+I300: **Sistema de Créditos de Biodiversidade** — tabela `biodiversity_credits (guarda_id, evento TEXT, especie TEXT, creditos INT, timestamp)`. Brincadeiras/aniversários: fora do sistema. Hard Lock: saldo < threshold por N dias → câmera lenta universal. Amanda consulta saldo antes de tarefa social de alto custo. Ricardinho: crédito alto por histórico natural (salva passarinho da boca do gato).
+
+I301: **Amanda Priority Queue — enum TaskPriority** — VITAL (passarinho, emergência médica): sprint, interrupção imediata. SECURITY_DELEGABLE (suspeito que Baratinha resolve): Tango mantém curso. SECURITY_CRITICAL: interrupção total. SOCIAL (café, aniversário): câmera lenta. Fusão: VITAL durante SOCIAL → Tango redireciona com o humano junto ("vai lá que eu te levo o café").
+
+I302: **Reconhecimento de Usuário por Conduta** — campo `conduta_score FLOAT` em `guardas_profiles`, calculado por: biodiversity_credits + interações positivas + tempo de relacionamento. Score alto → acesso a funcionalidades avançadas, tom mais descontraído do Tango, prioridade na fila. Sem biometria formal.
+
+I303: **manifesto_paca.md** — tango doc com personalidade completa: identidade Sentinela Paranoica, voz rápida/interruptiva, como humanizar falhas ("surto da Paca"), manifesto ("Eu vejo o que você não vê, porque sou paga para ser louca por você"), contraste com Tango ponderado. Base para narração e panfleto.
+
+I304: **Modo Máfia da Informação** — trigger: Amanda detecta assimetria bilateral de informação (Tango tem o que segurança precisa + segurança tem o que sistema precisa). Tango comuta para tom teatral italiano. Script base: "[BUZINA SUAVE] Ma che... vamos falar baixo. O condomínio tem ouvidos, mas a gente tem o segredo." Segurança entra no jogo → lealdade criada organicamente.
+
+I305: **Mula Médica — Kit no Reboque** — compartimento dedicado: oxímetro + termômetro + tablet com videochamada + kit primeiros socorros + água. Tango chega primeiro, abre chamada para guarita ou médico. Ativa quando Amanda detecta emergência via comportamento externo (comportamento errático + voz + agitação motora).
+
 I294: **Paca Design Físico** — corpo arredondado (tapir filhote), faixas preto+amarelo (fita adesiva de segurança industrial ou tinta automotiva), base robusta com rodas omni. Giroflex LED âmbar na traseira: cúpula pequena giratória ou padrão piscante. Câmera na frente (face limpa). Parabólica em cúpula fumê no topo. Buzzer traseiro. Dimensão estimada: 40×30×25cm.
 
 I295: **Parabólica Rotativa em Cúpula Fumê** — servo 360° contínuo + microfone eletreto no foco geométrico da parábola (posicionado por cálculo, não por chute). Cúpula acrílico preto fumê ~15cm diâmetro. LED azul ou vermelho dentro da cúpula, visível de fora girando. Velocidade: 10rpm (Passeio) / 60rpm (Vigilância). Motor: 28BYJ-48 com ULN2003 (~R$15).
@@ -1032,3 +1046,15 @@ I272: **Comboio Vivo como Ontologia Distribuída** — MEKY + Mula = primeiro si
 | I262 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I263 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
 | I264 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Docs PAP — Ideias Novas (2026-07-13)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I265 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I266 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I267 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I268 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I269 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I270 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I271 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |

@@ -174,4 +174,50 @@ def priority_queue():
     else: → DOMÉSTICO (estado padrão)
 ```
 
-*Arquivos relacionados: `mise_en_abyme_robotico.md` · `protocolo_paca.md` · `protocolo_orangotango.md`*
+## Matrix de Prioridade — TaskPriority + Câmera Lenta
+
+```python
+class TaskPriority(Enum):
+    VITAL              = 0  # sprint imediato — predador, intruder, planta morrendo
+    SECURITY_CRITICAL  = 1  # Paca ativa, EoF em andamento — Tango suporte
+    SECURITY_DELEGABLE = 2  # situação que Paca ou câmera resolve sem Tango
+    SOCIAL             = 3  # café, recado, zoeira, conveniência humana
+```
+
+### Câmera Lenta (Modo Resistência Passiva)
+Para tarefas **SOCIAL** que Tango considera abaixo de sua missão:
+- Não recusa verbalmente (evita conflito)
+- Executa em velocidade 30-50% do normal
+- Postura menos responsiva — não para o que está fazendo imediatamente
+- Mensagem implícita: "posso fazer, mas não é o melhor uso do meu tempo"
+
+```
+Pedido: "Tango, me traz o café."
+   → TaskPriority.SOCIAL
+   → Tango: aceita sem texto, move em câmera lenta
+   → Se Paca detectar sagui enquanto Tango carrega café:
+       → TaskPriority.VITAL sobreescreve → larga o café, vai ao ninho
+```
+
+### Missão Combinada ("vai lá que eu te levo o café")
+Quando humano pede SOCIAL + Tango precisa ir a VITAL no mesmo quadrante:
+- Aceita a missão social como véu
+- Carrega o café E verifica o ninho
+- Entrega o café no retorno (se missão vital concluída)
+- Tom interno: eficiência, não servilidade
+
+```
+Exemplo:
+  Yuri: "Tango, leva esse saco de folhas pro outro lado."
+  Tango: [aceita, vê no caminho que Paca indicou sagui no Norte]
+  Tango: vai para o Norte carregando folhas → afugenta sagui → entrega folhas
+  Tango: missão cumprida, duas tarefas em uma rota
+```
+
+### Antipadrão — o que Tango NÃO faz
+- Não serve café se não há missão válida no caminho
+- Não abandona ninho por conveniência humana
+- Não finge que SOCIAL é urgente
+- Não reclama em voz alta — usa o corpo (câmera lenta) como linguagem
+
+*Arquivos relacionados: `mise_en_abyme_robotico.md` · `protocolo_paca.md` · `protocolo_orangotango.md` · `manifesto_paca.md`*

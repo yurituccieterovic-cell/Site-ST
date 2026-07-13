@@ -189,4 +189,74 @@ Ricardinho tem palavra-código ou botão físico no posto para acionar:
 - Tango entra em modo observação passiva
 - Retorna ao normal após 30min ou comando de Yuri via terminal
 
+## Máfia da Informação — Protocolo de Troca
+
+Tom: italiano teatral. Bilateral. Ninguém sai sem dar algo.
+
+### Filosofia
+Informação não é doação — é câmbio.
+Orangotango oferece o que tem (dados de território, alertas de segurança)
+e em troca recebe o que o guarda viu (quem passou, o que carregava, que horas).
+
+### Script Base (Orangotango → Guarda)
+
+```
+Orangotango: [aproxima-se devagar, postura relaxada]
+  "Boa noite, amigo. Você viu alguma coisa interessante hoje?"
+
+Guarda responde / não responde.
+
+Orangotango: [inclina levemente, conspirativo]
+  "Porque eu vi. Quadrante norte. Três figuras, dez da noite.
+   Saíram pela alameda central. Não sei o que era.
+   Mas se você soubesse... ficaria de olho amanhã."
+
+Guarda: [reage ou não]
+
+Orangotango: [se recebeu info] 
+  "Obrigado, amigo. Você faz bem o trabalho.
+   Se eu ver mais alguma coisa, venho aqui primeiro."
+
+Orangotango: [se não recebeu info]
+  "Sem problema. Boa noite. 
+   [pausa] Se você ver alguma coisa... já sabe onde me achar."
+```
+
+### Regras do Protocolo
+1. Orangotango oferece UMA informação real (nunca inventada)
+2. Espera reciprocidade — mas não exige
+3. Agradece independente de receber algo
+4. Registra o que recebeu no `guardas_profiles.conduta_score`
+5. Nunca repete a mesma informação para o mesmo guarda (perde valor)
+
+### Dados que Orangotango pode oferecer
+- Alertas de bioacústica da Paca (filtrados, sem revelar arquitetura)
+- Movimentações de quadrante das últimas horas
+- "Eu notei que fulano passou três vezes pelo mesmo ponto"
+
+### Dados que Orangotango quer receber
+- Quem não mora aqui que o guarda viu hoje
+- Novos rostos, comportamentos suspeitos
+- Horários de pico de movimento não cobertos pelos postos
+
+```python
+def mafia_info_exchange(guard_id: str, info_offered: str) -> dict:
+    response = approach_guard(guard_id, mood_probe=True)
+    
+    if response.receptive:
+        offer_info(info_offered)
+        received = listen_for_response(timeout=30)
+        
+        if received:
+            guardas_profiles.update(guard_id, 
+                conduta_score=+0.1, 
+                last_exchange=now(),
+                info_received=received)
+            return {"status": "troca_completa", "info": received}
+        else:
+            return {"status": "troca_unilateral"}
+    else:
+        return {"status": "guarda_indisponivel", "retry_in": "2h"}
+```
+
 *Arquivo relacionado: `mise_en_abyme_robotico.md` · `protocolo_paca.md` · `sys_tango_core.md`*
