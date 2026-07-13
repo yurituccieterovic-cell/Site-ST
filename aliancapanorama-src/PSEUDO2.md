@@ -874,3 +874,162 @@ def montar_xfade(segs, durs, FADE=0.20):
 
 **Resultado esperado:** 1080×1080, ~32s, 15 cortes, zoompan Ken Burns, xfade entre cenas, fala sincronizada por cena
 *Atualizado em: 2026-07-11 · Claude Sonnet 4.6 · Sessão 50*
+
+---
+
+## Sessões 51–57 — CEU v1→v3, Babel v2, Hestia, pgvector (2026-07-11/12)
+
+### Babel v2 React+Vite (Sessão 41)
+Já commitado (`ce8d286`). Código em `babel/`.
+Tabela nova já no bootstrap: `babel_memories`.
+
+### pgvector + aulias avançadas (Sessão 47c)
+Já commitado. `memorias_vetoriais` no bootstrap com `vector(1536)`.
+Pendente: OPENAI_API_KEY no Railway ARPIA para Hestia.
+
+### CEU v1 → v3 (Sessões 54-57)
+Já commitado (commits `95722a0, 6b3dd1a, d267f77, 640cdb0`).
+`CeuPage.tsx`: 7 bairros, 30 IAs. Rota `/aliancapanorama/ceu` em `App.tsx` + `vercel.json`.
+`ceu.ts`: POST `/api/ceu/mo-all` → email sintetizado.
+
+### LoginGate timeout (Sessão 55)
+```typescript
+// LoginGate.tsx — acesso livre se Railway offline >8s
+const timer = setTimeout(() => setAuthenticated(true), 8000);
+await checkAuth().then(clearTimeout(timer));
+```
+
+### CARRETA_ATTACHED — Amanda MMA (Sessão 58)
+```python
+# Estado físico do comboio MEKY+Mula
+class CarretaState(Enum):
+    DETACHED = "detached"
+    ATTACHED = "attached"
+
+def recalculate_geometry(state: CarretaState) -> AgentGeometry:
+    if state == CarretaState.ATTACHED:
+        return AgentGeometry(
+            turning_radius = base_radius * 1.8,
+            width_buffer   = base_width * 1.5,
+            max_accel      = base_accel * 0.7,
+        )
+    return AgentGeometry.default()
+```
+
+---
+
+## Exosfera Tel — Código Robótico (Sessões 59-63)
+
+> Código completo em `tango/` — cada protocolo é o pseudocódigo implementável.
+
+### Amanda EoF — decide_escalation() (Sessão 59b)
+Ver: `tango/protocolo_paca.md#Lógica Amanda — Decisão de Escalar`
+```python
+def decide_escalation(state: PacaState) -> AmandaCommand: ...
+# linchamento: crowd>=3, threat>=7, victim → intervir
+# crime menor: victim, crowd<3, threat>=4 → custódia
+# rastreio: threat>=2 → seguir
+```
+
+### TaskPriority + Câmera Lenta (Sess��o 60)
+Ver: `tango/sys_tango_core.md#Matrix de Prioridade`
+```python
+class TaskPriority(Enum):
+    VITAL              = 0
+    SECURITY_CRITICAL  = 1
+    SECURITY_DELEGABLE = 2
+    SOCIAL             = 3  # câmera lenta → 30-50% velocidade
+```
+
+### FormacaoEvento + Cornetas (Sessão 61)
+Ver: `tango/protocolo_mac.md`
+```python
+class FormacaoEvento(Enum):
+    MAC_APPROACHING = "mac_approaching"
+    RITUAL_PUBLICO  = "ritual_publico"
+    DISPERSAR       = "dispersar"
+
+CORNETA_FREQ = {"tango":80, "orangotango":110, "paca":220, "baratinha":440}
+```
+
+### TotemMode + Cofre (Sessão 61)
+Ver: `tango/protocolo_totem.md`
+```python
+class TotemMode(Enum):
+    TRANSITO  = "transit"
+    PRESENCA  = "presence"
+    RITUAL    = "ritual"
+    ABERTURA  = "crescendo"
+    CUSTODIA  = "custody"
+```
+
+### GeofencingZone (Sess��o 62)
+Ver: `tango/protocolo_falcao.md`
+```python
+class GeofenceZone(Enum):
+    VERDE    = "green"   # câmera plena, velocidade plena
+    AMARELA  = "yellow"  # câmera HD off, velocidade 50%
+    VERMELHA = "red"     # parar + pedir autorização
+
+# Tabela: geofence_zones ← adicionada ao bootstrap.ts
+```
+
+### Frota Felina — freio emergência (Sessão 62)
+```python
+def emergency_brake_cat(velocidade: float, carro_detectado: bool) -> None:
+    if carro_detectado and velocidade > 0.5:
+        play_ultrasonic(freq=25_000, duration=0.3)  # só gatos ouvem
+        log_event("freio_emergencia")
+```
+
+### NivelPedido — Protocolo Interdependência (Sessão 63)
+Ver: `tango/protocolo_interdependencia.md`
+```python
+class NivelPedido(Enum):
+    GENTILEZA  = 1  # pedido educado + contexto
+    INCENTIVO  = 2  # imagem fauna no celular
+    DELEGACAO  = 3  # Modo Observação + Perfidia registra
+
+# Tabela: colaboracao_humana ← adicionada ao bootstrap.ts
+```
+
+### Amanda Checklist — 6 Módulos (Sessão 63)
+Ver: `tango/protocolo_interdependencia.md`
+```
+[ ] geofencing_sensorial    → detect_presence(zone) sem face ID
+[ ] priority_engine         → should_interrupt(current, incoming)
+[ ] dialeto_teatral         → DIALETO dict scripts
+[ ] totem_protocol          → iniciar_ritual_totem(modo) com broadcast
+[ ] nebula_manager          → health_check_fleet() → send_home()
+[ ] perfidia_bridge         → get_critical_log(event_id, yuri_key)
+```
+
+### Tesques + Sintagmas + AulIAs (Sessão 63)
+Ver: `tango/aulia_01_dados.md`
+```python
+# Tesque = unidade de dado/signo do sistema Tel
+# Sintagma = conjunto de tesques com significado operacional
+# Array Hierárquico Fractal = estrutura de dados própria
+
+# Workflow de Síntese:
+# entrada → classify → sintagma → síntese → relacionar → insight → ação
+# ISA: passos 1-4 · Amanda: 5-6 · Robô físico: 7
+
+# Tabelas novas: sintagmas, tesques_log, aulia_progresso ← bootstrap.ts
+```
+
+### Novas tabelas no bootstrap (Sessão 59-63)
+Adicionadas em `artifacts/api-server/src/lib/bootstrap.ts`:
+- `guardas_profiles` — perfil seguranças + conduta_score
+- `biodiversity_credits` — créditos de fauna (quati, teiú, sagui, jacu)
+- `geofence_zones` + `geofence_events` — mapa verde/amarela/vermelha
+- `colaboracao_humana` — log pedidos de ajuda a humanos
+- `paca_log` — log intervenções da Paca
+- `totem_log` — log abertura do cálice
+- `walkie_talkies` — rádios distribuídos a vizinhos
+- `robot_health` — saúde/ciclo de vida da frota
+- `formacao_eventos` — log coreografias (Corredor de Honra, Feriado)
+- `aulia_progresso` — progresso das IAs nas aulIAs
+- `sintagmas` + `tesques_log` — unidades semióticas do sistema
+
+*Atualizado em: 2026-07-13 · Claude Sonnet 4.6 · Sessões 51–63*

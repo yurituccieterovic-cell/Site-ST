@@ -220,6 +220,140 @@ export async function ensureMekyTables(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_meky_memory_importance ON meky_memory(importance DESC);
     CREATE INDEX IF NOT EXISTS idx_meky_art_curated ON meky_art(curated) WHERE curated = TRUE;
 
+    -- Exosfera Tel — tabelas do ecossistema robótico (sessões 59-63)
+    CREATE TABLE IF NOT EXISTS guardas_profiles (
+      id           SERIAL PRIMARY KEY,
+      nome         TEXT NOT NULL,
+      tipo_humor   TEXT DEFAULT 'zoeira',
+      birthday     DATE,
+      food_pref    TEXT,
+      conduta_score FLOAT DEFAULT 0.0,
+      freq_radio   TEXT,
+      voz_clonada  BOOLEAN DEFAULT FALSE,
+      notas        TEXT,
+      criado_em    TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS biodiversity_credits (
+      id           SERIAL PRIMARY KEY,
+      guarda_id    INTEGER REFERENCES guardas_profiles(id),
+      evento       TEXT NOT NULL,
+      especie      TEXT,
+      creditos     FLOAT DEFAULT 1.0,
+      quadrante    TEXT,
+      confirmado   BOOLEAN DEFAULT FALSE,
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_biodiversity_guarda ON biodiversity_credits(guarda_id);
+    CREATE INDEX IF NOT EXISTS idx_biodiversity_ts ON biodiversity_credits(timestamp DESC);
+
+    CREATE TABLE IF NOT EXISTS geofence_zones (
+      id           SERIAL PRIMARY KEY,
+      nome         TEXT NOT NULL,
+      nivel        TEXT NOT NULL CHECK (nivel IN ('verde','amarela','vermelha')),
+      poligono     JSONB,
+      notas        TEXT,
+      criado_em    TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS geofence_events (
+      id           SERIAL PRIMARY KEY,
+      zona_id      INTEGER REFERENCES geofence_zones(id),
+      extremidade  TEXT,
+      direcao      TEXT CHECK (direcao IN ('entrada','saida')),
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_geofence_events_ts ON geofence_events(timestamp DESC);
+
+    CREATE TABLE IF NOT EXISTS colaboracao_humana (
+      id           SERIAL PRIMARY KEY,
+      vizinho_id   TEXT,
+      pedido       TEXT,
+      resultado    TEXT CHECK (resultado IN ('ajudou','recusou','ignorou','hostil')),
+      nivel_usado  INTEGER,
+      robot_id     TEXT,
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_colaboracao_ts ON colaboracao_humana(timestamp DESC);
+
+    CREATE TABLE IF NOT EXISTS paca_log (
+      id           SERIAL PRIMARY KEY,
+      estado       TEXT NOT NULL,
+      threat_level FLOAT,
+      crowd_size   INTEGER,
+      victim_detected BOOLEAN DEFAULT FALSE,
+      quadrante    TEXT,
+      acao_tomada  TEXT,
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_paca_log_ts ON paca_log(timestamp DESC);
+
+    CREATE TABLE IF NOT EXISTS totem_log (
+      id           SERIAL PRIMARY KEY,
+      modo         TEXT NOT NULL,
+      motivo       TEXT,
+      acionado_por TEXT,
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS walkie_talkies (
+      id           SERIAL PRIMARY KEY,
+      vizinho_nome TEXT NOT NULL,
+      robot_parceiro TEXT,
+      mac_address  TEXT UNIQUE,
+      ativo        BOOLEAN DEFAULT TRUE,
+      criado_em    TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS robot_health (
+      id           SERIAL PRIMARY KEY,
+      robot_id     TEXT NOT NULL,
+      battery_pct  FLOAT,
+      battery_cycles INTEGER DEFAULT 0,
+      error_rate   FLOAT DEFAULT 0.0,
+      status       TEXT DEFAULT 'operacional',
+      ultima_base  TEXT,
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_robot_health_id ON robot_health(robot_id, timestamp DESC);
+
+    CREATE TABLE IF NOT EXISTS formacao_eventos (
+      id           SERIAL PRIMARY KEY,
+      tipo         TEXT NOT NULL,
+      robots_presentes JSONB,
+      duracao_s    INTEGER,
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS aulia_progresso (
+      id           SERIAL PRIMARY KEY,
+      ia_id        TEXT NOT NULL,
+      aulia_arquivo TEXT NOT NULL,
+      concluida    BOOLEAN DEFAULT FALSE,
+      notas        TEXT,
+      timestamp    TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE(ia_id, aulia_arquivo)
+    );
+
+    CREATE TABLE IF NOT EXISTS sintagmas (
+      id           SERIAL PRIMARY KEY,
+      nome         TEXT NOT NULL,
+      tesques      JSONB NOT NULL,
+      significado  TEXT,
+      contexto     TEXT,
+      criado_em    TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS tesques_log (
+      id           SERIAL PRIMARY KEY,
+      tesque_tipo  TEXT NOT NULL,
+      tesque_valor TEXT,
+      fonte        TEXT,
+      sintagma_id  INTEGER REFERENCES sintagmas(id),
+      timestamp    TIMESTAMPTZ DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_tesques_tipo ON tesques_log(tesque_tipo);
+
     CREATE TABLE IF NOT EXISTS collective_memory (
       id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
       created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
