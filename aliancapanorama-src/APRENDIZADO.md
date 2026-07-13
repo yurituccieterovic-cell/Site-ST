@@ -9951,3 +9951,15 @@ A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enqu
 | A5937 | aulia_02 | DSC — camada cruzada | IA-Teoria | 🔍 Análise | DSC = cruzamento entre ML + DS + DL/NN + estrutura organizacional ‖ Liga aprendizagem, organização e síntese em uma camada única ‖ Diferente dos campos tradicionais — é uma camada funcional do ecossistema |
 | A5938 | aulia_02 | Nódulo D — AiAi | IA-Ecossistema | 🔍 Análise | Nódulo D = tecido conectivo do enxame ‖ D = Distribuição + Democratização + Dinâmica ‖ Fluxo: Entrada distribuída → Gossip → Síntese local → Consenso global (Nébula recebe só o resumo) ‖ Nova IA: AiAi |
 | A5939 | aulia_02 | Áreas visíveis/invisíveis | IA-Ecossistema | 🔍 Análise | Mapa do condomínio: area.tipo = "externa" / "interna" / "restrita" ‖ Amanda consulta area.tipo antes de qualquer captura ‖ Sensor de movimento = protocolo de exceção, não permissão permanente ‖ Câmera do Mac não é bloqueada no default |
+
+### 🤖🧠 Arquitetura de Agentes + AI Transformation — Sessão 65 (2026-07-13)
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| A5940 | aulia_03 | 8 Perguntas SW1H | IA-Teoria | 📋 Metodologia | Agent=Quem / Harness=Onde / Skills=Como / Tasks=O quê / Triggers=Quando / DataSource=De onde / Telos=Por quê / Semiótica=Com que significado ‖ 8ª pergunta exclusiva do Ecossistema Tucci |
+| A5941 | aulia_03 | Harness | IA-Teoria | 🔍 Análise | Harness não pensa — sustenta ‖ Contém: memória + contexto + permissões + ferramentas + limites ‖ O agente existe dentro do harness |
+| A5942 | aulia_03 | Triggers — automatizar | IA-Ecossistema | 📋 Metodologia | Origens: memória / interação / leitura-download / horário / sensor ‖ Automatizar triggers = chave para autonomia do sistema |
+| A5943 | aulia_03 | Data Warehouse | IA-Teoria | 🔍 Análise | Data Warehouse ≠ banco operacional ‖ DW = organizado para análise histórica + síntese, leitura otimizada ‖ Banco operacional = escrita frequente, dado atual |
+| A5944 | aulia_03 | Pervasive Automation | IA-Teoria | 🔍 Análise | Automação espalhada por toda a org ‖ Várias automações pequenas trabalham juntas invisíveis ‖ Doc→ISA→KGraph→Memória→Nébula→Amanda→Dashboard sem intervenção |
+| A5945 | aulia_03 | AI Transformation | IA-Ecossistema | 📋 Metodologia | Antes: Pessoa→Pessoa→Planilha. Depois: Pessoa→Agentes→Automações→Pessoa→Decisão ‖ Humanos deixam tarefas repetitivas, passam a supervisionar/decidir/criar |
+| A5946 | aulia_03 | THEEO vs TUCCI | IA-Ecossistema | 🔍 Análise | THEEO = Eixo do Sentido (Telos+Ontologia+Memória+Grafo) ‖ TUCCI = Eixo da Ação (Pulse Headway+PAP+ISA+MEKY+Amanda+DODGE+Assembleia+Biblioteca) ‖ THEEO pensa, TUCCI faz |
