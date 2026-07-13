@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import logoUrl from "@/assets/sociedade_tucci_logo.png";
+import corujaUrl from "/coruja-preview.png";
 
 const SKIP_KEY = "pap_intro_seen_v1";
 
@@ -53,6 +54,20 @@ export function IntroFacade({ onComplete }: IntroFacadeProps) {
       className="absolute inset-0 z-[100] bg-black flex items-center justify-center overflow-hidden select-none"
       style={{ pointerEvents: phase === "done" ? "none" : "auto" }}
     >
+      {/* coruja background */}
+      <motion.img
+        src={corujaUrl}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        initial={{ opacity: 0, scale: 1.06 }}
+        animate={{ opacity: phase === "done" ? 0 : 0.55, scale: 1 }}
+        transition={{ duration: 2.5, ease: "easeOut" }}
+      />
+
+      {/* dark overlay */}
+      <div className="absolute inset-0 bg-black/55" />
+
       {/* subtle starfield */}
       <div className="absolute inset-0 opacity-40">
         {Array.from({ length: 60 }).map((_, i) => {
