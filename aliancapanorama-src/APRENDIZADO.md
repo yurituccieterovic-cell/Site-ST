@@ -8687,6 +8687,12 @@ A5974: FRACTAL DE ESCALA VISUAL — a navegação é sempre igual, só muda a es
 
 A5975: SQUARE MOBILE-FIRST — formato quadrado funciona em celular (vertical/horizontal) e computador. No celular é um jogo: você arrasta, dá zoom, entra numa casa, sai. Como um mapa interativo, não um menu.
 
+A5976: DADOS NÃO EXISTEM COMO OBJETOS — Semiótica Psicanalítica: dados são significantes no registro Simbólico, nunca o Real que tentam capturar. Temperatura=23°C já é construção: escolha de sensor, unidade, ponto de medição. O Real (estado térmico bruto) escapa sempre. Aplicação: saber o que o dataset não registra é parte do design do sistema, não da análise.
+
+A5977: RSI NO ECOSSISTEMA PAP — Real (o que o sistema não processa: ansiedade do aluno, motivação não declarada, o silêncio entre perguntas), Simbólico (banco + APIs + código = o que o sistema É), Imaginário (CEU + avatares + progress bars = como o sistema SE APRESENTA). Confundir os três é o erro do positivismo de dados. O interpretability_lock da ISA já é intuição psicanalítica: preservar o que o sistema "não sabe por que importa" = dar lugar ao Real dentro do Simbólico.
+
+A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enquanto não há substituto operacional. Saber que dados são construídos não nos libera de usá-los — nos obriga a usá-los melhor, sabendo seus limites. Para aulas de dados: "data quality" e "bias" são termos técnicos para um fenômeno mais profundo — datasets são catexizados (investidos de desejo). Quem decide o que medir decide o que importa.
+
 
 ## Docs PAP — Sync 2026-07-13 10:03 (287 entradas)
 

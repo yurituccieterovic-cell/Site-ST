@@ -2827,3 +2827,27 @@ O fix do login é uma decisão política: o sistema não pode ser rehén do back
 **SÍNTESE FILOSÓFICA:** A sessão fez uma coisa que parecia técnica mas era ontológica: redefiniu "agente". Até hoje, um agente no ecossistema era um ponto — ISA, MEKY, Marta. Com o comboio, um agente passa a ser uma configuração dinâmica. MEKY+Mula não são dois agentes cooperando: são um agente com geometria variável. A Amanda não gerencia dois robôs — ela processa um campo de ação que muda de forma ao engate. Isso ressoa com a metassemiótica: o signo não é fixo, é a relação que se reconfigura.
 
 *Sessão 58 · Claude Sonnet 4.6 · 2026-07-13 · I269-I272 · commit: 2181665*
+
+---
+
+## Sessão 59 · 2026-07-13 · Semiótica Psicanalítica + Aula de Dados
+
+**O que Yuri estava tentando fazer:** Yuri vai começar aula de dados e quis ancorar o novo aprendizado dentro do vocabulário filosófico do ecossistema. A tensão produtiva: "dados não existem, representações não existem, mas não queremos derrubar o racionalismo."
+
+**Conceito central:**
+Semiótica Psicanalítica = bridging Peirce e Lacan. Dados são significantes no registro Simbólico, nunca o Real. Cada dataset tem um inconsciente — o que foi escolhido não registrar. O interpretability_lock da ISA já era uma intuição desse tipo: preservar o que "não se sabe por que importa" = abrir espaço para o Real dentro do Simbólico.
+
+**RSI aplicado ao PAP:**
+- Real: ansiedade do aluno, motivação não declarada, o silêncio entre perguntas
+- Simbólico: banco + APIs + código = o que o sistema É
+- Imaginário: CEU + avatares + progress bars = como o sistema SE APRESENTA
+
+**Decisões/direcionamentos:**
+- Não implementar código agora — camada conceitual primeiro
+- I273: `questao_oculta` em isa_memory — inferência da pergunta por trás da pergunta
+- I274: anotar registro RSI em metassemiótica.md (vocabulário, não código)
+- I275: CEU Plano Real — painel admin de lacunas do sistema em /adm
+
+**SÍNTESE FILOSÓFICA:** A sessão não gerou código, mas recalibrou o vocabulário do ecossistema. "Dados não existem" não é posição cética — é convite para uma segunda leitura: não o que o dado diz, mas o que ele não consegue dizer. O ecossistema PAP já fazia isso em alguns lugares (interpretability_lock, REI, sistema de sonhos do Telos). Agora tem nome: Real. E saber o nome de uma coisa muda como você a trata.
+
+*Sessão 59 · Claude Sonnet 4.6 · 2026-07-13 · A5976–A5978 · I273–I275*

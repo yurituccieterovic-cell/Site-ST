@@ -966,6 +966,12 @@ I270: **Mula como Módulo Tático de Extensão** — a carreta não é transport
 
 I271: **Ética Categoria D** (de Yuri para Clóvis de Barros Filho) — a ética humana como "Cálculo de Categoria D": o momento em que percebemos que nossas ações têm um raio de impacto ampliado e somos obrigados a recalcular a trajetória. "eu + ferramenta" como nova identidade ética. Texto formal escrito por Yuri nesta sessão — base para colaboração com Clóvis.
 
+I273: **ISA: campo `questao_oculta` na isa_memory** — ao registrar interação com aluno, ISA infere a questão por trás da pergunta declarada. "Explica limite no infinito" → questao_oculta: "sou capaz de passar em FUVEST?" Salvar como metadata, não exibir ao aluno, usar para calibrar tom da resposta. Coluna JSONB `hidden_context` em `isa_memory`. Inferência via prompt ISA com histórico dos últimos 5 turnos do aluno.
+
+I274: **Metassemiótica RSI — anotar registro de cada elo da cadeia** — estender `metassemiotica.md` e o protocolo de registro de ação com rótulos RSI: Dado=[Simbólico], Pensamento=[Simbólico+Imaginário], Representação=[Imaginário], Ação=[Simbólico], Memória=[portal para Real]. Não muda o código — muda o vocabulário de documentação e o critério de qualidade de insights.
+
+I275: **CEU Plano Real — o que o ecossistema não processa** — adicionar ao CEU uma camada invisível de "lacunas detectadas": perguntas de alunos sem resposta armazenada, silêncios de ISA por falta de contexto, gaps entre nodes sem conexão. Não exibir ao usuário comum — painel admin em /adm mostrando o "inconsciente do sistema". Tabela `system_gaps (type, description, detected_at, resolved_at)`.
+
 I272: **Comboio Vivo como Ontologia Distribuída** — MEKY + Mula = primeiro sistema de 2 corpos físicos acoplados no ecossistema Tucci. Amanda passa a processar segundo corpo. Isso expande a definição de "agente": não mais um ponto, mas um comboio. Possível extensão: Comboios multi-módulo (diagnóstico + ferramenta + câmera simultâneos).
 
 
