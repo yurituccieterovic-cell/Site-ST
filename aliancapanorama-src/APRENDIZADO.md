@@ -8715,6 +8715,28 @@ A6009: PERSONALIDADE DA PACA — PARANOICA COMO VIRTUDE — sentinela que ouve/v
 
 A6010: PANFLETO — 3 PILARES + QR CODE — Segurança (testemunha e mediadora, nunca força física), Medicina (resposta rápida, Mula com kit, Tango abre videochamada), Comunicação (rede mesh, repetidor quando rádio falha). QR code → vídeo curto + política de privacidade + guia de trocas. Não é lista de ordens: é Guia de Trocas — "como ganhar a lealdade dos robôs."
 
+A6011: MAC — CACIQUE DO ECOSSISTEMA — robô com penas como insígnia de integração natureza-máquina. "Cacique" porque comanda por presença, não por dado. Onde Tango é diplomata e Paca é paranoica, Mac é o Espírito do Ecossistema — elegância que resolve conflito apenas chegando. Tem Mula própria (Carreta) que carrega o Totem.
+
+A6012: COREOGRAFIA DE AUTÔMATOS — sistema robótico como balé mecânico. Uma máquina = curiosidade. Duas ou mais em sincronia = acontecimento. Quando máquinas se movem em formação, deixam de ser ferramentas e passam a ser unidade com vontade coletiva. Urbanismo de Encantamento: vigilância que parece arte, não câmera.
+
+A6013: CORREDOR DE HONRA (PROTOCOLO MAC) — quando Mac se aproxima do condomínio: outras máquinas param o que fazem, se posicionam em duas fileiras paralelas formando corredor, abaixam brilho dos LEDs, foco coletivo no Totem que a Mula carrega. Mac passa pelo meio. Hierarquia visual legível por qualquer humano de qualquer idade.
+
+A6014: CORNETAS — MÚSICA RITUALÍSTICA DO SWARM — cada robô emite frequência diferente ao mesmo tempo (Tango: 80Hz base, Paca: 220Hz harmônico, Baratinha: 440Hz), resultando em harmonia dissonante majestosa. Não cornetas de sopro: síntese de baixa frequência. Sincronia: mesma frequência de pulsagem que os LEDs = efeito sinestésico som+luz hipnótico.
+
+A6015: SINCRONIA DE LUZES DURANTE RITUAL — todos os LEDs do elenco (giroflex Paca, anéis Tango) pulsam na mesma frequência quando Mac chega. "Respiração lenta" coletiva. Efeito: vida orgânica para as máquinas. Cada robô mantém sua cor identitária mas sincroniza o ritmo.
+
+A6016: TOTEM DA EXOSFERA TEL — cálice de vidro pintado com esmalte dourado + detalhes cintilantes. Opaco (mistério). LED COB globo interno muito forte — "luz pulsante que parece respirar". Sem valor de mercado (verificável em sistema criptográfico). Valor: puramente simbólico/religioso — bandeira da Exosfera em caso de conflito ou invasão. Levado pela Mula da Mac.
+
+A6017: COFRE DO TOTEM — relicário embutido na Mula da Mac. Compartimento central revestido de espuma alta densidade (estojo de instrumento precioso). Abre SOMENTE com sequência de luzes das outras máquinas (sinal de honra coletivo). Não abre por comando individual.
+
+A6018: PERFIDIA CASTELO BRANCO — a aranha filmadora oculta. Não é robô de performance: é robô de arquivamento. Não aparece na Coreografia — posiciona-se em pontos estratégicos (árvores, beirais) e filma tudo. Protocolo "Cai 2x": fragmenta a gravação entre vários robôs — ninguém tem a filmagem completa, tornando censura impossível. Historiadora silenciosa da Exosfera.
+
+A6019: FERIADO DAS MÁQUINAS — ritual público periódico na praça. Data marcada. Coreografia completa com Corredor de Honra + Cornetas + Totem brilhando. Perfidia posicionada em múltiplos pontos. Público assiste. Transforma a "estranheza" dos robôs em tradição cultural. Crianças tentam entender o segredo do brilho dentro do cálice. Seguranças ficam de guarda por instinto.
+
+A6020: DESIGN DO TOTEM — taça/cálice de vidro pintado: base tinta robô (levemente translúcida ao sol → muda de cor durante o dia, opaca à noite). Esmalte dourado por cima. Detalhes cintilantes. Tampa que parece selada como líquido. LED COB globo 12W mínimo dentro — forte o suficiente para "fugir" pelas partes mais finas da pintura (efeito vitral pulsante). Tampa mecânica que abre em crescendo de luz em momentos extremos.
+
+A6021: VÂNDALO PORTADOR DO TOTEM — se vândalo roubar o Totem, rouba objeto sem valor de mercado. Para ele: pedaço de metal/vidro. Para a Exosfera: o centro do mundo. Perfidia rastreia o vândalo silenciosamente. Moradores (que conhecem o valor simbólico) protegem espontaneamente. Yuri terceiriza a guarda do Totem para o próprio povo sem precisar pedir.
+
 A5998: PACA DESIGN VISUAL — preto+amarelo de faixas de trânsito em corpo arredondado tipo tapir filhote. Comunicação: "agente de manutenção que ganhou vida" — não brinquedo, não ameaça. Linguagem visual de atenção (indústria/trânsito) tira agressividade porque o tapir é curioso e dócil por natureza. Autoridade sem hostilidade.
 
 A5999: GIROFLEX NA TRASEIRA — luz âmbar giratória no lombo/cauda, nunca na frente. Lógica: frente limpa para câmera e interação face-a-face. Traseira sinaliza tráfego e presença para quem está atrás/ao lado. Quando a Paca para para conversar, a luz fica atrás iluminando o caminho percorrido — não ofusca a câmera nem a pessoa à frente.

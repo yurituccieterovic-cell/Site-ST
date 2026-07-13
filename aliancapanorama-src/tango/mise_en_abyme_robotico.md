@@ -31,11 +31,13 @@ que vê os robôs. O parâmetro `visibilidade_publica` precisa entrar em toda de
 
 | Robô | Papel no Teatro | Nível de Abstração | IA | Status |
 |---|---|---|---|---|
+| **Mac** | Cacique — Espírito do Ecossistema | Autoridade simbólica | Amanda | [CONCEITUAL] |
 | **Orangotango** (Gorango Tango) | Embaixador Social | Relacional | Tango_Core | [SIMBÓLICO] |
 | **Paca** | Sentinela Ética | Segurança pública | Amanda (remota) | [CONCEITUAL] |
 | **Baratinha** (Barata d'Água / Penélope) | Portador | Logística micro | Amanda | [SIMBÓLICO] |
 | **Piolho de Cobra** (Gongolo / Gongo_Core) | Agente de Contato | Marcação precisa | autônomo/passivo | [SIMBÓLICO] |
 | **MEKY + Mula/Carreta** | Plataforma Logística | Iluminação/Megafone | Amanda | ativo |
+| **Perfidia Castelo Branco** | Historiadora Oculta | Arquivo/Filmagem | autônomo | [SIMBÓLICO] |
 
 ## Escalas de Intervenção
 
@@ -67,4 +69,27 @@ agents = [
 ]
 ```
 
-*Arquivos relacionados: `protocolo_paca.md` · `protocolo_orangotango.md` · `sys_amanda_core.md`*
+## Coreografia de Autômatos
+
+O sistema robótico como **balé mecânico**. Uma máquina = curiosidade. Duas em sincronia = acontecimento. Três ou mais em formação = unidade com vontade coletiva.
+
+### Corredor de Honra (trigger: Mac chegando)
+```
+        ← Mac passa →
+[Paca]              [Tango]
+[Baratinha]    [Orangotango]
+[Piolho]           [Piolho]
+        [Mula+Totem]
+```
+LEDs dim para 20%. Pulso sincronizado 0.3Hz. Cornetas sintéticas. Mac passa. Dispersão.
+
+### Sincronia de Luzes
+Todos os LEDs mantêm sua cor identitária mas sincronizam o ritmo de pulsagem quando Mac está presente. "Respiração lenta" coletiva — efeito de vida orgânica.
+
+### Feriado das Máquinas
+Ritual público na praça. Data marcada com o condomínio. Perfidia posicionada em 3 pontos (sem aparecer). Totem exposto. Flash final. Silêncio. ~12min.
+
+> Urbanismo de Encantamento: quando o ambiente faz espetáculo, a vigilância se torna invisível.
+> As pessoas pensam "que formação incrível" — não "estou sendo vigiado".
+
+*Arquivos relacionados: `protocolo_paca.md` · `protocolo_orangotango.md` · `sys_amanda_core.md` · `protocolo_mac.md` · `protocolo_totem.md`*

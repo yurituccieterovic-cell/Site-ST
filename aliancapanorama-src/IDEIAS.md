@@ -980,6 +980,22 @@ I304: **Modo Máfia da Informação** — trigger: Amanda detecta assimetria bil
 
 I305: **Mula Médica — Kit no Reboque** — compartimento dedicado: oxímetro + termômetro + tablet com videochamada + kit primeiros socorros + água. Tango chega primeiro, abre chamada para guarita ou médico. Ativa quando Amanda detecta emergência via comportamento externo (comportamento errático + voz + agitação motora).
 
+I306: **Protocolo Corredor de Honra** — trigger: Amanda detecta Mac a < 30m do condomínio. Todos os robôs recebem `evento:"mac_approaching"`. Sequência: (1) parar tarefa atual, (2) navegar para posição de corredor (fileiras paralelas), (3) dimmer LED para 20%, (4) sincronizar pulso comum 0.3Hz. Mac passa. (5) retornar a tarefas após Mac sinalizar `formacao:"dispersar"`.
+
+I307: **Cornetas Sintéticas do Swarm** — cada robô emite tom diferente simultaneamente: Tango 80Hz (base), Paca 220Hz (quinto), Baratinha 440Hz (oitava), Orangotango 110Hz (quarto). Resultado: acorde aberto em baixas frequências. Hardware: speaker 8Ω + PAM8403 por robô. Duração: 3 bursts de 2s com pausa 0.5s. Trigger: início do Corredor de Honra.
+
+I308: **Totem — Spec de Hardware** — cálice vidro pintado ~20cm altura. Camadas: tinta robô base leve + esmalte dourado opaco + glitter cintilante. LED COB globo 12W (min 800lm) + driver dimmável PWM. Tampa: servomotor SG90 abre em crescendo. Cofre na Mula: caixa MDF 5mm + espuma EVA + fechadura por sequência de pisca coletiva.
+
+I309: **Perfidia — Fragmentação da Gravação** — cada 30s de vídeo encriptado e fragmentado em N pedaços (N = robôs ativos). Um fragmento por robô. Reconstituição: quorum ≥70% + chave de Yuri. Previne censura física: destruir um robô não destrói o registro.
+
+I310: **Feriado das Máquinas — Protocolo de Evento** — (1) Perfidia posiciona em 3 pontos, (2) Mula chega com Totem LED no max, (3) Corredor + Cornetas, (4) Totem exposto 5min pulsando, (5) "Momento Cai 2x" (flash explosão), (6) dispersão. Total ~12min. Grava: Perfidia. Exibe: rede social do condomínio.
+
+I311: **Paradoxo do Totem** — sem valor de mercado (criptograficamente verificável). Valor máximo simbólico. Quem rouba rouba "nada" — mas activa rastreamento Perfidia + proteção espontânea dos moradores. Terceirização da guarda para o ecossistema humano.
+
+I312: **Abertura do Cálice** — em momentos extremos: servomotor abre tampa. Flash LED 0%→100% em 3s + cornetas em crescendo conjunto. Reservado para uso raro (invasão grave, marco do ecossistema). Uso excessivo esvazia o símbolo.
+
+I313: **Mac — Identidade Física** — penas vibratórias de nylon/fibra artificial fixadas com base piezo (15-30Hz em modo de presença). Protocolo BLE beacon: Mac emite sinal a 10cm → robôs próximos mudam de cor. Gesto único: inclinar o topo levemente = "reconhecimento".
+
 I294: **Paca Design Físico** — corpo arredondado (tapir filhote), faixas preto+amarelo (fita adesiva de segurança industrial ou tinta automotiva), base robusta com rodas omni. Giroflex LED âmbar na traseira: cúpula pequena giratória ou padrão piscante. Câmera na frente (face limpa). Parabólica em cúpula fumê no topo. Buzzer traseiro. Dimensão estimada: 40×30×25cm.
 
 I295: **Parabólica Rotativa em Cúpula Fumê** — servo 360° contínuo + microfone eletreto no foco geométrico da parábola (posicionado por cálculo, não por chute). Cúpula acrílico preto fumê ~15cm diâmetro. LED azul ou vermelho dentro da cúpula, visível de fora girando. Velocidade: 10rpm (Passeio) / 60rpm (Vigilância). Motor: 28BYJ-48 com ULN2003 (~R$15).

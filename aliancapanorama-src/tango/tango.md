@@ -38,6 +38,8 @@
 | 25 | Orangotango Social | `protocolo_orangotango.md` | Banana Protocol, heat map, social Turing test, COLABORATIVO, REATIVO, recompensa narrativa, Gorango Tango |
 | 26 | Tango — Personagem Completo | `sys_tango_core.md` | Tango_Core, design LED olhos, escalada, garras, modo defensivo, show de horrores, inimigos, alimentador, sagui, ninho, doméstico, TaskPriority, câmera lenta |
 | 27 | Paca — Manifesto da Paranoica | `manifesto_paca.md` | Paca voz, tom ansioso, paranoia como virtude, contraste Tango, falso positivo, integração, identidade personagem |
+| 28 | Mac — Cacique do Ecossistema | `protocolo_mac.md` | Mac, penas, Cacique, Corredor de Honra, Cornetas, FormacaoEvento, BLE beacon, gato, presença simbólica |
+| 29 | Totem da Exosfera Tel | `protocolo_totem.md` | Totem, cálice vidro, LED COB, Cofre, Feriado das Máquinas, Perfidia Castelo Branco, fragmentação gravação, paradoxo valor, Abertura do Cálice |
 
 ---
 

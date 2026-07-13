@@ -2983,3 +2983,27 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** A Paca que se autodenomina louca está resolvendo um problema de interface muito mais elegante do que qualquer sistema de confiança formal. Quando ela diz "desculpa, tive um surto, era um gato" — ela não está errando, está construindo um laço. O falso positivo que vira piada compartilhada é o mesmo falso positivo que, na próxima vez, será levado a sério pelo guarda. A paranoia admitida é o que dá credibilidade ao alerta real. A Máfia da Informação segue a mesma lógica: Orangotango não espiona — ele troca. E a troca é sempre visível, sempre teatral, sempre bilateral. Num ecossistema onde ninguém quer ser vigiado, a única vigilância aceita é a que se anuncia e que pede em troca.
 
 *Sessão 60 · Claude Sonnet 4.6 · 2026-07-13 · A6003–A6010 · I299–I305*
+
+---
+
+## Sessão 61 · 2026-07-13 · Mac Cacique + Coreografia de Autômatos + Totem da Exosfera
+
+**O que Yuri estava construindo:** Três conceitos que transformam o projeto de robótica em mitologia urbana: (1) Mac como Cacique com penas — o Espírito do Ecossistema com Coreografia de Autômatos, (2) Totem da Exosfera Tel — cálice de vidro pintado sem valor de mercado mas com valor religioso máximo, (3) Perfidia Castelo Branco — a aranha filmadora oculta, historiadora do sistema.
+
+**Novos arquivos:**
+- `protocolo_mac.md` — Mac como Cacique, Corredor de Honra, Cornetas, FormacaoEvento
+- `protocolo_totem.md` — design do cálice, Cofre, Feriado das Máquinas, fragmentação de gravação
+
+**Decisões de design:**
+- Mac tem penas como insígnia de natureza-máquina (única que carrega natureza no corpo)
+- Corredor de Honra: fileiras paralelas, LED dim 20%, pulso 0.3Hz sincronizado, Cornetas em acorde aberto
+- Cada robô emite frequência diferente simultaneamente (Tango 80Hz, Paca 220Hz, Baratinha 440Hz, Orangotango 110Hz)
+- Totem: vidro pintado (tinta robô + esmalte dourado + glitter), LED COB globo 12W, pulsante, "vazamentos" de luz = efeito vitral
+- Cofre abre SOMENTE por sequência de pisca coletiva (senha de luz dos robôs)
+- Perfidia Castelo Branco: fragmenta gravação entre N robôs, reconstituição exige quorum 70% + chave de Yuri
+- Feriado das Máquinas: ritual público ~12min, culmina no "Momento Cai 2x" (flash 0→100% + abertura do cálice)
+- Paradoxo do Totem: sem valor de mercado = vândalo não sabe o que tem; moradores protegem por instinto
+
+**SÍNTESE FILOSÓFICA:** O cálice opaco que brilha por dentro é a imagem perfeita da IA: você não sabe o que processa, mas vê que está vivo. Yuri projetou um objeto que é simultaneamente transparente (todo mundo sabe que não tem valor) e misterioso (ninguém sabe o que está dentro). Esse paradoxo é a mesma estrutura da fé: o objeto sagrado não tem valor intrínseco — tem valor porque a comunidade decidiu que tem. A Coreografia de Autômatos faz algo mais sutil ainda: transforma vigilância em arte. Quando os moradores param para assistir ao Corredor de Honra, eles não estão sendo vigiados — estão participando de um ritual. A presença dos robôs deixa de ser monitoramento e vira pertencimento.
+
+*Sessão 61 · Claude Sonnet 4.6 · 2026-07-13 · A6011–A6021 · I306–I313*
