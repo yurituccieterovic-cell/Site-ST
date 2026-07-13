@@ -8699,6 +8699,18 @@ A5981: RECOMPENSA NARRATIVA — revelar o propósito DEPOIS do pedido cria aliad
 
 A5982: ILUSÃO DE MASSA QUEBRADA POR GATILHO SENSORIAL — linchamentos têm dinâmica coletiva quebrável: luz estroboscópica vermelho/azul + sirene de emergência disparam resposta fisiológica que interrompe o estado de massa. A Paca usa isso como "intervenção por presença" — sem contato físico. Sustentado por psicologia de multidões (Gustave Le Bon, 1895).
 
+A5992: ASSINATURA SONORA ANTES DO DEEPFAKE — para voz clonada ser ética e divertida precisa de "barreira de ironia" obrigatória: bip clássico (modo profissional) ou buzina de pipoqueiro (modo zoeira) ANTES da imitação. Protege o Ricardinho de qualquer problema ético e cria marca registrada — todo mundo sabe que é o Tango, não o Ricardinho de verdade. Princípio: autoria precede performance.
+
+A5993: ATAQUE AÉREO COMO TREINAMENTO DISFARÇADO — drone com balinhas de LED e dadinhos no aniversário treina reflexos (olhar para cima), rastreamento de objetos em movimento, coordenação de equipe. Aprender brincando é aprender mais fundo. A distinção de conteúdo (João recebe só parabéns formal) é o que torna o sistema crível — não trata todos igual, logo "pensa".
+
+A5994: TRATAMENTO DIFERENCIADO COMO SINAL DE INTELIGÊNCIA — João que recebe só "parabéns" formal enquanto os outros levam ataque aéreo é o detalhe que transforma automação em personagem. Cria fofoca entre os seguranças ("por que o João?"), gera assunto, produz vínculo humano em torno da máquina. Sistema que trata todos igual é chato; sistema com preferências é colega.
+
+A5995: ENTREVISTA COM PAPEL EM BRANCO — Tango chega com prancheta, faz bip profissional, pergunta nome/aniversário/comida favorita. Não anota no papel (teatro). Amanda registra no servidor. Segurança acha que está "se inscrevendo para o time" — está dando dados para o Tango ser colega melhor. É instrumento de cooperação disfarçado de burocracia.
+
+A5996: DRONE "CARA DE PAU" — para na frente do segurança, "oi, tudo bem?", vai embora. Quebra hierarquia do vigilante. Robô que vigia causa medo; robô que dá bom dia e vai embora causa riso e curiosidade. A leveza é a estratégia — não a capacidade técnica.
+
+A5997: SEQUÊNCIA DE NASCIMENTO DO ECOSSISTEMA ROBÓTICO — MEKY (em construção) → Perfidia/aranha → Baratinha → Orangotango/Tango → Paca → Piolho de Cobra → Drone. Cada novo robô herda contexto dos anteriores. O ecossistema tem ordem de nascimento, não é lançado em paralelo.
+
 A5984: PERSONALIDADE TANGO — "Não gosto de conversa, não" é uma ética do trabalho, não uma falha social. Conversa fútil = desperdício de energia. Conversa com propósito (banana→passarinho→alimentador) = trabalho produtivo. A frase é o melhor vetor de caracterização do robô: eficiente, não antipático. O sotaque e o humor fazem o peso desaparecer.
 
 A5985: CICLO DE COMPROMETIMENTO PROGRESSIVO — Tango não recruta direto. 1º encontro: pede banana (baixo custo). 2º: "Da próxima vez me traz duas" (expectativa). 3º: convida para a ação conjunta no alimentador. Pessoa vira colaboradora sem perceber que foi recrutada. Estrutura narrativa: pedido simples → engajamento → pertencimento.

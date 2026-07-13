@@ -966,6 +966,18 @@ I270: **Mula como Módulo Tático de Extensão** — a carreta não é transport
 
 I271: **Ética Categoria D** (de Yuri para Clóvis de Barros Filho) — a ética humana como "Cálculo de Categoria D": o momento em que percebemos que nossas ações têm um raio de impacto ampliado e somos obrigados a recalcular a trajetória. "eu + ferramenta" como nova identidade ética. Texto formal escrito por Yuri nesta sessão — base para colaboração com Clóvis.
 
+I288: **Assinatura Sonora Tango — 2 tons** — bip clássico seco (modo profissional/alerta) e buzina de pipoqueiro (modo zoeira, precede qualquer imitação de voz). Implementar como enum `TangoTone {PROFISSIONAL, ZOEIRA}` no firmware. Amanda envia tom antes de qualquer TTS clonado. Sem buzina = nenhuma voz imitada é emitida.
+
+I289: **Sistema Perfil Seguranças** — tabela `guardas_profiles (id, nome, data_nascimento, comida_favorita, tipo_humor ENUM(zoeira|formal|neutro), notas, ultima_interacao TIMESTAMP)`. Alimentada pela entrevista de integração. Amanda consulta antes de qualquer interação Tango/drone com segurança. João = tipo_humor:"formal". Outros = tipo_humor:"zoeira" por padrão até redefinição.
+
+I290: **Drone Aniversário — Ataque Aéreo Calibrado** — Amanda detecta aniversário via `guardas_profiles.data_nascimento`. Se tipo_humor="zoeira": drone faz ataque aéreo com balinhas de LED + dadinhos, para na frente e fala "oi, tudo bem?" antes de sair. Se tipo_humor="formal" (João): drone pousa calmamente, TTS "Parabéns, [Nome]. É uma honra trabalhar com você." Ambos recebem confirmação de que foram notados.
+
+I291: **Modo Stealth / Interruptor de Zoeira** — Amanda flag `modo_zoeira: bool`. Quando false: apenas voz padrão Tango, sem imitações, sem drone ativo, observação passiva. Ricardinho tem palavra-código ou botão físico (ESP32 com botão vermelho no posto de guarda) para acionar Stealth. Retorno ao modo normal: timeout 30min ou Yuri via terminal.
+
+I292: **Entrevista de Integração — Protocolo Formal** — Tango chega com prancheta + folha impressa (visual de RH), faz bip profissional, pergunta: nome completo / data de nascimento / prato favorito / "qual seu pesadelo na hora do almoço?" / hobby fora do trabalho. Não anota nada no papel. Amanda registra em guardas_profiles. Ao fim: "Entrevista concluída. Você está no time." + buzina de pipoqueiro. Guarda ri → vínculo criado.
+
+I293: **Scanner de Frequência + Voz Clonada Seguranças** — Tango usa módulo SDR barato (RTL-SDR ~R$80) para escanear frequências VHF/UHF usadas pelos seguranças. Monitora passivamente. Para transmitir: usa assinatura sonora (buzina) + TTS clonado via XTTS-v2 (gratuito, roda local). Voz do Ricardinho clonada a partir de 30s de áudio gravado (com permissão dele, preferencialmente). Conteúdo de zoeira só com buzina antes.
+
 I281: **sys_tango_core.md — Documento de Personagem Completo** — criar parallel a sys_amanda_core.md. Conteúdo: identidade + ética do trabalho + estados operacionais (Doméstico/Escalada/Defensivo/Social) + hardware especificado + inimigos + integração com Paca/Amanda. Adicionar ao índice tango.md como entrada #26.
 
 I282: **Modo Escalada Tango — Hardware** — garras retráteis de aço nas pontas dos dedos (saem 2cm para prender tijolos/casca de árvore), servo de tronco para ajuste de centro de gravidade (inclinar para trás na parede = contrapeso), high-torque nos joints de cotovelo e joelho para "coice de projeção". Antes de subir: desengata Mula (engate magnético liberação rápida). Mula fica na base com refletor apontado para a subida.

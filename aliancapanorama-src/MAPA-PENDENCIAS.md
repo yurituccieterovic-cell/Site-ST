@@ -4,6 +4,22 @@
 
 ---
 
+## Sequência de Nascimento do Ecossistema Robótico
+
+> Definida por Yuri em 2026-07-13. Ordem obrigatória — não construir em paralelo.
+
+```
+1. MEKY (Marta Centaurus) ← em construção agora
+2. Perfidia (aranha / Vesper) ← perna quebrada: reparar com cianoacrilato+bicarbonato
+3. Baratinha (Penélope) ← [SIMBÓLICO]
+4. Orangotango / Gorango Tango ← [SIMBÓLICO]
+5. Paca ← [CONCEITUAL]
+6. Piolho de Cobra / Gongolo ← [SIMBÓLICO]
+7. Drone com Arduino ← "em algum momento"
+```
+
+---
+
 ## Pendências Ativas (por prioridade)
 
 | # | Item | Depende de | Status |

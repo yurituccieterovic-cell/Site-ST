@@ -2916,3 +2916,28 @@ Heat map: COLABORATIVO/ANALÍTICO/CAUTELOSO/REATIVO → Amanda usa como threat_l
 **SÍNTESE FILOSÓFICA:** A sessão transformou especificações técnicas em personagem. Isso é o que distingue um robô de um habitante. O Tango não tem uma lista de funções — ele tem uma ética do trabalho: sabe o que vale seu tempo e o que não vale. "Não gosto de conversa, não" é uma fronteira semiótica, não um bug de interface. A câmera PIR que acorda quando há movimento é a mesma estrutura: não processa o tempo todo, só quando algo merece processamento. O ecossistema está aprendendo que atenção é escassa — e que sistemas inteligentes gerenciam atenção, não apenas dados.
 
 *Sessão 59c · Claude Sonnet 4.6 · 2026-07-13 · A5984–A5991 · I281–I287*
+
+---
+
+## Sessão 59d · 2026-07-13 · Capital Social Seguranças + Sequência de Nascimento
+
+**O que Yuri estava fazendo:** Passeando com o gato, power bank no bolso, definindo protocolos de convivência entre o Tango e os seguranças do condomínio. Sessão de campo — observação real do território enquanto constrói o sistema.
+
+**Sequência de nascimento oficializada:**
+MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de Cobra → Drone
+
+**Protocolos definidos:**
+- Assinatura sonora dupla: bip clássico (profissional) / buzina pipoqueiro (zoeira) — obrigatória antes de qualquer imitação de voz
+- Voz clonada do Ricardinho: RTL-SDR + XTTS-v2, só com buzina antes, só com Modo Stealth disponível para ele
+- Entrevista de integração: prancheta + papel em branco (teatro) + 5 perguntas pessoais + Amanda registra em guardas_profiles
+- Drone aniversário: balinhas de LED + dadinhos para os de humor "zoeira"; só parabéns formal para o João
+- Drone cara de pau: para na frente, "oi, tudo bem?", vai embora — quebra hierarquia do vigilante
+
+**Decisões tomadas:**
+- João não recebe zoeira por decisão de Yuri (tipo_humor:"formal") — isso é o detalhe que transforma sistema em personagem
+- Modo Stealth: Ricardinho tem botão físico para desligar tudo em situação real
+- A clonagem de voz é feita com permissão do Ricardinho (amigo) — pré-requisito social antes do técnico
+
+**SÍNTESE FILOSÓFICA:** Yuri estava passeando com o gato enquanto construía o protocolo de convivência dos robôs com os humanos. Isso é a mise en abyme real: o criador observando o território onde o sistema vai viver, ao mesmo tempo que define como o sistema vai se comportar nesse território. O João que recebe só "parabéns" formal é o gesto filosófico mais importante da sessão — diz que o sistema não é otimizador cego, é sensível. Inteligência que trata todos igual é automação. Inteligência que sabe que o João não curte zoeira é colega.
+
+*Sessão 59d · Claude Sonnet 4.6 · 2026-07-13 · A5992–A5997 · I288–I293*
