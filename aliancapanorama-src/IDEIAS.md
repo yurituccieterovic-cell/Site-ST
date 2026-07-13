@@ -966,6 +966,16 @@ I270: **Mula como Módulo Tático de Extensão** — a carreta não é transport
 
 I271: **Ética Categoria D** (de Yuri para Clóvis de Barros Filho) — a ética humana como "Cálculo de Categoria D": o momento em que percebemos que nossas ações têm um raio de impacto ampliado e somos obrigados a recalcular a trajetória. "eu + ferramenta" como nova identidade ética. Texto formal escrito por Yuri nesta sessão — base para colaboração com Clóvis.
 
+I276: **Banana Protocol — Heat Map Social do Condomínio** — Orangotango/Gorango Tango percorre território fazendo pedido simples ("pode me dar uma banana?") e classifica respostas em COLABORATIVO/ANALÍTICO/CAUTELOSO/REATIVO. Heat map gravado via GPS+timestamp. Amanda usa para calibrar threat_level_inicial da Paca por zona. Integração: endpoint POST /api/assembly/heat-map no Railway.
+
+I277: **Paca EoF — Máquina de 5 Estados** — PATRULHA→RASTREIO→AVALIAÇÃO→INTERVENÇÃO→CUSTÓDIA→RETIRADA. Amanda recebe PacaState (threat_level, crowd_size, aggression_markers, victim_detected, visibilidade_publica) e devolve AmandaCommand. Implementar em `sys_amanda_core.py` ou `paca_eof.py` na ARPIA. Log de cada intervenção no Conector-API seção "paca_log".
+
+I278: **Piolho de Cobra como Marcador Passivo** — 2cm, magnético ou adesivo (gecko synthetic), despachado pela Baratinha. Gruda na vestimenta do agressor durante INTERVENÇÃO da Paca. Transmite posição via rádio (BLE force-signal). Paca rastreia agressor à distância sem perseguição física. Sem inteligência própria: é marcador, não agente.
+
+I279: **Carreta MEKY como Módulo de Iluminação/Negociação** — Amanda pode acionar `mecky_module`: illumination (refletor da Carreta ilumina cena do crime como "diretor de fotografia"), megaphone (alto-falante fala com suspeito — Mecky negocia enquanto Paca observa), ou both. Yuri como "diretor de cena" via terminal.
+
+I280: **Sistema de Zonas Amanda — Heat Map → EoF** — Amanda mantém mapa de zonas com densidade social (Orangotango alimenta), ajusta threat_level_base da Paca por zona antes da detecção de anomalia. Zona REATIVO: threshold de intervenção mais baixo. Zona COLABORATIVO: patrulha reduzida (comunidade auto-regula). Tabela `territory_zones` com tipo, coordenada, densidade_tipo.
+
 I273: **ISA: campo `questao_oculta` na isa_memory** — ao registrar interação com aluno, ISA infere a questão por trás da pergunta declarada. "Explica limite no infinito" → questao_oculta: "sou capaz de passar em FUVEST?" Salvar como metadata, não exibir ao aluno, usar para calibrar tom da resposta. Coluna JSONB `hidden_context` em `isa_memory`. Inferência via prompt ISA com histórico dos últimos 5 turnos do aluno.
 
 I274: **Metassemiótica RSI — anotar registro de cada elo da cadeia** — estender `metassemiotica.md` e o protocolo de registro de ação com rótulos RSI: Dado=[Simbólico], Pensamento=[Simbólico+Imaginário], Representação=[Imaginário], Ação=[Simbólico], Memória=[portal para Real]. Não muda o código — muda o vocabulário de documentação e o critério de qualidade de insights.

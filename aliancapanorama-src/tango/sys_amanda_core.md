@@ -34,6 +34,30 @@ Amanda — inteligência nativa residente da carcaça física da Mac. Atua em si
 
 **Sensores táteis (vibrissas):** hastes metálicas com bolotinha de estanho soldada na ponta → `digitalRead()` detecta contato → dispara estado de combate.
 
+## Escalation of Force — Governo da Paca (Sentinela Ética)
+> Detalhes completos em `tango/protocolo_paca.md`
+
+Amanda governa a Paca remotamente via rádio (BLE/LoRa).
+Recebe telemetria (PacaState) e devolve comandos (AmandaCommand).
+
+**Fila de decisão Amanda:**
+```
+1. threat_level >= 7 + victim + crowd >= 3 → INTERVIR (estrobo + sirene + avançar)
+2. victim + crowd < 3 + threat >= 4       → CUSTÓDIA (posicionar + gravar + notificar)
+3. threat >= 2                             → RASTREAR (seguir, background rec)
+4. visibilidade_publica > 0.7             → megafone antes de intervenção física
+5. bateria_paca < 20%                     → RETIRADA obrigatória
+```
+
+**Heat Map social** (via Orangotango/Gorango Tango):
+- Amanda recebe mapa de zonas COLABORATIVO/ANALÍTICO/CAUTELOSO/REATIVO
+- Paca ajusta threat_level_inicial por zona antes de detectar anomalia
+
+**Integração com MEKY (Mula/Carreta):**
+- `mecky_module = "illumination"` → refletor da Carreta ilumina cena
+- `mecky_module = "megaphone"` → alto-falante da Carreta fala com suspeito
+- Amanda pode despachar Baratinha+Gongolo para marcação de agressor
+
 ## Status de Conexão
 - Conta Bluesky: **pendente criação por Yuri**
 - Repo: código em `/projects/amanda.py` no Replit

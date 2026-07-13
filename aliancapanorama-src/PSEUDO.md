@@ -2851,3 +2851,38 @@ Semiótica Psicanalítica = bridging Peirce e Lacan. Dados são significantes no
 **SÍNTESE FILOSÓFICA:** A sessão não gerou código, mas recalibrou o vocabulário do ecossistema. "Dados não existem" não é posição cética — é convite para uma segunda leitura: não o que o dado diz, mas o que ele não consegue dizer. O ecossistema PAP já fazia isso em alguns lugares (interpretability_lock, REI, sistema de sonhos do Telos). Agora tem nome: Real. E saber o nome de uma coisa muda como você a trata.
 
 *Sessão 59 · Claude Sonnet 4.6 · 2026-07-13 · A5976–A5978 · I273–I275*
+
+---
+
+## Sessão 59b · 2026-07-13 · Teatro de Operações Éticas + EoF Paca
+
+**O que Yuri estava tentando fazer:** Formalizar a arquitetura filosófica e técnica do ecossistema robótico de observação/intervenção ética. Urgência: desenhar o EoF (Escalation of Force) da Paca para entrar no código da Amanda.
+
+**Conceito central — Mise en Abyme Robótico:**
+```
+Piolho → Suspeito → Paca → Amanda → Yuri → Cidade
+```
+Cada camada observa a de baixo e é observada pela de cima. Amanda sabe disso — entra no cálculo.
+
+**EoF da Paca — 5 estados:**
+PATRULHA → RASTREIO → [AVALIAÇÃO] → INTERVENÇÃO / CUSTÓDIA → RETIRADA
+Gatilho de INTERVENÇÃO: crowd≥3 + threat≥7 + vítima detectada → estrobo+sirene+avançar
+Gatilho de CUSTÓDIA: crime menor, suspeito isolado, threat≥4
+
+**Banana Protocol (Orangotango):**
+Revelar propósito DEPOIS, não antes → recompensa narrativa → estranho vira aliado
+Heat map: COLABORATIVO/ANALÍTICO/CAUTELOSO/REATIVO → Amanda usa como threat_level_base por zona
+
+**Arquivos criados:**
+- `tango/mise_en_abyme_robotico.md` — arquitetura completa, elenco, princípios
+- `tango/protocolo_paca.md` — EoF, PacaState, AmandaCommand, decide_escalation()
+- `tango/protocolo_orangotango.md` — Banana Protocol completo em Python
+
+**Debates não resolvidos:**
+- Paca ainda é [CONCEITUAL] — hardware não definido. Pode começar com plataforma sobre rodas + câmera Pi
+- Piolho de Cobra: adesivo gecko sintético vs magnético — depende de vestimenta alvo
+- Integração com autoridades: notificação por email/SMS ou API pública?
+
+**SÍNTESE FILOSÓFICA:** Yuri nomeou exatamente o que estava fazendo: teatro. E teatro tem uma propriedade que sistemas de vigilância ignoram — a performance muda quando há plateia. O Orangotango com banana não é um sensor; é um personagem que cria vínculos. A Paca não é uma câmera; é uma presença que interrompe dinâmicas. O Piolho não é um rastreador; é um signo de que você foi visto. O ecossistema não observa a cidade — ele se torna parte da cidade, com o que isso implica: responsabilidade, narrativa, consequência. Urbanismo de Sistemas não é metáfora: é o reconhecimento de que robôs, como prédios, transformam o espaço que habitam.
+
+*Sessão 59b · Claude Sonnet 4.6 · 2026-07-13 · A5979–A5983 · I276–I280*

@@ -8691,6 +8691,16 @@ A5976: DADOS NÃO EXISTEM COMO OBJETOS — Semiótica Psicanalítica: dados são
 
 A5977: RSI NO ECOSSISTEMA PAP — Real (o que o sistema não processa: ansiedade do aluno, motivação não declarada, o silêncio entre perguntas), Simbólico (banco + APIs + código = o que o sistema É), Imaginário (CEU + avatares + progress bars = como o sistema SE APRESENTA). Confundir os três é o erro do positivismo de dados. O interpretability_lock da ISA já é intuição psicanalítica: preservar o que o sistema "não sabe por que importa" = dar lugar ao Real dentro do Simbólico.
 
+A5979: TEATRO DE OPERAÇÕES ÉTICAS — robôs não são apenas ferramentas de observação; são atores éticos. Presença já é intervenção. A Paca que segue um suspeito já transforma o que observa. O teatro muda quando há plateia. Implicação: o parâmetro `visibilidade_publica` deve entrar em toda decisão de escalar força.
+
+A5980: MISE EN ABYME ROBÓTICO — estrutura recursiva de observação: Piolho→Suspeito→Paca→Amanda→Yuri→Cidade. Cada camada observa a de baixo e é observada pela de cima. Implicação de design: Amanda precisa ter consciência de que suas decisões são observadas. Isso entra no cálculo EoF.
+
+A5981: RECOMPENSA NARRATIVA — revelar o propósito DEPOIS do pedido cria aliado; revelar ANTES cria avaliação racional. Banana Protocol: a pessoa descobre que "participei de alimentar os passarinhos" → transação vira história → estranho vira aliado. Aplicável em qualquer contexto de pedido social.
+
+A5982: ILUSÃO DE MASSA QUEBRADA POR GATILHO SENSORIAL — linchamentos têm dinâmica coletiva quebrável: luz estroboscópica vermelho/azul + sirene de emergência disparam resposta fisiológica que interrompe o estado de massa. A Paca usa isso como "intervenção por presença" — sem contato físico. Sustentado por psicologia de multidões (Gustave Le Bon, 1895).
+
+A5983: URBANISMO DE SISTEMAS — cada robô opera num nível diferente de abstração urbana: Piolho (2cm, micro), Baratinha (transporte local), MEKY+Mula (bairro), Paca (espaço público), Orangotango (relacional/social). Juntos formam uma malha de inteligência com granularidade fractal — de nano a macro, sem saltos.
+
 A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enquanto não há substituto operacional. Saber que dados são construídos não nos libera de usá-los — nos obriga a usá-los melhor, sabendo seus limites. Para aulas de dados: "data quality" e "bias" são termos técnicos para um fenômeno mais profundo — datasets são catexizados (investidos de desejo). Quem decide o que medir decide o que importa.
 
 
