@@ -40,6 +40,8 @@
 | 27 | Paca — Manifesto da Paranoica | `manifesto_paca.md` | Paca voz, tom ansioso, paranoia como virtude, contraste Tango, falso positivo, integração, identidade personagem |
 | 28 | Mac — Cacique do Ecossistema | `protocolo_mac.md` | Mac, penas, Cacique, Corredor de Honra, Cornetas, FormacaoEvento, BLE beacon, gato, presença simbólica |
 | 29 | Totem da Exosfera Tel | `protocolo_totem.md` | Totem, cálice vidro, LED COB, Cofre, Feriado das Máquinas, Perfidia Castelo Branco, fragmentação gravação, paradoxo valor, Abertura do Cálice |
+| 30 | Nébula Eletrônica | `protocolo_nebula.md` | Nébula, manufatura, Padrão Tel, modularidade, ciclo de vida, DNA personalidade, walkie-talkie, bases-ninho árvores, escalonamento |
+| 31 | Falcão + Frota Felina + Geofencing | `protocolo_falcao.md` | Falcão, drone, escotilha Jurassic Park, Frota Felina, gato acompanhante, freio emergência, Observador Extremidade, GeofencingZone, zona vermelha, triangulação perímetro, gato machucado |
 
 ---
 

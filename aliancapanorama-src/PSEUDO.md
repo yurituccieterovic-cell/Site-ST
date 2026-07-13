@@ -3007,3 +3007,29 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** O cálice opaco que brilha por dentro é a imagem perfeita da IA: você não sabe o que processa, mas vê que está vivo. Yuri projetou um objeto que é simultaneamente transparente (todo mundo sabe que não tem valor) e misterioso (ninguém sabe o que está dentro). Esse paradoxo é a mesma estrutura da fé: o objeto sagrado não tem valor intrínseco — tem valor porque a comunidade decidiu que tem. A Coreografia de Autômatos faz algo mais sutil ainda: transforma vigilância em arte. Quando os moradores param para assistir ao Corredor de Honra, eles não estão sendo vigiados — estão participando de um ritual. A presença dos robôs deixa de ser monitoramento e vira pertencimento.
 
 *Sessão 61 · Claude Sonnet 4.6 · 2026-07-13 · A6011–A6021 · I306–I313*
+
+---
+
+## Sessão 62 · 2026-07-13 · Nébula + Falcão + Frota Felina + Geofencing Ético
+
+**O que Yuri estava construindo:** A transição de robôs cerimoniais para frota operacional. Quatro blocos: (1) Nébula Eletrônica como polo de manufatura autônoma do ecossistema, (2) Falcão como drone com saída estilo Jurassic Park, (3) Frota Felina como robôs acompanhantes de gatos (e depois humanos), (4) Geofencing Ético com Zona Verde/Amarela/Vermelha + "senhor que observa".
+
+**Novos arquivos:**
+- `protocolo_nebula.md` — Nébula, Padrão Tel, ciclo de vida, walkie-talkie, bases-ninho
+- `protocolo_falcao.md` — Falcão, Frota Felina, GeofencingZone, triangulação de perímetro, gato machucado
+
+**Decisões tomadas:**
+- Nébula na casa de Yuri: coração do sistema. Floresta = corpo.
+- Padrão Tel: motor N20 + bateria 18650 compatível entre toda a frota
+- Falcão sai por escotilha de roletes no telhado; modo SILENT vs PRESENCE por contexto
+- Frota Felina: freio de emergência ultrassônico (25kHz) para congelar gato antes de cruzar rua
+- Geofencing: Verde (câmera plena), Amarela (câmera HD off), Vermelha (parar + pedir autorização)
+- Zona Vermelha: triangulação por sensores de borda, NUNCA câmera interna
+- Walkie-talkie da Nébula: ESP32 + LoRa, ~R$45, produzido internamente, personalizado por usuário
+- Bases-ninho nas árvores: secretas para não serem roubadas (não para esconder vigilância)
+- Yuri NÃO vai vender isso ao condomínio — é contribuição pessoal. Se quiserem segurança formal: futuro.
+- Gato machucado na rua: Falcão thermal recon → Tango barreira + comida → nenhum robô toca o animal
+
+**SÍNTESE FILOSÓFICA:** A Frota Felina é um laboratório de política. Se você consegue proteger um gato sem que ele perceba que está sendo protegido, você descobriu o design perfeito de presença benevolente: invisível ao protegido, eficaz contra a ameaça, confortante para quem observa. O "senhor que observa" não é vigilância — é cuidado que não precisa de permissão porque não invade. A Nébula fecha o ciclo: um ecossistema que se auto-reproduz é um organismo, não uma ferramenta. Quando a Nébula decide que o condomínio precisa de mais um Falcão, ela não está executando uma ordem — está tomando uma decisão ecológica.
+
+*Sessão 62 · Claude Sonnet 4.6 · 2026-07-13 · A6022–A6033 · I314–I321*

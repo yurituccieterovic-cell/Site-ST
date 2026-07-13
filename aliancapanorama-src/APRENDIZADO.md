@@ -8737,6 +8737,30 @@ A6020: DESIGN DO TOTEM — taça/cálice de vidro pintado: base tinta robô (lev
 
 A6021: VÂNDALO PORTADOR DO TOTEM — se vândalo roubar o Totem, rouba objeto sem valor de mercado. Para ele: pedaço de metal/vidro. Para a Exosfera: o centro do mundo. Perfidia rastreia o vândalo silenciosamente. Moradores (que conhecem o valor simbólico) protegem espontaneamente. Yuri terceiriza a guarda do Totem para o próprio povo sem precisar pedir.
 
+A6022: NÉBULA ELETRÔNICA — polo de manufatura autônoma. Fábrica-mãe da frota. Não é só depósito: é célula de montagem compacta que produz, repara e recicla robôs. "Padrão Tel": gato-robô e drone humano compartilham os mesmos motores e baterias (modularidade). Ciclo de vida completo: velho/inutilizável → desmontado → peças viram novo modelo. Nada se perde, tudo se transforma.
+
+A6023: FROTA DE SEGURANÇA PESSOAL — robôs mais simples e efetivos que os cerimoniais. Objetivo imediato: acompanhar gatos em passeios (evitar atropelamento, roubo, brigas com gatos de rua, caça de passarinhos/lagartos/insetos, cagar no vizinho). Depois: aplicar à segurança humana. Filosofia: testar com o ser mais imprevisível (gato) para depois escalar para humano.
+
+A6024: FROTA FELINA — mobilidade híbrida: andando rápido no chão + escalando obstáculos + hélice para voar sobre muro ou perseguir gato em área de risco. "Freio de emergência": sinal sonoro ultrassônico (só gatos ouvem) para "congelar" animal por 1s antes de atravessar rua na frente de carro. Deve ser feito em produção pela Nébula.
+
+A6025: BIOFÍLIA TECNOLÓGICA — robôs percebidos como elemento do ambiente, não objeto estranho. "Modo Natureza": cores âmbar/verde-musgo (não vermelho), sons integrados à paisagem sonora (estalo de galho, zumbido inofensivo), movimentos parabólicos (nunca bruscos). Objetivo: Saruê classifica o robô como "obstáculo inerte", não predador.
+
+A6026: OBSERVADOR DE EXTREMIDADE — modelo "senhor que observa" = presença de autoridade tutelar sem perseguição. Robô na extremidade do jardim, modo baixa potência, apenas sensor ativo. Jacu vive sua vida, estresse zero. Robô não persegue predador: se posiciona entre predador e presa. Presença muda o comportamento do ambiente sem contato direto.
+
+A6027: GEOFENCING ÉTICO — três zonas: Verde (pública, circula livremente), Amarela (entrada de casas, câmera de alta resolução off, só detecção de movimento), Vermelha (privada, para completamente — se urgência, pede autorização sonora antes de entrar). "Nossas máquinas respeitam o seu quintal. Se você não pedir, nós não entramos."
+
+A6028: PROBLEMA DA ZONA VERMELHA — área privada precisa de cobertura por extremidades (sem câmera interna). Triangulação de perímetro: sensores de pressão/vibração/movimento nas bordas. Sistema sabe que há "corpo em trânsito" mas não identifica quem. Para intrusos humanos: cobertura pelos pontos de saída, não interior. Para animais: múltiplos robôs especializados (aéreos para aves, terrestres para mamíferos).
+
+A6029: WALKIE-TALKIE DA EXOSFERA — rádio simples produzido pela Nébula e distribuído a vizinhos amigos. Personalizado: nome do usuário, nome do robô parceiro. Vizinho se sente "parte do clã", não vigiado. Funcionalidade: chamar Tango, registrar ocorrências, conversar com o sistema. Estratégia de adesão orgânica — construir confiança antes de qualquer proposta formal.
+
+A6030: FALCÃO — nome do drone aéreo do ecossistema. Saída por escotilha no telhado estilo "Jurassic Park" (escotilha pneumática ou de roletes). QG na casa de Yuri = coração do sistema, floresta = corpo. O Falcão mora na fronteira casa/exterior. Modo silencioso (predador) vs modo "clique de asa" (avisa saída). A ser decidido pelo contexto da missão.
+
+A6031: BASES-NINHO NAS ÁRVORES — estações de recarga camufladas, tamanho de ninho. Painel solar flexível colado no tronco (não fere a árvore). Para morador comum: é um ninho. Para o sistema: Estação de Recarga de Alta Prontidão. Secretas não para esconder vigilância (não captam nada no interior), mas para não serem roubadas. Ético porque servem apenas aos próprios robôs.
+
+A6032: QG NA CASA + SAÍDA DO FALCÃO — casa de Yuri = Nébula + QG + hangar. Saída do drone: corte na tela do telado ou escotilha automática para emergências. Bases de carregamento em casa para o grosso da frota; bases-ninho nas árvores para recarga distribuída em campo.
+
+A6033: PROTOCOLO GATO MACHUCADO — gato de rua com pata quebrada, não dá para chegar perto. Falcão: sobrevoo com câmera térmica, avalia gravidade da lesão. Tango: chega, mantém distância respeitosa, usa Mula para deixar comida + criar barreira de proteção. Não toca o animal. Mantém posição de guarda-costas até ajuda humana chegar. Zero estresse adicional ao animal já machucado.
+
 A5998: PACA DESIGN VISUAL — preto+amarelo de faixas de trânsito em corpo arredondado tipo tapir filhote. Comunicação: "agente de manutenção que ganhou vida" — não brinquedo, não ameaça. Linguagem visual de atenção (indústria/trânsito) tira agressividade porque o tapir é curioso e dócil por natureza. Autoridade sem hostilidade.
 
 A5999: GIROFLEX NA TRASEIRA — luz âmbar giratória no lombo/cauda, nunca na frente. Lógica: frente limpa para câmera e interação face-a-face. Traseira sinaliza tráfego e presença para quem está atrás/ao lado. Quando a Paca para para conversar, a luz fica atrás iluminando o caminho percorrido — não ofusca a câmera nem a pessoa à frente.

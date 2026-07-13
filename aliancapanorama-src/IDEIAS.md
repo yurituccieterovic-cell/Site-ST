@@ -996,6 +996,22 @@ I312: **Abertura do Cálice** — em momentos extremos: servomotor abre tampa. F
 
 I313: **Mac — Identidade Física** — penas vibratórias de nylon/fibra artificial fixadas com base piezo (15-30Hz em modo de presença). Protocolo BLE beacon: Mac emite sinal a 10cm → robôs próximos mudam de cor. Gesto único: inclinar o topo levemente = "reconhecimento".
 
+I314: **Nébula Eletrônica — Spec da Célula de Montagem** — estrutura compacta (contêiner pequeno ou cômodo do quintal). Impressora 3D de alta velocidade + braços robóticos simples. Modularidade "Padrão Tel": motor N20 + bateria 18650 compatível com Frota Felina, Falcão e robôs cerimoniais. Ciclo completo: produz → opera → repara → recicla. DNA de personalidade instanciado no boot (Paca paranoica, Tango diplomata, etc.).
+
+I315: **Frota Felina — Robô Acompanhante de Gato** — mobilidade híbrida: rodas omnidirecionais (terreno urbano) + garras retráteis (escalada muro) + hélice dobrável (voo de emergência sobre obstáculo). Freio de emergência: alto-falante ultrassônico 20-60kHz para "congelar" gato 1s antes de cruzar rua. Câmera AI local para detectar carro em movimento. Tamanho: compacto, não assusta gato.
+
+I316: **Observador de Extremidade — Protocolo** — modo baixa potência: motor off, PIR + câmera térmica baixa resolução apenas. Escolhe ponto elevado ou sombra para posicionamento estático. "Aceno do Senhor": LED pulsa 1x suavemente quando morador passa (bom dia não verbal). Não segue ninguém; espera ativação por limiar de anomalia.
+
+I317: **Geofencing Ético — Mapa de Zonas** — implementação: mapa GeoJSON do condomínio com polígonos Verde/Amarelo/Vermelho. Comportamentos por zona: Verde = operação plena; Amarela = sem câmera HD, só radar de movimento, velocidade 50%; Vermelha = parar + broadcast sonoro de autorização antes de continuar. Tabela `geofence_zones(id, nome, poligono, nivel)` no banco.
+
+I318: **Walkie-talkie da Nébula** — hardware: ESP32-C3 + módulo LoRa SX1276 + speaker pequeno + microfone + botão PTT. Custo estimado: R$45/unidade. Produzido pela Nébula. Personalizado com sticker do nome do usuário + nome do robô parceiro. Protocolo: PTT → voz → transcrita por Whisper local → roteada para Amanda → resposta em voz via XTTS-v2.
+
+I319: **Falcão — Drone Aéreo** — quadricóptero compacto (30cm diagonal). Saída: escotilha roletes no telhado, abre automaticamente por sinal de Amanda. Modos: SILENT (rotores lentos, <40dB — missão furtiva), PRESENCE (som de asa metálica ao sair — avisa). Câmera térmica + câmera RGB. Autonomia: 20min voo ativo. Retorno automático à escotilha quando bateria <20%.
+
+I320: **Bases-Ninho nas Árvores** — caixa PVC cinza 10×8×6cm colada com abraçadeira em galho. Interior: bateria LiPo 3000mAh + carregador solar MPPT + conector XT30 pogo pin. Robôs pousam sobre a base para recarga sem plugar nada. Painel solar: célula flexível 5W colada no tronco, lado sul. Não tem câmera, não capta dados. Secretas = não roubadas, não vandalizadas.
+
+I321: **Triangulação de Perímetro (Zona Vermelha)** — sem câmera no interior privado. Sensores de vibração (SW-420) ou PIR nas extremidades (portão, muro lateral, fundo). Tabela de eventos: `{extremidade, timestamp, direção}`. Amanda infere: entrou + não saiu em 10min = aviso ao walkie-talkie do vizinho (com permissão prévia). Nunca identifica quem — só "há movimento".
+
 I294: **Paca Design Físico** — corpo arredondado (tapir filhote), faixas preto+amarelo (fita adesiva de segurança industrial ou tinta automotiva), base robusta com rodas omni. Giroflex LED âmbar na traseira: cúpula pequena giratória ou padrão piscante. Câmera na frente (face limpa). Parabólica em cúpula fumê no topo. Buzzer traseiro. Dimensão estimada: 40×30×25cm.
 
 I295: **Parabólica Rotativa em Cúpula Fumê** — servo 360° contínuo + microfone eletreto no foco geométrico da parábola (posicionado por cálculo, não por chute). Cúpula acrílico preto fumê ~15cm diâmetro. LED azul ou vermelho dentro da cúpula, visível de fora girando. Velocidade: 10rpm (Passeio) / 60rpm (Vigilância). Motor: 28BYJ-48 com ULN2003 (~R$15).

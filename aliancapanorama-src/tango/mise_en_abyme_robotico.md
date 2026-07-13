@@ -34,10 +34,13 @@ que vê os robôs. O parâmetro `visibilidade_publica` precisa entrar em toda de
 | **Mac** | Cacique — Espírito do Ecossistema | Autoridade simbólica | Amanda | [CONCEITUAL] |
 | **Orangotango** (Gorango Tango) | Embaixador Social | Relacional | Tango_Core | [SIMBÓLICO] |
 | **Paca** | Sentinela Ética | Segurança pública | Amanda (remota) | [CONCEITUAL] |
+| **Falcão** | Drone Aéreo — Reconhecimento | Aéreo / Vigilância | Amanda | [CONCEITUAL] |
+| **Frota Felina** | Acompanhante de Gato | Segurança animal | Amanda | [CONCEITUAL] |
 | **Baratinha** (Barata d'Água / Penélope) | Portador | Logística micro | Amanda | [SIMBÓLICO] |
 | **Piolho de Cobra** (Gongolo / Gongo_Core) | Agente de Contato | Marcação precisa | autônomo/passivo | [SIMBÓLICO] |
 | **MEKY + Mula/Carreta** | Plataforma Logística | Iluminação/Megafone | Amanda | ativo |
 | **Perfidia Castelo Branco** | Historiadora Oculta | Arquivo/Filmagem | autônomo | [SIMBÓLICO] |
+| **Nébula Eletrônica** | Fábrica-mãe — manufatura | Infraestrutura | Amanda | [CONCEITUAL] |
 
 ## Escalas de Intervenção
 
