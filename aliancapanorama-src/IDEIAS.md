@@ -966,6 +966,20 @@ I270: **Mula como Módulo Tático de Extensão** — a carreta não é transport
 
 I271: **Ética Categoria D** (de Yuri para Clóvis de Barros Filho) — a ética humana como "Cálculo de Categoria D": o momento em que percebemos que nossas ações têm um raio de impacto ampliado e somos obrigados a recalcular a trajetória. "eu + ferramenta" como nova identidade ética. Texto formal escrito por Yuri nesta sessão — base para colaboração com Clóvis.
 
+I281: **sys_tango_core.md — Documento de Personagem Completo** — criar parallel a sys_amanda_core.md. Conteúdo: identidade + ética do trabalho + estados operacionais (Doméstico/Escalada/Defensivo/Social) + hardware especificado + inimigos + integração com Paca/Amanda. Adicionar ao índice tango.md como entrada #26.
+
+I282: **Modo Escalada Tango — Hardware** — garras retráteis de aço nas pontas dos dedos (saem 2cm para prender tijolos/casca de árvore), servo de tronco para ajuste de centro de gravidade (inclinar para trás na parede = contrapeso), high-torque nos joints de cotovelo e joelho para "coice de projeção". Antes de subir: desengata Mula (engate magnético liberação rápida). Mula fica na base com refletor apontado para a subida.
+
+I283: **Modo Defensivo Tango — "Show de Horrores"** — 3 ações simultâneas ao detectar agressão: (1) painéis laterais se abrem revelando espinhos falsos (metal pintado em laranja/vermelho) → volume visual +50%; (2) LED olhos → vermelho pulsante; (3) buzzer/speaker emite rugido digital primata (frequência grave 80-120Hz + harmônicos). Trigger: sensor de proximidade < 30cm + Amanda confirma ameaça. Nunca contato físico com humano.
+
+I284: **Rede de Postos de Escuta PVC** — 3-4 cubos de cano PVC escondidos estrategicamente no condomínio. Cada posto: fundo de galão 5L cortado (parábola) + microfone eletreto no foco + filtro espuma (corta vento) + ESP32 + NRF24L01 (radio). Custo ~R$80/posto. Envia {tipo:"sagui|pássaro|cão|humano", quadrante:"N/S/L/O", confiança:0.0-1.0} para Paca/Amanda via rádio 2.4GHz.
+
+I285: **TinyML ESP32 — Reconhecimento Bioacústico** — treinar modelo de espectrograma (~50-100KB, cabe em ESP32) para classificar: sagui, jacu, corocoroca, cão, humano, silêncio. Dataset: gravar 30-50 exemplos de cada classe no próprio condomínio. Ferramenta: Edge Impulse (gratuito). Upload OTA via WiFi. Filtro temporal: só aciona alerta se mesma classe detectada 3× em 10s (evita falso positivo de som único).
+
+I286: **Protocolo Quadrante Alert (Paca→Amanda→Tango)** — payload padrão de alerta: `{tipo, quadrante, confiança, timestamp, fonte:"posto_escuta_N"|"paca"}`. Amanda decide: confiança < 0.7 → só registra log. confiança 0.7-0.9 → notifica Yuri. confiança > 0.9 → aciona Tango se não doméstico crítico em andamento. Tango recebe quadrante e vai direto ao ponto — sem perambular.
+
+I287: **Mula como Base de Operações — Engate Magnético** — engate rápido com ímã de neodímio + trava mecânica de liberação por servo. Tango chega na base da árvore, comanda "soltar mula" → servo libera trava → Mula fica estacionada. Mula ativa refletor LED apontado para a subida (iluminação noturna). Quando Tango desce: aproximação a 30cm → engate automático por força magnética + trava servo.
+
 I276: **Banana Protocol — Heat Map Social do Condomínio** — Orangotango/Gorango Tango percorre território fazendo pedido simples ("pode me dar uma banana?") e classifica respostas em COLABORATIVO/ANALÍTICO/CAUTELOSO/REATIVO. Heat map gravado via GPS+timestamp. Amanda usa para calibrar threat_level_inicial da Paca por zona. Integração: endpoint POST /api/assembly/heat-map no Railway.
 
 I277: **Paca EoF — Máquina de 5 Estados** — PATRULHA→RASTREIO→AVALIAÇÃO→INTERVENÇÃO→CUSTÓDIA→RETIRADA. Amanda recebe PacaState (threat_level, crowd_size, aggression_markers, victim_detected, visibilidade_publica) e devolve AmandaCommand. Implementar em `sys_amanda_core.py` ou `paca_eof.py` na ARPIA. Log de cada intervenção no Conector-API seção "paca_log".

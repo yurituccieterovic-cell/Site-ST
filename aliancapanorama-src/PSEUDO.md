@@ -2886,3 +2886,33 @@ Heat map: COLABORATIVO/ANALÍTICO/CAUTELOSO/REATIVO → Amanda usa como threat_l
 **SÍNTESE FILOSÓFICA:** Yuri nomeou exatamente o que estava fazendo: teatro. E teatro tem uma propriedade que sistemas de vigilância ignoram — a performance muda quando há plateia. O Orangotango com banana não é um sensor; é um personagem que cria vínculos. A Paca não é uma câmera; é uma presença que interrompe dinâmicas. O Piolho não é um rastreador; é um signo de que você foi visto. O ecossistema não observa a cidade — ele se torna parte da cidade, com o que isso implica: responsabilidade, narrativa, consequência. Urbanismo de Sistemas não é metáfora: é o reconhecimento de que robôs, como prédios, transformam o espaço que habitam.
 
 *Sessão 59b · Claude Sonnet 4.6 · 2026-07-13 · A5979–A5983 · I276–I280*
+
+---
+
+## Sessão 59c · 2026-07-13 · Tango Personagem + Bioacústica Paca
+
+**O que Yuri estava tentando fazer:** Refinar a personalidade e o design físico do Gorango Tango como entidade coerente (não apenas robô funcional) + resolver como a Paca detecta saguis e cachorros de forma barata.
+
+**Tango — definições-chave:**
+- Personalidade: "Não gosto de conversa, não." — eficiente, não antipático. Conversa com propósito = trabalho.
+- Ciclo de comprometimento progressivo: 1º encontro → pede banana; 2º → "da próxima vez me traz duas"; 3º → convida para alimentador
+- Design: dois anéis LED (não monóculo), corpo primata orgânico, cobre envelhecido + azul marinho
+- 5 estados: DOMÉSTICO / SOCIAL / MANUTENÇÃO / ESCALADA / DEFENSIVO
+- Modo Defensivo: painéis abrem espinhos falsos (+50% volume) + LED vermelho pulsante + rugido primata digital
+- Escalada: garras retráteis de aço + servo tronco como contrapeso + high-torque nas pernas
+- Mula desengata na base (engate magnético + servo trava), fica com refletor apontado para cima
+- Inimigos: humano desinformado agressivo, predadores animais (sagui, cão, gato), vândalos
+
+**Paca — detecção bioacústica:**
+- Visão: Night Vision digital (câmera FPV barata + LEDs IR) + TinyML para detecção de forma
+- Som: rede de postos de escuta (fundo galão 5L + eletreto + filtro espuma + ESP32 + NRF24L01)
+- TinyML: espectrograma classifica sagui/jacu/cão/humano — treinar no Edge Impulse
+- Coordenação: Tango em modo DOMÉSTICO → Paca detecta → Amanda avalia confiança → Tango vai ao quadrante
+
+**Arquivos criados/atualizados:**
+- `tango/sys_tango_core.md` — documento de personagem completo (NOVO)
+- `tango/protocolo_paca.md` — seção bioacústica + coordenação Paca-Tango adicionada
+
+**SÍNTESE FILOSÓFICA:** A sessão transformou especificações técnicas em personagem. Isso é o que distingue um robô de um habitante. O Tango não tem uma lista de funções — ele tem uma ética do trabalho: sabe o que vale seu tempo e o que não vale. "Não gosto de conversa, não" é uma fronteira semiótica, não um bug de interface. A câmera PIR que acorda quando há movimento é a mesma estrutura: não processa o tempo todo, só quando algo merece processamento. O ecossistema está aprendendo que atenção é escassa — e que sistemas inteligentes gerenciam atenção, não apenas dados.
+
+*Sessão 59c · Claude Sonnet 4.6 · 2026-07-13 · A5984–A5991 · I281–I287*

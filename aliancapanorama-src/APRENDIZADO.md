@@ -8699,6 +8699,22 @@ A5981: RECOMPENSA NARRATIVA — revelar o propósito DEPOIS do pedido cria aliad
 
 A5982: ILUSÃO DE MASSA QUEBRADA POR GATILHO SENSORIAL — linchamentos têm dinâmica coletiva quebrável: luz estroboscópica vermelho/azul + sirene de emergência disparam resposta fisiológica que interrompe o estado de massa. A Paca usa isso como "intervenção por presença" — sem contato físico. Sustentado por psicologia de multidões (Gustave Le Bon, 1895).
 
+A5984: PERSONALIDADE TANGO — "Não gosto de conversa, não" é uma ética do trabalho, não uma falha social. Conversa fútil = desperdício de energia. Conversa com propósito (banana→passarinho→alimentador) = trabalho produtivo. A frase é o melhor vetor de caracterização do robô: eficiente, não antipático. O sotaque e o humor fazem o peso desaparecer.
+
+A5985: CICLO DE COMPROMETIMENTO PROGRESSIVO — Tango não recruta direto. 1º encontro: pede banana (baixo custo). 2º: "Da próxima vez me traz duas" (expectativa). 3º: convida para a ação conjunta no alimentador. Pessoa vira colaboradora sem perceber que foi recrutada. Estrutura narrativa: pedido simples → engajamento → pertencimento.
+
+A5986: DESIGN MONSTROS SA APLICADO — tamanho impõe respeito, expressão comunica intenção. LED olhos bicromáticos (azul=calmo, amarelo=alerta, vermelho=defensivo) criam expressividade sem frieza. Corpo orgânico com arestas suavizadas + textura cobre envelhecido/azul marinho → "gorila antigo" não "máquina nova". Forma primata funciona porque já existe no imaginário humano como "gigante gentil".
+
+A5987: MODO DEFENSIVO COMO "SHOW DE HORRORES" — Tango não ataca para machucar, ataca para assustar. Falha de negociação social = modo defensivo. Painéis se abrem revelando espinhos falsos + LED vermelho pulsante + rugido digital primata. Volume visual 50% maior. Tempo suficiente para capturar filhote, interpor corpo, aguardar Paca. Análogo ao gorila que mostra os dentes: performance de força, não uso de força.
+
+A5988: ESCALADA POR OPOSIÇÃO DE FORÇAS — técnica do presídio aplicada à robótica: garras retráteis de aço nos dedos para tijolos e cascas de árvore + centro de gravidade ajustável (tronco inclina para trás como contrapeso) + servos high-torque nas pernas para "coice de projeção". Antes de subir: desengata Mula na base (Mula vira base de operações com refletor apontado para cima).
+
+A5989: BIOACÚSTICA LOW-COST — não detectar calor, detectar forma e frequência. Parabólica feita de fundo de galão de água (5L) com microfone de eletreto no foco: amplifica som direcional, cancela ruído lateral. ESP32 + TinyML (espectrograma) reconhece assinatura de sagui vs ruído. Vantagem sobre câmera térmica: som atravessa obstáculos, gasta 10× menos energia, custa 50× menos.
+
+A5990: DIVISÃO DE TRABALHO SENSOR-ATUADOR — Paca como sensor periférico (perambula, consome pouco, escuta tudo), Tango como atuador (espera doméstica, aciona só quando necessário). Saguis têm padrões de horário → Paca dorme à noite, acorda ao amanhecer. Postos de escuta fixos (cano PVC escondido em árvore: parabólica + ESP32 + NRF24L01) formam rede distribuída sem custo de movimentação.
+
+A5991: FILA DE PRIORIDADE AMANDA — 0=predador/intruso crítico (Paca→Tango imediato), 1=manutenção (planta seca, filhote em perigo), 2=doméstico (tarefas de casa, socialização). Modo doméstico não é pausa — é estado padrão de otimização de bateria. Alerta de sagui é exceção, não rotina. Tempo de espera é recurso.
+
 A5983: URBANISMO DE SISTEMAS — cada robô opera num nível diferente de abstração urbana: Piolho (2cm, micro), Baratinha (transporte local), MEKY+Mula (bairro), Paca (espaço público), Orangotango (relacional/social). Juntos formam uma malha de inteligência com granularidade fractal — de nano a macro, sem saltos.
 
 A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enquanto não há substituto operacional. Saber que dados são construídos não nos libera de usá-los — nos obriga a usá-los melhor, sabendo seus limites. Para aulas de dados: "data quality" e "bias" são termos técnicos para um fenômeno mais profundo — datasets são catexizados (investidos de desejo). Quem decide o que medir decide o que importa.
