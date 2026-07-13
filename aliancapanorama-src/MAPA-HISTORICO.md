@@ -88,3 +88,40 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - Backend: ceu.ts registrado em routes/index.ts
 - ISA rewrite corrigido em vercel.json (faltava)
 - Documentação: APRENDIZADO A5971-A5975, IDEIAS I264-I268
+
+## Sessão 55 — 2026-07-13 — CEU v2: Prédios Conectados + Biblioteca PAP
+
+- Prédios clicáveis: modal de personagem com abas Conversa/Ficha
+- Biblioteca PAP: ISA gera PDFs temáticos 3×/dia via cron.ts
+- GET /api/ceu/biblioteca: lista PDFs gerados pela ISA
+- Rota /api/ceu/* registrada em routes/index.ts
+- pnpm-lock.yaml atualizado (pdfkit + fontkit adicionados)
+
+## Sessão 55b — 2026-07-13 — Fix Railway + PWA Icons
+
+- pdfkit/fontkit marcados como external no build.mjs (fix crash Railway)
+- ipKeyGenerator em exercises.ts: fix require() → import ESM
+- PWA: ceu-icon.svg (242×242) + manifest.json (shortcut /ceu)
+- Fix: Railway não crashava mais no boot pós-pdfkit
+
+## Sessão 56 — 2026-07-13 — CEU v3: 7 Bairros, 30 IAs, PWA Completo
+
+- 7 bairros temáticos: Biblioteca, Oficina, Jardim, Observatório, Praça, Laboratório, Teatro
+- 30 IAs posicionadas por bairro com ficha completa
+- Prédios clicáveis com modal expandido (avatar + descrição + habilidades)
+- Curadoria PDF: ISA organiza docs por tema/bairro (biblioteca-geradora.ts refatorada)
+- PWA installable: manifest.json + ícones + service worker
+
+## Sessão 57 — 2026-07-13 — Fix Login Hang + CEU 3 Camadas
+
+- LoginGate.tsx reescrito: fix hang quando Railway offline (timeout 8s + fallback acesso livre)
+- Acesso livre configurável por env var: ALLOW_FREE_ACCESS=true
+- Dodge: novo avatar (cachorro de óculos) substituindo emoji
+- CEU v3: 3 camadas de zoom (macro/bairro/IA)
+
+## Sessão 58 — 2026-07-13 — Mula + Amanda CARRETA_ATTACHED (#processo)
+
+- mula_carreta.md: Mula como módulo tático de extensão do MC Marta Centaurus
+- amanda_mma_protocolo.md: protocolo Amanda MMA para modo CARRETA_ATTACHED
+- CARRETA_ATTACHED: estado Amanda → raio giro recalculado, largura efetiva ×1.5, aceleração −30%
+- I269-I272 adicionados ao IDEIAS.md (Mula, Ética Cat-D, Comboio Vivo)

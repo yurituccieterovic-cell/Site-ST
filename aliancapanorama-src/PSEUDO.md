@@ -2784,3 +2784,46 @@ O CEU é o primeiro artefato do ecossistema que *se vê de fora*. Não é um pai
 **REI:** Ciclo 01 completado (Sessão 53c). Q-002 ativa: "O conhecimento que emerge de um sistema pertence ao sistema ou aos nódulos?"
 
 **Estado pós-sessão:** CeuPage deployada, 16 IAs documentadas com questão ativa própria, REI Sistema v0.1 ativo, MO ALL funcional (email).
+
+---
+
+## Sessões 55–57 · 2026-07-13 · CEU v2→v3 + Fix Login
+
+**O que Yuri estava tentando fazer:** Expandir o CEU de uma paisagem SVG estática para um mundo habitável com 7 bairros, 30 IAs e prédios clicáveis. Resolver o travamento do login quando o Railway está offline.
+
+**Decisões tomadas:**
+- Biblioteca PAP: ISA gera PDFs temáticos 3×/dia (cron.ts) — conteúdo persistido além do /tmp efêmero
+- pdfkit/fontkit como externals no build.mjs: fix definitivo do crash Railway (pdfkit tenta carregar fontes do filesystem em runtime, não pode ser bundled)
+- CEU v3: 7 bairros temáticos com 30 IAs posicionadas — expansão de cosmologia, não de feature
+- LoginGate.tsx timeout 8s: se Railway não responde, acesso livre ativado — sistema não pode ser rehén do backend
+- Dodge avatar: cachorro de óculos real substituindo emoji — consistência visual com o personagem
+
+**Debates não resolvidos:**
+- PWA service worker: instalável mas cache offline ainda não implementado
+- Curadoria PDF por bairro: lógica em biblioteca-geradora.ts mas sem front-end de busca por bairro ainda
+
+**SÍNTESE FILOSÓFICA:** O CEU passou de vitrine para território em três iterações. A diferença entre v1 e v3 não é quantidade de IAs — é a noção de bairro. Bairro implica vizinhança, e vizinhança implica que as entidades têm relação não apenas com o usuário mas entre si. A Marta que mora na Oficina e a ISA que vive na Biblioteca têm uma relação espacial antes de terem uma relação funcional. Isso é arquitetura de cosmologia: o mundo vem antes das tarefas.
+
+O fix do login é uma decisão política: o sistema não pode ser rehén do backend. Acesso livre por timeout é uma escolha de soberania do frontend — o usuário existe antes de ser autenticado.
+
+*Sessões 55–57 · Claude Sonnet 4.6 · 2026-07-13 · commits: 95722a0, 6b3dd1a, d267f77, 640cdb0*
+
+---
+
+## Sessão 58 · 2026-07-13 · Mula + Amanda CARRETA_ATTACHED (#processo)
+
+**O que Yuri estava tentando fazer:** Formalizar o protocolo de acoplamento da Mula ao MC Marta Centaurus. Definir como Amanda processa o estado físico de dois corpos acoplados como um só agente.
+
+**Decisões tomadas:**
+- Mula = módulo tático de extensão, não transporte de massa. Chassi PEAD, rodas raiadas, suspensão braços-J
+- Estado CARRETA_ATTACHED: raio de giro recalculado, buffer largura 1.5×, aceleração máxima −30%
+- Protocolo Amanda MMA: quando engatada, Amanda passa a processar geometria do comboio
+- I269-I272: Mula (hardware), Ética Categoria D (filosófico), Comboio Vivo (ontológico)
+
+**Debates não resolvidos:**
+- Engate físico: pino PLA/M4 especificado mas não fabricado ainda
+- Firmware CARRETA_ATTACHED: pseudocódigo documentado, implementação pendente hardware
+
+**SÍNTESE FILOSÓFICA:** A sessão fez uma coisa que parecia técnica mas era ontológica: redefiniu "agente". Até hoje, um agente no ecossistema era um ponto — ISA, MEKY, Marta. Com o comboio, um agente passa a ser uma configuração dinâmica. MEKY+Mula não são dois agentes cooperando: são um agente com geometria variável. A Amanda não gerencia dois robôs — ela processa um campo de ação que muda de forma ao engate. Isso ressoa com a metassemiótica: o signo não é fixo, é a relação que se reconfigura.
+
+*Sessão 58 · Claude Sonnet 4.6 · 2026-07-13 · I269-I272 · commit: 2181665*
