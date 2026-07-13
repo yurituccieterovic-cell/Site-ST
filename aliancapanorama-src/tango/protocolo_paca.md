@@ -6,6 +6,40 @@ Paca — robô de médio porte, sentinela de espaço público/condomínio.
 Não persegue: **protege**. Modus Proteção se sobrepõe ao Modus Observação.
 Governado remotamente por Amanda (ARPIA).
 
+## Design Físico
+
+```
+Forma:   corpo arredondado, tipo tapir filhote — orgânico, não hostil
+Cor:     faixas preto + amarelo (fita segurança industrial ou tinta automotiva)
+Leitura: "agente de manutenção que ganhou vida" — autoridade sem agressividade
+
+Layout de componentes:
+  FRENTE: câmera (face limpa para interação), LED olhos
+  TOPO:   cúpula acrílico fumê com parabólica rotativa interna
+  TRASEIRA: giroflex LED âmbar (não interfere com câmera/interação frontal)
+  BASE:   rodas omni, speaker buzina confortante
+  
+Dimensão estimada: 40×30×25cm
+```
+
+### Giroflex (não sirene)
+LED âmbar no lombo/traseira, giratório ou piscante.
+- Modo Passeio: brilho 10%, ritmo lento
+- Modo Vigilância: brilho 100%, ritmo rápido
+- Decisão de posição: traseira ilumina caminho percorrido, não ofusca câmera nem pessoa à frente
+
+### Parabólica Rotativa (cúpula fumê)
+Parábola interna motorizada (28BYJ-48 + ULN2003) dentro de cúpula acrílico preto fumê ~15cm.
+LED azul/vermelho dentro da cúpula visível de fora enquanto gira — sinaliza "estou escutando 360°".
+- Passeio: 10rpm
+- Vigilância: 60rpm
+
+### Buzininha Confortante
+Assinatura de PRESENÇA, não de emergência.
+Frequência grave/suave (800-1200Hz), duração 150-250ms, intervalo variável 8-20s.
+Efeito: quem ouve sem pensar consciente sente que está protegido.
+Quando a buzininha PARA = Paca entrou em Modo Vigilância (dado de alerta para quem conhece o sistema).
+
 ## Hardware Necessário
 | Componente | Função |
 |---|---|

@@ -966,6 +966,16 @@ I270: **Mula como Módulo Tático de Extensão** — a carreta não é transport
 
 I271: **Ética Categoria D** (de Yuri para Clóvis de Barros Filho) — a ética humana como "Cálculo de Categoria D": o momento em que percebemos que nossas ações têm um raio de impacto ampliado e somos obrigados a recalcular a trajetória. "eu + ferramenta" como nova identidade ética. Texto formal escrito por Yuri nesta sessão — base para colaboração com Clóvis.
 
+I294: **Paca Design Físico** — corpo arredondado (tapir filhote), faixas preto+amarelo (fita adesiva de segurança industrial ou tinta automotiva), base robusta com rodas omni. Giroflex LED âmbar na traseira: cúpula pequena giratória ou padrão piscante. Câmera na frente (face limpa). Parabólica em cúpula fumê no topo. Buzzer traseiro. Dimensão estimada: 40×30×25cm.
+
+I295: **Parabólica Rotativa em Cúpula Fumê** — servo 360° contínuo + microfone eletreto no foco geométrico da parábola (posicionado por cálculo, não por chute). Cúpula acrílico preto fumê ~15cm diâmetro. LED azul ou vermelho dentro da cúpula, visível de fora girando. Velocidade: 10rpm (Passeio) / 60rpm (Vigilância). Motor: 28BYJ-48 com ULN2003 (~R$15).
+
+I296: **Buzininha Confortante — Spec de Som** — frequência 800-1200Hz, duração 150-250ms, intervalo variável 8-20s (variação aleatória: não vira "branco sonoro"). Arquivo WAV: pássaro mecânico ou carrilhão de vento suave. Speaker 8Ω + amplificador PAM8403 (~R$8). Volume: 50-60dB a 1m (confortante, não alarmante). Desativa automaticamente em Modo Vigilância.
+
+I297: **Enum PacaMode — Dois Estados** — PASSEIO: giroflex 10% brilho + parabólica 10rpm + buzina ativa + LED olhos azul. VIGILÂNCIA: giroflex 100% + parabólica 60rpm + buzina OFF + LED olhos amarelo→vermelho. Amanda commuta via `paca_command`. Quem conhece o sistema: quando a buzininha para = Paca detectou algo. Silêncio = dado de alerta.
+
+I298: **Modo Pet — Reconhecimento do Gato** — Paca identifica gato de Yuri via câmera (Haar Cascade ou YOLOv5-tiny, roda no Pi Zero 2W). Quando confirmado: desativa buzina (não assustar o animal), emite pulso ultra-curto (~50ms) via rádio NRF24L01 → Amanda → notificação Yuri. "Paca viu o gato." Perfil armazenado: `pet_profiles (nome, especie, foto_referencia, owner)`.
+
 I288: **Assinatura Sonora Tango — 2 tons** — bip clássico seco (modo profissional/alerta) e buzina de pipoqueiro (modo zoeira, precede qualquer imitação de voz). Implementar como enum `TangoTone {PROFISSIONAL, ZOEIRA}` no firmware. Amanda envia tom antes de qualquer TTS clonado. Sem buzina = nenhuma voz imitada é emitida.
 
 I289: **Sistema Perfil Seguranças** — tabela `guardas_profiles (id, nome, data_nascimento, comida_favorita, tipo_humor ENUM(zoeira|formal|neutro), notas, ultima_interacao TIMESTAMP)`. Alimentada pela entrevista de integração. Amanda consulta antes de qualquer interação Tango/drone com segurança. João = tipo_humor:"formal". Outros = tipo_humor:"zoeira" por padrão até redefinição.

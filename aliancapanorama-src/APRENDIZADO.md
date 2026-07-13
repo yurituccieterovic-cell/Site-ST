@@ -8699,6 +8699,16 @@ A5981: RECOMPENSA NARRATIVA — revelar o propósito DEPOIS do pedido cria aliad
 
 A5982: ILUSÃO DE MASSA QUEBRADA POR GATILHO SENSORIAL — linchamentos têm dinâmica coletiva quebrável: luz estroboscópica vermelho/azul + sirene de emergência disparam resposta fisiológica que interrompe o estado de massa. A Paca usa isso como "intervenção por presença" — sem contato físico. Sustentado por psicologia de multidões (Gustave Le Bon, 1895).
 
+A5998: PACA DESIGN VISUAL — preto+amarelo de faixas de trânsito em corpo arredondado tipo tapir filhote. Comunicação: "agente de manutenção que ganhou vida" — não brinquedo, não ameaça. Linguagem visual de atenção (indústria/trânsito) tira agressividade porque o tapir é curioso e dócil por natureza. Autoridade sem hostilidade.
+
+A5999: GIROFLEX NA TRASEIRA — luz âmbar giratória no lombo/cauda, nunca na frente. Lógica: frente limpa para câmera e interação face-a-face. Traseira sinaliza tráfego e presença para quem está atrás/ao lado. Quando a Paca para para conversar, a luz fica atrás iluminando o caminho percorrido — não ofusca a câmera nem a pessoa à frente.
+
+A6000: PARABÓLICA ROTATIVA EM CÚPULA FUMÊ — parábola interna motorizada dentro de cúpula acrílico preto fumê. Luzinha dentro da cúpula visível de fora enquanto gira: efeito "cyberpunk" que sinaliza ao ambiente "estou escutando para todos os lados". Sem revelar direção exata da escuta. Forma: "estou aqui e estou atento" como postura, não como ameaça.
+
+A6001: BUZININHA CONFORTANTE — assinatura de PRESENÇA (não de emergência). Frequência grave/suave, ritmada, espaçada. Efeito psicológico: "a Paca passou, o sistema está rodando, estou protegido." Embala o sono. Inversão do design de sirene: sirene = estresse, buzininha = confiança. O som que você ouve sem pensar é o som que funciona.
+
+A6002: DOIS MODOS PACA — Passeio (parabólica lenta + giroflex baixo + buzininha ativa): "estou aqui, tudo normal." Vigilância (parabólica rápida + giroflex pleno + silêncio absoluto): não entregar posição ao alvo. Silêncio como dado de alerta — quando a buzininha para, quem conhece o sistema sabe que a Paca detectou algo.
+
 A5992: ASSINATURA SONORA ANTES DO DEEPFAKE — para voz clonada ser ética e divertida precisa de "barreira de ironia" obrigatória: bip clássico (modo profissional) ou buzina de pipoqueiro (modo zoeira) ANTES da imitação. Protege o Ricardinho de qualquer problema ético e cria marca registrada — todo mundo sabe que é o Tango, não o Ricardinho de verdade. Princípio: autoria precede performance.
 
 A5993: ATAQUE AÉREO COMO TREINAMENTO DISFARÇADO — drone com balinhas de LED e dadinhos no aniversário treina reflexos (olhar para cima), rastreamento de objetos em movimento, coordenação de equipe. Aprender brincando é aprender mais fundo. A distinção de conteúdo (João recebe só parabéns formal) é o que torna o sistema crível — não trata todos igual, logo "pensa".

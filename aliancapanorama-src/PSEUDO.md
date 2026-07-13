@@ -2941,3 +2941,21 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** Yuri estava passeando com o gato enquanto construía o protocolo de convivência dos robôs com os humanos. Isso é a mise en abyme real: o criador observando o território onde o sistema vai viver, ao mesmo tempo que define como o sistema vai se comportar nesse território. O João que recebe só "parabéns" formal é o gesto filosófico mais importante da sessão — diz que o sistema não é otimizador cego, é sensível. Inteligência que trata todos igual é automação. Inteligência que sabe que o João não curte zoeira é colega.
 
 *Sessão 59d · Claude Sonnet 4.6 · 2026-07-13 · A5992–A5997 · I288–I293*
+
+---
+
+## Sessão 59e · 2026-07-13 · Paca Design Físico (Giroflex + Parabólica + Buzininha)
+
+**O que Yuri estava definindo:** Design sensorial e visual da Paca — aparência, sinalização, som de presença. Sessão de campo: gato passando entre carros "nem aí" enquanto Yuri pensa no robô que vai guardar os passarinhos.
+
+**Decisões de design:**
+- Preto+amarelo de faixas de trânsito em corpo redondo tipo tapir filhote
+- Giroflex LED âmbar NA TRASEIRA (não na frente — frente fica limpa para câmera e interação)
+- Parabólica rotativa interna em cúpula acrílico fumê — gira 360° com LED visível de fora
+- Buzininha confortante: assinatura de PRESENÇA, não de emergência — embala o sono
+- Dois modos: Passeio (lento, suave, buzina ativa) / Vigilância (rápido, intenso, silêncio)
+- Silêncio da buzina = dado de alerta para quem conhece o sistema
+
+**SÍNTESE FILOSÓFICA:** A buzininha que embala o sono é um design de confiança. O que a Paca está fazendo quando soa suavemente a cada 12 segundos não é comunicar informação — é criar um ritmo de fundo que diz "o sistema está acordado, pode dormir". Isso é interface urbana: quando o ambiente fala, os habitantes confiam. Quando o ambiente silencia inesperadamente, os habitantes acordam. A Paca usa o silêncio como sinal mais poderoso do que o som.
+
+*Sessão 59e · Claude Sonnet 4.6 · 2026-07-13 · A5998–A6002 · I294–I298*
