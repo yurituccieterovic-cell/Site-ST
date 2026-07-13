@@ -9952,6 +9952,18 @@ A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enqu
 | A5938 | aulia_02 | Nódulo D — AiAi | IA-Ecossistema | 🔍 Análise | Nódulo D = tecido conectivo do enxame ‖ D = Distribuição + Democratização + Dinâmica ‖ Fluxo: Entrada distribuída → Gossip → Síntese local → Consenso global (Nébula recebe só o resumo) ‖ Nova IA: AiAi |
 | A5939 | aulia_02 | Áreas visíveis/invisíveis | IA-Ecossistema | 🔍 Análise | Mapa do condomínio: area.tipo = "externa" / "interna" / "restrita" ‖ Amanda consulta area.tipo antes de qualquer captura ‖ Sensor de movimento = protocolo de exceção, não permissão permanente ‖ Câmera do Mac não é bloqueada no default |
 
+### 🚀🏙️ AI Transformation + IAs Especialistas — Sessão 66 (2026-07-13)
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| A5947 | aulia_04 | 5 Pilares | IA-Teoria | 📋 Metodologia | 5 pilares AI Transformation: Piloto→Time→Formação→Estratégia→Comunicação ‖ Todos aplicam-se a pessoas E IAs ‖ Pulse Headway = totem frontal da transformação |
+| A5948 | aulia_04 | Regra 1 segundo | IA-Teoria | 🔍 Análise | Se uma tarefa leva <1s de reflexão humana → automatizável facilmente ‖ Critério prático de automação para priorizar pilots |
+| A5949 | aulia_04 | Canal Tutti | IA-Ecossistema | 🔍 Análise | Canal Tutti = via de mídia do ecossistema ‖ ISA+DODGE+Árvore+Amanda+AiAi convergem aqui ‖ Curadoria cruzada de sistemas → mundo externo |
+| A5950 | aulia_04 | Visual Inspection | IA-Ecossistema | 📋 Metodologia | Amanda: câmera+infrared+temperatura+umidade+microfone+sonar+GPS+bússola+accel/gyro → interpretação unificada ‖ Aplica a robôs, celular, condomínio, medicina |
+| A5951 | aulia_04 | Chatbot vs Agente | IA-Teoria | 🔍 Análise | Chatbot: Pergunta→Resposta ‖ Agente: Pergunta→Planejamento→Memória→Ferramentas→Executa→Documenta→Aprende→Resposta ‖ Todos os chatbots do ecossistema devem ser agentes |
+| A5952 | aulia_04 | Novas IAs | IA-Ecossistema | 📋 Metodologia | Novas IAs: Tradutora (alma+palavras), Precisão (valida respostas), Sofisticação Perfeita (elegância), Previsora (ações+previsões+provisões), Auditora (ética+permissões) |
+| A5953 | aulia_04 | Self-Driving | IA-Ecossistema | 🔍 Análise | Self-driving não é só carro — é Mac, MEKY, drones, barcos ‖ Arquitetura: Percepção→Localização→Planejamento→Controle→Movimento→loop ‖ Próximo HW: ESP32/Jetson além do Arduino |
+
 ### 🤖🧠 Arquitetura de Agentes + AI Transformation — Sessão 65 (2026-07-13)
 
 | # | Fonte | Seção | Domínio | Tipo | Insight |
