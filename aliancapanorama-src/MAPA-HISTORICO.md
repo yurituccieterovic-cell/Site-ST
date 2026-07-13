@@ -141,3 +141,37 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - amanda_mma_protocolo.md: protocolo Amanda MMA para modo CARRETA_ATTACHED
 - CARRETA_ATTACHED: estado Amanda → raio giro recalculado, largura efetiva ×1.5, aceleração −30%
 - I269-I272 adicionados ao IDEIAS.md (Mula, Ética Cat-D, Comboio Vivo)
+
+## Sessão 60 — 2026-07-13 — Panfleto + Créditos Bio + Paca Paranoica + Máfia da Informação
+
+- manifesto_paca.md: identidade e voz da Paca (paranoica como virtude de design)
+- sys_tango_core.md: TaskPriority enum + câmera lenta + missão combinada
+- protocolo_orangotango.md: seção Máfia da Informação (troca bilateral teatral italiana)
+- tango.md: entrada 27 (manifesto_paca)
+- A6003-A6010 · I299-I305
+
+## Sessão 61 — 2026-07-13 — Mac Cacique + Coreografia de Autômatos + Totem da Exosfera
+
+- protocolo_mac.md: Mac como Cacique com penas, Corredor de Honra, Cornetas, FormacaoEvento
+- protocolo_totem.md: cálice vidro+LED COB, Cofre, Feriado das Máquinas, Perfidia fragmentação
+- mise_en_abyme_robotico.md: Mac e Perfidia no elenco, seção Coreografia de Autômatos
+- tango.md: entradas 28-29
+- A6011-A6021 · I306-I313
+
+## Sessão 62 — 2026-07-13 — Nébula + Falcão + Frota Felina + Geofencing Ético
+
+- protocolo_nebula.md: manufatura autônoma, Padrão Tel, ciclo de vida, walkie-talkie, bases-ninho
+- protocolo_falcao.md: drone escotilha Jurassic Park, Frota Felina, GeofencingZone, gato machucado
+- mise_en_abyme_robotico.md: Falcão, Frota Felina, Nébula no elenco
+- tango.md: entradas 30-31
+- A6022-A6033 · I314-I321
+
+## Sessão 63 — 2026-07-13 — Amanda Checklist + Interdependência + AulIAs #01
+
+- protocolo_interdependencia.md: 6 pilares Amanda, botão escotilha, NivelPedido, colaboracao_humana
+- aulia_01_dados.md: aula dados como tesques, sintagma, array fractal, workflow síntese
+- bootstrap.ts: 13 tabelas Exosfera Tel (guardas_profiles, biodiversity_credits, geofence_zones, etc.)
+- PSEUDO2.md: sessões 51-63 adicionadas
+- Email enviado a Yuri com checklist Amanda
+- tango.md: entradas 32-33
+- A6034-A6045 · I322-I330
