@@ -89,6 +89,22 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - ISA rewrite corrigido em vercel.json (faltava)
 - Documentação: APRENDIZADO A5971-A5975, IDEIAS I264-I268
 
+## Sessão 59 — 2026-07-13 — Semiótica Psicanalítica + Teatro de Operações Éticas
+
+- Semiótica Psicanalítica: dados=Simbólico, representações=Imaginário, Real escapa sempre
+- RSI aplicado ao PAP: A5976–A5978, I273–I275
+- Teatro de Operações Éticas: Mise en Abyme robótico, elenco completo documentado
+- EoF da Paca: máquina 5 estados (PATRULHA→RASTREIO→INTERVENÇÃO→CUSTÓDIA→RETIRADA)
+- decide_escalation() em Python: PacaState + AmandaCommand
+- Banana Protocol: social Turing test + heat map social do condomínio
+- Tango personagem completo: 5 estados, LED olhos, escalada garras retráteis, modo defensivo
+- Paca bioacústica: rede postos de escuta PVC, TinyML ESP32 + espectrograma
+- Capital social seguranças: entrevista integração, assinatura sonora dupla, guardas_profiles
+- Sequência de nascimento: MEKY→Perfidia→Baratinha→Orangotango→Paca→Piolho→Drone
+- Paca design físico: tapir preto+amarelo, giroflex traseira, parabólica cúpula fumê, buzininha confortante
+- Docs criados: mise_en_abyme_robotico.md, protocolo_paca.md, protocolo_orangotango.md, sys_tango_core.md
+- A5976–A6002, I273–I298
+
 ## Sessão 55 — 2026-07-13 — CEU v2: Prédios Conectados + Biblioteca PAP
 
 - Prédios clicáveis: modal de personagem com abas Conversa/Ficha
