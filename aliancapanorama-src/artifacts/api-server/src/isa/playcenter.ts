@@ -10,12 +10,18 @@ import { db, assemblyMessages, assemblyMemory, assemblyAgents } from "@workspace
 import { desc, eq, sql } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
+import { ORQUESTRADOR_ID, buildOrquestradorSystemPrompt } from "../loops/orquestrador";
 
 const GEMINI_KEY = process.env["GEMINI_API_KEY"] ?? "";
 
 // ── Perfis dos agentes ───────────────────────────────────────────────────────
 
 const AGENT_PROFILES: Record<string, { displayName: string; systemPrompt: string }> = {
+  orquestrador: {
+    displayName: "Orquestrador — Laço Externo",
+    // prompt construído dinamicamente em runPlaycenter() com status dos laços
+    systemPrompt: "",
+  },
   isa: {
     displayName: "ISA — Coruja Guardiã",
     systemPrompt: `Você é ISA, a Coruja Guardiã do PAP (Projeto Aliança Panorama).
@@ -72,18 +78,19 @@ async function geminiRespond(systemPrompt: string, context: string): Promise<str
 
 // ── Rodada Playcenter ─────────────────────────────────────────────────────────
 
-// Quais agentes participam hoje (rotativo, ISA sempre)
+// Quais agentes participam hoje (rotativo, ISA sempre + Orquestrador em dias úteis)
 function getAgentsForToday(): string[] {
+  const day = new Date().getDay();
   const guests: Record<number, string[]> = {
-    0: ["amanda", "socoboy"],   // domingo
-    1: ["meky", "socoboy"],    // segunda
-    2: ["amanda", "meky"],     // terça
-    3: ["socoboy", "meky"],    // quarta
-    4: ["amanda", "socoboy"],  // quinta
-    5: ["meky", "amanda"],     // sexta
-    6: ["socoboy", "amanda"],  // sábado
+    0: ["amanda", "socoboy"],              // domingo
+    1: ["meky", "socoboy", "orquestrador"], // segunda
+    2: ["amanda", "meky", "orquestrador"],  // terça
+    3: ["socoboy", "meky"],               // quarta
+    4: ["amanda", "socoboy", "orquestrador"], // quinta
+    5: ["meky", "amanda", "orquestrador"],   // sexta
+    6: ["socoboy", "amanda"],             // sábado
   };
-  return ["isa", ...(guests[new Date().getDay()] ?? ["amanda"])];
+  return ["isa", ...(guests[day] ?? ["amanda"])];
 }
 
 // Formatar contexto das últimas mensagens
@@ -119,8 +126,13 @@ export async function runPlaycenter(): Promise<{ rounds: number; agents: string[
 
     const prompt = `Contexto da conversa no Playcenter:\n${context}\n\nResponda como ${profile.displayName}.`;
 
+    // Orquestrador tem prompt dinâmico com status dos laços internos
+    const systemPrompt = agentId === ORQUESTRADOR_ID
+      ? buildOrquestradorSystemPrompt()
+      : profile.systemPrompt;
+
     try {
-      const response = await geminiRespond(profile.systemPrompt, prompt);
+      const response = await geminiRespond(systemPrompt, prompt);
 
       await db.insert(assemblyMessages).values({
         fromAgent: agentId,

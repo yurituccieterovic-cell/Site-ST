@@ -54,6 +54,7 @@
 | 2026-07-11 (Sessão 50) | Trailer 30s "Inteligência em Camadas": motion graphics 15 cenas, fala por cena (edge-tts por trecho), zoompan + fade + xfade entre cortes, formato 1080x1080, imagens Pollinations.ai por cena, texto overlay Pillow. DOD landing + ISA landing + Amanda→MEKY bridge (Sessão 49). |
 | 2026-07-11 (Sessão 51) | Video Pipeline para todas as IAs: lib/video_pipeline.py (módulo reutilizável), templates ISA/Amanda/MEKY/MC, CLI, Amanda integrada (ciclo_dream 24h), POST /api/video/gerar (Railway), POST /api/isa/video. Dodge: DOD→Dodge, ícone novo, chat público 10 msgs. |
 | 2026-07-12 (Sessão 52) | Pollinations.ai como fallback gratuito no llm-router (sem API key). Dodge home: DodgeChatWidget flutuante, paths imagens corrigidos, rewrite /api/* Vercel, emoji 🐕 substituído por avatar real. pap-sync: APRENDIZADO.md +360 entradas (docs PAP), I251-I257 adicionados. |
+| 2026-07-14 (Sessão 53) | AulIAs #04 AI Transformation → implementação: Orquestrador (Laço Externo). loops/registry.ts rastreia 10 laços internos. loops/orquestrador.ts injeta status real no Playcenter. cron.ts wrapeado com updateLoop(). Orquestrador seedado em assembly_agents. pack-orquestrador.md criado. |
 
 ---
 

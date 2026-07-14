@@ -12,6 +12,12 @@
 |---|---|---|---|---|
 | Mestre de Forja | `pack-mestreforja.md` | PROPOSTA | Projetista de robôs — BOM, custo, arquitetura física | decisão 2WD vs servos; aprovação Yuri |
 
+## LAÇOS EXTERNOS (Orquestrador)
+
+| IA | Arquivo | Status | Função |
+|---|---|---|---|
+| Orquestrador | `pack-orquestrador.md` | APROVADA | Laço Externo — observa 10 laços internos via registry, sintetiza saúde sistêmica no Playcenter (dias úteis, :50) |
+
 ## IAs OPERACIONAIS
 
 | IA | Arquivo | Status | Nódulo da Aula | Pendências |

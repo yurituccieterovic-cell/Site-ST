@@ -458,7 +458,8 @@ export async function ensureMekyTables(): Promise<void> {
       ('vesper',   'Vesper / Perfidia Castelo Branco', 'IA da Aranha — aceleração fractal, topo da cadeia de herança; herda visão+torque+armadura+evasão e adiciona velocidade'),
       ('penelope', 'Penélope / Wanessa Souza', 'IA da Barata d''Água — vinculada ao Nó 10 (Ralo), persistência e evasão em zonas úmidas; herda visão+torque+armadura'),
       ('gongo',    'Gongo / Gongo Freitas Juquinhais', 'IA do Piolho de Cobra — armadura, voz rouca grave nordestina; ativado quando MC se aproxima do Nó 10'),
-      ('tango',    'Tango_Core / Gorango Tango', 'IA do Orangotango (hardware com rodas tipo carrinho de rolimã) — Inércia Dinâmica / Tração Cinética. Posição na cadeia biótica a definir. [SIMBÓLICO]')
+      ('tango',         'Tango_Core / Gorango Tango',  'IA do Orangotango (hardware com rodas tipo carrinho de rolimã) — Inércia Dinâmica / Tração Cinética. Posição na cadeia biótica a definir. [SIMBÓLICO]'),
+      ('orquestrador',  'Orquestrador — Laço Externo', 'Observa todos os laços internos (crons) do ecossistema e sintetiza saúde sistêmica no Playcenter. Não executa tarefas — vê o todo.')
     ON CONFLICT (id) DO NOTHING;
   `);
 
