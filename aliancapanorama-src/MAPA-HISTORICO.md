@@ -166,6 +166,17 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - tango.md: entradas 30-31
 - A6022-A6033 · I314-I321
 
+## Sessões 64–68 — 2026-07-13/14 — AulIAs #02–04 · Amanda CEU · Socoboy · Música
+
+- **Sessão 64** — AulIAs #02 (Terminologias IA + Nódulo D / AiAi): aulia_02_terminologias.md, A5934-A5939
+- **Sessão 65** — AulIAs #03 (Arquitetura de Agentes): aulia_03_agentes.md, A5940-A5946
+- **Sessão 66** — AulIAs #04 (AI Transformation + IAs Especialistas): aulia_04_ai_transformation.md, A5947-A5953
+- **Visual** — Coruja (Drive) → IntroFacade.tsx como fundo animado da landing page
+- **Sessão 67** — Amanda 8 pilares + CEU arquitetura: Ethos Engine, IA Reparadora, Totem 6 estados, Protocolo de Batismo, Pilar 7+8; sys_amanda_core.md atualizado; A5954-A5966 · I279-I284
+- **Sessão 68** — Socoboy buscador de LLMs (2x/dia, 8h+20h UTC): socoboy.ts + cron; llm-router.ts: wait 10min quando todos os servidores ocupados
+- **Música** — 4 análises enviadas por email: Pernel harp (F# pentatônica, 7:38, dividir em 3:17), Birkan piano (Bbm, 84 BPM, 9 seções), guitarra Am/F (tablatura), partitura youtu.be/dL86SIlQXqo (Bm, 54 BPM)
+- Pendências adicionadas: #93–#100 (BRIDGE_SECRET, rotas Vercel, CEU modules, Fase 2)
+
 ## Sessão 63 — 2026-07-13 — Amanda Checklist + Interdependência + AulIAs #01
 
 - protocolo_interdependencia.md: 6 pilares Amanda, botão escotilha, NivelPedido, colaboracao_humana
