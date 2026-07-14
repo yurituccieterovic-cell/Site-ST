@@ -11,6 +11,7 @@ import { runBibliotecaGeradora, rehydratarGerados } from "./biblioteca-geradora"
 import { runSocoboyLLMSearch } from "./socoboy";
 import { logger } from "../lib/logger";
 import { registerLoop, updateLoop } from "../loops/registry";
+import { runSocoboyConsolidacao } from "../socoboy/curador";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 export function startIsaCron(): void {
@@ -24,7 +25,8 @@ export function startIsaCron(): void {
   registerLoop("playcenter",    "Playcenter",               "*/1h:50", "isa");
   registerLoop("saude_fund",    "Saúde do Fundador",        "8h:00",   "isa");
   registerLoop("isa_geradora",  "ISA Biblioteca Geradora",  "8/14/20h", "isa");
-  registerLoop("socoboy_llms",  "Socoboy LLMs",             "8h+20h",  "socoboy");
+  registerLoop("socoboy_llms",       "Socoboy LLMs",             "8h+20h",  "socoboy");
+  registerLoop("socoboy_curador",    "Socoboy Curador",          "6h:00",   "socoboy");
 
   // Ciclo ISA principal: análise + tasks — todo hora cheia
   cron.schedule("0 * * * *", async () => {
@@ -172,5 +174,18 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário 4h:30 6x/dia · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Orquestrador registrado)");
+  // Socoboy Curador: consolida memórias do ecosistema diariamente às 6h
+  cron.schedule("0 6 * * *", async () => {
+    try {
+      logger.info("Socoboy Curador: iniciando consolidação diária");
+      const result = await runSocoboyConsolidacao();
+      logger.info(result, "Socoboy Curador: consolidação concluída");
+      updateLoop("socoboy_curador", true, `dados:${result.dados_gerados} mems:${result.memorias_lidas}`);
+    } catch (err) {
+      logger.error({ err }, "Socoboy Curador: erro na consolidação");
+      updateLoop("socoboy_curador", false);
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário 4h:30 6x/dia · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · Orquestrador registrado)");
 }

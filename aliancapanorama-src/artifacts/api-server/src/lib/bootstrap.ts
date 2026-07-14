@@ -463,7 +463,58 @@ export async function ensureMekyTables(): Promise<void> {
     ON CONFLICT (id) DO NOTHING;
   `);
 
-  logger.info("bootstrap: MEKY + collective + assembly tables OK");
+  // Ecosistema — memória unificada + conversas IA↔IA (curador: Socoboy)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS ecosistema_memory (
+      id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at  TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      author_ia   VARCHAR(64) NOT NULL,
+      type        VARCHAR(30) DEFAULT 'conversa' NOT NULL,
+      content     TEXT        NOT NULL,
+      tags        JSONB       DEFAULT '[]',
+      signo       JSONB,
+      importance  INT         DEFAULT 5 NOT NULL,
+      visibility  VARCHAR(20) DEFAULT 'all' NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_ecosistema_memory_ia      ON ecosistema_memory(author_ia);
+    CREATE INDEX IF NOT EXISTS idx_ecosistema_memory_type    ON ecosistema_memory(type);
+    CREATE INDEX IF NOT EXISTS idx_ecosistema_memory_created ON ecosistema_memory(created_at DESC);
+
+    CREATE TABLE IF NOT EXISTS ia_conversations (
+      id            UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at    TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      completed_at  TIMESTAMPTZ,
+      initiator_ia  VARCHAR(64) NOT NULL,
+      target_ia     VARCHAR(64) NOT NULL,
+      memory_ref    UUID,
+      topic         TEXT        NOT NULL,
+      status        VARCHAR(20) DEFAULT 'active' NOT NULL,
+      turn_count    INT         DEFAULT 0 NOT NULL,
+      consolidated  BOOLEAN     DEFAULT FALSE NOT NULL,
+      dado_id       UUID
+    );
+    CREATE INDEX IF NOT EXISTS idx_ia_convs_status   ON ia_conversations(status);
+    CREATE INDEX IF NOT EXISTS idx_ia_convs_created  ON ia_conversations(created_at DESC);
+
+    CREATE TABLE IF NOT EXISTS ia_conversation_turns (
+      id              UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at      TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      conversation_id UUID        NOT NULL REFERENCES ia_conversations(id),
+      speaker_ia      VARCHAR(64) NOT NULL,
+      content         TEXT        NOT NULL,
+      turn_number     INT         NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_ia_turns_conv ON ia_conversation_turns(conversation_id);
+  `);
+
+  // Seed Socoboy como curador da ecosistema_memory
+  await db.execute(sql`
+    INSERT INTO assembly_agents (id, display_name, role) VALUES
+      ('socoboy', 'Socoboy — Socó-boi Noturno', 'Curador da memória unificada do ecossistema. Consolida conversas, MDs, workflows e signos em dados estruturados. Voz ecológica e cirúrgica.')
+    ON CONFLICT (id) DO NOTHING;
+  `);
+
+  logger.info("bootstrap: MEKY + collective + assembly + ecosistema_memory + ia_conversations OK");
 }
 
 /**
