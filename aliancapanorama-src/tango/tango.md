@@ -44,6 +44,10 @@
 | 31 | Falcão + Frota Felina + Geofencing | `protocolo_falcao.md` | Falcão, drone, escotilha Jurassic Park, Frota Felina, gato acompanhante, freio emergência, Observador Extremidade, GeofencingZone, zona vermelha, triangulação perímetro, gato machucado |
 | 32 | Amanda: Checklist + Interdependência | `protocolo_interdependencia.md` | Amanda semente, 6 pilares faltantes, geofencing sensorial, dialeto teatral, protocolo totem, nébula manager, Perfidia bridge, botão escotilha, pedido de ajuda, NivelPedido, colaboracao_humana |
 | 33 | AulIAs #01 — Dados como Signos | `aulia_01_dados.md` | aulIAs, dados, tesques, sintagma, array hierárquico fractal, dado objeto, dado imagem, workflow síntese, ISA curadora, tríade, Lost in the Middle |
+| 34 | AulIAs #02 — Terminologias IA + Nódulo D | `aulia_02_terminologias.md` | ML vs DS, neural network, deep learning, DSC camada cruzada, Nódulo D (AiAi), enxame distribuído, gossip, Gossip→Síntese local→Consenso global, áreas visíveis/invisíveis |
+| 35 | AulIAs #03 — Arquitetura de Agentes | `aulia_03_agentes.md` | Agent=Quem, Harness=Onde, Skills=Como, Tasks=O quê, Triggers=Quando, DataSource=De onde, Telos=Por quê, Semiótica=Com que significado, Data Warehouse, Pervasive Automation, THEEO vs TUCCI |
+| 36 | AulIAs #04 — AI Transformation | `aulia_04_ai_transformation.md` | 5 pilares, regra 1 segundo, Canal Tutti, visual inspection, chatbot vs agente, IAs especialistas (Tradutora/Precisão/Sofisticação/Previsora/Auditora), self-driving |
+| 37 | Amanda 8 Pilares + CEU Arquitetura | `sys_amanda_core.md` (seção Sessão 67) | 8 pilares, Ethos Engine, IA Reparadora, Nebula Manager, dialeto estilos, Totem 6 estados, Perfídia Fase 2, Autoconsciência, Aprendizagem Coletiva, interdependência 4 níveis, Protocolo de Batismo, CEU services |
 
 ---
 

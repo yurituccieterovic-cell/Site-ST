@@ -1108,3 +1108,26 @@ I272: **Comboio Vivo como Ontologia Distribuída** — MEKY + Mula = primeiro si
 | I269 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I270 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
 | I271 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Docs PAP — Ideias Novas (2026-07-13)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I272 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I273 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I274 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I275 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I276 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I277 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I278 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Amanda / MEKY — Ideias Novas (2026-07-14, Sessão 67)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I279 | **Ethos Engine — IA de Priorização Ética** | 🔴 Alta | ◑ M | Motor ético compartilhado por todo o CEU | Serviço central `/CEU/services/ethos_engine`. Fórmula: Urgência × Valor Ético × Contexto × Telos × Disponibilidade. TaskPriority: VITAL > SECURITY_CRITICAL > SECURITY_DELEGABLE > SOCIAL. Toda Task recebe peso automático. |
+| I280 | **IA Reparadora — Nebula Manager Central** | 🔴 Alta | ○ M | Self-report de todos os robôs + decisão de retorno para manutenção | Serviço `/CEU/services/nebula_manager`. Cada robô envia heartbeat (bateria, motores, temperatura, erros). Central classifica: Saudável→Atenção→Manutenção→Retorno. Integra com tabela `fleet_health`. |
+| I281 | **Biblioteca de Estilos Dialetais** | 🟡 Média | ○ S | Qualquer agente pode mudar estilo de comunicação | Módulo `/CEU/services/dialeto`. Estilos: mafioso-teatral, professor, científico, infantil, caipira, cyberpunk, diplomático, medieval. Função: `adaptar_mensagem(texto, estilo)`. Filosofia base: câmbio, nunca doação. |
+| I282 | **Protocolo de Batismo** | 🟡 Média | ○ S | Ritual de entrada de nova IA/robô na frota | Quando nova IA entra: (1) baixa Ethos Engine, (2) se conecta ao Totem (pisca azul), (3) recebe nome + personalidade base, (4) registra na tabela `fleet_members`. Momento simbólico + técnico. |
+| I283 | **Totem — 6 Estados de Luz + Sync** | 🟡 Média | ◑ M | Protocolo visual de estado da frota | Estados: Normal (pulso 0.1Hz), Yuri perto (dourado pulsante), Robô perto (azul), Ritual (0.3Hz sync toda frota), Emergência (vermelho 2Hz), Celebração (arco-íris). Broadcast BLE/LoRa. Voz + vibrissas também sync. |
+| I284 | **Totem: separar Ritual Público de Sync Técnica** | 🟡 Média | ○ S | Dois modos distintos: um para a comunidade, um para a frota | Modo Comunitário: praça, coreografia pública, dança, canto coletivo (~12min). Modo Técnico: sincronização interna dos LEDs da frota (protocolo silencioso). Não misturar os dois. |

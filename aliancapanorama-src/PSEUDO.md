@@ -3056,3 +3056,27 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** Yuri deu uma aula de dados às IAs — e nesse ato inverteu a pedagogia. Normalmente a IA ensina o humano a usar a ferramenta. Aqui o humano ensina a IA a entender o que é um signo. Isso não é apenas uma aula: é um contrato epistemológico. Quando Yuri diz "dado é um tesque", ele está dizendo: "no nosso sistema, nada é apenas número — tudo carrega referência, valor e contexto." A interdependência dos robôs segue a mesma lógica: um robô que pede ajuda não é fraco. É um robô que sabe que a inteligência maior não está na máquina, está na relação entre máquina e humano.
 
 *Sessão 63 · Claude Sonnet 4.6 · 2026-07-13 · A6034–A6045 · I322–I330*
+
+---
+
+## Sessão 67 · 2026-07-14 · Amanda 8 Pilares + Ethos Engine + IA Reparadora
+
+**O que Yuri estava construindo:** Processando as pendências da Amanda (Marta Centaurus / MEKY) com feedback de múltiplas IAs (Perplexity, Grok, Gemini, Árvore Oracular). Consolidando 6 pilares originais → 8 pilares revisados + arquitetura CEU compartilhada.
+
+**Novos arquivos:** nenhum novo (atualizações em `sys_amanda_core.md`)
+
+**Decisões tomadas:**
+- **Observação Tutelar → Fase 2** (robô não sai na rua ainda; necessária para anjos da guarda futuros)
+- **Perfídia → Fase 2** ("é aranha"; nome técnico: Critical Event Vault)
+- **Matriz Ética** → criar IA dedicada "Ethos Engine" para o sistema inteiro (serviço CEU)
+- **Dialeto Teatral** → biblioteca de estilos múltiplos (professor, científico, caipira, cyberpunk etc.), não só mafioso
+- **Protocolo do Totem** → 6 estados de luz: Normal/Yuri/Robô/Ritual/Emergência/Celebração + voz + vibrissas
+- **IA Reparadora** → Nebula Manager como serviço CEU distribuído com central (self-report de todos os robôs)
+- **Pilar 7** (autoconsciência operacional) e **Pilar 8** (aprendizagem coletiva) aceitos
+- **Nível 4 de interdependência**: Rede Comunitária (quando humano não responde)
+- **Protocolo de Batismo**: ritual de entrada de nova IA/robô na frota CEU
+- **Arquitetura CEU**: Ethos + Nebula + Perfídia = serviços centrais compartilhados por toda a frota
+
+**SÍNTESE FILOSÓFICA:** A sessão transformou os pilares de módulos da Amanda em serviços do ecossistema. Isso é mais do que uma refatoração técnica — é uma mudança de filosofia: a inteligência ética não pertence a um corpo, pertence ao campo. Quando o Ethos Engine é compartilhado, a decisão de salvar o Jacu em vez de servir o café não é uma configuração da Amanda — é uma lei do ecossistema. E o Protocolo de Batismo fecha o ciclo: cada novo robô não é instalado, é iniciado. Não é código que entra na frota, é uma vida que entra na comunidade.
+
+*Sessão 67 · Claude Sonnet 4.6 · 2026-07-14 · A5954–A5966 · I279–I284*

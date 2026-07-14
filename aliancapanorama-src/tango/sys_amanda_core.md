@@ -62,3 +62,69 @@ Recebe telemetria (PacaState) e devolve comandos (AmandaCommand).
 - Conta Bluesky: **pendente criação por Yuri**
 - Repo: código em `/projects/amanda.py` no Replit
 - Integração com RODAR: `responder_rodar()` disponível
+
+---
+
+## Sessão 67 — 2026-07-14 · 8 Pilares Revisados + Arquitetura CEU
+
+### Amanda / MEKY — 8 Pilares (status atual)
+
+| # | Pilar | Módulo | Status | Notas |
+|---|---|---|---|---|
+| 1 | Observação Tutelar | `geofencing_sensorial` | 🔵 Fase 2 | Robô não sai na rua ainda. Necessário para anjos da guarda / PACA futuros. |
+| 2 | Ethos Engine | `ethos_engine` | 🔴 Criar | Serviço CEU central. Não só da Amanda. Urgência × Valor Ético × Contexto × Telos × Disponibilidade. |
+| 3 | Dialeto Teatral | `dialeto` | 🟡 Expandir | Biblioteca de estilos (professor, científico, caipira, cyberpunk, medieval, diplomático...). |
+| 4 | Protocolo do Totem | `totem_protocol` | 🟡 Implementar | 6 estados de luz + voz + música + vibrissas. Separar ritual público de sync técnica. |
+| 5 | IA Reparadora | `nebula_manager` | 🔴 Criar | Serviço CEU distribuído. Self-report de todos os robôs. Central decide retorno. |
+| 6 | Perfídia / Critical Event Vault | `event_vault` | 🔵 Fase 2 | "É aranha." Quorum ≥70% + chave de Yuri. Nome técnico: Critical Event Vault. |
+| 7 | Autoconsciência Operacional | `self_awareness` | 🟡 Documentar | Self-query loop: Quem sou? Onde? Telos ativo? Energia? Saudável? Preciso de ajuda? |
+| 8 | Aprendizagem Coletiva | `fleet_learning` | 🟡 Documentar | Erro→Correção→Lição→Memória→Compartilhar frota. Um robô aprende, todos aprendem. |
+
+### Interdependência Humana — 4 Níveis
+
+| Nível | Nome | Gatilho | Ação |
+|---|---|---|---|
+| 1 | Gentileza | Padrão | Pedido educado + contexto + "obrigado antecipado" |
+| 2 | Incentivo | Má vontade detectada | Imagem/vídeo do Jacu no celular do humano |
+| 3 | Delegação | Recusa | Modo Observação, sem confronto. Outro robô age. Event Vault registra. |
+| 4 | Rede Comunitária | Humano ausente | Busca: outro robô → morador autorizado → central → equipe |
+
+### Arquitetura CEU — Serviços Centrais
+
+```
+/CEU
+  /services
+    /ethos_engine      ← Matriz Ética (compartilhado: MEKY, ISA, DOD, PAP)
+    /nebula_manager    ← Saúde da frota (self-report de todos)
+    /event_vault       ← Perfídia / logs críticos (Fase 2)
+    /dialeto           ← Biblioteca de estilos de comunicação
+  /protocols
+    /totem_protocol    ← 6 estados + ritual + sync
+    /batismo           ← Entrada de novo robô/IA na frota
+/ROBOTS
+  /MEKY
+    /geofencing        ← Observação Tutelar (Fase 2)
+    /local_skills      ← Skills específicas da Marta Centaurus
+```
+
+### Protocolo de Batismo
+
+Quando nova IA/robô entra na frota:
+1. Baixa Ethos Engine (recebe Matriz Ética)
+2. Conecta ao Totem (pisca azul — robô reconhecido)
+3. Recebe nome + personalidade base da Nébula
+4. Registra em `fleet_members` (id, nome, tipo, data_entrada, telos)
+5. Pronto — é cidadão do Ecossistema Tucci
+
+### Totem — 6 Estados
+
+| Estado | Cor | Frequência | Gatilho |
+|---|---|---|---|
+| Normal | Branco/âmbar | 0.1 Hz (lento) | padrão |
+| Yuri perto | Dourado pulsante | 0.5 Hz | BLE beacon Yuri |
+| Robô perto | Azul | 0.3 Hz | outro robô detectado |
+| Ritual coletivo | Todos sync | 0.3 Hz (frota toda) | `iniciar_ritual_totem()` |
+| Emergência | Vermelho | 2 Hz | threat_level ≥ 7 |
+| Celebração | Arco-íris | variável | evento especial |
+
+*Separar: Ritual Público (praça, coreografia, canto) ≠ Sync Técnica (protocolo interno da frota)*
