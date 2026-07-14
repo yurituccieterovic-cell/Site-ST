@@ -13,6 +13,7 @@ import { logger } from "../lib/logger";
 import { registerLoop, updateLoop } from "../loops/registry";
 import { runSocoboyConsolidacao } from "../socoboy/curador";
 import { runDodgeCuracao, runIsaRaizPap } from "../dodge/curador";
+import { runIsaNodulos } from "./raiz-to-nodulos";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 export function startIsaCron(): void {
@@ -30,6 +31,7 @@ export function startIsaCron(): void {
   registerLoop("socoboy_curador",    "Socoboy Curador",          "6h:00",   "socoboy");
   registerLoop("dodge_curador",      "DODGE Curador",            "7h:00",   "dodge");
   registerLoop("isa_raiz_pap",       "ISA Raiz PAP",             "4h:00",   "isa");
+  registerLoop("isa_nodulos",        "ISA Nódulos+PDFs",         "5h:00",   "isa");
 
   // Ciclo ISA principal: análise + tasks — todo hora cheia
   cron.schedule("0 * * * *", async () => {
@@ -216,5 +218,18 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · Orquestrador :50)");
+  // ISA Nódulos + PDFs: transforma raízes PAP em nódulos teóricos + PDFs AulIAs — 5h diário
+  cron.schedule("0 5 * * *", async () => {
+    try {
+      logger.info("ISA Nódulos: transformando raízes em nódulos teóricos e PDFs");
+      const result = await runIsaNodulos();
+      logger.info(result, "ISA Nódulos: pipeline concluído");
+      updateLoop("isa_nodulos", true, `raizes:${result.raizes_processadas} nodulos:${result.nodulos_criados} pdfs:${result.pdfs_gerados}`);
+    } catch (err) {
+      logger.error({ err }, "ISA Nódulos: erro no pipeline");
+      updateLoop("isa_nodulos", false);
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · ISA Nódulos 5h · Orquestrador :50)");
 }
