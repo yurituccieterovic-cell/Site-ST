@@ -8,6 +8,7 @@ import { generateArtFromDream } from "../meky/art";
 import { runPlaycenter } from "./playcenter";
 import { runSaudeFundador } from "./cycle";
 import { runBibliotecaGeradora, rehydratarGerados } from "./biblioteca-geradora";
+import { runSocoboyLLMSearch } from "./socoboy";
 import { logger } from "../lib/logger";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
@@ -115,5 +116,26 @@ export function startIsaCron(): void {
   // Re-hidratação ao subir: recriar PDFs gerados perdidos no /tmp
   rehydratarGerados().catch((err) => logger.warn({ err }, "ISA Geradora: falha na re-hidratação inicial"));
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário 4h:30 6x/dia · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h)");
+  // Socoboy — busca LLMs e novos modelos 2x/dia: 8h (manhã) e 20h (noite) UTC
+  cron.schedule("0 8 * * *", async () => {
+    try {
+      logger.info("Socoboy: busca matinal de LLMs iniciada");
+      const result = await runSocoboyLLMSearch("manha");
+      logger.info(result, "Socoboy: busca matinal concluída");
+    } catch (err) {
+      logger.error({ err }, "Socoboy: erro na busca matinal");
+    }
+  });
+
+  cron.schedule("0 20 * * *", async () => {
+    try {
+      logger.info("Socoboy: busca noturna de LLMs iniciada");
+      const result = await runSocoboyLLMSearch("noite");
+      logger.info(result, "Socoboy: busca noturna concluída");
+    } catch (err) {
+      logger.error({ err }, "Socoboy: erro na busca noturna");
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário 4h:30 6x/dia · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h)");
 }

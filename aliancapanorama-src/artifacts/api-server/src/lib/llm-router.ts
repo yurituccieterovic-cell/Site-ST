@@ -159,50 +159,85 @@ const POOL_PROVIDERS: Record<LLMPool, Provider[]> = {
   "coder":     [makeOpenAI(), makeGemini(), makePollinations()],
 };
 
+// ── Helpers ─────────────────────────────────────────────────────────────────
+
+const BUSY_PATTERNS = [
+  /429/i, /rate.?limit/i, /too.?many.?request/i, /overload/i,
+  /server.?busy/i, /capacity/i, /quota/i, /503/i, /service.?unavailable/i,
+];
+
+function isBusyError(msg: string): boolean {
+  return BUSY_PATTERNS.some(p => p.test(msg));
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // ── Router ──────────────────────────────────────────────────────────────────
 
 /**
  * Roteia uma chamada LLM pelo pool especificado.
  * Tenta provedores em ordem, pulando os em cooling.
- * Lança apenas se todos falharem.
+ * Se TODOS falharem por ocupação/rate-limit → aguarda 10 min e retenta uma vez.
  */
 export async function routeLLM(req: LLMRequest): Promise<string> {
-  const pool = req.pool ?? "chat-live";
-  const providers = POOL_PROVIDERS[pool];
+  const poolName = req.pool ?? "chat-live";
+  const providers = POOL_PROVIDERS[poolName];
 
-  const errors: string[] = [];
-  for (const provider of providers) {
-    if (isCooling(provider.name, provider.cooldownMs)) {
-      logger.debug({ provider: provider.name }, "llm-router: em cooling, tentando próximo");
-      continue;
-    }
-    try {
-      const result = await provider.call(req);
-      markUsed(provider.name);
-      logger.debug({ provider: provider.name, pool }, "llm-router: sucesso");
-      return result;
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      errors.push(`${provider.name}: ${msg}`);
-      logger.warn({ provider: provider.name, err: msg }, "llm-router: provider falhou, tentando próximo");
-    }
-  }
-
-  // Segunda passagem — ignorar cooling se todos falharam antes de chegar a qualquer um
-  if (errors.length === 0) {
-    // Todos estavam em cooling — tentar o primeiro sem cooling
+  async function tryPool(): Promise<{ result: string | null; errors: string[]; allBusy: boolean }> {
+    const errors: string[] = [];
     for (const provider of providers) {
+      if (isCooling(provider.name, provider.cooldownMs)) {
+        logger.debug({ provider: provider.name }, "llm-router: em cooling, tentando próximo");
+        continue;
+      }
       try {
         const result = await provider.call(req);
         markUsed(provider.name);
-        return result;
+        logger.debug({ provider: provider.name, pool: poolName }, "llm-router: sucesso");
+        return { result, errors, allBusy: false };
       } catch (err) {
-        errors.push(`${provider.name}: ${err instanceof Error ? err.message : String(err)}`);
+        const msg = err instanceof Error ? err.message : String(err);
+        errors.push(`${provider.name}: ${msg}`);
+        logger.warn({ provider: provider.name, err: msg }, "llm-router: provider falhou, tentando próximo");
       }
     }
+
+    // Segunda passagem — ignorar cooling se todos estavam em cooling
+    if (errors.length === 0) {
+      for (const provider of providers) {
+        try {
+          const result = await provider.call(req);
+          markUsed(provider.name);
+          return { result, errors, allBusy: false };
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          errors.push(`${provider.name}: ${msg}`);
+        }
+      }
+    }
+
+    const allBusy = errors.length > 0 && errors.every(e => isBusyError(e));
+    return { result: null, errors, allBusy };
   }
 
-  throw new Error(`llm-router: todos os provedores falharam no pool ${pool}:\n${errors.join("\n")}`);
+  // Primeira tentativa
+  const first = await tryPool();
+  if (first.result !== null) return first.result;
+
+  // Se todos ocupados → aguardar 10 min e retentar
+  if (first.allBusy) {
+    const WAIT_MS = 10 * 60 * 1000; // 10 minutos
+    logger.warn({ pool: poolName, errors: first.errors }, `llm-router: todos os servidores ocupados — aguardando ${WAIT_MS / 60000}min antes de retentar`);
+    await sleep(WAIT_MS);
+    logger.info({ pool: poolName }, "llm-router: retentando após espera de 10 min");
+    const second = await tryPool();
+    if (second.result !== null) return second.result;
+    throw new Error(`llm-router: todos os provedores ocupados (após retry de 10min) no pool ${poolName}:\n${second.errors.join("\n")}`);
+  }
+
+  throw new Error(`llm-router: todos os provedores falharam no pool ${poolName}:\n${first.errors.join("\n")}`);
 }
 
 /**
