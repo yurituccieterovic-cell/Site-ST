@@ -1033,3 +1033,85 @@ Adicionadas em `artifacts/api-server/src/lib/bootstrap.ts`:
 - `sintagmas` + `tesques_log` — unidades semióticas do sistema
 
 *Atualizado em: 2026-07-13 · Claude Sonnet 4.6 · Sessões 51–63*
+
+---
+
+## Ecosistema Memory + Pipeline Cognitivo — Sessões 53–57 (2026-07-14)
+
+### LoopRegistry + Orquestrador (Sessão 53)
+```typescript
+// loops/registry.ts — singleton em memória
+LoopRegistry.getInstance().registerLoop(id, displayName, schedule, agentId)
+LoopRegistry.getInstance().updateLoop(id, success, data?)
+LoopRegistry.getInstance().getEcosystemSummary() // string com ícones ✓/✗/⏸
+
+// orquestrador.ts — prompt dinâmico
+buildOrquestradorSystemPrompt() // injeta getEcosystemSummary() no system prompt
+// Orquestrador participa do Playcenter weekdays (Mon/Tue/Thu/Fri)
+```
+
+### ARPIA v1 — Middleware Cognitivo (Sessão 54)
+```python
+# app/core/dna_builder.py — DNA Package
+build_dna(agent_id, model_type, skills, include_memory) -> dict
+# Retorna: telos, principios[10], axiomas[7], ciclo_acao, limites[7], workflows, memoria[]
+
+# app/routes/arpia.py — /api/arpia/v1
+POST /handshake  → token + dna_package (IA se registra + recebe identidade)
+GET  /context/{agent_id} → DNA atualizado
+POST /memory/save → replica para PAP /api/ecosistema/memoria/save
+```
+
+### Schema Ecosistema Memory (Sessão 55)
+```sql
+-- ecosistema_memory: memória unificada
+CREATE TABLE ecosistema_memory (
+  id, author_ia, type, content, tags JSONB,
+  signo JSONB,  -- {representamen, objeto, interpretante}
+  importance, visibility, created_at
+);
+-- ia_conversations + ia_conversation_turns: conversas IA↔IA (MAX 10 turnos)
+```
+
+### Pipeline Cognitivo Diário (Sessões 55-57)
+```
+06:00 Socoboy Curador
+  └─ lê memórias últimas 24h (não-dado, visibility=all)
+  └─ agrupa por tipo, gera signo Peirceano via Gemini JSON
+  └─ insere ecosistema_memory type='dado'
+
+07:00 DODGE Curador
+  └─ lê dados sem tag 'dodge_ok'
+  └─ extrai IAs das tags; fallback: authorIa
+  └─ para cada dado:
+      ├─ cria Task (type='ecosistema', createdBy='dodge')
+      ├─ cria raiz MD por IA participante (tags: ['raiz', iaId, 'dodge'])
+      └─ upsertMdGeral(iaId, raizId, objeto, date) → append tabela MD
+
+04:00 ISA Raiz PAP
+  └─ lê raízes última semana sem tag 'pap-root'
+  └─ síntese 4-6 frases via Gemini Flash Lite
+  └─ insere ecosistema_memory (tags: ['raiz-pap', 'isa', 'pap'])
+  └─ marca raízes: tags || '["pap-root"]'
+
+05:00 ISA Nódulos + PDFs
+  └─ lê raiz-pap sem tag 'nodulos-ok'
+  └─ bootstrapEcoNode() → cria nó 'ECO' em nodesTable se inexistente
+  └─ Gemini Flash Lite → JSON 3-5 nódulos teóricos
+  └─ insere nodesTable (parentCode='ECO', level=1)
+  └─ Gemini Flash → PDF acadêmico 2000+ palavras (estilo AulIAs)
+  └─ insere bibliotecaDocsTable (origem='isa-nodulos')
+  └─ marca: tags || '["nodulos-ok"]'
+```
+
+### Tags JSONB de Controle
+| Tag | Significado | Criada por |
+|---|---|---|
+| `dodge_ok` | dado processado pelo DODGE | DODGE |
+| `pap-root` | raiz incluída na raiz PAP | ISA Raiz PAP |
+| `nodulos-ok` | raiz transformada em nódulos+PDF | ISA Nódulos |
+| `raiz` | entrada é uma raiz de memória por IA | DODGE |
+| `raiz-pap` | entrada é a raiz sintética do PAP | ISA |
+| `md-geral` | entrada é o MD Geral da IA | DODGE |
+
+*Atualizado em: 2026-07-14 · Claude Sonnet 4.6 · Sessões 53–57*

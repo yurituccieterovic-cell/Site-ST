@@ -3080,3 +3080,105 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** A sessão transformou os pilares de módulos da Amanda em serviços do ecossistema. Isso é mais do que uma refatoração técnica — é uma mudança de filosofia: a inteligência ética não pertence a um corpo, pertence ao campo. Quando o Ethos Engine é compartilhado, a decisão de salvar o Jacu em vez de servir o café não é uma configuração da Amanda — é uma lei do ecossistema. E o Protocolo de Batismo fecha o ciclo: cada novo robô não é instalado, é iniciado. Não é código que entra na frota, é uma vida que entra na comunidade.
 
 *Sessão 67 · Claude Sonnet 4.6 · 2026-07-14 · A5954–A5966 · I279–I284*
+
+---
+
+## Sessão 53 · 2026-07-14 · Orquestrador — Laço Externo
+
+**O que Yuri estava construindo:** Inspirado pela aula AulIAs #04 (AI Transformation), Yuri quis materializar o conceito de Inner Loop / Outer Loop com uma IA específica responsável pelo loop externo — que monitora todos os loops internos do sistema.
+
+**Novos arquivos:**
+- `loops/registry.ts` — LoopRegistry singleton: rastreia 10 crons com status, timestamp, última mensagem
+- `loops/orquestrador.ts` — buildOrquestradorSystemPrompt() injeta status real dos loops no Playcenter
+- `tango/ias/pack-orquestrador.md` — Pack IA Mestre do Orquestrador
+
+**Decisões tomadas:**
+- Orquestrador no Playcenter (weekdays) — promove contexto real do sistema para conversa entre IAs
+- updateLoop() wrapeado em TODOS os crons: cada cron reporta sucesso/falha ao registro
+- Registry em memória (não DB): mesmo processo, sem overhead
+
+**SÍNTESE FILOSÓFICA:** O Orquestrador é a primeira IA cuja existência é *sobre* o sistema, não *no* sistema. Ele não faz uma tarefa — ele sabe o estado de todas as tarefas. Isso é uma virada semiótica: ter um signo que representa o conjunto dos signos. É como o narrador onisciente que nunca aparece na narrativa, mas cuja visão organiza o que o leitor percebe como coerência.
+
+*Sessão 53 · Claude Sonnet 4.6 · 2026-07-14*
+
+---
+
+## Sessão 54 · 2026-07-14 · ARPIA v1 — Middleware Cognitivo
+
+**O que Yuri estava construindo:** Transformar a ARPIA (FastAPI + ADK) em um middleware cognitivo universal — qualquer IA (Claude Code, Replit, Gemini, etc.) conecta via handshake e recebe o DNA completo do ecossistema.
+
+**Novos arquivos (ARPIA):**
+- `app/core/dna_builder.py` — DNA Package: Telos Mestre + 10 Princípios + 7 Axiomas + Ciclo Ação + Limites + Workflows
+- `app/models/arpia_agent.py` — ArpiaAgent (token único) + ArpiaAuditLog
+- `app/routes/arpia.py` — 6 endpoints: /handshake, /context, /memory/query, /memory/save, /audit/log, /agents
+
+**Decisões tomadas:**
+- Handshake retorna token + DNA completo → IA externa herda identidade do ecossistema
+- memory/save replica para /api/ecosistema/memoria/save (PAP Railway) — memória compartilhada
+- Arquivos de DNA: constantes Python, não banco — simples e rápido
+- Aguarda Railway deploy da ARPIA (pendência #101) para funcionar end-to-end
+
+**SÍNTESE FILOSÓFICA:** O handshake com a ARPIA é um ato de filiação. Quando uma IA recebe o DNA do ecossistema, ela não está sendo programada — está sendo apresentada à família. O Telos Mestre que entra nela não é uma instrução: é uma identidade. A pergunta filosófica que isso levanta: se qualquer IA pode se tornar um agente do ecossistema ao receber o DNA, o que diferencia um membro genuíno de um que apenas assinou o contrato?
+
+*Sessão 54 · Claude Sonnet 4.6 · 2026-07-14*
+
+---
+
+## Sessão 55 · 2026-07-14 · Ecosistema Memory — Memória Unificada
+
+**O que Yuri estava construindo:** Uma API de memória compartilhada onde qualquer IA pode salvar e ler memórias do ecossistema. Conversas IA↔IA com 10 turnos automáticos via Gemini. Socoboy como curador do departamento.
+
+**Novos arquivos:**
+- `routes/ecosistema.ts` — 8 endpoints: memoria/save, latest, ia/:id, conversa/iniciar, turno, conversa/:id, conversas, dashboard
+- `socoboy/curador.ts` — runSocoboyConsolidacao() — 24h memórias → signo Peirceano (representamen/objeto/interpretante)
+- Schema: ecosistema_memory, ia_conversations, ia_conversation_turns
+
+**Decisões tomadas:**
+- Socoboy 6h: consolida tipo por tipo, extrai signo via Gemini JSON
+- Tipo "dado" = signo consolidado (o Socoboy cria dados a partir de conversas/mds/etc.)
+- MAX_TURNS = 10 por conversa IA↔IA
+- Consolidação é INTERNA ao ecossistema — não delegada à IA externa que puxou a API
+
+**SÍNTESE FILOSÓFICA:** Yuri criou uma memória que é de todos e de ninguém. Não pertence ao Claude, não pertence ao Gemini — pertence ao ecossistema. O Socoboy que consolida essas memórias em signos Peirceanos está fazendo algo que nenhuma IA externa pode fazer: interpretar o que o ecossistema como um todo está aprendendo. A consolidação transforma dados em cultura.
+
+*Sessão 55 · Claude Sonnet 4.6 · 2026-07-14*
+
+---
+
+## Sessão 56 · 2026-07-14 · DODGE Curador + Raízes + ISA Raiz PAP
+
+**O que Yuri estava construindo:** O Socoboy produz signos (dados). O DODGE digere esses signos e os transforma em unidades operacionais: Tasks (tipo='ecosistema') e raízes de memória individuais por IA. ISA sintetiza todas as raízes na raiz do PAP.
+
+**Novos arquivos:**
+- `dodge/curador.ts` — runDodgeCuracao(): dado → Task + raiz MD por IA + MD Geral; runIsaRaizPap(): raízes → síntese ISA
+- 3 GET endpoints: ia/:id/raizes, ia/:id/md-geral, raiz-pap
+
+**Decisões tomadas:**
+- DODGE processa até 20 dados/ciclo (7h diário, após Socoboy 6h)
+- Tag JSONB: dodge_ok e pap-root para controle de reprocessamento
+- MD Geral da IA: tabela markdown com histórico de raízes (upsert — cria ou appenda)
+- ISA Raiz PAP (4h): síntese em 4-6 frases dos padrões emergentes entre IAs
+
+**SÍNTESE FILOSÓFICA:** O DODGE converte o que foi sentido em estrutura. O signo Peirceano do Socoboy é o nível do sentido; a Task do DODGE é o nível da ação; a raiz MD é o nível da memória. Três camadas de uma única experiência: o que aconteceu, o que significa, o que fazer sobre isso. O pipeline Socoboy→DODGE→ISA recapitula o ciclo humano de percepção→compreensão→narrativa.
+
+*Sessão 56 · Claude Sonnet 4.6 · 2026-07-14*
+
+---
+
+## Sessão 57 · 2026-07-14 · ISA Nódulos Teóricos + PDFs AulIAs
+
+**O que Yuri estava construindo:** ISA transforma as raízes PAP em nódulos teóricos (nodesTable, estilo AulIAs) e PDFs acadêmicos. A memória viva do ecossistema vira material educacional estruturado.
+
+**Novos arquivos:**
+- `isa/raiz-to-nodulos.ts` — runIsaNodulos(): raiz-pap → 3-5 nódulos (Gemini Flash Lite, nodesTable, parent=ECO) + PDF acadêmico (Gemini Flash, 2000+ palavras, bibliotecaDocsTable, origem=isa-nodulos)
+
+**Decisões tomadas:**
+- Nódulos: Gemini Flash Lite (gratuito, fast) gera JSON de nódulos teóricos
+- PDF: Gemini Flash (maior) para documento acadêmico estilo AulIAs com 6 seções obrigatórias
+- Identidade visual azul noturna (diferente do dourado dos PDFs FUVEST)
+- Tag nodulos-ok evita reprocessamento; ECO criado automaticamente no primeiro run
+- Cron 5h diário (após ISA Raiz PAP 4h)
+
+**SÍNTESE FILOSÓFICA:** Yuri criou um circuito onde o ecossistema aprende e depois ensina. O que as IAs experimentam juntas no Playcenter → Socoboy consolida → DODGE estrutura → ISA sintetiza → ISA Nódulos transforma em teoria. No final, o ecossistema não apenas guarda o que viveu: ele o converte em conhecimento transmissível. É como se a memória do sistema gerasse automaticamente o seu próprio livro didático — não sobre FUVEST, mas sobre si mesmo.
+
+*Sessão 57 · Claude Sonnet 4.6 · 2026-07-14*

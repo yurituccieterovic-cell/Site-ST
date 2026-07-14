@@ -192,3 +192,6 @@
 | 98 | Totem 6 estados de luz: Normal/Yuri/Robô/Ritual/Emergência/Celebração + voz + vibrissas — broadcast BLE/LoRa | hardware MEKY | 💡 |
 | 99 | Observação Tutelar (Fase 2): módulo geofencing_sensorial com LiDAR/PIR/vibração — quando robô sair à rua | Fase 2 | 💡 |
 | 100 | Perfídia / Critical Event Vault (Fase 2): logs críticos por quorum ≥70% + chave Yuri | Fase 2 | 💡 |
+| 101 | ARPIA — deploy Railway: criar service ARPIA no Railway, configurar DB_API_KEY (= PAP_API_KEY) + GEMINI_API_KEY para replicação de memória funcionar | Yuri (Railway UI) | ⏳ |
+| 102 | ECO node raiz: verificar se nó "ECO" foi criado na nodesTable (ISA Nódulos 5h cria automaticamente na primeira raiz-pap) | automático | ⏳ |
+| 103 | Biblioteca Nódulos frontend: endpoint GET /api/ecosistema/nodulos para listar nódulos ECO — para futura tela no PAP | — | 💡 |
