@@ -12,6 +12,7 @@ import { runSocoboyLLMSearch } from "./socoboy";
 import { logger } from "../lib/logger";
 import { registerLoop, updateLoop } from "../loops/registry";
 import { runSocoboyConsolidacao } from "../socoboy/curador";
+import { runDodgeCuracao, runIsaRaizPap } from "../dodge/curador";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 export function startIsaCron(): void {
@@ -27,6 +28,8 @@ export function startIsaCron(): void {
   registerLoop("isa_geradora",  "ISA Biblioteca Geradora",  "8/14/20h", "isa");
   registerLoop("socoboy_llms",       "Socoboy LLMs",             "8h+20h",  "socoboy");
   registerLoop("socoboy_curador",    "Socoboy Curador",          "6h:00",   "socoboy");
+  registerLoop("dodge_curador",      "DODGE Curador",            "7h:00",   "dodge");
+  registerLoop("isa_raiz_pap",       "ISA Raiz PAP",             "4h:00",   "isa");
 
   // Ciclo ISA principal: análise + tasks — todo hora cheia
   cron.schedule("0 * * * *", async () => {
@@ -174,18 +177,44 @@ export function startIsaCron(): void {
     }
   });
 
-  // Socoboy Curador: consolida memórias do ecosistema diariamente às 6h
+  // Socoboy Curador: consolida memórias em signos (dados) — 6h diário
   cron.schedule("0 6 * * *", async () => {
     try {
-      logger.info("Socoboy Curador: iniciando consolidação diária");
+      logger.info("Socoboy Curador: iniciando consolidação de signos");
       const result = await runSocoboyConsolidacao();
-      logger.info(result, "Socoboy Curador: consolidação concluída");
+      logger.info(result, "Socoboy Curador: concluído");
       updateLoop("socoboy_curador", true, `dados:${result.dados_gerados} mems:${result.memorias_lidas}`);
     } catch (err) {
-      logger.error({ err }, "Socoboy Curador: erro na consolidação");
+      logger.error({ err }, "Socoboy Curador: erro");
       updateLoop("socoboy_curador", false);
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · bibliotecário 4h:30 6x/dia · Bluesky 2h:15 · MEKY sonho 2h · ISA sonho 3h · engajamento 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · Orquestrador registrado)");
+  // DODGE Curador: pega signos → Tasks + Raízes de memória por IA — 7h diário (após Socoboy)
+  cron.schedule("0 7 * * *", async () => {
+    try {
+      logger.info("DODGE Curador: iniciando pipeline signos → Tasks + Raízes");
+      const result = await runDodgeCuracao();
+      logger.info(result, "DODGE Curador: concluído");
+      updateLoop("dodge_curador", true, `tasks:${result.tasks_criadas} raizes:${result.raizes_criadas} ias:[${result.ias_atualizadas.join(",")}]`);
+    } catch (err) {
+      logger.error({ err }, "DODGE Curador: erro");
+      updateLoop("dodge_curador", false);
+    }
+  });
+
+  // ISA Raiz PAP: sintetiza raízes de todas as IAs na raiz do PAP — 4h diário
+  cron.schedule("0 4 * * *", async () => {
+    try {
+      logger.info("ISA Raiz PAP: iniciando síntese das raízes do ecossistema");
+      const result = await runIsaRaizPap();
+      logger.info(result, "ISA Raiz PAP: concluído");
+      updateLoop("isa_raiz_pap", true, `raizes_lidas:${result.raizes_lidas}`);
+    } catch (err) {
+      logger.error({ err }, "ISA Raiz PAP: erro");
+      updateLoop("isa_raiz_pap", false);
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · Orquestrador :50)");
 }

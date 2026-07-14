@@ -316,6 +316,64 @@ router.get("/ecosistema/conversas", async (req, res): Promise<void> => {
   res.json({ ok: true, total: rows.length, conversations: rows });
 });
 
+// ── GET /api/ecosistema/ia/:agentId/raizes ───────────────────────────────────
+
+router.get("/ecosistema/ia/:agentId/raizes", async (req, res): Promise<void> => {
+  const { agentId } = req.params;
+  const limit = Math.min(50, Number(req.query["limit"] ?? 20));
+
+  const raizes = await db
+    .select()
+    .from(ecosistemaMemory)
+    .where(
+      and(
+        eq(ecosistemaMemory.type, "md"),
+        sql`${ecosistemaMemory.tags} @> ${JSON.stringify(["raiz", agentId!])}::jsonb`,
+      )
+    )
+    .orderBy(desc(ecosistemaMemory.createdAt))
+    .limit(limit);
+
+  res.json({ ok: true, agent_id: agentId, total: raizes.length, raizes });
+});
+
+// ── GET /api/ecosistema/ia/:agentId/md-geral ─────────────────────────────────
+
+router.get("/ecosistema/ia/:agentId/md-geral", async (req, res): Promise<void> => {
+  const { agentId } = req.params;
+
+  const [mdGeral] = await db
+    .select()
+    .from(ecosistemaMemory)
+    .where(
+      and(
+        eq(ecosistemaMemory.authorIa, agentId!),
+        sql`${ecosistemaMemory.tags} @> '["md-geral"]'::jsonb`,
+      )
+    )
+    .limit(1);
+
+  if (!mdGeral) {
+    res.json({ ok: true, agent_id: agentId, md_geral: null, message: "Nenhuma raiz ainda — DODGE ainda não processou dados para esta IA." });
+    return;
+  }
+
+  res.json({ ok: true, agent_id: agentId, md_geral: mdGeral });
+});
+
+// ── GET /api/ecosistema/raiz-pap ─────────────────────────────────────────────
+
+router.get("/ecosistema/raiz-pap", async (req, res): Promise<void> => {
+  const [raizPap] = await db
+    .select()
+    .from(ecosistemaMemory)
+    .where(sql`${ecosistemaMemory.tags} @> '["raiz-pap"]'::jsonb`)
+    .orderBy(desc(ecosistemaMemory.createdAt))
+    .limit(1);
+
+  res.json({ ok: true, raiz_pap: raizPap ?? null });
+});
+
 // ── GET /api/socoboy/dashboard ───────────────────────────────────────────────
 
 router.get("/socoboy/dashboard", async (req, res): Promise<void> => {

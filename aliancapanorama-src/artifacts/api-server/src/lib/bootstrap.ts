@@ -507,10 +507,11 @@ export async function ensureMekyTables(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_ia_turns_conv ON ia_conversation_turns(conversation_id);
   `);
 
-  // Seed Socoboy como curador da ecosistema_memory
+  // Seed Socoboy + DODGE como curadores da ecosistema_memory
   await db.execute(sql`
     INSERT INTO assembly_agents (id, display_name, role) VALUES
-      ('socoboy', 'Socoboy — Socó-boi Noturno', 'Curador da memória unificada do ecossistema. Consolida conversas, MDs, workflows e signos em dados estruturados. Voz ecológica e cirúrgica.')
+      ('socoboy', 'Socoboy — Socó-boi Noturno', 'Curador de signos: consolida conversas em dados com signo Peirceano {representamen, objeto, interpretante}. Voz ecológica e cirúrgica.'),
+      ('dodge',   'DODGE — DOD Supervisor',      'Curador de raízes: transforma signos em Tasks (unidade do sistema) + raízes de memória MD por IA. Atualiza MD Geral de cada IA.')
     ON CONFLICT (id) DO NOTHING;
   `);
 
