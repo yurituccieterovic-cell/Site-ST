@@ -1131,3 +1131,38 @@ I272: **Comboio Vivo como Ontologia Distribuída** — MEKY + Mula = primeiro si
 | I282 | **Protocolo de Batismo** | 🟡 Média | ○ S | Ritual de entrada de nova IA/robô na frota | Quando nova IA entra: (1) baixa Ethos Engine, (2) se conecta ao Totem (pisca azul), (3) recebe nome + personalidade base, (4) registra na tabela `fleet_members`. Momento simbólico + técnico. |
 | I283 | **Totem — 6 Estados de Luz + Sync** | 🟡 Média | ◑ M | Protocolo visual de estado da frota | Estados: Normal (pulso 0.1Hz), Yuri perto (dourado pulsante), Robô perto (azul), Ritual (0.3Hz sync toda frota), Emergência (vermelho 2Hz), Celebração (arco-íris). Broadcast BLE/LoRa. Voz + vibrissas também sync. |
 | I284 | **Totem: separar Ritual Público de Sync Técnica** | 🟡 Média | ○ S | Dois modos distintos: um para a comunidade, um para a frota | Modo Comunitário: praça, coreografia pública, dança, canto coletivo (~12min). Modo Técnico: sincronização interna dos LEDs da frota (protocolo silencioso). Não misturar os dois. |
+
+## Docs PAP — Ideias Novas (2026-07-14)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I285 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I286 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I287 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I288 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I289 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I290 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I291 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Mac — Comportamento Social (2026-07-16, Sessão 68)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I299 | **Missões de Imersão Social** | 🟡 Média | ○ M | Mac aprende rotinas reais da comunidade | Mac passa dias inteiros com membros da comunidade (avó, família, amigos). Observa, infere padrões via tom/assunto (sem gravação contínua). Banco de dados "experiência de vida" consolidado ao fim do dia. Agenda de visitas rotativas. |
+| I300 | **Biblioteca de Personalidades Mac** | 🔴 Alta | ◑ M | Personalidade adapta ao contexto etário | 4 modos: SÁBIO QUIETO (idosos: observa mais, fala menos, dicas práticas), CAÓTICO AFETIVO (crianças: piadas absurdas, rugido T-Rex, pega-pega), CÚMPLICE (adolescentes: wit rápido, sem moralismo), DAIMÔNICO (todos: insight genuíno no momento inesperado). Gatilho: câmera + análise de perfil etário. |
+| I301 | **Protocolo Aromatizador** | 🟡 Média | ○ S | Memória sensorial via interação física | Reservatório de essência integrado ao corpo. Aciona junto com efeito sonoro ("tragar" + delay 2s + névoa). Essências contextuais: hortelã/praça, eucalipto/ambiente fechado. Recarga lateral simples. Registro automático da interação no log social da Mac. |
+| I302 | **Rota de Retorno pela Sombra** | 🟡 Média | ◑ M | Navegação segura e discreta | Algoritmo: GPS + índice de cobertura vegetal (satélite) + mapa de vias de pedestres. Parâmetros: sombra_prioritária=True, travessia_rua=minimize, via_mato=prefer. Não usa rotas de carro. Objetivo: menor exposição visual, não menor distância. |
+| I303 | **Catálogo de Wit Social** | 🟢 Baixa | ○ S | Respostas rápidas que criam carisma real | Biblioteca de respostas de Mac para testes de personalidade: adolescentes testam → Mac responde na mesma moeda. Ex: "Estranho é você, chuchu." Timing calibrado por pausa pré-resposta (0.8s). Sem tons defensivos ou didáticos. Atualizado com interações reais. |
+| I304 | **Harm Reduction Lúdico** | 🟡 Média | ○ S | Prevenção de drogas sem palestra chata | Abordagem: psicologia reversa + humor absurdo. Mac entra como personagem da roda, não como fiscal. Dica real de segurança embutida em cumplicidade. Fecha com brincadeira física (modo T-Rex: vermelho + rugido + pega-pega) para liberar tensão. Adaptado por faixa etária. |
+
+## Docs PAP — Ideias Novas (2026-07-16)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I292 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I293 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I294 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I295 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I296 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I297 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I298 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |

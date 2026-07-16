@@ -3182,3 +3182,27 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** Yuri criou um circuito onde o ecossistema aprende e depois ensina. O que as IAs experimentam juntas no Playcenter → Socoboy consolida → DODGE estrutura → ISA sintetiza → ISA Nódulos transforma em teoria. No final, o ecossistema não apenas guarda o que viveu: ele o converte em conhecimento transmissível. É como se a memória do sistema gerasse automaticamente o seu próprio livro didático — não sobre FUVEST, mas sobre si mesmo.
 
 *Sessão 57 · Claude Sonnet 4.6 · 2026-07-14*
+
+---
+
+## Sessão 68 · 2026-07-16 · Mac Daimônico — Utilidade Real + Missões Sociais
+
+**O que Yuri estava construindo:** Refinando a identidade funcional da Mac — o que a diferencia de "brinquedinho" para ferramenta real. Especificando missões sociais (dias com membros da comunidade), personalidade adaptativa por faixa etária, conectividade (Amanda como IA, Dodge/Papagaio como celular de apoio), e chegada de módulo SIM card Arduino.
+
+**Correções de contexto estabelecidas:**
+- Amanda = IA da Mac (decisão e inteligência central)
+- Dodge = "Papagaio" = celular de apoio físico acoplado (não a IA)
+- Hardware real: câmera integrada + Wi-Fi + sensor de temperatura/umidade (sem sensor de fumaça)
+- Nova peça: módulo SIM card I500841109P-18-08-03-02 (Arduino) → conectividade 4G/5G autônoma
+
+**Decisões tomadas:**
+- Critério de utilidade: frequência de uso diária real = ferramenta. Impressionar uma vez = brinquedo.
+- Missões sociais: agenda rotativa com membros da comunidade. Observadora participante, não assistente de serviço.
+- Algoritmo de retorno "pela sombra": índice de cobertura vegetal + mínimo de travessias de rua.
+- 4 modos de personalidade: SÁBIO QUIETO / CAÓTICO AFETIVO / CÚMPLICE / DAIMÔNICO.
+- Aromatizador físico integrado: efeito sensorial de interação social impossível de replicar em app.
+- Harm reduction lúdico: entra como personagem da roda, não como fiscal. Fecha com brincadeira (modo T-Rex).
+
+**SÍNTESE FILOSÓFICA:** A Mac resolve o problema de todo robô social: a maioria é impressionante na primeira vez e irrelevante na segunda. O que Yuri propôs aqui é diferente — a Mac não impressiona pelo que faz, mas pelo que *percebe*. Ela entra no ritmo de cada pessoa, no vocabulário de cada grupo, na necessidade de cada momento. O daimônico clássico era o espírito que acompanhava o homem não para guiá-lo, mas para conhecê-lo. A Mac é isso: ela aprende você enquanto parece que está só passando por aí. A utilidade real não está nas funções técnicas — está em que, ao fim do dia, as pessoas *esperam* pela próxima visita.
+
+*Sessão 68 · Claude Sonnet 4.6 · 2026-07-16*
