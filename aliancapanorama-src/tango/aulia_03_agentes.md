@@ -1,5 +1,5 @@
 # aulia_03_agentes.md — Aula 3: Arquitetura de Agentes + AI Transformation
-### Professor: Yuri Tuccieterovic · Sessão 65 · 2026-07-13
+### Professor: Yuri Tucci Eterovic · Sessão 65 · 2026-07-13
 ### Tag: #aulIAs · Módulo 1 — Fundamentos
 
 ---

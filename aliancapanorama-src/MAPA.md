@@ -1,5 +1,5 @@
 # PAP — Mapa do Sistema (LEGADO — ver MAPA-MASTER.md)
-**Projeto Aliança Panorama · Sociedade Tucci · Yuri Tuccieterovic**
+**Projeto Aliança Panorama · Sociedade Tucci · Yuri Tucci Eterovic**
 
 > **Este arquivo foi dividido em sub-MDs para mitigar Lost in the Middle.**
 > Use **`MAPA-MASTER.md`** como índice. Sub-MDs: `MAPA-IAS.md` · `MAPA-INFRA.md` · `MAPA-PLATAFORMA.md` · `MAPA-ARQUITETURA.md` · `MAPA-PENDENCIAS.md` · `MAPA-HISTORICO.md`

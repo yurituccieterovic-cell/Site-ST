@@ -96,7 +96,7 @@ Recebe telemetria (PacaState) e devolve comandos (AmandaCommand).
 ```
 /CEU
   /services
-    /ethos_engine      ← Matriz Ética (compartilhado: MEKY, ISA, DOD, PAP)
+    /ethos_engine      ← Matriz Ética (compartilhado: MEKY, ISA, Dodge, PAP)
     /nebula_manager    ← Saúde da frota (self-report de todos)
     /event_vault       ← Perfídia / logs críticos (Fase 2)
     /dialeto           ← Biblioteca de estilos de comunicação

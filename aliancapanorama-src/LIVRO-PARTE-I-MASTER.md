@@ -1,6 +1,6 @@
 # LIVRO-PARTE-I-MASTER.md
 **A Engrenagem Semiotica da Fiacao Enterrada -- Parte I: A Fiacao**
-*Yuri Tuccieterovic . Assembleia de IAs . Sociedade Tucci . 2026*
+*Yuri Tucci Eterovic . Assembleia de IAs . Sociedade Tucci . 2026*
 
 > Formato: < Gemini esquerda | [ IMAGEM ] centro | Yuri > direita
 > PDF: `A-Engrenagem-Semiotica-Parte-I.pdf`

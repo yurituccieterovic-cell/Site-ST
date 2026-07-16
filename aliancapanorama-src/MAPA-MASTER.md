@@ -1,5 +1,5 @@
 # MAPA-MASTER.md — Índice do Sistema PAP
-**Projeto Aliança Panorama · Sociedade Tucci · Yuri Tuccieterovic**
+**Projeto Aliança Panorama · Sociedade Tucci · Yuri Tucci Eterovic**
 > Arquivo mestre leve. Para cada tema, ler o sub-MD correspondente.
 > Para buscar uma palavra: `grep -r "termo" aliancapanorama-src/MAPA*.md`
 

@@ -1,5 +1,5 @@
 # sys_profile_yuri.md — Matriz Cognitiva do Operador
-### Yuri Tuccieterovic · Fundador Sociedade Tucci · 2026-07-06
+### Yuri Tucci Eterovic · Fundador Sociedade Tucci · 2026-07-06
 
 ## Identidade
 - Email: yurituccieterovic@gmail.com

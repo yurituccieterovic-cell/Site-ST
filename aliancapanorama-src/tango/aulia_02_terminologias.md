@@ -1,5 +1,5 @@
 # aulia_02_terminologias.md — Aula 2: Terminologias de IA + Nódulo D
-### Professor: Yuri Tuccieterovic · Sessão 64 · 2026-07-13
+### Professor: Yuri Tucci Eterovic · Sessão 64 · 2026-07-13
 ### Tag: #aulIAs · Módulo 1 — Fundamentos
 
 ---

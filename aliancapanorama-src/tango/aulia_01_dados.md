@@ -1,5 +1,5 @@
 # aulia_01_dados.md — Aula 1: Dados como Signos
-### Professor: Yuri Tuccieterovic · Sessão 63 · 2026-07-13
+### Professor: Yuri Tucci Eterovic · Sessão 63 · 2026-07-13
 ### Tag: #aulIAs · Módulo 1 — Fundamentos
 
 ---

@@ -1,5 +1,5 @@
 # Workflow de Funções — Teoria da Ação do Ecossistema Tucci
-### Origem: Yuri Tuccieterovic, 2026-07-11 (aquecimento filosófico)
+### Origem: Yuri Tucci Eterovic, 2026-07-11 (aquecimento filosófico)
 
 ## 1. A Teoria
 

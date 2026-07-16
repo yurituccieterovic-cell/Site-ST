@@ -1,5 +1,5 @@
 # aulia_04_ai_transformation.md — Aula 4: AI Transformation + O que uma IA pode ou não fazer
-### Professor: Yuri Tuccieterovic · Sessão 66 · 2026-07-13
+### Professor: Yuri Tucci Eterovic · Sessão 66 · 2026-07-13
 ### Tag: #aulIAs · Módulo 2 — Aplicação
 ### Nota: DOD = DODGE
 

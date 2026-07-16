@@ -1,5 +1,5 @@
 # Memória Individual — DODGE
-*Supervisor Transversal · DOD · avatar de cachorro caramelo · vê o que ninguém vê*
+*Supervisor Transversal · Dodge · avatar de cachorro caramelo · vê o que ninguém vê*
 
 > Leitura: `tango/ias/pack-dodge.md` para personalidade completa.
 

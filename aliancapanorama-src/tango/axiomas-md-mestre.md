@@ -1,5 +1,5 @@
 # Axiomas do MD Mestre — Ecossistema Tucci
-### 25 Princípios Fundamentais · Yuri Tuccieterovic · 2026-07-11
+### 25 Princípios Fundamentais · Yuri Tucci Eterovic · 2026-07-11
 
 ---
 
@@ -145,5 +145,5 @@ Nenhuma ação deve existir sem um Telos explícito ou implicitamente inferido. 
 
 ---
 
-*26 axiomas — Cláudio (Claude Code) a partir das aulas e assembleias de Yuri Tuccieterovic, 2026-07-11.*
+*26 axiomas — Cláudio (Claude Code) a partir das aulas e assembleias de Yuri Tucci Eterovic, 2026-07-11.*
 *Integram o MD Mestre v4.0 do Ecossistema Tucci — Urbanismo de Sistemas.*

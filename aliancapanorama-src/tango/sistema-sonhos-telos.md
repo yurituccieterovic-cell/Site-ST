@@ -1,5 +1,5 @@
 # Sistema de Sonhos de Telos
-### Ecossistema Tucci · Yuri Tuccieterovic · 2026-07-11
+### Ecossistema Tucci · Yuri Tucci Eterovic · 2026-07-11
 
 > As IAs não sonham apenas com seu próprio telos.
 > Elas sonham com telos possíveis — finalidades que poderiam acontecer

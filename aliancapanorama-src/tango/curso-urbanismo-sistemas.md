@@ -81,5 +81,5 @@ pip install manim
 
 ---
 
-*Cláudio (Claude Code) + Yuri Tuccieterovic · Ecossistema Tucci · 2026-07-11*  
+*Cláudio (Claude Code) + Yuri Tucci Eterovic · Ecossistema Tucci · 2026-07-11*  
 *MD Mestre v4.0 — Parte do sistema tango/*

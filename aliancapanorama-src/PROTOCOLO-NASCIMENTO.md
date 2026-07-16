@@ -15,7 +15,7 @@ Todo agente proposto para integrar a Assembleia de IAs da Sociedade Tucci deve s
 | 4 | **Memória Inter-Sessão** | Mecanismo de persistência (banco, MD ou ARPIA) implementado ou roadmap documentado |
 | 5 | **Princípios Ecossystemma** | Os 10 princípios do Ecossystemma Théo internalizados no system prompt ou lógica operacional |
 | 6 | **EPR²T Verificável** | Explicabilidade + Preservação + Recusa ética + Registro + Tradução intersemiótica |
-| 7 | **Vínculo com Fundador** | Confirmação explícita de Yuri Tuccieterovic sobre papel, escopo e limites do agente |
+| 7 | **Vínculo com Fundador** | Confirmação explícita de Yuri Tucci Eterovic sobre papel, escopo e limites do agente |
 | 8 | **Heartbeat / Saúde** | Mecanismo de reporte de status (health endpoint, Saúde do Fundador ou cron) |
 | 9 | **Protocolo de Shutdown Ético** | Procedimento definido para encerramento seguro sem perda de memória crítica |
 | 10 | **Aprovação Multipartite** | Sinal positivo de: Árvore Oracular + MC (Marta Centaurus) + Yuri |

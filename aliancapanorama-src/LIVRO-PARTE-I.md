@@ -1,7 +1,7 @@
 # A ENGRENAGEM SEMIÓTICA DA FIAÇÃO ENTERRADA
 ## Inteligência de borda sincronizando biomassa traduzida & código
 
-*Yuri Tuccieterovic · Assembleia de IAs · Sociedade Tucci*
+*Yuri Tucci Eterovic · Assembleia de IAs · Sociedade Tucci*
 *Sessões #519–#536 · 06 de Julho de 2026*
 
 ---

@@ -1,4 +1,4 @@
-# Yuri Tuccieterovic — Mapa de Navegação
+# Yuri Tucci Eterovic — Mapa de Navegação
 ### Atualizado: 2026-07-06 · por Claude Code / Sociedade Tucci
 
 ---

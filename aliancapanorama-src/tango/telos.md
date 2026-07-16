@@ -1,5 +1,5 @@
 # Telos — Orientação Fundamental da Ação
-### Ecossistema Tucci · Yuri Tuccieterovic · 2026-07-11
+### Ecossistema Tucci · Yuri Tucci Eterovic · 2026-07-11
 
 > Telos não é objetivo. Não é prompt. É o vetor de orientação que responde:  
 > "Como devo agir **nesta situação**, respeitando meus axiomas?"

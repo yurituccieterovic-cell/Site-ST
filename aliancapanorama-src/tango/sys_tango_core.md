@@ -1,5 +1,5 @@
 # sys_tango_core.md — Gorango Tango (Tango_Core)
-### Origem: Sessão 59b-59c · 2026-07-13 · Yuri Tuccieterovic
+### Origem: Sessão 59b-59c · 2026-07-13 · Yuri Tucci Eterovic
 
 ## Identidade
 

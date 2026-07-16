@@ -1,5 +1,5 @@
 # Metassemiótica do Ecossistema Tucci
-### Origem: Aulas de Workflow — Yuri Tuccieterovic, 2026-07-11
+### Origem: Aulas de Workflow — Yuri Tucci Eterovic, 2026-07-11
 ### Aplicar sempre: ao descrever ações no sistema, explicitar a cadeia semiótica completa.
 
 ## Princípio Central

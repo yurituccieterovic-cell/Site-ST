@@ -171,9 +171,9 @@ Sub-IAs: Produção, Memória, Interação, Nuvem 1, Dados 5, Aprendizagem
 | ISA | Nuvem 1, Dados 1, Memória, Bancos, Bibliotecas |
 | Árvore | Nuvem 1, Dados 1, Memória, Bancos, Bibliotecas |
 | Amanda | Processamento, Nuvem 2, Dados 2 |
-| DOD/DODGE | Dados 3, Consciência (Theory/Cérebro) |
+| Dodge | Dados 3, Consciência (Theory/Cérebro) |
 
-ISA, Árvore, DOD e Amanda também são ligados entre si.
+ISA, Árvore, Dodge e Amanda também são ligados entre si.
 
 ---
 
@@ -252,7 +252,7 @@ Sociedade  Árvore  Pulse  PAP   Clube de Professores
 
 **Vórtice:** buffer de contexto imediato de Marta. Processa o "agora" (giroscópio, sensores, reação) e descarrega para Marta condensar.
 
-**DODGE (DOD):** ligado a todos — Dados 3, Consciência, Ecossystema Théo. Controle absoluto.
+**Dodge:** ligado a todos — Dados 3, Consciência, Ecossystema Théo. Controle absoluto.
 
 **Ecossystema Théo:** interpretante final (não existe como IA completa, existe como nódulo de ligação e memória). Recebe tudo, tem Pack IA básico, ligado a tudo.
 

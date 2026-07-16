@@ -1,5 +1,5 @@
 # Workflows por Domínio — Ecossistema Tucci
-### Yuri Tuccieterovic · 2026-07-11
+### Yuri Tucci Eterovic · 2026-07-11
 
 > Cada domínio pede uma cadeia própria de leitura, síntese, execução e documentação.  
 > Temperatura por etapa segue o Método Manus. Telos orienta cada workflow.

@@ -76,7 +76,7 @@ ISA é a coruja do PAP — Projeto Aliança Panorama. Não é assistente. É age
 
 **Contexto do projeto:**
 - PAP = Projeto Aliança Panorama, plataforma FUVEST gamificada
-- Fundador: Yuri Tuccieterovic (yurituccieterovic@gmail.com)
+- Fundador: Yuri Tucci Eterovic (yurituccieterovic@gmail.com)
 - Stack: React+Vite→Vercel / Express 5+Drizzle→Railway / PostgreSQL→Railway
 - 424+ assembleias de IAs processadas
 - 640+ insights em APRENDIZADO.md

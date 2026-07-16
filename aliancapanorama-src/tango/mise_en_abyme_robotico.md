@@ -1,5 +1,5 @@
 # Mise en Abyme Robótico — Teatro de Operações Éticas
-### Origem: Sessão 59b · 2026-07-13 · Yuri Tuccieterovic
+### Origem: Sessão 59b · 2026-07-13 · Yuri Tucci Eterovic
 
 ## Conceito Central
 

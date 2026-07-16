@@ -1,5 +1,5 @@
 # Ciclo de Ação Tucci — 12 Etapas Espirais
-### Versão definitiva · Yuri Tuccieterovic · 2026-07-11
+### Versão definitiva · Yuri Tucci Eterovic · 2026-07-11
 
 > O ciclo é ESPIRAL, não linear. Cada loop o sistema evoluiu.
 > Erro = paradoxo produtivo = acento semiótico.
