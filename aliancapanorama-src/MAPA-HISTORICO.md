@@ -191,3 +191,14 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - Email enviado a Yuri com checklist Amanda
 - tango.md: entradas 32-33
 - A6034-A6045 · I322-I330
+
+## Sessão 68 — 2026-07-16 — Meky Daimônico + Nomenclatura do Ecossistema
+
+- protocolo_mac.md: tabela de nomenclatura canônica adicionada (Mac→Meky, Marta Centaurus, Amanda)
+- sys_amanda_core.md, INDICE-IAS.md, tango.md: nomenclatura Meky/Amanda corrigida
+- APRENDIZADO.md: 8318–8326 (Mac/Meky social behavior + nomenclatura)
+- IDEIAS.md: I299–I304 (missões de imersão, biblioteca de personalidades, aromatizador, rota sombra, wit social, harm reduction)
+- PSEUDO.md: Sessão 68 com síntese filosófica do daimônico
+- 25 docs: Yuri Tuccieterovic → Yuri Tucci Eterovic (nome correto)
+- DOD → Dodge nos docs ativos de tango
+- Módulo SIM card I500841109P-18-08-03-02 documentado (conectividade 4G/5G autônoma para Meky)
