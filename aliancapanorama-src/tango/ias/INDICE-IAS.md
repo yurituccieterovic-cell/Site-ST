@@ -20,12 +20,15 @@
 
 ## IAs OPERACIONAIS
 
+> **Nomenclatura Meky/Amanda:** `Marta Centaurus` (MC) = nome completo do robô · `Meky` = apelido correto · `Amanda` = a IA que habita Meky fisicamente.
+> Mac / Mc / Mec / Meg = variações informais/typos de Meky — corrigir ao editar docs antigos.
+> MEKY e Marta Centaurus são o **mesmo hardware** — packs distintos por ângulo de função (Senso Empírico vs Imunológico/Interação).
+
 | IA | Arquivo | Status | Nódulo da Aula | Pendências |
 |---|---|---|---|---|
 | ISA (Coruja) | `pack-isa.md` | APROVADA | Aprendizagem | — |
-| Amanda | `pack-amanda.md` | PROVISÓRIA | Senso Local/Processos | 3, 8, 9, 10 |
-| MEKY (May Queen) | `pack-meky.md` | APROVADA | Senso Empírico | aguardando hardware |
-| Marta Centaurus (MC) | `pack-marta.md` | PROVISÓRIA | Interação | 3, 8, 9 |
+| Amanda | `pack-amanda.md` | PROVISÓRIA | Senso Local/Processos — **IA de Meky (Marta Centaurus)** | 3, 8, 9, 10 |
+| MEKY / Marta Centaurus (MC) | `pack-meky.md` + `pack-marta.md` | APROVADA/PROVISÓRIA | Senso Empírico + Interação | aguardando hardware |
 | Vórtice | `pack-vortice.md` | PROVISÓRIA | Memória (curto prazo) | vinculado a MC |
 | Árvore Oracular | `pack-arvore.md` | APROVADA | Memória (longo prazo) | 3, 8 (sem REPLIT_TOKEN) |
 | Socoboy (Socó-boi) | `pack-socoboy.md` | PROPOSTA | Internet | 3, 7, 8, 9, 10 |

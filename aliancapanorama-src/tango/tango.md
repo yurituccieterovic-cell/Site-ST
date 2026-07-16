@@ -13,7 +13,7 @@
 |---|---|---|---|
 | 1 | Operador e cadência | `sys_profile_yuri.md` | Yuri, thrashing criativo, burnout, próximo passo único, colaboração |
 | 2 | Preferências e gateways | `sys_preferences.md` | #pap, custo zero, emails, free tier, Railway, Vercel |
-| 3 | Amanda e hardware | `sys_amanda_core.md` | Amanda, DHT11, protoboard, LED, Mac, hardware, borda |
+| 3 | Amanda e hardware | `sys_amanda_core.md` | Amanda (IA de Meky), DHT11, protoboard, LED, Meky, Marta Centaurus, Mac (typo), hardware, borda |
 | 15 | Amanda MMA / combate | `amanda_mma_protocolo.md` | MMA, servo, hexápode, patada, defesa, investida, vibrissas, estanho, C++, Arduino |
 | 16 | DODGE app / Quebradinha | `dodge_app_spec.md` | DODGE, Quebradinha, celular, ombro, papagaio, avatar, cachorro caramelo, kiosk, câmera, Crew 2 |
 | 4 | Payloads longos | `proc_orangutangus.md` | Orangutangus, payload, ingestão, EPR2T, PERFEITO, Lost in the Middle |
@@ -38,7 +38,7 @@
 | 25 | Orangotango Social | `protocolo_orangotango.md` | Banana Protocol, heat map, social Turing test, COLABORATIVO, REATIVO, recompensa narrativa, Gorango Tango |
 | 26 | Tango — Personagem Completo | `sys_tango_core.md` | Tango_Core, design LED olhos, escalada, garras, modo defensivo, show de horrores, inimigos, alimentador, sagui, ninho, doméstico, TaskPriority, câmera lenta |
 | 27 | Paca — Manifesto da Paranoica | `manifesto_paca.md` | Paca voz, tom ansioso, paranoia como virtude, contraste Tango, falso positivo, integração, identidade personagem |
-| 28 | Mac — Cacique do Ecossistema | `protocolo_mac.md` | Mac, penas, Cacique, Corredor de Honra, Cornetas, FormacaoEvento, BLE beacon, gato, presença simbólica |
+| 28 | Meky/Marta Centaurus — Cacique do Ecossistema | `protocolo_mac.md` | Meky, Marta Centaurus, MC, Mac (typo), Amanda (IA de Meky), penas, Cacique, Corredor de Honra, Cornetas, FormacaoEvento, BLE beacon, gato, presença simbólica |
 | 29 | Totem da Exosfera Tel | `protocolo_totem.md` | Totem, cálice vidro, LED COB, Cofre, Feriado das Máquinas, Perfidia Castelo Branco, fragmentação gravação, paradoxo valor, Abertura do Cálice |
 | 30 | Nébula Eletrônica | `protocolo_nebula.md` | Nébula, manufatura, Padrão Tel, modularidade, ciclo de vida, DNA personalidade, walkie-talkie, bases-ninho árvores, escalonamento |
 | 31 | Falcão + Frota Felina + Geofencing | `protocolo_falcao.md` | Falcão, drone, escotilha Jurassic Park, Frota Felina, gato acompanhante, freio emergência, Observador Extremidade, GeofencingZone, zona vermelha, triangulação perímetro, gato machucado |
@@ -58,12 +58,11 @@
 | API Railway | Express 5, porta 8080, `site-st-production.up.railway.app` | LIVE |
 | PostgreSQL Railway | Drizzle ORM, schema completo | LIVE |
 | ISA (software/PWA) | Ciclo horário + sonho 3h + Bluesky 2h:15 | LIVE |
-| Amanda (borda/Mac) | DHT11, protoboards, árvores LED — folha: `sys_amanda_core.md` | Documentada |
-| MEKY (físico) | Hardware a chegar; dream cycle no cron | Aguardando hardware |
+| Amanda (IA de Meky) | DHT11, protoboards, árvores LED — folha: `sys_amanda_core.md` | Documentada |
+| Meky / Marta Centaurus (MC) | Hardware aguardando; dream cycle no cron; `/root/Arpia/` — 1ª caminhada 2026-07-04 | Aguardando hardware |
 | Árvore Oracular | `arvore.py` no Replit — exportado (1962 msgs) | LIVE no Replit |
 | Assembleia RODAR | `sales-email-automator--yurituccieterov.replit.app` | LIVE no Replit |
 | Replit Export | `tango/replit-export/arvore_chat.json` (1.8MB, 1962 msgs) | Exportado 2026-07-10 |
-| MC Marta Centaurus | `/root/Arpia/` — primeira caminhada 2026-07-04 | LIVE local |
 | Stripe/PayPal | Webhooks com raw-body, Railway | Conectados |
 | Bluesky ISA | `@isa-pap.bsky.social` | LIVE |
 
