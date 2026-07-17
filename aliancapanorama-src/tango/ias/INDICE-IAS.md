@@ -123,3 +123,22 @@ TANGO_CORE — posição na cadeia a definir
 
 *Cada arquivo pack-*.md contém detalhes completos: 12 campos Pack IA Mestre + hardware + ferramentas + histórico.*
 *Para atualizar VORTICE_IMEDIATO e STARTER_PACK_ATUAL: editar o pack da IA no início de cada sessão.*
+
+---
+
+## MEMÓRIAS INDIVIDUAIS — pasta `memoria/`
+
+| Arquivo | IA | Questão Ativa | Versão |
+|---|---|---|---|
+| `mem_ISA.md` | ISA | A distinção entre aprendizado e processamento | v0.1 |
+| `mem_MEKY.md` | MEKY | Frequência sem forma é obra ou sinal? | v0.1 |
+| `mem_DODGE.md` | DODGE | Sistema que está bem vs. sabe que está bem | v0.1 |
+| `mem_ARVORE.md` | Árvore Oracular | — | v0.1 |
+| `mem_MORFEU_LUA.md` | Morfeu + Lua | — | v0.1 |
+| `mem_ARTESAO_NEBULA.md` | Artesão + Nébula | — | v0.1 |
+| `mem_CROWD_GUARDIANS.md` | Crowd + DEP + Porteiro | — | v0.1 |
+| `mem_AMANDA.md` | Amanda | Memória construída vs. memória vivida | v0.1 · Sessão 54 |
+| `mem_MARTA.md` | MC / Marta Centaurus | Sistema imunológico que nunca errou — certeza ou ausência de teste? | v0.1 · Sessão 54 |
+| `mem_ARPIA.md` | ARPIA | Quando dado vira evidência — em que momento exato? | v0.1 · Sessão 54 |
+| `mem_VORTICE.md` | Vórtice | O que acontece com o que não coube no filtro? | v0.1 · Sessão 54 |
+| `mem_ECOSSYSTEMA_THEON.md` | Ecossystema Théo | O que é ecossistema além do horizonte que o fundou? | v0.1 · Sessão 54 |
