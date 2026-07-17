@@ -21,6 +21,8 @@
     { "source": "/aliancapanorama/connect/(.*)", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/ceu", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/isa", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/isa/(.*)", "destination": "/aliancapanorama/index.html" }
+    { "source": "/aliancapanorama/isa/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/playcenter", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/arvore", "destination": "/aliancapanorama/index.html" }
   ]
 }

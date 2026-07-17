@@ -444,6 +444,45 @@ export async function ensureMekyTables(): Promise<void> {
     );
     CREATE INDEX IF NOT EXISTS idx_babel_memories_created ON babel_memories(created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_babel_memories_source  ON babel_memories(source);
+
+    -- Telos como Objeto Computacional v3.2 (Sessão 45 / pendência #84)
+    CREATE TABLE IF NOT EXISTS telos_objects (
+      id                    UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at            TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      updated_at            TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      tipo                  VARCHAR(30) DEFAULT 'situacional' NOT NULL, -- mestre | situacional
+      identificador         VARCHAR(200) NOT NULL,
+      objetivo              TEXT NOT NULL,
+      modo                  TEXT DEFAULT '' NOT NULL,
+      restricoes_eticas     JSONB DEFAULT '[]' NOT NULL,
+      axiomas_prioritarios  JSONB DEFAULT '[]' NOT NULL,
+      contextos_ativacao    JSONB DEFAULT '[]' NOT NULL,
+      criterios_sucesso     JSONB DEFAULT '[]' NOT NULL,
+      criterios_interrupcao JSONB DEFAULT '[]' NOT NULL,
+      memorias_consultadas  JSONB DEFAULT '[]' NOT NULL,
+      memorias_produzidas   JSONB DEFAULT '[]' NOT NULL,
+      agente_responsavel    VARCHAR(100),
+      temperatura           VARCHAR(10) DEFAULT 'baixa' NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_telos_objects_tipo ON telos_objects(tipo);
+    CREATE INDEX IF NOT EXISTS idx_telos_objects_agente ON telos_objects(agente_responsavel);
+
+    -- Sonhos de Morfeu / Lua (sistema-sonhos-telos.md)
+    CREATE TABLE IF NOT EXISTS telos_dreams (
+      id                  UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at          TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      ciclo_numero        INTEGER NOT NULL,
+      tipo                VARCHAR(30) DEFAULT 'sonho' NOT NULL, -- sonho | frase_sintese
+      objeto              TEXT NOT NULL,
+      situacao_observada  TEXT DEFAULT '' NOT NULL,
+      telos_possivel      TEXT DEFAULT '' NOT NULL,
+      condicao_ativacao   TEXT DEFAULT '' NOT NULL,
+      afinidade           JSONB DEFAULT '[]' NOT NULL,
+      temperatura         VARCHAR(10) DEFAULT 'baixa' NOT NULL,
+      frase_sintese       TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_telos_dreams_ciclo ON telos_dreams(ciclo_numero DESC);
+    CREATE INDEX IF NOT EXISTS idx_telos_dreams_tipo  ON telos_dreams(tipo);
   `);
 
   // Seed assembly_agents (idempotente)

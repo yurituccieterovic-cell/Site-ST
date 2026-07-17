@@ -17,6 +17,8 @@ import { StudioPage } from "@/pages/StudioPage";
 import { ConectorPage } from "@/pages/ConectorPage";
 import { IsaLandingPage } from "@/pages/IsaLandingPage";
 import { CeuPage } from "@/pages/CeuPage";
+import { PlaycenterPage } from "@/pages/PlaycenterPage";
+import { ArvorePage } from "@/pages/ArvorePage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
 
@@ -283,7 +285,9 @@ const isDodge  = path.includes("/dodge");
 const isIsa    = path.startsWith("/aliancapanorama/isa") || path === "/isa";
 const isStudio  = path.includes("/studio");
 const isConnect = path.includes("/connect");
-const isCeu     = path.includes("/ceu");
+const isCeu        = path.includes("/ceu");
+const isPlaycenter = path.includes("/playcenter");
+const isArvore     = path.includes("/arvore");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -359,6 +363,14 @@ function App() {
 
   if (isCeu) {
     return <CeuPage />;
+  }
+
+  if (isPlaycenter) {
+    return <PlaycenterPage />;
+  }
+
+  if (isArvore) {
+    return <ArvorePage />;
   }
 
   return (

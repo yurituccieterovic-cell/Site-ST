@@ -14,6 +14,7 @@ import { registerLoop, updateLoop } from "../loops/registry";
 import { runSocoboyConsolidacao } from "../socoboy/curador";
 import { runDodgeCuracao, runIsaRaizPap } from "../dodge/curador";
 import { runIsaNodulos } from "./raiz-to-nodulos";
+import { runMorfeu } from "./morfeu";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 export function startIsaCron(): void {
@@ -32,6 +33,7 @@ export function startIsaCron(): void {
   registerLoop("dodge_curador",      "DODGE Curador",            "7h:00",   "dodge");
   registerLoop("isa_raiz_pap",       "ISA Raiz PAP",             "4h:00",   "isa");
   registerLoop("isa_nodulos",        "ISA Nódulos+PDFs",         "5h:00",   "isa");
+  registerLoop("morfeu",             "Morfeu — Sonhos de Telos", "3h:30",   "morfeu");
 
   // Ciclo ISA principal: análise + tasks — todo hora cheia
   cron.schedule("0 * * * *", async () => {
@@ -231,5 +233,18 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · ISA Nódulos 5h · Orquestrador :50)");
+  // Morfeu — Sonhos de Telos: gera 3-5 telos possíveis a cada 3h:30
+  cron.schedule("30 */3 * * *", async () => {
+    try {
+      logger.info("Morfeu: ciclo de sonhos iniciado");
+      const result = await runMorfeu();
+      logger.info(result, "Morfeu: ciclo concluído");
+      updateLoop("morfeu", true, `ciclo:${result.ciclo} sonhos:${result.sonhos}`);
+    } catch (err) {
+      logger.error({ err }, "Morfeu: erro no ciclo de sonhos");
+      updateLoop("morfeu", false);
+    }
+  });
+
+  logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · ISA Nódulos 5h · Morfeu 3h:30 · Orquestrador :50)");
 }
