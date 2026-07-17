@@ -38,6 +38,7 @@ import memoriesRouter from "./memories";
 import videoRouter from "./video";
 import ceuRouter from "./ceu";
 import telosRouter from "./telos";
+import ethosRouter from "./ethos";
 
 const router: IRouter = Router();
 
@@ -62,6 +63,7 @@ router.use(memoriesRouter);
 router.use(videoRouter);
 router.use(ceuRouter);
 router.use(telosRouter);
+router.use(ethosRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

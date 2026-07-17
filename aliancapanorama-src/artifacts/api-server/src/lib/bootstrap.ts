@@ -483,6 +483,28 @@ export async function ensureMekyTables(): Promise<void> {
     );
     CREATE INDEX IF NOT EXISTS idx_telos_dreams_ciclo ON telos_dreams(ciclo_numero DESC);
     CREATE INDEX IF NOT EXISTS idx_telos_dreams_tipo  ON telos_dreams(tipo);
+
+    -- Ethos Engine — histórico de avaliações éticas (pendência #95)
+    CREATE TABLE IF NOT EXISTS ethos_evaluations (
+      id                UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      created_at        TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      agente            VARCHAR(100) NOT NULL,
+      situacao          TEXT NOT NULL,
+      urgencia          NUMERIC(4,1) NOT NULL,
+      valor_etico       NUMERIC(4,1) NOT NULL,
+      coerencia_telos   NUMERIC(4,1) NOT NULL,
+      disponibilidade   NUMERIC(4,1) NOT NULL,
+      telos_ativo       TEXT DEFAULT '' NOT NULL,
+      score             NUMERIC(4,1) NOT NULL,
+      decisao           VARCHAR(20) NOT NULL,
+      justificativa     TEXT NOT NULL,
+      axiomas_ativados  JSONB DEFAULT '[]' NOT NULL,
+      restricao_violada TEXT,
+      gemini_consulta   TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_ethos_eval_agente  ON ethos_evaluations(agente);
+    CREATE INDEX IF NOT EXISTS idx_ethos_eval_decisao ON ethos_evaluations(decisao);
+    CREATE INDEX IF NOT EXISTS idx_ethos_eval_created ON ethos_evaluations(created_at DESC);
   `);
 
   // Seed assembly_agents (idempotente)
