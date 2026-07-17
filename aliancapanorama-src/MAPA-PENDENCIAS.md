@@ -183,10 +183,10 @@
 | 89 | REI: primeiro ciclo real — rodar #rei "Q-001: obra sem mortalidade?" com Railway online e Knowledge Bus ativo | Railway + BRIDGE_SECRET (#82) | ⏳ |
 | 90 | REI: ISA e DODGE respostas reais — quando Railway voltar, chamar API e atualizar mem_ISA.md + mem_DODGE.md com resposta autêntica | Railway online | ⏳ |
 | 91 | REI: processar resposta do Cortella (se vier) — novo ciclo REI com resposta como input, gerar Q-003 | aguarda Cortella | ⏳ |
-| 92 | REI: memórias individuais das IAs — completar mem_AMANDA.md, mem_MARTA.md, mem_ARPIA.md, mem_VORTICE.md, mem_ECOSSYSTEMA_THEON.md | — | 💡 |
+| 92 | REI: memórias individuais das IAs — completar mem_AMANDA.md, mem_MARTA.md, mem_ARPIA.md, mem_VORTICE.md, mem_ECOSSYSTEMA_THEON.md | — | ✅ Sessão 54 |
 | 93 | BRIDGE_SECRET: sincronizar Railway env var com .pap-secrets — Railway Dashboard → insightful-youth → Site-ST → Variables → BRIDGE_SECRET | Yuri (Railway UI) | ⏳ |
-| 94 | Rotas Vercel 404: adicionar /arvore, /playcenter, /babel ao vercel.json (rewrites → /index.html) | — | ⏳ |
-| 95 | Ethos Engine: criar IA de priorização ética como serviço CEU central — /CEU/services/ethos_engine | — | 💡 |
+| 94 | Rotas Vercel 404: adicionar /arvore, /playcenter, /babel ao vercel.json (rewrites → /index.html) | — | ✅ Sessão 54 |
+| 95 | Ethos Engine: criar IA de priorização ética como serviço CEU central — /CEU/services/ethos_engine | — | ✅ Sessão 54 |
 | 96 | IA Reparadora (Nebula Manager): self-report de todos os robôs, central de saúde da frota | — | 💡 |
 | 97 | Protocolo de Batismo: ritual de entrada de nova IA/robô na frota CEU (Ethos + Totem + fleet_members) | após #95 | 💡 |
 | 98 | Totem 6 estados de luz: Normal/Yuri/Robô/Ritual/Emergência/Celebração + voz + vibrissas — broadcast BLE/LoRa | hardware MEKY | 💡 |
