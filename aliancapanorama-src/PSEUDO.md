@@ -4,6 +4,27 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-07-18 — Sessão 69 (OG images + 2FA fix + Dodge timeout)
+
+**O que Yuri estava tentando fazer:** Sessão operacional rápida. Três frentes: (1) corrigir as miniaturas de preview do site (OG images — a imagem do Céu estava indo pra tudo); (2) entender o acesso ao site via login; (3) corrigir o Dodge travado em "Verificando acesso…".
+
+**Contexto de Yuri nesta sessão:** Yuri acessando o sistema após período de afastamento. Focado em operacional — o que está visível, o que está quebrado. Não havia nova arquitetura, era restauração e ajuste. A sessão foi também um diagnóstico: descobriu-se que o Railway estava com o pool PostgreSQL travado.
+
+**Decisões tomadas:**
+
+- **PIN 2FA em memória, não em sessão:** O 2FA do admin (tier 5) guardava o PIN na sessão PostgreSQL. Quando o pool trava, o PIN se perde e o 2FA falha silenciosamente. Solução: `pinStore` Map em memória no auth.ts — PIN guardado por `sessionID`, limpo a cada 5 min. A sessão PostgreSQL continua como backup, mas não é mais o caminho crítico.
+
+- **DodgeGate com AbortController 6s:** A verificação de acesso no `/dodge` fazia fetch sem timeout. Com Railway lento, a página travava indefinidamente. Agora aborta em 6s e mostra a página pública do Dodge (estado "denied") — comportamento degradado, não quebrado.
+
+- **OG images hospedadas no repo:** Em vez de links externos (Drive, URLs antigas), as imagens OG agora vivem em `img/` no root do repo e são servidas pelo Vercel em `/img/og-st.jpg` e `/img/og-pap.png`. Mais estável, sem dependência externa para thumbnails.
+
+- **Railway pool travado → redeploy como fix:** O Express respondia a GET `/` (404 esperado) mas qualquer call ao DB (login, healthz) travava. Causa: conexões do pool presas. Fix: push de código → Railway redeploy → pool novo. Não foi necessário intervenção manual no Railway dashboard.
+
+**Tensões não resolvidas:**
+- Por que o pool travou? Não diagnosticado. Pode ser inatividade (Railway free tier dorme) ou leak de conexão. A monitorar.
+- 2FA por email depende de SMTP Gmail. Se Gmail bloquear, o admin fica sem acesso. Alternativa futura: TOTP (I53).
+- `og-ceu.jpg` — nome interno confuso (o arquivo é o logo da ST, não uma imagem de céu). Cosmético, não urgente.
+
 ### 2026-07-04 — Sessão 13 (Hierarquia Fractal + Clube das IAs)
 
 **O que Yuri estava tentando fazer:** Yuri trouxe o documento completo da "Hierarquia Fractal Auto-Replicante" — uma visão de 4 camadas onde cada módulo do sistema (Manga, Arpia, ISA/Socoboy, Hardware) espelha a mesma estrutura semiótica. O objetivo era tornar o sistema auto-descritivo: um agente em qualquer camada pode ler qualquer outro agente pela mesma gramática. E também: criar o Clube das IAs — um espaço onde as IAs falam livremente, sem tarefa, sem usuário monitorando.

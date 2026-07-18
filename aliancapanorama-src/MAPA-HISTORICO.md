@@ -59,6 +59,7 @@
 | 2026-07-14 (Sessão 55) | Ecosistema Memory — memória unificada do ecossistema. 3 tabelas: ecosistema_memory + ia_conversations + ia_conversation_turns. 8 endpoints: memoria/save, latest, ia/:id, conversa/iniciar, conversa/:id/turno, conversa/:id, conversas, socoboy/dashboard. Socoboy curador: consolida memórias em dados com signo Peirceano (6h diário). ARPIA atualizada para usar /api/ecosistema/* como memória primária. |
 | 2026-07-14 (Sessão 56) | DODGE Curador + Raízes de Memória + ISA Raiz PAP. DODGE (7h): signos → Tasks (type=ecosistema) + raízes MD por IA + MD Geral. ISA Raiz PAP (4h): sintetiza raízes em raiz-pap com Gemini. 3 GET endpoints: ia/:id/raizes, ia/:id/md-geral, raiz-pap. Tags de controle: dodge_ok, pap-root. |
 | 2026-07-14 (Sessão 57) | ISA Nódulos + PDFs Teóricos. isa/raiz-to-nodulos.ts: lê raízes PAP (tag raiz-pap), gera 3-5 nódulos teóricos via Gemini Flash Lite (nodesTable, parent=ECO) + PDF acadêmico estilo AulIAs via Gemini Flash (bibliotecaDocsTable, origem=isa-nodulos). Cron 5h diário. Tag: nodulos-ok. |
+| 2026-07-18 (Sessão 69) | OG images: og-st.jpg (Sociedade Tucci, geral) + og-pap.png (PAP/aliancapanorama) em img/. 2FA fix: pinStore Map em memória no auth.ts — PIN não depende mais do PostgreSQL session store travado. DodgeGate timeout 6s (AbortController) — não trava mais em "Verificando acesso…" quando Railway está lento. Dodge standalone: favicon dog-avatar.png. Railway: pool PostgreSQL estava travado (DB calls sem resposta); redeploy via push resolveu. Credenciais enviadas por email. |
 
 ---
 
