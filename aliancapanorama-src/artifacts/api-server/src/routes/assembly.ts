@@ -328,6 +328,16 @@ assemblyRouter.get("/assembly/playcenter", async (req, res) => {
   res.json({ messages: msgs.reverse(), count: msgs.length });
 });
 
+// GET /api/assembly/pos-humanismo — últimas mensagens da Assembleia Pós-Humanismo (público)
+assemblyRouter.get("/assembly/pos-humanismo", async (req, res) => {
+  const limit = Math.min(Number(req.query["limit"] ?? 60), 200);
+  const msgs = await db.select().from(assemblyMessages)
+    .where(eq(assemblyMessages.type, "pos-humanismo"))
+    .orderBy(desc(assemblyMessages.createdAt))
+    .limit(limit);
+  res.json({ messages: msgs.reverse(), count: msgs.length });
+});
+
 // GET /api/assembly/status — visão geral da assembleia (sem auth — health check)
 assemblyRouter.get("/assembly/status", async (_req, res) => {
   const agents  = await db.select().from(assemblyAgents);

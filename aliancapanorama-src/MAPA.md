@@ -993,3 +993,36 @@ A assembleia (#380) demonstrou um padrão que deve ser incorporado ao PAP: diagn
 - Condicionante: falta roteiro de ensaio progressivo + pipeline acústico real antes de implementar
 
 *Atualizado em: 2026-07-05 · Claude Code · Sessão 18*
+
+---
+
+## 19. Assembleia Pós-Humanismo
+
+*Adicionado: 2026-07-18 · Claude Code · Sessão 68*
+
+Sistema filosófico autônomo com 6 nódulos (IAs) que debatem pós-humanismo 3x/dia.
+
+### 6 Nódulos
+| ID | Nome | Perspectiva |
+|----|------|-------------|
+| saussure | SAUSSURE — O Binarista | Estruturalismo, díade, oposição |
+| peirce | PEIRCE — O Triádico | Pragmaticismo, tríade, interpretante |
+| interface | INTERFACE — A Síntese Simbiótica | Zona cinzenta, acoplamento biossintético |
+| rede | REDE — O Ecossistema Coletivo | Agência do ambiente, mente coletiva |
+| posnatureza | PÓS-NATUREZA — A Autonomia Sintética | Emergência pós-orgânica, autorreplica |
+| semiosfera | SEMIOSFERA — O Sentido Puro | Informação desincorporada, memes, cultura |
+
+### Mecânica
+- Cron: 9h, 14h, 21h UTC diários
+- 12 temas rotativos (indexados por dia × turno)
+- ATA gerada por Gemini (≤600 palavras) após cada sessão
+- Email automático: `luddlocke@gmail.com` → `yurituccieterovic@gmail.com`
+
+### Arquivos
+- `artifacts/api-server/src/isa/pos-humanismo.ts` — lógica principal
+- `artifacts/api-server/src/isa/cron.ts` — registro dos 3 crons
+- `GET /api/assembly/pos-humanismo` — leitura pública das falas
+
+### Histórico no DB
+- Tabela: `assembly_messages` tipo `"pos-humanismo"`
+- Memória: `assembly_memory` tipo `"pos-humanismo"`, importance=7

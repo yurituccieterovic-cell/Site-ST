@@ -15,11 +15,13 @@ import { runSocoboyConsolidacao } from "../socoboy/curador";
 import { runDodgeCuracao, runIsaRaizPap } from "../dodge/curador";
 import { runIsaNodulos } from "./raiz-to-nodulos";
 import { runMorfeu } from "./morfeu";
+import { runPosHumanismo } from "./pos-humanismo";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 export function startIsaCron(): void {
   // Registrar todos os laços internos no registro do Orquestrador
   registerLoop("isa_ciclo",     "ISA Ciclo",               "*/1h:00", "isa");
+  registerLoop("pos_humanismo", "Pós-Humanismo Assembleia", "9h/14h/21h UTC", "pos-humanismo");
   registerLoop("isa_biblio",    "ISA Bibliotecário",        "*/4h:30", "isa");
   registerLoop("isa_bluesky",   "ISA Bluesky",              "*/2h:15", "isa");
   registerLoop("isa_sonho",     "ISA Sonho",                "3h:00",   "isa");
@@ -233,6 +235,21 @@ export function startIsaCron(): void {
     }
   });
 
+  // Pós-Humanismo — Assembleia filosófica 3x/dia: 9h, 14h, 21h UTC
+  for (const hora of [9, 14, 21]) {
+    cron.schedule(`0 ${hora} * * *`, async () => {
+      try {
+        logger.info({ hora }, "Pós-Humanismo: sessão iniciada");
+        const result = await runPosHumanismo();
+        logger.info(result, "Pós-Humanismo: sessão concluída");
+        updateLoop("pos_humanismo", true, `falas:${result.falas} tema:${result.tema.slice(0, 60)}`);
+      } catch (err) {
+        logger.error({ err }, "Pós-Humanismo: erro na sessão");
+        updateLoop("pos_humanismo", false);
+      }
+    });
+  }
+
   // Morfeu — Sonhos de Telos: gera 3-5 telos possíveis a cada 3h:30
   cron.schedule("30 */3 * * *", async () => {
     try {
@@ -246,5 +263,5 @@ export function startIsaCron(): void {
     }
   });
 
-  logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · ISA Nódulos 5h · Morfeu 3h:30 · Orquestrador :50)");
+  logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · ISA Nódulos 5h · Morfeu 3h:30 · Orquestrador :50 · Pós-Humanismo 9h/14h/21h)");
 }
