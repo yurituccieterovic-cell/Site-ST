@@ -26,6 +26,15 @@ async function sendAdmPin(email: string, pin: string, login: string) {
   });
 }
 
+// PIN store em memória — independente do PostgreSQL session store.
+// Chave: sessionID. Expiração: 10 minutos. Limpo a cada 5 minutos.
+interface PinEntry { pin: string; expiry: number; userId: number }
+const pinStore = new Map<string, PinEntry>();
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of pinStore) if (now > v.expiry) pinStore.delete(k);
+}, 5 * 60 * 1000);
+
 const router = Router();
 
 const loginRateLimit = rateLimit({
@@ -81,19 +90,24 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
   // Tier 5 (admin) requer PIN 2FA via email
   if (user.tier >= 5) {
     const pin = generatePin();
+    const expiry = Date.now() + 10 * 60 * 1000;
+
+    // Guardar PIN em memória (não depende do session store PostgreSQL)
+    pinStore.set(req.sessionID, { pin, expiry, userId: user.id });
+
+    // Também tentar salvar na sessão como backup (pode falhar se DB lento)
     req.session.admPin = pin;
-    req.session.admPinExpiry = Date.now() + 10 * 60 * 1000;
+    req.session.admPinExpiry = expiry;
     req.session.admPinUserId = user.id;
     req.session.admVerified = false;
+    req.session.save(() => {/* silencioso */});
 
-    // PIN vai para o email do usuário admin (campo email) ou fallback para Yuri
     const emailDest = (user as { email?: string | null }).email ?? "yurituccieterovic@gmail.com";
-    // Fire-and-forget com timeout — não bloqueia resposta se SMTP travar
     const emailTimeout = new Promise<void>(resolve => setTimeout(resolve, 3000));
     Promise.race([sendAdmPin(emailDest, pin, user.login), emailTimeout])
-      .catch(() => {/* silencioso — PIN está na sessão */});
+      .catch(() => {/* silencioso */});
 
-    console.log(`[AUTH] PIN para ${user.login}: ${pin} → ${emailDest}`); // Railway logs como fallback
+    console.log(`[AUTH] PIN para ${user.login}: ${pin} → ${emailDest}`);
 
     res.json({ requiresPin: true, login: user.login });
     return;
@@ -103,7 +117,6 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
   req.session.userLogin = user.login;
   req.session.userTier = user.tier;
 
-  // Forçar gravação da sessão antes de responder (connect-pg-simple salva assíncrono)
   await new Promise<void>((resolve, reject) => {
     req.session.save((err) => (err ? reject(err) : resolve()));
   });
@@ -121,13 +134,19 @@ const pinRateLimit = rateLimit({ windowMs: 5 * 60 * 1000, limit: 5, skipSuccessf
 
 router.post("/auth/adm-pin", pinRateLimit, async (req, res) => {
   const { pin } = req.body as { pin?: string };
-  const { admPin, admPinExpiry, admPinUserId } = req.session;
 
-  if (!admPin || !admPinExpiry || !admPinUserId) {
+  // Verificar PIN: primeiro no store em memória, depois na sessão (fallback)
+  const stored = pinStore.get(req.sessionID);
+  const admPin    = stored?.pin      ?? req.session.admPin;
+  const admExpiry = stored?.expiry   ?? req.session.admPinExpiry;
+  const admUserId = stored?.userId   ?? req.session.admPinUserId;
+
+  if (!admPin || !admExpiry || !admUserId) {
     res.status(400).json({ error: "Nenhum PIN pendente. Faça login primeiro." });
     return;
   }
-  if (Date.now() > admPinExpiry) {
+  if (Date.now() > admExpiry) {
+    pinStore.delete(req.sessionID);
     req.session.admPin = undefined;
     res.status(401).json({ error: "PIN expirado. Faça login novamente." });
     return;
@@ -137,7 +156,9 @@ router.post("/auth/adm-pin", pinRateLimit, async (req, res) => {
     return;
   }
 
-  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, admPinUserId)).limit(1);
+  pinStore.delete(req.sessionID);
+
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, admUserId)).limit(1);
   if (!user) { res.status(401).json({ error: "Usuário não encontrado." }); return; }
 
   req.session.userId = user.id;
