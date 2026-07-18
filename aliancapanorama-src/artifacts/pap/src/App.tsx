@@ -146,13 +146,16 @@ function DodgePublicChat() {
 function DodgeGate() {
   const [state, setState] = useState<"loading" | "denied" | { tier: number }>("loading");
   useEffect(() => {
-    fetch(`${API_BASE}/api/auth/me`, { credentials: "include" })
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    fetch(`${API_BASE}/api/auth/me`, { credentials: "include", signal: ctrl.signal })
       .then(r => r.json() as Promise<{ user: { tier: number } | null }>)
       .then(d => {
         if (d.user && d.user.tier >= 5) setState({ tier: d.user.tier });
         else setState("denied");
       })
-      .catch(() => setState("denied"));
+      .catch(() => setState("denied"))
+      .finally(() => clearTimeout(timer));
   }, []);
   if (state === "loading") return <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center text-cyan-400 font-mono text-sm">Verificando acesso…</div>;
   if (state === "denied") return (
