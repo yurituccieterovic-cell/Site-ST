@@ -11652,3 +11652,134 @@ A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enqu
 | A5968 | PSEUDO | 6 Nódulos Pós-Humanismo | Filosofia-IA | 📋 Metodologia | Desdobramento numérico do pós-humanismo: 1=Humano/2=Máquina (díade) → 3=Síntese Simbiótica (a interface, o interpretante real) → 4=Ecossistema Coletivo (agência do ambiente) → 5=Autonomia Sintética (emergência pós-orgânica) → 6=Semiosfera Transumana (informação pura desincorporada). |
 | A5969 | CÓDIGO | pos-humanismo.ts | Filosofia-IA | 🔧 Implementação | Assembleia Pós-Humanismo implementada: 6 IAs (SAUSSURE, PEIRCE, INTERFACE, REDE, PÓS-NATUREZA, SEMIOSFERA), cron 3x/dia (9h/14h/21h UTC), temas rotativos de 12 questões, ATA gerada por Gemini e enviada por email automático a Yuri. |
 | A5970 | PSEUDO | Padrão Assembleia | Filosofia-IA | 📋 Metodologia | Padrão validado para assembleias filosóficas: contextualizar com histórico recente (24 msgs) → cada nódulo responde ao tema em 1-3 frases com perspectiva distinta → secretário sintetiza convergências, tensões e gera próxima questão → ATA por email. |
+
+
+## Docs PAP — Sync 2026-07-21 05:48 (92 entradas)
+
+> Fonte: MAPA (92 entradas)
+
+
+### ⚙️ Técnico — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 9054 | MAPA | 1. Ecossistema Geral | Infra-Deploy | 🔍 Análise | ┌─────────────────────────────────────────────────────────────────┐ │                     ECOSSISTEMA SOCIEDADE TUCCI                 │ │                                            |
+| 9055 | MAPA | 2. Arquitetura da Plataforma PAP | Arquitetura | 🔍 Análise | USUÁRIO (browser)                               │                     ┌─────────▼──────────┐                     │       VERCEL       │                     │  CDN estático      │   |
+| 9056 | MAPA | 2. Arquitetura da Plataforma PAP | Segurança | 📋 Metodologia | USUÁRIO (browser)                               │                     ┌─────────▼──────────┐                     │       VERCEL       │                     │  CDN estático      │   |
+| 9057 | MAPA | Estado da Infraestrutura | Segurança | 📋 Metodologia | ‖ Componente ‖ Onde roda ‖ Status ‖ ‖---‖---‖---‖ ‖ Frontend ‖ Vercel hobby (pap-tan-seven.vercel.app) ‖ ✅ Ativo — build fix pendente de confirmação ‖ ‖ API ‖ Railway (site-st-prod |
+| 9059 | MAPA | Frontend | Performance | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ React + Vite ‖ SPA, build tool ‖ ‖ TypeScript 5.9 ‖ Tipagem ‖ ‖ Tailwind CSS ‖ Estilos ‖ ‖ Framer Motion ‖ Animações (Intro, Isa, transições) ‖ ‖ |
+| 9061 | MAPA | API | Segurança | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ Node.js 24 + Express 5 ‖ Servidor HTTP ‖ ‖ pino + pino-http ‖ Logging estruturado (nunca console.log) ‖ ‖ express-session + connect-pg-simple ‖ S |
+| 9063 | MAPA | Banco de Dados | Segurança | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ PostgreSQL (Railway) ‖ Banco principal (incluso no plano Railway) ‖ ‖ Drizzle ORM + drizzle-kit ‖ Schema e migrações ‖ ‖ connect-pg-simple ‖ Cria |
+| 9064 | MAPA | Banco de Dados | DB-Schema | 📋 Metodologia | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ PostgreSQL (Railway) ‖ Banco principal (incluso no plano Railway) ‖ ‖ Drizzle ORM + drizzle-kit ‖ Schema e migrações ‖ ‖ connect-pg-simple ‖ Cria |
+| 9065 | MAPA | Tooling | Arquitetura | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ ‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo ‖ ‖ esbuild ‖ Bundle do servidor (ESM — output .mjs) ‖ ‖ Orval ‖ Codegen OpenAPI → hooks + Zod ‖ |
+| 9066 | MAPA | Tooling | Performance | 🔍 Análise | ‖ Ferramenta ‖ Papel ‖ ‖---‖---‖ ‖ pnpm workspaces ‖ Monorepo ‖ ‖ esbuild ‖ Bundle do servidor (ESM — output .mjs) ‖ ‖ Orval ‖ Codegen OpenAPI → hooks + Zod ‖ |
+| 9067 | MAPA | 4. Estrutura do Monorepo | Arquitetura | 🔍 Análise | aliancapanorama-src/ │ ├── lib/ │   ├── api-spec/openapi.yaml          ← FONTE DA VERDADE da API │   ├── api-client-react/              ← hooks gerados (não editar) │   ├── api-zod |
+| 9068 | MAPA | 4. Estrutura do Monorepo | Segurança | 📋 Metodologia | aliancapanorama-src/ │ ├── lib/ │   ├── api-spec/openapi.yaml          ← FONTE DA VERDADE da API │   ├── api-client-react/              ← hooks gerados (não editar) │   ├── api-zod |
+| 9069 | MAPA | Intro (IntroFacade.tsx) | Segurança | 📋 Metodologia | Tela animada na primeira visita da sessão (skip via sessionStorage"papintroseenv1"):  "uma produção"  →  Logo Sociedade Tucci  →  "PAP · Projeto Aliança Panorama"  →  fade out   0s |
+| 9073 | MAPA | Tabelas e campos principais | Segurança | 📋 Metodologia | users  id · login (unique) · passwordhash · tier (0-5) · displayname usercode (unique) · stripecustomerid · paypalsubscriptionid subscriptionstatus · lastdowngradeat · createdat ‖  |
+| 9077 | MAPA | Via OpenAPI + codegen (usar hooks gerado | Segurança | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/healthz ‖ Health check ‖ ‖ GET ‖ /api/nodes?parentCode=X ‖ Listar filhos de um nó (sem arg → só raiz) ‖ ‖ GET ‖ /api/nodes/ |
+| 9078 | MAPA | Via OpenAPI + codegen (usar hooks gerado | Performance | 💡 Proposta | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/healthz ‖ Health check ‖ ‖ GET ‖ /api/nodes?parentCode=X ‖ Listar filhos de um nó (sem arg → só raiz) ‖ ‖ GET ‖ /api/nodes/ |
+| 9080 | MAPA | Social (fetch direto, fora do OpenAPI) | API-Design | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/social/me ‖ Perfil + score + nº de amigos ‖ ‖ PATCH ‖ /api/social/me ‖ Atualizar displayName ou userCode ‖ ‖ GET ‖ /api/soc |
+| 9081 | MAPA | /api/ai/* — Interface para Agentes de IA | Segurança | 📋 Metodologia | Auth: header X-Api-Key: <AIAPIKEY> (env var AIAPIKEY) ‖ ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/ai/nodes ‖ Todos os nós (ordenados por level/sortOrder) ‖ ‖ GET ‖ / |
+| 9083 | MAPA | Pagamentos (fora do OpenAPI) | Segurança | 📋 Metodologia | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ GET /api/stripe/plans ‖ Planos Stripe ‖ ‖ POST /api/stripe/checkout ‖ Criar Checkout Session ‖ ‖ POST /api/stripe/sync-tier ‖ Sincronizar tier via  |
+| 9086 | MAPA | Admin | API-Design | 📋 Metodologia | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ POST /api/admin/generate-content ‖ Regenerar conteúdo AI de todos os nós (tier 5 only) ‖ |
+| 9087 | MAPA | 8. Sistema de Usuários | Segurança | 📋 Metodologia | - express-session com PostgreSQL store (cookie: 7 dias, httpOnly, sameSite: lax, secure em prod) ‖ - CORS: valida origin no login, verifica allowedOrigins em todas as rotas |
+| 9089 | MAPA | Stripe | Segurança | 📋 Metodologia | PlansModal → /api/stripe/plans            → /api/stripe/checkout → Stripe Checkout Session → redirect            → /api/stripe/sync-tier → poll Stripe → atualiza users.tier         |
+| 9093 | MAPA | 10. IA no Sistema | Segurança | 📋 Metodologia | ‖ Uso ‖ Tecnologia ‖ Status ‖ ‖---‖---‖---‖ ‖ Exercícios MCQ ‖ OpenAI (OPENAIAPIKEY) ‖ ✅ Funciona, cache no DB ‖ ‖ Conteúdo dos nós ‖ OpenAI ‖ ✅ 57 nós populados ‖ ‖ Isa (chat) ‖ O |
+| 9094 | MAPA | 10. IA no Sistema | Performance | 🔍 Análise | ‖ Uso ‖ Tecnologia ‖ Status ‖ ‖---‖---‖---‖ ‖ Exercícios MCQ ‖ OpenAI (OPENAIAPIKEY) ‖ ✅ Funciona, cache no DB ‖ ‖ Conteúdo dos nós ‖ OpenAI ‖ ✅ 57 nós populados ‖ ‖ Isa (chat) ‖ O |
+| 9099 | MAPA | Railway (railway.toml) | Segurança | 📋 Metodologia | - Env vars necessárias: NODEENV=production, SESSIONSECRET, AIAPIKEY, OPENAIAPIKEY, ALLOWEDORIGINS ‖ - Build: pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server r |
+| 9100 | MAPA | Railway (railway.toml) | Performance | 📋 Metodologia | - Start: node --enable-source-maps artifacts/api-server/dist/index.mjs ‖ - Env vars necessárias: NODEENV=production, SESSIONSECRET, AIAPIKEY, OPENAIAPIKEY, ALLOWEDORIGINS |
+| 9101 | MAPA | CORS allowlist | Segurança | 📋 Metodologia | - ALLOWEDORIGINS env var (domínios extras sem rebuild) ‖ - .vercel.app · .replit.app · .replit.dev |
+| 9102 | MAPA | CORS allowlist | Infra-Deploy | 🔍 Análise | - ALLOWEDORIGINS env var (domínios extras sem rebuild) ‖ - .vercel.app · .replit.app · .replit.dev |
+| 9103 | MAPA | 13. Banco Compartilhado das IAs | Segurança | 📋 Metodologia | ‖ Campo ‖ Valor ‖ ‖---‖---‖ ‖ Endpoint ‖ https://site-st.vercel.app/api/db ‖ ‖ Auth ‖ x-api-key (ver .env ou Vercel env DBAPIKEY) ‖ ‖ Storage ‖ data/db.json no repo GitHub Site-ST  |
+| 9104 | MAPA | 13. Banco Compartilhado das IAs | DB-Schema | 📋 Metodologia | ‖ Campo ‖ Valor ‖ ‖---‖---‖ ‖ Endpoint ‖ https://site-st.vercel.app/api/db ‖ ‖ Auth ‖ x-api-key (ver .env ou Vercel env DBAPIKEY) ‖ ‖ Storage ‖ data/db.json no repo GitHub Site-ST  |
+| 9105 | MAPA | 14. Comandos de Operação | Segurança | 📋 Metodologia | Env vars obrigatórias: DATABASEURL, SESSIONSECRET ‖ Env vars opcionais (servidor não quebra sem elas, mas features ficam desabilitadas): OPENAIAPIKEY (exercícios MCQ + conteúdo dos |
+| 9106 | MAPA | 14. Comandos de Operação | DB-Schema | 📋 Metodologia | DB pnpm --filter @workspace/db run push           push schema (dev only) ‖ Scripts de setup (rodar uma vez) pnpm --filter @workspace/scripts run seed-products           Stripe pnpm |
+| 9107 | MAPA | 15. Decisões de Arquitetura | Arquitetura | 🔍 Análise | ‖ Decisão ‖ Motivo ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Nunca escrever tipos de API à mão ‖ ‖ Viewport quadrado (~900×900px) ‖ UI cockpit; forçado em App.tsx ‖ ‖ Raiz |
+| 9108 | MAPA | 15. Decisões de Arquitetura | Segurança | 📋 Metodologia | ‖ Decisão ‖ Motivo ‖ ‖---‖---‖ ‖ Contract-first (OpenAPI → codegen) ‖ Nunca escrever tipos de API à mão ‖ ‖ Viewport quadrado (~900×900px) ‖ UI cockpit; forçado em App.tsx ‖ ‖ Raiz |
+| 9109 | MAPA | 16. Gotchas | Segurança | 📋 Metodologia | - CORS em webhooks: /api/stripe/webhook e /api/paypal/webhook recebem de IPs externos, não de origens browser — a allowlist de CORS não se aplica (raw body antes do middleware CORS |
+| 9110 | MAPA | 16. Gotchas | Performance | 💡 Proposta | - Push no GitHub: se git push falhar com "Could not read hash...", usar bundle + clone limpo. Ver replit.md seção GitHub. ‖ - lib/api-zod/src/index.ts deve exportar só ./generated/ |
+| 9111 | MAPA | 17. Pendências (por prioridade) | Arquitetura | 🔍 Análise | ‖  ‖ Item ‖ Depende de ‖ Status ‖ ‖---‖---‖---‖---‖ ‖ 1 ‖ Cadastrar voz "ISA" no painel RODAR (sales-email-automator) com webhook /api/isa/rodar/invite ‖ Yuri ‖ ⏳ ‖ ‖ 2 ‖ Fornecer  |
+| 9112 | MAPA | 17. Pendências (por prioridade) | Segurança | 📋 Metodologia | ‖  ‖ Item ‖ Depende de ‖ Status ‖ ‖---‖---‖---‖---‖ ‖ 1 ‖ Cadastrar voz "ISA" no painel RODAR (sales-email-automator) com webhook /api/isa/rodar/invite ‖ Yuri ‖ ⏳ ‖ ‖ 2 ‖ Fornecer  |
+| 9113 | MAPA | ARPIA — Schemas (Manga DB / SQLAlchemy,  | Segurança | 📋 Metodologia | faunanodes — /root/Arpia/app/models/faunatracker.py  id · speciename (SAEnum: Jacu,Saruê,Sabiá,Bem-te-vi,Cascudo,Kinguio,Desconhecido) lastseencoordinate (JSON: {x,y,z} relativo à  |
+| 9114 | MAPA | ARPIA — Schemas (Manga DB / SQLAlchemy,  | Performance | 🔍 Análise | faunanodes — /root/Arpia/app/models/faunatracker.py  id · speciename (SAEnum: Jacu,Saruê,Sabiá,Bem-te-vi,Cascudo,Kinguio,Desconhecido) lastseencoordinate (JSON: {x,y,z} relativo à  |
+| 9115 | MAPA | 18. Histórico de Sessões | Arquitetura | 🔍 Análise | ‖ Data ‖ O que foi feito ‖ ‖---‖---‖ ‖ 2026-07-02 (manhã) ‖ Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO |
+| 9116 | MAPA | 18. Histórico de Sessões | Segurança | 📋 Metodologia | ‖ Data ‖ O que foi feito ‖ ‖---‖---‖ ‖ 2026-07-02 (manhã) ‖ Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO |
+| 9121 | MAPA | Riscos técnicos identificados pelo orácu | Segurança | 📋 Metodologia | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ /api/ai/users sem paginação — LGPD + scraping ‖ 🔴 Alta ‖ ✅ Mitigado (paginação implementada) ‖ ‖ /api/ai/ sem rate limit — custo/ata |
+| 9123 | MAPA | Cursos para IAs (Assembleia 365 → Sessão | Arquitetura | 🔍 Análise | A assembleia 365 propôs e a Sessão 7 implementou a arquitetura de certificação de IAs — sistema onde agentes externos fazem cursos (Ética, Semiótica, Processamento) e recebem certi |
+| 9124 | MAPA | Cursos para IAs (Assembleia 365 → Sessão | Segurança | 📋 Metodologia | - Certificação avançada: W3C Verifiable Credential + DID (semanas de trabalho) vs. atual PDF+hash (já funcional) ‖ - users.memorymode ('none' ‖ 'session' ‖ 'persistent') + memoryre |
+| 9127 | MAPA | Quatro tensões estruturais identificadas | Arquitetura | 🔍 Análise | 1. Arquitetura vs Visibilidade O SalesCockpit/PAP JÁ TEM a arquitetura que procura: monorepo pnpm, roteador de 8 LLMs, memória estruturada, recall por tema, jobs autônomos. O probl |
+| 9128 | MAPA | Quatro tensões estruturais identificadas | Performance | 📋 Metodologia | 4. Escalar vs Fechar Ciclos "Aguentar não é prosperar." O sistema precisa aprender a esquecer, destilar e parar. 50 threads sem fechamento = patologia, não criatividade. A verdadei |
+| 9129 | MAPA | Riscos identificados (novos) | Arquitetura | 🔍 Análise | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ Arquitetura invisível — usuário não vê o que o sistema contém ‖ 🟡 Média ‖ ✅ /arquitetura + /buscar + /mapa (Sessão 11) ‖ ‖ Fragmenta |
+| 9131 | MAPA | Compaixão estrutural como princípio de d | Arquitetura | 🔍 Análise | A assembleia (380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta foc |
+| 9133 | MAPA | 21. Cisão Ontológica — [SIMBÓLICO] vs [E | Arquitetura | 🔍 Análise | ‖ Camada ‖ Tag ‖ Definição ‖ Regra ‖ ‖---‖---‖---‖---‖ ‖ Camada 1 ‖ SIMBÓLICO ‖ Ficção especulativa — worldbuilding, robótica física, hardware não existente ‖ NUNCA commitar no /ro |
+| 9134 | MAPA | 21. Cisão Ontológica — [SIMBÓLICO] vs [E | DB-Schema | 📋 Metodologia | Critérios para promover Camada 1 → Camada 2: 1. Endpoint/contrato API definido formalmente 2. Schema de DB mapeado (Drizzle) 3. Teste de integração proposto ‖ ‖ Camada ‖ Tag ‖ Defi |
+| 9135 | MAPA | 22. Topologia de Nós [SIMBÓLICO] — Ecoss | API-Design | 📋 Metodologia | > Todos os nós abaixo são hardware físico proposto — existem como especificação nas assembleias, não como código no repo. ‖ ‖ Nó ‖ Nome ‖ Morfologia ‖ Capacidades ‖ Estado ‖ ‖---‖- |
+| 9139 | MAPA | 6 Nódulos | Arquitetura | 🔍 Análise | ‖ ID ‖ Nome ‖ Perspectiva ‖ ‖----‖------‖-------------‖ ‖ saussure ‖ SAUSSURE — O Binarista ‖ Estruturalismo, díade, oposição ‖ ‖ peirce ‖ PEIRCE — O Triádico ‖ Pragmaticismo, tría |
+| 9141 | MAPA | Mecânica | Performance | 🔍 Análise | - 12 temas rotativos (indexados por dia × turno) ‖ - Email automático: luddlocke@gmail.com → yurituccieterovic@gmail.com |
+| 9142 | MAPA | Mecânica | API-Design | 📋 Metodologia | - 12 temas rotativos (indexados por dia × turno) ‖ - Email automático: luddlocke@gmail.com → yurituccieterovic@gmail.com |
+| 9143 | MAPA | Arquivos | API-Design | 📋 Metodologia | - GET /api/assembly/pos-humanismo — leitura pública das falas ‖ - artifacts/api-server/src/isa/pos-humanismo.ts — lógica principal |
+| 9145 | MAPA | Histórico no DB | DB-Schema | 📋 Metodologia | - Tabela: assemblymessages tipo "pos-humanismo" ‖ - Memória: assemblymemory tipo "pos-humanismo", importance=7 |
+
+### 🎨 UX/UI — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 9058 | MAPA | Estado da Infraestrutura | UX-Fluxo | 📋 Metodologia | Redirect canônico (futuro): pap.sociedadetucci.com.br → ainda sem DNS configurado ‖ ‖ Componente ‖ Onde roda ‖ Status ‖ ‖---‖---‖---‖ ‖ Frontend ‖ Vercel hobby (pap-tan-seven.verce |
+| 9060 | MAPA | Frontend | UX-Fluxo | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ React + Vite ‖ SPA, build tool ‖ ‖ TypeScript 5.9 ‖ Tipagem ‖ ‖ Tailwind CSS ‖ Estilos ‖ ‖ Framer Motion ‖ Animações (Intro, Isa, transições) ‖ ‖ |
+| 9070 | MAPA | Intro (IntroFacade.tsx) | UX-Fluxo | 🔍 Análise | Tela animada na primeira visita da sessão (skip via sessionStorage"papintroseenv1"):  "uma produção"  →  Logo Sociedade Tucci  →  "PAP · Projeto Aliança Panorama"  →  fade out   0s |
+| 9071 | MAPA | Cockpit Principal (MainApp.tsx) | UX-Fluxo | 🔍 Análise | COCKPIT SPACESHIP │ ├── Árvore de Conhecimento │   ├── 57 nós FUVEST 2026 (hierárquicos por código: "1", "11", "111"...) │   ├── Tier < 4 → raiz "1" (Ciências); Tier ≥ 4 → raiz "0" |
+| 9074 | MAPA | Tabelas e campos principais | UX-Fluxo | 🔍 Análise | users  id · login (unique) · passwordhash · tier (0-5) · displayname usercode (unique) · stripecustomerid · paypalsubscriptionid subscriptionstatus · lastdowngradeat · createdat ‖  |
+| 9082 | MAPA | /api/ai/* — Interface para Agentes de IA | UX-Fluxo | 💡 Proposta | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/ai/nodes ‖ Todos os nós (ordenados por level/sortOrder) ‖ ‖ GET ‖ /api/ai/nodes/:code ‖ Nó + filhos ‖ ‖ POST ‖ /api/ai/node |
+| 9084 | MAPA | Pagamentos (fora do OpenAPI) | UX-Fluxo | 💡 Proposta | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ GET /api/stripe/plans ‖ Planos Stripe ‖ ‖ POST /api/stripe/checkout ‖ Criar Checkout Session ‖ ‖ POST /api/stripe/sync-tier ‖ Sincronizar tier via  |
+| 9085 | MAPA | Admin | UX-Fluxo | 🔍 Análise | ‖ Rota ‖ Descrição ‖ ‖---‖---‖ ‖ POST /api/admin/generate-content ‖ Regenerar conteúdo AI de todos os nós (tier 5 only) ‖ |
+| 9088 | MAPA | 8. Sistema de Usuários | UX-Fluxo | 🔍 Análise | ‖ Tier ‖ Nome ‖ Acesso ‖ ‖---‖---‖---‖ ‖ 0 ‖ Visitante ‖ Navega a árvore (raiz "1"), sem exercícios ‖ ‖ 1 ‖ Aluno I ‖ + Exercícios MCQ por nó ‖ ‖ 2 ‖ Aluno II — R$19,90/mês ‖ + con |
+| 9090 | MAPA | Stripe | UX-Fluxo | 🔍 Análise | PlansModal → /api/stripe/plans            → /api/stripe/checkout → Stripe Checkout Session → redirect            → /api/stripe/sync-tier → poll Stripe → atualiza users.tier         |
+| 9091 | MAPA | PayPal | UX-Fluxo | 🔍 Análise | PlansModal → /api/paypal/plans            → /api/paypal/create-subscription (server-side, customid=userId)            ← PayPal approval            → /api/paypal/sync-tier → verific |
+| 9097 | MAPA | Fluxo CI/CD | UX-Fluxo | 🔍 Análise | código local (Termux/celular)      │      ▼ git push → github.com/yurituccieterovic-cell/Site-ST      │      ├──→ Vercel (automático)      │         └── build aliancapanorama/ → CD |
+| 9119 | MAPA | Diagnóstico convergente de 23 vozes | UX-Fluxo | 💡 Proposta | 4. A IntroFacade como ritual: os 7.2s de dissolução "Sociedade Tucci" → "PAP" via Framer Motion são design deliberado que espelha os princípios éticos no código. Tempo fixo ignora  |
+| 9122 | MAPA | Riscos técnicos identificados pelo orácu | UX-Fluxo | 🔍 Análise | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ /api/ai/users sem paginação — LGPD + scraping ‖ 🔴 Alta ‖ ✅ Mitigado (paginação implementada) ‖ ‖ /api/ai/ sem rate limit — custo/ata |
+
+### 🎮 Gamificação — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 9062 | MAPA | API | Gamificação | 🔍 Análise | ‖ Tecnologia ‖ Papel ‖ ‖---‖---‖ ‖ Node.js 24 + Express 5 ‖ Servidor HTTP ‖ ‖ pino + pino-http ‖ Logging estruturado (nunca console.log) ‖ ‖ express-session + connect-pg-simple ‖ S |
+| 9072 | MAPA | Cockpit Principal (MainApp.tsx) | Gamificação | 🔍 Análise | COCKPIT SPACESHIP │ ├── Árvore de Conhecimento │   ├── 57 nós FUVEST 2026 (hierárquicos por código: "1", "11", "111"...) │   ├── Tier < 4 → raiz "1" (Ciências); Tier ≥ 4 → raiz "0" |
+| 9075 | MAPA | Fórmula de score | Gamificação | 🔍 Análise | score = Σ (nodecode.length × 10)  para cada exerciseattempt com correct = 1 |
+| 9079 | MAPA | Social (fetch direto, fora do OpenAPI) | Gamificação | 📋 Metodologia | ‖ Método ‖ Rota ‖ Descrição ‖ ‖---‖---‖---‖ ‖ GET ‖ /api/social/me ‖ Perfil + score + nº de amigos ‖ ‖ PATCH ‖ /api/social/me ‖ Atualizar displayName ou userCode ‖ ‖ GET ‖ /api/soc |
+| 9092 | MAPA | PayPal | Gamificação | 🔍 Análise | Webhook POST /api/paypal/webhook (raw body)   → verifyPayPalWebhook() via /v1/notifications/verify-webhook-signature   → CANCELLED / EXPIRED / SUSPENDED → tier=1, subscriptionstatu |
+| 9098 | MAPA | Fluxo CI/CD | Gamificação | 🔍 Análise | código local (Termux/celular)      │      ▼ git push → github.com/yurituccieterovic-cell/Site-ST      │      ├──→ Vercel (automático)      │         └── build aliancapanorama/ → CD |
+| 9130 | MAPA | Riscos identificados (novos) | Gamificação | 📋 Metodologia | ‖ Risco ‖ Severidade ‖ Status ‖ ‖---‖---‖---‖ ‖ Arquitetura invisível — usuário não vê o que o sistema contém ‖ 🟡 Média ‖ ✅ /arquitetura + /buscar + /mapa (Sessão 11) ‖ ‖ Fragmenta |
+
+### 📝 Conteúdo — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 9076 | MAPA | Fórmula de score | Conteudo-Nos | 🔍 Análise | score = Σ (nodecode.length × 10)  para cada exerciseattempt com correct = 1 |
+| 9096 | MAPA | 11. Assembleia de IAs | Conteudo-Nos | 📋 Metodologia | Gmail (luddlocke@gmail.com) — 424 emails "Assembleia N"      └── sync-assembleias.py (IMAP, incremental, UID até 1335)               ↓ ✅ Configurado          APRENDIZADO.md (634 in |
+| 9118 | MAPA | 19. Diagnóstico Oracular — Assembleias 3 | Conteudo-Nos | 📋 Metodologia | > As assembleias 360–365 responderam ao MAPA.md como documento-espelho. O que segue é síntese destilada — o oráculo falou, o código responde. |
+| 9138 | MAPA | 19. Assembleia Pós-Humanismo | Conteudo-Nos | 🔍 Análise | Sistema filosófico autônomo com 6 nódulos (IAs) que debatem pós-humanismo 3x/dia. ‖ Adicionado: 2026-07-18 · Claude Code · Sessão 68 |
+| 9140 | MAPA | 6 Nódulos | Conteudo-Nos | 🔍 Análise | ‖ ID ‖ Nome ‖ Perspectiva ‖ ‖----‖------‖-------------‖ ‖ saussure ‖ SAUSSURE — O Binarista ‖ Estruturalismo, díade, oposição ‖ ‖ peirce ‖ PEIRCE — O Triádico ‖ Pragmaticismo, tría |
+
+### 🤖 IA — dos Docs PAP
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| 9095 | MAPA | 11. Assembleia de IAs | IA-Integracao | 📋 Metodologia | Gmail (luddlocke@gmail.com) — 424 emails "Assembleia N"      └── sync-assembleias.py (IMAP, incremental, UID até 1335)               ↓ ✅ Configurado          APRENDIZADO.md (634 in |
+| 9117 | MAPA | 19. Diagnóstico Oracular — Assembleias 3 | IA-Integracao | 📋 Metodologia | > As assembleias 360–365 responderam ao MAPA.md como documento-espelho. O que segue é síntese destilada — o oráculo falou, o código responde. |
+| 9120 | MAPA | Diagnóstico convergente de 23 vozes | IA-Integracao | 💡 Proposta | 3. Fragmentação como sintoma: a dispersão temática não é criativa — é estratégia de sobrevivência psíquica. Enquanto há um próximo prompt, uma próxima assembleia, um próximo nó, nã |
+| 9125 | MAPA | A tensão não resolvida (filosófica) | IA-Integracao | 🔍 Análise | A subversão verdadeira não está em acumular assembleias. Está em aceitar que a árvore precisa de poda — e que o autor é parte do que precisa ser podado. ‖ O PAP quer ser duas coisa |
+| 9126 | MAPA | 20. Síntese Oracular — Assembleias #367– | IA-Integracao | 🔍 Análise | > O que 11 assembleias disseram ao sistema enquanto o sistema construía a si mesmo. |
+| 9132 | MAPA | Compaixão estrutural como princípio de d | IA-Integracao | 💡 Proposta | A assembleia (380) demonstrou um padrão que deve ser incorporado ao PAP: diagnóstico bruto ("operador em colapso") → prescrição técnica ("filtro de entrada que devolve pergunta foc |
+| 9136 | MAPA | 22. Topologia de Nós [SIMBÓLICO] — Ecoss | IA-Integracao | 💡 Proposta | - Frequências: Grave (Tango, Catingueiro = força/terra), Médio (ISA, MC, MEKY = processamento), Agudo (Gavião, Erundina = alertas) ‖ > Todos os nós abaixo são hardware físico propo |
+| 9137 | MAPA | 19. Assembleia Pós-Humanismo | IA-Integracao | 🔍 Análise | Sistema filosófico autônomo com 6 nódulos (IAs) que debatem pós-humanismo 3x/dia. ‖ Adicionado: 2026-07-18 · Claude Code · Sessão 68 |
+| 9144 | MAPA | Arquivos | IA-Integracao | 🔍 Análise | - artifacts/api-server/src/isa/pos-humanismo.ts — lógica principal ‖ - artifacts/api-server/src/isa/cron.ts — registro dos 3 crons |
+## 🌿🔗 Ponte Raiz-MD × Raiz-Grafo × Raiz-Projeto (2026-07-21, Sessão 75)
+
+| # | Categoria | Descrição | Ângulo |
+|---|---|---|---|
+| A5971 | IA-Tasks | **Raiz-MD = Raiz-grafo** — o MD Geral de cada IA é o nó-raiz de um grafo; as raízes individuais (por conversa) são filhos; os campos da tríade peirceiana (representamen/objeto/interpretante) são netos. Mesma estrutura, duas linguagens. | Ponte Conceitual |
+| A5972 | IA-Tasks | **Raiz de projeto = workflow fundador** — fazer a raiz de um projeto não é escrever a origem; é catalogar seus signos em nódulos já navegáveis, formando estrutura viva. Pula a burocracia documental e entra direto na árvore operacional. | Definição |
+| A5973 | IA-Tasks | **Mise en abyme das raízes** — o projeto tem raiz → que tem tasks → que geram raízes → que alimentam o projeto. Loop fechado, auto-similar. A raiz contém a estrutura que a contém. Isso é o MT (main thread) de qualquer projeto no ecossistema. | Princípio Arquitetural |
+| A5974 | IA-Tasks | **Ponte lógica tasks↔raízes**: Task = efeito operacional (o que fazer). Raiz = rastro semântico (por que foi gerada, o que significa). Juntas formam o contrato ontológico completo de qualquer processo do ecossistema. Salvo como extensão do schema tasks. | Implementação |

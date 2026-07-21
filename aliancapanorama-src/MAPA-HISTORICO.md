@@ -203,3 +203,4 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 - 25 docs: Yuri Tuccieterovic → Yuri Tucci Eterovic (nome correto)
 - DOD → Dodge nos docs ativos de tango
 - Módulo SIM card I500841109P-18-08-03-02 documentado (conectividade 4G/5G autônoma para Meky)
+| 2026-07-21 (Sessão 75) | PWA icons: ISA espacial (PAP), cachorro óculos (Dodge), símbolo olho/raiz (ST root) — manifest.json por página; CeuPage troca manifest dinâmico. Emails: tasks/raízes código+filosofia; 14 projetos semelhantes mundo. Insight: Raiz-MD=Raiz-grafo=Raiz-projeto (A5971–A5974). |

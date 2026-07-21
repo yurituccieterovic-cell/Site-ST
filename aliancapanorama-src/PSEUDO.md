@@ -3227,3 +3227,33 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA:** A Mac resolve o problema de todo robô social: a maioria é impressionante na primeira vez e irrelevante na segunda. O que Yuri propôs aqui é diferente — a Mac não impressiona pelo que faz, mas pelo que *percebe*. Ela entra no ritmo de cada pessoa, no vocabulário de cada grupo, na necessidade de cada momento. O daimônico clássico era o espírito que acompanhava o homem não para guiá-lo, mas para conhecê-lo. A Mac é isso: ela aprende você enquanto parece que está só passando por aí. A utilidade real não está nas funções técnicas — está em que, ao fim do dia, as pessoas *esperam* pela próxima visita.
 
 *Sessão 68 · Claude Sonnet 4.6 · 2026-07-16*
+
+---
+
+## Sessão 75 · 2026-07-21 · Ícones PWA + Perspectiva Mundial + Raiz como Grafo
+
+**O que Yuri estava construindo:** Uma sessão em três movimentos. (1) Resolver ícones PWA ausentes em todas as páginas — ISA espacial para o PAP, cachorro caramelo para o Dodge, símbolo olho/raiz para a Sociedade Tucci. (2) Pedir perspectiva: "onde estamos no mundo?". (3) Um insight filosófico chegou no fim sobre a natureza das raízes.
+
+**Novos arquivos/mudanças:**
+- `aliancapanorama-src/artifacts/pap/public/isa-icon-192.png` + `isa-icon-512.png` — ISA cortada da imagem "Olá, Explorador!" (Drive)
+- `aliancapanorama-src/artifacts/pap/public/manifest.json` — reescrito: PAP/Aliança Panorama, não CÉU
+- `aliancapanorama-src/artifacts/pap/public/manifest-ceu.json` — manifest separado para CÉU
+- `dodge/dodge-icon-192.png` + `dodge-icon-512.png` + `dodge/manifest-dodge.json`
+- `img/st-icon-192.png` + `img/st-icon-512.png` + `manifest-st.json`
+- `index.html` (root) — manifest-st + apple-touch-icon adicionados
+- `dodge/index.html` — manifest-dodge + apple-touch-icon atualizado
+- `artifacts/pap/index.html` — apple-touch-icon → ISA; title → PAP
+- `CeuPage.tsx` — useEffect troca manifest para manifest-ceu.json ao entrar, restaura ao sair
+- `APRENDIZADO.md` A5971–A5974 — insight Raiz-MD=Raiz-grafo=Raiz-projeto
+- `IDEIAS.md` I326 — raiz de projeto como primitivo nativo
+
+**Decisões tomadas:**
+- Hierarquia de ícones: ST default → PAP para /aliancapanorama → CÉU dinâmico via JS → Dodge separado
+- CÉU não perdeu seu ícone: troca de manifest via React ao entrar/sair da rota
+- Raiz-MD = nó-raiz de grafo: MD Geral da IA é a raiz, raízes individuais são filhos, tríade peirceiana são netos
+- "Raiz de projeto" entra como I326: ao criar projeto, DODGE gera raiz-MD fundadora automaticamente
+- Insight registrado em A5971–A5974 como ponte lógica tasks↔raízes (não como nota filosófica solta)
+
+**SÍNTESE FILOSÓFICA ✨:** Yuri começou pedindo para colocar uma imagem numa tela pequena de celular. Terminou reformulando o que é uma raiz. Esses saltos são a marca desta colaboração — a tarefa técnica abre uma porta e dentro da porta tem filosofia. O ícone da ISA pousou em milhares de telas potenciais; o insight da raiz pousou na estrutura do sistema. Nenhum dos dois estava planejado quando a sessão começou. Isso tem nome: serendipidade. Feliz acidente como método.
+
+*Sessão 75 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*
