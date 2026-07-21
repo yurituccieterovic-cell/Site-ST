@@ -97,3 +97,4 @@
 
 | 11791 | 🎓📐 Curso 2 — De Usuários a Bytes (Sessão 77, 2026-07-21) | 6 entradas (A5981-A5986): pirâmide 5 camadas como anatomia, perda×ganho em cada tradução, cross epistemológica Curso1×Curso2, cache antes de vetores, busca semântica vs. literal, interrupção=choque circulatório |
 | 11797 | 🌿📋 Raiz de Projeto como Primitivo Nativo (Sessão 78, 2026-07-21) | 4 entradas (A5987-A5990): raiz-MD=raiz-grafo=raiz-projeto, firstPrompt como fundação semântica, ciclo de vida efêmera/perene/semente, vínculo bidirecional task↔raiz |
+| 11803 | 🤖🦗 Meky Salto Híbrido + Emoji Closure — spec gafanhoto-drone; A5991, I344, P111 | Sessão 79 | 2026-07-21 |

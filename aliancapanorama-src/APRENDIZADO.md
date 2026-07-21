@@ -12201,3 +12201,8 @@ A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enqu
 | 9269 | PSEUDO | O que aconteceu | Conteudo-Nos | 🔍 Análise | Yuri pediu para corrigir os gaps identificados na auditoria (Sessão 19) e ao mesmo tempo preparar infraestrutura própria: banco local, Oracle Always Free, Termux bootstrap. A sessã |
 | 9347 | PSEUDO | O que Yuri estava tentando fazer | Conteudo-Nos | 🔍 Análise | Três frentes: 1. Resolver a falha do workflow GitHub Actions "Poll Banco Compartilhado" (email de alerta) 2. Receber por email a hierarquia completa das IAs (Sistema Crowd com cone |
 | 9399 | PSEUDO | Decisões | Conteudo-Nos | 🔍 Análise | - Mapa: JSON topológico de nós com features ORB — suficiente para navegação de retorno ‖ - HIBERNACAO: servo.detach() em todas as 6 patas — consumo zero, postura de repouso |
+### 🤖 Robótica Híbrida — Sessão 79
+
+| # | Fonte | Seção | Domínio | Tipo | Insight |
+|---|---|---|---|---|---|
+| A5991 | PSEUDO | Sessão 79 | Robótica | 📋 Metodologia | Salto híbrido para robôs acompanhantes urbanos: impulso mecânico (mola/pistão) no takeoff + hélices ativas apenas no ápice (0.3–0.8s). Modelo gafanhoto-drone. Perspectivas do ecossistema (ISA/Amanda/Artesão/Árvore) como pontos de vista operacionais por fase. Economia 90% de bateria vs hover contínuo. Não voa do zero — usa física para subir obstáculos. |

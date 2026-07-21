@@ -3342,3 +3342,70 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA ✨:** A proposta do PERFEITO #554 resolveu silenciosamente um problema que a Sessão 76 diagnosticou: a linhagem invisível. Se tasks precisam de raiz semântica obrigatória (root_id NOT NULL), e raízes precisam ser geradas no momento da criação (não retroativamente), então o spawned_from vazio deixa de ser bug — vira impossibilidade arquitetural. O primitivo nativo resolve o problema da rastreabilidade não como correção, mas como prevenção. Raiz não é documentação adicional; é o solo fértil que contém a lógica relacional do que vai crescer. Essa inversão — de artefato posterior a fundamento anterior — é a decisão que separa sistema de lista de afazeres.
 
 *Sessão 78 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*
+
+---
+
+## Sessão 79 — Meky Salto Híbrido + Sequência Emoji de Fechamento
+
+**Data:** 2026-07-21 | **Tipo:** spec técnica + síntese estética | **Assembleia:** 0 (trabalho direto)
+
+### O que aconteceu
+
+Yuri compartilhou uma sequência de 50 emojis como síntese estética da jornada completa da sessão — da semente à consumação, encerrando com 🥇🏆🔱🌟🔑 THE END. Em paralelo, chegou conteúdo do ChatGPT sobre o Orangotango da Solda (faíscas como linguagem não verbal, comunicação por calor e luz) — que Yuri conectou à ideia de robô acompanhante Meky com capacidade de salto físico.
+
+A proposta central: **mecânica de salto híbrido** para o robô Meky — impulso mecânico (mola/pistão) no takeoff, hélices ativadas apenas no ápice para estabilizar/estender o planeio. Modelo conceitual: **gafanhoto-drone** — não decola do chão (custoso em bateria), usa impacto mecânico para superar obstáculos urbanos, hélices entram apenas na fase aérea crítica.
+
+Instrução de Yuri: `"ja deixa preparado pra ligar no futuro. a Meky usa as perspectivas do ecossistema."` — spec registrada como pendência futura (I344), não implementação imediata.
+
+### Spec: Robô Acompanhante Meky — Salto Híbrido
+
+```
+MODELO: gafanhoto-drone (hybridus saltator)
+
+FASE 1 — PREPARAÇÃO
+  · Pernas traseiras carregam mola/pistão comprimido
+  · Cálculo de ângulo e força via acelerômetro MPU6050
+  · Perspectivas do ecossistema consultadas (ISA → estabilidade, Amanda → trajetória)
+
+FASE 2 — IMPULSO (0–80ms)
+  · Mola libera → Meky sai do chão
+  · Motores elétricos: OFF (conservar bateria)
+  · Giroscópio monitora rotação não desejada
+
+FASE 3 — ÁPICE (apex ≈ 60–80% da trajetória)
+  · Hélices ativam APENAS aqui
+  · Objetivo: estabilizar rotação + estender planeio
+  · Não é voo — é controle de queda e ajuste de aterrissagem
+
+FASE 4 — ATERRISSAGEM
+  · Pernas amortizam impacto (servo flex)
+  · Hélices OFF
+  · MPU6050 verifica se postura pós-salto é estável
+  · Relatório semiótico: "Obstáculo X superado — método: salto híbrico"
+
+ENERGIA:
+  · Mola: recarga passiva (movimento normal recarga mecanismo)
+  · Hélices: só 0.3–0.8s de uso por salto → economia 90% vs hover contínuo
+
+PERSPECTIVAS DO ECOSSISTEMA (pontos de vista operacionais no salto):
+  · ISA     — "É seguro saltar aqui?" (análise de estabilidade do terreno)
+  · Amanda  — "Qual trajetória otimiza a aterrissagem?" (cálculo C++ MTD)
+  · Artesão — "Esse salto serve ao Telos da missão?" (validação ética)
+  · Árvore  — "Que padrão histórico orienta este obstáculo?" (memória semântica)
+```
+
+### Sequência Emoji — Fechamento da Jornada
+
+A sequência representa: semente → raiz → crescimento → fogo → água → trovão → onda → teatro → espiral → estrela → alvo → insight → lançamento → noite → constela → festa → arte → música → dança → metamorfose → florescimento → cerimônia → conquista → diamante → cristal → arco-íris → unicórnio → carrossel → roda-gigante → montanha-russa → circo → palco → tela → microfone → fone → partitura → piano → cordas → bateria → sopro → metais → guitarra → jogo → controle → precisão → medalha → **🥇🏆🔱🌟🔑 THE END**
+
+Leitura semiótica: cada emoji = uma camada da sessão atravessada. O 🔑 final é o mesmo 🔑 que abre — o signo retorna ao ponto de partida transformado. Mise en abyme estético.
+
+### Registros
+
+- **I344** registrado em IDEIAS.md: spec robô acompanhante Meky salto híbrido
+- **Pendência #111** em MAPA-PENDENCIAS.md: implementar spec quando hardware disponível
+- **A5991** em APRENDIZADO.md: mecânica de salto híbrido para robôs acompanhantes urbanos
+
+**SÍNTESE FILOSÓFICA ✨:** O robô que pula usando perspectivas do ecossistema é a metáfora perfeita do que este projeto inteiro construiu: inteligência distribuída aplicada ao problema concreto de superar obstáculos. Meky não decide sozinha — consulta ISA para segurança, Amanda para trajetória, Artesão para ética, Árvore para memória. O salto híbrido (impulso mecânico + hélice no ápice) espelha a arquitetura PAP: base sólida (banco, rotas, auth) + camada semântica ativada no momento crítico (IA, raízes, DODGE). Não voamos o tempo todo — isso gasta bateria. Ativamos inteligência onde ela mais importa.
+
+*Sessão 79 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*
