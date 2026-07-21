@@ -1,10 +1,11 @@
 {
   "name": "DODGE — Sociedade Tucci",
   "short_name": "DODGE",
-  "description": "App DODGE da Sociedade Tucci",
+  "description": "Sistema de ingestão semântica e geração de tasks da Sociedade Tucci.",
   "start_url": "/dodge/",
   "scope": "/dodge/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#0a0f1e",
   "theme_color": "#00b4d8",
   "lang": "pt-BR",
@@ -12,6 +13,6 @@
     { "src": "/dodge/dodge-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/dodge/dodge-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
-  "categories": ["education", "productivity"],
+  "categories": ["productivity"],
   "prefer_related_applications": false
 }
