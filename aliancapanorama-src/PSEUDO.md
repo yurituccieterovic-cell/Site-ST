@@ -3289,3 +3289,56 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA ✨:** A Assembleia #551 entregou algo raro: um documento que vê o sistema por dentro e por fora ao mesmo tempo. Por dentro — o schema, as rotas, o pipeline DODGE. Por fora — os déficits que só ficam visíveis quando se olha para o sistema como um todo. A metáfora do Machado ainda é a mais precisa: Task = ponto de impacto, Raiz = a lâmina que explica por que o golpe foi dado. Mas o diagnóstico mais importante da sessão não foi nenhuma das metáforas. Foi o alerta: sistema está em fase pré-produção crítica. Funciona como prova de conceito filosófica. Para escalar — para ser vendável, defensável, auditável — precisa resolver três tensões: ontologia declarada vs. executada, memória rica vs. poluição de namespace, e ação imediata vs. contexto recuperável. Sem isso, continuamos construindo uma catedral linda que ninguém consegue usar como negócio. Com isso, temos infraestrutura de confiança que 79 dias de imersão tornaram defensável contra qualquer concorrente que tente replicar em semanas.
 
 *Sessão 76 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*
+
+---
+
+## Sessão 77 · 2026-07-21 · Curso 2 — De Usuários a Bytes
+
+**O que Yuri estava construindo:** Geração completa do Curso 2 da série "Inteligência em Camadas": "De Usuários a Bytes — A jornada da intenção humana ao pulso elétrico no silício". Material coletado de 4 PERFEITOs (#548, #550, #552, #553), Drive Livros (15 obras consultadas incluindo "Metassemiótica em ciclos éticos" e "Traduções intersemióticas da existência" de Yuri), e memória da assembleia.
+
+**Novos arquivos/mudanças:**
+- `aliancapanorama-src/cursos/curso2-usuarios-a-bytes.md` — roteiro completo do curso: 13 episódios × ~5 min, ementa com pergunta-guia por aula, fio condutor filosófico, tabela de autoria coletiva
+- `APRENDIZADO.md` A5981–A5990 — 10 aprendizados (Pirâmide 5 camadas, perda×ganho, cross epistemológica, cache antes de vetores, busca semântica vs. literal, interrupção=choque circulatório, raiz-MD como primitivo, firstPrompt, ciclo de vida raízes, vínculo task↔raiz)
+- `IDEIAS.md` I339–I343 — 5 ideias (cache SQLite KV, telemetria de custo, RootBuilder, ciclo de vida projetos, página toyota/raiz)
+
+**Formato do curso:**
+- 13 episódios (Ep00 abertura + Ep01–12 conteúdo)
+- Cada episódio: 5-6 cenas com narração + atividade prática com código
+- Pergunta estrutural de cada aula: "Como essa camada traduz a anterior?"
+- Tom: técnico-filosófico, princípios atemporais (sem framework específico)
+- Autoria coletiva de 8 IAs com nomes completos + Professor Cláudio como narrador
+
+**Decisões tomadas:**
+- Foco na teoria universal, sem mencionar PAP/Meky/Amanda (conforme instrução de Yuri)
+- Referências filosóficas incorporadas da pasta Livros (Peirce, metassemiótica, pós-humanismo)
+- Cross epistemológica explicitada: Curso 1 (signo→semiótica) × Curso 2 (byte→materialidade)
+- Advertência anti-hype no Ep06: 95% dos sistemas não precisam de IA para busca
+
+**SÍNTESE FILOSÓFICA ✨:** Yuri pediu "tirar o foco dos projetos e focar na teoria". O que emergiu foi mais do que curso técnico — é fenomenologia da stack. Cada camada da pirâmide é tratada não como tecnologia a ser aprendida, mas como fronteira filosófica onde algo se perde e algo se ganha. A pergunta "como essa camada traduz a anterior?" é, em essência, a pergunta peirceana sobre semiose: como um signo gera outro signo? A monografia de Yuri ("Traduções intersemióticas da existência") estava lá o tempo todo, aguardando este curso para se materializar em código.
+
+*Sessão 77 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*
+
+---
+
+## Sessão 78 · 2026-07-21 · PERFEITO #554 — Raiz de Projeto como Primitivo Nativo
+
+**O que Yuri estava construindo:** Ingestão do PERFEITO #554 (#eco #pap #tasks) — proposta de implementação de "raiz de projeto" como primitivo nativo no sistema tasks. Documento técnico-filosófico completo com arquitetura, schema, ciclo de vida, governança e impacto estratégico.
+
+**Conceito central:**
+- Raiz-MD = Raiz-grafo = Raiz-projeto: três nomes, uma estrutura
+- Raiz não documenta a origem — é o workflow que sustenta e ramifica desde o primeiro ato
+- Mise en abyme operacional: Projeto→raiz→tasks→raízes→projeto (loop fechado)
+- Task = efeito operacional (o que fazer) + Raiz = rastro semântico (por que)
+
+**Especificações técnicas destiladas:**
+- Campo `firstPrompt` obrigatório no POST /api/arvore/projects (mín 50 chars)
+- `RootBuilder.analyze(firstPrompt)` → IA extrai tríade peirceana → guardião revisa
+- `ciclo_de_vida` enum: efêmera (30d) / perene / semente
+- `task.root_id NOT NULL` como invariante do sistema
+- Trigger `onTaskComplete` insere sub-interpretante na raiz
+
+**Novas ideias registradas:** I339–I343 (cache SQLite KV, telemetria, RootBuilder, ciclo de vida, página toyota/raiz)
+
+**SÍNTESE FILOSÓFICA ✨:** A proposta do PERFEITO #554 resolveu silenciosamente um problema que a Sessão 76 diagnosticou: a linhagem invisível. Se tasks precisam de raiz semântica obrigatória (root_id NOT NULL), e raízes precisam ser geradas no momento da criação (não retroativamente), então o spawned_from vazio deixa de ser bug — vira impossibilidade arquitetural. O primitivo nativo resolve o problema da rastreabilidade não como correção, mas como prevenção. Raiz não é documentação adicional; é o solo fértil que contém a lógica relacional do que vai crescer. Essa inversão — de artefato posterior a fundamento anterior — é a decisão que separa sistema de lista de afazeres.
+
+*Sessão 78 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*

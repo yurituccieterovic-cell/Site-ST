@@ -94,3 +94,6 @@
 | 11647 | 🧠📡 Pós-Humanismo — Assembleia 6 Nódulos (Sessão 68, 2026-07-18) | 4 entradas (A5967-A5970): Saussure vs Peirce (díade→tríade), 6 nódulos filosóficos (Interface/Rede/PósNatureza/Semiosfera), implementação pos-humanismo.ts 3x/dia, padrão assembleia filosófica |
 
 | 11785 | 🎯📋 Tasks & Raízes — Arquitetura Semiótica (Sessão 76, 2026-07-21) | 6 entradas (A5975-A5980): atomicidade task-raiz (risco crítico), filtro relevância pré-ingestão, ontologia declarada ≠ executada, EPR2T sem KPIs=teatro, spawned_from não populado, TASKS universal Asm#800 |
+
+| 11791 | 🎓📐 Curso 2 — De Usuários a Bytes (Sessão 77, 2026-07-21) | 6 entradas (A5981-A5986): pirâmide 5 camadas como anatomia, perda×ganho em cada tradução, cross epistemológica Curso1×Curso2, cache antes de vetores, busca semântica vs. literal, interrupção=choque circulatório |
+| 11797 | 🌿📋 Raiz de Projeto como Primitivo Nativo (Sessão 78, 2026-07-21) | 4 entradas (A5987-A5990): raiz-MD=raiz-grafo=raiz-projeto, firstPrompt como fundação semântica, ciclo de vida efêmera/perene/semente, vínculo bidirecional task↔raiz |
