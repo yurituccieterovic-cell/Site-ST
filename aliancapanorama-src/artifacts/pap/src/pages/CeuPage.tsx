@@ -517,6 +517,14 @@ export function CeuPage() {
   const [showBiblioteca, setShowBiblioteca] = useState(false);
   const [apiStatus, setApiStatus] = useState<"unknown" | "online" | "offline">("unknown");
 
+  // Troca manifest para CÉU enquanto na página, restaura ao sair
+  useEffect(() => {
+    const link = document.querySelector<HTMLLinkElement>("link[rel='manifest']");
+    const prev = link?.href ?? "";
+    if (link) link.href = "/aliancapanorama/manifest-ceu.json";
+    return () => { if (link) link.href = prev; };
+  }, []);
+
   // Health check rápido ao carregar
   useEffect(() => {
     fetch(`${API}/api/healthz`, { signal: AbortSignal.timeout(6000) })
