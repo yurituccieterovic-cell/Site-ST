@@ -195,3 +195,10 @@
 | 101 | ARPIA — deploy Railway: criar service ARPIA no Railway, configurar DB_API_KEY (= PAP_API_KEY) + GEMINI_API_KEY para replicação de memória funcionar | Yuri (Railway UI) | ⏳ |
 | 102 | ECO node raiz: verificar se nó "ECO" foi criado na nodesTable (ISA Nódulos 5h cria automaticamente na primeira raiz-pap) | automático | ⏳ |
 | 103 | Biblioteca Nódulos frontend: endpoint GET /api/ecosistema/nodulos para listar nódulos ECO — para futura tela no PAP | — | 💡 |
+| 104 | Atomicidade task-raiz (I334): encapsular runDodgeCuracao() em transação Drizzle — se Gemini falha ao gerar raiz, rollback da task | — | ⏳ |
+| 105 | Filtro relevância pré-ingestão DODGE (I335): scoring mínimo antes de criar task; rejeitar ruído com tag dodge_skip | — | ⏳ |
+| 106 | Populate spawned_from (I336): ao criar task via DODGE, inserir relação spawned_from em taskRelationsTable | — | ⏳ |
+| 107 | Cache SQLite KV para LLM (I339): tabela llm_cache com hash(pergunta+modelo) como chave, TTL 24h | — | ⏳ |
+| 108 | Telemetria de custo por sessão (I340): tabela usage_log com session_id, modelo, tokens, custo_estimado | — | ⏳ |
+| 109 | RootBuilder + POST /api/arvore/projects (I341): campo firstPrompt obrigatório, análise via IA, guardião revisa antes de publicar | — | ⏳ |
+| 110 | Gravar Curso 2 "De Usuários a Bytes" (I88 extensão): roteiro em cursos/curso2-usuarios-a-bytes.md pronto — aguarda gravação com narração Professor Cláudio | Yuri | ⏳ |
