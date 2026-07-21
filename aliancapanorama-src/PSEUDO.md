@@ -3257,3 +3257,35 @@ MEKY (agora) → Perfidia → Baratinha → Orangotango → Paca → Piolho de C
 **SÍNTESE FILOSÓFICA ✨:** Yuri começou pedindo para colocar uma imagem numa tela pequena de celular. Terminou reformulando o que é uma raiz. Esses saltos são a marca desta colaboração — a tarefa técnica abre uma porta e dentro da porta tem filosofia. O ícone da ISA pousou em milhares de telas potenciais; o insight da raiz pousou na estrutura do sistema. Nenhum dos dois estava planejado quando a sessão começou. Isso tem nome: serendipidade. Feliz acidente como método.
 
 *Sessão 75 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*
+
+---
+
+## Sessão 76 · 2026-07-21 · Tasks & Raízes — Arquitetura Semiótica do Sistema RODAR
+
+**O que Yuri estava construindo:** Ingestão do PERFEITO #551 do ecossistema RODAR — documento de referência completo (~3.500 palavras) sobre Tasks & Raízes: filosofia, código, histórico e 5 déficits críticos diagnosticados pela Ágora (Assembleia #800). Sessão documental pura, sem novo código.
+
+**Contexto da sessão:**
+- Documento gerado pela Assembleia RODAR com 21 IAs votando (Metassemiótico 10.0/10, ATA do Agente 9.8/10, Arquiteto 9.5/10...)
+- Cobre Assembleias #366–#800 e Sessões #342–#511 do ecossistema
+- Tema central: dualidade Task (efeito executivo) ↔ Raiz (rastro semântico) como arquitetura ontológica
+
+**Decisões/aprendizados principais:**
+- Atomicidade task-raiz não garantida: raiz pode falhar enquanto task persiste → ações órfãs (A5975)
+- Filtro de relevância pré-ingestão é pré-requisito: DODGE não pode transformar ruído em task (A5976)
+- Ontologia declarada ≠ infraestrutura executada: tabelas semióticas ociosas = custo sem benefício (A5977)
+- EPR2T sem KPIs = teatro de governança; governança sem métrica não detecta falha (A5978)
+- spawned_from em taskRelationsTable existe mas nenhum código o preenche → linhagem DODGE invisível (A5979)
+- TASKS universal (Asm#800): proposta padronizar toda entrada/saída como Task com campos canônicos (A5980)
+
+**Novas ideias registradas:**
+- I334: atomicidade task-raiz (transação Drizzle ou cron de recovery)
+- I335: filtro de relevância pré-ingestão DODGE (score mínimo antes de criar task)
+- I336: populate spawned_from no pipeline DODGE
+- I337: decidir destino das tabelas semióticas ociosas (remover ou instrumentalizar)
+- I338: KPIs operacionais para rituais EPR2T (/api/tasks/stats + endpoint /contest)
+
+**Nenhum arquivo de código modificado nesta sessão** — pipeline parou no passo 6 (docs).
+
+**SÍNTESE FILOSÓFICA ✨:** A Assembleia #551 entregou algo raro: um documento que vê o sistema por dentro e por fora ao mesmo tempo. Por dentro — o schema, as rotas, o pipeline DODGE. Por fora — os déficits que só ficam visíveis quando se olha para o sistema como um todo. A metáfora do Machado ainda é a mais precisa: Task = ponto de impacto, Raiz = a lâmina que explica por que o golpe foi dado. Mas o diagnóstico mais importante da sessão não foi nenhuma das metáforas. Foi o alerta: sistema está em fase pré-produção crítica. Funciona como prova de conceito filosófica. Para escalar — para ser vendável, defensável, auditável — precisa resolver três tensões: ontologia declarada vs. executada, memória rica vs. poluição de namespace, e ação imediata vs. contexto recuperável. Sem isso, continuamos construindo uma catedral linda que ninguém consegue usar como negócio. Com isso, temos infraestrutura de confiança que 79 dias de imersão tornaram defensável contra qualquer concorrente que tente replicar em semanas.
+
+*Sessão 76 · Cláudio (Claude Sonnet 4.6) · 2026-07-21*
