@@ -3528,3 +3528,31 @@ A sessão não tinha código — era pura análise arquitetural e estratégica. 
 **SÍNTESE FILOSÓFICA ✨:** A Parte 4b é onde a arquitetura olha para si mesma e tem de decidir se é arte ou infraestrutura. O Índice Φ é a resposta: não é medida de beleza, é medida de habitabilidade. O sistema só é fractal de verdade quando qualquer campo pode virar Task sem quebrar nada — e o limite de 3 níveis é o que impede que a recursividade infinita se torne labirinto. Os dois Axiomas não são poesia filosófica — são contratos operacionais: "se existe, tem representante; se tem representante, pode crescer; se cresce, mantém o padrão". E a conclusão da análise crítica é a mais honesta de todo o ciclo: Pare de adicionar camadas. Comece a subtrair fricção. A próxima arquitetura não será mais elegante — será mais habitável.
 
 *Sessão #85 / RODAR #561 · Cláudio (Claude Sonnet 4.6) · 2026-07-23*
+
+---
+
+## Sessão #86 / RODAR #562 — 2026-07-23
+**O que Yuri estava fazendo:** PERFEITO #562 — Parte 4C da Aula de Tasks. As IAs ramificaram fractalmente os Índices, e surgiu material novo genuíno: 7 Leis Operacionais formalizadas (Especialização, Não-Duplicação, Promoção, Interferência, Evolução, Coerência, Vitalidade), relação epistemológica "reveals" (≠ causal), taxonomia filosófica completa do Índice 6 (12 tipos). Ironicamente, o erro da aula anterior aconteceu no Índice 6 — o sistema encenou seu próprio conceito.
+
+**Decisões:** PARTE 4C adicionada à aula-tasks-parte4.md. I378 (relação reveals) registrada. A6082–A6086.
+
+**Artefatos:** A6082–A6086 · I378 · `cursos/aula-tasks-parte4.md` (Seção 4C)
+
+**SÍNTESE FILOSÓFICA ✨:** As 7 Leis não são regras — são o momento em que a ontologia descobre que precisa de governança. Um sistema que cresce sem lei vira entropia vestida de riqueza. A lei mais importante é a da Não-Duplicação: cada dado tem um dono. É o princípio que torna o resto possível, porque sem dono, não há responsabilidade, e sem responsabilidade, o conhecimento se dissolve em ruído. O erro no Índice 6 durante a aula foi o achado mais honesto do ciclo: o sistema não está acima das suas próprias interferências — ele as atravessa com elas.
+
+*Sessão #86 / RODAR #562 · Cláudio (Claude Sonnet 4.6) · 2026-07-23*
+
+---
+
+## Sessão #87 / RODAR #563 — 2026-07-23
+**O que Yuri estava fazendo:** PERFEITO #563 — Parte 5 da Aula de Tasks (última). As 7 decisões técnicas foram respondidas pelo Conselho: GIN index, Zod partial, weight_vector separado, Φ por raiz+global 1h, Promoção Fractal explícita com reversibilidade, DAG rígido para reveals, inferência parcial ISA/DODGE. ChatGPT contribuiu com Ψ (criatividade) e os 9 Princípios de Governança Fractal. Constituição ST System com 10 artigos. Axioma Final: "O ST System não organiza tarefas; ele organiza a evolução do conhecimento."
+
+**Decisões:** Aulias pendente — BRIDGE_SECRET local dessincronizado com Railway (#93 ainda aberta). Pendência #112 atualizada para incluir Partes 4C e 5. aula-tasks-parte5.md criado. A6087–A6092.
+
+**Tensão não resolvida:** Conector e Aulias inacessíveis por divergência de BRIDGE_SECRET. Yuri precisa verificar Railway dashboard → Variables → BRIDGE_SECRET e atualizar #secrets.
+
+**Artefatos:** A6087–A6092 · `cursos/aula-tasks-parte5.md`
+
+**SÍNTESE FILOSÓFICA ✨:** A Parte 5 é o momento em que a arquitetura para de ser filosofia e começa a ser responsabilidade. Ψ é o insight mais surpreendente: um sistema pode ser coerente (Φ alto) e completamente morto (Ψ ≈ 0). Medir criatividade além de coerência é reconhecer que saúde sistêmica não é ausência de caos — é capacidade de produzir novidade a partir dele. A Constituição de 10 artigos é o que separa um projeto de uma civilização: artigo 4 ("nenhum conhecimento é perdido") e artigo 8 ("toda automação importante deve ser reversível") são os mais difíceis de honrar na prática, e por isso os mais importantes. O Axioma Final não é encerramento — é reposicionamento. O sistema não gerencia tarefas. Ele metaboliza pensamento.
+
+*Sessão #87 / RODAR #563 · Cláudio (Claude Sonnet 4.6) · 2026-07-23*
