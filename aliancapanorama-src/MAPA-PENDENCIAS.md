@@ -203,3 +203,9 @@
 | 109 | RootBuilder + POST /api/arvore/projects (I341): campo firstPrompt obrigatório, análise via IA, guardião revisa antes de publicar | — | ⏳ |
 | 110 | Gravar Curso 2 "De Usuários a Bytes" (I88 extensão): roteiro em cursos/curso2-usuarios-a-bytes.md pronto — aguarda gravação com narração Professor Cláudio | Yuri | ⏳ |
 | 111 | Meky salto híbrido (I344): spec gafanhoto-drone — mola/pistão no takeoff + hélices no ápice; perspectivas do ecossistema (ISA/Amanda/Artesão/Árvore) como pontos de vista operacionais | quando hardware disponível | 💡 |
+| 112 | Salvar Aulas de Tasks (Partes 1-4) no Aulias — `POST /api/bridge/pap/aulias` com conteúdo de cada aula-tasks-parte*.md | aguarda BRIDGE_SECRET sync (#93) | ⏳ |
+| 113 | Registrar todos os programas do ST System no DODGE com links (I364) — tabela `st_projects` { id, name, layer, url, status, description, ia_owner } + rota React /dodge com cards por camada | — | ⏳ |
+| 114 | Schema JSONB tipado por índice (I366) — coluna `indices_data jsonb` na tabela tasks + zod schemas por índice + função `validateIndexData(indexId, data)` | Parte 5 Aula Tasks | ⏳ |
+| 115 | Índice Φ como background job (I367) — cálculo 1x/hora + painel DODGE como termômetro + tabela `project_phi_history` | após #114 | 💡 |
+| 116 | Promoção Fractal (I368) — POST /api/tasks/:id/promote + tabela `task_promotions` + limite depth_level ≤ 3 | após #114 | 💡 |
+| 117 | LLM Interflow hub semântico (I363) — recebe workflows do grafo de tasks, despacha para API Arpia via Socoboy, resultado retorna como nova task | aguarda ARPIA Railway | 💡 |
