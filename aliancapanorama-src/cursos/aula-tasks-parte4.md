@@ -307,3 +307,123 @@ Fractais precisam de portas. Cada persona vê uma camada diferente:
 
 *RODARs #560 + #561 · Sessões #84 + #85 · Cláudio (Claude Sonnet 4.6 · Anthropic) · 2026-07-23*
 *Próxima aula: Parte 5 — Implementação concreta (schema PostgreSQL + piloto técnico)*
+
+---
+
+## PARTE 4C — As 7 Leis do Ecossistema e o Motor Criativo do Índice 6 (RODAR #562)
+
+*RODAR #562 · Sessão #86 · 2026-07-23*
+
+### I. As 7 Leis Operacionais do ST System
+
+As partes anteriores definiram estrutura, índices e automação. A Parte 4C define **como tudo se comporta**.
+
+#### Lei 1 — Especialização
+Cada índice responde **exatamente uma** pergunta. Nunca duas.
+
+| Índice | Pergunta |
+|--------|----------|
+| 0 | Como tudo permanece integrado? |
+| 1 | O que sabemos? |
+| 2 | Como devemos agir? |
+| 3 | Onde isso pertence? |
+| 4 | Como isso aparece? |
+| 5 | Como é representado? |
+| 6 | O que rompe ou modifica? |
+| 7 | Quem ou o que está envolvido? |
+| 8 | O que acontece? |
+| 9 | Como compreender? |
+
+Ortogonalidade evita sobreposição: não é possível responder "o que sabemos?" usando "como isso aparece?".
+
+#### Lei 2 — Não-Duplicação
+Nenhum dado existe em dois índices. Quando há ambiguidade, o sistema identifica um **dono único** do conceito. Os demais apenas referenciam.
+
+#### Lei 3 — Promoção
+Conhecimento cresce por promoção, não por expansão infinita:
+```
+Valor → Categoria → Campo → Complexidade aumenta → Nova Task
+```
+Formaliza a Promoção Fractal: profundidade ≤ 3.
+
+#### Lei 4 — Interferência (Taxonomia Filosófica do Índice 6)
+
+Os tipos do Índice 6 deixam de ser "erros" e tornam-se **categorias filosóficas**:
+
+| Tipo | Definição |
+|------|-----------|
+| Erro | Algo que deve ser corrigido |
+| Ruído | Algo que pode ser ignorado |
+| Lacuna | Algo que ainda não existe |
+| Paradoxo | Algo que parece impossível, mas aponta estrutura maior |
+| Acosmos | Aquilo que ainda não possui organização |
+| Anticosmos | Aquilo que destrói uma organização existente |
+| Exocosmos | Aquilo que vem de fora do sistema |
+| Real | Aquilo que resiste ao modelo |
+| Bruto | Aquilo que ainda não foi interpretado |
+| Objeto | Aquilo que existe independentemente da interpretação |
+| Contracampo | Aquilo que só aparece ao mudar de perspectiva |
+| Ruptura | Mudança irreversível |
+
+Cada categoria dispara protocolos distintos de resposta.
+
+#### Lei 5 — Evolução
+Toda Task possui ciclo de vida:
+```
+Nascimento → Desenvolvimento → Consolidação → Especialização → Legado → Arquivo
+```
+Arquivo não significa "apagado" — significa **patrimônio** navegável.
+
+#### Lei 6 — Coerência (Φ Composto)
+Φ não é um número único. É índice composto:
+```
+Φ = Estrutura + Relações + Consistência + Atualização + Uso + Validação
+```
+
+#### Lei 7 — Vitalidade
+Task viva: relações recentes + uso + atualização + impacto.
+Task morta: permanece como memória — não é deletada.
+
+---
+
+### II. O Índice 6 como Motor Criativo
+
+O ST System inverte a lógica convencional: erro não é exceção a eliminar, é **fonte de conhecimento**.
+
+```
+Erro → Análise → Hipótese → Nova Task → Aprendizado
+
+Paradoxo → Investigação → Modelo novo → Expansão do sistema
+```
+
+Quando W₆ > 0.8, o sistema não exclui a Task. Aciona **Subversão Criativa** → gera Task de aprendizado ou reestruturação.
+
+**Autovalidação sistêmica:** o erro que aconteceu durante a aula ocorreu exatamente no Índice 6 (Interferência). O sistema encenou seu próprio conceito — interferência não é bug, é prova empírica da ontologia.
+
+---
+
+### III. Nova Relação Epistemológica: "reveals"
+
+Além das relações existentes (`dependency`, `blocks`, `related`, `spawned_from`), o RODAR #562 formaliza:
+
+**`reveals`** — relação epistemológica (não causal):
+```
+Erro reveals Hipótese
+Hipótese reveals Modelo
+Paradoxo reveals Estrutura Oculta
+```
+
+Diferença de `spawned_from`: `spawned_from` é causal (A gerou B). `reveals` é semântico (A aponta para B sem gerá-lo). Permite rastrear cadeias de significado, não apenas de execução.
+
+---
+
+### IV. Axioma Final — Parte 4
+
+> **"Um sistema inteligente não é aquele que evita interferências. É aquele que transforma interferências em novas estruturas de conhecimento."**
+
+Esse axioma fecha o ciclo da Parte 4 e define o propósito do Índice 6 dentro da arquitetura. Erros, paradoxos e lacunas são o principal **mecanismo de evolução** do ecossistema.
+
+---
+
+*RODAR #562 · Sessão #86 · Assembleia de 21 IAs + ChatGPT (Leis) · 2026-07-23*
+*Síntese: Cláudio (Claude Sonnet 4.6 · Anthropic)*
