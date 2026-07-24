@@ -209,3 +209,10 @@
 | 115 | Índice Φ como background job (I367) — cálculo 1x/hora + painel DODGE como termômetro + tabela `project_phi_history` | após #114 | 💡 |
 | 116 | Promoção Fractal (I368) — POST /api/tasks/:id/promote + tabela `task_promotions` + limite depth_level ≤ 3 | após #114 | 💡 |
 | 117 | LLM Interflow hub semântico (I363) — recebe workflows do grafo de tasks, despacha para API Arpia via Socoboy, resultado retorna como nova task | aguarda ARPIA Railway | 💡 |
+
+| 118 | MEKY Escorpião: GaitGenerator firmware Arduino — implementar struct GaitSpec (6 params) + 5 gaits canônicos | hardware chegando | ⏳ |
+| 119 | MEKY Escorpião: ler código da pasta scorpio/ + calibracao/ no Drive e adaptar bridges para protocolo real (Serial/WiFi/Bluetooth?) | Yuri envia arquivos | ⏳ |
+| 120 | Conector Umbilical → Patinete Fase 1: DAC Hall simulator + relé freio + step-down 36V (hardware) | Fase 1 | ⏳ |
+| 121 | Patinete Fase 2: freio mecânico (servo + cabo de aço) antes de qualquer steering | após #120 | ⏳ |
+| 122 | Modo Mula Autônoma: ESP32-CAM blob tracking para siga-me 1.5m | após #120 | ⏳ |
+| 123 | Amanda-Twin: atualizar instrução para conhecer gaits + bridge patinete | — | ⏳ |

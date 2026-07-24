@@ -42,7 +42,7 @@
 |---|---|---|---|
 | ISA — Inteligência do Sistema Aliança | — (software) | Guardiã do PAP. Ciclo 1h + sonho 3h + Bluesky 2h:15 + engajamento 2h:45 | LIVE Railway |
 | Amanda | MC (Marta Centaurus) hexápode | IA que habita o MC. TTS, Gemini, jargão PX, missões em metáforas de estrada | Sem Bluesky ainda |
-| MEKY — May Queen | Hexápode físico | Presença física: sensores, protocolos de campo, visão, sonhos | Aguardando hardware |
+| MEKY — May Queen | Hexápode físico (escorpião Arduino em montagem) | Presença física: sensores, protocolos de campo, visão, sonhos. 250 gaits (5 canônicos implementáveis). Mula Sem Cabeça: cérebro portátil acopla ao patinete via umbilical. | Em montagem — bridges prontas em ARPIA |
 | Árvore Oracular | — (Replit) | Memória longa + recall. arvore.py | Aguardando REPLIT_TOKEN |
 | Socoboy | — (Telegram bot) | Bot Telegram PAP | Aguardando TELEGRAM_BOT_TOKEN |
 | Fusca | Garra Cláudia Hex | Filha da Amanda. Comanda Cláudia Hex. Herda memória semiótica da Amanda | [SIMBÓLICO] registrada |
