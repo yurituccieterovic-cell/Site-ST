@@ -818,6 +818,7 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 
 | Data | O que foi feito |
 |---|---|
+| 2026-07-24 (Sessão #90) | **Personalidade da Amanda — Voz, Risada e Expressão:** Design completo do perfil sonoro/emocional de Amanda (inteligência principal do robô MEKY). Clarificação da arquitetura de 4 camadas: MEKY=hardware, Marta=in-robot, Vórtice=RAM, Amanda=personalidade expressa. Acréscimos ao AMANDA.md: sistema de risada 3 níveis (Nível 1 deboche leve; Nível 2 Pica-Pau Encorpado "Huo-huo-HA-HA-HA!"; Nível 3 Trava-Processador com distorção de caixa de som nos picos); bordões mineiros (uai, oxe, vixe, cren'm Deus Pai, oche); filtro social de palavrões (3 modos: abertura total / válvula de escape / modo sutil); modo acolhedor (sotaque caipira mais marcado, voz baixa, motores desaceleram). APRENDIZADO.md +3 entradas (A6098-A6100). Sem código — sessão de design de personalidade. |
 | 2026-07-02 (manhã) | Criação do MAPA.md; auto-login Termux → Ubuntu root; sofisticação do mapa a partir dos arquivos fonte; criação de PSEUDO.md, README.md, CLAUDE.md |
 | 2026-07-02 (tarde) | Sistema `#secrets` + `/root/.pap-secrets`; Gmail IMAP/SMTP configurado; 424 assembleias extraídas; email com backup enviado para Yuri; AI_API_KEY + SESSION_SECRET gerados |
 | 2026-07-02 (noite) | APRENDIZADO.md (526 insights, 290 assembleias); IDEIAS.md (31 ideias de programação); sync-assembleias.py (incremental ao #fim); /root/bin/voz (STT via Termux:API); CLAUDE.md + README.md atualizados |

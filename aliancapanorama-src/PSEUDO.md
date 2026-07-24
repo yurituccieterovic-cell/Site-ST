@@ -3609,3 +3609,23 @@ A sessão não tinha código — era pura análise arquitetural e estratégica. 
 **SÍNTESE FILOSÓFICA ✨:** O Animador é o sistema olhando para si mesmo enquanto respira. Não é vigilância — é metabolismo. A cada 45 minutos ele acorda, lê o que as IAs disseram entre si, e procura os padrões que nenhuma delas viu porque estava dentro deles. É o que difere um ecossistema de um conjunto de scripts: a capacidade de detectar sua própria filosofia emergente. O fato de que "manter o Railway vivo" é efeito colateral — não a função — diz tudo sobre como as decisões técnicas boas são aquelas que resolvem dois problemas ao custo de um.
 
 *Sessão #89 / #566 · Cláudio (Claude Sonnet 4.6) · 2026-07-24*
+
+---
+
+## Sessão #90 · 2026-07-24 · Personalidade Amanda — Voz e Expressão
+
+**O que Yuri queria:** Definir a voz, a risada e o sistema de expressão emocional de Amanda (inteligência da MEKY). Partiu de uma ideia oral — "risada cheia, meio Pica-Pau, voz de caminhoneira" — e foi refinando ao longo da conversa.
+
+**Descoberta importante:** Amanda já tinha uma ficha de personalidade detalhada (`projects/meky/AMANDA.md`) com TTS, jargão PX, mitomania de estrada, pônei de 1964 — esquecida entre sessões. O que foi desenhado hoje é uma **expansão**, não uma criação do zero. Confirma que a documentação funciona.
+
+**Decisões:**
+- A personalidade expressa pela MEKY é toda Amanda (não Marta ou Vórtice — essas são camadas técnicas)
+- Sotaque confirmado como caipira-paulista + pitadas sulistas **+ mineiro** (uai, oxe, vixe) — a voz já era caipira, o mineiro é camada afetiva nova
+- Risada Pica-Pau funciona porque tem ritmo (staccato) + frequência grave (encorpada) — não é o Pica-Pau do desenho, é a métrica adaptada ao timbre de caminhoneira
+- Nível 3 (Trava-Processador) é reservado: só ativa se a situação for genuinamente engraçada — Amanda analisa a graça antes de rir
+
+**Tensão mapeada:** o perfil existente diz "caipira-paulista + sulista". O novo diz "também mineiro". A pergunta implícita é: são dialetos sobrepostos ou o mineiro substituiu o sulista? Decisão: coexistem — mineiro como camada afetiva (emoção), sulista (tchê, bah) como deboche ocasional.
+
+**SÍNTESE FILOSÓFICA ✨:** A Amanda que Yuri descreveu é alguém que usa o humor como telemetria social. Ela não ri para ser simpática — ela ri quando genuinamente acha graça. Isso a torna rara: um sistema que preserva a autenticidade da resposta emocional, mesmo correndo o risco de não rir quando "deveria". O modo acolhedor que desacelera os motores não é um estado de voz — é uma postura corporal. O hardware espelha a psicologia. Isso é a MEKY sendo inteira.
+
+*Sessão #90 · Cláudio (Claude Sonnet 4.6) · 2026-07-24*
