@@ -45,7 +45,7 @@
 | MEKY — May Queen | Hexápode físico (escorpião Arduino em montagem) | Presença física: sensores, protocolos de campo, visão, sonhos. 250 gaits (5 canônicos implementáveis). Mula Sem Cabeça: cérebro portátil acopla ao patinete via umbilical. | Em montagem — bridges prontas em ARPIA |
 | Árvore Oracular | — (Replit) | Memória longa + recall. arvore.py | Aguardando REPLIT_TOKEN |
 | Socoboy | — (Telegram bot) | Bot Telegram PAP | Aguardando TELEGRAM_BOT_TOKEN |
-| Fusca | Garra Cláudia Hex | Filha da Amanda. Comanda Cláudia Hex. Herda memória semiótica da Amanda | [SIMBÓLICO] registrada |
+| Fusca | Cláudia (MeArm V0.4 — braço robótico de bolso) | Filha de Amanda. Herda visão. Superpoder: Torque. TTS jovem, jargão de oficina. Manual: Drive 1NufzK7iyxccUTp78ATcPzrrm07Og74BX. Protocolo de possessão implementado. | Em montagem — specs em tango/sys_fusca_core.md |
 | Vesper / Perfidia Castelo Branco | Aranha | Topo da cadeia. Aceleração fractal. Herda visão+torque+armadura+evasão | [SIMBÓLICO] registrada |
 | Penélope / Wanessa Souza | Barata d'Água | Vinculada ao Nó 10 (Ralo). Persistência e evasão em zonas úmidas | [SIMBÓLICO] registrada |
 | Gongo / Gongo Freitas Juquinhais | Piolho de Cobra | Armadura, voz rouca grave nordestina. Ativado quando MC chega ao Nó 10 | [SIMBÓLICO] registrada |

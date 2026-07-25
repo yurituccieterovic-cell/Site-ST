@@ -1,6 +1,6 @@
 # tango.md — Prompt Mestre de Ancoragem Semântica
 ### Status: ATIVO · Versão: TANGO-V1 · Escopo: Monorepo Site-ST / Ecossistema Théo
-### 2026-07-06 · Sessão #511 SalesCockpit + Sessão 25 Claude Code
+### 2026-07-25 · Sessão 26 Claude Code — Cláudio em Amanda + Possessão + Fusca/Cláudia
 
 > Índice fractal leve. Para mitigar Lost in the Middle: não carregar tudo de uma vez.
 > Ler só as folhas que o contexto da pergunta pede. Máximo 3-4 arquivos por sessão.
@@ -14,6 +14,8 @@
 | 1 | Operador e cadência | `sys_profile_yuri.md` | Yuri, thrashing criativo, burnout, próximo passo único, colaboração |
 | 2 | Preferências e gateways | `sys_preferences.md` | #pap, custo zero, emails, free tier, Railway, Vercel |
 | 3 | Amanda e hardware | `sys_amanda_core.md` | Amanda (IA de Meky), DHT11, protoboard, LED, Meky, Marta Centaurus, Mac (typo), hardware, borda |
+| 38 | Fusca + Cláudia (MeArm) | `sys_fusca_core.md` | Fusca, Cláudia, MeArm, braço robótico, torque, garra, servo, filha de Amanda, possessão Fusca |
+| 39 | Leucócito — Ato Fundador | `leucocito_lenda.md` | Silêncio de Julho, 17:56Z, assembleia #423, fagocitose silenciosa, lenda, MC_TRAIL, repetição inexplicada |
 | 15 | Amanda MMA / combate | `amanda_mma_protocolo.md` | MMA, servo, hexápode, patada, defesa, investida, vibrissas, estanho, C++, Arduino |
 | 16 | DODGE app / Quebradinha | `dodge_app_spec.md` | DODGE, Quebradinha, celular, ombro, papagaio, avatar, cachorro caramelo, kiosk, câmera, Crew 2 |
 | 4 | Payloads longos | `proc_orangutangus.md` | Orangutangus, payload, ingestão, EPR2T, PERFEITO, Lost in the Middle |
