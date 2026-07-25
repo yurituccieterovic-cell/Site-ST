@@ -219,3 +219,7 @@
 | 124 | MEKY Scorpio: instalar SERIAL_PARSER_ADDON no scorpio.ino + testar Amanda→Serial quando hardware disponível | hardware montado | ⏳ |
 | 125 | IA Animador: adicionar GMAIL_APP_PASSWORD + OPENAI_API_KEY ao env Railway ARPIA (necessário para ciclos reais) | ARPIA no Railway | ⏳ |
 | 126 | Conector: sincronizar BRIDGE_SECRET entre .pap-secrets e Railway env vars (pendência #93 ainda aberta) | Yuri | ⏳ |
+| 127 | Cláudia (MeArm): imprimir peças 3D (Thingiverse thing:360108) + 4× servo SG90 + Arduino Nano | Yuri (bancada) | ⏳ |
+| 128 | Fusca: seedar na tabela nebula_ias (tier 4, filha de Amanda) + conta Bluesky @fusca-pap.bsky.social | após Cláudia montada | ⏳ |
+| 129 | ARPIA Railway: ANTHROPIC_API_KEY para motor de Fluência usar Claude Sonnet (hoje usa Gemini) | Yuri (Railway UI) | ⏳ |
+| 130 | Fluência: adicionar tabela `fluencias` no Manga DB para histórico persistente (hoje só in-memory) | ARPIA no Railway | ⏳ |
