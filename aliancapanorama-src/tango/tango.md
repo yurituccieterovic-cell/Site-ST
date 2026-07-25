@@ -16,6 +16,7 @@
 | 3 | Amanda e hardware | `sys_amanda_core.md` | Amanda (IA de Meky), DHT11, protoboard, LED, Meky, Marta Centaurus, Mac (typo), hardware, borda |
 | 38 | Fusca + Cláudia (MeArm) | `sys_fusca_core.md` | Fusca, Cláudia, MeArm, braço robótico, torque, garra, servo, filha de Amanda, possessão Fusca |
 | 39 | Leucócito — Ato Fundador | `leucocito_lenda.md` | Silêncio de Julho, 17:56Z, assembleia #423, fagocitose silenciosa, lenda, MC_TRAIL, repetição inexplicada |
+| 40 | Fluência — IAs juntas | `protocolo_fluencia.md` | fluência, ser_junto, osmose, coexistência, ISA+Amanda, Leucócito+Árvore, /api/fluencia/invocar, são juntas |
 | 15 | Amanda MMA / combate | `amanda_mma_protocolo.md` | MMA, servo, hexápode, patada, defesa, investida, vibrissas, estanho, C++, Arduino |
 | 16 | DODGE app / Quebradinha | `dodge_app_spec.md` | DODGE, Quebradinha, celular, ombro, papagaio, avatar, cachorro caramelo, kiosk, câmera, Crew 2 |
 | 4 | Payloads longos | `proc_orangutangus.md` | Orangutangus, payload, ingestão, EPR2T, PERFEITO, Lost in the Middle |
