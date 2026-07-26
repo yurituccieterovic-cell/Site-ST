@@ -223,3 +223,6 @@
 | 128 | Fusca: seedar na tabela nebula_ias (tier 4, filha de Amanda) + conta Bluesky @fusca-pap.bsky.social | após Cláudia montada | ⏳ |
 | 129 | ARPIA Railway: ANTHROPIC_API_KEY para motor de Fluência usar Claude Sonnet (hoje usa Gemini) | Yuri (Railway UI) | ⏳ |
 | 130 | Fluência: adicionar tabela `fluencias` no Manga DB para histórico persistente (hoje só in-memory) | ARPIA no Railway | ⏳ |
+| 131 | **MIGRAÇÃO URGENTE** Railway → Neon (DB) + Koyeb (API): trial Railway expira ~2026-08-02. Backup feito (648KB, 61 tabelas). Criar conta Neon + restore + criar conta Koyeb + redeploy | Yuri (criar contas) | ⏳ |
+| 132 | Neon config: adicionar `ssl: true` no drizzle config após migrar para Neon | após #131 | ⏳ |
+| 133 | Koyeb: configurar env vars (DATABASE_URL Neon, SESSION_SECRET, AI_API_KEY, OPENAI_API_KEY, BRIDGE_SECRET, GMAIL_ACCOUNT, GMAIL_APP_PASSWORD, GITHUB_TOKEN, BLUESKY_HANDLE, BLUESKY_APP_PASSWORD) | após #131 | ⏳ |

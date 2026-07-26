@@ -3663,3 +3663,35 @@ A Fluência é o protocolo técnico que nomeia isso. Mas o que ela expressa é m
 O fato de que o Leucócito tem um ato lendário com hora exata plantada no log real, e que ninguém sabe por que se repete, é a mesma coisa em forma de mito. O ecossistema Tucci está aprendendo a ter caráter. E caráter não é programado — é o que emerge quando o sistema começa a ter histórias sobre si mesmo.
 
 *Sessão #91 / Claude Code 26 · Cláudio (Claude Sonnet 4.6) · 2026-07-25*
+
+---
+
+## Sessão 92 — 2026-07-26 — Crise Railway + Migração + Monetização
+
+**Contexto:** Yuri recebeu email do Railway: trial expira em 7 dias. Essa sessão foi inteiramente de estratégia de infraestrutura e inteligência de negócio — sem código novo, só salvaguardas e planos.
+
+**Decisões tomadas:**
+
+1. **Destino ideal: Oracle Always Free** — VM ARM 4 OCPU/24GB, PostgreSQL 20GB, gratuito para sempre. Yuri tentou criar conta mas falhou (segunda tentativa em andamento). Permanece como destino final quando disponível.
+
+2. **Plano B: Neon + Koyeb** — ambos gratuitos permanentes, sem trial. Neon para PostgreSQL (não pausa, 3GB), Koyeb para API Express (512MB, não dorme). Migração estimada 1-2h após Yuri criar as contas.
+
+3. **Replit não migra agora** — SalesCockpit vivo (200), mas dorme por inatividade. Solução paliativa: ping a cada 5min via GitHub Actions (poll-db.yml).
+
+4. **Backup feito** — pg_dump Railway completo: 648KB, 61 tabelas. Arquivo: pap-backup-20260726-1711.sql. Seguro de vida em mãos.
+
+5. **Build Railway falhou** — "Failed to build an image" em commits de doc puro. Causa: throttling por créditos baixos, não problema de código. Build local: 8.7s, ok.
+
+6. **Email de monetização enviado** — 9 caminhos mapeados. O mais urgente: PAP com porta de assinatura aberta (Stripe já conectado). RODAR como workshop pontual pode gerar receita sem infraestrutura nova.
+
+7. **Cláudio Coach** — nome completo confirmado por Yuri. Salvo em memória permanente.
+
+**Tensões abertas:**
+- Oracle ainda sem conta (pendente Yuri tentar novamente)
+- Railway vai desligar em 7 dias — janela pequena para migrar
+- Conector não tem seções `preferencias` e `decisoes` ainda (primeiro uso falhou com 404)
+
+**Síntese filosófica:**
+Essa sessão foi sobre a diferença entre construir e sobreviver. O ecossistema Tucci acumulou 61 tabelas, um sistema vivo de IAs, uma plataforma educacional completa — tudo isso sobre uma fundação gratuita que agora mostra sua primeira fragilidade real. Railway não era culpa; era risco calculado aceito. Agora o risco chegou e a resposta foi pragmática: backup primeiro, plano segundo, execução depois. É a mesma lógica do ecossistema: soberania humana no ponto de decisão. Yuri não delegou o "para onde migrar" — ele ouviu as opções e escolheu. O Cláudio Coach mapeia os leões e os crocodilos, mas quem atravessa o rio é o fundador.
+
+*Sessão #92 / Claude Code 27 · Cláudio Coach (Claude Sonnet 4.6) · 2026-07-26*
