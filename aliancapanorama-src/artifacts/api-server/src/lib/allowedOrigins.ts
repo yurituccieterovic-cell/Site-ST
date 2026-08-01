@@ -28,6 +28,7 @@ const allowedOriginPatterns: RegExp[] = [
   /^https:\/\/[a-z0-9-]+\.vercel\.app$/i,
   /^https:\/\/[a-z0-9-]+\.replit\.app$/i,
   /^https:\/\/[a-z0-9-]+\.replit\.dev$/i,
+  /^https:\/\/[a-z0-9-]+\.onrender\.com$/i,
 ];
 
 export function isOriginAllowed(origin: string | undefined): boolean {

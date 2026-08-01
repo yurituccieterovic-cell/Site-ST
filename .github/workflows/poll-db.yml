@@ -25,3 +25,9 @@ jobs:
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
             "https://sales-email-automator--yurituccieterov.replit.app/")
           echo "Replit status: $STATUS"
+
+      - name: Ping Render (manter API PAP viva)
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
+            "https://site-st.onrender.com/api/healthz")
+          echo "Render API status: $STATUS"
