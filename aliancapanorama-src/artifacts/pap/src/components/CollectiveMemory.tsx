@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API = "https://site-st-production.up.railway.app";
+const API = import.meta.env.VITE_API_URL ?? "";
 
 interface Entry {
   id: string;
