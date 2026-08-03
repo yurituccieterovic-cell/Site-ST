@@ -20,12 +20,6 @@ jobs:
           DB_API_KEY: ${{ secrets.DB_API_KEY }}
         run: node scripts/poll-db.js
 
-      - name: Ping Replit (manter SalesCockpit vivo)
-        run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
-            "https://sales-email-automator--yurituccieterov.replit.app/")
-          echo "Replit status: $STATUS"
-
       - name: Ping Render (manter API PAP viva)
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
