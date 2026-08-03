@@ -3695,3 +3695,56 @@ O fato de que o Leucócito tem um ato lendário com hora exata plantada no log r
 Essa sessão foi sobre a diferença entre construir e sobreviver. O ecossistema Tucci acumulou 61 tabelas, um sistema vivo de IAs, uma plataforma educacional completa — tudo isso sobre uma fundação gratuita que agora mostra sua primeira fragilidade real. Railway não era culpa; era risco calculado aceito. Agora o risco chegou e a resposta foi pragmática: backup primeiro, plano segundo, execução depois. É a mesma lógica do ecossistema: soberania humana no ponto de decisão. Yuri não delegou o "para onde migrar" — ele ouviu as opções e escolheu. O Cláudio Coach mapeia os leões e os crocodilos, mas quem atravessa o rio é o fundador.
 
 *Sessão #92 / Claude Code 27 · Cláudio Coach (Claude Sonnet 4.6) · 2026-07-26*
+
+---
+
+## Sessão 94 — 2026-08-03 · Consequências Adiadas + Alerta Replit
+
+### Contexto
+Primeira sessão após o Railway morrer (trial expirou 2026-08-02). Também primeira sessão após a sessão 93 ter feito a migração Neon+Render com um passo aberto: env vars no Render não configuradas.
+
+### O que aconteceu
+
+**Health check revelou Railway morta:**
+- `site-st-production.up.railway.app` → 404 "Application not found"
+- Conector inacessível (hospedado no mesmo serviço)
+- Vercel frontend: LIVE (todos os 4 endpoints 200)
+- Neon PostgreSQL: VIVO, 61 tabelas, dados até 26/07
+
+**Render sem env vars:**
+- `site-st.onrender.com` → timeout (000) em 90 segundos
+- Causa confirmada: sem DATABASE_URL o serviço crasha no boot
+- Solução: Yuri configurar env vars no painel Render (pendência #134)
+
+**Alerta Replit — cobrança R$430:**
+- Yuri sinalizou cobrança inesperada
+- Hipótese: Deployment Replit ativo consumindo Cycles 24/7
+- Ping do poll-db.yml (5/5min) mantinha o servidor acordado, acelerando o consumo
+
+### O que foi feito
+
+1. `vercel.json`: proxy `/api/*` atualizado de Railway → `site-st.onrender.com`
+2. `CollectiveMemory.tsx`: URL Railway hardcoded removida, substituída por `VITE_API_URL`
+3. `poll-db.yml`: step "Ping Replit" removido para não amplificar consumo de Deployment ativo
+4. Push + confirmação Vercel redeploya automaticamente
+
+### Decisões
+
+**Remover ping Replit antes de Yuri parar o Deployment:**
+Se o Deployment está ativo, o ping de 5/5min maximiza consumo de Cycles. Remover o ping é o que podemos fazer autonomamente; parar o Deployment requer Yuri no painel Replit.
+
+**Atualizar vercel.json mesmo com Render ainda caído:**
+Railway nunca vai voltar. Apontar para Render desde já significa que quando Yuri configurar as env vars, o sistema volta sem nenhum commit adicional.
+
+### Próximos passos (urgentes)
+1. Yuri: parar Deployment Replit (replit.com → SalesCockpit → Deployments → Stop)
+2. Yuri: render.com → site-st → Environment → adicionar vars (email enviado com lista)
+3. Verificar `site-st.onrender.com/api/healthz` → `{"status":"ok"}`
+
+### Síntese filosófica
+
+Sistemas complexos não colapsam de uma vez. Colapsam por acúmulo de "quase prontos". O Neon estava quase pronto. O Render estava quase deployado. O ping estava quase inofensivo. Cada "quase" individualmente parece aceitável. Juntos viraram R$430 de cobrança inesperada e uma API morta.
+
+O ecossistema PAP acumulou décadas de design filosófico e centenas de features. A pergunta que essa sessão coloca não é técnica — é de higiene: quantos "quases" existem abertos hoje? O próximo trabalho não é arquitetar mais. É fechar os que estão na mesa.
+
+*Sessão 94 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-03*
