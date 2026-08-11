@@ -4,7 +4,10 @@ import {
   PieChart, Pie, Cell,
 } from "recharts";
 
-const API = import.meta.env.VITE_API_URL ?? "";
+const API  = import.meta.env.VITE_API_URL ?? "";
+const BASE = import.meta.env.BASE_URL ?? "/aliancapanorama/";
+const LOGO = `${BASE}rapadura-icon.png`;
+const HERO = `${BASE}rapadura-hero.jpg`;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -267,19 +270,25 @@ function LoginView({ onLogin }: { onLogin: (user: RapaduraUser) => void }) {
       justifyContent: "center", padding: "24px 16px",
       fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
     }}>
-      {/* Wordmark */}
-      <div style={{ textAlign: "center", marginBottom: 40 }}>
+      {/* Logo */}
+      <div style={{ textAlign: "center", marginBottom: 36 }}>
+        <img
+          src={LOGO}
+          alt="Rapadura R"
+          style={{ width: 90, height: 90, objectFit: "contain", marginBottom: 10 }}
+        />
         <div style={{
-          fontSize: 42, fontWeight: 200, letterSpacing: "0.55em",
-          color: "#c8963b", lineHeight: 1, paddingRight: "0.55em",
+          fontSize: 32, fontWeight: 300, letterSpacing: "0.35em",
+          color: "#c8963b", lineHeight: 1, paddingRight: "0.35em",
+          fontFamily: "'Georgia', 'Times New Roman', serif",
         }}>
-          RAPADURA
+          Rapadura
         </div>
         <div style={{
-          fontSize: 9, letterSpacing: "0.28em", textTransform: "uppercase",
-          color: "#3d4a5e", marginTop: 10,
+          fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase",
+          color: "#3d4a5e", marginTop: 8,
         }}>
-          Motor de Inteligência Patrimonial
+          Yuri &amp; Mayumi Investment Hub
         </div>
       </div>
 
@@ -1147,6 +1156,24 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
 export function RapaduraPage() {
   const [user, setUser] = useState<RapaduraUser | null>(null);
   const [checking, setChecking] = useState(true);
+
+  // Troca favicon e título enquanto no Rapadura
+  useEffect(() => {
+    const prev = document.title;
+    document.title = "Rapadura · Inteligência Patrimonial";
+    let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+    const prevHref = link?.href;
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = `${BASE}rapadura-favicon.png`;
+    return () => {
+      document.title = prev;
+      if (link && prevHref) link.href = prevHref;
+    };
+  }, []);
   const [view, setView] = useState<View>("oportunidades");
   const [fundos, setFundos] = useState<Fundo[]>([]);
   const [pertences, setPertences] = useState<Pertence[]>([]);
@@ -1225,11 +1252,15 @@ export function RapaduraPage() {
           height: 44,
         }}>
           {/* Logo */}
-          <div style={{
-            fontSize: 11, fontWeight: 300, letterSpacing: "0.45em",
-            color: "#c8963b", textTransform: "uppercase",
-          }}>
-            RAPADURA
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <img src={LOGO} alt="R" style={{ width: 24, height: 24, objectFit: "contain" }} />
+            <span style={{
+              fontSize: 13, fontWeight: 300, letterSpacing: "0.2em",
+              color: "#c8963b",
+              fontFamily: "'Georgia', 'Times New Roman', serif",
+            }}>
+              Rapadura
+            </span>
           </div>
 
           {/* Nav */}
