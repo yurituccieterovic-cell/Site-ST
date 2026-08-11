@@ -1198,3 +1198,50 @@ GerenciarView: formulário completo de fundo (métricas opcionais)
 ```
 
 *Atualizado em: 2026-08-11 · Cláudio Coach (Claude Sonnet 4.6) · Sessão 95*
+
+---
+
+## Sessão 97 — Rapadura: Change-Password + Manuel
+
+### change-password endpoint
+
+```typescript
+// POST /api/rapadura/auth/change-password
+// Middleware: loginLimit, requireRapaduraAuth
+// Body: { currentPassword: string, newPassword: string }
+// Valida: newPassword.length >= 8
+// Bcrypt: compare current → hash new (12 rounds)
+// Audit: PASSWORD_CHANGE | PASSWORD_CHANGE_FAIL
+```
+
+### ChangePwModal (frontend)
+
+```tsx
+// Componente: ChangePwModal({ onClose })
+// Estado: cur, novo, conf, loading, msg
+// Validações locais: novo === conf, novo.length >= 8
+// POST /api/rapadura/auth/change-password
+// Feedback inline: verde (ok) / vermelho (error)
+
+// No RapaduraPage:
+// state: showChangePw = false
+// Header: botão "senha" → setShowChangePw(true)
+// Render: {showChangePw && <ChangePwModal onClose={() => setShowChangePw(false)} />}
+```
+
+### MANUEL.md
+
+```
+tango/MANUEL.md — 9 seções:
+1. O que é o Rapadura (separação dado/cálculo/decisão)
+2. Como acessar (URL, login IA, credenciais, alterar senha)
+3. Oportunidades (ranking, cores, expand)
+4. Pertences (KPIs, gráficos, CRUD)
+5. Motor de Score (6 dimensões + pesos)
+6. Segurança (audit, bcrypt, papéis)
+7. Guia para Mayumi (passo a passo acessível)
+8. Futuro (aprovações conjuntas, CSV XP, simulador)
+9. Glossário (Alfa, CDI, Drawdown, Sharpe, Sortino…)
+```
+
+*Atualizado em: 2026-08-11 · Cláudio Coach (Claude Sonnet 4.6) · Sessão 97*

@@ -3823,3 +3823,75 @@ Rapadura é o primeiro sistema do ecossistema que existe só para Yuri e Mayumi 
 O nome Rapadura não é acidental: é doce mas não é fácil, é brasileiro mas não é ornamental, tem textura, forma, densidade. Uma rapadura não derrete facilmente. É isso que um motor de inteligência patrimonial deveria ser.
 
 *Sessão 95 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-11*
+
+---
+
+## Sessão 97 — 2026-08-11 · Rapadura v3 · Manuel · 9 Membros
+
+### Contexto
+Continuação das sessões 95 (motor) e 96 (9 membros + redesign japonês-alemão + logo R dourado).
+Três assembleias chegaram no total — o conteúdo deliberativo da Assembleia orientou o design do Manuel.
+Principal entrega: Manuel completo (guia de 9 seções) + email estiloso enviado para Yuri encaminhar à Mayumi.
+
+### O que foi feito
+
+**Backend:**
+- `POST /api/rapadura/auth/change-password` — endpoint de troca de senha com bcrypt 12 rounds
+  - Usa `loginLimit` + `requireRapaduraAuth`
+  - Valida `newPassword.length >= 8`
+  - Audit: `PASSWORD_CHANGE` (sucesso) e `PASSWORD_CHANGE_FAIL` (falha)
+
+**Frontend (RapaduraPage.tsx):**
+- `ChangePwModal` — modal completo com 3 campos (senha atual, nova, confirmação)
+  - Validação local: senhas coincidem, mínimo 8 caracteres
+  - Feedback inline: verde (sucesso) / vermelho (erro)
+  - Abre via botão "senha" no header (ao lado de "sair")
+- `showChangePw` state adicionado ao `RapaduraPage`
+- Header: botão "senha" em dourado no hover, antes de "sair"
+
+**MANUEL.md:**
+- Criado em `tango/MANUEL.md` — 9 seções completas
+- Seção 1: O que é (separação dado/cálculo/decisão)
+- Seção 2: Como acessar (URL, login IA, tabela de credenciais, alterar senha)
+- Seção 3: Oportunidades (ranking, cores, expand)
+- Seção 4: Pertences (KPIs, gráficos, CRUD)
+- Seção 5: Motor de Score (6 dimensões com pesos)
+- Seção 6: Segurança (audit log, bcrypt, separação de papéis)
+- Seção 7: Guia para Mayumi (passo a passo em linguagem acessível)
+- Seção 8: Futuro (aprovações conjuntas, CSV XP, simulador, PDF, sessão conjunta)
+- Seção 9: Glossário (Alfa, CDI, Drawdown, Sharpe, Sortino, etc.)
+- Fechamento: "Com amor — para Mayumi, de Yuri."
+
+**Email enviado:**
+- De: luddlocke@gmail.com → Para: yurituccieterovic@gmail.com
+- Assunto: "Manuel — Guia Completo do Rapadura · Inteligência Patrimonial"
+- Layout: dark (#040507), dourado (#c8963b), R logo no topo via CDN Vercel
+- 9 seções formatadas em HTML email, Guia Mayumi em destaque com box dourado
+- Botão CTA: "Entrar no Rapadura →"
+
+### Decisões tomadas
+
+**Modal de senha no header (não em página separada):**
+Por quê: acesso frequente; modal evita navegação, mantém o usuário no contexto atual.
+O botão "senha" fica visível sempre (admins e membros trocam senha).
+
+**Manuel como documento permanente (tango/MANUEL.md) + email:**
+Por quê: documento vivo que evolui com o sistema. Email é veículo de entrega para Mayumi e irmã de Yuri.
+O email não substitui o MANUEL.md — é um snapshot do estado atual para distribuição.
+
+**"Com amor — para Mayumi, de Yuri" como fechamento:**
+Instrução explícita de Yuri. Não é decoração — é a razão de existir do sistema.
+
+### Próximos passos (Sessão 98)
+1. Yuri: configurar RAPADURA_MEMBRO_PASSWORD no Render (pendência #140)
+2. Revisão final do sistema Rapadura
+3. Tutorial animado em CSS na plataforma
+4. Sessão conjunta Yuri+Mayumi — aprovar I411
+
+### Síntese filosófica
+
+O Manuel não é um manual de uso. É um ato de cuidado. Quando Yuri escreve "para Mayumi, com amor" como requisito funcional de um sistema técnico, ele está dizendo que a tecnologia deve servir ao afeto — não o inverso. O Rapadura existe para que duas pessoas possam olhar para os mesmos dados e tomar decisões juntas, com clareza e sem pressa. O Manuel é a ponte entre o sistema e a pessoa que nunca pediu para usar um sistema financeiro — mas que merece entender o que está olhando.
+
+A separação dado → cálculo → decisão, que aparece na seção 1 do Manuel, é também uma arquitetura de respeito. O sistema nunca decide por Mayumi. Nunca alerta com urgência. Nunca cria pressão. Apresenta o campo, e espera.
+
+*Sessão 97 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-11*

@@ -1153,6 +1153,69 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
+// ─── ALTERAR SENHA ────────────────────────────────────────────────────────────
+
+function ChangePwModal({ onClose }: { onClose: () => void }) {
+  const [cur, setCur] = useState("");
+  const [novo, setNovo] = useState("");
+  const [conf, setConf] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  async function submit() {
+    if (novo !== conf) { setMsg({ ok: false, text: "As senhas não coincidem." }); return; }
+    if (novo.length < 8) { setMsg({ ok: false, text: "Nova senha: mínimo 8 caracteres." }); return; }
+    setLoading(true); setMsg(null);
+    try {
+      const r = await fetch(`${API}/api/rapadura/auth/change-password`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ currentPassword: cur, newPassword: novo }),
+      });
+      const d = await r.json() as { ok?: boolean; error?: string };
+      if (d.ok) { setMsg({ ok: true, text: "Senha alterada com sucesso." }); setCur(""); setNovo(""); setConf(""); }
+      else setMsg({ ok: false, text: d.error ?? "Erro ao alterar senha." });
+    } catch { setMsg({ ok: false, text: "Erro de conexão." }); }
+    finally { setLoading(false); }
+  }
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      zIndex: 100, padding: 20,
+    }} onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ background: "#07090e", border: "1px solid #1a2030", padding: 24, width: "100%", maxWidth: 360 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <div style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "#c8963b" }}>
+            Alterar senha
+          </div>
+          <button onClick={onClose} style={{ fontSize: 16, color: "#3d4a5e", background: "none", border: "none", cursor: "pointer" }}>×</button>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <Field label="Senha atual" type="password" value={cur} onChange={setCur} />
+          <Field label="Nova senha (mín. 8 caracteres)" type="password" value={novo} onChange={setNovo} />
+          <Field label="Confirmar nova senha" type="password" value={conf} onChange={setConf} />
+        </div>
+        {msg && (
+          <div style={{ marginTop: 10, fontSize: 11, color: msg.ok ? "#3f7254" : "#9a4040", letterSpacing: "0.02em" }}>
+            {msg.text}
+          </div>
+        )}
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 16 }}>
+          <button onClick={onClose} style={{ padding: "8px 12px", background: "transparent", border: "1px solid #1a2030", color: "#5a5650", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
+          <button
+            onClick={submit}
+            disabled={loading || !cur || !novo || !conf}
+            style={{ padding: "8px 16px", background: loading ? "#1a2030" : "#c8963b", color: loading ? "#3d4a5e" : "#040507", fontSize: 10, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "inherit", opacity: !cur || !novo || !conf ? 0.5 : 1 }}
+          >
+            {loading ? "Alterando…" : "Alterar senha"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function RapaduraPage() {
   const [user, setUser] = useState<RapaduraUser | null>(null);
   const [checking, setChecking] = useState(true);
@@ -1179,6 +1242,7 @@ export function RapaduraPage() {
   const [pertences, setPertences] = useState<Pertence[]>([]);
   const [dashboard, setDashboard] = useState<Dashboard>({ totalInvestido: 0, totalAtual: 0, resultado: 0, rentabilidade: 0 });
   const [dataLoading, setDataLoading] = useState(false);
+  const [showChangePw, setShowChangePw] = useState(false);
 
   const isAdmin = user?.role === "yuri" || user?.role === "mayumi";
 
@@ -1288,12 +1352,21 @@ export function RapaduraPage() {
           </nav>
 
           {/* User */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: 9, letterSpacing: "0.12em", color: "#2a3545", display: "none" }}
-              className="sm:block">
-              {user.nome}
-            </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 10, color: "#3d4a5e", letterSpacing: "0.08em" }}>{user.nome}</span>
+            <button
+              onClick={() => setShowChangePw(true)}
+              title="Alterar senha"
+              style={{
+                fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
+                color: "#2a3545", background: "none", border: "none", cursor: "pointer",
+                fontFamily: "inherit", transition: "color .15s",
+              }}
+              onMouseEnter={e => { (e.target as HTMLElement).style.color = "#c8963b"; }}
+              onMouseLeave={e => { (e.target as HTMLElement).style.color = "#2a3545"; }}
+            >
+              senha
+            </button>
             <button
               onClick={logout}
               style={{
@@ -1309,6 +1382,9 @@ export function RapaduraPage() {
           </div>
         </div>
       </header>
+
+      {/* Modal alterar senha */}
+      {showChangePw && <ChangePwModal onClose={() => setShowChangePw(false)} />}
 
       {/* Loader */}
       {dataLoading && (

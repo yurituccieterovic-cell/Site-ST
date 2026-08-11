@@ -184,6 +184,29 @@ router.post("/rapadura/auth/login", loginLimit, async (req, res) => {
   res.json({ ok: true, user: { id: user.id, nome: user.nome, role: user.role } });
 });
 
+// Alterar senha (membro troca credencial individual no primeiro acesso)
+router.post("/rapadura/auth/change-password", loginLimit, requireRapaduraAuth, async (req, res) => {
+  const { currentPassword, newPassword } = req.body as { currentPassword?: string; newPassword?: string };
+  if (!currentPassword || !newPassword || newPassword.length < 8) {
+    res.status(400).json({ error: "Senha atual e nova senha (mín. 8 caracteres) obrigatórias" });
+    return;
+  }
+  const userId = req.session.rapaduraUserId!;
+  const [user] = await db.select().from(rapaduraUsersTable).where(eq(rapaduraUsersTable.id, userId)).limit(1);
+  if (!user) { res.status(404).json({ error: "Usuário não encontrado" }); return; }
+
+  const ok = await bcrypt.compare(currentPassword, user.passwordHash);
+  if (!ok) {
+    await audit(userId, "PASSWORD_CHANGE_FAIL", null, req.ip ?? "");
+    res.status(401).json({ error: "Senha atual incorreta" });
+    return;
+  }
+  const newHash = await bcrypt.hash(newPassword, 12);
+  await db.update(rapaduraUsersTable).set({ passwordHash: newHash }).where(eq(rapaduraUsersTable.id, userId));
+  await audit(userId, "PASSWORD_CHANGE", null, req.ip ?? "");
+  res.json({ ok: true });
+});
+
 router.post("/rapadura/auth/logout", (req, res) => {
   const userId = req.session.rapaduraUserId ?? null;
   req.session.rapaduraUserId = undefined;

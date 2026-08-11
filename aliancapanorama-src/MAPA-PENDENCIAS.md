@@ -234,3 +234,7 @@
 | 137 | Render: adicionar RAPADURA_YURI_PASSWORD e RAPADURA_MAYUMI_PASSWORD nas env vars (senhas iniciais: rapadura@yuri2026 e rapadura@mayumi2026 — trocar depois) | Yuri (Render UI) | ⏳ |
 | 138 | Rapadura: testar login IA em site-st.vercel.app/rapadura após Render voltar | após #134 | ⏳ |
 | 139 | Rapadura: sessão conjunta Yuri+Mayumi (I411) — confirmação dupla para compras grandes | após sistema estável | 💡 |
+| 140 | Rapadura: configurar RAPADURA_MEMBRO_PASSWORD no Render (senha padrão dos 9 novos membros) | Yuri (Render UI) | ⏳ |
+| 141 | Rapadura: painel de aprovações conjuntas (I411) — interface visual para decisões que pedem confirmação de ambos | após sistema estável | 💡 |
+| 142 | Rapadura: exportar PDF da carteira (I419) | sessão futura | 💡 |
+| 143 | Rapadura: página /rapadura/manuel (versão interativa do Manuel dentro da plataforma) | sessão futura | 💡 |
