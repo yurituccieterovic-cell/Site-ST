@@ -3895,3 +3895,55 @@ O Manuel não é um manual de uso. É um ato de cuidado. Quando Yuri escreve "pa
 A separação dado → cálculo → decisão, que aparece na seção 1 do Manuel, é também uma arquitetura de respeito. O sistema nunca decide por Mayumi. Nunca alerta com urgência. Nunca cria pressão. Apresenta o campo, e espera.
 
 *Sessão 97 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-11*
+
+---
+
+## Sessão 98 — 2026-08-11 · Revisão PDF + CSS Tutorial
+
+### Contexto
+Sessão de revisão e consolidação. Yuri enviou o PDF completo do projeto Rapadura (50 págs, 4 capítulos) para revisão. Paralelamente: Manuel v2 reenviado (sem "Eterovic" para Mayumi — se conheceram há uma semana), tutorial CSS animado criado.
+
+### O que foi feito
+
+**Revisão do PDF (50 páginas, 4 capítulos):**
+- Capítulo 1: especificação original (Perplexity/Gemini) — score formula validada ✅
+- Capítulo 2: expansão arquitetural com 23 seções (IA tripartite, taxonomia de incerteza, múltiplos rankings, modo investigação, direito de discordância)
+- Capítulo 3: status técnico da Sessão 95 — idêntico ao que foi construído ✅
+- Capítulo 4: 2 assembleias deliberativas — Assembleia 1 reprova o sistema ("reprovação legítima como dado"), Assembleia 2 sintetiza como "infraestrutura de honestidade computacional"
+
+**Aprendizados registrados (#11836–#11843):**
+- Reprovação como dado de navegação
+- Taxonomia de incerteza (CONFIRMADO/DESCONHECIDO/CONFLITANTE/DESATUALIZADO/INFERIDO/VERIFICADO)
+- Direito de discordância
+- IA tripartite
+- Paradoxo de monetizar transparência
+- Pivô fantasma
+- Relógio do dinheiro
+- "O que ainda não sabemos?" como pergunta obrigatória
+
+**Ideias registradas (I421–I432):**
+12 funcionalidades futuras mapeadas do PDF.
+
+**Manuel v2:** reenviado corrigindo "Yuri & Mayumi Eterovic" → "Yuri & Mayumi" + logo reposicionado (box dourado, 88px com glow, itálico "With love, for Mayumi, from Yuri").
+
+**CSS Tutorial animado (`/aliancapanorama/css-tutorial`):**
+7 seções interativas com design dark/gold do Rapadura:
+1. Variáveis CSS — color picker live (HSL sliders → card atualiza em tempo real)
+2. Box Model — sliders de padding/border/margin com visualização em camadas coloridas
+3. Tipografia — sliders de size/spacing/line-height/weight + toggle de família
+4. Flexbox — 5 itens reposicionáveis em tempo real com todos os toggles
+5. Animações — 4 keyframes ativados por botão (fadeSlide, pulse dourado, shimmer, spin)
+6. Transições — 4 cards hover com easing e duration ajustáveis
+7. Síntese — card do Rapadura sendo construído camada por camada com passos animados
+
+Barra de progresso no topo (scroll-driven). Código CSS exibido e highlight em tempo real.
+
+### Síntese filosófica
+
+A Assembleia 1 reprova o Rapadura. A Assembleia 2 o chama de "infraestrutura de honestidade computacional". As duas estão certas ao mesmo tempo. O sistema cobre o núcleo do que foi especificado mas carece de validação empírica fora da amostra. Essa tensão não é problema a resolver — é dado a registrar.
+
+O PDF traz uma afirmação que deve ficar: "A ramificação mais importante não é técnica. É descobrir como monetizar transparência num mercado que paga por certeza performativa." O Rapadura não vende promessas. Isso o torna mais difícil de vender — e mais valioso de existir.
+
+O CSS Tutorial é um objeto curioso: um sistema feito para ensinar a fazer interfaces dentro de uma interface que ensina por fazer. A melhor didática é a que se ensina a si mesma ao ser usada.
+
+*Sessão 98 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-11*
