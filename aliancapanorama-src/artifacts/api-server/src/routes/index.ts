@@ -39,6 +39,7 @@ import videoRouter from "./video";
 import ceuRouter from "./ceu";
 import telosRouter from "./telos";
 import ethosRouter from "./ethos";
+import rapaduraRouter from "./rapadura";
 
 const router: IRouter = Router();
 
@@ -64,6 +65,7 @@ router.use(videoRouter);
 router.use(ceuRouter);
 router.use(telosRouter);
 router.use(ethosRouter);
+router.use(rapaduraRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);

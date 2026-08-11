@@ -14,3 +14,4 @@ export * from "./domestico";
 export * from "./lisange";
 export * from "./babel";
 export * from "./ecosistema";
+export * from "./rapadura";

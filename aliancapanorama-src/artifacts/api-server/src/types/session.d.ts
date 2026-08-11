@@ -9,5 +9,8 @@ declare module "express-session" {
     admPin?: string;
     admPinExpiry?: number;
     admPinUserId?: number;
+    rapaduraUserId?: number;
+    rapaduraRole?: string;
+    rapaduraNome?: string;
   }
 }

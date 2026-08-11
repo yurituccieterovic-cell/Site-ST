@@ -1310,3 +1310,48 @@ I272: **Comboio Vivo como Ontologia Distribuída** — MEKY + Mula = primeiro si
 | I387 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I388 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
 | I389 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Docs PAP — Ideias Novas (2026-07-26)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I390 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I391 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I392 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I393 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I394 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I395 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I396 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Docs PAP — Ideias Novas (2026-08-01)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I397 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I398 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I399 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I400 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I401 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I402 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I403 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Docs PAP — Ideias Novas (2026-08-03)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I404 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I405 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I406 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I407 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I408 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I409 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I410 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+## Rapadura — Sistema Patrimonial (Sessão 95 · 2026-08-11)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I411 | **Rapadura — Sessão Conjunta Yuri+Mayumi** | 🟡 Média | ◑ M | Decisões financeiras exigem confirmação dupla para ações críticas | Adicionar modo "sessão conjunta": ambos autenticados simultaneamente. Compras acima de R$10k exigem PIN de confirmação do segundo usuário. Tabela `rapadura_audit.quem_aprovou` para trilha de decisões. |
+| I412 | **Rapadura — Score de Convicção em tempo real** | 🟡 Média | ○ S | Mostrar por que o score é o que é — não caixa preta | Ao abrir card do fundo, exibir breakdown: retorno (92), risco (76), consistência (89), liquidez (61), custo (84), credibilidade (94). Score de Confiança separado (baseado em completude dos dados). |
+| I413 | **Rapadura — Watchlist de Oportunidades** | 🟢 Baixa | ○ S | Acompanhar fundos de interesse antes de comprar | Tabela `rapadura_watchlist` (user_id, fundo_id, notas, created_at). Seção "Acompanhando" na tela Oportunidades. Alerta quando score mudar significativamente. |
+| I414 | **Rapadura — Simulador de Resgate** | 🟡 Média | ◑ M | Calcular valor líquido disponível na data de resgate | Input: pertence_id + data_resgate_desejada. Output: D+X calculado, valor estimado (com IR regressivo), data de disponibilidade. Tabela IR regressiva (22.5/20/17.5/15%) por prazo. |
+| I415 | **Rapadura — Importar CSV da XP** | 🟢 Baixa | ● L | Importar extrato XP automaticamente, evitar digitação manual | Upload de CSV de extrato de carteira. Parser detecta colunas (fundo, data, valor, cotas). Criação automática de pertences + fundos se CNPJ não existir. |

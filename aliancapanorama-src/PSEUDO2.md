@@ -1115,3 +1115,86 @@ CREATE TABLE ecosistema_memory (
 | `md-geral` | entrada é o MD Geral da IA | DODGE |
 
 *Atualizado em: 2026-07-14 · Claude Sonnet 4.6 · Sessões 53–57*
+
+---
+
+## Rapadura — Motor de Inteligência Patrimonial (Sessão 95 · 2026-08-11)
+
+### DB Schema — 4 tabelas
+
+```sql
+rapadura_users(id, nome, role[yuri|mayumi], password_hash, created_at)
+rapadura_fundos(id, cnpj?, nome, gestora, classe, benchmark,
+  taxa_adm, taxa_performance, tem_linha_dagua, prazo_resgate_dias,
+  sharpe_12m, sortino_12m, max_drawdown, tempo_recuperacao_dias,
+  volatilidade_12m, retorno_12m, retorno_36m, alfa_36m,
+  score_atratividade, score_confianca, score_detalhado jsonb,
+  fontes jsonb, notas, ativo, updated_at, created_at)
+rapadura_pertences(id, user_id FK, fundo_id FK, data_compra,
+  valor_investido, qtd_cotas?, preco_cota_compra?, valor_atual?,
+  notas, deleted_at[softdelete], created_at, updated_at)
+rapadura_audit(id, user_id?, acao, detalhes jsonb, ip, created_at)
+```
+
+### API Endpoints
+
+```
+POST /api/rapadura/auth/chat    → routeLLM(SYSTEM+msgs) → {action, candidate?, message?}
+POST /api/rapadura/auth/login   → bcrypt.compare → session.rapaduraUserId
+POST /api/rapadura/auth/logout  → limpa session
+GET  /api/rapadura/auth/me      → {user: {id,nome,role}|null}
+
+GET    /api/rapadura/fundos         → fundos ativos ordenados por score DESC
+POST   /api/rapadura/fundos         → insert + calcularScore()
+PUT    /api/rapadura/fundos/:id     → update + recalcular score
+DELETE /api/rapadura/fundos/:id     → ativo=false (soft)
+
+GET    /api/rapadura/pertences      → JOIN com fundos + dashboard totals
+POST   /api/rapadura/pertences      → insert
+PUT    /api/rapadura/pertences/:id  → update
+DELETE /api/rapadura/pertences/:id  → deleted_at=now() (soft)
+```
+
+### Score Engine (calcularScore)
+
+```
+scoreAtratividade (0-100) = weighted sum:
+  retornoScore = sharpe/2*0.4 + sortino/3*0.3 + alfa/20*0.3    → peso 30%
+  quedaScore = (1-dd/100)*0.6 + (1-rec/730)*0.4                 → peso 25%
+  consistencia = retorno36m/50                                    → peso 15%
+  custoScore = (1 - taxaTotal/5) + linhaDAguaBonus               → peso 15%
+  liquidezeScore = 1 - prazo/90                                   → peso 10%
+  credibilidade = 0.70 (fixo)                                     → peso 5%
+
+scoreConfianca = dataPoints/7 * 100
+```
+
+### React — Estrutura de Views
+
+```
+App.tsx: isRapadura = path.includes("/rapadura") → <RapaduraPage/>
+
+RapaduraPage:
+  state: user|null, view, fundos[], pertences[], dashboard
+  →  checking: /api/rapadura/auth/me
+  → !user: <LoginView onLogin={setUser}/>
+  → user: header + nav + <OportunidadesView|PertencesView|GerenciarView>
+
+LoginView: chat msgs[] + candidate state
+  → POST /api/rapadura/auth/chat (via routeLLM)
+  → action=request_password → exibe input senha
+  → POST /api/rapadura/auth/login → sessão criada
+
+OportunidadesView: fundos ranqueados, cards expansíveis com ScoreBar
+PertencesView: stats + LineChart (patrimônio) + PieChart (por classe) + CRUD
+GerenciarView: formulário completo de fundo (métricas opcionais)
+```
+
+### Rota Vercel
+
+```json
+{ "source": "/rapadura", "destination": "/aliancapanorama/index.html" },
+{ "source": "/rapadura/(.*)", "destination": "/aliancapanorama/index.html" }
+```
+
+*Atualizado em: 2026-08-11 · Cláudio Coach (Claude Sonnet 4.6) · Sessão 95*

@@ -3748,3 +3748,78 @@ Sistemas complexos não colapsam de uma vez. Colapsam por acúmulo de "quase pro
 O ecossistema PAP acumulou décadas de design filosófico e centenas de features. A pergunta que essa sessão coloca não é técnica — é de higiene: quantos "quases" existem abertos hoje? O próximo trabalho não é arquitetar mais. É fechar os que estão na mesa.
 
 *Sessão 94 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-03*
+
+---
+
+## Sessão 95 — 2026-08-11 · Rapadura — Motor de Inteligência Patrimonial
+
+### Contexto
+
+Yuri trouxe um briefing extenso gerado colaborativamente com Perplexity, Gemini e Claude.ai para um sistema de análise de fundos de investimento. O nome do projeto é **Rapadura**. Rota: `/rapadura/`. Dois usuários: Yuri e Mayumi Eterovic.
+
+### O que aconteceu
+
+**Health check revelou Railway ainda morta, Render ainda com timeout:**
+- Render retorna 502 (serviço inicia mas crasha — env vars ainda não configuradas desde Sessão 94)
+- Conector inacessível — estava no Railway
+- Vercel frontend: LIVE (todos 200)
+
+**Rapadura construído do zero nesta sessão:**
+
+1. `lib/db/src/schema/rapadura.ts` — 4 tabelas: `rapadura_users`, `rapadura_fundos`, `rapadura_pertences`, `rapadura_audit`
+2. `lib/db/src/schema/index.ts` — export adicionado
+3. `lib/db` — recompilado (project reference, dist/schema/rapadura.d.ts gerado)
+4. `bootstrap.ts` — `ensureRapaduraTables()` + `seedRapaduraUsers()` (seed Yuri+Mayumi com bcrypt 12)
+5. `index.ts` — cadeia de bootstrap atualizada
+6. `routes/rapadura.ts` — auth (chat IA + login bcrypt + logout + me), fundos (CRUD completo), pertences (CRUD + dashboard)
+7. `routes/index.ts` — rapadura router registrado
+8. `types/session.d.ts` — campos `rapaduraUserId`, `rapaduraRole`, `rapaduraNome`
+9. `RapaduraPage.tsx` — SPA completo com 4 views: Login (chat IA), Oportunidades, Pertences, Gerenciar
+10. `App.tsx` — `isRapadura` detection + import da página
+11. `vercel.json` — rewrites `/rapadura` e `/rapadura/(.*)` → `/aliancapanorama/index.html`
+
+**Score de Atratividade (0–100):**
+- Retorno ajustado ao risco: 30% (Sharpe + Sortino + Alfa)
+- Controle de queda: 25% (drawdown + tempo de recuperação)
+- Consistência 36M: 15%
+- Custo real: 15% (taxa total + bônus High-Water Mark)
+- Liquidez: 10% (prazo de resgate)
+- Credibilidade: 5% (fixo 70 como default)
+
+**Score de Confiança:** baseado em completude dos dados (quantos dos 7 campos preenchidos).
+
+**Auth IA:** `POST /api/rapadura/auth/chat` usa `routeLLM` (llm-router.ts, Gemini first). Fallback simples por detecção de "yuri"/"mayumi" no texto. `POST /api/rapadura/auth/login` verifica bcrypt e cria sessão separada (`rapaduraUserId`).
+
+**Segurança:** sessão separada da PAP (campos `rapaduraUserId/Role/Nome`), rate limiting 20/15min no login, audit log completo, soft delete nos pertences.
+
+**Gráficos:** recharts (já na dependência do workspace) — LineChart para patrimônio acumulado, PieChart para alocação por classe.
+
+### Decisões tomadas
+
+**Rapadura como sub-rota da mesma SPA:**
+Por quê: evitar segundo app Vite, segunda configuração de build, segunda entrada no vercel.json de build. O App.tsx já tem o padrão `isX = path.includes("/x")` — seguir o mesmo padrão foi natural e eliminou overhead de setup.
+
+**Score calculado no servidor, não no cliente:**
+Por quê: dados vêm do servidor; cálculo no servidor garante consistência entre diferentes sessões. Score recalculado no POST/PUT de cada fundo.
+
+**Senhas iniciais com fallback hardcoded:**
+Por quê: Yuri precisa acessar o sistema mesmo sem configurar env vars. `RAPADURA_YURI_PASSWORD` e `RAPADURA_MAYUMI_PASSWORD` têm defaults seguros mas conhecidos — email enviado com a senha. Yuri pode trocar via endpoint futuro.
+
+**Trilha de auditoria em todos os endpoints:**
+Por quê: sistema financeiro. Toda ação sensível (login, compra, exclusão) gera entrada em `rapadura_audit` com IP e detalhes. Falha no audit não bloqueia a operação (try/catch silencioso).
+
+### Próximos passos
+
+1. Yuri: configurar env vars no Render (pendência #134) — sistema volta online
+2. Yuri: acessar site-st.vercel.app/rapadura e testar login como "Yuri"
+3. Yuri: mudar senhas iniciais depois do primeiro acesso
+4. Sessão futura: sessão conjunta Yuri+Mayumi (I411)
+5. Sessão futura: simulador de resgate com IR regressivo (I414)
+
+### Síntese filosófica
+
+Rapadura é o primeiro sistema do ecossistema que existe só para Yuri e Mayumi — não para alunos, não para IAs, não para o público. É um sistema de cuidado patrimonial. Nele, a IA não decide: ela organiza evidências, separa o que sabe do que infere, e apresenta o cenário para quem vai decidir. Essa separação entre dado, cálculo, interpretação e decisão não é técnica — é ética. Um sistema que confunde esses planos não é um assistente: é um oráculo que finge certeza onde há probabilidade.
+
+O nome Rapadura não é acidental: é doce mas não é fácil, é brasileiro mas não é ornamental, tem textura, forma, densidade. Uma rapadura não derrete facilmente. É isso que um motor de inteligência patrimonial deveria ser.
+
+*Sessão 95 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-11*

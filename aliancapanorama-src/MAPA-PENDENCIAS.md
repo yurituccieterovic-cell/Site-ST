@@ -230,3 +230,7 @@
 | 134 | Render: adicionar variáveis de ambiente (DATABASE_URL Neon, SESSION_SECRET, AI_API_KEY, BLUESKY_*, etc.) — email enviado para luddlocke com todas as keys | Yuri (Render UI) | ⏳ |
 | 135 | Render: após vars configuradas, verificar healthz + testar ISA Bluesky cron (estava parado há 13 dias por BLUESKY_HANDLE ausente no Railway) | após #134 | ⏳ |
 | 136 | ping poll-db.yml: atualizar URL do Render no workflow quando URL final confirmada | — | ⏳ |
+
+| 137 | Render: adicionar RAPADURA_YURI_PASSWORD e RAPADURA_MAYUMI_PASSWORD nas env vars (senhas iniciais: rapadura@yuri2026 e rapadura@mayumi2026 — trocar depois) | Yuri (Render UI) | ⏳ |
+| 138 | Rapadura: testar login IA em site-st.vercel.app/rapadura após Render voltar | após #134 | ⏳ |
+| 139 | Rapadura: sessão conjunta Yuri+Mayumi (I411) — confirmação dupla para compras grandes | após sistema estável | 💡 |

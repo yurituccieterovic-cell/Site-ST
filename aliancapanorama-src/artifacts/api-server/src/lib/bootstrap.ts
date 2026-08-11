@@ -2,8 +2,8 @@ import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
 import { db } from "@workspace/db";
-import { usersTable, nodesTable, auliasTable } from "@workspace/db";
-import { sql } from "drizzle-orm";
+import { usersTable, nodesTable, auliasTable, rapaduraUsersTable } from "@workspace/db";
+import { sql, eq } from "drizzle-orm";
 import { logger } from "./logger";
 
 const DEFAULT_PASSWORD = "pap";
@@ -2104,4 +2104,94 @@ export async function enforceUniquePasswords(): Promise<void> {
       "Run `pnpm --filter @workspace/scripts run randomize-passwords` to assign " +
       "unique passwords and capture the output securely, then restart the server."
   );
+}
+
+// Cria tabelas do Rapadura (idempotente via IF NOT EXISTS)
+export async function ensureRapaduraTables(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS rapadura_users (
+      id SERIAL PRIMARY KEY,
+      nome TEXT NOT NULL,
+      role TEXT NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS rapadura_fundos (
+      id SERIAL PRIMARY KEY,
+      cnpj TEXT UNIQUE,
+      nome TEXT NOT NULL,
+      gestora TEXT NOT NULL,
+      classe TEXT NOT NULL DEFAULT 'Multimercado',
+      benchmark TEXT NOT NULL DEFAULT 'CDI',
+      taxa_adm NUMERIC(5,2),
+      taxa_performance NUMERIC(5,2),
+      tem_linha_dagua BOOLEAN DEFAULT true,
+      prazo_resgate_dias INTEGER DEFAULT 30,
+      sharpe_12m NUMERIC(6,3),
+      sortino_12m NUMERIC(6,3),
+      max_drawdown NUMERIC(5,2),
+      tempo_recuperacao_dias INTEGER,
+      volatilidade_12m NUMERIC(5,2),
+      retorno_12m NUMERIC(6,2),
+      retorno_36m NUMERIC(6,2),
+      alfa_36m NUMERIC(6,3),
+      score_atratividade NUMERIC(5,1),
+      score_confianca NUMERIC(5,1),
+      score_detalhado JSONB,
+      fontes JSONB,
+      notas TEXT,
+      ativo BOOLEAN DEFAULT true,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS rapadura_pertences (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES rapadura_users(id),
+      fundo_id INTEGER NOT NULL REFERENCES rapadura_fundos(id),
+      data_compra TEXT NOT NULL,
+      valor_investido NUMERIC(12,2) NOT NULL,
+      qtd_cotas NUMERIC(18,6),
+      preco_cota_compra NUMERIC(12,6),
+      valor_atual NUMERIC(12,2),
+      notas TEXT,
+      deleted_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS rapadura_audit (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER,
+      acao TEXT NOT NULL,
+      detalhes JSONB,
+      ip TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `);
+  logger.info("bootstrap: rapadura tables OK");
+}
+
+// Seed de Yuri e Mayumi no Rapadura (idempotente)
+export async function seedRapaduraUsers(): Promise<void> {
+  const yuriPwd = process.env["RAPADURA_YURI_PASSWORD"] ?? "rapadura@yuri2026";
+  const mayumiPwd = process.env["RAPADURA_MAYUMI_PASSWORD"] ?? "rapadura@mayumi2026";
+
+  const existing = await db.select().from(rapaduraUsersTable);
+  if (existing.length >= 2) {
+    logger.info("bootstrap: rapadura users already seeded");
+    return;
+  }
+
+  const yuriHash = await bcrypt.hash(yuriPwd, 12);
+  const mayumiHash = await bcrypt.hash(mayumiPwd, 12);
+
+  const existingRoles = existing.map(u => u.role);
+
+  if (!existingRoles.includes("yuri")) {
+    await db.insert(rapaduraUsersTable).values({ nome: "Yuri", role: "yuri", passwordHash: yuriHash });
+    logger.info("bootstrap: rapadura user Yuri criado");
+  }
+  if (!existingRoles.includes("mayumi")) {
+    await db.insert(rapaduraUsersTable).values({ nome: "Mayumi", role: "mayumi", passwordHash: mayumiHash });
+    logger.info("bootstrap: rapadura user Mayumi criado");
+  }
 }
