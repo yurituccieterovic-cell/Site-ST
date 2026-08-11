@@ -1360,3 +1360,31 @@ I272: **Comboio Vivo como Ontologia Distribuída** — MEKY + Mula = primeiro si
 | I418 | **Rapadura — Exportar PDF da carteira** | 🟢 Baixa | ◑ M | Compartilhar extrato com assessor/familiar | Botão "Exportar PDF" na view Pertences. Gera documento com KPIs, gráficos e tabela de posições. Biblioteca: `pdf-lib` ou via print CSS. |
 | I419 | **Rapadura — Modo leitura pública (read-only link)** | 🟡 Média | ◑ M | Compartilhar oportunidades sem expor carteira | Token JWT de 24h que permite ver Oportunidades sem autenticar. Útil para mostrar o sistema para assessor. |
 | I420 | **Manuel — Versão interativa no site** | 🟢 Baixa | ◑ M | Versão navegável do guia em `/rapadura/manuel` | Página React estática com os 9 capítulos do Manuel. Navegação lateral, busca por seção. Link "Abrir Manuel" no footer do Rapadura. |
+
+---
+
+### Sessão 98 — Ideias extraídas do PDF "Rapadura - Projeto de Sistema"
+
+I421 — CNPJ + código ANBIMA como identificador primário de fundo (além do nome comercial). Nomes de fundos são ambíguos; o CNPJ é inequívoco. Campo `cnpj VARCHAR(18) UNIQUE` no schema.
+
+I422 — Cronômetro de resgate: visualizar D+X como timeline animada. PEDIDO → cotização → liquidação → DINHEIRO DISPONÍVEL. Cada passo com data estimada e status visual.
+
+I423 — Taxonomia de incerteza por campo: cada dado carrega status epistemológico CONFIRMADO / DESCONHECIDO / CONFLITANTE / DESATUALIZADO / INFERIDO / VERIFICADO. Exibido como badge ao lado do valor.
+
+I424 — IA Tripartite no card de fundo: Analista (dados puros) + Crítico (riscos ocultos) + Explicador (linguagem simples) + Síntese. Tabs ou accordion no card expandido.
+
+I425 — Direito de Discordância: quando score > 70 mas IA detecta inconsistência documental, exibir ⚠️ "Análise inconclusiva" com justificativa. Nunca esconder o conflito entre camadas.
+
+I426 — "O que ainda não sabemos?" — seção permanente no Modo Investigação de cada fundo. Lista de campos desconhecidos, conflitantes ou desatualizados. Impede falsa sensação de completude.
+
+I427 — Múltiplos rankings por dimensão: não um único ranking, mas 4 vistas: melhor retorno / melhor controle de risco / melhor custo / melhor equilíbrio. "Melhor fundo é pergunta mal definida. O sistema pergunta: melhor para quê?"
+
+I428 — 4 classificadores de oportunidade por cor: Verde (retorno bom + risco aceitável) / Amarelo-claro (retorno excelente + risco elevado) / Âmbar (assimetria: risco cresceu mais que retorno) / Vermelho (mudança estrutural ou risco incompatível).
+
+I429 — Heatmap mensal de rentabilidade: matriz mês × fundo, cor = retorno. Padrão estilo calendário de contribuições GitHub. Exibido na aba Pertences / dashboard.
+
+I430 — Simulador de estresse (backtesting): "Como a carteira atual se comportaria no crash do COVID (março/2020) ou na crise das Americanas?" Simulação sobre dados históricos reais.
+
+I431 — Rentabilidade real: descontar IPCA do retorno nominal. Exibir "retorno real" ao lado do "retorno nominal" em Pertences e Oportunidades.
+
+I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem administra? Quem gere? Em que investe? Quanto cobra? Qual benchmark? Qual liquidez? Como performou? Qual foi o pior período? Quanto tempo demorou para recuperar? O que mudou recentemente? **O que ainda não sabemos?**

@@ -20,6 +20,8 @@
     { "source": "/dodge", "destination": "/index.html" },
     { "source": "/dodge/(.*)", "destination": "/index.html" },
     { "source": "/isa", "destination": "/index.html" },
-    { "source": "/isa/(.*)", "destination": "/index.html" }
+    { "source": "/isa/(.*)", "destination": "/index.html" },
+    { "source": "/css-tutorial", "destination": "/index.html" },
+    { "source": "/css-tutorial/(.*)", "destination": "/index.html" }
   ]
 }

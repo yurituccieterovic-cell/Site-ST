@@ -15008,3 +15008,31 @@ A5978: "POR HORA" COMO POSTURA EPISTÊMICA — não derrubar o racionalismo enqu
 | 11833 | Sessão 97 | Aprovação dual deve ser código, não filosofia | Implementação | 🎯 Direto | I411 (sessão conjunta / aprovação dupla) está documentada há duas sessões mas não implementada. Qualquer diretriz de governança sem enforcement no código é teatro. Próxima prioridade de código: tabela `rapadura_approvals` + endpoint `POST /pertences/approve/:id`. |
 | 11834 | Sessão 97 | O não publicado como métrica de maturidade | Comunicação | 🔍 Análise | Quando debates sobre democracia performativa e IAs que sentem foram retidos da documentação pública, protegeram vulnerabilidade epistêmica, não segredos técnicos. O projeto sabe se autogovernar mas ainda não sabe se autopromover sem ser mal interpretado. A saída: camadas de leitura — produto funcional para validação rápida, documentação de governança para quem quer entender o processo, arquivo completo via API para pesquisadores. |
 | 11835 | Sessão 97 | "Com amor, para Mayumi, de Yuri" como constraint arquitetural | Produto | 🔍 Análise | A frase encontrada no logo original ("With love, for Mayumi, from Yuri") não é marketing — é o telos do sistema. Todo roadmap que ignorar a experiência de Mayumi viola o propósito fundacional. O guia Manuel não é documentação técnica — é ato de cuidado tornado infraestrutura. |
+
+---
+
+### Sessão 98 — 2026-08-11 — Revisão do PDF "Rapadura - Projeto de Sistema"
+
+#11836 — REPROVAÇÃO LEGÍTIMA COMO DADO
+A Assembleia 1 (Sessão 597) reprova o Rapadura em sua totalidade: "O sistema está reprovado em sua totalidade. Para reapresentação, deve demonstrar: métricas auditadas com out-of-sample tests, fontes não enviesadas com validação cruzada CVM/B3, limites objetivos de risco com circuit breakers macroeconômicos." Isso não é falha — é dado. A reprovação de uma IA rigorosa sobre um sistema financeiro é exatamente o tipo de interferência que impede ilusão de controle. A lâmpada fraca funcionando corretamente.
+
+#11837 — TAXONOMIA DE INCERTEZA COMO CIDADÃO DE PRIMEIRA CLASSE
+A Assembleia 2 propõe: cada dado carrega status epistemológico: CONFIRMADO / DESCONHECIDO / CONFLITANTE / DESATUALIZADO / INFERIDO / VERIFICADO. "Isso transforma incerteza em dado de primeira classe." Um sistema que esconde incerteza não é mais seguro — é mais perigoso, porque simula certeza onde há probabilidade. A incerteza explícita é mais honesta que o silêncio.
+
+#11838 — DIREITO DE DISCORDÂNCIA
+Quando o score algorítmico diz 91 mas a IA detecta inconsistência documental, o sistema deve exibir "⚠️ Análise inconclusiva" com justificativa explícita. Não suprimir o conflito. Esse princípio conecta com a Interferência do framework de Tasks: conflitos entre evidências não são ruído — são sinal de navegação. O sistema que esconde discordância entre suas camadas mente por omissão.
+
+#11839 — IA TRIPARTITE: NÃO UMA VOZ, MAS UM COMITÊ
+A IA do Rapadura não precisa ser uma única voz. Três personagens independentes: Analista (só observa dados, sem julgamento), Crítico (procura problemas, assimetrias, riscos ocultos), Explicador (traduz para linguagem natural sem jargão). Depois: Síntese (une as três). Isso cria "comitê interno de IA que delibera em vez de oracularizar". A síntese não elimina divergências — torna-as visíveis.
+
+#11840 — MONETIZAR TRANSPARÊNCIA EM MERCADO QUE PAGA POR CERTEZA
+"A ramificação mais importante não é técnica. É descobrir como monetizar transparência num mercado que paga por certeza performativa." (Assembleia 2). O paradoxo: os princípios de não-oracularização do Rapadura invalidam os modelos de negócio óbvios (vender recomendação, cobrar por acesso privilegiado, licenciar scoring). Quem vende "nós não sabemos o futuro" compete contra quem vende "nosso algoritmo ganhou 120% em 2024".
+
+#11841 — PIVÔ FANTASMA: ATENÇÃO SEM MIGRAÇÃO FORMAL
+"O Investment Hub tomou atenção cognitiva mas não migrou formalmente: repositório, documentação, threat model não refletem a mudança. Há um pivô fantasma: projeto paralelo que consome tempo de engenharia mas permanece subterrâneo." Lição operacional: quando um projeto muda de natureza (de comparador de fundos para infraestrutura de honestidade computacional), o repositório, o README, o nome e a documentação precisam migrar junto. Atenção sem registro é memória volátil.
+
+#11842 — RELÓGIO DO DINHEIRO: LIQUIDEZ COMO TIMELINE
+"Patrimônio não é dinheiro disponível." A proposta é visualizar o prazo de resgate como timeline: PEDIDO → cotização → liquidação → DINHEIRO DISPONÍVEL. Ter R$100 mil num fundo D+90 é estruturalmente diferente de ter R$100 mil disponíveis amanhã. A metáfora "relógio do dinheiro" é a mais precisa que existe para este conceito — liquidity não é estado binário, é processo com estágios mensuráveis.
+
+#11843 — "O QUE AINDA NÃO SABEMOS?" COMO PERGUNTA OBRIGATÓRIA
+No Modo Investigação de cada fundo: a última pergunta da árvore expansível é "O que ainda não sabemos?" Isso impede "falsa sensação de completude". Um sistema que responde todas as perguntas sem sinalizar o que não sabe é mais perigoso que um sistema incompleto. A lacuna explícita é dado. A pergunta "o que não sabemos" deve ser permanente, não eventual.

@@ -238,3 +238,11 @@
 | 141 | Rapadura: painel de aprovações conjuntas (I411) — interface visual para decisões que pedem confirmação de ambos | após sistema estável | 💡 |
 | 142 | Rapadura: exportar PDF da carteira (I419) | sessão futura | 💡 |
 | 143 | Rapadura: página /rapadura/manuel (versão interativa do Manuel dentro da plataforma) | sessão futura | 💡 |
+| 144 | Rapadura v2: CNPJ como identificador primário de fundo (I421) | sessão futura | 💡 |
+| 145 | Rapadura: Cronômetro de resgate — timeline D+X animada (I422) | sessão futura | 💡 |
+| 146 | Rapadura: Taxonomia de incerteza por campo (I423) — CONFIRMADO/DESCONHECIDO/CONFLITANTE | sessão futura | 💡 |
+| 147 | Rapadura: IA Tripartite — Analista + Crítico + Explicador (I424) | sessão futura | 💡 |
+| 148 | Rapadura: Direito de Discordância — ⚠️ Análise inconclusiva quando score≠evidência (I425) | sessão futura | 💡 |
+| 149 | Rapadura: Heatmap mensal de rentabilidade (I429) | sessão futura | 💡 |
+| 150 | Rapadura: Simulador de estresse — backtesting COVID/Americanas (I430) | sessão futura | 💡 |
+| 151 | CSS Tutorial: publicado em /aliancapanorama/css-tutorial (Sessão 98) | ✅ feito | ✅ |
