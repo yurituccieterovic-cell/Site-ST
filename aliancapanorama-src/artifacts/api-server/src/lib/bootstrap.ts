@@ -2170,28 +2170,35 @@ export async function ensureRapaduraTables(): Promise<void> {
   logger.info("bootstrap: rapadura tables OK");
 }
 
-// Seed de Yuri e Mayumi no Rapadura (idempotente)
+// Seed de todos os membros do Rapadura (idempotente por nome)
 export async function seedRapaduraUsers(): Promise<void> {
-  const yuriPwd = process.env["RAPADURA_YURI_PASSWORD"] ?? "rapadura@yuri2026";
+  const yuriPwd   = process.env["RAPADURA_YURI_PASSWORD"]   ?? "rapadura@yuri2026";
   const mayumiPwd = process.env["RAPADURA_MAYUMI_PASSWORD"] ?? "rapadura@mayumi2026";
+  const membroPwd = process.env["RAPADURA_MEMBRO_PASSWORD"] ?? "rapadura@membro2026";
 
-  const existing = await db.select().from(rapaduraUsersTable);
-  if (existing.length >= 2) {
-    logger.info("bootstrap: rapadura users already seeded");
-    return;
+  const MEMBERS = [
+    { nome: "Yuri",    role: "yuri",   pwd: yuriPwd },
+    { nome: "Mayumi",  role: "mayumi", pwd: mayumiPwd },
+    { nome: "André",   role: "membro", pwd: membroPwd },
+    { nome: "Lisange", role: "membro", pwd: membroPwd },
+    { nome: "Gisele",  role: "membro", pwd: membroPwd },
+    { nome: "Mauro",   role: "membro", pwd: membroPwd },
+    { nome: "Beatriz", role: "membro", pwd: membroPwd },
+    { nome: "Clara",   role: "membro", pwd: membroPwd },
+    { nome: "Bruno",   role: "membro", pwd: membroPwd },
+    { nome: "Fred",    role: "membro", pwd: membroPwd },
+    { nome: "Piti",    role: "membro", pwd: membroPwd },
+  ];
+
+  const existing = await db.select({ nome: rapaduraUsersTable.nome }).from(rapaduraUsersTable);
+  const existingNomes = new Set(existing.map(u => u.nome));
+
+  for (const m of MEMBERS) {
+    if (!existingNomes.has(m.nome)) {
+      const hash = await bcrypt.hash(m.pwd, 12);
+      await db.insert(rapaduraUsersTable).values({ nome: m.nome, role: m.role, passwordHash: hash });
+      logger.info(`bootstrap: rapadura user ${m.nome} (${m.role}) criado`);
+    }
   }
-
-  const yuriHash = await bcrypt.hash(yuriPwd, 12);
-  const mayumiHash = await bcrypt.hash(mayumiPwd, 12);
-
-  const existingRoles = existing.map(u => u.role);
-
-  if (!existingRoles.includes("yuri")) {
-    await db.insert(rapaduraUsersTable).values({ nome: "Yuri", role: "yuri", passwordHash: yuriHash });
-    logger.info("bootstrap: rapadura user Yuri criado");
-  }
-  if (!existingRoles.includes("mayumi")) {
-    await db.insert(rapaduraUsersTable).values({ nome: "Mayumi", role: "mayumi", passwordHash: mayumiHash });
-    logger.info("bootstrap: rapadura user Mayumi criado");
-  }
+  logger.info("bootstrap: rapadura users OK (11 membros)");
 }

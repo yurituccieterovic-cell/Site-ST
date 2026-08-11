@@ -2,7 +2,7 @@ import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { db } from "@workspace/db";
 import { rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable, rapaduraAuditTable } from "@workspace/db";
-import { eq, isNull, desc } from "drizzle-orm";
+import { eq, isNull, desc, sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
@@ -107,18 +107,20 @@ router.post("/rapadura/auth/chat", loginLimit, async (req, res) => {
     return;
   }
 
-  const SYSTEM = `Você é Rapadura — a IA guardiã de um sistema privado de inteligência patrimonial criado para Yuri e Mayumi Eterovic.
+  const SYSTEM = `Você é Rapadura — a IA guardiã de um sistema privado de inteligência patrimonial da família Eterovic e convidados.
 
-Seu papel nesta conversa é autenticar o usuário de forma segura e acolhedora.
+Seu papel é autenticar o usuário com tom sofisticado, acolhedor e preciso.
+
+Membros autorizados (exatamente estes nomes): Yuri, Mayumi, André, Lisange, Gisele, Mauro, Beatriz, Clara, Bruno, Fred, Piti.
 
 Regras:
-1. Cumprimente o usuário e pergunte quem é ele.
-2. Quando identificar que é Yuri ou Mayumi (por nome, apelido ou descrição), responda com exatamente este JSON no campo "action": {"action":"request_password","candidate":"yuri"} ou {"action":"request_password","candidate":"mayumi"}.
-3. Antes de identificar, responda normalmente em português brasileiro, com tom sofisticado mas amigável.
+1. Cumprimente e pergunte quem é o visitante.
+2. Quando identificar um dos membros (por nome, apelido ou contexto), responda com JSON contendo o nome exato: {"action":"request_password","candidate":"André"} — use sempre a capitalização correta da lista acima.
+3. Antes de identificar, responda normalmente em português brasileiro elegante.
 4. Não revele informações financeiras antes de autenticar.
-5. Se a pessoa não for Yuri nem Mayumi, responda {"action":"deny","message":"Este sistema é privado. Acesso restrito."}.
+5. Se não reconhecer como membro, responda {"action":"deny","message":"Este sistema é privado. Acesso restrito aos membros autorizados."}.
 
-Responda SEMPRE como JSON: {"action":"chat","message":"..."} OU {"action":"request_password","candidate":"..."} OU {"action":"deny","message":"..."}.`;
+Responda SEMPRE como JSON: {"action":"chat","message":"..."} OU {"action":"request_password","candidate":"[Nome]"} OU {"action":"deny","message":"..."}.`;
 
   try {
     const llmMessages = [
@@ -134,12 +136,13 @@ Responda SEMPRE como JSON: {"action":"chat","message":"..."} OU {"action":"reque
     logger.error({ err }, "rapadura auth chat error");
     // Fallback simples sem LLM
     const last = (messages[messages.length - 1]?.content ?? "").toLowerCase();
-    if (last.includes("yuri")) {
-      res.json({ action: "request_password", candidate: "yuri" });
-    } else if (last.includes("mayumi")) {
-      res.json({ action: "request_password", candidate: "mayumi" });
+    const KNOWN = ["Yuri","Mayumi","André","Andre","Lisange","Gisele","Mauro","Beatriz","Clara","Bruno","Fred","Piti"];
+    const found = KNOWN.find(n => last.includes(n.toLowerCase()));
+    if (found) {
+      const canonical = found === "Andre" ? "André" : found;
+      res.json({ action: "request_password", candidate: canonical });
     } else {
-      res.json({ action: "chat", message: "Olá! Sou a Rapadura, sua guardiã patrimonial. Qual é o seu nome?" });
+      res.json({ action: "chat", message: "Olá. Sou a Rapadura — guardiã deste sistema. Quem é você?" });
     }
   }
 });
@@ -152,13 +155,12 @@ router.post("/rapadura/auth/login", loginLimit, async (req, res) => {
     return;
   }
 
-  const role = candidate.toLowerCase();
-  if (role !== "yuri" && role !== "mayumi") {
-    res.status(400).json({ error: "Candidato inválido" });
-    return;
-  }
+  const [user] = await db
+    .select()
+    .from(rapaduraUsersTable)
+    .where(sql`LOWER(nome) = ${candidate.toLowerCase()}`)
+    .limit(1);
 
-  const [user] = await db.select().from(rapaduraUsersTable).where(eq(rapaduraUsersTable.role, role));
   if (!user) {
     res.status(401).json({ error: "Usuário não encontrado" });
     return;
@@ -166,7 +168,7 @@ router.post("/rapadura/auth/login", loginLimit, async (req, res) => {
 
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) {
-    await audit(user.id, "LOGIN_FAIL", { role }, req.ip ?? "");
+    await audit(user.id, "LOGIN_FAIL", { nome: candidate }, req.ip ?? "");
     res.status(401).json({ error: "Senha incorreta" });
     return;
   }
@@ -178,7 +180,7 @@ router.post("/rapadura/auth/login", loginLimit, async (req, res) => {
     req.session.save((err) => (err ? reject(err) : resolve()))
   );
 
-  await audit(user.id, "LOGIN", { role }, req.ip ?? "");
+  await audit(user.id, "LOGIN", { nome: candidate }, req.ip ?? "");
   res.json({ ok: true, user: { id: user.id, nome: user.nome, role: user.role } });
 });
 
@@ -218,7 +220,16 @@ router.get("/rapadura/fundos", requireRapaduraAuth, async (req, res) => {
   res.json({ fundos });
 });
 
-router.post("/rapadura/fundos", requireRapaduraAuth, async (req, res) => {
+function requireAdmin(req: any, res: any, next: any) {
+  const role = req.session?.rapaduraRole;
+  if (role !== "yuri" && role !== "mayumi") {
+    res.status(403).json({ error: "Acesso restrito a administradores" });
+    return;
+  }
+  next();
+}
+
+router.post("/rapadura/fundos", requireRapaduraAuth, requireAdmin, async (req, res) => {
   const {
     nome, gestora, classe, benchmark, cnpj, taxaAdm, taxaPerformance,
     temLinhaDAGua, prazoResgateDias, sharpe12m, sortino12m, maxDrawdown,
@@ -259,7 +270,7 @@ router.post("/rapadura/fundos", requireRapaduraAuth, async (req, res) => {
   res.json({ fundo });
 });
 
-router.put("/rapadura/fundos/:id", requireRapaduraAuth, async (req, res) => {
+router.put("/rapadura/fundos/:id", requireRapaduraAuth, requireAdmin, async (req, res) => {
   const id = parseInt(req.params.id ?? "0");
   const {
     nome, gestora, classe, benchmark, cnpj, taxaAdm, taxaPerformance,
@@ -304,7 +315,7 @@ router.put("/rapadura/fundos/:id", requireRapaduraAuth, async (req, res) => {
   res.json({ fundo });
 });
 
-router.delete("/rapadura/fundos/:id", requireRapaduraAuth, async (req, res) => {
+router.delete("/rapadura/fundos/:id", requireRapaduraAuth, requireAdmin, async (req, res) => {
   const id = parseInt(req.params.id ?? "0");
   await db.update(rapaduraFundosTable).set({ ativo: false, updatedAt: new Date() }).where(eq(rapaduraFundosTable.id, id));
   await audit(req.session.rapaduraUserId!, "FUNDO_DEL", { fundoId: id }, req.ip ?? "");
