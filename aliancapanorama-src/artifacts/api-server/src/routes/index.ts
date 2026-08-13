@@ -40,6 +40,7 @@ import ceuRouter from "./ceu";
 import telosRouter from "./telos";
 import ethosRouter from "./ethos";
 import rapaduraRouter from "./rapadura";
+import socoboyRouter from "./socoboy";
 
 const router: IRouter = Router();
 
@@ -66,6 +67,7 @@ router.use(ceuRouter);
 router.use(telosRouter);
 router.use(ethosRouter);
 router.use(rapaduraRouter);
+router.use(socoboyRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
