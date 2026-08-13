@@ -4,6 +4,17 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-08-13 — Sessão 107 (Render down + Favicon iOS + Cana limite)
+
+**O que Yuri estava tentando fazer:** Rapadura saiu do ar; favicon errado no Ecosia iOS.
+
+**Decisões tomadas:**
+- **Render travado**: processo Node respondia TLS mas não HTTP. Deploy manual via Render API (dep-d9v376j7uimc73blsmg0) → API voltou 200.
+- **Favicon iOS**: HTML correto (`rapadura-favicon.png`). Causa: cache do Ecosia/Safari. Solução: Configurações → Ecosia → Limpar Cache.
+- **Cana limite**: `maxTokens 1200→4096`, limite 15 itens, mensagem amigável com música ao ultrapassar. Commit: `d7941d9`.
+
+---
+
 ### 2026-08-13 — Sessão 106 (#processo Assembleia #609 — Rapadura v2 e o Sistema Que Aprendeu a Documentar)
 
 **O que Yuri estava tentando fazer:** Processar a Assembleia #609 (#rapadura #rapadurav2) que analisou o relatório técnico da Sessão 105.
