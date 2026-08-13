@@ -24,7 +24,7 @@
     { "source": "/aliancapanorama/isa/(.*)", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/playcenter", "destination": "/aliancapanorama/index.html" },
     { "source": "/aliancapanorama/arvore", "destination": "/aliancapanorama/index.html" },
-    { "source": "/rapadura", "destination": "/aliancapanorama/index.html" },
-    { "source": "/rapadura/(.*)", "destination": "/aliancapanorama/index.html" }
+    { "source": "/rapadura", "destination": "/aliancapanorama/rapadura.html" },
+    { "source": "/rapadura/(.*)", "destination": "/aliancapanorama/rapadura.html" }
   ]
 }

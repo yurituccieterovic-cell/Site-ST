@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#000"/>
+  <!-- Stars -->
+  <circle cx="80" cy="60" r="2.5" fill="#fff" opacity="0.8"/>
+  <circle cx="140" cy="40" r="1.5" fill="#fff" opacity="0.6"/>
+  <circle cx="200" cy="70" r="2" fill="#fff" opacity="0.9"/>
+  <circle cx="310" cy="45" r="1.8" fill="#fff" opacity="0.7"/>
+  <circle cx="380" cy="65" r="2" fill="#fff" opacity="0.8"/>
+  <circle cx="430" cy="38" r="1.5" fill="#fff" opacity="0.5"/>
+  <circle cx="50" cy="110" r="1.5" fill="#fff" opacity="0.6"/>
+  <circle cx="460" cy="95" r="2.5" fill="#fff" opacity="0.7"/>
+  <!-- Moon -->
+  <circle cx="430" cy="80" r="22" fill="#d8cc90" opacity="0.9"/>
+  <circle cx="440" cy="74" r="17" fill="#050810"/>
+  <!-- Mountains far -->
+  <path d="M0,280 L60,200 L120,230 L190,165 L260,210 L340,170 L410,205 L480,175 L512,195 L512,290 L0,290Z" fill="#0c0b1a"/>
+  <!-- Mountains mid -->
+  <path d="M0,290 L70,258 L150,272 L230,255 L320,268 L400,255 L490,268 L512,275 L512,295 L0,295Z" fill="#141c10"/>
+  <!-- Ground -->
+  <rect x="0" y="295" width="512" height="80" fill="#0a0806"/>
+  <!-- Building silhouettes (connected) -->
+  <!-- Biblioteca (classical) -->
+  <rect x="35" y="220" width="70" height="78" fill="#5a4418"/>
+  <path d="M28,220 L112,220 L71,190Z" fill="#8a6830"/>
+  <rect x="42" y="220" width="6" height="78" fill="#b08030" rx="2"/>
+  <rect x="62" y="220" width="6" height="78" fill="#b08030" rx="2"/>
+  <rect x="82" y="220" width="6" height="78" fill="#b08030" rx="2"/>
+  <rect x="102" y="220" width="6" height="78" fill="#b08030" rx="2"/>
+  <!-- Oficina (workshop) -->
+  <rect x="105" y="240" width="55" height="58" fill="#3a2210"/>
+  <rect x="120" y="208" width="14" height="34" fill="#2a1808"/>
+  <circle cx="132" cy="265" r="12" fill="#0a0803" stroke="#c07820" stroke-width="2"/>
+  <circle cx="132" cy="265" r="7" fill="#e0a020" opacity="0.8"/>
+  <!-- Centro Ambiental (organic, center) -->
+  <rect x="160" y="232" width="80" height="66" fill="#1e3810"/>
+  <path d="M152,232 L248,232 L240,215 L200,205 L160,215Z" fill="#2a5018"/>
+  <circle cx="200" cy="198" r="14" fill="#1e4010"/>
+  <circle cx="190" cy="208" r="9" fill="#265018"/>
+  <circle cx="210" cy="206" r="11" fill="#1e4810"/>
+  <!-- Observatório (dome) -->
+  <rect x="240" y="245" width="52" height="53" fill="#252450"/>
+  <ellipse cx="266" cy="244" rx="34" ry="22" fill="#3a3878"/>
+  <circle cx="266" cy="270" r="10" fill="#2040c0" opacity="0.8"/>
+  <!-- Assembleia (wide) -->
+  <rect x="292" y="225" width="110" height="73" fill="#4a3815"/>
+  <path d="M284,225 L410,225 L347,192Z" fill="#8a6820"/>
+  <rect x="300" y="225" width="7" height="73" fill="#c09030" rx="2"/>
+  <rect x="320" y="225" width="7" height="73" fill="#c09030" rx="2"/>
+  <rect x="340" y="225" width="7" height="73" fill="#c09030" rx="2"/>
+  <rect x="360" y="225" width="7" height="73" fill="#c09030" rx="2"/>
+  <rect x="380" y="225" width="7" height="73" fill="#c09030" rx="2"/>
+  <rect x="396" y="225" width="7" height="73" fill="#c09030" rx="2"/>
+  <!-- Trees between buildings -->
+  <rect x="106" y="243" width="4" height="55" fill="#2a1a08"/>
+  <circle cx="108" cy="238" r="14" fill="#1a3010"/>
+  <rect x="155" y="252" width="4" height="46" fill="#2a1a08"/>
+  <circle cx="157" cy="247" r="12" fill="#1e3810"/>
+  <rect x="238" y="258" width="4" height="40" fill="#2a1a08"/>
+  <circle cx="240" cy="253" r="10" fill="#183010"/>
+  <rect x="289" y="240" width="4" height="58" fill="#2a1a08"/>
+  <circle cx="291" cy="234" r="13" fill="#1a3010"/>
+  <rect x="406" y="248" width="4" height="50" fill="#2a1a08"/>
+  <circle cx="408" cy="242" r="14" fill="#183010"/>
+  <!-- Right forest -->
+  <rect x="425" y="260" width="5" height="38" fill="#2a1a08"/>
+  <circle cx="427" cy="253" r="18" fill="#142808"/>
+  <rect x="450" y="268" width="5" height="30" fill="#2a1a08"/>
+  <circle cx="452" cy="262" r="14" fill="#183010"/>
+  <rect x="475" y="265" width="5" height="33" fill="#2a1a08"/>
+  <circle cx="477" cy="258" r="16" fill="#142808"/>
+  <!-- Pulso orb -->
+  <circle cx="256" cy="130" r="30" fill="#c8a020" opacity="0.04"/>
+  <circle cx="256" cy="130" r="18" fill="#c8a020" opacity="0.08"/>
+  <circle cx="256" cy="130" r="8" fill="#e0b820" opacity="0.4"/>
+  <!-- CÉU text -->
+  <text x="256" y="160" text-anchor="middle" font-family="Georgia,serif" font-size="40" font-weight="700" fill="url(#gtxt)" letter-spacing="6">CÉU</text>
+  <defs>
+    <linearGradient id="gtxt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8d060"/>
+      <stop offset="100%" stop-color="#a06820"/>
+    </linearGradient>
+  </defs>
+  <!-- Ground details -->
+  <ellipse cx="130" cy="298" rx="20" ry="8" fill="#141008" opacity="0.8"/>
+  <ellipse cx="350" cy="302" rx="25" ry="8" fill="#141008" opacity="0.7"/>
+  <ellipse cx="460" cy="300" rx="18" ry="6" fill="#141008" opacity="0.8"/>
+</svg>

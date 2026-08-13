@@ -1143,7 +1143,7 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {inp("Nome do fundo *", "nome", "text", "XP Platinum FIC…")}
             {inp("Gestora *", "gestora", "text", "XP Asset…")}
-            <SelectField label="Classe" value={form.classe} onChange={v => setForm(f => ({ ...f, classe: v }))} options={["Multimercado", "Ações", "Renda Fixa", "Crédito Privado", "Internacional", "Cripto"]} />
+            <SelectField label="Classe" value={form.classe} onChange={v => setForm(f => ({ ...f, classe: v }))} options={["Multimercado", "Ação", "Ações", "Renda Variável", "Renda Fixa", "Pós Fixado", "Pré Fixado", "Crédito Privado", "FII", "Internacional", "Cripto"]} />
             <SelectField label="Benchmark" value={form.benchmark} onChange={v => setForm(f => ({ ...f, benchmark: v }))} options={["CDI", "Ibovespa", "IPCA+6%", "IPCA+8%", "S&P 500", "Dólar"]} />
             {inp("Taxa Adm (%aa)", "taxaAdm", "number", "1.50")}
             {inp("Taxa Performance (%)", "taxaPerformance", "number", "20")}
