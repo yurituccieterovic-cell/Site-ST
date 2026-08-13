@@ -1901,13 +1901,13 @@ export function RapaduraPage() {
           </div>
 
           {/* Nav */}
-          <nav style={{ display: "flex", alignItems: "center", height: "100%" }}>
+          <nav style={{ display: "flex", alignItems: "center", height: "100%", overflowX: "auto", flexShrink: 1 }}>
             {TABS.filter(t => !t.adminOnly || isAdmin).map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setView(tab.id)}
                 style={{
-                  height: "100%", padding: "0 14px",
+                  height: "100%", padding: "0 14px", whiteSpace: "nowrap",
                   background: "transparent", border: "none",
                   fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase",
                   color: view === tab.id ? "#c8963b" : "#3d4a5e",
@@ -1925,8 +1925,21 @@ export function RapaduraPage() {
           </nav>
 
           {/* User */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
             <span style={{ fontSize: 10, color: "#3d4a5e", letterSpacing: "0.08em" }}>{user.nome}</span>
+            <a
+              href="/rapadura/manuel"
+              title="Guia do sistema"
+              style={{
+                fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
+                color: "#2a3545", textDecoration: "none", cursor: "pointer",
+                fontFamily: "inherit", transition: "color .15s",
+              }}
+              onMouseEnter={e => { (e.target as HTMLElement).style.color = "#c8963b"; }}
+              onMouseLeave={e => { (e.target as HTMLElement).style.color = "#2a3545"; }}
+            >
+              guia
+            </a>
             <button
               onClick={() => setShowChangePw(true)}
               title="Alterar senha"
