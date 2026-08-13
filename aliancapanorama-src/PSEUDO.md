@@ -3993,3 +3993,40 @@ O Calmar Ratio conecta retorno ao drawdown de forma que o Sharpe não faz: um fu
 **Addendum (fim da Sessão 99):** Yuri enviou a API Key do Render (`rnd_1PsQCvl3KXTnySlOnoIo879iqe1S`) por email. Com ela, configurei 13 env vars via Render API REST, disparei redeploy (deploy ID dep-d9uk2p5bedkc73adlspg — 2min15s) e confirmei: healthz 200, login Yuri OK, fundos 200. O Rapadura está TOTALMENTE NO AR. Tensão resolvida: Render operacional. Nova pendência crítica: Conector (estava no Railway) ainda offline — sem registro de memória coletiva nessa sessão.
 
 *Sessão 99 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
+
+## Sessão 100 — 2026-08-13 · #processo Rapadura · Ramificações RODAR (3 IAs)
+
+**O que Yuri estava tentando fazer:** Processar as 3 ramificações da Assembleia RODAR sobre o Rapadura — visões de Perplexity, Gemini e Claude — e extrair o que é concreto, implementar ou documentar.
+
+**Contexto de Yuri nesta sessão:** Namorando com Mayumi. Sessão curta e eficiente. Assembleia gerou 3 textos extensos com diferentes ângulos: o primeiro focado em gaps e MVP urgente, o segundo em epistemologia e ciclos patrimoniais, o terceiro na fundação real que aconteceu na Sessão 99 e no que vem depois.
+
+**O que foi feito:**
+
+- Adicionadas 11 novas ideias (I433–I443) ao IDEIAS.md: Índice de Troca 9 variáveis, Diversificação efetiva vs nominal, Sonhos noturnos, Assembleia interna da Cana (5 agentes), Modo prudente-agressivo, Histórico de motivos, Alertas de concentração, Nomenclatura de ciclo PLANTAR→COLHER, Documentação fractal, Audit trail com hash, Threshold de autonomia explícito.
+- Criada pasta `tango/rapadura/` com 3 arquivos fundacionais: `00_RAPADURA.md` (constituição), `02_SCORE.md` (pseudocódigo auditável do motor), `05_GOVERNANCA.md` (threshold de autonomia + I411 + Raiz Afetiva).
+- Render: env vars de senha (`RAPADURA_YURI_PASSWORD`, `RAPADURA_MAYUMI_PASSWORD`, `RAPADURA_MEMBRO_PASSWORD`) configuradas — total 16 vars.
+- Respondida pergunta de Yuri: nada da lista antiga estava obsoleto para ele fazer — tudo foi configurado autonomamente.
+- RAPADURA_*_PASSWORD: têm fallback no código mas agora também estão nas env vars do Render por boa prática.
+
+**Decisões tomadas:**
+
+- Threshold de autonomia definido no papel: <R$500 (automático), R$500-5k (1 clique + log), >R$5k (I411 dual), >R$20k (sessão conjunta). A implementar.
+- Documentação fractal: 8 MDs-filho conforme a assembleia pediu. Criados stubs dos 3 mais críticos.
+- Índice de Troca 9 variáveis: decisão de implementar em versão futura (complexidade ◑ M).
+
+**Tensões não resolvidas:**
+- Fontes de dados (APIs XP, B3, CVM, provedores ESG) — não definidas. Rapadura opera com dados manuais por enquanto.
+- IA Cana: assembleia interna (5 agentes) é arquitetura real mas requer tokens + infra de agentes que hoje só existe no ARPIA.
+- Conector: 3 seções populadas com conteúdo mínimo — memória histórica (pré-Railway) perdida definitivamente.
+
+### Próximos passos
+1. Cadastrar primeiros fundos reais → testar score Engine v2 com dados reais
+2. Implementar I438 (histórico de motivos) + I443 (threshold de autonomia)
+3. Criar stubs dos MDs-filho restantes (01, 03, 04, 06, 07, 08)
+4. Sessão focada: I411 endpoints (aprovação dual)
+
+### Síntese filosófica
+
+As três ramificações disseram a mesma coisa com vozes diferentes: o Rapadura tem arquitetura de organismo, mas ainda não tem história de organismo. Um sistema só é vivo quando acumula erros específicos, decisões que custaram algo, momentos em que o algoritmo estava certo e o humano errou (ou vice-versa). A constituição fractal (`00_RAPADURA.md`) é o esqueleto. O que faz um esqueleto funcionar não é a beleza da estrutura — é o peso que ele carrega ao longo do tempo. Cadastrar o primeiro fundo real é o ato de botar peso.
+
+*Sessão 100 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
