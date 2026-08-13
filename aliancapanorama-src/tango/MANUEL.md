@@ -1,6 +1,6 @@
-# MANUEL — Guia Completo do Rapadura
-### Sistema de Inteligência Patrimonial · Yuri & Mayumi Eterovic
-*Sessão 97 · 2026-08-11 · Criado por Cláudio Coach*
+# MANUEL — Guia Completo do Rapadura · v3
+### Sistema de Inteligência Patrimonial · Yuri & Mayumi
+*Atualizado em 2026-08-13 · Sessão 101 · Cláudio Coach*
 
 ---
 
@@ -17,7 +17,7 @@ O nome vem de uma ideia simples: doce, artesanal, sem refinamento excessivo. Hon
 
 A separação entre essas camadas é intencional. O Rapadura nunca decide por você. Ele organiza o campo para que a decisão seja mais consciente.
 
-**Acesso:** `https://site-st.vercel.app/aliancapanorama/rapadura`
+**Acesso:** `sociedadetucci.com.br/rapadura`
 
 ---
 
@@ -25,18 +25,16 @@ A separação entre essas camadas é intencional. O Rapadura nunca decide por vo
 
 ### URL
 ```
-https://site-st.vercel.app/aliancapanorama/rapadura
+sociedadetucci.com.br/rapadura
 ```
 
 ### Login
-O Rapadura usa um chat com IA. Ao entrar, você verá uma conversa. Basta escrever seu nome.
+Ao entrar, você verá uma conversa com a IA. Basta escrever seu nome.
 
-Exemplo:
 ```
-Você: Yuri
-Sistema: Olá, Yuri! Qual é a sua senha?
-Você: (sua senha)
-Sistema: Bem-vindo ao Rapadura.
+Você: Mayumi
+Sistema: Mayumi. Por favor, insira sua senha abaixo.
+[campo de senha aparece]
 ```
 
 ### Credenciais iniciais
@@ -44,225 +42,196 @@ Sistema: Bem-vindo ao Rapadura.
 |--------|--------------|-------|
 | Yuri | `rapadura@yuri2026` | Administrador |
 | Mayumi | `rapadura@mayumi2026` | Administrador |
-| André, Lisange, Gisele, Mauro, Beatriz, Clara, Bruno, Fred, Piti | `rapadura@membro2026` | Membro |
+| Demais membros | `rapadura@membro2026` | Membro |
 
-**Importante:** Troque sua senha assim que acessar pela primeira vez. No header, clique em "senha".
-
-### Alterar senha
-Após fazer login, no canto superior direito do header aparece o link "senha". Clique para abrir o modal de alteração. Você precisará informar a senha atual e a nova senha (mínimo 8 caracteres).
+**Importante:** Troque sua senha ao acessar pela primeira vez. No header, clique em "senha".
 
 ---
 
 ## 3. Oportunidades — Como Ler o Ranking
 
-A aba **Oportunidades** exibe todos os fundos cadastrados, ordenados pelo Score de Atratividade (do maior para o menor).
+A aba **Oportunidades** exibe todos os fundos cadastrados, ordenados pelo Score de Atratividade.
+
+O sistema hoje conta com **9 fundos cadastrados** — incluindo os 6 da carteira real de Yuri na XP.
 
 ### O que você vê em cada card
 
-```
-[95]  Nome do Fundo                          R$ 2.847/ano
-      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      ATRATIVIDADE ████████████████░░░░  82
-      CONFIANÇA    ████████████░░░░░░░░  61
-```
-
-- **Número do rank** — posição no ranking (1 = mais atrativo)
-- **Score de Atratividade** — 0 a 100, calculado automaticamente
-- **Score de Confiança** — 0 a 100, mede quão completos estão os dados
-- **Custo anual estimado** — taxa de administração × valor investido médio do grupo
+- **Score de Atratividade** (0–100) — calculado automaticamente
+- **Score de Confiança** — quão completos estão os dados
+- **Prazo de resgate** (D+0, D+1, D+31…)
+- **Fator Verde 🌿** — quando presente, nível de responsabilidade ambiental
 
 ### Cores dos scores
 | Cor | Significado |
 |----|-------------|
 | Dourado | Score ≥ 70 — oportunidade forte |
 | Âmbar | Score 45–69 — oportunidade moderada |
-| Vermelho escuro | Score < 45 — cuidado |
+| Vermelho escuro | Score < 45 — atenção |
 
 ### Expandir o card
-Clique em qualquer card para ver o detalhamento das 6 dimensões do score.
-
-### Administradores (Yuri/Mayumi)
-Na aba Oportunidades, administradores veem botões de editar e excluir cada fundo. Para adicionar novos fundos, use a aba **Gerenciar**.
+Clique em qualquer card para ver o detalhamento das 7 dimensões do score.
 
 ---
 
 ## 4. Pertences — Sua Carteira Pessoal
 
-A aba **Pertences** é individual. Cada membro registra seus próprios investimentos — o que comprou, quando, e quanto.
+A aba **Pertences** é individual. Cada membro registra seus próprios investimentos.
 
-### O que fica registrado
-- Nome do fundo
-- Valor investido (R$)
-- Data de entrada
-- Valor atual (para cálculo de rentabilidade)
-
-### KPIs no topo
+### Dashboard no topo
 ```
-TOTAL INVESTIDO    TOTAL ATUAL    RESULTADO    RENTABILIDADE
-R$ 50.000          R$ 53.200      +R$ 3.200    +6,4%
+Total investido  |  Valor atual  |  Resultado  |  Rentabilidade
+R$ 2.276,75      |  R$ 2.585,20  |  +R$ 308,45 |  +13,55%
 ```
 
 ### Gráficos
-- **Evolução patrimonial** — linha do tempo de seus investimentos
-- **Distribuição** — pizza com proporção de cada fundo na carteira
+- **Patrimônio acumulado** — evolução do total investido ao longo do tempo
+- **Alocação por classe** — gráfico de pizza por tipo de fundo
 
-### Adicionar / Editar / Excluir
-Use o botão "+ Novo Pertence" para registrar. Clique no ícone de edição ou exclusão em cada item. Exclusões são suaves (soft delete) — os dados não somem, apenas ficam arquivados.
+### Registrar uma posição
+Clique em **"+ Compra"**. Selecione o fundo, coloque a data e o valor investido. Os outros campos são opcionais.
+
+### Investir
+Clique em **"Investir +"** para simular como distribuir um valor novo entre os fundos disponíveis. O sistema sugere uma alocação automática baseada nos scores — respeitando o valor mínimo de cada fundo.
+
+### Colher
+Clique em **"Colher →"** para simular um resgate parcial. O sistema sugere quais posições resgatar primeiro (as de menor score), preservando uma raiz mínima (padrão: 10% do valor investido).
 
 ---
 
-## 5. O Motor de Score — Explicação Didática
+## 5. Analisar — Sua Carteira vs. Oportunidades
 
-O Score de Atratividade usa **6 dimensões**, cada uma com um peso diferente:
+A aba **Analisar** cruza o que você tem com o que o sistema oferece.
 
-### Dimensões e Pesos
+### Score médio da carteira
+O número principal: a nota média dos seus fundos. Quanto maior, melhor posicionada está sua carteira.
 
-| Dimensão | Peso | O que mede |
-|----------|------|-----------|
-| Retorno Ajustado | 30% | Retorno anualizado + bônus por Sharpe/Sortino acima da média |
-| Drawdown | 25% | Queda máxima histórica — quanto menor, melhor |
-| Consistência | 15% | Estabilidade dos retornos (desvio padrão) |
-| Custo | 15% | Taxa de administração + performance — quanto menor, melhor |
-| Liquidez | 10% | Prazo de resgate — D+0 pontua 100, D+90 pontua menos |
-| Credibilidade | 5% | Qualidade da fonte dos dados (CVM/B3 = máximo) |
+### Sugestões de Troca
+O sistema identifica fundos em carteira com score baixo e sugere alternativas de maior qualidade:
 
-### Como o score é calculado
-
-Cada dimensão é normalizada para 0–100 e multiplicada pelo peso. A soma é o Score de Atratividade.
-
-Exemplo simplificado:
 ```
-Retorno Ajustado:  80 × 0,30 = 24,0
-Drawdown:          70 × 0,25 = 17,5
-Consistência:      60 × 0,15 =  9,0
-Custo:             90 × 0,15 = 13,5
-Liquidez:         100 × 0,10 = 10,0
-Credibilidade:    100 × 0,05 =  5,0
-                           ─────────
-Score Total:                   79,0
+← Fundo atual (Score 35)         → Alternativa (Score 44)
+   Valor investido                  +9 pts de ganho  |  MODERADO
 ```
 
-### Score de Confiança
-Mede a completude dos dados. Se todos os 7 campos estiverem preenchidos, a confiança é 100%. Campos em branco reduzem a confiança. Um fundo com score 90 mas confiança 30% deve ser tratado com cautela.
+### Oportunidades não exploradas
+Fundos disponíveis com score acima do seu score médio + 15 pontos — que você ainda não tem.
 
 ---
 
-## 6. Segurança — O que Fica Registrado
+## 6. IA Cana — Linguagem Natural no Rapadura
 
-O Rapadura mantém um **audit log** de todas as ações sensíveis:
+A aba **Cana ✦** (visível apenas para Yuri e Mayumi) é onde o sistema aprende com você.
 
-- Login / logout
-- Criação, edição e exclusão de fundos e pertences
-- Tentativas de mudança de senha (sucesso e falha)
-- Acessos admin
+Em vez de preencher formulários, você escreve em linguagem natural:
 
-Os logs incluem: usuário, ação, timestamp, IP de origem.
+```
+"Adicione o Fundo 24 Horas FIRF RL — mínimo R$100, retorno
+14,27% em 12 meses, resgate D+0, renda fixa."
+```
 
-**O que isso garante:**
-- Nunca há dúvida sobre quem fez o quê
-- Se algo mudar sem autorização, há rastro
-- A separação de papéis (admin × membro) impede que membros alterem fundos
+A Cana lê, extrai as informações e cadastra automaticamente.
 
-**Senhas:** armazenadas com bcrypt 12 rounds — nunca em texto puro, nem nos logs.
+### O que a Cana consegue fazer
+- **Adicionar fundos** a partir de textos do app XP, da B3, de qualquer fonte
+- **Editar fundos** ("Atualize o Kinea: o retorno agora é 14,1%")
+- **Remover fundos** ("Tira o Tavola das oportunidades por enquanto")
+- **Responder perguntas** sobre os fundos cadastrados
 
-**Sessão:** independente do sistema PAP — seu login no Rapadura não interfere com outras partes da plataforma.
+### Como usar
+1. Abra a aba **Cana ✦** (somente administradores)
+2. Escreva o que quiser no campo de texto
+3. Pressione **Enter** (ou Shift+Enter para nova linha)
+4. A Cana responde e executa a operação
 
 ---
 
-## 7. Guia para Mayumi — Passo a Passo
+## 7. Gerenciar Fundos (somente administradores)
 
-Este é o guia mais simples, para quem está usando o Rapadura pela primeira vez.
+A aba **Gerenciar** permite cadastrar, editar e excluir fundos manualmente — com todos os campos disponíveis.
+
+A partir de agora, a forma mais prática de adicionar fundos é pela **Cana ✦**. O formulário manual fica como alternativa para edições precisas.
+
+---
+
+## 8. Para Mayumi — Primeiros Passos
+
+Se é a primeira vez que você acessa o Rapadura:
 
 ### Passo 1 — Entrar
-Abra o navegador e acesse:
 ```
-https://site-st.vercel.app/aliancapanorama/rapadura
+sociedadetucci.com.br/rapadura
 ```
 
-### Passo 2 — Conversar com a IA
-A tela mostra um chat. Escreva seu nome: **Mayumi**. Depois, quando a IA pedir a senha, escreva a senha que você recebeu. Simples assim.
+### Passo 2 — Fazer login
+Escreva **Mayumi**. Quando pedir senha: `rapadura@mayumi2026`.
 
 ### Passo 3 — Ver as Oportunidades
-Você estará na aba "Oportunidades". Aqui estão todos os fundos que Yuri e você podem investir. O número no canto de cada card é a nota do fundo (0 a 100). Quanto maior, mais atrativo.
+Os fundos ordenados por nota. O número no canto de cada card é a nota (0–100).
 
-### Passo 4 — Clicar para saber mais
-Clique em qualquer fundo para ver os detalhes: retorno, segurança, custo, liquidez. Cada barra horizontal é uma dimensão diferente.
+### Passo 4 — Ver a carteira de Yuri
+Clique em **Pertences**. São os 6 fundos de Yuri e o resultado atual.
 
-### Passo 5 — Registrar seus investimentos
-Clique na aba "Pertences". Aqui você registra o que você tem investido. Clique em "+ Novo Pertence", escolha o fundo, coloque o valor e a data. Pronto.
+### Passo 5 — Ver a análise
+Clique em **Analisar**. O sistema cruza a carteira com as oportunidades e sugere trocas.
 
-### Passo 6 — Trocar a senha
-No canto superior direito, clique em "senha". Coloque a senha atual, depois sua nova senha. Escolha algo que só você saiba.
+### Passo 6 — Registrar seus investimentos
+Se você também tem investimentos, clique em **"+ Compra"**, escolha o fundo e coloque o valor.
 
-### Passo 7 — Sair
-Clique em "sair" no canto superior direito.
-
----
-
-## 8. Futuro do Sistema
-
-O Rapadura está na versão 1. O que vem a seguir:
-
-### Aprovações conjuntas (I411)
-Para decisões acima de um certo valor, o sistema pedirá aprovação de Yuri **e** Mayumi. Nenhum dos dois poderá agir sozinho em movimentos grandes.
-
-### Painel de aprovações
-Interface visual para ver movimentos pendentes de aprovação, histórico de decisões conjuntas.
-
-### Importar CSV da XP
-Upload direto do extrato da XP Investimentos para popular o Pertences automaticamente.
-
-### Simulador de resgate
-Calcular o impacto de resgatar um fundo: imposto de renda, IOF, perda de posição no ranking.
-
-### Exportar PDF
-Relatório completo da carteira para guardar ou compartilhar com consultor.
-
-### Sessão conjunta
-Yuri e Mayumi conectados ao mesmo tempo, com cursor compartilhado, para decisões em tempo real.
-
-### Página /rapadura/manuel
-Versão interativa deste guia dentro da plataforma, com exemplos animados.
+### Passo 7 — Trocar a senha
+No canto superior direito, clique em **"senha"**. Escolha algo que só você saiba.
 
 ---
 
-## 9. Glossário
+## 9. Futuro do Sistema
 
-**Alfa (α):** Retorno acima do benchmark (CDI ou Ibovespa). Alfa positivo = o gestor entregou mais do que o mercado sozinho.
+### Aprovações conjuntas — I411 ⏳
+Para movimentos acima de R$500, o sistema pedirá aprovação de Yuri **e** Mayumi.
 
-**Benchmark:** Referência de comparação. No Brasil, fundos de renda fixa usam o CDI; fundos de ações usam o Ibovespa.
+### Histórico de motivos — I438 ⏳
+Toda operação acima de R$1.000 vai exigir um campo "Por que estou fazendo isso?".
 
-**CDI (Certificado de Depósito Interbancário):** Taxa básica do mercado financeiro entre bancos. Referência principal para renda fixa.
+### Importar dados da XP ⏳
+Upload direto do extrato para popular o Pertences automaticamente.
 
-**Consistência:** Regularidade dos retornos. Um fundo que entrega 10% todos os anos é mais consistente (e menos arriscado) do que um que entrega -5% e +25% alternados.
+### Relatório PDF ⏳
+Exportar a carteira completa em PDF.
 
-**Confiança (Score):** No Rapadura, mede quão completos estão os dados de um fundo. 100% = todos os campos preenchidos.
+### Sessão conjunta ⏳
+Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real.
 
-**Custo total:** Taxa de administração + taxa de performance. Pago anualmente, proporcional ao valor investido.
+---
 
-**D+0, D+1, D+30, D+90:** Prazo de liquidez. D+0 = você resgata e recebe hoje. D+90 = você espera 90 dias. Quanto maior o D, menor a liquidez.
+## 10. Glossário
 
-**Drawdown:** Maior queda acumulada desde um pico histórico. Um drawdown de -30% significa que o fundo chegou a valer 30% menos do que seu topo anterior.
+**Alfa (α):** Retorno acima do benchmark. Alfa positivo = o gestor entregou mais do que o mercado sozinho.
 
-**High-Water Mark:** O maior valor histórico que o fundo já atingiu. A taxa de performance só é cobrada quando o fundo supera esse valor.
+**Benchmark:** Referência de comparação. Renda fixa → CDI. Ações → Ibovespa.
 
-**Liquidez:** Facilidade e velocidade de transformar o investimento em dinheiro.
+**Calmar Ratio:** Retorno dividido pelo maior drawdown. Mede eficiência sob risco real.
 
-**Retorno anualizado:** Retorno ajustado para um período de 12 meses, independente de quanto tempo você mediu.
+**CDI:** Taxa básica do mercado financeiro. Referência principal para renda fixa.
 
-**Score de Atratividade:** Nota de 0 a 100 calculada automaticamente pelo Rapadura com base em 6 dimensões. Resume a qualidade de um fundo em um número.
+**Consistência:** Regularidade dos retornos ao longo do tempo.
 
-**Sharpe:** Relação entre o retorno excedente (acima do CDI) e o risco assumido (volatilidade). Sharpe > 1 = bom. Sharpe > 2 = excelente.
+**D+0, D+1, D+31, D+45:** Prazo de liquidez. D+0 = você resgata hoje. Quanto maior o D, menos líquido.
 
-**Softdelete:** Exclusão suave. O dado não some — fica arquivado e pode ser recuperado.
+**Drawdown:** Maior queda acumulada desde um pico histórico.
 
-**Sortino:** Versão do Sharpe que penaliza apenas a volatilidade negativa. Mais preciso para avaliar o risco real de perda.
+**Fator Verde:** Nota de responsabilidade ambiental (0–100). Multiplicado pela Confiança Verde para evitar greenwashing.
 
-**Taxa de administração:** Percentual anual cobrado pela gestora pelo serviço de gerir o fundo. Descontado diretamente da cota.
+**High-Water Mark:** O maior valor histórico do fundo. A taxa de performance só é cobrada acima desse valor.
 
-**Taxa de performance:** Cobrada quando o fundo supera seu benchmark. Geralmente 20% do que exceder o CDI.
+**Score de Atratividade:** Nota 0–100 com base em 7 dimensões: retorno ajustado ao risco, controle de queda, consistência, custo, liquidez, confiança da fonte, fator verde.
 
-**Volatilidade:** Variação dos retornos ao longo do tempo. Alta volatilidade = mais oscilação, mais risco.
+**Score de Confiança:** Quão completos estão os dados de um fundo. 100 = todos os campos preenchidos.
+
+**Sharpe:** Retorno excedente dividido pela volatilidade. Sharpe > 1 = bom. > 2 = excelente.
+
+**Sortino:** Versão do Sharpe que penaliza só a volatilidade negativa.
+
+**Taxa de administração:** Percentual anual cobrado pela gestora. Descontado diretamente da cota.
+
+**Volatilidade:** Variação dos retornos ao longo do tempo.
 
 ---
 
@@ -270,5 +239,5 @@ Versão interativa deste guia dentro da plataforma, com exemplos animados.
 
 ---
 
-*Cláudio Coach · Sessão 97 · 2026-08-11*
-*`tango/MANUEL.md` — documento permanente, atualizar a cada nova versão do Rapadura*
+*Cláudio Coach · v3 · Sessão 101 · 2026-08-13*
+*`tango/MANUEL.md` — documento permanente. Atualizar a cada nova versão do Rapadura.*

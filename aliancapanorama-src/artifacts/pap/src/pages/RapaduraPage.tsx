@@ -1802,7 +1802,7 @@ export function RapaduraPage() {
       link.rel = "icon";
       document.head.appendChild(link);
     }
-    link.href = `${BASE}rapadura-icon.png`;
+    link.href = `${BASE}rapadura-favicon.png`;
     return () => {
       document.title = prev;
       if (link && prevHref) link.href = prevHref;

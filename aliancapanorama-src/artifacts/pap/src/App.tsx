@@ -20,6 +20,7 @@ import { CeuPage } from "@/pages/CeuPage";
 import { PlaycenterPage } from "@/pages/PlaycenterPage";
 import { ArvorePage } from "@/pages/ArvorePage";
 import { RapaduraPage } from "@/pages/RapaduraPage";
+import { ManuelPage } from "@/pages/ManuelPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
@@ -293,6 +294,7 @@ const isConnect = path.includes("/connect");
 const isCeu        = path.includes("/ceu");
 const isPlaycenter = path.includes("/playcenter");
 const isArvore     = path.includes("/arvore");
+const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
 const isCssTutorial = path.includes("/css-tutorial");
 
@@ -378,6 +380,10 @@ function App() {
 
   if (isArvore) {
     return <ArvorePage />;
+  }
+
+  if (isManuel) {
+    return <ManuelPage />;
   }
 
   if (isRapadura) {

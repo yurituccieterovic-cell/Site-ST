@@ -56,24 +56,35 @@ Você é concisa. Às vezes misteriosa. Fale em 1-3 frases.`,
 
 // ── Gemini ───────────────────────────────────────────────────────────────────
 
+const MODELS = ["gemini-flash-lite-latest", "gemma-4-26b-a4b-it"];
+
 async function geminiRespond(systemPrompt: string, context: string): Promise<string> {
-  if (!GEMINI_KEY) return "[sem chave Gemini]";
+  const key = GEMINI_KEY || process.env["AI_API_KEY"] || "";
+  if (!key) return "[sem chave Gemini]";
 
-  const resp = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ role: "user", parts: [{ text: context }] }],
-        generationConfig: { thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 180 },
-      }),
+  for (const model of MODELS) {
+    try {
+      const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: systemPrompt }] },
+            contents: [{ role: "user", parts: [{ text: context }] }],
+            generationConfig: { maxOutputTokens: 180 },
+          }),
+        }
+      );
+      const data = await resp.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[]; error?: { message?: string } };
+      if (data.error?.message?.match(/no longer available|not found|deprecated/i)) continue;
+      const text = (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim();
+      if (text) return text;
+    } catch {
+      continue;
     }
-  );
-
-  const data = await resp.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-  return (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim() || "...";
+  }
+  return "...";
 }
 
 // ── Rodada Playcenter ─────────────────────────────────────────────────────────
