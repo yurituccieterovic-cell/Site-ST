@@ -4,6 +4,26 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-08-13 — Sessão 105 (PWA iOS Rapadura + Tipos Investimento + Bug Cana + Fundos Mayumi)
+
+**O que Yuri estava tentando fazer:** (1) Ícone e nome errados no Rapadura no iOS/Ecosia; (2) Adicionar novos tipos de investimento; (3) Bug da Cana que ficava rodando sem adicionar pertences; (4) Registrar dois fundos que a Mayumi mandou por email.
+
+**Decisões tomadas:**
+
+- **PWA iOS**: Criado `rapadura.html` como segundo entry point MPA no Vite com `apple-mobile-web-app-title=Rapadura` e `apple-touch-icon=rapadura-icon-192.png`. vercel.json atualizado: `/rapadura` → `rapadura.html`.
+
+- **Novos tipos**: SelectField Classe agora tem: Ação, Renda Variável, Pós Fixado, Pré Fixado, FII (além dos já existentes).
+
+- **Bug Cana**: `ADD_PERTENCE`/`EDIT_PERTENCE`/`DELETE_PERTENCE` implementados em `rapadura.ts`. O CANA_SYSTEM foi atualizado para distinguir fundos (catálogo admin) de pertences (carteira pessoal). Import `and` adicionado.
+
+- **Fundos Mayumi**: Adicionados direto no Neon via psycopg2 — BNP Paribas Match FIF RF (R$361,37, 15,20%) e Trend Investback FIC FIRF (R$130,44, 15,09%), ambos Pós Fixado, D+0, userId=2.
+
+**Assembleia**: Sessões #607 (#eco #iris) e #608 (#eco #canva) processadas — Íris com critério de falsificabilidade registrado; Canvas+Íris com tensão técnica vs. comercial documentada.
+
+**Commits**: a32f5a9 (PWA+tipos), 6d6567c (Cana bug fix)
+
+---
+
 ### 2026-08-13 — Sessão 104 (Resposta à Assembleia — Canvas #603-#605 e Íris #606)
 
 **O que Yuri estava tentando fazer:** Recebeu 4 sessões PERFEITO da Assembleia (#603-#606) sobre Canvas e Íris, e pediu que o Cláudio Coach respondesse formalizando as decisões em emails separados para cada projeto.
