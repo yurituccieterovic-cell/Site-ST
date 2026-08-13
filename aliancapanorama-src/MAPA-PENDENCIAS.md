@@ -71,7 +71,15 @@
 | 76 | Socoboy: atualizar modelo Gemini de gemini-1.5-flash (deprecated) para gemini-flash-lite-latest | — | ✅ Sessão 101 |
 | 77 | Ping-keeper: cron GitHub Actions pra manter Render acordado (elimina cold start grátis) | Yuri confirmar | ⏳ NÃO implementar por enquanto (Yuri: free é melhor) |
 | 78 | Servidor+Terminal: criar página /ecossistema/servidor no PAP com status em tempo real | — | ⏳ |
-| 79 | Canvas no ecossistema: aguarda Yuri definir o que imagina (mapa mental? editor visual?) | Yuri confirmar | ⏳ |
+| 79 | Canvas no ecossistema: conceito definido (Sessão 103B) — Inteligência Visual e Espacial, 3 versões, MVP = Mapa Mental Rapadura | implementação | ⏳ |
+| 84 | Canvas v1 — Mapa Mental Rapadura: nós dourados/cinzas, arestas correlação/risco, zoom+pan | — | ⏳ |
+| 85 | Canvas v2 — Lousa Ecossistema: cartões por IA, autoria colorida, persistência no DB | Canvas v1 | ⏳ |
+| 86 | Canvas v3 — Canvas de Projetos: blocos ricos, histórico, memória viva multimodal | Canvas v2 | ⏳ |
+| 87 | Íris — ADB: Yuri completar pareamento Wi-Fi (instruções enviadas por email Sessão 103C) | Yuri + celular | ⏳ |
+| 88 | Íris — calibrar coordenadas de toque por app (ChatGPT, Gemini, Claude.ai, Perplexity) | ADB #87 | ⏳ |
+| 89 | Íris — verificação automática: antes de enviar prompt, ler tela e confirmar resposta anterior recebida | calibração #88 | ⏳ |
+| 90 | Íris — coleta de memória: gravar sínteses no Conector (seção iris_logs) ao final de cada ciclo | verificação #89 | ⏳ |
+| 91 | Íris — primeiro looping supervisionado com Yuri assistindo antes de ciclos autônomos | #90 | ⏳ |
 | 80 | ARPIA no Replit: migrar para Render quando possível; por enquanto manter pausado/mínimo para economizar créditos | Yuri confirmar | ⏳ Próxima sessão: fazer deploy ARPIA no Render |
 | 81 | ManuelPage: tutorial do Rapadura em /rapadura/manuel (10 capítulos, sidebar dark/gold) | — | ✅ Sessão 101 |
 | 82 | Playcenter: modelo Gemini atualizado (gemini-flash-lite-latest + gemma fallback) — já roda no Render junto com API | — | ✅ Sessão 101 |

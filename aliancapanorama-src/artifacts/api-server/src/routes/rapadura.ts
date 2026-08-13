@@ -2,7 +2,7 @@ import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { db } from "@workspace/db";
 import { rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable, rapaduraAuditTable, rapaduraAprovacoesTable } from "@workspace/db";
-import { eq, isNull, desc, sql } from "drizzle-orm";
+import { eq, isNull, desc, sql, and } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
@@ -682,14 +682,15 @@ router.get("/rapadura/analise", requireRapaduraAuth, async (req, res) => {
 const CANA_SYSTEM = `Você é a IA Cana, assistente patrimonial inteligente do Rapadura.
 Analise a mensagem do usuário e retorne APENAS um JSON válido (sem markdown, sem explicação):
 
+Para FUNDOS (catálogo compartilhado — requer admin):
 {
-  "acao": "ADD_FUNDO" | "EDIT_FUNDO" | "DELETE_FUNDO" | "ADD_PERTENCE" | "EDIT_PERTENCE" | "DELETE_PERTENCE" | "QUERY" | "CHAT",
-  "itens": [  // array — pode ter múltiplos fundos na mesma mensagem
+  "acao": "ADD_FUNDO" | "EDIT_FUNDO" | "DELETE_FUNDO",
+  "itens": [
     {
       "id": <number ou null para ADD>,
       "nome": "string",
       "gestora": "string",
-      "classe": "Renda Fixa"|"Multimercado"|"Ações"|"FII"|"Internacional"|"Criptoativos",
+      "classe": "Renda Fixa"|"Multimercado"|"Ações"|"Ação"|"Renda Variável"|"Pós Fixado"|"Pré Fixado"|"FII"|"Internacional"|"Cripto",
       "benchmark": "CDI"|"IBOV"|"IPCA"|"Outro",
       "retorno12m": <number % ou null>,
       "sharpe12m": <number ou null>,
@@ -704,18 +705,47 @@ Analise a mensagem do usuário e retorne APENAS um JSON válido (sem markdown, s
       "notas": "string ou null"
     }
   ],
-  "resposta": "mensagem amigável confirmando o que entendeu e vai fazer"
+  "resposta": "mensagem amigável"
+}
+
+Para PERTENCES (investimentos pessoais do usuário logado):
+{
+  "acao": "ADD_PERTENCE" | "EDIT_PERTENCE" | "DELETE_PERTENCE",
+  "itens": [
+    {
+      "id": <number — só para EDIT/DELETE>,
+      "fundoNome": "nome do fundo para buscar",
+      "gestora": "gestora (se o fundo precisar ser criado)",
+      "classe": "classe do fundo (se precisar criar)",
+      "retorno12m": <number % — se informado e fundo não existe>,
+      "prazoResgateDias": <number — se informado>,
+      "valorInvestido": <number R$ — custo de aquisição>,
+      "valorAtual": <number R$ — saldo atual, se informado>,
+      "dataCompra": "YYYY-MM-DD",
+      "notas": "string ou null"
+    }
+  ],
+  "resposta": "mensagem amigável"
+}
+
+Para CONSULTAS e CONVERSAS:
+{
+  "acao": "QUERY" | "CHAT",
+  "itens": [],
+  "resposta": "resposta direta"
 }
 
 Regras:
 - prazoResgate "D+0" = 0, "D+1" = 1, "D+2" = 2, etc
-- "em até X dia(s)" → X dias
-- Rentabilidade Bruta = retorno12m
-- Aplicação mínima = valorMinAplicacao
-- Se não tiver um campo, omita ou use null
-- Para DELETE: só precisa de id ou nome
+- Rentabilidade Bruta 12M = retorno12m
+- Saldo líquido ≈ valorInvestido (custo); Saldo total = valorAtual
+- Se usuário menciona saldo e rendimento: valorInvestido = saldo - rendimento; valorAtual = saldo
+- dataCompra: use a data de hoje se não informada (formato YYYY-MM-DD)
+- Para DELETE: só precisa de id ou fundoNome
 - Para QUERY ou CHAT: itens pode ser []
-- Sempre extraia TODOS os fundos mencionados na mensagem em itens[]`;
+- Use ADD_PERTENCE quando o usuário diz "tenho", "investi", "adiciona ao meu patrimônio", etc
+- Use ADD_FUNDO apenas quando explicitamente pedido por admin para adicionar ao catálogo
+- Sempre extraia TODOS os itens mencionados em itens[]`;
 
 router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const { message, history = [] } = req.body as { message: string; history?: any[] };
@@ -821,6 +851,68 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
         await db.update(rapaduraFundosTable).set({ ativo: false, updatedAt: new Date() }).where(eq(rapaduraFundosTable.id, targetId));
         await audit(userId, "FUNDO_DELETE_CANA", { fundoId: targetId }, req.ip ?? "");
         executado.push({ ok: true, acao: "DELETE_FUNDO", fundoId: targetId });
+
+      } else if (acao === "ADD_PERTENCE") {
+        // Buscar fundo pelo nome
+        const busca = (item.fundoNome ?? item.nome ?? "").toLowerCase();
+        let fundo = fundosExistentes.find(f => f.nome.toLowerCase().includes(busca));
+        // Se não achou, buscar no DB completo
+        if (!fundo) {
+          const [found] = await db.select({ id: rapaduraFundosTable.id, nome: rapaduraFundosTable.nome, score: rapaduraFundosTable.scoreAtratividade })
+            .from(rapaduraFundosTable).where(sql`lower(${rapaduraFundosTable.nome}) like ${"%" + busca + "%"}`)
+            .limit(1);
+          if (found) fundo = found;
+        }
+        // Se ainda não achou e isAdmin: criar o fundo
+        if (!fundo) {
+          if (!isAdmin) { executado.push({ erro: `Fundo não encontrado: "${item.fundoNome}". Peça ao admin para cadastrá-lo primeiro.` }); continue; }
+          const scores = calcularScore(item);
+          const [novoFundo] = await db.insert(rapaduraFundosTable).values({
+            nome: item.fundoNome ?? item.nome ?? "Fundo sem nome",
+            gestora: item.gestora ?? "Não informada",
+            classe: item.classe ?? "Renda Fixa",
+            benchmark: item.benchmark ?? "CDI",
+            retorno12m: item.retorno12m != null ? String(item.retorno12m) : null,
+            prazoResgateDias: item.prazoResgateDias ?? 0,
+            notas: item.notas ?? null,
+            scoreAtratividade: scores.scoreAtratividade,
+            scoreConfianca: scores.scoreConfianca,
+            scoreDetalhado: scores.scoreDetalhado,
+          }).returning({ id: rapaduraFundosTable.id, nome: rapaduraFundosTable.nome, score: rapaduraFundosTable.scoreAtratividade });
+          fundo = novoFundo;
+          await audit(userId, "FUNDO_ADD_CANA_AUTO", { fundoId: fundo.id, nome: fundo.nome }, req.ip ?? "");
+        }
+        const hoje = new Date().toISOString().slice(0, 10);
+        const [pertence] = await db.insert(rapaduraPertencesTable).values({
+          userId,
+          fundoId: fundo.id,
+          dataCompra: item.dataCompra ?? hoje,
+          valorInvestido: String(item.valorInvestido ?? 0),
+          valorAtual: item.valorAtual != null ? String(item.valorAtual) : null,
+          notas: item.notas ?? null,
+        }).returning();
+        await audit(userId, "PERTENCE_ADD_CANA", { pertenceId: pertence.id, fundoId: fundo.id, nome: fundo.nome }, req.ip ?? "");
+        executado.push({ ok: true, acao: "ADD_PERTENCE", pertenceId: pertence.id, fundo: { id: fundo.id, nome: fundo.nome } });
+
+      } else if (acao === "EDIT_PERTENCE") {
+        if (!item.id) { executado.push({ erro: "ID do pertence obrigatório para edição" }); continue; }
+        const updates: Record<string, any> = {};
+        if (item.valorInvestido != null) updates.valorInvestido = String(item.valorInvestido);
+        if (item.valorAtual != null) updates.valorAtual = String(item.valorAtual);
+        if (item.dataCompra) updates.dataCompra = item.dataCompra;
+        if (item.notas != null) updates.notas = item.notas;
+        updates.updatedAt = new Date();
+        await db.update(rapaduraPertencesTable).set(updates)
+          .where(and(eq(rapaduraPertencesTable.id, item.id), eq(rapaduraPertencesTable.userId, userId)));
+        await audit(userId, "PERTENCE_EDIT_CANA", { pertenceId: item.id }, req.ip ?? "");
+        executado.push({ ok: true, acao: "EDIT_PERTENCE", pertenceId: item.id });
+
+      } else if (acao === "DELETE_PERTENCE") {
+        if (!item.id) { executado.push({ erro: "ID do pertence obrigatório para exclusão" }); continue; }
+        await db.update(rapaduraPertencesTable).set({ deletedAt: new Date(), updatedAt: new Date() })
+          .where(and(eq(rapaduraPertencesTable.id, item.id), eq(rapaduraPertencesTable.userId, userId)));
+        await audit(userId, "PERTENCE_DELETE_CANA", { pertenceId: item.id }, req.ip ?? "");
+        executado.push({ ok: true, acao: "DELETE_PERTENCE", pertenceId: item.id });
       }
     } catch (e) {
       executado.push({ erro: String(e), item });

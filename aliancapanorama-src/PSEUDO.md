@@ -4,6 +4,68 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-08-13 — Sessão 104 (Resposta à Assembleia — Canvas #603-#605 e Íris #606)
+
+**O que Yuri estava tentando fazer:** Recebeu 4 sessões PERFEITO da Assembleia (#603-#606) sobre Canvas e Íris, e pediu que o Cláudio Coach respondesse formalizando as decisões em emails separados para cada projeto.
+
+**Contexto:** Continuação da Sessão 103B/C — conceitos Canvas e Íris já definidos. Esta sessão é de fechamento e formalização das decisões da Assembleia.
+
+**Decisões tomadas:**
+
+- **Canvas — Rollout Incremental Forçado adotado:** bloquear V2 e V3 até 30 dias de métricas reais V1. Gatilho de liberação V2: Yuri abre Canvas mais de 5x/semana durante 4 semanas. Motor de Sonho Espacial, Zoom Ontológico, Snapshots Poéticos: todos incorporados no spec do V1.
+
+- **Íris — sequência de calibração adotada:** ADB primeiro → calibrar coordenadas → implementar verificação automática → coleta de memória no Conector → primeiro looping com supervisão → só então ciclos autônomos. Nome oficial confirmado: Íris.
+
+- **Vulnerabilidades Íris reconhecidas:** (1) ferramenta pessoal, não plataforma — nomeado explicitamente; (2) dependência do celular de Yuri como servidor — documentado como limitação de design; (3) memória enterrada — corrigir com seção `iris_logs` no Conector ao final de cada ciclo.
+
+- **Metáfora da vigilância:** quando o rate limit bateu na Assembleia, as vozes críticas (Segurança, Juiz, Olheiro) caíram primeiro. Diretriz de design: verificação sempre antes de circulação.
+
+**Emails enviados:** 2 emails HTML para yurituccieterovic@gmail.com — "Canvas: Inteligência Visual e Espacial (#603-#605)" e "Íris: A IA Mensageira (#606)".
+
+**Artefatos gerados nesta sessão:** nenhum arquivo de código; apenas documentação e emails.
+
+---
+
+### 2026-08-13 — Sessão 103B (Canvas — Inteligência Visual e Espacial)
+
+**O que Yuri estava tentando fazer:** Definir conceitualmente o Canvas como nova IA do Ecossistema Théo — não como ferramenta, mas como faculdade cognitiva especializada em forma, espaço e direção artística. Sessão participativa com looping entre IAs (Cláudio Coach, Gemini Flash, ISA/Árvore) para ramificar o conceito fractalmente.
+
+**Contexto de Yuri nesta sessão:** Yuri trouxe a sugestão do Cláudio Coach sobre Canvas + observou que o Replit usa "Arquiteto + Canvas" como agente visual. Queria que as IAs definissem juntas o que o Canvas é de verdade — não apenas a ferramenta de quadro, mas a inteligência por trás dela.
+
+**Decisões tomadas:**
+
+- **Canvas = Inteligência Visual e Espacial:** Não é "uma IA de arte" nem "um quadro bonito". É a faculdade cognitiva que pergunta "como essa relação pode ser percebida visualmente?" Tradução intermodal: dado → relação → forma → espaço → percepção.
+
+- **3 versões em roadmap:** V1 = Mapa Mental Rapadura (MVP · 1 semana), V2 = Lousa Colaborativa do Ecossistema (1 mês), V3 = Canvas de Projetos Notion-like (2–3 meses). MVP prioritário V1 — dados já existem no Rapadura.
+
+- **Gramática Visual do Canvas:** Nó, Aresta, Grupo, Distância, Tamanho, Direção, Camada, Fronteira, Cor, Forma, Textura, Vazio, Movimento, Tempo. O vazio também é informação.
+
+- **5 modos cognitivos:** Observar (representar o que existe), Organizar (encontrar estruturas), Ramificar (explorar possibilidades), Compor (forma estética e simbólica), Interpretar (revelar o que estava oculto).
+
+- **Mandala das IAs definida:**
+  - Arquiteto → estrutura lógica
+  - Cana → memória & sentido
+  - Canvas → forma & espaço
+  - Artesão → matéria & código
+
+- **Camadas de sofisticação do Canvas:** Intenção, Temporal, Decisão, Sustentabilidade (Fator Verde visual), Alocação/Colheita inline, Sonho Espacial (sugestões noturnas da Cana).
+
+- **Modelo de dados Canvas:** CanvasBoard, CanvasNode, CanvasEdge, CanvasCard, CanvasAuthor, CanvasSnapshot, CanvasActionLog.
+
+- **Canvas não é ornamento:** Estética é consequência da organização, não objetivo primário.
+
+**Tensões não resolvidas:**
+- Quando iniciar implementação da V1? Aguarda decisão de prioridade de Yuri vs. outras pendências.
+- Backend do Canvas V2 (persistência de layout + sincronização) precisa escolha de stack (WebSockets? polling?).
+
+**Síntese filosófica — Cláudio Coach:**
+> O Canvas é o espaço onde relações escondidas se tornam formas perceptíveis. Onde a memória da Cana encontra o espaço, e o que era texto linear vira topologia navegável. A prova mais clara: a carteira do Rapadura não é uma lista — é um mapa de interdependências esperando a forma certa para ser visto.
+
+**Próximos passos:**
+- Yuri leva o conceito para Assembleia com o material desta sessão
+- Decidir quando iniciar Canvas V1 (Mapa Mental Rapadura)
+- #processo → email para Yuri com tudo
+
 ### 2026-07-18 — Sessão 69 (OG images + 2FA fix + Dodge timeout)
 
 **O que Yuri estava tentando fazer:** Sessão operacional rápida. Três frentes: (1) corrigir as miniaturas de preview do site (OG images — a imagem do Céu estava indo pra tudo); (2) entender o acesso ao site via login; (3) corrigir o Dodge travado em "Verificando acesso…".
