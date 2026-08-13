@@ -1,0 +1,18 @@
+{
+  "name": "Rapadura",
+  "short_name": "Rapadura",
+  "description": "Sistema de inteligência patrimonial — Yuri & Mayumi",
+  "start_url": "/rapadura",
+  "scope": "/rapadura",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#040507",
+  "theme_color": "#c8963b",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/aliancapanorama/rapadura-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/aliancapanorama/rapadura-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["finance", "productivity"],
+  "prefer_related_applications": false
+}

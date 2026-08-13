@@ -510,12 +510,33 @@ export function ManuelPage() {
 
   useEffect(() => {
     document.title = "Manuel · Rapadura";
-    const link: HTMLLinkElement =
-      document.querySelector("link[rel='icon']") ?? document.createElement("link");
-    link.rel = "icon";
-    link.type = "image/png";
-    link.href = `${BASE}rapadura-favicon.png`;
-    document.head.appendChild(link);
+
+    // favicon
+    let favicon = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+    if (!favicon) { favicon = document.createElement("link"); favicon.rel = "icon"; document.head.appendChild(favicon); }
+    favicon.type = "image/png";
+    favicon.href = `${BASE}rapadura-favicon.png`;
+
+    // manifest
+    let manifest = document.querySelector<HTMLLinkElement>("link[rel='manifest']");
+    if (!manifest) { manifest = document.createElement("link"); manifest.rel = "manifest"; document.head.appendChild(manifest); }
+    manifest.href = `${BASE}rapadura-manifest.json`;
+
+    // apple-touch-icon
+    let apple = document.querySelector<HTMLLinkElement>("link[rel='apple-touch-icon']");
+    if (!apple) { apple = document.createElement("link"); apple.rel = "apple-touch-icon"; document.head.appendChild(apple); }
+    apple.href = `${BASE}rapadura-icon-512.png`;
+
+    // meta iOS
+    const setMeta = (name: string, content: string) => {
+      let el = document.querySelector<HTMLMetaElement>(`meta[name='${name}']`);
+      if (!el) { el = document.createElement("meta"); el.name = name; document.head.appendChild(el); }
+      el.content = content;
+    };
+    setMeta("apple-mobile-web-app-title", "Rapadura");
+    setMeta("apple-mobile-web-app-capable", "yes");
+    setMeta("apple-mobile-web-app-status-bar-style", "black-translucent");
+    setMeta("theme-color", "#c8963b");
   }, []);
 
   const chapter = CHAPTERS.find(c => c.id === active);

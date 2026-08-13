@@ -1791,21 +1791,64 @@ export function RapaduraPage() {
   const [user, setUser] = useState<RapaduraUser | null>(null);
   const [checking, setChecking] = useState(true);
 
-  // Troca favicon e título enquanto no Rapadura
+  // Troca favicon, título e meta PWA enquanto no Rapadura
   useEffect(() => {
     const prev = document.title;
     document.title = "Rapadura · Inteligência Patrimonial";
-    let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
-    const prevHref = link?.href;
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "icon";
-      document.head.appendChild(link);
+
+    // favicon
+    let favicon = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+    const prevFavicon = favicon?.href;
+    if (!favicon) {
+      favicon = document.createElement("link");
+      favicon.rel = "icon";
+      favicon.type = "image/png";
+      document.head.appendChild(favicon);
     }
-    link.href = `${BASE}rapadura-favicon.png`;
+    favicon.href = `${BASE}rapadura-favicon.png`;
+
+    // manifest PWA
+    let manifest = document.querySelector<HTMLLinkElement>("link[rel='manifest']");
+    const prevManifest = manifest?.href;
+    if (!manifest) {
+      manifest = document.createElement("link");
+      manifest.rel = "manifest";
+      document.head.appendChild(manifest);
+    }
+    manifest.href = `${BASE}rapadura-manifest.json`;
+
+    // apple-touch-icon (iOS "Adicionar à tela inicial")
+    let apple = document.querySelector<HTMLLinkElement>("link[rel='apple-touch-icon']");
+    const prevApple = apple?.href;
+    if (!apple) {
+      apple = document.createElement("link");
+      apple.rel = "apple-touch-icon";
+      document.head.appendChild(apple);
+    }
+    apple.href = `${BASE}rapadura-icon-512.png`;
+
+    // meta tags iOS PWA
+    const setMeta = (name: string, content: string) => {
+      let el = document.querySelector<HTMLMetaElement>(`meta[name='${name}']`);
+      const prev = el?.content;
+      if (!el) { el = document.createElement("meta"); el.name = name; document.head.appendChild(el); }
+      el.content = content;
+      return prev;
+    };
+    const prevTitle = setMeta("apple-mobile-web-app-title", "Rapadura");
+    const prevCapable = setMeta("apple-mobile-web-app-capable", "yes");
+    const prevStatus = setMeta("apple-mobile-web-app-status-bar-style", "black-translucent");
+    const prevTheme = setMeta("theme-color", "#c8963b");
+
     return () => {
       document.title = prev;
-      if (link && prevHref) link.href = prevHref;
+      if (favicon && prevFavicon) favicon.href = prevFavicon;
+      if (manifest && prevManifest) manifest.href = prevManifest;
+      if (apple && prevApple) apple.href = prevApple;
+      setMeta("apple-mobile-web-app-title", prevTitle ?? "PAP");
+      setMeta("apple-mobile-web-app-capable", prevCapable ?? "");
+      setMeta("apple-mobile-web-app-status-bar-style", prevStatus ?? "");
+      setMeta("theme-color", prevTheme ?? "#c8a050");
     };
   }, []);
   const [view, setView] = useState<View>("oportunidades");
