@@ -262,3 +262,17 @@
 | 149 | Rapadura: Heatmap mensal de rentabilidade (I429) | sessão futura | 💡 |
 | 150 | Rapadura: Simulador de estresse — backtesting COVID/Americanas (I430) | sessão futura | 💡 |
 | 151 | CSS Tutorial: publicado em /aliancapanorama/css-tutorial (Sessão 98) | ✅ feito | ✅ |
+
+## Rapadura — Backlog Técnico (pós Sessão 103)
+
+| # | Item | Prioridade | Status |
+|---|---|---|---|
+| 138 | I438 — Histórico de motivos obrigatório (genealogia auditável) | ALTA | ⏳ |
+| 139 | I443 — Threshold de autonomia explícito (R$500/5k/20k) | ALTA | ⏳ |
+| 140 | Rapadura: configurar RAPADURA_MEMBRO_PASSWORD no Render (senha padrão dos 9 novos membros) | Yuri (Render UI) | ⏳ |
+| 141 | I433 — Índice de Troca 9 variáveis | MÉDIA | ⏳ |
+| 142 | I411 — Painel de aprovações pendentes (dual approval) | MÉDIA | ⏳ |
+| 143 | I434 — Diversificação efetiva vs nominal | MÉDIA | ⏳ |
+| 144 | I415 — Importar CSV XP | BAIXA | ⏳ |
+| 145 | I435 — Sonhos noturnos (cron Cana às 03h) | BAIXA | ⏳ |
+| 146 | I436 — Assembleia interna da Cana (5 agentes) | BAIXA | ⏳ |

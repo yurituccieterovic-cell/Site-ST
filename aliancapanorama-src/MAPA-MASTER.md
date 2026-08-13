@@ -9,12 +9,16 @@
 
 | Serviço | URL | Status |
 |---|---|---|
-| Frontend | `site-st.vercel.app/aliancapanorama` | ✅ LIVE |
-| API Railway | `site-st-production.up.railway.app` | ✅ LIVE |
-| Domínio desejado | `pap.sociedadetucci.com.br` | 🔧 DNS pendente |
+| Frontend PAP | `site-st.vercel.app/aliancapanorama` | ✅ LIVE |
+| Frontend Rapadura | `sociedadetucci.com.br/rapadura` | ✅ LIVE |
+| Manuel do Rapadura | `sociedadetucci.com.br/rapadura/manuel` | ✅ LIVE |
+| API Render | `site-st.onrender.com` | ✅ LIVE |
+| DB Neon | `ep-late-pond-acean4b0.sa-east-1.aws.neon.tech` | ✅ LIVE |
 | Bluesky ISA | `@isa-pap.bsky.social` | ✅ LIVE |
 | Repo | `github.com/yurituccieterovic-cell/Site-ST` | ✅ |
-| Admin | login `AO` / senha `AOA` | ✅ |
+| Admin PAP | login `AO` / senha `AOA` | ✅ |
+| Rapadura Yuri | login: `Yuri` / senha: `rapadura@yuri2026` | ✅ |
+| Rapadura Mayumi | login: `Mayumi` / senha: `rapadura@mayumi2026` | ✅ |
 
 ---
 

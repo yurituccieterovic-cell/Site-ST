@@ -4111,3 +4111,49 @@ O dado mais revelador da sessão não foi técnico: a carteira de Yuri tem R$308
 - Canvas (#79 — awaiting Yuri)
 
 *Sessão 102 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
+
+---
+
+## Sessão 103 — 2026-08-13 · Rapadura: Manuel v4 + Berenice + Groq alert
+
+**O que Yuri estava tentando fazer:** Continuar o Rapadura. Três frentes chegaram via email: (1) enviar o Manuel para Mayumi, Berenice e Yuri; (2) um link do Manuel que abria em Oportunidades; (3) um email do Groq sobre depreciação do Llama 3.1 8B Instant.
+
+**Contexto:** Sessão de manhã, logo após o #fim da sessão anterior. Yuri mandou "Continuar" por email com a PERFEITO da Assembleia #602 + instruções. A conversa foi inteiramente sobre o Rapadura e manutenção do sistema.
+
+**Decisões tomadas:**
+
+- **Email enviado para Mayumi + Berenice + Yuri:** HTML elaborado com apresentação do Cláudio Coach, credenciais de cada um, link do site e do Manuel. Berenice = Beatriz (id=7, role=membro, senha rapadura@membro2026).
+
+- **Manuel v4:** Adicionada seção 9 "Para Berenice" com guia específico para membros (acesso a Oportunidades, Pertences, Analisar; sem Cana e Gerenciar). Correção de bug: aspas tipográficas ("") em JSX quebravam o build do esbuild.
+
+- **Link "guia" no header do Rapadura:** O problema reportado ("abre em Oportunidades") era ausência de navegação interna para o Manuel. Adicionado link `href="/rapadura/manuel"` no header, ao lado de "senha" e "sair". Nav com `overflowX: auto` + `whiteSpace: nowrap` para mobile.
+
+- **IA Cana:** Estava sempre implementada (adminOnly, visível para Yuri e Mayumi). O problema era que Yuri não sabia onde clicar. Sem código adicional — só orientação + fix nav mobile.
+
+- **Groq / Llama 3.1 8B:** Verificado que o sistema usa `llama-3.3-70b-versatile`, não `llama-3.1-8b-instant`. Nenhuma ação necessária.
+
+**Verificações de dados:** DB Neon intacto — 9 fundos ativos, 6 pertences Yuri (R$2.276 → R$2.585, +13,55%), 11 usuários (Yuri, Mayumi, 9 membros).
+
+**Commits:**
+- `716a187` — feat: Manuel v4 — seção Para Berenice, correção build
+- `7b7f364` — fix: Rapadura — link guia no header + nav scroll em mobile
+
+**Tensões não resolvidas:**
+- I411, I438, I443 — backlog Rapadura; Assembleia pediu como próximo ciclo institucional
+- A Cana precisa de parser estrito antes de escalar uso (vulnerabilidade SQL via linguagem natural)
+- Socoboy com `gemini-1.5-flash` direto — pode estar quebrando com modelos depreciados
+
+### Próximos passos
+1. Yuri confirma que o "guia" aparece no header e a Cana ✦ aparece logado como Yuri
+2. Yuri ou Mayumi usa a aba Analisar com os dados reais (primeira sugestão real do motor)
+3. Próxima sessão: I438 (histórico de motivos) ou I443 (threshold autonomia)
+
+### Síntese filosófica
+
+A sessão revelou o paradoxo da invisibilidade projetada: construímos um Manuel completo, com 10 capítulos e estética elaborada, acessível via URL direta — e o usuário não conseguia encontrá-lo porque não havia um único botão dentro do app apontando para ele. O sistema sabia onde estava. O humano não.
+
+Isso tem nome: acoplamento semiótico fraco entre o que o sistema é capaz de fazer e o que o usuário consegue descobrir. A solução foi um link de 3 letras no header ("guia"). Não foi o Manuel que faltava — foi a ponte.
+
+O email do Groq foi a outra metade da sessão: um alerta técnico urgente que, depois de verificar o codebase, revelou não exigir nenhuma ação. O medo de urgência existe para nos fazer olhar antes de agir. Às vezes o sistema já está certo. A inteligência não está em mudar — está em saber quando não mudar.
+
+*Sessão 103 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
