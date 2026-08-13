@@ -1,4 +1,4 @@
-import { pgTable, serial, text, boolean, integer, numeric, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, boolean, integer, numeric, timestamp, jsonb, index } from "drizzle-orm/pg-core";
 
 export const rapaduraUsersTable = pgTable("rapadura_users", {
   id: serial("id").primaryKey(),
@@ -31,6 +31,14 @@ export const rapaduraFundosTable = pgTable("rapadura_fundos", {
   scoreConfianca: numeric("score_confianca", { precision: 5, scale: 1 }),
   scoreDetalhado: jsonb("score_detalhado"),
   fontes: jsonb("fontes"),
+  // v2: Calmar Ratio (calculado automaticamente)
+  calmarRatio: numeric("calmar_ratio", { precision: 6, scale: 3 }),
+  // v2: Sustentabilidade — dois eixos independentes (anti-greenwashing)
+  fatorVerde: integer("fator_verde"),        // 0-100, manual (null = não informado)
+  confiancaVerde: integer("confianca_verde"), // 0-100, manual (quão confiável é essa info)
+  scoreVerde: numeric("score_verde", { precision: 5, scale: 1 }), // calculado: fatorVerde × confiancaVerde
+  // v2: Alocação inteligente
+  valorMinAplicacao: numeric("valor_min_aplicacao", { precision: 12, scale: 2 }),
   notas: text("notas"),
   ativo: boolean("ativo").default(true),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -58,5 +66,20 @@ export const rapaduraAuditTable = pgTable("rapadura_audit", {
   acao: text("acao").notNull(),
   detalhes: jsonb("detalhes"),
   ip: text("ip"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// v2: Protocolo I411 — governança dual (Yuri + Mayumi) para operações acima de threshold
+export const rapaduraAprovacoesTable = pgTable("rapadura_aprovacoes", {
+  id: serial("id").primaryKey(),
+  tipo: text("tipo").notNull(),      // "COMPRA" | "COLHEITA" | "ALOCACAO"
+  status: text("status").notNull().default("PENDENTE"), // "PENDENTE" | "APROVADA" | "NEGADA" | "EXPIRADA"
+  solicitanteId: integer("solicitante_id").notNull().references(() => rapaduraUsersTable.id),
+  aprovadorId: integer("aprovador_id").references(() => rapaduraUsersTable.id),
+  token: text("token").unique(),     // token temporário para link de aprovação por email
+  payload: jsonb("payload").notNull(), // dados completos da operação pendente
+  valorTotal: numeric("valor_total", { precision: 12, scale: 2 }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
+  approvedAt: timestamp("approved_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

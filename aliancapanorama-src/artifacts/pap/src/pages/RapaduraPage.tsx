@@ -20,6 +20,9 @@ type Fundo = {
   retorno36m: string | null; alfa36m: string | null; tempoRecuperacaoDias: number | null;
   scoreAtratividade: string | null; scoreConfianca: string | null; scoreDetalhado: any;
   notas: string | null; cnpj: string | null;
+  // v2
+  fatorVerde: number | null; confiancaVerde: number | null; scoreVerde: string | null;
+  calmarRatio: string | null; valorMinAplicacao: string | null;
 };
 type Pertence = {
   id: number; fundoId: number; fundoNome: string; fundoGestora: string;
@@ -29,7 +32,29 @@ type Pertence = {
 };
 type Dashboard = { totalInvestido: number; totalAtual: number; resultado: number; rentabilidade: number };
 type ChatMsg = { role: "user" | "assistant"; content: string };
-type View = "oportunidades" | "pertences" | "gerenciar";
+type View = "oportunidades" | "pertences" | "gerenciar" | "analisar";
+
+type AlocacaoItem = {
+  fundoId: number; nome: string; gestora: string;
+  scoreAtratividade: string | null; scoreConfianca: string | null; scoreVerde: string | null;
+  percentual: number; valor: number; valorMin: number;
+};
+type ColheitaItem = {
+  pertenceId: number; fundoId: number; fundoNome: string; fundoGestora: string;
+  fundoScore: string | null; prazoResgateDias: number;
+  valorAtual: number; valorResgatar: number; valorRestante: number; raizPreservada: number;
+};
+type InvestirResult = { alocacao: AlocacaoItem[]; valorTotal: number; totalAlocado: number; mensagem?: string };
+type ColherResult = { colheita: ColheitaItem[]; valorDesejado: number; totalResgatado: number; totalDisponivel: number; naoAtendido: number; raizPct: number };
+type AnalisarResult = {
+  carteira: { quantidadeFundos: number; scoreMedio: number; totalInvestido: number };
+  oportunidadesForaCerteira: Fundo[];
+  sugestoesTroca: Array<{
+    emCarteira: { fundoId: number; nome: string; score: string | null; valorInvestido: string };
+    sugerido: { fundoId: number; nome: string; score: string | null };
+    ganhoScore: number; indiceTroca: string;
+  }>;
+};
 
 // ─── Utils ────────────────────────────────────────────────────────────────────
 
@@ -90,6 +115,21 @@ function LiquidBadge({ dias }: { dias: number }) {
   const label = dias <= 0 ? "D+0" : `D+${dias}`;
   return (
     <span style={{ fontSize: 10, fontFamily: "monospace", color, letterSpacing: "0.05em" }}>{label}</span>
+  );
+}
+
+function VerdeBadge({ fatorVerde, confiancaVerde }: { fatorVerde: number | null; confiancaVerde: number | null }) {
+  if (fatorVerde == null) return null;
+  const score = confiancaVerde != null ? Math.round((fatorVerde * confiancaVerde) / 100) : fatorVerde;
+  const color = score >= 60 ? "#3f7254" : score >= 30 ? "#6a7a40" : "#4a4a30";
+  return (
+    <span title={`Fator Verde: ${fatorVerde}/100 · Confiança: ${confiancaVerde ?? "??"}/100`} style={{
+      fontSize: 9, fontFamily: "monospace", color,
+      background: `${color}18`, padding: "2px 6px",
+      border: `1px solid ${color}40`, letterSpacing: "0.04em",
+    }}>
+      🌿 {score}
+    </span>
   );
 }
 
@@ -515,6 +555,7 @@ function OportunidadesView({
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+                    <VerdeBadge fatorVerde={f.fatorVerde} confiancaVerde={f.confiancaVerde} />
                     <LiquidBadge dias={f.prazoResgateDias} />
                     <ScoreBadge value={f.scoreAtratividade} />
                     <span style={{ fontSize: 10, color: "#2a3545" }}>{open ? "▲" : "▼"}</span>
@@ -551,6 +592,9 @@ function OportunidadesView({
                   <ScoreRow label="Consistência 36M" value={f.scoreDetalhado.consistencia ?? 0} />
                   <ScoreRow label="Custo real" value={f.scoreDetalhado.custo ?? 0} />
                   <ScoreRow label="Liquidez" value={f.scoreDetalhado.liquidez ?? 0} />
+                  {f.scoreDetalhado.fatorVerde != null && (
+                    <ScoreRow label="Fator Verde 🌿" value={f.scoreDetalhado.fatorVerde} />
+                  )}
 
                   <div style={{
                     marginTop: 12, paddingTop: 12, borderTop: "1px solid #0f1520",
@@ -562,6 +606,20 @@ function OportunidadesView({
                         {Number(f.scoreConfianca ?? 0).toFixed(1)}/100
                       </span>
                     </span>
+                    {f.calmarRatio && (
+                      <span style={{ fontSize: 10, color: "#3d4a5e" }}>
+                        Calmar:{" "}
+                        <span style={{ color: "#8a7a6a", fontFamily: "monospace" }}>{f.calmarRatio}</span>
+                      </span>
+                    )}
+                    {f.valorMinAplicacao && (
+                      <span style={{ fontSize: 10, color: "#3d4a5e" }}>
+                        Mín:{" "}
+                        <span style={{ color: "#8a7a6a", fontFamily: "monospace" }}>
+                          {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(f.valorMinAplicacao))}
+                        </span>
+                      </span>
+                    )}
                     {!f.temLinhaDAGua && (
                       <span style={{ fontSize: 10, color: "#7a5050" }}>⚠ Sem High-Water Mark</span>
                     )}
@@ -604,6 +662,8 @@ function PertencesView({
   });
   const [saving, setSaving] = useState(false);
   const [confirmDel, setConfirmDel] = useState<number | null>(null);
+  const [showInvestir, setShowInvestir] = useState(false);
+  const [showColher, setShowColher] = useState(false);
 
   const resultado = dashboard.resultado;
   const rentabilidade = dashboard.rentabilidade;
@@ -668,6 +728,10 @@ function PertencesView({
 
   return (
     <div>
+      {/* Modais */}
+      {showInvestir && <InvestirModal onClose={() => setShowInvestir(false)} />}
+      {showColher && <ColherModal onClose={() => setShowColher(false)} />}
+
       {/* Header */}
       <div style={{
         display: "flex", justifyContent: "space-between", alignItems: "flex-end",
@@ -681,16 +745,38 @@ function PertencesView({
             Pertences
           </div>
         </div>
-        <button
-          onClick={() => { reset(); setShowForm(true); }}
-          style={{
-            fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase",
-            color: "#c8963b", border: "1px solid #5a4020", background: "rgba(200,150,59,0.06)",
-            padding: "7px 12px", cursor: "pointer", fontFamily: "inherit",
-          }}
-        >
-          + Adicionar compra
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            onClick={() => setShowColher(true)}
+            style={{
+              fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase",
+              color: "#3f7254", border: "1px solid #2a4a38", background: "rgba(63,114,84,0.06)",
+              padding: "7px 12px", cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            Colher →
+          </button>
+          <button
+            onClick={() => setShowInvestir(true)}
+            style={{
+              fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase",
+              color: "#c8963b", border: "1px solid #5a4020", background: "rgba(200,150,59,0.06)",
+              padding: "7px 12px", cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            Investir +
+          </button>
+          <button
+            onClick={() => { reset(); setShowForm(true); }}
+            style={{
+              fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase",
+              color: "#5a5650", border: "1px solid #1a2030", background: "transparent",
+              padding: "7px 12px", cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            + Compra
+          </button>
+        </div>
       </div>
 
       {/* KPIs */}
@@ -953,7 +1039,8 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
     nome: "", gestora: "", classe: "Multimercado", benchmark: "CDI", cnpj: "",
     taxaAdm: "", taxaPerformance: "", temLinhaDAGua: true, prazoResgateDias: "30",
     sharpe12m: "", sortino12m: "", maxDrawdown: "", tempoRecuperacaoDias: "",
-    volatilidade12m: "", retorno12m: "", retorno36m: "", alfa36m: "", notas: "",
+    volatilidade12m: "", retorno12m: "", retorno36m: "", alfa36m: "",
+    fatorVerde: "", confiancaVerde: "", valorMinAplicacao: "", notas: "",
   };
   const [form, setForm] = useState(blank);
   const [editId, setEditId] = useState<number | null>(null);
@@ -971,7 +1058,11 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
       sharpe12m: fnd.sharpe12m ?? "", sortino12m: fnd.sortino12m ?? "", maxDrawdown: fnd.maxDrawdown ?? "",
       tempoRecuperacaoDias: fnd.tempoRecuperacaoDias ? String(fnd.tempoRecuperacaoDias) : "",
       volatilidade12m: fnd.volatilidade12m ?? "", retorno12m: fnd.retorno12m ?? "",
-      retorno36m: fnd.retorno36m ?? "", alfa36m: fnd.alfa36m ?? "", notas: fnd.notas ?? "",
+      retorno36m: fnd.retorno36m ?? "", alfa36m: fnd.alfa36m ?? "",
+      fatorVerde: fnd.fatorVerde != null ? String(fnd.fatorVerde) : "",
+      confiancaVerde: fnd.confiancaVerde != null ? String(fnd.confiancaVerde) : "",
+      valorMinAplicacao: fnd.valorMinAplicacao ?? "",
+      notas: fnd.notas ?? "",
     });
     setEditId(fnd.id);
     setShowForm(false);
@@ -995,6 +1086,9 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
         retorno12m: form.retorno12m ? parseFloat(form.retorno12m) : null,
         retorno36m: form.retorno36m ? parseFloat(form.retorno36m) : null,
         alfa36m: form.alfa36m ? parseFloat(form.alfa36m) : null,
+        fatorVerde: form.fatorVerde ? parseInt(form.fatorVerde) : null,
+        confiancaVerde: form.confiancaVerde ? parseInt(form.confiancaVerde) : null,
+        valorMinAplicacao: form.valorMinAplicacao ? parseFloat(form.valorMinAplicacao) : null,
       };
       await fetch(url, { method: editId ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify(body) });
       reset();
@@ -1080,6 +1174,19 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
               {inp("Alfa 36M (%)", "alfa36m", "number", "8.0")}
             </div>
           </div>
+          <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #0f1520" }}>
+            <div style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 12 }}>
+              Sustentabilidade (opcional)
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+              {inp("Fator Verde (0-100)", "fatorVerde", "number", "75")}
+              {inp("Confiança Verde (0-100)", "confiancaVerde", "number", "80")}
+              {inp("Valor mínimo (R$)", "valorMinAplicacao", "number", "500")}
+            </div>
+            <div style={{ fontSize: 10, color: "#3d4a5e", marginTop: 6, fontStyle: "italic" }}>
+              Score Verde = Fator × Confiança ÷ 100 (anti-greenwashing)
+            </div>
+          </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 12 }}>
             {inp("CNPJ", "cnpj", "text", "00.000.000/0001-00")}
             {inp("Notas", "notas", "text", "observações…")}
@@ -1147,6 +1254,306 @@ function GerenciarView({ fundos, onRefresh, onBack }: { fundos: Fundo[]; onRefre
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+// ─── MODAL INVESTIR ──────────────────────────────────────────────────────────
+
+function InvestirModal({ onClose }: { onClose: () => void }) {
+  const [valor, setValor] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<InvestirResult | null>(null);
+  const [error, setError] = useState("");
+
+  async function simular() {
+    const v = parseFloat(valor.replace(",", "."));
+    if (!v || v <= 0) { setError("Informe um valor válido."); return; }
+    setLoading(true); setError(""); setResult(null);
+    try {
+      const r = await fetch(`${API}/api/rapadura/investir`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ valorTotal: v }),
+      });
+      const d = await r.json() as InvestirResult;
+      setResult(d);
+    } catch { setError("Erro de conexão."); }
+    finally { setLoading(false); }
+  }
+
+  const fmtBRL = (n: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.80)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 20 }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ background: "#07090e", border: "1px solid #1a2030", padding: 28, width: "100%", maxWidth: 480 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#c8963b" }}>Investir na Rapadura</div>
+            <div style={{ fontSize: 12, color: "#5a5650", marginTop: 3 }}>Alocação inteligente por score</div>
+          </div>
+          <button onClick={onClose} style={{ fontSize: 18, color: "#3d4a5e", background: "none", border: "none", cursor: "pointer" }}>×</button>
+        </div>
+
+        <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+          <input
+            type="number"
+            value={valor}
+            onChange={e => setValor(e.target.value)}
+            placeholder="Valor total a investir (R$)"
+            onKeyDown={e => e.key === "Enter" && simular()}
+            style={{ flex: 1, background: "#040507", border: "1px solid #141b26", color: "#c5c0b8", fontSize: 14, padding: "10px 12px", outline: "none", fontFamily: "inherit" }}
+          />
+          <button
+            onClick={simular}
+            disabled={loading}
+            style={{ padding: "10px 20px", background: loading ? "#1a2030" : "#c8963b", color: loading ? "#3d4a5e" : "#040507", fontSize: 11, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "inherit", letterSpacing: "0.06em" }}
+          >
+            {loading ? "…" : "Simular"}
+          </button>
+        </div>
+
+        {error && <div style={{ fontSize: 11, color: "#9a4040", marginBottom: 12 }}>{error}</div>}
+
+        {result && (
+          <div>
+            {result.mensagem && <div style={{ fontSize: 11, color: "#5a5650", marginBottom: 12 }}>{result.mensagem}</div>}
+            {result.alocacao.length > 0 && (
+              <>
+                <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 10 }}>
+                  Distribuição sugerida — {fmtBRL(result.totalAlocado)}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  {result.alocacao.map(a => (
+                    <div key={a.fundoId} style={{ background: "#090f18", padding: "10px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#ddd8d0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.nome}</div>
+                        <div style={{ fontSize: 10, color: "#3d4a5e", marginTop: 2 }}>{a.gestora} · Score {Number(a.scoreAtratividade ?? 0).toFixed(0)}</div>
+                      </div>
+                      <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 12 }}>
+                        <div style={{ fontSize: 13, fontFamily: "monospace", fontWeight: 700, color: "#c8963b" }}>{fmtBRL(a.valor)}</div>
+                        <div style={{ fontSize: 10, color: "#5a5650" }}>{a.percentual.toFixed(1)}%</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 12, fontSize: 10, color: "#3d4a5e", fontStyle: "italic" }}>
+                  Simulação orientativa. Verifique disponibilidade e liquidez antes de executar na XP.
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── MODAL COLHER ─────────────────────────────────────────────────────────────
+
+function ColherModal({ onClose }: { onClose: () => void }) {
+  const [valor, setValor] = useState("");
+  const [raiz, setRaiz] = useState("10");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<ColherResult | null>(null);
+  const [error, setError] = useState("");
+
+  async function simular() {
+    const v = parseFloat(valor.replace(",", "."));
+    if (!v || v <= 0) { setError("Informe um valor de resgate."); return; }
+    setLoading(true); setError(""); setResult(null);
+    try {
+      const r = await fetch(`${API}/api/rapadura/colher`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ valorDesejado: v, raizMinima: parseFloat(raiz) || 10 }),
+      });
+      const d = await r.json() as ColherResult;
+      setResult(d);
+    } catch { setError("Erro de conexão."); }
+    finally { setLoading(false); }
+  }
+
+  const fmtBRL = (n: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.80)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 20 }}
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{ background: "#07090e", border: "1px solid #1a2030", padding: 28, width: "100%", maxWidth: 500 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#3f7254" }}>Colher Rapadura</div>
+            <div style={{ fontSize: 12, color: "#5a5650", marginTop: 3 }}>Resgate com raiz mínima preservada</div>
+          </div>
+          <button onClick={onClose} style={{ fontSize: 18, color: "#3d4a5e", background: "none", border: "none", cursor: "pointer" }}>×</button>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 10, marginBottom: 16 }}>
+          <input
+            type="number"
+            value={valor}
+            onChange={e => setValor(e.target.value)}
+            placeholder="Valor a resgatar (R$)"
+            onKeyDown={e => e.key === "Enter" && simular()}
+            style={{ background: "#040507", border: "1px solid #141b26", color: "#c5c0b8", fontSize: 14, padding: "10px 12px", outline: "none", fontFamily: "inherit" }}
+          />
+          <div>
+            <div style={{ fontSize: 9, color: "#3d4a5e", marginBottom: 4, letterSpacing: "0.1em" }}>RAIZ MÍNIMA (%)</div>
+            <input
+              type="number"
+              value={raiz}
+              onChange={e => setRaiz(e.target.value)}
+              min={0} max={50}
+              style={{ width: "100%", boxSizing: "border-box", background: "#040507", border: "1px solid #141b26", color: "#c5c0b8", fontSize: 12, padding: "10px 10px", outline: "none", fontFamily: "inherit" }}
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={simular}
+          disabled={loading}
+          style={{ width: "100%", padding: "10px", background: loading ? "#1a2030" : "#3f7254", color: loading ? "#3d4a5e" : "#fff", fontSize: 11, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "inherit", letterSpacing: "0.08em", marginBottom: 16 }}
+        >
+          {loading ? "Calculando…" : "Simular colheita"}
+        </button>
+
+        {error && <div style={{ fontSize: 11, color: "#9a4040", marginBottom: 12 }}>{error}</div>}
+
+        {result && (
+          <div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2, marginBottom: 14 }}>
+              {[
+                ["Desejado", fmtBRL(result.valorDesejado)],
+                ["Resgatável", fmtBRL(result.totalResgatado)],
+                ["Não atendido", fmtBRL(result.naoAtendido)],
+              ].map(([l, v]) => (
+                <div key={l} style={{ background: "#090f18", padding: "8px 10px" }}>
+                  <div style={{ fontSize: 9, color: "#3d4a5e", letterSpacing: "0.12em", textTransform: "uppercase" }}>{l}</div>
+                  <div style={{ fontSize: 12, fontFamily: "monospace", color: "#c5c0b8", fontWeight: 600, marginTop: 3 }}>{v}</div>
+                </div>
+              ))}
+            </div>
+            {result.colheita.length > 0 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                {result.colheita.map(c => (
+                  <div key={c.pertenceId} style={{ background: "#090f18", padding: "10px 14px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: "#ddd8d0" }}>{c.fundoNome}</span>
+                      <span style={{ fontSize: 13, fontFamily: "monospace", fontWeight: 700, color: "#3f7254" }}>{fmtBRL(c.valorResgatar)}</span>
+                    </div>
+                    <div style={{ display: "flex", gap: 12, marginTop: 4, fontSize: 10, color: "#3d4a5e" }}>
+                      <span>Atual: {fmtBRL(c.valorAtual)}</span>
+                      <span>Restante: {fmtBRL(c.valorRestante)}</span>
+                      <span>Raiz: {fmtBRL(c.raizPreservada)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div style={{ marginTop: 12, fontSize: 10, color: "#3d4a5e", fontStyle: "italic" }}>
+              Simulação orientativa. A raiz ({result.raizPct}% do investido) é preservada em cada fundo.
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── ANALISAR ────────────────────────────────────────────────────────────────
+
+function AnalisarView() {
+  const [data, setData] = useState<AnalisarResult | null>(null);
+  const [loading, setLoading] = useState(true);
+  const fmtBRL = (n: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
+
+  useEffect(() => {
+    fetch(`${API}/api/rapadura/analise`, { credentials: "include" })
+      .then(r => r.json() as Promise<AnalisarResult>)
+      .then(setData)
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div style={{ textAlign: "center", padding: "48px 0", color: "#3d4a5e", fontSize: 12 }}>Analisando carteira…</div>;
+  if (!data) return <div style={{ textAlign: "center", padding: "48px 0", color: "#3d4a5e" }}>Erro ao carregar análise.</div>;
+
+  return (
+    <div>
+      <div style={{ marginBottom: 28, paddingBottom: 16, borderBottom: "1px solid #0f1520" }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 5 }}>Inteligência</div>
+        <div style={{ fontSize: 22, fontWeight: 300, color: "#ddd8d0" }}>Pertences × Oportunidades</div>
+      </div>
+
+      {/* KPIs da carteira */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2, marginBottom: 28 }}>
+        <div style={{ background: "#09101a", padding: "14px 16px", borderTop: "2px solid #c8963b" }}>
+          <div style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#4a4540" }}>Score médio carteira</div>
+          <div style={{ fontSize: 22, fontFamily: "monospace", fontWeight: 700, color: "#c8963b", marginTop: 6 }}>{data.carteira.scoreMedio}</div>
+        </div>
+        <div style={{ background: "#09101a", padding: "14px 16px", borderTop: "2px solid #1a2a40" }}>
+          <div style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#4a4540" }}>Fundos na carteira</div>
+          <div style={{ fontSize: 22, fontFamily: "monospace", fontWeight: 700, color: "#ddd8d0", marginTop: 6 }}>{data.carteira.quantidadeFundos}</div>
+        </div>
+        <div style={{ background: "#09101a", padding: "14px 16px", borderTop: "2px solid #1a2a40" }}>
+          <div style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#4a4540" }}>Total investido</div>
+          <div style={{ fontSize: 18, fontFamily: "monospace", fontWeight: 700, color: "#ddd8d0", marginTop: 6 }}>{fmtBRL(data.carteira.totalInvestido)}</div>
+        </div>
+      </div>
+
+      {/* Sugestões de troca */}
+      {data.sugestoesTroca.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 12 }}>
+            Sugestões de Troca
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {data.sugestoesTroca.map((s, i) => (
+              <div key={i} style={{ background: "#09101a", padding: "14px 16px", borderLeft: `2px solid ${s.indiceTroca === "FORTE" ? "#c8963b" : "#3d4a5e"}` }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <div style={{ flex: 1 }}>
+                    <span style={{ fontSize: 11, color: "#7a3535" }}>← {s.emCarteira.nome}</span>
+                    <span style={{ fontSize: 10, color: "#3d4a5e", display: "block", marginTop: 2 }}>Score {Number(s.emCarteira.score ?? 0).toFixed(0)} · {fmtBRL(Number(s.emCarteira.valorInvestido))}</span>
+                  </div>
+                  <div style={{ textAlign: "center", padding: "0 8px" }}>
+                    <div style={{ fontSize: 10, color: "#c8963b" }}>+{s.ganhoScore} pts</div>
+                    <div style={{ fontSize: 9, color: "#3d4a5e", letterSpacing: "0.08em" }}>{s.indiceTroca}</div>
+                  </div>
+                  <div style={{ flex: 1, textAlign: "right" }}>
+                    <span style={{ fontSize: 11, color: "#3f7254" }}>→ {s.sugerido.nome}</span>
+                    <span style={{ fontSize: 10, color: "#3d4a5e", display: "block", marginTop: 2 }}>Score {Number(s.sugerido.score ?? 0).toFixed(0)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Oportunidades fora da carteira */}
+      {data.oportunidadesForaCerteira.length > 0 && (
+        <div>
+          <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 12 }}>
+            Oportunidades Não Exploradas (score {data.carteira.scoreMedio + 15}+)
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {data.oportunidadesForaCerteira.map(f => (
+              <div key={f.id} style={{ background: "#09101a", padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#ddd8d0" }}>{f.nome}</div>
+                  <div style={{ fontSize: 10, color: "#3d4a5e", marginTop: 2 }}>{f.gestora} · {f.classe}</div>
+                </div>
+                <ScoreBadge value={f.scoreAtratividade} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {data.sugestoesTroca.length === 0 && data.oportunidadesForaCerteira.length === 0 && (
+        <div style={{ textAlign: "center", padding: "40px 0", color: "#3d4a5e", fontSize: 13 }}>
+          Sua carteira está bem posicionada — nenhuma melhoria clara identificada.
+        </div>
+      )}
     </div>
   );
 }
@@ -1294,6 +1701,7 @@ export function RapaduraPage() {
   const TABS: { id: View; label: string; adminOnly?: boolean }[] = [
     { id: "oportunidades", label: "Oportunidades" },
     { id: "pertences", label: "Pertences" },
+    { id: "analisar", label: "Analisar" },
     { id: "gerenciar", label: "Gerenciar", adminOnly: true },
   ];
 
@@ -1400,6 +1808,9 @@ export function RapaduraPage() {
         )}
         {view === "pertences" && (
           <PertencesView pertences={pertences} dashboard={dashboard} fundos={fundos} onRefresh={loadData} />
+        )}
+        {view === "analisar" && (
+          <AnalisarView />
         )}
         {view === "gerenciar" && isAdmin && (
           <GerenciarView fundos={fundos} onRefresh={loadData} onBack={() => setView("oportunidades")} />
