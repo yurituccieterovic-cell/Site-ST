@@ -3990,4 +3990,6 @@ A descoberta de que o banco nunca existiu no Neon é uma metáfora perfeita do q
 
 O Calmar Ratio conecta retorno ao drawdown de forma que o Sharpe não faz: um fundo pode ter Sharpe decente com drawdown devastador. O Calmar exige que o retorno seja proporcional à dor vivida — o sistema agora mede coragem eficiente, não apenas performance bruta.
 
+**Addendum (fim da Sessão 99):** Yuri enviou a API Key do Render (`rnd_1PsQCvl3KXTnySlOnoIo879iqe1S`) por email. Com ela, configurei 13 env vars via Render API REST, disparei redeploy (deploy ID dep-d9uk2p5bedkc73adlspg — 2min15s) e confirmei: healthz 200, login Yuri OK, fundos 200. O Rapadura está TOTALMENTE NO AR. Tensão resolvida: Render operacional. Nova pendência crítica: Conector (estava no Railway) ainda offline — sem registro de memória coletiva nessa sessão.
+
 *Sessão 99 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*

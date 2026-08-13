@@ -34,18 +34,23 @@
           └───────────────────────────────────┘
 ```
 
-### Estado da Infraestrutura
+### Estado da Infraestrutura (atualizado 2026-08-13)
 
 | Componente | Onde roda | Status |
 |---|---|---|
 | Frontend | Vercel hobby (`site-st.vercel.app/aliancapanorama`) | ✅ LIVE |
-| API | Railway (`site-st-production.up.railway.app`) | ✅ LIVE |
-| Banco de dados | Railway PostgreSQL | ✅ LIVE |
+| API PAP | Render (`site-st.onrender.com`) | ✅ LIVE |
+| Banco PAP | Neon PostgreSQL (`ep-late-pond-acean4b0.sa-east-1`) | ✅ LIVE |
+| Banco Rapadura | Neon (mesma instância) — 5 tabelas v2 | ✅ LIVE |
+| Conector | ❌ OFFLINE (estava no Railway) | 🔴 MIGRAR |
+| Railway | ❌ MORTO — trial expirou 2026-08-02 | ❌ Abandonado |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
 | Domínio | pap.sociedadetucci.com.br | 🔧 DNS a configurar |
 | GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
 | Bluesky ISA | isa-pap.bsky.social | ✅ LIVE |
-| ARPIA | Railway (pendente) + `/root/Arpia/` | ✅ Código pronto |
+| ARPIA | `/root/Arpia/` — sem servidor ativo | ⏸ Backlog |
+| Render API Key | `rnd_1PsQCvl3KXTnySlOnoIo879iqe1S` (em .pap-secrets) | ✅ Configurado |
+| Render Service ID | `srv-d9n682bm8hqs73dmg4kg` | ✅ |
 
 ---
 

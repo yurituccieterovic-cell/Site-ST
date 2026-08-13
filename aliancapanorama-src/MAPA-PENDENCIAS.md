@@ -60,9 +60,14 @@
 | 46 | Zero-Trust/ActiveMasking (perimeter_masking.cpp): AGUARDA REVISÃO LEGAL | revisão jurídica | 🚫 |
 | 49 | I99 — Protocolo de Recovery MC: heartbeat check 2 ciclos sem resposta | cycle.ts + ARPIA live | ⏳ |
 | 51 | Sistema de Verificação 3 Camadas (I93) em assembly_tasks | ARPIA live | ⏳ |
-| 52 | ARPIA: deploy no Railway (falta PR + env vars) | Yuri | ⏳ |
-| 53 | ARPIA_BASE_URL: adicionar ao env Railway PAP API após deploy ARPIA | #52 | ⏳ |
+| 52 | ARPIA: deploy no Render (Railway morto) | Yuri | ⏳ |
+| 53 | ARPIA_BASE_URL: adicionar ao env Render PAP API após deploy ARPIA | #52 | ⏳ |
 | 55 | Oracle Always Free: criar conta + provisionar VM ARM | Yuri | ⏳ |
+| 71 | Conector: migrar Railway → Render (era site-st-production.up.railway.app) | Cláudio | ⏳ |
+| 72 | Socoboy Telegram: TELEGRAM_BOT_TOKEN via @BotFather → conectar ARPIA | Yuri (BotFather) | ⏳ |
+| 73 | Rapadura: cadastrar primeiros fundos reais no painel Gerenciar | Yuri/Mayumi | ⏳ |
+| 74 | IA Cana: chatbox dedicado ao Rapadura (memória viva do patrimônio) | — | ⏳ |
+| 75 | I411: endpoints de aprovação dual (rapadura_aprovacoes — tabela criada) | — | ⏳ |
 | 56 | Dev local: `.env.local` a preencher, rodar `bash scripts/dev-local.sh setup` | Yuri | ⏳ |
 | 57 | Termux extra: copiar termux-bootstrap.sh e rodar em novo Termux | Yuri | ⏳ |
 | 58 | Oracle: migrar banco Railway → Oracle (`migrate-db-to-oracle.sh`) | #55 | ⏳ |
@@ -105,6 +110,9 @@
 | — | Livro v5: bug índice corrigido, Cap.0, texto real PDF, 5 frames vídeo, 10 páginas | ✅ Sessão 26b (2026-07-07) |
 | I193 | /connect fora do LoginGate — App.tsx linha 129: `if (isConnect) return <ConectorPage />` antes do LoginGate | ✅ já implementado |
 | I200 | Health check DB ping — health.ts: SELECT 1 → 200 ok / 503 db unreachable | ✅ já implementado |
+| — | Migração Railway → Render: dump (648KB) restaurado no Neon, Render configurado | ✅ Sessão 93+99 |
+| — | Rapadura v2: Score Engine v2 (Calmar+Verde), Investir/Colher/Analisar, DB fundado no Neon | ✅ 81a550e (Sessão 99) |
+| — | Render env vars: 13 vars configuradas via API Key autonomamente | ✅ 2026-08-13 |
 | — | LIVRO-WORKFLOW.md: pipeline completo de geração do PDF documentado | ✅ Sessão 26b (2026-07-07) |
 | — | LIVRO-VISAO-WORKFLOW.md: workflow de extração de imagens/vídeos para IAs | ✅ Sessão 26b (2026-07-07) |
 | — | PortalPage.tsx + /portal: painel adm/superadm com stats PAP sincronizados | ✅ Sessão 26b (2026-07-07) |
