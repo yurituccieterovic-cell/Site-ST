@@ -80,6 +80,9 @@
 | 89 | Íris — verificação automática: antes de enviar prompt, ler tela e confirmar resposta anterior recebida | calibração #88 | ⏳ |
 | 90 | Íris — coleta de memória: gravar sínteses no Conector (seção iris_logs) ao final de cada ciclo | verificação #89 | ⏳ |
 | 91 | Íris — primeiro looping supervisionado com Yuri assistindo antes de ciclos autônomos | #90 | ⏳ |
+| 92 | Rapadura PWA — banner na UI avisando que atualização de ícone exige reinstalação no iOS | — | ⏳ |
+| 93 | RODAR — Protocolo de poda semântica: RAG+embedding para recall inteligente (não só indexação cronológica) | Assembleia #609 | ⏳ |
+| 94 | Governança explícita de publicação na Assembleia: protocolo de o que sai (o Agente decide unilateralmente desde sempre — nunca foi explicitado) | Assembleia #609 | ⏳ |
 | 80 | ARPIA no Replit: migrar para Render quando possível; por enquanto manter pausado/mínimo para economizar créditos | Yuri confirmar | ⏳ Próxima sessão: fazer deploy ARPIA no Render |
 | 81 | ManuelPage: tutorial do Rapadura em /rapadura/manuel (10 capítulos, sidebar dark/gold) | — | ✅ Sessão 101 |
 | 82 | Playcenter: modelo Gemini atualizado (gemini-flash-lite-latest + gemma fallback) — já roda no Render junto com API | — | ✅ Sessão 101 |

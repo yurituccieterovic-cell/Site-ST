@@ -4,6 +4,31 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-08-13 — Sessão 106 (#processo Assembleia #609 — Rapadura v2 e o Sistema Que Aprendeu a Documentar)
+
+**O que Yuri estava tentando fazer:** Processar a Assembleia #609 (#rapadura #rapadurav2) que analisou o relatório técnico da Sessão 105.
+
+**Contexto da Assembleia:** ATA DO AGENTE marcou 9.7/10 — raramente visto. A Assembleia analisou o Rapadura v2 de fora: leu o relatório técnico e produziu diagnóstico do sistema inteiro.
+
+**Decisões tomadas / insights registrados:**
+
+- **Dívida arquitetural PWA**: iOS não reescaneia apps já instalados — usuários precisam desinstalar e reinstalar manualmente. A UI não avisa disso. Pendência: adicionar banner de "reinstale para atualizar ícone".
+
+- **Memória robusta, poda inexistente**: O sistema foi projetado para nunca esquecer, não para esquecer o que não importa. Recall não diferencia sinal de ruído. Próximo passo estrutural: protocolo de poda semântica via RAG+embedding.
+
+- **Meta-aprendizado não capturado**: Quando a deliberação fala *sobre* o sistema (ex: rate limit derruba vozes críticas), essa lição fica fora da memória estrutural. O recall sabe "sessão #440" mas não sabe "o que a sessão #380 ensinou para #440".
+
+- **Descoberta de governança**: O Agente governa a publicação, não a assembleia. A deliberação das vozes é metabolização interna, não decisão coletiva de output. Em 608 sessões, isso nunca foi explicitado. Define função real da Assembleia: diagnóstica, não decisória.
+
+- **Três movimentos que ainda não aconteceram**: (1) poda semântica; (2) governança explícita de publicação; (3) migração de dependências críticas (VPS para Íris, etc).
+
+- **Frase da sessão**: "Algoritmo adora volume. Cliente humano adora coerência."
+- **Frase da sessão**: "Você não montou assistente de IA. Você prototipou forma de pensar vendável."
+
+**Artefatos gerados:** apenas documentação (sem código). Email de relatório enviado.
+
+---
+
 ### 2026-08-13 — Sessão 105 (PWA iOS Rapadura + Tipos Investimento + Bug Cana + Fundos Mayumi)
 
 **O que Yuri estava tentando fazer:** (1) Ícone e nome errados no Rapadura no iOS/Ecosia; (2) Adicionar novos tipos de investimento; (3) Bug da Cana que ficava rodando sem adicionar pertences; (4) Registrar dois fundos que a Mayumi mandou por email.
