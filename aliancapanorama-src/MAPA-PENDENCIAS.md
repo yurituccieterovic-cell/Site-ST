@@ -68,11 +68,14 @@
 | 73 | Rapadura: cadastrar primeiros fundos reais no painel Gerenciar | Yuri/Mayumi | ✅ Sessão 101 — 9 fundos ativos (3 oportunidades + 6 carteira XP Yuri) |
 | 74 | IA Cana: chatbox dedicado ao Rapadura (memória viva do patrimônio) | — | ✅ Sessão 101 — POST /api/rapadura/cana + tab "Cana ✦" no frontend |
 | 75 | I411: endpoints de aprovação dual (rapadura_aprovacoes — tabela criada) | — | ⏳ |
-| 76 | Socoboy: atualizar modelo Gemini de gemini-1.5-flash (deprecated) para gemini-flash-lite-latest | — | ⏳ |
-| 77 | Ping-keeper: cron GitHub Actions pra manter Render acordado (elimina cold start grátis) | Yuri confirmar | ⏳ |
+| 76 | Socoboy: atualizar modelo Gemini de gemini-1.5-flash (deprecated) para gemini-flash-lite-latest | — | ✅ Sessão 101 |
+| 77 | Ping-keeper: cron GitHub Actions pra manter Render acordado (elimina cold start grátis) | Yuri confirmar | ⏳ NÃO implementar por enquanto (Yuri: free é melhor) |
 | 78 | Servidor+Terminal: criar página /ecossistema/servidor no PAP com status em tempo real | — | ⏳ |
 | 79 | Canvas no ecossistema: aguarda Yuri definir o que imagina (mapa mental? editor visual?) | Yuri confirmar | ⏳ |
-| 80 | ARPIA no Replit: decidir migrar para Render ou desligar (consumindo créditos Replit) | Yuri confirmar | ⏳ |
+| 80 | ARPIA no Replit: migrar para Render quando possível; por enquanto manter pausado/mínimo para economizar créditos | Yuri confirmar | ⏳ Próxima sessão: fazer deploy ARPIA no Render |
+| 81 | ManuelPage: tutorial do Rapadura em /rapadura/manuel (10 capítulos, sidebar dark/gold) | — | ✅ Sessão 101 |
+| 82 | Playcenter: modelo Gemini atualizado (gemini-flash-lite-latest + gemma fallback) — já roda no Render junto com API | — | ✅ Sessão 101 |
+| 83 | Favicon Rapadura: revertido para rapadura-favicon.png (1.4KB) — bug do ícone grande corrigido | — | ✅ Sessão 101 |
 | 56 | Dev local: `.env.local` a preencher, rodar `bash scripts/dev-local.sh setup` | Yuri | ⏳ |
 | 57 | Termux extra: copiar termux-bootstrap.sh e rodar em novo Termux | Yuri | ⏳ |
 | 58 | Oracle: migrar banco Railway → Oracle (`migrate-db-to-oracle.sh`) | #55 | ⏳ |

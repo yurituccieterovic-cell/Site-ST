@@ -4081,3 +4081,33 @@ A IA Cana começou como uma promessa técnica ("consegue fazer o que você fez a
 O dado mais revelador da sessão não foi técnico: a carteira de Yuri tem R$308 de resultado positivo mas contém fundos em perda significativa (Tavola -5.24%, Trend Prata -13.62%). O Rapadura, quando a aba Analisar rodar sobre esses dados reais, vai cruzar essa dor com as oportunidades disponíveis. O sistema vai fazer sua primeira sugestão real. Vai errar ou acertar — mas vai ser a primeira vez que a inteligência patrimonial tem dados reais para trabalhar.
 
 *Sessão 101 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
+
+---
+
+## Sessão 102 — 2026-08-13 · ManuelPage + Playcenter no Render + ARPIA pendência
+
+**O que Yuri estava tentando fazer:** Continuação da Sessão 101. Três frentes: (1) ManuelPage — tutorial visual do Rapadura no site; (2) Playcenter migrar para o Render; (3) ARPIA/Replit — economizar créditos.
+
+**Contexto:** Sessão de contexto compactado (continuação). Yuri também pediu rota autônoma com `#fim` antes de acabar.
+
+**Decisões tomadas:**
+
+- **ManuelPage.tsx criada:** 10 capítulos com sidebar, dark/gold aesthetic. Rota `/rapadura/manuel` adicionada ao vercel.json e ao App.tsx (antes de `isRapadura` para não ser engolida). Routing limpo — `isManuel` como flag booleana no topo.
+
+- **Playcenter já no Render:** O Playcenter roda dentro do API server (cron.ts, `startIsaCron()`). Já estava em Render. O que precisava era apenas corrigir o modelo Gemini: `gemini-2.0-flash-lite` → `gemini-flash-lite-latest` + fallback `gemma-4-26b-a4b-it` + remover `thinkingConfig` (causava erro).
+
+- **ARPIA no Replit:** Decisão pendente — manter mínima por enquanto, migrar para Render na próxima sessão disponível. Fica como #52 atualizado + #80.
+
+- **Favicon Rapadura:** Revertido para `rapadura-favicon.png` (1.4KB). `rapadura-icon.png` (23KB) era o logo grande, não o favicon. Bug confirmado por Yuri.
+
+- **Manuel v3:** Email enviado para Yuri com o guia atualizado. Aguarda última assembleia para enviar a Mayumi.
+
+**Commits:** `9b4b0da` — ManuelPage v3 + Playcenter model fix + favicon revert
+
+**Próximos passos:**
+- Deploy ARPIA no Render (liberar Replit)
+- Servidor+Terminal no Théo (#78)
+- Enviar Manuel para Mayumi (após assembleia)
+- Canvas (#79 — awaiting Yuri)
+
+*Sessão 102 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
