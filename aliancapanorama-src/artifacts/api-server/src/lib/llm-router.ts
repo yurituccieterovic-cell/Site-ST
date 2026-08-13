@@ -60,7 +60,8 @@ function makeOpenAI(): Provider {
 
 function makeGemini(): Provider {
   const key = process.env["GEMINI_API_KEY"] ?? process.env["AI_API_KEY"] ?? "";
-  const MODELS = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash-001"];
+  // Models ordered by preference — tested working as of Aug 2026
+  const MODELS = ["gemini-flash-lite-latest", "gemma-4-26b-a4b-it", "gemini-flash-lite-latest"];
   return {
     name: "gemini",
     cooldownMs: 2000,
@@ -82,14 +83,15 @@ function makeGemini(): Provider {
           { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
         );
         const data = await resp.json() as {
-          candidates?: { content: { parts: { text: string }[] } }[];
+          candidates?: { content: { parts?: { text?: string }[] } }[];
           error?: { message: string };
         };
         if (data.error) {
-          if (data.error.message.includes("no longer available")) continue;
+          if (/no longer available|not found/i.test(data.error.message)) continue;
           throw new Error(`Gemini: ${data.error.message}`);
         }
-        return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (text) return text;
       }
       throw new Error("Gemini: nenhum modelo disponível");
     },
