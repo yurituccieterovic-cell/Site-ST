@@ -673,4 +673,161 @@ router.get("/rapadura/analise", requireRapaduraAuth, async (req, res) => {
   });
 });
 
+// ─── IA Cana — linguagem natural → operações no Rapadura ─────────────────────
+//
+// POST /rapadura/cana
+// Body: { message: string, history?: {role,content}[] }
+// Aceita texto livre com um ou vários fundos para ADD/EDIT/DELETE/QUERY
+//
+const CANA_SYSTEM = `Você é a IA Cana, assistente patrimonial inteligente do Rapadura.
+Analise a mensagem do usuário e retorne APENAS um JSON válido (sem markdown, sem explicação):
+
+{
+  "acao": "ADD_FUNDO" | "EDIT_FUNDO" | "DELETE_FUNDO" | "ADD_PERTENCE" | "EDIT_PERTENCE" | "DELETE_PERTENCE" | "QUERY" | "CHAT",
+  "itens": [  // array — pode ter múltiplos fundos na mesma mensagem
+    {
+      "id": <number ou null para ADD>,
+      "nome": "string",
+      "gestora": "string",
+      "classe": "Renda Fixa"|"Multimercado"|"Ações"|"FII"|"Internacional"|"Criptoativos",
+      "benchmark": "CDI"|"IBOV"|"IPCA"|"Outro",
+      "retorno12m": <number % ou null>,
+      "sharpe12m": <number ou null>,
+      "sortino12m": <number ou null>,
+      "maxDrawdown": <number % positivo ou null>,
+      "taxaAdm": <number % ou null>,
+      "taxaPerformance": <number % ou null>,
+      "prazoResgateDias": <0|1|2|3|5|7|30|90 ou null>,
+      "valorMinAplicacao": <number R$ ou null>,
+      "fatorVerde": <0-100 ou null>,
+      "confiancaVerde": <0-100 ou null>,
+      "notas": "string ou null"
+    }
+  ],
+  "resposta": "mensagem amigável confirmando o que entendeu e vai fazer"
+}
+
+Regras:
+- prazoResgate "D+0" = 0, "D+1" = 1, "D+2" = 2, etc
+- "em até X dia(s)" → X dias
+- Rentabilidade Bruta = retorno12m
+- Aplicação mínima = valorMinAplicacao
+- Se não tiver um campo, omita ou use null
+- Para DELETE: só precisa de id ou nome
+- Para QUERY ou CHAT: itens pode ser []
+- Sempre extraia TODOS os fundos mencionados na mensagem em itens[]`;
+
+router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
+  const { message, history = [] } = req.body as { message: string; history?: any[] };
+  if (!message) { res.status(400).json({ error: "message obrigatório" }); return; }
+
+  const userId = req.session.rapaduraUserId!;
+  const userRole = req.session.rapaduraRole as string;
+  const isAdmin = userRole === "yuri" || userRole === "mayumi" || userRole === "admin";
+
+  // Buscar fundos existentes para contexto
+  const fundosExistentes = await db.select({
+    id: rapaduraFundosTable.id,
+    nome: rapaduraFundosTable.nome,
+    gestora: rapaduraFundosTable.gestora,
+    score: rapaduraFundosTable.scoreAtratividade,
+  }).from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true)).limit(30);
+
+  const contextoFundos = fundosExistentes.map(f => `ID${f.id}: ${f.nome} (${f.gestora}) score=${f.score}`).join("\n");
+
+  const systemWithContext = CANA_SYSTEM + `\n\nFundos já cadastrados:\n${contextoFundos || "(nenhum ainda)"}`;
+
+  // Chamar Gemini via routeLLM
+  let rawJson = "";
+  try {
+    const msgs: any[] = [
+      { role: "system", content: systemWithContext },
+      ...history.slice(-4).map((h: any) => ({ role: h.role, content: h.content })),
+      { role: "user", content: message },
+    ];
+    rawJson = await routeLLM({ messages: msgs, maxTokens: 1200 });
+  } catch (e) {
+    res.status(500).json({ error: "Erro ao chamar IA", details: String(e) }); return;
+  }
+
+  // Parse JSON da resposta
+  let parsed: any;
+  try {
+    const jsonMatch = rawJson.match(/\{[\s\S]*\}/);
+    parsed = JSON.parse(jsonMatch?.[0] ?? rawJson);
+  } catch {
+    res.json({ acao: "CHAT", resposta: rawJson, executado: [] }); return;
+  }
+
+  const { acao, itens = [], resposta } = parsed;
+  const executado: any[] = [];
+
+  // Executar operações
+  for (const item of itens) {
+    try {
+      if (acao === "ADD_FUNDO") {
+        if (!isAdmin) { executado.push({ erro: "Sem permissão para adicionar fundos" }); continue; }
+        const scores = calcularScore(item);
+        const [fundo] = await db.insert(rapaduraFundosTable).values({
+          nome: item.nome ?? "Fundo sem nome",
+          gestora: item.gestora ?? "Desconhecida",
+          classe: item.classe ?? "Multimercado",
+          benchmark: item.benchmark ?? "CDI",
+          taxaAdm: item.taxaAdm != null ? String(item.taxaAdm) : null,
+          taxaPerformance: item.taxaPerformance != null ? String(item.taxaPerformance) : null,
+          prazoResgateDias: item.prazoResgateDias ?? 30,
+          sharpe12m: item.sharpe12m != null ? String(item.sharpe12m) : null,
+          sortino12m: item.sortino12m != null ? String(item.sortino12m) : null,
+          maxDrawdown: item.maxDrawdown != null ? String(item.maxDrawdown) : null,
+          retorno12m: item.retorno12m != null ? String(item.retorno12m) : null,
+          retorno36m: item.retorno36m != null ? String(item.retorno36m) : null,
+          alfa36m: item.alfa36m != null ? String(item.alfa36m) : null,
+          tempoRecuperacaoDias: item.tempoRecuperacaoDias ?? null,
+          volatilidade12m: item.volatilidade12m != null ? String(item.volatilidade12m) : null,
+          valorMinAplicacao: item.valorMinAplicacao != null ? String(item.valorMinAplicacao) : null,
+          fatorVerde: item.fatorVerde != null ? parseInt(item.fatorVerde) : null,
+          confiancaVerde: item.confiancaVerde != null ? parseInt(item.confiancaVerde) : null,
+          notas: item.notas ?? null,
+          scoreAtratividade: scores.scoreAtratividade,
+          scoreConfianca: scores.scoreConfianca,
+          calmarRatio: scores.calmarRatio,
+          scoreVerde: scores.scoreVerde,
+          scoreDetalhado: scores.scoreDetalhado,
+        }).returning();
+        await audit(userId, "FUNDO_ADD_CANA", { fundoId: fundo.id, nome: fundo.nome }, req.ip ?? "");
+        executado.push({ ok: true, acao: "ADD_FUNDO", fundo: { id: fundo.id, nome: fundo.nome, score: fundo.scoreAtratividade } });
+
+      } else if (acao === "EDIT_FUNDO") {
+        if (!isAdmin) { executado.push({ erro: "Sem permissão" }); continue; }
+        const targetId = item.id ?? fundosExistentes.find(f => f.nome.toLowerCase().includes((item.nome ?? "").toLowerCase()))?.id;
+        if (!targetId) { executado.push({ erro: `Fundo não encontrado: ${item.nome}` }); continue; }
+        const scores = calcularScore(item);
+        const updates: Record<string, any> = {};
+        const fields = ["nome","gestora","classe","benchmark","taxaAdm","taxaPerformance","prazoResgateDias","sharpe12m","sortino12m","maxDrawdown","retorno12m","retorno36m","alfa36m","tempoRecuperacaoDias","volatilidade12m","valorMinAplicacao","fatorVerde","confiancaVerde","notas"];
+        for (const f of fields) if (item[f] != null) updates[f] = f === "fatorVerde" || f === "confiancaVerde" ? parseInt(item[f]) : (typeof item[f] === "number" ? String(item[f]) : item[f]);
+        updates.scoreAtratividade = scores.scoreAtratividade;
+        updates.scoreConfianca = scores.scoreConfianca;
+        updates.scoreDetalhado = scores.scoreDetalhado;
+        updates.calmarRatio = scores.calmarRatio;
+        updates.scoreVerde = scores.scoreVerde;
+        await db.update(rapaduraFundosTable).set(updates).where(eq(rapaduraFundosTable.id, targetId));
+        await audit(userId, "FUNDO_EDIT_CANA", { fundoId: targetId }, req.ip ?? "");
+        executado.push({ ok: true, acao: "EDIT_FUNDO", fundoId: targetId });
+
+      } else if (acao === "DELETE_FUNDO") {
+        if (!isAdmin) { executado.push({ erro: "Sem permissão" }); continue; }
+        const targetId = item.id ?? fundosExistentes.find(f => f.nome.toLowerCase().includes((item.nome ?? "").toLowerCase()))?.id;
+        if (!targetId) { executado.push({ erro: `Fundo não encontrado: ${item.nome}` }); continue; }
+        await db.update(rapaduraFundosTable).set({ ativo: false, updatedAt: new Date() }).where(eq(rapaduraFundosTable.id, targetId));
+        await audit(userId, "FUNDO_DELETE_CANA", { fundoId: targetId }, req.ip ?? "");
+        executado.push({ ok: true, acao: "DELETE_FUNDO", fundoId: targetId });
+      }
+    } catch (e) {
+      executado.push({ erro: String(e), item });
+    }
+  }
+
+  res.json({ acao, resposta, executado, itens: itens.length });
+});
+
 export default router;
