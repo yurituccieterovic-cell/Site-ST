@@ -59,37 +59,39 @@ function makeOpenAI(): Provider {
 }
 
 function makeGemini(): Provider {
-  const key = process.env["GEMINI_API_KEY"] ?? "";
+  const key = process.env["GEMINI_API_KEY"] ?? process.env["AI_API_KEY"] ?? "";
+  const MODELS = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash-001"];
   return {
     name: "gemini",
-    cooldownMs: 2000, // Gemini free: ~15 req/min → 4s entre chamadas é seguro; 2s é rápido mas ok
+    cooldownMs: 2000,
     async call(req) {
       if (!key) throw new Error("GEMINI_API_KEY não configurada");
-      // Converter messages para o formato Gemini
       const contents = req.messages
         .filter(m => m.role !== "system")
         .map(m => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
       const systemMsg = req.messages.find(m => m.role === "system")?.content;
       const body: Record<string, unknown> = {
         contents,
-        generationConfig: {
-          maxOutputTokens: req.maxTokens ?? 500,
-          temperature: req.temperature ?? 0.7,
-          thinkingConfig: { thinkingBudget: 0 },
-        },
+        generationConfig: { maxOutputTokens: req.maxTokens ?? 500, temperature: req.temperature ?? 0.7 },
       };
       if (systemMsg) body["systemInstruction"] = { parts: [{ text: systemMsg }] };
 
-      const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
-        { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
-      );
-      const data = await resp.json() as {
-        candidates?: { content: { parts: { text: string }[] } }[];
-        error?: { message: string };
-      };
-      if (data.error) throw new Error(`Gemini: ${data.error.message}`);
-      return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
+      for (const model of MODELS) {
+        const resp = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+          { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
+        );
+        const data = await resp.json() as {
+          candidates?: { content: { parts: { text: string }[] } }[];
+          error?: { message: string };
+        };
+        if (data.error) {
+          if (data.error.message.includes("no longer available")) continue;
+          throw new Error(`Gemini: ${data.error.message}`);
+        }
+        return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ?? "";
+      }
+      throw new Error("Gemini: nenhum modelo disponível");
     },
   };
 }
