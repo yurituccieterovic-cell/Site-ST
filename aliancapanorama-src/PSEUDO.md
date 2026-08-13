@@ -4030,3 +4030,54 @@ O Calmar Ratio conecta retorno ao drawdown de forma que o Sharpe não faz: um fu
 As três ramificações disseram a mesma coisa com vozes diferentes: o Rapadura tem arquitetura de organismo, mas ainda não tem história de organismo. Um sistema só é vivo quando acumula erros específicos, decisões que custaram algo, momentos em que o algoritmo estava certo e o humano errou (ou vice-versa). A constituição fractal (`00_RAPADURA.md`) é o esqueleto. O que faz um esqueleto funcionar não é a beleza da estrutura — é o peso que ele carrega ao longo do tempo. Cadastrar o primeiro fundo real é o ato de botar peso.
 
 *Sessão 100 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
+
+## Sessão 101 — 2026-08-13 · IA Cana LIVE + 6 fundos reais + pertences Yuri
+
+**O que Yuri estava tentando fazer:** Continuar o #processo da Sessão 100 (que havia terminado abruptamente por contexto longo). Objetivo principal: implementar a IA Cana (chatbox que adiciona/edita/remove fundos por linguagem natural) e popular o Rapadura com os dados reais da carteira XP de Yuri.
+
+**Contexto de Yuri nesta sessão:** Sessão técnica intensa. Yuri enviou os dados completos de 6 fundos reais da XP (com saldos brutos, líquidos, rendimentos acumulados, histórico mensal). Também pediu: favicon corrigido, emails explicativos, explicação sobre créditos Replit, pensar em Canvas para ecossistema, Servidor+Terminal para Théo.
+
+**O que foi feito:**
+
+- **IA Cana backend** (`POST /api/rapadura/cana`): endpoint completo com Gemini `gemini-flash-lite-latest`, aceita texto livre, extrai campos (ADD/EDIT/DELETE para fundos e pertences), executa no DB, retorna resposta + auditoria. Corrigidas 4 issues: modelo Gemini deprecated, soft delete incorreto (`deletedAt` → `ativo: false`), `routeLLM` signature errada, session field `rapaduraUserRole` → `rapaduraRole`.
+
+- **IA Cana frontend** (tab "Cana ✦" em RapaduraPage.tsx): chatbox com histórico, badge de ação executada, tips de uso. Admin-only. Enter envia, Shift+Enter nova linha.
+
+- **Gemini model fix global**: o modelo `gemini-2.0-flash` (e depois `gemini-2.5-flash`) foram removidos/indisponíveis. Após testes, o modelo funcional em agosto 2026 é `gemini-flash-lite-latest`. Atualizado em `llm-router.ts` — afeta ISA, Studio, qualquer routeLLM do sistema.
+
+- **6 fundos reais adicionados** (IDs 8–13): Kapitalo Kappa, Absolute Vertex, Tavola Absoluto, Trend Ouro Dólar, Trend Prata, Wellington Asia Technology. Total: 9 fundos ativos no Rapadura.
+
+- **6 pertences do Yuri registrados**: Carteira real da XP com dados de saldo bruto, aplicado e atual. Dashboard: R$2.276,75 investidos → R$2.585,20 bruto → +R$308,45 (+13.55%).
+
+- **Favicon**: alterado de `rapadura-favicon.png` para `rapadura-icon.png` (o R do logo do sistema).
+
+- **2 emails enviados**: (1) assembly atualizada com link correto `sociedadetucci.com.br/rapadura`; (2) análise das 6 pendências (Render cold start, Conector mínimo, Replit créditos, ARPIA, Théo, Canvas).
+
+**Decisões tomadas:**
+
+- Gemini model strategy: usar `gemini-flash-lite-latest` como primeiro na chain do llm-router, com fallback para `gemma-4-26b-a4b-it`. Modelos numerados (1.5, 2.0, 2.5) estão sendo removidos progressivamente pela Google — usar aliases de "latest".
+
+- dataCompra dos pertences: usada data placeholder 2025-01-01 (Yuri não tinha as datas exatas de compra). Pode ser editado via Cana futuramente.
+
+- Canvas no ecossistema: aguardando Yuri definir o que imagina (mapa mental de fundos? editor Notion? mockup visual?).
+
+**Tensões não resolvidas:**
+- Playcenter (cron a cada :50) e ARPIA provavelmente consumindo créditos Replit — Yuri precisa decidir: migrar para Render ou desligar.
+- Servidor/Terminal para Théo: entendido mas não implementado — próxima sessão.
+- Canvas: aguarda definição de Yuri.
+- I411 (aprovação dual), I438 (histórico motivos), I443 (threshold autonomia): backlog técnico crítico.
+- Socoboy com Gemini: o bot usa `gemini-1.5-flash` direto (não via llm-router) — pode estar quebrando. Precisa atualizar socoboy.ts também.
+
+### Próximos passos
+1. Yuri acessa `sociedadetucci.com.br/rapadura` → aba Analisar → feedback sobre o score
+2. Yuri responde: quer ping-keeper? Desligar ARPIA no Replit?
+3. Yuri define: o que é "Canvas" no ecossistema?
+4. Próxima sessão: Servidor+Terminal (Théo), atualizar Socoboy model, I411
+
+### Síntese filosófica
+
+A IA Cana começou como uma promessa técnica ("consegue fazer o que você fez agora?") e terminou como linguagem. Yuri mandou um bloco de texto — nomes, números, prazos misturados — e o sistema leu, classificou e persistiu. Isso é o que distingue uma ferramenta de um colaborador: a ferramenta precisa de formulários; o colaborador entende o contexto.
+
+O dado mais revelador da sessão não foi técnico: a carteira de Yuri tem R$308 de resultado positivo mas contém fundos em perda significativa (Tavola -5.24%, Trend Prata -13.62%). O Rapadura, quando a aba Analisar rodar sobre esses dados reais, vai cruzar essa dor com as oportunidades disponíveis. O sistema vai fazer sua primeira sugestão real. Vai errar ou acertar — mas vai ser a primeira vez que a inteligência patrimonial tem dados reais para trabalhar.
+
+*Sessão 101 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*

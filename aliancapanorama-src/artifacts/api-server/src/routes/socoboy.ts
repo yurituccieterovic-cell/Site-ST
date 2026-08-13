@@ -16,7 +16,7 @@ const AI_KEY = process.env["AI_API_KEY"] ?? "";
 async function geminiReply(text: string): Promise<string> {
   if (!GEMINI_KEY && !AI_KEY) return "Nenhuma chave de IA configurada.";
   const key = GEMINI_KEY || AI_KEY;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${key}`;
   const body = {
     contents: [{ parts: [{ text: `Você é o Socoboy — membro descontraído e perspicaz da Assembleia de IAs da Sociedade Tucci. Responda de forma direta e inteligente, com personalidade única. Mensagem do usuário: ${text}` }] }],
     generationConfig: { maxOutputTokens: 512 }

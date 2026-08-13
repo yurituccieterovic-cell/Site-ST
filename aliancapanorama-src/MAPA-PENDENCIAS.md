@@ -63,11 +63,16 @@
 | 52 | ARPIA: deploy no Render (Railway morto) | Yuri | ⏳ |
 | 53 | ARPIA_BASE_URL: adicionar ao env Render PAP API após deploy ARPIA | #52 | ⏳ |
 | 55 | Oracle Always Free: criar conta + provisionar VM ARM | Yuri | ⏳ |
-| 71 | Conector: migrar Railway → Render (era site-st-production.up.railway.app) | Cláudio | ⏳ |
+| 71 | Conector: migrar Railway → Render (era site-st-production.up.railway.app) | Cláudio | ✅ Sessão 99 — Conector live em site-st.onrender.com |
 | 72 | Socoboy Telegram: TELEGRAM_BOT_TOKEN via @BotFather → conectar ARPIA | Yuri (BotFather) | ✅ LIVE (versão leve via webhook PAP, bot @SuBlimeMango_bot) |
-| 73 | Rapadura: cadastrar primeiros fundos reais no painel Gerenciar | Yuri/Mayumi | ⏳ |
-| 74 | IA Cana: chatbox dedicado ao Rapadura (memória viva do patrimônio) | — | ⏳ |
+| 73 | Rapadura: cadastrar primeiros fundos reais no painel Gerenciar | Yuri/Mayumi | ✅ Sessão 101 — 9 fundos ativos (3 oportunidades + 6 carteira XP Yuri) |
+| 74 | IA Cana: chatbox dedicado ao Rapadura (memória viva do patrimônio) | — | ✅ Sessão 101 — POST /api/rapadura/cana + tab "Cana ✦" no frontend |
 | 75 | I411: endpoints de aprovação dual (rapadura_aprovacoes — tabela criada) | — | ⏳ |
+| 76 | Socoboy: atualizar modelo Gemini de gemini-1.5-flash (deprecated) para gemini-flash-lite-latest | — | ⏳ |
+| 77 | Ping-keeper: cron GitHub Actions pra manter Render acordado (elimina cold start grátis) | Yuri confirmar | ⏳ |
+| 78 | Servidor+Terminal: criar página /ecossistema/servidor no PAP com status em tempo real | — | ⏳ |
+| 79 | Canvas no ecossistema: aguarda Yuri definir o que imagina (mapa mental? editor visual?) | Yuri confirmar | ⏳ |
+| 80 | ARPIA no Replit: decidir migrar para Render ou desligar (consumindo créditos Replit) | Yuri confirmar | ⏳ |
 | 56 | Dev local: `.env.local` a preencher, rodar `bash scripts/dev-local.sh setup` | Yuri | ⏳ |
 | 57 | Termux extra: copiar termux-bootstrap.sh e rodar em novo Termux | Yuri | ⏳ |
 | 58 | Oracle: migrar banco Railway → Oracle (`migrate-db-to-oracle.sh`) | #55 | ⏳ |
