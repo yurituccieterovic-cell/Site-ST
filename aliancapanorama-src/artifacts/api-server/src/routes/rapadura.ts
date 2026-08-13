@@ -745,7 +745,8 @@ Regras:
 - Para QUERY ou CHAT: itens pode ser []
 - Use ADD_PERTENCE quando o usuário diz "tenho", "investi", "adiciona ao meu patrimônio", etc
 - Use ADD_FUNDO apenas quando explicitamente pedido por admin para adicionar ao catálogo
-- Sempre extraia TODOS os itens mencionados em itens[]`;
+- Sempre extraia TODOS os itens mencionados em itens[]
+- LIMITE: máximo 15 itens por mensagem. Se tiver mais de 15, processe os primeiros 15 e avise no campo "resposta" quantos ficaram de fora`;
 
 router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const { message, history = [] } = req.body as { message: string; history?: any[] };
@@ -775,7 +776,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
       ...history.slice(-4).map((h: any) => ({ role: h.role, content: h.content })),
       { role: "user", content: message },
     ];
-    rawJson = await routeLLM({ messages: msgs, maxTokens: 1200 });
+    rawJson = await routeLLM({ messages: msgs, maxTokens: 4096 });
   } catch (e) {
     res.status(500).json({ error: "Erro ao chamar IA", details: String(e) }); return;
   }
@@ -786,11 +787,36 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
     const jsonMatch = rawJson.match(/\{[\s\S]*\}/);
     parsed = JSON.parse(jsonMatch?.[0] ?? rawJson);
   } catch {
-    res.json({ acao: "CHAT", resposta: rawJson, executado: [] }); return;
+    // JSON quebrado geralmente significa payload muito grande (resposta truncada)
+    const muitoGrande = rawJson.length > 3000 || (rawJson.match(/"nome"/g) ?? []).length > 10;
+    if (muitoGrande) {
+      res.json({
+        acao: "CHAT",
+        resposta: "🎵 Tudo que quer me dar é demais, é pesado, não há paz...\n\nTantinhos ativos de uma vez só me deixam tonta! Meu limite é 15 itens por mensagem. Por favor, divida em partes menores e mande de novo — prometo processar cada um com carinho.",
+        executado: [],
+        limite: { max: 15, dica: "Divida em lotes de até 15 itens por mensagem" }
+      }); return;
+    }
+    res.json({
+      acao: "CHAT",
+      resposta: "Não consegui entender o formato da sua mensagem. Pode reescrever de outra forma? Se estava adicionando investimentos, tente descrever um a um: nome do fundo, valor investido e data de compra.",
+      executado: []
+    }); return;
   }
 
   const { acao, itens = [], resposta } = parsed;
   const executado: any[] = [];
+
+  // Limite de segurança: no máximo 15 itens por chamada
+  const LIMITE_ITENS = 15;
+  if (itens.length > LIMITE_ITENS) {
+    res.json({
+      acao: "CHAT",
+      resposta: `🎵 Tudo que quer me dar é demais, é pesado, não há paz...\n\nVocê mandou ${itens.length} itens de uma vez — meu limite é ${LIMITE_ITENS}! Mande em lotes menores e processo tudo certinho.`,
+      executado: [],
+      limite: { recebido: itens.length, max: LIMITE_ITENS, dica: `Divida em lotes de até ${LIMITE_ITENS} itens` }
+    }); return;
+  }
 
   // Executar operações
   for (const item of itens) {
