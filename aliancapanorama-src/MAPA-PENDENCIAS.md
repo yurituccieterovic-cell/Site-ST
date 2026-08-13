@@ -64,7 +64,7 @@
 | 53 | ARPIA_BASE_URL: adicionar ao env Render PAP API após deploy ARPIA | #52 | ⏳ |
 | 55 | Oracle Always Free: criar conta + provisionar VM ARM | Yuri | ⏳ |
 | 71 | Conector: migrar Railway → Render (era site-st-production.up.railway.app) | Cláudio | ⏳ |
-| 72 | Socoboy Telegram: TELEGRAM_BOT_TOKEN via @BotFather → conectar ARPIA | Yuri (BotFather) | ⏳ |
+| 72 | Socoboy Telegram: TELEGRAM_BOT_TOKEN via @BotFather → conectar ARPIA | Yuri (BotFather) | ✅ LIVE (versão leve via webhook PAP, bot @SuBlimeMango_bot) |
 | 73 | Rapadura: cadastrar primeiros fundos reais no painel Gerenciar | Yuri/Mayumi | ⏳ |
 | 74 | IA Cana: chatbox dedicado ao Rapadura (memória viva do patrimônio) | — | ⏳ |
 | 75 | I411: endpoints de aprovação dual (rapadura_aprovacoes — tabela criada) | — | ⏳ |
