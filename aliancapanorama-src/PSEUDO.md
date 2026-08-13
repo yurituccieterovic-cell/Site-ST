@@ -3947,3 +3947,47 @@ O PDF traz uma afirmação que deve ficar: "A ramificação mais importante não
 O CSS Tutorial é um objeto curioso: um sistema feito para ensinar a fazer interfaces dentro de uma interface que ensina por fazer. A melhor didática é a que se ensina a si mesma ao ser usada.
 
 *Sessão 98 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-11*
+
+---
+
+## Sessão 99 — 2026-08-13 · Rapadura v2 · Score Engine v2 + Investir/Colher/Analisar
+
+**O que Yuri estava tentando fazer:** Continuar o #processo da Sessão 96 que tinha dado erro (pipeline nunca foi executado — Cláudio absorveu contexto mas não rodou os 9 passos). Yuri tinha enviado o PDF "Receita da Rapadura" (62 páginas) com ramificações fracionais de 5 IAs + decisões próprias sobre sustentabilidade, alocação inteligente e colheita com raiz mínima.
+
+**Contexto de Yuri nesta sessão:** Yuri namorando com Mayumi. Sessão técnica completa — nenhuma interrupção de saúde, mas ritmo acelerado. O PDF trouxe ramificações de Perplexity, Gemini Flash, Árvore Oracular e Claude. Yuri acrescentou: Fator Verde como score (não filtro), "Investir na Rapadura" (alocação automática), "Colher Rapadura" (resgate com raiz afetiva), Análise Pertences × Oportunidades.
+
+**Descoberta crítica:** As tabelas do Rapadura NUNCA existiram no Neon. A Sessão 95 fez o código mas nunca deployou ao banco. O Railway morreu (2026-08-02) antes do primeiro push. Banco criado do zero nessa sessão: 5 tabelas + usuários Yuri/Mayumi.
+
+**Decisões tomadas:**
+
+- **Calmar Ratio** como 4ª sub-métrica do retorno ajustado: calmar = retorno12m / maxDrawdown. Normalizado: calmar/2 ≤ 1. Peso: 20% dentro da dimensão de retorno (que tem Sharpe 30% + Sortino 25% + Alfa 25% + Calmar 20%).
+
+- **Fator Verde** como 7ª dimensão do score (5%): produto de (fatorVerde × confiancaVerde) / 100. Dois eixos separados (impacto + confiabilidade) para evitar greenwashing. Quando ausente, 5% vai para retornoAjustado (fica em 35%). Preenchimento manual.
+
+- **Investir na Rapadura** — algoritmo de alocação: top-5 fundos por score, pesos quadráticos (score²) para concentrar nos melhores sem ignorar os demais. Respeita valorMinAplicacao. Último fundo recebe o restante.
+
+- **Colher Rapadura** — algoritmo de resgate: ordena pertences por score crescente (resgata os piores primeiro). Preserva raiz mínima (% do valorInvestido, default 10%). Não resgata menos de R$50 por fundo.
+
+- **Análise Pertences × Oportunidades** — scoreMedio da carteira como threshold. Oportunidades: score > scoreMedio + 15 pontos. Sugestão de troca: pertence com score < 50 → melhor alternativa da mesma classe (ou top-1 geral). IndiceTroca: FORTE/MODERADO/FRACO.
+
+- **Schema v2**: calmar_ratio, fator_verde, confianca_verde, score_verde, valor_min_aplicacao em rapadura_fundos. Nova tabela rapadura_aprovacoes (I411 — protocolo de governança dual). Score de Confiança expandido de 7 → 8 campos.
+
+**Tensões não resolvidas:**
+- Render ainda sem env vars configuradas — API retorna 500. Yuri precisa entrar no Render dashboard e configurar DATABASE_URL=NEON_DATABASE_URL + SESSION_SECRET + AI_API_KEY + GEMINI_API_KEY + ALLOWED_ORIGINS.
+- I411 (aprovação conjunta) está no schema mas sem endpoints implementados — backlog.
+- IA Cana (chatbox dedicado) — backlog.
+- Conector Railway offline — registros da sessão não foram ao Conector.
+
+### Próximos passos
+1. Yuri configura env vars no Render → API v2 ficará operacional
+2. Testar login via chat IA + cadastrar primeiros fundos da XP
+3. Implementar I411 (aprovação dual) quando primeira decisão conjunta precisar de proteção
+4. IA Cana (chatbox Rapadura) — próxima sessão técnica grande
+
+### Síntese filosófica
+
+A descoberta de que o banco nunca existiu no Neon é uma metáfora perfeita do que a Assembleia diagnosticou: "existe um PRD de classe mundial para um produto que ainda não foi ao ar". O Rapadura tinha teoria impecável e infraestrutura inexistente. Esta sessão foi o ato de fundar de verdade — criar as tabelas, os usuários, os endpoints. A v2 não é uma versão melhorada; é o primeiro deploy real.
+
+O Calmar Ratio conecta retorno ao drawdown de forma que o Sharpe não faz: um fundo pode ter Sharpe decente com drawdown devastador. O Calmar exige que o retorno seja proporcional à dor vivida — o sistema agora mede coragem eficiente, não apenas performance bruta.
+
+*Sessão 99 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-13*
