@@ -32,7 +32,7 @@ type Pertence = {
 };
 type Dashboard = { totalInvestido: number; totalAtual: number; resultado: number; rentabilidade: number };
 type ChatMsg = { role: "user" | "assistant"; content: string };
-type View = "oportunidades" | "pertences" | "gerenciar" | "analisar";
+type View = "oportunidades" | "pertences" | "gerenciar" | "analisar" | "cana";
 
 type AlocacaoItem = {
   fundoId: number; nome: string; gestora: string;
@@ -1558,6 +1558,170 @@ function AnalisarView() {
   );
 }
 
+// ─── IA CANA ─────────────────────────────────────────────────────────────────
+
+const CANA_ACAO_COLOR: Record<string, string> = {
+  ADD_FUNDO: "#3f7254", EDIT_FUNDO: "#8a6b30", DELETE_FUNDO: "#7a3535",
+  ADD_PERTENCE: "#3f7254", EDIT_PERTENCE: "#8a6b30", DELETE_PERTENCE: "#7a3535",
+  QUERY: "#4a6a9b", CHAT: "#3d4a5e",
+};
+
+function CanaView({ onRefresh }: { onRefresh: () => void }) {
+  const [history, setHistory] = useState<ChatMsg[]>([{
+    role: "assistant",
+    content: "Olá! Sou a Cana, sua assistente patrimonial.\n\nPosso adicionar, editar ou remover fundos por linguagem natural.\n\nExemplo: \"Adicione Fundo 24 Horas FIRF RL — mínimo R$100, retorno 14.27% em 12M, D+0\"",
+  }]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [lastResult, setLastResult] = useState<{ acao: string; executado: boolean; itens?: any[] } | null>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [history, loading]);
+
+  async function send() {
+    if (!input.trim() || loading) return;
+    const msg = input.trim();
+    const newHistory: ChatMsg[] = [...history, { role: "user", content: msg }];
+    setHistory(newHistory);
+    setInput("");
+    setLoading(true);
+    setLastResult(null);
+    try {
+      const r = await fetch(`${API}/api/rapadura/cana`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ message: msg, history: history.slice(-6) }),
+      });
+      const d = await r.json() as { acao?: string; resposta?: string; executado?: boolean; itens?: any[]; error?: string };
+      setHistory(h => [...h, { role: "assistant", content: d.resposta ?? d.error ?? "Erro ao processar." }]);
+      if (d.acao && d.acao !== "CHAT" && d.acao !== "QUERY") {
+        setLastResult({ acao: d.acao, executado: !!d.executado, itens: d.itens });
+        if (d.executado) onRefresh();
+      }
+    } catch {
+      setHistory(h => [...h, { role: "assistant", content: "Erro de conexão." }]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div>
+      <div style={{ marginBottom: 28, paddingBottom: 16, borderBottom: "1px solid #0f1520" }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 5 }}>
+          Inteligência Patrimonial
+        </div>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+          <div style={{ fontSize: 22, fontWeight: 300, color: "#ddd8d0", letterSpacing: "-0.01em" }}>IA Cana</div>
+          <span style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#3d4a5e" }}>
+            linguagem natural → operações
+          </span>
+        </div>
+      </div>
+
+      <div style={{ background: "#07090e", border: "1px solid #141b26", marginBottom: 16 }}>
+        {/* Messages */}
+        <div style={{ height: 380, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: 12 }}>
+          {history.map((m, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
+              <div style={{
+                maxWidth: "88%", padding: "10px 14px",
+                background: m.role === "user" ? "rgba(200,150,59,0.07)" : "#0c1018",
+                border: `1px solid ${m.role === "user" ? "rgba(200,150,59,0.18)" : "#141b26"}`,
+                fontSize: 12, lineHeight: 1.65, color: m.role === "user" ? "#c5c0b8" : "#9a9590",
+                whiteSpace: "pre-wrap",
+              }}>
+                {m.content}
+              </div>
+            </div>
+          ))}
+          {loading && (
+            <div style={{ display: "flex", justifyContent: "flex-start" }}>
+              <div style={{ padding: "8px 12px", background: "#0c1018", border: "1px solid #141b26", fontSize: 11, color: "#3d4a5e" }}>
+                processando…
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Action badge */}
+        {lastResult && (
+          <div style={{
+            padding: "8px 14px", borderTop: "1px solid #0f1520",
+            display: "flex", alignItems: "center", gap: 10,
+            background: lastResult.executado ? "rgba(63,114,84,0.05)" : "rgba(122,53,53,0.05)",
+          }}>
+            <span style={{
+              fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase",
+              color: CANA_ACAO_COLOR[lastResult.acao] ?? "#5a5650",
+              border: `1px solid ${(CANA_ACAO_COLOR[lastResult.acao] ?? "#5a5650")}40`,
+              padding: "2px 8px",
+            }}>
+              {lastResult.acao}
+            </span>
+            <span style={{ fontSize: 10, color: lastResult.executado ? "#3f7254" : "#7a3535" }}>
+              {lastResult.executado
+                ? `✓ executado (${lastResult.itens?.length ?? 1} item${(lastResult.itens?.length ?? 1) > 1 ? "s" : ""})`
+                : "⚠ não executado"}
+            </span>
+          </div>
+        )}
+
+        {/* Input */}
+        <div style={{ padding: "10px 12px", borderTop: "1px solid #0f1520", display: "flex", gap: 8 }}>
+          <textarea
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
+            placeholder="Descreva a operação em linguagem natural… (Enter envia, Shift+Enter nova linha)"
+            disabled={loading}
+            rows={3}
+            style={{
+              flex: 1, background: "#040507", border: "1px solid #141b26",
+              color: "#c5c0b8", fontSize: 12, padding: "8px 10px",
+              outline: "none", fontFamily: "inherit", resize: "vertical", lineHeight: 1.5,
+            }}
+            onFocus={e => { e.target.style.borderColor = "#5a4020"; }}
+            onBlur={e => { e.target.style.borderColor = "#141b26"; }}
+          />
+          <button
+            onClick={send}
+            disabled={loading || !input.trim()}
+            style={{
+              padding: "8px 16px", alignSelf: "flex-end",
+              background: loading || !input.trim() ? "#1a1f2a" : "#c8963b",
+              color: loading || !input.trim() ? "#3d4a5e" : "#040507",
+              fontSize: 12, fontWeight: 700, border: "none",
+              cursor: loading || !input.trim() ? "not-allowed" : "pointer",
+              fontFamily: "inherit", letterSpacing: "0.05em",
+            }}
+          >
+            →
+          </button>
+        </div>
+      </div>
+
+      {/* Tips */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 2 }}>
+        {([
+          ["Adicionar", "\"Fundo XYZ, retorno 14.5% em 12M, mínimo R$500, D+1, renda fixa\""],
+          ["Editar", "\"Atualize o Kinea: retorno agora é 14.1%, D+2\""],
+          ["Remover", "\"Remove o Indie FIA da lista de oportunidades\""],
+        ] as const).map(([title, ex]) => (
+          <div key={title} style={{ background: "#09101a", padding: "12px 14px" }}>
+            <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 6 }}>
+              {title}
+            </div>
+            <div style={{ fontSize: 11, color: "#5a5650", fontStyle: "italic", lineHeight: 1.5 }}>{ex}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
 // ─── ALTERAR SENHA ────────────────────────────────────────────────────────────
@@ -1702,6 +1866,7 @@ export function RapaduraPage() {
     { id: "oportunidades", label: "Oportunidades" },
     { id: "pertences", label: "Pertences" },
     { id: "analisar", label: "Analisar" },
+    { id: "cana", label: "Cana ✦", adminOnly: true },
     { id: "gerenciar", label: "Gerenciar", adminOnly: true },
   ];
 
@@ -1811,6 +1976,12 @@ export function RapaduraPage() {
         )}
         {view === "analisar" && (
           <AnalisarView />
+        )}
+        {view === "cana" && isAdmin && (
+          <CanaView onRefresh={loadData} />
+        )}
+        {view === "cana" && !isAdmin && (
+          <div style={{ textAlign: "center", padding: "64px 0", color: "#3d4a5e" }}>Acesso restrito.</div>
         )}
         {view === "gerenciar" && isAdmin && (
           <GerenciarView fundos={fundos} onRefresh={loadData} onBack={() => setView("oportunidades")} />
