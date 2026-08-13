@@ -182,7 +182,39 @@ No canto superior direito, clique em **"senha"**. Escolha algo que só você sai
 
 ---
 
-## 9. Futuro do Sistema
+## 9. Para Berenice — Primeiros Passos
+
+O Rapadura é um sistema privado de investimentos da família Tucci. Como membro, você tem acesso para consultar os fundos disponíveis e registrar seus próprios investimentos.
+
+### Passo 1 — Entrar
+```
+sociedadetucci.com.br/rapadura
+```
+
+### Passo 2 — Fazer login
+Escreva **Beatriz**. Quando pedir senha: `rapadura@membro2026`.
+
+**Importante:** Troque sua senha ao acessar pela primeira vez. No canto superior, clique em "senha".
+
+### Passo 3 — Ver as Oportunidades
+Os fundos cadastrados, ordenados por nota (Score de Atratividade). Você pode ver a nota de cada fundo e clicar para entender o que significa cada dimensão.
+
+### Passo 4 — Registrar seus investimentos
+Se você tem investimentos que gostaria de acompanhar aqui:
+1. Clique em **Pertences**
+2. Clique em **"+ Compra"**
+3. Selecione o fundo, a data e o valor
+
+### Passo 5 — Analisar sua carteira
+Clique em **Analisar** para cruzar o que você tem com as oportunidades do sistema.
+
+### O que membros não têm acesso
+- **Cana ✦** — acesso exclusivo de Yuri e Mayumi (gerencia os fundos via IA)
+- **Gerenciar** — cadastro e edição de fundos (somente administradores)
+
+---
+
+## 10. Futuro do Sistema
 
 ### Aprovações conjuntas — I411 ⏳
 Para movimentos acima de R$500, o sistema pedirá aprovação de Yuri **e** Mayumi.
@@ -201,7 +233,7 @@ Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real.
 
 ---
 
-## 10. Glossário
+## 11. Glossário
 
 **Alfa (α):** Retorno acima do benchmark. Alfa positivo = o gestor entregou mais do que o mercado sozinho.
 
@@ -239,5 +271,5 @@ Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real.
 
 ---
 
-*Cláudio Coach · v3 · Sessão 101 · 2026-08-13*
+*Cláudio Coach · v4 · Sessão 102 · 2026-08-13*
 *`tango/MANUEL.md` — documento permanente. Atualizar a cada nova versão do Rapadura.*

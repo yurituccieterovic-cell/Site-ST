@@ -12,8 +12,9 @@ const CHAPTERS = [
   { id: "cana",           label: "6. IA Cana" },
   { id: "gerenciar",      label: "7. Gerenciar" },
   { id: "mayumi",         label: "8. Para Mayumi" },
-  { id: "futuro",         label: "9. Futuro" },
-  { id: "glossario",      label: "10. Glossário" },
+  { id: "berenice",       label: "9. Para Berenice" },
+  { id: "futuro",         label: "10. Futuro" },
+  { id: "glossario",      label: "11. Glossário" },
 ];
 
 function NavSidebar({ active, onChange }: { active: string; onChange: (id: string) => void }) {
@@ -398,10 +399,43 @@ function ChMayumi() {
   );
 }
 
+function ChBerenice() {
+  return (
+    <div>
+      <p className="text-gray-400 text-sm mb-5">
+        O Rapadura é um sistema privado de investimentos da família Tucci. Como membro, você pode consultar os fundos disponíveis e acompanhar seus próprios investimentos.
+      </p>
+      <Step n="1" title="Entrar">
+        <span className="font-mono text-amber-200">sociedadetucci.com.br/rapadura</span>
+      </Step>
+      <Step n="2" title="Fazer login">
+        Escreva <strong className="text-white">Beatriz</strong>. Quando pedir senha:{" "}
+        <span className="font-mono text-amber-200">rapadura@membro2026</span>
+      </Step>
+      <Step n="3" title="Trocar a senha">
+        No canto superior, clique em <strong className="text-white">"senha"</strong>. Escolha algo que só você saiba.
+      </Step>
+      <Step n="4" title="Ver as Oportunidades">
+        Fundos ordenados por nota (Score de Atratividade). Clique em qualquer card para entender cada dimensão.
+      </Step>
+      <Step n="5" title="Registrar investimentos">
+        Se você tem investimentos para acompanhar: clique em <strong className="text-white">Pertences</strong> → <strong className="text-white">"+ Compra"</strong> → escolha o fundo, data e valor.
+      </Step>
+      <Step n="6" title="Analisar sua carteira">
+        Clique em <strong className="text-white">Analisar</strong> para cruzar seus fundos com as oportunidades do sistema.
+      </Step>
+      <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-4 text-sm text-gray-300 mt-4">
+        <span className="text-amber-300 font-semibold">ℹ️ Acesso de membro:</span>{" "}
+        As abas <strong className="text-white">Cana ✦</strong> e <strong className="text-white">Gerenciar</strong> são exclusivas de Yuri e Mayumi.
+      </div>
+    </div>
+  );
+}
+
 function ChFuturo() {
   const items = [
     { id: "I411", label: "Aprovações conjuntas", desc: "Para movimentos acima de R$500, o sistema pedirá aprovação de Yuri e Mayumi.", status: "⏳" },
-    { id: "I438", label: "Histórico de motivos", desc: "Toda operação acima de R$1.000 vai exigir um campo "Por que estou fazendo isso?".", status: "⏳" },
+    { id: "I438", label: "Histórico de motivos", desc: "Toda operação acima de R$1.000 vai exigir um campo 'Por que estou fazendo isso?'.", status: "⏳" },
     { id: "",     label: "Importar dados da XP", desc: "Upload direto do extrato para popular o Pertences automaticamente.", status: "⏳" },
     { id: "",     label: "Relatório PDF", desc: "Exportar a carteira completa em PDF.", status: "⏳" },
     { id: "",     label: "Sessão conjunta", desc: "Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real.", status: "⏳" },
@@ -465,6 +499,7 @@ const CHAPTER_CONTENT: Record<string, React.ReactNode> = {
   "cana":          <ChCana />,
   "gerenciar":     <ChGerenciar />,
   "mayumi":        <ChMayumi />,
+  "berenice":      <ChBerenice />,
   "futuro":        <ChFuturo />,
   "glossario":     <ChGlossario />,
 };
@@ -492,7 +527,7 @@ export function ManuelPage() {
         <img src={LOGO} alt="Rapadura" className="w-7 h-7 rounded object-contain" />
         <div>
           <div className="text-amber-300 font-bold text-sm leading-tight">Manuel</div>
-          <div className="text-gray-500 text-xs">Guia do Rapadura · v3</div>
+          <div className="text-gray-500 text-xs">Guia do Rapadura · v4</div>
         </div>
         <div className="flex-1" />
         <a href="/rapadura" className="text-xs text-gray-500 hover:text-amber-300 transition-colors hidden md:block">
