@@ -84,10 +84,11 @@
 | 93 | RODAR — Protocolo de poda semântica: RAG+embedding para recall inteligente (não só indexação cronológica) | Assembleia #609 | ⏳ |
 | 94 | Governança explícita de publicação na Assembleia: protocolo de o que sai (o Agente decide unilateralmente desde sempre — nunca foi explicitado) | Assembleia #609 | ⏳ |
 | 80 | ARPIA no Replit: migrar para Render quando possível; por enquanto manter pausado/mínimo para economizar créditos | Yuri confirmar | ⏳ Próxima sessão: fazer deploy ARPIA no Render |
-| 81 | ManuelPage: tutorial do Rapadura em /rapadura/manuel (10 capítulos, sidebar dark/gold) | — | ✅ Sessão 101 — v3 pendente: atualizar capítulos com I438, importar XP, PDF, reconciliação |
+| 81 | ManuelPage: tutorial do Rapadura em /rapadura/manuel (12 capítulos, sidebar dark/gold) | — | ✅ Sessão 108 — v5 com cap. Transações, Cana Pesquisadora (em breve), roadmap v3/v4 |
 | 95 | Rapadura v3 — transações, reconciliação parcial, I438, importar XP, PDF, histórico cotas | — | ✅ Sessão 108 (2026-08-13) — commit 752360b |
-| 96 | Manuel v4 — atualizar tutorial Rapadura com features v3 (I438, XP import, PDF, reconciliação) | — | ⏳ Próxima sessão |
-| 97 | Email Mayumi + Beatriz: manual v4 + link tutorial Rapadura | Manuel v4 (#96) | ⏳ |
+| 96 | Manuel v5 — tutorial atualizado para v3 + Cana Pesquisadora + roadmap | — | ✅ Sessão 108/109 — commit f17e9b6 |
+| 97 | Email Mayumi (matanimoto@gmail.com) + Berenice (beatriz.tucci@gmail.com) + CC Yuri | #96 | ✅ Sessão 109 — URL: sociedadetucci.com.br/rapadura + PDFs V2+V3 em anexo |
+| 153 | Assembleia — email looping final Rapadura v3 | — | ✅ Sessão 109 — PERFEITO #613 recebido e processado |
 | 82 | Playcenter: modelo Gemini atualizado (gemini-flash-lite-latest + gemma fallback) — já roda no Render junto com API | — | ✅ Sessão 101 |
 | 83 | Favicon Rapadura: revertido para rapadura-favicon.png (1.4KB) — bug do ícone grande corrigido | — | ✅ Sessão 101 |
 | 56 | Dev local: `.env.local` a preencher, rodar `bash scripts/dev-local.sh setup` | Yuri | ⏳ |
