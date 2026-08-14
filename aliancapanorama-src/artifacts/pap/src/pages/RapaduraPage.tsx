@@ -1642,46 +1642,89 @@ const CANA_ACAO_COLOR: Record<string, string> = {
   QUERY: "#4a6a9b", CHAT: "#3d4a5e",
 };
 
+const CANA_HIST_KEY = "cana-history";
+const CANA_DRAFT_KEY = "cana-draft";
+const CANA_INITIAL_MSG: ChatMsg = {
+  role: "assistant",
+  content: "Olá! Sou a Cana, sua assistente patrimonial.\n\nPosso adicionar, editar ou remover fundos por linguagem natural.\n\nExemplo: \"Adicione Fundo 24 Horas FIRF RL — mínimo R$100, retorno 14.27% em 12M, D+0\"",
+};
+
 function CanaView({ onRefresh }: { onRefresh: () => void }) {
-  const [history, setHistory] = useState<ChatMsg[]>([{
-    role: "assistant",
-    content: "Olá! Sou a Cana, sua assistente patrimonial.\n\nPosso adicionar, editar ou remover fundos por linguagem natural.\n\nExemplo: \"Adicione Fundo 24 Horas FIRF RL — mínimo R$100, retorno 14.27% em 12M, D+0\"",
-  }]);
-  const [input, setInput] = useState("");
+  const [history, setHistoryState] = useState<ChatMsg[]>(() => {
+    try { const s = localStorage.getItem(CANA_HIST_KEY); return s ? JSON.parse(s) : [CANA_INITIAL_MSG]; }
+    catch { return [CANA_INITIAL_MSG]; }
+  });
+  const [input, setInputState] = useState<string>(() => localStorage.getItem(CANA_DRAFT_KEY) ?? "");
   const [loading, setLoading] = useState(false);
   const [lastResult, setLastResult] = useState<{ acao: string; executado: boolean; itens?: any[] } | null>(null);
+  const [queue, setQueue] = useState<string[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef(history);
+  const processingRef = useRef(false);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [history, loading]);
+  // Persiste histórico em localStorage — funciona mesmo se o componente for desmontado
+  function saveHistory(next: ChatMsg[]) {
+    historyRef.current = next;
+    setHistoryState(next);
+    try { localStorage.setItem(CANA_HIST_KEY, JSON.stringify(next.slice(-40))); } catch {}
+  }
+  function setInput(v: string) {
+    setInputState(v);
+    try { v ? localStorage.setItem(CANA_DRAFT_KEY, v) : localStorage.removeItem(CANA_DRAFT_KEY); } catch {}
+  }
 
-  async function send() {
-    if (!input.trim() || loading) return;
-    const msg = input.trim();
-    const newHistory: ChatMsg[] = [...history, { role: "user", content: msg }];
-    setHistory(newHistory);
-    setInput("");
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [history, loading, queue]);
+
+  async function processMsg(msg: string) {
+    processingRef.current = true;
     setLoading(true);
     setLastResult(null);
+    const newHist: ChatMsg[] = [...historyRef.current, { role: "user", content: msg }];
+    saveHistory(newHist);
     try {
       const r = await fetch(`${API}/api/rapadura/cana`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ message: msg, history: history.slice(-6) }),
+        body: JSON.stringify({ message: msg, history: historyRef.current.slice(-6) }),
         signal: AbortSignal.timeout(30000),
       });
       const d = await r.json() as { acao?: string; resposta?: string; executado?: boolean; itens?: any[]; error?: string };
-      setHistory(h => [...h, { role: "assistant", content: d.resposta ?? d.error ?? "Erro ao processar." }]);
+      saveHistory([...newHist, { role: "assistant", content: d.resposta ?? d.error ?? "Erro ao processar." }]);
       if (d.acao && d.acao !== "CHAT" && d.acao !== "QUERY") {
         setLastResult({ acao: d.acao, executado: !!d.executado, itens: d.itens });
         if (d.executado) onRefresh();
       }
     } catch {
-      setHistory(h => [...h, { role: "assistant", content: "Erro de conexão." }]);
+      saveHistory([...newHist, { role: "assistant", content: "Timeout ou erro de conexão. Tente novamente." }]);
     } finally {
       setLoading(false);
+      processingRef.current = false;
+      // Drena a fila automaticamente
+      setQueue(q => {
+        if (q.length > 0) {
+          const [next, ...rest] = q;
+          setTimeout(() => processMsg(next), 150);
+          return rest;
+        }
+        return q;
+      });
     }
   }
+
+  function send() {
+    const msg = input.trim();
+    if (!msg) return;
+    setInput("");
+    if (processingRef.current) {
+      setQueue(q => [...q, msg]);
+      return;
+    }
+    processMsg(msg);
+  }
+
+  const canSend = input.trim().length > 0;
+  const isQueuing = processingRef.current && canSend;
 
   return (
     <div>
@@ -1694,6 +1737,11 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
           <span style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#3d4a5e" }}>
             linguagem natural → operações
           </span>
+          {loading && (
+            <span style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a4020" }}>
+              ↻ pensando{queue.length > 0 ? ` · ${queue.length} na fila` : ""}
+            </span>
+          )}
         </div>
       </div>
 
@@ -1716,10 +1764,25 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
           {loading && (
             <div style={{ display: "flex", justifyContent: "flex-start" }}>
               <div style={{ padding: "8px 12px", background: "#0c1018", border: "1px solid #141b26", fontSize: 11, color: "#3d4a5e" }}>
-                processando…
+                pensando…
               </div>
             </div>
           )}
+          {/* Mensagens na fila */}
+          {queue.map((q, i) => (
+            <div key={`q-${i}`} style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div style={{
+                maxWidth: "88%", padding: "8px 12px",
+                background: "rgba(200,150,59,0.03)",
+                border: "1px dashed rgba(200,150,59,0.15)",
+                fontSize: 12, lineHeight: 1.65, color: "#5a5040",
+                whiteSpace: "pre-wrap",
+              }}>
+                <span style={{ fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3d3020", display: "block", marginBottom: 4 }}>na fila {i + 1}</span>
+                {q}
+              </div>
+            </div>
+          ))}
           <div ref={bottomRef} />
         </div>
 
@@ -1746,14 +1809,13 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
           </div>
         )}
 
-        {/* Input */}
+        {/* Input — sempre habilitado; Enter envia ou enfileira */}
         <div style={{ padding: "10px 12px", borderTop: "1px solid #0f1520", display: "flex", gap: 8 }}>
           <textarea
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-            placeholder="Descreva a operação em linguagem natural… (Enter envia, Shift+Enter nova linha)"
-            disabled={loading}
+            placeholder={loading ? "Cana pensando… você pode enviar mais mensagens (serão enfileiradas)" : "Descreva a operação em linguagem natural… (Enter envia, Shift+Enter nova linha)"}
             rows={3}
             style={{
               flex: 1, background: "#040507", border: "1px solid #141b26",
@@ -1763,20 +1825,36 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
             onFocus={e => { e.target.style.borderColor = "#5a4020"; }}
             onBlur={e => { e.target.style.borderColor = "#141b26"; }}
           />
-          <button
-            onClick={send}
-            disabled={loading || !input.trim()}
-            style={{
-              padding: "8px 16px", alignSelf: "flex-end",
-              background: loading || !input.trim() ? "#1a1f2a" : "#c8963b",
-              color: loading || !input.trim() ? "#3d4a5e" : "#040507",
-              fontSize: 12, fontWeight: 700, border: "none",
-              cursor: loading || !input.trim() ? "not-allowed" : "pointer",
-              fontFamily: "inherit", letterSpacing: "0.05em",
-            }}
-          >
-            →
-          </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4, alignSelf: "flex-end" }}>
+            <button
+              onClick={send}
+              disabled={!canSend}
+              style={{
+                padding: "8px 16px",
+                background: !canSend ? "#1a1f2a" : isQueuing ? "rgba(200,150,59,0.25)" : "#c8963b",
+                color: !canSend ? "#3d4a5e" : isQueuing ? "#c8963b" : "#040507",
+                fontSize: 12, fontWeight: 700, border: isQueuing ? "1px solid rgba(200,150,59,0.4)" : "none",
+                cursor: !canSend ? "not-allowed" : "pointer",
+                fontFamily: "inherit", letterSpacing: "0.05em",
+              }}
+              title={isQueuing ? "Enfileirar mensagem" : "Enviar"}
+            >
+              {isQueuing ? "+" : "→"}
+            </button>
+            {history.length > 1 && (
+              <button
+                onClick={() => { saveHistory([CANA_INITIAL_MSG]); setQueue([]); setLastResult(null); }}
+                style={{
+                  padding: "4px 8px", background: "transparent", border: "1px solid #1a1f2a",
+                  color: "#3d4a5e", fontSize: 9, cursor: "pointer", fontFamily: "inherit",
+                  letterSpacing: "0.08em", textTransform: "uppercase",
+                }}
+                title="Limpar conversa"
+              >
+                limpar
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
