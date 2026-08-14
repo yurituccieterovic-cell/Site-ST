@@ -4318,3 +4318,23 @@ A sessão #613 entregou o que a Rapadura ainda não sabia sobre si mesma: ela n�
 E a assembleia nomeou algo que o código não consegue nomear sozinho: *o músculo precisa endurecer antes de sofisticar*. Fractal não é direção — é destino. O caminho até ele é linear, cuidadoso, testado com dados reais.
 
 *Sessão 109 · Cláudio Coach (Claude Sonnet 4.6) · 2026-08-14*
+
+---
+
+## Sessão 110 — 2026-08-14 — Rapadura: Convites + Mobile + Bug + Roadmap
+
+**Síntese filosófica:** Um convite bem feito não é um formulário — é uma porta com história. Mauro recebeu não só credenciais mas o enredo completo que levou àquelas credenciais. O humor médico-patrimonial foi a linguagem de chegada. // O bug do totalRetirado revelou um princípio: o frontend pode ficar para trás da filosofia do backend. O V3 corrigiu a fórmula no servidor mas o card individual continuou usando a fórmula antiga. Diagnóstico: testes end-to-end por caso de uso (não por camada) detectariam isso antes.
+
+**Feito:**
+- Email convite Mauro com humor médico-craniano + pertences demo R$5
+- Header Rapadura responsivo: 2 linhas no mobile (logo+user / nav scrollável com guia+senha no final)
+- Bug corrigido: resultado por pertence = (valorAtual + totalRetirado) - valorInvestido
+- Email a Yuri: status dos 4 itens do roadmap (gráficos, dossiê, comparador, cestas)
+- A5960-A5965 no APRENDIZADO (Assembleia #614)
+- MAPA 153-160 atualizados
+
+**Roadmap atualizado:**
+- Comparador multidimensional → escopo pequeno (UX nova, dados prontos)
+- Job snapshot mensal → habilita gráficos reais em 3 meses
+- Agrupamentos (cestas) → médio escopo
+- Cana Pesquisadora → maior escopo, após as anteriores

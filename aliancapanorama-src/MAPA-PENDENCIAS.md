@@ -297,3 +297,11 @@
 | 150 | I265 — Parser XP com fallback granular (validação de colunas com mensagem específica) | MÉDIA | ⏳ |
 | 151 | I266 — Beta comercial fechado: 10 casais, entrevistas, freemium R$29/mês | BAIXA | ⏳ decisão Yuri |
 | 152 | I267 — Guard rails estatísticos Cana Sonhando (r², p-value, snapshot dados) | MÉDIA | ⏳ |
+| 153 | fix: resultado por pertence incluía totalRetirado — bug corrigido Sessão 110 | ✅ feito | ✅ |
+| 154 | Header Rapadura mobile 2 linhas (logo+user / nav scrollável) — corrigido Sessão 110 | ✅ feito | ✅ |
+| 155 | Email Mauro (mrotucci@gmail.com) — convite Rapadura com piadas de médico + pertences demo | ✅ feito | ✅ |
+| 156 | Comparador multidimensional — selecionar 2-3 fundos, tabela side-by-side | futura | ⏳ |
+| 157 | Job snapshot mensal — gravar valorAtual em rapadura_historico_cotas periodicamente | futura | ⏳ |
+| 158 | Agrupamentos personalizados (cestas) — UI + tabela rapadura_cestas | futura | ⏳ |
+| 159 | Cana Pesquisadora — job + scraping CVM/B3, dossiê por fundo com fonte+data | futura | ⏳ |
+| 160 | API GET /api/rapadura/oportunidades com ia_token para Dodge/ISA/Árvore/Socoboy | futura | ⏳ |
