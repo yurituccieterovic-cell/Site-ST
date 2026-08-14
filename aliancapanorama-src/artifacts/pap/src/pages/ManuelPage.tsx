@@ -424,6 +424,16 @@ function ChCana() {
       <Step n="2" title="Escreva o que quiser">Pode ser um texto colado do app da XP, uma instrução, uma pergunta.</Step>
       <Step n="3" title="Pressione Enter">Shift+Enter para nova linha sem enviar.</Step>
       <Step n="4" title="A Cana responde">E executa a operação automaticamente.</Step>
+
+      <div className="mt-6 border border-amber-700/30 bg-amber-900/10 rounded-lg p-4">
+        <div className="text-amber-300 font-semibold text-sm mb-2">🔭 Cana Pesquisadora — em breve</div>
+        <p className="text-gray-400 text-xs leading-relaxed">
+          A Cana atual é <strong className="text-gray-300">Acordada</strong>: responde ao que você pergunta, executa o que você pede.
+          A próxima versão será a <strong className="text-gray-300">Pesquisadora</strong>: ela lê lâminas, regulamentos e notícias de cada fundo de forma periódica,
+          atualiza o dossiê com origem e data carimbados — sem inventar, só sintetizar.
+          A distinção é essencial: a Cana nunca afirma o que não viu. Ela nomeia a fonte.
+        </p>
+      </div>
     </div>
   );
 }
