@@ -2109,6 +2109,19 @@ function TransacoesView({ fundos }: { fundos: Fundo[] }) {
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
+// ─── MOBILE HOOK ─────────────────────────────────────────────────────────────
+
+function useIsMobile() {
+  const [mob, setMob] = useState(() => typeof window !== "undefined" && window.innerWidth < 600);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 599px)");
+    const h = (e: MediaQueryListEvent) => setMob(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
+  return mob;
+}
+
 // ─── ALTERAR SENHA ────────────────────────────────────────────────────────────
 
 function ChangePwModal({ onClose }: { onClose: () => void }) {
@@ -2244,6 +2257,7 @@ export function RapaduraPage() {
   const [showChangePw, setShowChangePw] = useState(false);
 
   const isAdmin = user?.role === "yuri" || user?.role === "mayumi";
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetch(`${API}/api/rapadura/auth/me`, { credentials: "include" })
@@ -2312,76 +2326,81 @@ export function RapaduraPage() {
         backdropFilter: "blur(8px)",
         position: "sticky", top: 0, zIndex: 40,
       }}>
+        {/* ── Linha 1: Logo + User ── */}
         <div style={{
-          maxWidth: 820, margin: "0 auto", padding: "0 20px",
+          maxWidth: 820, margin: "0 auto", padding: "0 16px",
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          height: 44,
+          height: isMobile ? 40 : 44,
         }}>
           {/* Logo */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={LOGO} alt="R" style={{ width: 24, height: 24, objectFit: "contain" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+            <img src={LOGO} alt="R" style={{ width: 22, height: 22, objectFit: "contain" }} />
             <span style={{
-              fontSize: 13, fontWeight: 300, letterSpacing: "0.2em",
-              color: "#c8963b",
-              fontFamily: "'Georgia', 'Times New Roman', serif",
+              fontSize: isMobile ? 12 : 13, fontWeight: 300, letterSpacing: "0.2em",
+              color: "#c8963b", fontFamily: "'Georgia', 'Times New Roman', serif",
             }}>
               Rapadura
             </span>
           </div>
 
-          {/* Nav */}
-          <nav style={{ display: "flex", alignItems: "center", height: "100%", overflowX: "auto", flexShrink: 1 }}>
-            {TABS.filter(t => !t.adminOnly || isAdmin).map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setView(tab.id)}
-                style={{
-                  height: "100%", padding: "0 14px", whiteSpace: "nowrap",
-                  background: "transparent", border: "none",
-                  fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase",
-                  color: view === tab.id ? "#c8963b" : "#3d4a5e",
-                  cursor: "pointer",
-                  borderBottom: view === tab.id ? "1px solid #c8963b" : "1px solid transparent",
-                  fontFamily: "inherit",
-                  transition: "color .15s, border-color .15s",
-                }}
-                onMouseEnter={e => { if (view !== tab.id) (e.currentTarget as HTMLElement).style.color = "#7a746c"; }}
-                onMouseLeave={e => { if (view !== tab.id) (e.currentTarget as HTMLElement).style.color = "#3d4a5e"; }}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
+          {/* Desktop nav — inline na linha 1 */}
+          {!isMobile && (
+            <nav style={{ display: "flex", alignItems: "center", height: "100%", overflow: "hidden" }}>
+              {TABS.filter(t => !t.adminOnly || isAdmin).map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setView(tab.id)}
+                  style={{
+                    height: "100%", padding: "0 14px", whiteSpace: "nowrap",
+                    background: "transparent", border: "none",
+                    fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase",
+                    color: view === tab.id ? "#c8963b" : "#3d4a5e",
+                    cursor: "pointer",
+                    borderBottom: view === tab.id ? "1px solid #c8963b" : "1px solid transparent",
+                    fontFamily: "inherit", transition: "color .15s, border-color .15s",
+                  }}
+                  onMouseEnter={e => { if (view !== tab.id) (e.currentTarget as HTMLElement).style.color = "#7a746c"; }}
+                  onMouseLeave={e => { if (view !== tab.id) (e.currentTarget as HTMLElement).style.color = "#3d4a5e"; }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          )}
 
-          {/* User */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+          {/* User actions */}
+          <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 10, flexShrink: 0 }}>
             <span style={{ fontSize: 10, color: "#3d4a5e", letterSpacing: "0.08em" }}>{user.nome}</span>
-            <a
-              href="/rapadura/manuel"
-              title="Guia do sistema"
-              style={{
-                fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
-                color: "#2a3545", textDecoration: "none", cursor: "pointer",
-                fontFamily: "inherit", transition: "color .15s",
-              }}
-              onMouseEnter={e => { (e.target as HTMLElement).style.color = "#c8963b"; }}
-              onMouseLeave={e => { (e.target as HTMLElement).style.color = "#2a3545"; }}
-            >
-              guia
-            </a>
-            <button
-              onClick={() => setShowChangePw(true)}
-              title="Alterar senha"
-              style={{
-                fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
-                color: "#2a3545", background: "none", border: "none", cursor: "pointer",
-                fontFamily: "inherit", transition: "color .15s",
-              }}
-              onMouseEnter={e => { (e.target as HTMLElement).style.color = "#c8963b"; }}
-              onMouseLeave={e => { (e.target as HTMLElement).style.color = "#2a3545"; }}
-            >
-              senha
-            </button>
+            {!isMobile && (
+              <>
+                <a
+                  href="/rapadura/manuel"
+                  title="Guia do sistema"
+                  style={{
+                    fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
+                    color: "#2a3545", textDecoration: "none", cursor: "pointer",
+                    fontFamily: "inherit", transition: "color .15s",
+                  }}
+                  onMouseEnter={e => { (e.target as HTMLElement).style.color = "#c8963b"; }}
+                  onMouseLeave={e => { (e.target as HTMLElement).style.color = "#2a3545"; }}
+                >
+                  guia
+                </a>
+                <button
+                  onClick={() => setShowChangePw(true)}
+                  title="Alterar senha"
+                  style={{
+                    fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
+                    color: "#2a3545", background: "none", border: "none", cursor: "pointer",
+                    fontFamily: "inherit", transition: "color .15s",
+                  }}
+                  onMouseEnter={e => { (e.target as HTMLElement).style.color = "#c8963b"; }}
+                  onMouseLeave={e => { (e.target as HTMLElement).style.color = "#2a3545"; }}
+                >
+                  senha
+                </button>
+              </>
+            )}
             <button
               onClick={logout}
               style={{
@@ -2396,6 +2415,57 @@ export function RapaduraPage() {
             </button>
           </div>
         </div>
+
+        {/* ── Linha 2 (mobile only): Nav + guia + senha ── */}
+        {isMobile && (
+          <nav style={{
+            borderTop: "1px solid #0f1520",
+            display: "flex", overflowX: "auto",
+            scrollbarWidth: "none",
+          }}>
+            {TABS.filter(t => !t.adminOnly || isAdmin).map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setView(tab.id)}
+                style={{
+                  flex: "none", padding: "0 13px", height: 36, whiteSpace: "nowrap",
+                  background: "transparent", border: "none",
+                  fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: view === tab.id ? "#c8963b" : "#3d4a5e",
+                  cursor: "pointer",
+                  borderBottom: view === tab.id ? "2px solid #c8963b" : "2px solid transparent",
+                  fontFamily: "inherit",
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+            {/* Separador */}
+            <div style={{ flex: "none", width: 1, background: "#141b26", margin: "8px 4px" }} />
+            <a
+              href="/rapadura/manuel"
+              style={{
+                flex: "none", padding: "0 12px", height: 36, whiteSpace: "nowrap",
+                display: "flex", alignItems: "center",
+                fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase",
+                color: "#2a3545", textDecoration: "none", fontFamily: "inherit",
+              }}
+            >
+              guia
+            </a>
+            <button
+              onClick={() => setShowChangePw(true)}
+              style={{
+                flex: "none", padding: "0 12px", height: 36, whiteSpace: "nowrap",
+                background: "transparent", border: "none",
+                fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase",
+                color: "#2a3545", cursor: "pointer", fontFamily: "inherit",
+              }}
+            >
+              senha
+            </button>
+          </nav>
+        )}
       </header>
 
       {/* Modal alterar senha */}
