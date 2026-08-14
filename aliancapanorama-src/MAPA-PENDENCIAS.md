@@ -305,3 +305,15 @@
 | 158 | Agrupamentos personalizados (cestas) — UI + tabela rapadura_cestas | futura | ⏳ |
 | 159 | Cana Pesquisadora — job + scraping CVM/B3, dossiê por fundo com fonte+data | futura | ⏳ |
 | 160 | API GET /api/rapadura/oportunidades com ia_token para Dodge/ISA/Árvore/Socoboy | futura | ⏳ |
+
+## Rapadura — Estabilidade (Sessão 111 · 2026-08-14)
+
+| # | Item | Prioridade | Status |
+|---|---|---|---|
+| 161 | routeLLM: sleep 10min → OOM cascata no Render — removido | CRÍTICO | ✅ Sessão 111 |
+| 162 | AbortSignal.timeout(20s) em todos os providers do LLM router | ALTA | ✅ Sessão 111 |
+| 163 | Cana: timeout 25s + 503 amigável; história truncada 800ch; maxTokens 2000; fundos limit 15 | ALTA | ✅ Sessão 111 |
+| 164 | Auth/chat login: timeout 10s; Dodge: timeout 12s | ALTA | ✅ Sessão 111 |
+| 165 | PDF export: res=(va+totalRetirado)-vi bug corrigido | ALTA | ✅ Sessão 111 |
+| 166 | Cana: queue de mensagens + draft localStorage + background processing (resposta persiste ao navegar) | ALTA | ✅ Sessão 111 |
+| 167 | healthz expõe memMb+heapMb; CI ping independente sem checkout | MÉDIA | ✅ Sessão 111 |

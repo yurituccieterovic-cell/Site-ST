@@ -4338,3 +4338,24 @@ E a assembleia nomeou algo que o código não consegue nomear sozinho: *o múscu
 - Job snapshot mensal → habilita gráficos reais em 3 meses
 - Agrupamentos (cestas) → médio escopo
 - Cana Pesquisadora → maior escopo, após as anteriores
+
+---
+
+## Sessão 111 — 2026-08-14 — Rapadura: Estabilidade + Cana Queue + Bug Auditoria
+
+**Síntese filosófica:** Um servidor que dorme 10 minutos por decisão de design não é um servidor — é um secador de cabelo esquecido ligado. O `sleep(10 * 60 * 1000)` no routeLLM era a morte silenciosa: cada request da Cana que encontrava rate-limit acumulava 10min de memória pendurada até o Render (512MB) explodir em OOM. A causa raiz não era fraqueza da infra — era uma estratégia de retry ingênua transportada de scripts offline para um servidor web. // A Cana ganhou consciência de fila: pode agora ouvir várias mensagens enquanto pensa, como um interlocutor real que não pede silêncio enquanto processa. O background processing via localStorage foi a decisão mais elegante da sessão: ao persistir antes do setState, a resposta sobrevive à desmontagem do componente e reaparece quando o usuário volta. Sem WebSockets, sem service workers — só localStorage fazendo o trabalho pesado.
+
+**Feito:**
+- routeLLM: `sleep(10min)` removido (causa raiz do crash OOM em cascata no Render)
+- AbortSignal.timeout(20s) em cada provider do LLM router
+- Cana: AbortController 25s + 503 amigável; histórico truncado 800ch; fundos limit(15); maxTokens 2000
+- Auth/chat login: timeout 10s; Dodge: timeout 12s (todos os endpoints LLM com timeout agora)
+- PDF export: bug resultado individual `va-vi` → `(va+totalRetirado)-vi`
+- Cana: queue de mensagens (input sempre ativo); draft persistente (localStorage); background processing
+- CI: job ping Render independente (sem checkout/Node.js)
+- healthz expõe memMb + heapMb para monitorar RAM
+
+**Decisões técnicas:**
+- Falha imediata no routeLLM (allBusy) > retry de 10min → caller deve decidir estratégia
+- AbortSignal como campo opcional de LLMRequest → cada rota define seu próprio timeout
+- localStorage como camada de persistência da Cana → sem levantar infraestrutura adicional
