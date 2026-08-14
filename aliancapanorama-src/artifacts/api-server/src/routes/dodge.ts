@@ -83,7 +83,12 @@ router.post("/dodge/public-chat", publicChatRateLimit, async (req, res) => {
       ...messages.map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
     ];
 
-    const reply = await routeLLM({ messages: llmMessages, pool: "chat-live", maxTokens: 300, temperature: 0.7 });
+    const dodgeCtrl = new AbortController();
+    const dodgeTimer = setTimeout(() => dodgeCtrl.abort(), 12000);
+    let reply: string;
+    try {
+      reply = await routeLLM({ messages: llmMessages, pool: "chat-live", maxTokens: 300, temperature: 0.7, signal: dodgeCtrl.signal });
+    } finally { clearTimeout(dodgeTimer); }
     const loginRequired = reply.includes("[LOGIN_REQUIRED]");
     res.json({
       reply: reply.replace("[LOGIN_REQUIRED]", "").trim(),

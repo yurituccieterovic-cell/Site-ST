@@ -156,7 +156,12 @@ Responda SEMPRE como JSON: {"action":"chat","message":"..."} OU {"action":"reque
       { role: "system" as const, content: SYSTEM },
       ...messages.map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
     ];
-    const raw = await routeLLM({ messages: llmMessages, pool: "chat-live", temperature: 0.3 });
+    const authCtrl = new AbortController();
+    const authTimer = setTimeout(() => authCtrl.abort(), 10000);
+    let raw: string;
+    try {
+      raw = await routeLLM({ messages: llmMessages, pool: "chat-live", temperature: 0.3, signal: authCtrl.signal });
+    } finally { clearTimeout(authTimer); }
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error("LLM não retornou JSON");
     const parsed = JSON.parse(jsonMatch[0]) as { action: string; message?: string; candidate?: string };
@@ -1335,7 +1340,8 @@ router.get("/rapadura/relatorio/pdf", requireRapaduraAuth, async (req, res) => {
 
     const vi = Number(p.valorInvestido) || 0;
     const va = Number(p.valorAtual) || vi;
-    const res = va - vi;
+    const retiradoPdf = Number(p.totalRetirado) || 0;
+    const res = (va + retiradoPdf) - vi;
     const rowY = doc.y;
 
     doc.fontSize(8).fillColor("#c5c0b8").font("Helvetica-Bold")
