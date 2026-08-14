@@ -25,3 +25,16 @@ jobs:
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
             "https://site-st.onrender.com/api/healthz")
           echo "Render API status: $STATUS"
+        continue-on-error: true
+
+  ping-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep-alive Render (sem checkout)
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
+            "https://site-st.onrender.com/api/healthz")
+          echo "healthz: $STATUS"
+          FRONT=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 \
+            "https://site-st.vercel.app/aliancapanorama")
+          echo "front: $FRONT"
