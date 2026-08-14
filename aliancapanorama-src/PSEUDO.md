@@ -4359,3 +4359,29 @@ E a assembleia nomeou algo que o código não consegue nomear sozinho: *o múscu
 - Falha imediata no routeLLM (allBusy) > retry de 10min → caller deve decidir estratégia
 - AbortSignal como campo opcional de LLMRequest → cada rota define seu próprio timeout
 - localStorage como camada de persistência da Cana → sem levantar infraestrutura adicional
+
+---
+
+## Sessão 112 — 2026-08-14 — Keepalive Triplo: Sistemas se Acordando
+
+**Síntese filosófica:** Um sistema que depende de uma única mão para acordar é frágil. Três sistemas com intervalos primos (5, 7, 9 minutos) que se acordam mutuamente é resiliência com charme. O `roundtable` não é só infraestrutura — é uma metáfora: GitHub Actions bate na porta, o backend anota quem passou, o Neon acorda junto. A ideia de "sistemas conversando" veio do Yuri como intuição antes de ser código — e o código ficou fiel ao espírito. O `/api/sistemas/roundtable` é uma sala de presença digital: quem está acordado, quando esteve aqui, como está.
+
+**Contexto:** Rapadura estava fora (Render dormindo, free tier, cold sleep). Diagnóstico revelou que backend e DB estavam ok — era só sono. O problema do free tier não é técnico, é ontológico: um servidor que dorme não está morto, mas também não está vivo.
+
+**Feito:**
+- Diagnóstico: Render dormindo era o único problema — backend (healthz 200) e Neon (login ok) funcionavam
+- `lib/keepalive.ts`: cron Neon */9min (SELECT 1) + self-ping */7min + roundtable em memória (100 pulsos)
+- `routes/sistemas.ts`: GET /api/sistemas/ping?from= + GET /api/sistemas/roundtable
+- `routes/index.ts` + `index.ts`: sistemas montado e startKeepaliveCron() no bootstrap
+- `.github/workflows/poll-db.yml`: agora registra presença em /api/sistemas/ping + verifica rapadura/auth/me
+- UptimeRobot (terceiro sistema): endpoint pronto — Yuri cadastra em uptimerobot.com apontando para /api/sistemas/ping
+- Commit: c052051
+
+**Decisões técnicas:**
+- Intervalos primos (5, 7, 9min) → sem colisão, cobertura total, nenhum buraco de mais de 5min
+- Roundtable em memória (não DB) → simples, sem custo, reinicia com o servidor (aceitável para keepalive)
+- `from` param obrigatório no ping → rastreabilidade de quem acordou quem
+
+**Próximos passos:**
+- Yuri cadastrar UptimeRobot (3 min, gratuito) → terceiro sistema entra no roundtable
+- Monitor de alerta: se roundtable ficar vazio por >15min → email automático de alerta
