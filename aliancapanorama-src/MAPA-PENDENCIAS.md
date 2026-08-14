@@ -277,16 +277,22 @@
 | 150 | Rapadura: Simulador de estresse — backtesting COVID/Americanas (I430) | sessão futura | 💡 |
 | 151 | CSS Tutorial: publicado em /aliancapanorama/css-tutorial (Sessão 98) | ✅ feito | ✅ |
 
-## Rapadura — Backlog Técnico (pós Sessão 103)
+## Rapadura — Backlog Técnico (atualizado Sessão 109 · 2026-08-14)
 
 | # | Item | Prioridade | Status |
 |---|---|---|---|
-| 138 | I438 — Histórico de motivos obrigatório (genealogia auditável) | ALTA | ⏳ |
+| 138 | I438 — Histórico de motivos obrigatório (genealogia auditável) | ALTA | ✅ Sessão 108 |
 | 139 | I443 — Threshold de autonomia explícito (R$500/5k/20k) | ALTA | ⏳ |
-| 140 | Rapadura: configurar RAPADURA_MEMBRO_PASSWORD no Render (senha padrão dos 9 novos membros) | Yuri (Render UI) | ⏳ |
+| 140 | Rapadura: configurar RAPADURA_MEMBRO_PASSWORD no Render (senha padrão dos membros) | Yuri (Render UI) | ⏳ |
 | 141 | I433 — Índice de Troca 9 variáveis | MÉDIA | ⏳ |
 | 142 | I411 — Painel de aprovações pendentes (dual approval) | MÉDIA | ⏳ |
 | 143 | I434 — Diversificação efetiva vs nominal | MÉDIA | ⏳ |
-| 144 | I415 — Importar CSV XP | BAIXA | ⏳ |
+| 144 | I415 — Importar CSV XP | BAIXA | ✅ Sessão 108 |
 | 145 | I435 — Sonhos noturnos (cron Cana às 03h) | BAIXA | ⏳ |
 | 146 | I436 — Assembleia interna da Cana (5 agentes) | BAIXA | ⏳ |
+| 147 | Email para Mayumi (matanimoto@gmail.com) + Berenice (beatriz.tucci@gmail.com) com Manuel v5 | ALTA | ⏳ aguardando Yuri |
+| 148 | I263 — Auditoria reconciliação + validação humana (badge ⚠ + breakdown + "revisado") | ALTA | ⏳ |
+| 149 | I264 — Categorização pós-gravação de motivos I438 (LLM sugerida) | MÉDIA | ⏳ |
+| 150 | I265 — Parser XP com fallback granular (validação de colunas com mensagem específica) | MÉDIA | ⏳ |
+| 151 | I266 — Beta comercial fechado: 10 casais, entrevistas, freemium R$29/mês | BAIXA | ⏳ decisão Yuri |
+| 152 | I267 — Guard rails estatísticos Cana Sonhando (r², p-value, snapshot dados) | MÉDIA | ⏳ |
