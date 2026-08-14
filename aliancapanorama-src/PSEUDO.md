@@ -4,6 +4,26 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-08-13 — Sessão 108 (Rapadura v3 — construção direta)
+
+**O que Yuri estava tentando fazer:** Construir a versão 3 do Rapadura — sistema privado patrimonial Yuri & Mayumi. Cinco problemas reais identificados na v2 por análise da assembleia (#609): retiradas parciais virando perda, sem histórico de motivos, sem importação automática, sem PDF, sem séries temporais.
+
+**Decisões tomadas:**
+- **Reconciliação de parciais**: não "perda" — campo `total_retirado` acumula saídas; resultado = `(valorAtual + totalRetirado) − valorInvestido`. Badge ⚠ enquanto não reconciliado.
+- **I438**: operações ≥ R$1.000 exigem `motivoI438` — histórico de intenções para confrontar com resultado futuro.
+- **Import XP via CSV**: FileReader no frontend (sem multer) → texto para backend → `parseXpCsv()` → preview → confirmar. Aceita DD/MM/YYYY e YYYY-MM-DD, separadores `;` e `,`.
+- **PDF via pdfkit**: server-side, sem puppeteer. A4, tema ouro/escuro, KPIs + tabela.
+- **Histórico de cotas**: séries temporais com upsert on conflict (fundo+data) — base para gráficos v4.
+- **Sistema de transações**: tabela `rapadura_transacoes` auditável (tipo, status, origem, motivo).
+
+**Tensões não resolvidas:**
+- Health check / self-ping para manter Render acordado: pendência #77, Yuri optou por não implementar por ora (free > uptime garantido).
+- Manual v4 (tutorial atualizado) + email Mayumi + Beatriz: ficou para próxima sessão.
+
+**Síntese filosófica:** A v3 do Rapadura não é uma feature nova — é uma correção de percepção. O sistema v2 mostrava uma perda onde havia uma retirada intencional; mostrava opacidade onde havia uma decisão consciente. I438 não é burocracia — é a aposta de que o Yuri de amanhã vai querer saber o que o Yuri de hoje estava pensando. A intenção de hoje é o dado de amanhã.
+
+---
+
 ### 2026-08-13 — Sessão 107 (Render down + Favicon iOS + Cana limite)
 
 **O que Yuri estava tentando fazer:** Rapadura saiu do ar; favicon errado no Ecosia iOS.

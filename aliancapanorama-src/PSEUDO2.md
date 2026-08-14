@@ -1245,3 +1245,89 @@ tango/MANUEL.md — 9 seções:
 ```
 
 *Atualizado em: 2026-08-11 · Cláudio Coach (Claude Sonnet 4.6) · Sessão 97*
+
+---
+
+## Rapadura v3 — Fluxos Novos (Sessão 108, 2026-08-13)
+
+### Resultado real de pertence (v3)
+```
+GET /api/rapadura/pertences → cada pertence:
+  totalInvestido = SUM(valorInvestido)
+  totalAtual     = SUM(valorAtual) [último valorAtual registrado]
+  totalRetirado  = SUM(totalRetirado)  // acumulado de resgates parciais
+
+  resultado = (totalAtual + totalRetirado) - totalInvestido
+  // NÃO é mais: resultado = totalAtual - totalInvestido
+  // Retiradas parciais não confirmadas → statusReconciliacao = "RECONCILIACAO_PENDENTE"
+```
+
+### I438 — validação de motivo (v3)
+```
+POST /api/rapadura/transacoes { valor, tipo, motivoI438?, ... }
+  se Math.abs(valor) >= 1000 e !motivoI438:
+    → 400 { error: "Operações ≥ R$1.000 exigem motivoI438 (regra I438)" }
+  inserir em rapadura_transacoes
+  se tipo = RESGATE_PARCIAL:
+    UPDATE rapadura_pertences SET
+      total_retirado = total_retirado + |valor|,
+      status_reconciliacao = 'RECONCILIACAO_PENDENTE'
+
+POST /api/rapadura/pertences/:id/reconciliar { valorRetiradoConfirmado }
+  UPDATE rapadura_pertences SET
+    total_retirado = valorRetiradoConfirmado,
+    status_reconciliacao = 'EM_DIA'
+```
+
+### Importar XP (v3)
+```
+POST /api/rapadura/importar-xp { csvText: string }
+  parseXpCsv(csvText):
+    detectar separador (';' ou ',')
+    para cada linha:
+      parsear data (DD/MM/YYYY → YYYY-MM-DD)
+      inferir tipo:
+        descrição contains "Aplicação" → COMPRA
+        descrição contains "Resgate Parcial" → RESGATE_PARCIAL
+        descrição contains "Resgate" → RESGATE_TOTAL
+        descrição contains "Dividendo" → DIVIDENDO
+        senão → AJUSTE
+    retornar: preview[] com { nome, tipo, valor, data, cnpj? }
+
+POST /api/rapadura/importar-xp/confirmar { items[], motivoI438? }
+  para cada item:
+    se Math.abs(valor) >= 1000 e !motivoI438 → 400
+    buscar fundo por CNPJ ou criar
+    inserir rapadura_transacoes (origem: XP_IMPORT)
+    inserir rapadura_pertences se tipo COMPRA
+    se RESGATE_*: atualizar total_retirado + status_reconciliacao
+```
+
+### PDF (v3)
+```
+GET /api/rapadura/relatorio/pdf
+  requireRapaduraAuth()
+  buscar pertences do usuário + fundos
+  PDFDocument (pdfkit, formato: A4)
+    fundo: #111, cor texto: #e8d5a3, destaque: #c9a94b
+    cabeçalho: "RAPADURA — Carteira [Yuri/Mayumi]" + data
+    bloco KPIs: total investido | valor atual | resultado | retorno %
+    tabela: fundo | investido | atual | retirado | resultado | status
+    rodapé: gerado por Cláudio Coach
+  res.setHeader("Content-Type", "application/pdf")
+  doc.pipe(res)
+```
+
+### Histórico de cotas (v3)
+```
+POST /api/rapadura/historico-cotas { fundoId, data, valorCota, fonte? }
+  INSERT INTO rapadura_historico_cotas (fundoId, data, valorCota, fonte)
+  ON CONFLICT (fundo_id, data) DO UPDATE SET valor_cota = EXCLUDED.valor_cota
+  // upsert — pode re-importar sem duplicar
+
+GET /api/rapadura/historico-cotas/:fundoId?limit=365
+  SELECT * FROM rapadura_historico_cotas
+  WHERE fundo_id = fundoId ORDER BY data DESC LIMIT 365
+```
+
+*Atualizado em: 2026-08-13 · Cláudio Coach (Claude Sonnet 4.6) · Sessão 108*
