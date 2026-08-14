@@ -30,11 +30,30 @@ jobs:
   ping-render:
     runs-on: ubuntu-latest
     steps:
-      - name: Keep-alive Render (sem checkout)
+      - name: Roundtable — sistemas se acordando
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
-            "https://site-st.onrender.com/api/healthz")
-          echo "healthz: $STATUS"
+          BASE="https://site-st.onrender.com/api"
+
+          # 1. Acorda o Render e registra presença no roundtable
+          PING=$(curl -s --max-time 30 "$BASE/sistemas/ping?from=github-actions")
+          echo "roundtable: $PING"
+
+          # 2. Verifica healthz geral
+          HEALTH=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "$BASE/healthz")
+          echo "healthz: $HEALTH"
+
+          # 3. Verifica rapadura (endpoint de auth/me — deve retornar 401, não 500)
+          RAP=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "$BASE/rapadura/auth/me")
+          echo "rapadura/auth/me: $RAP"
+
+          # 4. Verifica frontend Vercel
           FRONT=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 \
-            "https://site-st.vercel.app/aliancapanorama")
-          echo "front: $FRONT"
+            "https://site-st.vercel.app/rapadura")
+          echo "vercel/rapadura: $FRONT"
+
+          # Falha se Render retornar erro 5xx
+          if [ "$HEALTH" -ge 500 ]; then
+            echo "ERRO: Render retornou $HEALTH"
+            exit 1
+          fi
+        continue-on-error: true

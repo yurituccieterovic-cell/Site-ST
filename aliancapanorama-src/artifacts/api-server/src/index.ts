@@ -3,6 +3,7 @@ import { logger } from "./lib/logger";
 import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso, seedAuliasCursoAvancado, ensureVectorMemory, seedRoteirosVideo, ensureRapaduraTables, seedRapaduraUsers } from "./lib/bootstrap";
 import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
+import { startKeepaliveCron } from "./lib/keepalive";
 
 const rawPort = process.env["PORT"];
 
@@ -37,6 +38,7 @@ ensureSessionTable()
       }
       logger.info({ port }, "Server listening");
       startIsaCron();
+      startKeepaliveCron();
     });
   })
   .catch((err) => {
