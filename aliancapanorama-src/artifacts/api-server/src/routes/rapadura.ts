@@ -1,9 +1,14 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { db } from "@workspace/db";
-import { rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable, rapaduraAuditTable, rapaduraAprovacoesTable } from "@workspace/db";
-import { eq, isNull, desc, sql, and } from "drizzle-orm";
+import {
+  rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable,
+  rapaduraAuditTable, rapaduraAprovacoesTable,
+  rapaduraTransacoesTable, rapaduraHistoricoCotas,
+} from "@workspace/db";
+import { eq, isNull, desc, sql, and, asc, inArray } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+import PDFDocument from "pdfkit";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
 
@@ -395,6 +400,8 @@ router.get("/rapadura/pertences", requireRapaduraAuth, async (req, res) => {
       precoCotaCompra: rapaduraPertencesTable.precoCotaCompra,
       valorAtual: rapaduraPertencesTable.valorAtual,
       notas: rapaduraPertencesTable.notas,
+      statusReconciliacao: rapaduraPertencesTable.statusReconciliacao,
+      totalRetirado: rapaduraPertencesTable.totalRetirado,
       createdAt: rapaduraPertencesTable.createdAt,
       fundoId: rapaduraFundosTable.id,
       fundoNome: rapaduraFundosTable.nome,
@@ -409,19 +416,23 @@ router.get("/rapadura/pertences", requireRapaduraAuth, async (req, res) => {
     .where(eq(rapaduraPertencesTable.userId, userId))
     .orderBy(desc(rapaduraPertencesTable.createdAt));
 
-  const ativos = pertences.filter(p => true); // soft delete handled on insert side
-
-  // Calcular totais
+  // Calcular totais com resultado correto: inclui retiradas parciais já feitas
   let totalInvestido = 0;
   let totalAtual = 0;
-  for (const p of ativos) {
+  let totalRetirado = 0;
+  for (const p of pertences) {
     totalInvestido += Number(p.valorInvestido) || 0;
     totalAtual += Number(p.valorAtual) || Number(p.valorInvestido) || 0;
+    totalRetirado += Number(p.totalRetirado) || 0;
   }
-  const resultado = totalAtual - totalInvestido;
-  const rentabilidade = totalInvestido > 0 ? (resultado / totalInvestido) * 100 : 0;
+  // resultado real = (posição atual + o que já saiu) - o que entrou
+  const resultadoReal = (totalAtual + totalRetirado) - totalInvestido;
+  const rentabilidade = totalInvestido > 0 ? (resultadoReal / totalInvestido) * 100 : 0;
 
-  res.json({ pertences: ativos, dashboard: { totalInvestido, totalAtual, resultado, rentabilidade } });
+  res.json({
+    pertences,
+    dashboard: { totalInvestido, totalAtual, totalRetirado, resultado: resultadoReal, rentabilidade },
+  });
 });
 
 router.post("/rapadura/pertences", requireRapaduraAuth, async (req, res) => {
@@ -946,6 +957,402 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   }
 
   res.json({ acao, resposta, executado, itens: itens.length });
+});
+
+// ─── Transações (I438 + histórico de motivos) ─────────────────────────────────
+
+router.get("/rapadura/transacoes", requireRapaduraAuth, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+  const pertenceId = req.query.pertenceId ? parseInt(String(req.query.pertenceId)) : null;
+
+  const where = pertenceId
+    ? and(eq(rapaduraTransacoesTable.userId, userId), eq(rapaduraTransacoesTable.pertenceId, pertenceId))
+    : eq(rapaduraTransacoesTable.userId, userId);
+
+  const transacoes = await db
+    .select({
+      id: rapaduraTransacoesTable.id,
+      tipo: rapaduraTransacoesTable.tipo,
+      valor: rapaduraTransacoesTable.valor,
+      qtdCotas: rapaduraTransacoesTable.qtdCotas,
+      dataTransacao: rapaduraTransacoesTable.dataTransacao,
+      motivoI438: rapaduraTransacoesTable.motivoI438,
+      status: rapaduraTransacoesTable.status,
+      origem: rapaduraTransacoesTable.origem,
+      notas: rapaduraTransacoesTable.notas,
+      createdAt: rapaduraTransacoesTable.createdAt,
+      pertenceId: rapaduraTransacoesTable.pertenceId,
+      fundoId: rapaduraFundosTable.id,
+      fundoNome: rapaduraFundosTable.nome,
+    })
+    .from(rapaduraTransacoesTable)
+    .innerJoin(rapaduraFundosTable, eq(rapaduraTransacoesTable.fundoId, rapaduraFundosTable.id))
+    .where(where)
+    .orderBy(desc(rapaduraTransacoesTable.dataTransacao));
+
+  res.json({ transacoes });
+});
+
+router.post("/rapadura/transacoes", requireRapaduraAuth, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+  const { pertenceId, fundoId, tipo, valor, qtdCotas, dataTransacao, motivoI438, notas } =
+    req.body as Record<string, any>;
+
+  if (!fundoId || !tipo || !valor || !dataTransacao) {
+    res.status(400).json({ error: "fundoId, tipo, valor e dataTransacao obrigatórios" });
+    return;
+  }
+
+  // I438: motivo obrigatório para operações >= R$1.000
+  if (Math.abs(Number(valor)) >= 1000 && !motivoI438?.trim()) {
+    res.status(400).json({
+      error: "Operação acima de R$1.000 exige justificativa no campo 'Por que estou fazendo isso?' (motivo I438).",
+      campo: "motivoI438",
+    });
+    return;
+  }
+
+  const [transacao] = await db.insert(rapaduraTransacoesTable).values({
+    userId,
+    pertenceId: pertenceId ? parseInt(pertenceId) : null,
+    fundoId: parseInt(fundoId),
+    tipo,
+    valor: String(valor),
+    qtdCotas: qtdCotas ? String(qtdCotas) : null,
+    dataTransacao,
+    motivoI438: motivoI438 ?? null,
+    status: "CONFIRMADO",
+    origem: "MANUAL",
+    notas: notas ?? null,
+  }).returning();
+
+  // Se é resgate parcial: atualizar totalRetirado e marcar pertence se necessário
+  if ((tipo === "RESGATE_PARCIAL" || tipo === "RESGATE_TOTAL") && pertenceId) {
+    const pId = parseInt(pertenceId);
+    const [pertence] = await db.select().from(rapaduraPertencesTable).where(eq(rapaduraPertencesTable.id, pId)).limit(1);
+    if (pertence) {
+      const novoTotal = (Number(pertence.totalRetirado) || 0) + Math.abs(Number(valor));
+      await db.update(rapaduraPertencesTable).set({
+        totalRetirado: String(novoTotal),
+        statusReconciliacao: tipo === "RESGATE_TOTAL" ? "EM_DIA" : "RECONCILIACAO_PENDENTE",
+        updatedAt: new Date(),
+      }).where(eq(rapaduraPertencesTable.id, pId));
+    }
+  }
+
+  await audit(userId, "TRANSACAO_ADD", { transacaoId: transacao.id, tipo, valor }, req.ip ?? "");
+  res.json({ transacao });
+});
+
+// Confirmar reconciliação de pertence (após informar parcial)
+router.post("/rapadura/pertences/:id/reconciliar", requireRapaduraAuth, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+  const id = parseInt(req.params.id ?? "0");
+  const { valorRetiradoConfirmado } = req.body as { valorRetiradoConfirmado?: number };
+
+  if (!valorRetiradoConfirmado) {
+    res.status(400).json({ error: "valorRetiradoConfirmado obrigatório" });
+    return;
+  }
+
+  await db.update(rapaduraPertencesTable).set({
+    totalRetirado: String(valorRetiradoConfirmado),
+    statusReconciliacao: "EM_DIA",
+    updatedAt: new Date(),
+  }).where(and(eq(rapaduraPertencesTable.id, id), eq(rapaduraPertencesTable.userId, userId)));
+
+  await audit(userId, "PERTENCE_RECONCILIAR", { pertenceId: id, valorRetiradoConfirmado }, req.ip ?? "");
+  res.json({ ok: true });
+});
+
+// ─── Histórico de cotas ───────────────────────────────────────────────────────
+
+router.get("/rapadura/historico-cotas/:fundoId", requireRapaduraAuth, async (req, res) => {
+  const fundoId = parseInt(req.params.fundoId ?? "0");
+  const cotas = await db
+    .select()
+    .from(rapaduraHistoricoCotas)
+    .where(eq(rapaduraHistoricoCotas.fundoId, fundoId))
+    .orderBy(asc(rapaduraHistoricoCotas.data))
+    .limit(365);
+  res.json({ cotas });
+});
+
+router.post("/rapadura/historico-cotas", requireRapaduraAuth, requireAdmin, async (req, res) => {
+  const { fundoId, data, valorCota, fonte } = req.body as Record<string, any>;
+  if (!fundoId || !data || !valorCota) {
+    res.status(400).json({ error: "fundoId, data e valorCota obrigatórios" });
+    return;
+  }
+  const [cota] = await db.insert(rapaduraHistoricoCotas).values({
+    fundoId: parseInt(fundoId),
+    data,
+    valorCota: String(valorCota),
+    fonte: fonte ?? "MANUAL",
+  }).onConflictDoUpdate({
+    target: [rapaduraHistoricoCotas.fundoId, rapaduraHistoricoCotas.data],
+    set: { valorCota: String(valorCota), fonte: fonte ?? "MANUAL" },
+  }).returning();
+  res.json({ cota });
+});
+
+// ─── Importar XP (CSV) ────────────────────────────────────────────────────────
+
+// Parser do extrato XP: aceita conteúdo CSV como texto
+function parseXpCsv(csvText: string): Array<{ data: string; descricao: string; valor: number; tipo: string }> {
+  const linhas = csvText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const items: Array<{ data: string; descricao: string; valor: number; tipo: string }> = [];
+
+  for (const linha of linhas) {
+    // Separador pode ser ; ou ,
+    const sep = linha.includes(";") ? ";" : ",";
+    const cols = linha.split(sep).map(c => c.replace(/^"|"$/g, "").trim());
+
+    // Detectar data no formato DD/MM/YYYY ou YYYY-MM-DD
+    const dateRaw = cols[0] ?? "";
+    let data = "";
+    const dmatch = dateRaw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    const ymatch = dateRaw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (dmatch) data = `${dmatch[3]}-${dmatch[2]}-${dmatch[1]}`;
+    else if (ymatch) data = dateRaw;
+    else continue; // linha sem data reconhecida = cabeçalho ou irrelevante
+
+    const descricao = cols[1] ?? "";
+
+    // Valor: pode estar na coluna 2 (positivo) ou 3 (negativo), ou só coluna 2 com sinal
+    const raw2 = (cols[2] ?? "").replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, "");
+    const raw3 = (cols[3] ?? "").replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, "");
+    let valor = parseFloat(raw2);
+    if (isNaN(valor) || valor === 0) valor = parseFloat(raw3);
+    if (isNaN(valor)) continue;
+
+    // Inferir tipo pela descrição
+    const desc = descricao.toLowerCase();
+    let tipo = "AJUSTE";
+    if (desc.includes("aplic") || desc.includes("compra") || desc.includes("subscri")) tipo = "COMPRA";
+    else if (desc.includes("resgat") && desc.includes("parcial")) tipo = "RESGATE_PARCIAL";
+    else if (desc.includes("resgat")) tipo = "RESGATE_TOTAL";
+    else if (desc.includes("dividend") || desc.includes("rendimento") || desc.includes("jcp")) tipo = "DIVIDENDO";
+
+    items.push({ data, descricao, valor, tipo });
+  }
+  return items;
+}
+
+// Preview: recebe CSV como texto, retorna itens detectados sem gravar
+router.post("/rapadura/importar-xp", requireRapaduraAuth, async (req, res) => {
+  const { csvTexto } = req.body as { csvTexto?: string };
+  if (!csvTexto?.trim()) {
+    res.status(400).json({ error: "csvTexto obrigatório (conteúdo do extrato XP)" });
+    return;
+  }
+
+  const itens = parseXpCsv(csvTexto);
+  if (itens.length === 0) {
+    res.status(400).json({ error: "Nenhuma linha válida detectada. Verifique o formato do extrato." });
+    return;
+  }
+
+  res.json({ preview: itens, total: itens.length });
+});
+
+// Confirmar importação: grava as transações escolhidas
+router.post("/rapadura/importar-xp/confirmar", requireRapaduraAuth, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+  const { itens, fundoId, pertenceId } = req.body as {
+    itens?: Array<{ data: string; descricao: string; valor: number; tipo: string; motivoI438?: string }>;
+    fundoId?: number;
+    pertenceId?: number;
+  };
+
+  if (!itens?.length || !fundoId) {
+    res.status(400).json({ error: "itens e fundoId obrigatórios" });
+    return;
+  }
+
+  // Validar I438 para todos os itens >= R$1.000
+  const semMotivo = itens.filter(it => Math.abs(it.valor) >= 1000 && !it.motivoI438?.trim());
+  if (semMotivo.length > 0) {
+    res.status(400).json({
+      error: `${semMotivo.length} item(ns) acima de R$1.000 sem justificativa (I438). Preencha 'Por que estou fazendo isso?' para cada.`,
+      itensSemMotivo: semMotivo.map(i => i.descricao),
+    });
+    return;
+  }
+
+  const gravadas = [];
+  let totalRetiradoAcumulado = 0;
+
+  for (const it of itens) {
+    const [t] = await db.insert(rapaduraTransacoesTable).values({
+      userId,
+      pertenceId: pertenceId ?? null,
+      fundoId,
+      tipo: it.tipo,
+      valor: String(it.valor),
+      dataTransacao: it.data,
+      motivoI438: it.motivoI438 ?? null,
+      notas: it.descricao,
+      status: "CONFIRMADO",
+      origem: "XP_IMPORT",
+    }).returning();
+    gravadas.push(t);
+
+    if (it.tipo === "RESGATE_PARCIAL" || it.tipo === "RESGATE_TOTAL") {
+      totalRetiradoAcumulado += Math.abs(it.valor);
+    }
+  }
+
+  // Atualizar totalRetirado do pertence se informado
+  if (pertenceId && totalRetiradoAcumulado > 0) {
+    const [pertence] = await db.select().from(rapaduraPertencesTable).where(eq(rapaduraPertencesTable.id, pertenceId)).limit(1);
+    if (pertence) {
+      const novoTotal = (Number(pertence.totalRetirado) || 0) + totalRetiradoAcumulado;
+      await db.update(rapaduraPertencesTable).set({
+        totalRetirado: String(novoTotal),
+        statusReconciliacao: "EM_DIA",
+        updatedAt: new Date(),
+      }).where(eq(rapaduraPertencesTable.id, pertenceId));
+    }
+  }
+
+  await audit(userId, "XP_IMPORT", { fundoId, itens: gravadas.length }, req.ip ?? "");
+  res.json({ ok: true, gravadas: gravadas.length });
+});
+
+// ─── Relatório PDF ────────────────────────────────────────────────────────────
+
+router.get("/rapadura/relatorio/pdf", requireRapaduraAuth, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+  const userName = req.session.rapaduraNome ?? "Membro";
+  const hoje = new Date().toLocaleDateString("pt-BR");
+
+  const [pertences, fundos] = await Promise.all([
+    db.select({
+      id: rapaduraPertencesTable.id,
+      dataCompra: rapaduraPertencesTable.dataCompra,
+      valorInvestido: rapaduraPertencesTable.valorInvestido,
+      valorAtual: rapaduraPertencesTable.valorAtual,
+      totalRetirado: rapaduraPertencesTable.totalRetirado,
+      statusReconciliacao: rapaduraPertencesTable.statusReconciliacao,
+      notas: rapaduraPertencesTable.notas,
+      fundoId: rapaduraFundosTable.id,
+      fundoNome: rapaduraFundosTable.nome,
+      fundoGestora: rapaduraFundosTable.gestora,
+      fundoClasse: rapaduraFundosTable.classe,
+      fundoBenchmark: rapaduraFundosTable.benchmark,
+      fundoScore: rapaduraFundosTable.scoreAtratividade,
+    })
+      .from(rapaduraPertencesTable)
+      .innerJoin(rapaduraFundosTable, eq(rapaduraPertencesTable.fundoId, rapaduraFundosTable.id))
+      .where(and(eq(rapaduraPertencesTable.userId, userId), isNull(rapaduraPertencesTable.deletedAt)))
+      .orderBy(desc(rapaduraPertencesTable.valorAtual)),
+    db.select().from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true)),
+  ]);
+
+  const fmtBRL = (n: number) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
+
+  let totalInvestido = 0, totalAtual = 0, totalRetirado = 0;
+  for (const p of pertences) {
+    totalInvestido += Number(p.valorInvestido) || 0;
+    totalAtual += Number(p.valorAtual) || Number(p.valorInvestido) || 0;
+    totalRetirado += Number(p.totalRetirado) || 0;
+  }
+  const resultado = (totalAtual + totalRetirado) - totalInvestido;
+  const rentabilidade = totalInvestido > 0 ? (resultado / totalInvestido) * 100 : 0;
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename="rapadura-${hoje.replace(/\//g, "-")}.pdf"`);
+
+  const doc = new PDFDocument({ size: "A4", margin: 48, info: { Title: "Rapadura — Relatório Patrimonial" } });
+  doc.pipe(res);
+
+  const GOLD = "#c8963b";
+  const DARK = "#1a1f2a";
+  const GRAY = "#5a5650";
+
+  // Cabeçalho
+  doc.fontSize(22).fillColor(GOLD).font("Helvetica").text("Rapadura", 48, 48);
+  doc.fontSize(9).fillColor(GRAY).font("Helvetica").text("MOTOR DE INTELIGÊNCIA PATRIMONIAL", 48, 74);
+  doc.fontSize(9).fillColor(GRAY).text(`${userName}  ·  ${hoje}`, 48, 86);
+
+  doc.moveTo(48, 102).lineTo(547, 102).strokeColor(DARK).lineWidth(0.5).stroke();
+
+  // KPIs
+  doc.moveDown(0.5);
+  const kpis = [
+    ["Total Investido", fmtBRL(totalInvestido)],
+    ["Valor Atual", fmtBRL(totalAtual)],
+    ["Total Retirado", fmtBRL(totalRetirado)],
+    ["Resultado Total", `${resultado >= 0 ? "+" : ""}${fmtBRL(resultado)} (${rentabilidade >= 0 ? "+" : ""}${rentabilidade.toFixed(2)}%)`],
+  ];
+
+  let kx = 48;
+  const ky = 116;
+  for (const [label, value] of kpis) {
+    doc.fontSize(7).fillColor(GRAY).text(label.toUpperCase(), kx, ky, { width: 120 });
+    doc.fontSize(11).fillColor(resultado >= 0 || label !== "Resultado Total" ? "#ddd8d0" : "#9a4040")
+      .font("Helvetica-Bold").text(value, kx, ky + 12, { width: 120 });
+    doc.font("Helvetica");
+    kx += 125;
+  }
+
+  doc.moveTo(48, 160).lineTo(547, 160).strokeColor(DARK).lineWidth(0.5).stroke();
+
+  // Tabela de posições
+  doc.moveDown(0.5);
+  doc.y = 170;
+  doc.fontSize(8).fillColor(GOLD).text("POSIÇÕES DA CARTEIRA", 48, doc.y);
+  doc.moveDown(0.5);
+
+  const headerY = doc.y;
+  doc.fontSize(7).fillColor(GRAY);
+  doc.text("FUNDO", 48, headerY, { width: 180 });
+  doc.text("CLASSE", 232, headerY, { width: 70 });
+  doc.text("INVESTIDO", 306, headerY, { width: 80, align: "right" });
+  doc.text("ATUAL", 390, headerY, { width: 80, align: "right" });
+  doc.text("RESULTADO", 474, headerY, { width: 73, align: "right" });
+  doc.moveDown(0.3);
+  doc.moveTo(48, doc.y).lineTo(547, doc.y).strokeColor(DARK).lineWidth(0.3).stroke();
+  doc.moveDown(0.3);
+
+  for (const p of pertences) {
+    if (doc.y > 720) { doc.addPage(); doc.y = 48; }
+
+    const vi = Number(p.valorInvestido) || 0;
+    const va = Number(p.valorAtual) || vi;
+    const res = va - vi;
+    const rowY = doc.y;
+
+    doc.fontSize(8).fillColor("#c5c0b8").font("Helvetica-Bold")
+      .text(p.fundoNome.length > 28 ? p.fundoNome.slice(0, 27) + "…" : p.fundoNome, 48, rowY, { width: 180 });
+    doc.font("Helvetica").fillColor(GRAY)
+      .text(p.fundoGestora.length > 20 ? p.fundoGestora.slice(0, 19) + "…" : p.fundoGestora, 48, rowY + 10, { width: 180 });
+
+    doc.fontSize(8).fillColor(GRAY).text(p.fundoClasse, 232, rowY, { width: 70 });
+    doc.fillColor("#c5c0b8").text(fmtBRL(vi), 306, rowY, { width: 80, align: "right" });
+    doc.text(fmtBRL(va), 390, rowY, { width: 80, align: "right" });
+    doc.fillColor(res >= 0 ? "#3f7254" : "#9a4040")
+      .text(`${res >= 0 ? "+" : ""}${fmtBRL(res)}`, 474, rowY, { width: 73, align: "right" });
+
+    if (p.statusReconciliacao === "RECONCILIACAO_PENDENTE") {
+      doc.fontSize(6).fillColor("#c8963b").text("⚠ reconciliação pendente", 232, rowY + 10, { width: 120 });
+    }
+
+    doc.y = rowY + 24;
+    doc.moveTo(48, doc.y).lineTo(547, doc.y).strokeColor(DARK).lineWidth(0.2).stroke();
+    doc.moveDown(0.3);
+  }
+
+  // Rodapé
+  doc.fontSize(7).fillColor(GRAY).text(
+    "Rapadura · Motor de Inteligência Patrimonial · Sociedade Tucci · 2026  —  Documento confidencial.",
+    48, 790, { width: 499, align: "center" }
+  );
+
+  doc.end();
+  await audit(userId, "RELATORIO_PDF", { pertences: pertences.length }, req.ip ?? "");
 });
 
 export default router;

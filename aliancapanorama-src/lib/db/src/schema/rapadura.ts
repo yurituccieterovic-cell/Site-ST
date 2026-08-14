@@ -1,4 +1,4 @@
-import { pgTable, serial, text, boolean, integer, numeric, timestamp, jsonb, index } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, boolean, integer, numeric, timestamp, jsonb, index, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const rapaduraUsersTable = pgTable("rapadura_users", {
   id: serial("id").primaryKey(),
@@ -55,6 +55,9 @@ export const rapaduraPertencesTable = pgTable("rapadura_pertences", {
   precoCotaCompra: numeric("preco_cota_compra", { precision: 12, scale: 6 }),
   valorAtual: numeric("valor_atual", { precision: 12, scale: 2 }),
   notas: text("notas"),
+  // v3: reconciliação de parciais
+  statusReconciliacao: text("status_reconciliacao").default("EM_DIA"), // EM_DIA | RECONCILIACAO_PENDENTE
+  totalRetirado: numeric("total_retirado", { precision: 12, scale: 2 }).default("0"),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -68,6 +71,37 @@ export const rapaduraAuditTable = pgTable("rapadura_audit", {
   ip: text("ip"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+// v3: Transações — sistema de movimentações com estados e histórico de motivos (I438)
+export const rapaduraTransacoesTable = pgTable("rapadura_transacoes", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => rapaduraUsersTable.id),
+  pertenceId: integer("pertence_id").references(() => rapaduraPertencesTable.id),
+  fundoId: integer("fundo_id").notNull().references(() => rapaduraFundosTable.id),
+  tipo: text("tipo").notNull(), // COMPRA | RESGATE_PARCIAL | RESGATE_TOTAL | DIVIDENDO | AJUSTE | IMPORT_XP
+  valor: numeric("valor", { precision: 12, scale: 2 }).notNull(),
+  qtdCotas: numeric("qtd_cotas", { precision: 18, scale: 6 }),
+  dataTransacao: text("data_transacao").notNull(),
+  motivoI438: text("motivo_i438"), // obrigatório quando |valor| >= 1000
+  status: text("status").notNull().default("CONFIRMADO"), // PENDENTE | RECONCILIACAO_PENDENTE | CONFIRMADO | AJUSTADO
+  origem: text("origem").notNull().default("MANUAL"), // MANUAL | XP_IMPORT | SISTEMA
+  notas: text("notas"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// v3: Histórico de cotas por ativo — séries temporais
+export const rapaduraHistoricoCotas = pgTable("rapadura_historico_cotas", {
+  id: serial("id").primaryKey(),
+  fundoId: integer("fundo_id").notNull().references(() => rapaduraFundosTable.id),
+  data: text("data").notNull(), // YYYY-MM-DD
+  valorCota: numeric("valor_cota", { precision: 12, scale: 6 }).notNull(),
+  retornoVariacao: numeric("retorno_variacao", { precision: 8, scale: 4 }),
+  fonte: text("fonte").notNull().default("MANUAL"), // MANUAL | API_CVM | XP_IMPORT
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => ({
+  fundoDataIdx: index("rap_hist_fundo_data_idx").on(table.fundoId, table.data),
+  fundoDataUniq: uniqueIndex("rap_hist_fundo_data_uniq").on(table.fundoId, table.data),
+}));
 
 // v2: Protocolo I411 — governança dual (Yuri + Mayumi) para operações acima de threshold
 export const rapaduraAprovacoesTable = pgTable("rapadura_aprovacoes", {

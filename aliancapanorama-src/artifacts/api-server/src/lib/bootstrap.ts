@@ -2166,6 +2166,57 @@ export async function ensureRapaduraTables(): Promise<void> {
       ip TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+    CREATE TABLE IF NOT EXISTS rapadura_aprovacoes (
+      id SERIAL PRIMARY KEY,
+      tipo TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'PENDENTE',
+      solicitante_id INTEGER NOT NULL REFERENCES rapadura_users(id),
+      aprovador_id INTEGER REFERENCES rapadura_users(id),
+      token TEXT UNIQUE,
+      payload JSONB NOT NULL,
+      valor_total NUMERIC(12,2),
+      expires_at TIMESTAMPTZ,
+      approved_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS rapadura_transacoes (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES rapadura_users(id),
+      pertence_id INTEGER REFERENCES rapadura_pertences(id),
+      fundo_id INTEGER NOT NULL REFERENCES rapadura_fundos(id),
+      tipo TEXT NOT NULL,
+      valor NUMERIC(12,2) NOT NULL,
+      qtd_cotas NUMERIC(18,6),
+      data_transacao TEXT NOT NULL,
+      motivo_i438 TEXT,
+      status TEXT NOT NULL DEFAULT 'CONFIRMADO',
+      origem TEXT NOT NULL DEFAULT 'MANUAL',
+      notas TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS rapadura_historico_cotas (
+      id SERIAL PRIMARY KEY,
+      fundo_id INTEGER NOT NULL REFERENCES rapadura_fundos(id),
+      data TEXT NOT NULL,
+      valor_cota NUMERIC(12,6) NOT NULL,
+      retorno_variacao NUMERIC(8,4),
+      fonte TEXT NOT NULL DEFAULT 'MANUAL',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE(fundo_id, data)
+    );
+  `);
+  // Colunas v2 adicionadas de forma idempotente
+  await db.execute(sql`
+    ALTER TABLE rapadura_fundos ADD COLUMN IF NOT EXISTS calmar_ratio NUMERIC(6,3);
+    ALTER TABLE rapadura_fundos ADD COLUMN IF NOT EXISTS fator_verde INTEGER;
+    ALTER TABLE rapadura_fundos ADD COLUMN IF NOT EXISTS confianca_verde INTEGER;
+    ALTER TABLE rapadura_fundos ADD COLUMN IF NOT EXISTS score_verde NUMERIC(5,1);
+    ALTER TABLE rapadura_fundos ADD COLUMN IF NOT EXISTS valor_min_aplicacao NUMERIC(12,2);
+  `);
+  // Colunas v3 adicionadas de forma idempotente
+  await db.execute(sql`
+    ALTER TABLE rapadura_pertences ADD COLUMN IF NOT EXISTS status_reconciliacao TEXT DEFAULT 'EM_DIA';
+    ALTER TABLE rapadura_pertences ADD COLUMN IF NOT EXISTS total_retirado NUMERIC(12,2) DEFAULT 0;
   `);
   logger.info("bootstrap: rapadura tables OK");
 }

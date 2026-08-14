@@ -20,7 +20,6 @@ type Fundo = {
   retorno36m: string | null; alfa36m: string | null; tempoRecuperacaoDias: number | null;
   scoreAtratividade: string | null; scoreConfianca: string | null; scoreDetalhado: any;
   notas: string | null; cnpj: string | null;
-  // v2
   fatorVerde: number | null; confiancaVerde: number | null; scoreVerde: string | null;
   calmarRatio: string | null; valorMinAplicacao: string | null;
 };
@@ -29,10 +28,21 @@ type Pertence = {
   fundoClasse: string; fundoPrazoResgate: number; fundoScore: string | null;
   dataCompra: string; valorInvestido: string; qtdCotas: string | null;
   precoCotaCompra: string | null; valorAtual: string | null; notas: string | null;
+  // v3
+  statusReconciliacao: string | null; totalRetirado: string | null;
 };
-type Dashboard = { totalInvestido: number; totalAtual: number; resultado: number; rentabilidade: number };
+type Dashboard = {
+  totalInvestido: number; totalAtual: number; totalRetirado: number;
+  resultado: number; rentabilidade: number;
+};
+type Transacao = {
+  id: number; tipo: string; valor: string; qtdCotas: string | null;
+  dataTransacao: string; motivoI438: string | null; status: string; origem: string;
+  notas: string | null; pertenceId: number | null; fundoId: number; fundoNome: string;
+};
 type ChatMsg = { role: "user" | "assistant"; content: string };
-type View = "oportunidades" | "pertences" | "gerenciar" | "analisar" | "cana";
+type View = "oportunidades" | "pertences" | "transacoes" | "gerenciar" | "analisar" | "cana";
+type XpPreviewItem = { data: string; descricao: string; valor: number; tipo: string; motivoI438?: string };
 
 type AlocacaoItem = {
   fundoId: number; nome: string; gestora: string;
@@ -658,12 +668,13 @@ function PertencesView({
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState({
     fundoId: "", dataCompra: "", valorInvestido: "",
-    qtdCotas: "", precoCotaCompra: "", valorAtual: "", notas: "",
+    qtdCotas: "", precoCotaCompra: "", valorAtual: "", notas: "", motivoI438: "",
   });
   const [saving, setSaving] = useState(false);
   const [confirmDel, setConfirmDel] = useState<number | null>(null);
   const [showInvestir, setShowInvestir] = useState(false);
   const [showColher, setShowColher] = useState(false);
+  const [showImportar, setShowImportar] = useState(false);
 
   const resultado = dashboard.resultado;
   const rentabilidade = dashboard.rentabilidade;
@@ -685,7 +696,7 @@ function PertencesView({
   const pieData = Object.entries(byClasse).map(([name, value]) => ({ name, value: Math.round(value) }));
 
   function reset() {
-    setForm({ fundoId: "", dataCompra: "", valorInvestido: "", qtdCotas: "", precoCotaCompra: "", valorAtual: "", notas: "" });
+    setForm({ fundoId: "", dataCompra: "", valorInvestido: "", qtdCotas: "", precoCotaCompra: "", valorAtual: "", notas: "", motivoI438: "" });
     setShowForm(false);
     setEditId(null);
   }
@@ -695,6 +706,7 @@ function PertencesView({
       fundoId: String(p.fundoId), dataCompra: p.dataCompra,
       valorInvestido: p.valorInvestido, qtdCotas: p.qtdCotas ?? "",
       precoCotaCompra: p.precoCotaCompra ?? "", valorAtual: p.valorAtual ?? "", notas: p.notas ?? "",
+      motivoI438: "",
     });
     setEditId(p.id);
     setShowForm(false);
@@ -702,6 +714,11 @@ function PertencesView({
 
   async function submit() {
     if (!form.fundoId || !form.dataCompra || !form.valorInvestido) return;
+    const valorNum = parseFloat(form.valorInvestido);
+    if (valorNum >= 1000 && !form.motivoI438.trim()) {
+      alert("Operação acima de R$1.000: preencha o campo 'Por que estou fazendo isso?' (I438).");
+      return;
+    }
     setSaving(true);
     try {
       const url = editId ? `${API}/api/rapadura/pertences/${editId}` : `${API}/api/rapadura/pertences`;
@@ -709,7 +726,12 @@ function PertencesView({
         method: editId ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ ...form, fundoId: parseInt(form.fundoId), valorInvestido: parseFloat(form.valorInvestido) }),
+        body: JSON.stringify({
+          ...form,
+          fundoId: parseInt(form.fundoId),
+          valorInvestido: valorNum,
+          motivoI438: form.motivoI438 || undefined,
+        }),
       });
       reset();
       onRefresh();
@@ -731,11 +753,13 @@ function PertencesView({
       {/* Modais */}
       {showInvestir && <InvestirModal onClose={() => setShowInvestir(false)} />}
       {showColher && <ColherModal onClose={() => setShowColher(false)} />}
+      {showImportar && <ImportarXPModal fundos={fundos} onClose={() => { setShowImportar(false); onRefresh(); }} />}
 
       {/* Header */}
       <div style={{
         display: "flex", justifyContent: "space-between", alignItems: "flex-end",
         marginBottom: 28, paddingBottom: 16, borderBottom: "1px solid #0f1520",
+        flexWrap: "wrap", gap: 8,
       }}>
         <div>
           <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 5 }}>
@@ -745,7 +769,27 @@ function PertencesView({
             Pertences
           </div>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button
+            onClick={() => window.open(`${API}/api/rapadura/relatorio/pdf`, "_blank")}
+            style={{
+              fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase",
+              color: "#4a6a9b", border: "1px solid #2a3a5a", background: "rgba(74,106,155,0.06)",
+              padding: "7px 12px", cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            PDF ↓
+          </button>
+          <button
+            onClick={() => setShowImportar(true)}
+            style={{
+              fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase",
+              color: "#6a7a40", border: "1px solid #3a4a20", background: "rgba(106,122,64,0.06)",
+              padding: "7px 12px", cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            Importar XP
+          </button>
           <button
             onClick={() => setShowColher(true)}
             style={{
@@ -780,11 +824,11 @@ function PertencesView({
       </div>
 
       {/* KPIs */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2, marginBottom: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2, marginBottom: dashboard.totalRetirado > 0 ? 8 : 24 }}>
         <KpiCard label="Total investido" value={fmt(dashboard.totalInvestido)} />
         <KpiCard label="Valor atual" value={fmt(dashboard.totalAtual)} />
         <KpiCard
-          label="Resultado"
+          label="Resultado total"
           value={`${resultado >= 0 ? "+" : ""}${fmt(resultado)}`}
           color={resultado >= 0 ? "#3f7254" : "#7a3535"}
         />
@@ -794,6 +838,16 @@ function PertencesView({
           color={rentabilidade >= 0 ? "#3f7254" : "#7a3535"}
         />
       </div>
+      {dashboard.totalRetirado > 0 && (
+        <div style={{
+          background: "#09101a", padding: "10px 14px", marginBottom: 24,
+          borderLeft: "2px solid #5a4020", display: "flex", alignItems: "center", gap: 10,
+        }}>
+          <span style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a4020" }}>Já retirado</span>
+          <span style={{ fontSize: 12, fontFamily: "monospace", color: "#8a6b30" }}>{fmt(dashboard.totalRetirado)}</span>
+          <span style={{ fontSize: 10, color: "#3d4a5e" }}>incluído no resultado total</span>
+        </div>
+      )}
 
       {/* Gráficos */}
       {pertences.length > 0 && (
@@ -885,6 +939,16 @@ function PertencesView({
             <div style={{ gridColumn: "1 / -1" }}>
               <Field label="Notas" value={form.notas} onChange={f("notas")} placeholder="opcional…" />
             </div>
+            {parseFloat(form.valorInvestido || "0") >= 1000 && (
+              <div style={{ gridColumn: "1 / -1" }}>
+                <Field
+                  label="Por que estou fazendo isso? (obrigatório acima de R$1.000)"
+                  value={form.motivoI438}
+                  onChange={f("motivoI438")}
+                  placeholder="Justificativa da operação — I438"
+                />
+              </div>
+            )}
           </div>
           <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 14 }}>
             <button
@@ -939,7 +1003,18 @@ function PertencesView({
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#ddd8d0" }}>{p.fundoNome}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "#ddd8d0" }}>{p.fundoNome}</span>
+                      {p.statusReconciliacao === "RECONCILIACAO_PENDENTE" && (
+                        <span style={{
+                          fontSize: 8, letterSpacing: "0.12em", textTransform: "uppercase",
+                          color: "#c8963b", border: "1px solid #5a402040",
+                          background: "rgba(200,150,59,0.08)", padding: "2px 6px",
+                        }}>
+                          ⚠ parcial pendente
+                        </span>
+                      )}
+                    </div>
                     <div style={{ fontSize: 10, color: "#3d4a5e", marginTop: 3, letterSpacing: "0.04em" }}>
                       {p.fundoGestora} · {p.fundoClasse} · {p.dataCompra}
                     </div>
@@ -1722,6 +1797,316 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
   );
 }
 
+// ─── IMPORTAR XP ──────────────────────────────────────────────────────────────
+
+function ImportarXPModal({ fundos, onClose }: { fundos: Fundo[]; onClose: () => void }) {
+  const [step, setStep] = useState<"upload" | "preview" | "done">("upload");
+  const [csvTexto, setCsvTexto] = useState("");
+  const [fundoId, setFundoId] = useState("");
+  const [preview, setPreview] = useState<XpPreviewItem[]>([]);
+  const [motivos, setMotivos] = useState<Record<number, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => setCsvTexto(ev.target?.result as string ?? "");
+    reader.readAsText(file, "UTF-8");
+  }
+
+  async function processar() {
+    if (!csvTexto.trim() || !fundoId) { setError("Cole o CSV e selecione o fundo."); return; }
+    setLoading(true); setError("");
+    try {
+      const r = await fetch(`${API}/api/rapadura/importar-xp`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ csvTexto }),
+      });
+      const d = await r.json() as { preview?: XpPreviewItem[]; error?: string };
+      if (!d.preview) { setError(d.error ?? "Erro ao processar CSV."); return; }
+      setPreview(d.preview);
+      setStep("preview");
+    } catch { setError("Erro de conexão."); }
+    finally { setLoading(false); }
+  }
+
+  async function confirmar() {
+    const itensFinal = preview.map((it, i) => ({ ...it, motivoI438: motivos[i] ?? "" }));
+    const semMotivo = itensFinal.filter(it => Math.abs(it.valor) >= 1000 && !it.motivoI438.trim());
+    if (semMotivo.length > 0) { setError(`${semMotivo.length} item(ns) acima de R$1.000 precisam de justificativa (I438).`); return; }
+    setLoading(true); setError("");
+    try {
+      const r = await fetch(`${API}/api/rapadura/importar-xp/confirmar`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({ itens: itensFinal, fundoId: parseInt(fundoId) }),
+      });
+      const d = await r.json() as { ok?: boolean; error?: string };
+      if (d.ok) setStep("done");
+      else setError(d.error ?? "Erro ao confirmar.");
+    } catch { setError("Erro de conexão."); }
+    finally { setLoading(false); }
+  }
+
+  const fmtBRL = (n: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
+  const TIPO_COLOR: Record<string, string> = {
+    COMPRA: "#3f7254", RESGATE_PARCIAL: "#c8963b", RESGATE_TOTAL: "#9a4040",
+    DIVIDENDO: "#4a6a9b", AJUSTE: "#3d4a5e",
+  };
+
+  return (
+    <div
+      style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.82)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 20 }}
+      onClick={e => e.target === e.currentTarget && onClose()}
+    >
+      <div style={{ background: "#07090e", border: "1px solid #1a2030", padding: 28, width: "100%", maxWidth: 600, maxHeight: "90vh", overflowY: "auto" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#6a7a40" }}>Importar Extrato XP</div>
+            <div style={{ fontSize: 12, color: "#5a5650", marginTop: 3 }}>
+              {step === "upload" ? "Upload ou cole o CSV" : step === "preview" ? `${preview.length} linhas — revise antes de confirmar` : "Importado com sucesso"}
+            </div>
+          </div>
+          <button onClick={onClose} style={{ fontSize: 18, color: "#3d4a5e", background: "none", border: "none", cursor: "pointer" }}>×</button>
+        </div>
+
+        {step === "upload" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5650", marginBottom: 5 }}>Fundo (obrigatório)</div>
+              <select value={fundoId} onChange={e => setFundoId(e.target.value)}
+                style={{ width: "100%", background: "#040507", border: "1px solid #141b26", color: "#c5c0b8", fontSize: 12, padding: "8px 10px", outline: "none", fontFamily: "inherit" }}>
+                <option value="">Selecione o fundo…</option>
+                {fundos.map(f => <option key={f.id} value={f.id}>{f.nome}</option>)}
+              </select>
+            </div>
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5650", marginBottom: 4 }}>Upload CSV</div>
+              <input type="file" accept=".csv,.txt" onChange={handleFile} style={{ color: "#5a5650", fontSize: 11 }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5650", marginBottom: 4 }}>ou cole o conteúdo</div>
+              <textarea
+                value={csvTexto} onChange={e => setCsvTexto(e.target.value)}
+                placeholder={"Data;Histórico;Valor\n01/08/2026;Aplicação Fundo XP;-5000.00"}
+                rows={6}
+                style={{ width: "100%", boxSizing: "border-box", background: "#040507", border: "1px solid #141b26", color: "#c5c0b8", fontSize: 11, padding: "8px 10px", outline: "none", fontFamily: "monospace", resize: "vertical" }}
+              />
+            </div>
+            {error && <div style={{ fontSize: 11, color: "#9a4040" }}>{error}</div>}
+            <button onClick={processar} disabled={loading || !csvTexto.trim() || !fundoId}
+              style={{ padding: "10px", background: !csvTexto.trim() || !fundoId ? "#1a2030" : "#6a7a40", color: "#ddd8d0", fontSize: 11, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "inherit", opacity: !csvTexto.trim() || !fundoId ? 0.5 : 1 }}>
+              {loading ? "Processando…" : "Processar CSV →"}
+            </button>
+          </div>
+        )}
+
+        {step === "preview" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2, maxHeight: 380, overflowY: "auto" }}>
+              {preview.map((it, i) => (
+                <div key={i} style={{ background: "#09101a", padding: "10px 14px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <span style={{ fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: TIPO_COLOR[it.tipo] ?? "#5a5650", marginRight: 8 }}>{it.tipo}</span>
+                      <span style={{ fontSize: 11, color: "#c5c0b8" }}>{it.descricao.slice(0, 36)}</span>
+                    </div>
+                    <span style={{ fontSize: 12, fontFamily: "monospace", fontWeight: 700, color: it.valor >= 0 ? "#3f7254" : "#9a4040" }}>
+                      {it.valor >= 0 ? "+" : ""}{fmtBRL(it.valor)}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 10, color: "#3d4a5e", marginTop: 3 }}>{it.data}</div>
+                  {Math.abs(it.valor) >= 1000 && (
+                    <input type="text" placeholder="Por que estou fazendo isso? (I438 — obrigatório)"
+                      value={motivos[i] ?? ""} onChange={e => setMotivos(m => ({ ...m, [i]: e.target.value }))}
+                      style={{ marginTop: 6, width: "100%", boxSizing: "border-box", background: "#040507", border: "1px solid #5a4020", color: "#c5c0b8", fontSize: 11, padding: "5px 8px", outline: "none", fontFamily: "inherit" }} />
+                  )}
+                </div>
+              ))}
+            </div>
+            {error && <div style={{ fontSize: 11, color: "#9a4040" }}>{error}</div>}
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setStep("upload")} style={{ padding: "9px 16px", background: "transparent", border: "1px solid #1a2030", color: "#5a5650", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>← Voltar</button>
+              <button onClick={confirmar} disabled={loading}
+                style={{ flex: 1, padding: "9px", background: loading ? "#1a2030" : "#6a7a40", color: "#ddd8d0", fontSize: 11, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "inherit" }}>
+                {loading ? "Gravando…" : `Confirmar ${preview.length} transações →`}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === "done" && (
+          <div style={{ textAlign: "center", padding: "32px 0" }}>
+            <div style={{ fontSize: 32, color: "#3f7254", marginBottom: 14 }}>✓</div>
+            <div style={{ fontSize: 14, color: "#3f7254" }}>{preview.length} transações importadas.</div>
+            <button onClick={onClose} style={{ marginTop: 20, padding: "9px 24px", background: "#6a7a40", color: "#ddd8d0", fontSize: 11, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "inherit" }}>Fechar</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── TRANSAÇÕES ───────────────────────────────────────────────────────────────
+
+function TransacoesView({ fundos }: { fundos: Fundo[] }) {
+  const [transacoes, setTransacoes] = useState<Transacao[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({
+    fundoId: "", tipo: "COMPRA", valor: "",
+    qtdCotas: "", dataTransacao: new Date().toISOString().slice(0, 10), motivoI438: "", notas: "",
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const TIPOS = ["COMPRA", "RESGATE_PARCIAL", "RESGATE_TOTAL", "DIVIDENDO", "AJUSTE"];
+  const TIPO_COLOR: Record<string, string> = {
+    COMPRA: "#3f7254", RESGATE_PARCIAL: "#c8963b", RESGATE_TOTAL: "#9a4040",
+    DIVIDENDO: "#4a6a9b", AJUSTE: "#3d4a5e",
+  };
+  const fmtBRL = (n: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
+
+  useEffect(() => {
+    fetch(`${API}/api/rapadura/transacoes`, { credentials: "include" })
+      .then(r => r.json() as Promise<{ transacoes: Transacao[] }>)
+      .then(d => setTransacoes(d.transacoes ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const ff = (k: keyof typeof form) => (v: string) => setForm(prev => ({ ...prev, [k]: v }));
+
+  async function salvar() {
+    if (!form.fundoId || !form.tipo || !form.valor || !form.dataTransacao) {
+      setError("Fundo, tipo, valor e data são obrigatórios."); return;
+    }
+    const valorNum = parseFloat(form.valor);
+    if (Math.abs(valorNum) >= 1000 && !form.motivoI438.trim()) {
+      setError("Operação acima de R$1.000 exige justificativa (I438)."); return;
+    }
+    setSaving(true); setError("");
+    try {
+      const r = await fetch(`${API}/api/rapadura/transacoes`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+        body: JSON.stringify({
+          fundoId: parseInt(form.fundoId), tipo: form.tipo, valor: valorNum,
+          qtdCotas: form.qtdCotas ? parseFloat(form.qtdCotas) : undefined,
+          dataTransacao: form.dataTransacao,
+          motivoI438: form.motivoI438 || undefined,
+          notas: form.notas || undefined,
+        }),
+      });
+      const d = await r.json() as { transacao?: Transacao; error?: string };
+      if (d.error) { setError(d.error); return; }
+      if (d.transacao) setTransacoes(ts => [d.transacao!, ...ts]);
+      setForm({ fundoId: "", tipo: "COMPRA", valor: "", qtdCotas: "", dataTransacao: new Date().toISOString().slice(0, 10), motivoI438: "", notas: "" });
+      setShowForm(false);
+    } catch { setError("Erro de conexão."); }
+    finally { setSaving(false); }
+  }
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 28, paddingBottom: 16, borderBottom: "1px solid #0f1520" }}>
+        <div>
+          <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 5 }}>Histórico</div>
+          <div style={{ fontSize: 22, fontWeight: 300, color: "#ddd8d0" }}>Transações</div>
+        </div>
+        <button onClick={() => setShowForm(s => !s)}
+          style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#c8963b", border: "1px solid #5a4020", background: "rgba(200,150,59,0.06)", padding: "7px 12px", cursor: "pointer", fontFamily: "inherit" }}>
+          + Nova transação
+        </button>
+      </div>
+
+      {showForm && (
+        <div style={{ background: "#07090e", border: "1px solid #1a2030", padding: 18, marginBottom: 20 }}>
+          <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#c8963b", marginBottom: 14 }}>Registrar Movimentação</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div style={{ gridColumn: "1 / -1" }}>
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5650", marginBottom: 4 }}>Fundo</div>
+              <select value={form.fundoId} onChange={e => ff("fundoId")(e.target.value)}
+                style={{ width: "100%", background: "#040507", border: "1px solid #141b26", color: "#c5c0b8", fontSize: 12, padding: "8px 10px", outline: "none", fontFamily: "inherit" }}>
+                <option value="">Selecione…</option>
+                {fundos.map(fn => <option key={fn.id} value={fn.id}>{fn.nome}</option>)}
+              </select>
+            </div>
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a5650", marginBottom: 4 }}>Tipo</div>
+              <select value={form.tipo} onChange={e => ff("tipo")(e.target.value)}
+                style={{ width: "100%", background: "#040507", border: "1px solid #141b26", color: "#c5c0b8", fontSize: 12, padding: "8px 10px", outline: "none", fontFamily: "inherit" }}>
+                {TIPOS.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+            <Field label="Data" type="date" value={form.dataTransacao} onChange={ff("dataTransacao")} />
+            <Field label="Valor (R$)" type="number" value={form.valor} onChange={ff("valor")} placeholder="ex: -5000 ou 1200" />
+            <Field label="Qtd cotas (opcional)" type="number" value={form.qtdCotas} onChange={ff("qtdCotas")} />
+            <Field label="Notas (opcional)" value={form.notas} onChange={ff("notas")} />
+            {Math.abs(parseFloat(form.valor || "0")) >= 1000 && (
+              <div style={{ gridColumn: "1 / -1" }}>
+                <Field label="Por que estou fazendo isso? (I438 — obrigatório)" value={form.motivoI438} onChange={ff("motivoI438")} placeholder="Justificativa da operação" />
+              </div>
+            )}
+          </div>
+          {error && <div style={{ fontSize: 11, color: "#9a4040", marginTop: 10 }}>{error}</div>}
+          <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 14 }}>
+            <button onClick={() => { setShowForm(false); setError(""); }}
+              style={{ padding: "8px 14px", background: "transparent", border: "1px solid #1a2030", color: "#5a5650", fontSize: 10, cursor: "pointer", fontFamily: "inherit" }}>Cancelar</button>
+            <button onClick={salvar} disabled={saving}
+              style={{ padding: "8px 18px", background: saving ? "#1a2030" : "#c8963b", color: saving ? "#3d4a5e" : "#040507", fontSize: 10, fontWeight: 700, border: "none", cursor: "pointer", fontFamily: "inherit" }}>
+              {saving ? "Salvando…" : "Registrar"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "40px 0", color: "#3d4a5e" }}>Carregando…</div>
+      ) : transacoes.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "48px 0", color: "#3d4a5e", fontSize: 12 }}>Nenhuma transação registrada.</div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          {transacoes.map(t => {
+            const valor = Number(t.valor);
+            return (
+              <div key={t.id} style={{ background: "#09101a", padding: "12px 16px", borderLeft: `2px solid ${(TIPO_COLOR[t.tipo] ?? "#3d4a5e")}50` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 8, letterSpacing: "0.12em", textTransform: "uppercase", color: TIPO_COLOR[t.tipo] ?? "#5a5650", border: `1px solid ${(TIPO_COLOR[t.tipo] ?? "#5a5650")}40`, padding: "2px 6px" }}>
+                        {t.tipo}
+                      </span>
+                      <span style={{ fontSize: 12, color: "#ddd8d0", fontWeight: 600 }}>{t.fundoNome}</span>
+                    </div>
+                    <div style={{ fontSize: 10, color: "#3d4a5e", marginTop: 3 }}>
+                      {t.dataTransacao} · {t.origem}
+                      {t.notas && <> · <em>{t.notas.slice(0, 40)}</em></>}
+                    </div>
+                    {t.motivoI438 && (
+                      <div style={{ fontSize: 10, color: "#8a6b30", marginTop: 3, fontStyle: "italic" }}>
+                        ↳ {t.motivoI438}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ textAlign: "right", flexShrink: 0, marginLeft: 12 }}>
+                    <div style={{ fontSize: 13, fontFamily: "monospace", fontWeight: 700, color: valor >= 0 ? "#3f7254" : "#9a4040" }}>
+                      {valor >= 0 ? "+" : ""}{fmtBRL(valor)}
+                    </div>
+                    <div style={{ fontSize: 9, color: "#3d4a5e", marginTop: 2, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                      {t.status}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 
 // ─── ALTERAR SENHA ────────────────────────────────────────────────────────────
@@ -1908,6 +2293,7 @@ export function RapaduraPage() {
   const TABS: { id: View; label: string; adminOnly?: boolean }[] = [
     { id: "oportunidades", label: "Oportunidades" },
     { id: "pertences", label: "Pertences" },
+    { id: "transacoes", label: "Transações" },
     { id: "analisar", label: "Analisar" },
     { id: "cana", label: "Cana ✦", adminOnly: true },
     { id: "gerenciar", label: "Gerenciar", adminOnly: true },
@@ -2029,6 +2415,9 @@ export function RapaduraPage() {
         )}
         {view === "pertences" && (
           <PertencesView pertences={pertences} dashboard={dashboard} fundos={fundos} onRefresh={loadData} />
+        )}
+        {view === "transacoes" && (
+          <TransacoesView fundos={fundos} />
         )}
         {view === "analisar" && (
           <AnalisarView />
