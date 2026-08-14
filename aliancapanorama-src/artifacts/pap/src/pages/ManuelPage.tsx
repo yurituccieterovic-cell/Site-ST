@@ -7,14 +7,15 @@ const CHAPTERS = [
   { id: "o-que-e",        label: "1. O que é o Rapadura" },
   { id: "como-acessar",   label: "2. Como Acessar" },
   { id: "oportunidades",  label: "3. Oportunidades" },
-  { id: "pertences",      label: "4. Pertences" },
-  { id: "analisar",       label: "5. Analisar" },
-  { id: "cana",           label: "6. IA Cana" },
-  { id: "gerenciar",      label: "7. Gerenciar" },
-  { id: "mayumi",         label: "8. Para Mayumi" },
-  { id: "berenice",       label: "9. Para Berenice" },
-  { id: "futuro",         label: "10. Futuro" },
-  { id: "glossario",      label: "11. Glossário" },
+  { id: "pertences",      label: "4. Pertences v3" },
+  { id: "transacoes",     label: "5. Transações" },
+  { id: "analisar",       label: "6. Analisar" },
+  { id: "cana",           label: "7. IA Cana" },
+  { id: "gerenciar",      label: "8. Gerenciar" },
+  { id: "mayumi",         label: "9. Para Mayumi" },
+  { id: "berenice",       label: "10. Para Beatriz" },
+  { id: "futuro",         label: "11. Futuro" },
+  { id: "glossario",      label: "12. Glossário" },
 ];
 
 function NavSidebar({ active, onChange }: { active: string; onChange: (id: string) => void }) {
@@ -231,14 +232,15 @@ function ChPertences() {
     <div>
       <p className="text-gray-300 text-sm mb-4">
         A aba <span className="text-amber-300 font-semibold">Pertences</span> é individual. Cada membro registra seus próprios investimentos.
+        Na <strong className="text-amber-200">v3</strong>, o resultado passou a ser calculado corretamente mesmo com retiradas parciais.
       </p>
 
       <h3 className="text-white font-semibold mb-3">Dashboard no topo</h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         {[
           { label: "Total investido", value: "R$ 2.276,75", color: "text-gray-300" },
           { label: "Valor atual", value: "R$ 2.585,20", color: "text-white" },
-          { label: "Resultado", value: "+R$ 308,45", color: "text-green-400" },
+          { label: "Resultado real", value: "+R$ 308,45", color: "text-green-400" },
           { label: "Rentabilidade", value: "+13,55%", color: "text-amber-300" },
         ].map(item => (
           <div key={item.label} className="bg-black/40 border border-white/10 rounded-xl p-3 text-center">
@@ -247,6 +249,18 @@ function ChPertences() {
           </div>
         ))}
       </div>
+      <div className="bg-black/30 border border-amber-900/30 rounded-lg px-4 py-3 mb-5 text-xs text-gray-400">
+        <span className="text-amber-400 font-semibold">v3 — Fórmula do resultado:</span>{" "}
+        <span className="font-mono text-amber-200">(valor atual + já retirado) − investido</span>
+        {" "}— retiradas parciais <strong className="text-white">não aparecem como perda</strong>.
+      </div>
+
+      <h3 className="text-white font-semibold mb-3">Badge de reconciliação</h3>
+      <p className="text-gray-400 text-sm mb-3">
+        Se um ativo teve retirada parcial não confirmada no sistema, você verá o badge{" "}
+        <span className="inline-flex items-center gap-1 bg-yellow-900/40 border border-yellow-700/40 text-yellow-300 text-xs px-2 py-0.5 rounded-full">⚠ parcial pendente</span>.
+        Clique em <strong className="text-white">Reconciliar</strong> para informar o valor retirado e voltar ao estado EM_DIA.
+      </p>
 
       <h3 className="text-white font-semibold mb-3">Gráficos</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
@@ -263,7 +277,9 @@ function ChPertences() {
       <h3 className="text-white font-semibold mb-3">Ações</h3>
       <div className="space-y-3">
         {[
-          { label: "+ Compra", desc: "Registrar uma posição. Selecione o fundo, data e valor investido." },
+          { label: "+ Compra", desc: "Registrar uma posição. Selecione o fundo, data e valor investido. Operações ≥ R$1.000 pedem justificativa (I438)." },
+          { label: "Importar XP", desc: "Upload do extrato CSV da XP Investimentos → preview dos itens → confirmar para popular automaticamente." },
+          { label: "Baixar PDF", desc: "Gera relatório completo da carteira: KPIs, tabela de ativos com status de reconciliação." },
           { label: "Investir +", desc: "Simula como distribuir um valor novo. Sugere alocação automática pelos scores, respeitando o valor mínimo." },
           { label: "Colher →", desc: "Simula um resgate parcial. Sugere quais posições resgatar primeiro (menor score), preservando raiz mínima (10%)." },
         ].map(action => (
@@ -273,6 +289,63 @@ function ChPertences() {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function ChTransacoes() {
+  return (
+    <div>
+      <p className="text-gray-300 text-sm mb-4">
+        A aba <span className="text-amber-300 font-semibold">Transações</span> é o coração da v3 — cada movimentação financeira é um registro auditável com estado, origem e motivo.
+      </p>
+
+      <h3 className="text-white font-semibold mb-3">Tipos de transação</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-5">
+        {[
+          { label: "COMPRA", color: "bg-green-900/50 border-green-700/40 text-green-300" },
+          { label: "RESGATE_PARCIAL", color: "bg-yellow-900/50 border-yellow-700/40 text-yellow-300" },
+          { label: "RESGATE_TOTAL", color: "bg-red-900/50 border-red-700/40 text-red-300" },
+          { label: "DIVIDENDO", color: "bg-blue-900/50 border-blue-700/40 text-blue-300" },
+          { label: "AJUSTE", color: "bg-gray-800 border-white/10 text-gray-400" },
+          { label: "IMPORT_XP", color: "bg-purple-900/50 border-purple-700/40 text-purple-300" },
+        ].map(t => (
+          <span key={t.label} className={`inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-mono font-bold border ${t.color}`}>{t.label}</span>
+        ))}
+      </div>
+
+      <h3 className="text-white font-semibold mb-3">Estados</h3>
+      <div className="space-y-2 mb-5">
+        {[
+          { s: "CONFIRMADO", desc: "Transação registrada e válida.", color: "text-green-400" },
+          { s: "PENDENTE", desc: "Aguardando confirmação.", color: "text-yellow-400" },
+          { s: "RECONCILIACAO_PENDENTE", desc: "Retirada parcial informada, aguardando reconciliação com a posição.", color: "text-orange-400" },
+          { s: "AJUSTADO", desc: "Corrigido manualmente após discrepância.", color: "text-blue-400" },
+        ].map(item => (
+          <div key={item.s} className="flex items-start gap-3 bg-black/30 border border-white/8 rounded-lg p-3">
+            <span className={`text-xs font-mono font-bold whitespace-nowrap ${item.color}`}>{item.s}</span>
+            <span className="text-gray-400 text-xs">{item.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      <h3 className="text-white font-semibold mb-2">Regra I438 — "Por que estou fazendo isso?"</h3>
+      <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-4 mb-5">
+        <p className="text-gray-300 text-sm">
+          Toda operação com valor absoluto <strong className="text-amber-300">≥ R$1.000</strong> exige o preenchimento do campo{" "}
+          <em className="text-amber-200">"Por que estou fazendo isso?"</em>.
+        </p>
+        <p className="text-gray-500 text-xs mt-2">
+          O motivo fica gravado para sempre na trilha de auditoria. Com o tempo, isso cria um banco de intenções que permite comparar cada decisão com o resultado obtido meses depois.
+        </p>
+      </div>
+
+      <h3 className="text-white font-semibold mb-3">Importar XP — passo a passo</h3>
+      <Step n="1" title="Exporte o extrato da XP">No app da XP Investimentos, baixe o extrato em formato CSV.</Step>
+      <Step n="2" title="Clique em 'Importar XP' na aba Pertences">O sistema abre o modal de importação.</Step>
+      <Step n="3" title="Selecione o arquivo CSV">O sistema lê o arquivo e mostra um preview com todos os itens detectados.</Step>
+      <Step n="4" title="Revise o preview">Verifique nome do fundo, tipo de operação, valor e data. O sistema já inferiu o tipo automaticamente.</Step>
+      <Step n="5" title="Confirme">Os itens entram em Pertences e Transações automaticamente.</Step>
     </div>
   );
 }
@@ -433,25 +506,52 @@ function ChBerenice() {
 }
 
 function ChFuturo() {
-  const items = [
-    { id: "I411", label: "Aprovações conjuntas", desc: "Para movimentos acima de R$500, o sistema pedirá aprovação de Yuri e Mayumi.", status: "⏳" },
-    { id: "I438", label: "Histórico de motivos", desc: "Toda operação acima de R$1.000 vai exigir um campo 'Por que estou fazendo isso?'.", status: "⏳" },
-    { id: "",     label: "Importar dados da XP", desc: "Upload direto do extrato para popular o Pertences automaticamente.", status: "⏳" },
-    { id: "",     label: "Relatório PDF", desc: "Exportar a carteira completa em PDF.", status: "⏳" },
-    { id: "",     label: "Sessão conjunta", desc: "Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real.", status: "⏳" },
+  const done = [
+    { id: "I438", label: "Histórico de motivos", desc: "Operações ≥ R$1.000 exigem campo 'Por que estou fazendo isso?' — trilha de intenções auditável.", version: "v3" },
+    { id: "",     label: "Importar dados da XP", desc: "Upload CSV → preview → confirmar → Pertences populado automaticamente.", version: "v3" },
+    { id: "",     label: "Relatório PDF", desc: "Exportar carteira completa em PDF (KPIs + tabela + status de reconciliação).", version: "v3" },
+    { id: "",     label: "Sistema de Transações", desc: "Cada movimentação tem tipo, estado e origem — histórico auditável completo.", version: "v3" },
+    { id: "",     label: "Reconciliação de parciais", desc: "Retiradas parciais não aparecem como perda — estado RECONCILIACAO_PENDENTE.", version: "v3" },
+    { id: "",     label: "Histórico de cotas", desc: "Séries temporais por fundo — base para gráficos de evolução.", version: "v3" },
+  ];
+  const pending = [
+    { id: "I411", label: "Aprovações conjuntas", desc: "Para movimentos acima de R$500, o sistema pedirá aprovação de Yuri e Mayumi." },
+    { id: "",     label: "Gráficos de evolução patrimonial", desc: "Curva de patrimônio ao longo do tempo por ativo e por carteira." },
+    { id: "",     label: "Dossiê por ativo (Cana pesquisadora)", desc: "Cada fundo/ação ganha histórico próprio, dados fundamentalistas e notas da Cana." },
+    { id: "",     label: "Comparador multidimensional", desc: "Benchmark explícito, retorno ajustado ao risco, horizonte temporal. Fundos vs. ações vs. renda fixa comparáveis." },
+    { id: "",     label: "Agrupamentos personalizados", desc: "Criar cestas (\"carteira verde\", \"apostas\", \"vacas leiteiras\") e comparar como portfólios virtuais." },
+    { id: "",     label: "Sessão conjunta", desc: "Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real." },
   ];
   return (
     <div>
-      <div className="space-y-3">
-        {items.map((item, i) => (
-          <div key={i} className="flex gap-4 items-start bg-black/30 border border-white/10 rounded-lg p-4">
-            <span className="text-lg">{item.status}</span>
+      <h3 className="text-white font-semibold mb-3">✅ Entregue na v3</h3>
+      <div className="space-y-2 mb-6">
+        {done.map((item, i) => (
+          <div key={i} className="flex gap-3 items-start bg-green-950/30 border border-green-900/40 rounded-lg p-3">
+            <span className="text-green-400 text-sm mt-0.5">✓</span>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-white font-semibold text-sm">{item.label}</span>
+                {item.id && <Badge color="bg-gray-800 text-gray-400 border border-white/10">{item.id}</Badge>}
+                <Badge color="bg-green-900/60 text-green-300 border border-green-700/40">{item.version}</Badge>
+              </div>
+              <p className="text-gray-400 text-xs mt-0.5">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <h3 className="text-white font-semibold mb-3">⏳ Próximas versões</h3>
+      <div className="space-y-2">
+        {pending.map((item, i) => (
+          <div key={i} className="flex gap-4 items-start bg-black/30 border border-white/10 rounded-lg p-3">
+            <span className="text-gray-600 mt-0.5">⏳</span>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-white font-semibold text-sm">{item.label}</span>
                 {item.id && <Badge color="bg-gray-800 text-gray-400 border border-white/10">{item.id}</Badge>}
               </div>
-              <p className="text-gray-400 text-xs mt-1">{item.desc}</p>
+              <p className="text-gray-400 text-xs mt-0.5">{item.desc}</p>
             </div>
           </div>
         ))}
@@ -495,6 +595,7 @@ const CHAPTER_CONTENT: Record<string, React.ReactNode> = {
   "como-acessar":  <ChComoAcessar />,
   "oportunidades": <ChOportunidades />,
   "pertences":     <ChPertences />,
+  "transacoes":    <ChTransacoes />,
   "analisar":      <ChAnalisar />,
   "cana":          <ChCana />,
   "gerenciar":     <ChGerenciar />,

@@ -73,28 +73,61 @@ Clique em qualquer card para ver o detalhamento das 7 dimensões do score.
 
 ---
 
-## 4. Pertences — Sua Carteira Pessoal
+## 4. Pertences — Sua Carteira Pessoal (v3)
 
 A aba **Pertences** é individual. Cada membro registra seus próprios investimentos.
 
 ### Dashboard no topo
 ```
-Total investido  |  Valor atual  |  Resultado  |  Rentabilidade
-R$ 2.276,75      |  R$ 2.585,20  |  +R$ 308,45 |  +13,55%
+Total investido  |  Valor atual  |  Resultado real  |  Rentabilidade
+R$ 2.276,75      |  R$ 2.585,20  |  +R$ 308,45      |  +13,55%
 ```
+
+**v3 — Fórmula do resultado real:** `(valor atual + já retirado) − investido`
+Retiradas parciais **não aparecem mais como perda**.
+
+### Badge de reconciliação
+Se um ativo teve retirada parcial não confirmada, aparece o badge **⚠ parcial pendente**.
+Clique em **Reconciliar** para informar o valor retirado e voltar ao estado EM_DIA.
 
 ### Gráficos
 - **Patrimônio acumulado** — evolução do total investido ao longo do tempo
 - **Alocação por classe** — gráfico de pizza por tipo de fundo
 
-### Registrar uma posição
-Clique em **"+ Compra"**. Selecione o fundo, coloque a data e o valor investido. Os outros campos são opcionais.
+### Ações
+- **+ Compra** — Registrar posição. Operações ≥ R$1.000 pedem justificativa (I438).
+- **Importar XP** — Upload CSV da XP → preview → confirmar → Pertences populado automático.
+- **Baixar PDF** — Relatório completo: KPIs + tabela de ativos com status de reconciliação.
+- **Investir +** — Simula alocação de valor novo pelos scores, respeitando mínimos.
+- **Colher →** — Simula resgate parcial (menor score primeiro, raiz mínima 10%).
 
-### Investir
-Clique em **"Investir +"** para simular como distribuir um valor novo entre os fundos disponíveis. O sistema sugere uma alocação automática baseada nos scores — respeitando o valor mínimo de cada fundo.
+---
 
-### Colher
-Clique em **"Colher →"** para simular um resgate parcial. O sistema sugere quais posições resgatar primeiro (as de menor score), preservando uma raiz mínima (padrão: 10% do valor investido).
+## 4b. Transações — Histórico de Movimentações (v3)
+
+A aba **Transações** registra cada movimentação como objeto auditável com tipo, estado e motivo.
+
+### Tipos
+`COMPRA` · `RESGATE_PARCIAL` · `RESGATE_TOTAL` · `DIVIDENDO` · `AJUSTE` · `IMPORT_XP`
+
+### Estados
+| Estado | Significado |
+|--------|-------------|
+| CONFIRMADO | Válida |
+| PENDENTE | Aguardando confirmação |
+| RECONCILIACAO_PENDENTE | Retirada parcial informada, posição pendente |
+| AJUSTADO | Corrigido manualmente |
+
+### Regra I438
+Toda operação **≥ R$1.000** exige preenchimento de "Por que estou fazendo isso?".
+O motivo fica gravado na trilha de auditoria para comparação futura com o resultado.
+
+### Importar XP — passo a passo
+1. No app XP, exporte o extrato em CSV
+2. Clique em **Importar XP** na aba Pertences
+3. Selecione o arquivo
+4. Revise o preview (nome, tipo, valor, data detectados automaticamente)
+5. Confirme — os itens entram em Pertences e Transações
 
 ---
 
@@ -216,20 +249,21 @@ Clique em **Analisar** para cruzar o que você tem com as oportunidades do siste
 
 ## 10. Futuro do Sistema
 
-### Aprovações conjuntas — I411 ⏳
-Para movimentos acima de R$500, o sistema pedirá aprovação de Yuri **e** Mayumi.
+### ✅ Entregue na v3 (2026-08-13)
+- **I438 — Histórico de motivos** — campo obrigatório ≥ R$1.000
+- **Importar dados da XP** — CSV → preview → confirmar
+- **Relatório PDF** — KPIs + tabela completa
+- **Sistema de Transações** — tipo, estado, origem, auditável
+- **Reconciliação de parciais** — retiradas ≠ perda
+- **Histórico de cotas** — séries temporais por fundo
 
-### Histórico de motivos — I438 ⏳
-Toda operação acima de R$1.000 vai exigir um campo "Por que estou fazendo isso?".
-
-### Importar dados da XP ⏳
-Upload direto do extrato para popular o Pertences automaticamente.
-
-### Relatório PDF ⏳
-Exportar a carteira completa em PDF.
-
-### Sessão conjunta ⏳
-Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real.
+### ⏳ Próximas versões
+- **I411 — Aprovações conjuntas** — movimentos acima de R$500 pedem OK de Yuri e Mayumi
+- **Gráficos de evolução patrimonial** — curva de patrimônio por ativo e por carteira
+- **Dossiê por ativo (Cana pesquisadora)** — histórico, fundamentalista, notas da Cana
+- **Comparador multidimensional** — benchmark explícito, retorno ajustado ao risco
+- **Agrupamentos personalizados** — criar cestas para comparação como portfólios virtuais
+- **Sessão conjunta** — Yuri e Mayumi ao mesmo tempo para decisões em tempo real
 
 ---
 
@@ -271,5 +305,5 @@ Yuri e Mayumi conectados ao mesmo tempo para decisões em tempo real.
 
 ---
 
-*Cláudio Coach · v4 · Sessão 102 · 2026-08-13*
+*Cláudio Coach · v5 · Sessão 108 · 2026-08-14*
 *`tango/MANUEL.md` — documento permanente. Atualizar a cada nova versão do Rapadura.*

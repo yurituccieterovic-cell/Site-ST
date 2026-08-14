@@ -2,7 +2,7 @@
 
 > Derivadas de APRENDIZADO.md. Atualizar ao `#fim`.
 
-> **44 ideias** — 31 de assembleias + 6 de docs (MAPA/PSEUDO/PSEUDO2) + 7 das Raízes do Projeto (I128-I134)
+> **49 ideias** — 31 de assembleias + 6 de docs (MAPA/PSEUDO/PSEUDO2) + 7 das Raízes do Projeto (I128-I134) + 5 das Assembleias #610-#612 (I258-I262)
 
 
 ## Legenda
@@ -1443,3 +1443,12 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I455 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I456 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
 | I457 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+## 💰 Rapadura v4 — Assembleias #610-#612 (2026-08-14)
+
+| # | Feature | Prior. | Compl. | Status | Impacto | Descrição técnica |
+|---|---|---|---|---|---|---|
+| I258 | **Dossiê vivo por ativo (Cana pesquisadora)** | 🔴 Alta | ● L | 💭 Ideia | Cada fundo/ação tem memória própria — histórico de cotas, eventos, fundamentalista, notícias com origem e data | rapadura_dossie: fundo_id, ultimo_update, confidence, payload jsonb. Cana agenda job a cada 24h. Fontes: B3 pública, lâminas PDF, Google News. |
+| I259 | **Comparador multidimensional (Espaço de Comparabilidade)** | 🔴 Alta | ◑ M | 💭 Ideia | Comparar ativos heterogêneos com benchmark explícito e retorno ajustado ao risco — nunca retorno absoluto isolado | Radar Chart: eixos Retorno, Risco, Liquidez, Verde, Custo. Tag "comparação válida" vs "ilustrativa". Benchmark explícito em cada visualização. |
+| I260 | **Gráficos de evolução patrimonial** | 🔴 Alta | ◑ M | 💭 Ideia | Curva de patrimônio ao longo do tempo por ativo, por carteira e por grupo — responde "como estava minha carteira 6 meses atrás?" | Recharts LineChart usando rapadura_historico_cotas. Série por ativo, por carteira total, drawdown. Slider de período. |
+| I261 | **Cana Sonhando — processamento noturno de correlações** | 🟡 Média | ◑ M | 💭 Ideia | IA cruza correlações silenciosas da carteira — nunca altera dados, gera hipóteses apenas (FATO→EVIDÊNCIA→ANÁLISE→HIPÓTESE→SUGESTÃO) | Cron 2h (madrugada). Lê rapadura_historico_cotas. Detecta correlação alta (>0.8) entre pares. Grava em rapadura_hipoteses com confidence e linked_assets. |
+| I262 | **Agrupamentos personalizados de ativos** | 🟡 Média | ○ S | 💭 Ideia | Criar cestas ("carteira verde", "apostas", "vacas leiteiras") e comparar como portfólios virtuais com retorno, volatilidade, drawdown | rapadura_grupos: id, nome, user_id, ativo_ids jsonb. GET /rapadura/grupos/:id/performance → aplica engine de cálculo de performance à cesta. |
