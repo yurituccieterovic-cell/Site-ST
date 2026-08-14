@@ -1668,6 +1668,7 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ message: msg, history: history.slice(-6) }),
+        signal: AbortSignal.timeout(30000),
       });
       const d = await r.json() as { acao?: string; resposta?: string; executado?: boolean; itens?: any[]; error?: string };
       setHistory(h => [...h, { role: "assistant", content: d.resposta ?? d.error ?? "Erro ao processar." }]);

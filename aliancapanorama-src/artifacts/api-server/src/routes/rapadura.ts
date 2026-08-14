@@ -767,28 +767,41 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const userRole = req.session.rapaduraRole as string;
   const isAdmin = userRole === "yuri" || userRole === "mayumi" || userRole === "admin";
 
-  // Buscar fundos existentes para contexto
+  // Buscar fundos existentes para contexto (top 15 por score)
   const fundosExistentes = await db.select({
     id: rapaduraFundosTable.id,
     nome: rapaduraFundosTable.nome,
     gestora: rapaduraFundosTable.gestora,
     score: rapaduraFundosTable.scoreAtratividade,
-  }).from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true)).limit(30);
+  }).from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true))
+    .orderBy(desc(rapaduraFundosTable.scoreAtratividade))
+    .limit(15);
 
   const contextoFundos = fundosExistentes.map(f => `ID${f.id}: ${f.nome} (${f.gestora}) score=${f.score}`).join("\n");
 
   const systemWithContext = CANA_SYSTEM + `\n\nFundos já cadastrados:\n${contextoFundos || "(nenhum ainda)"}`;
 
-  // Chamar Gemini via routeLLM
+  // Chamar LLM com timeout de 25s — sem timeout causava hang no Render até OOM
   let rawJson = "";
   try {
+    const trimContent = (s: string) => s.length > 800 ? s.slice(0, 800) + "…" : s;
     const msgs: any[] = [
       { role: "system", content: systemWithContext },
-      ...history.slice(-4).map((h: any) => ({ role: h.role, content: h.content })),
+      ...history.slice(-4).map((h: any) => ({ role: h.role, content: trimContent(String(h.content ?? "")) })),
       { role: "user", content: message },
     ];
-    rawJson = await routeLLM({ messages: msgs, maxTokens: 4096 });
-  } catch (e) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 25000);
+    try {
+      rawJson = await routeLLM({ messages: msgs, maxTokens: 2000, signal: ctrl.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  } catch (e: any) {
+    const isTimeout = e?.name === "AbortError" || /abort/i.test(String(e));
+    if (isTimeout) {
+      res.status(503).json({ error: "Cana demorou demais, tente de novo em instantes" }); return;
+    }
     res.status(500).json({ error: "Erro ao chamar IA", details: String(e) }); return;
   }
 

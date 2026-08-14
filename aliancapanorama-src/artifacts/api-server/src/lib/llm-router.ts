@@ -9,6 +9,7 @@ export interface LLMRequest {
   maxTokens?: number;
   temperature?: number;
   pool?: LLMPool;
+  signal?: AbortSignal;
 }
 
 interface Provider {
@@ -47,6 +48,7 @@ function makeOpenAI(): Provider {
           max_completion_tokens: req.maxTokens ?? 500,
           temperature: req.temperature ?? 0.7,
         }),
+        signal: req.signal ?? AbortSignal.timeout(20000),
       });
       const data = await resp.json() as {
         choices?: { message: { content: string } }[];
@@ -80,7 +82,7 @@ function makeGemini(): Provider {
       for (const model of MODELS) {
         const resp = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
-          { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
+          { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: req.signal ?? AbortSignal.timeout(20000) }
         );
         const data = await resp.json() as {
           candidates?: { content: { parts?: { text?: string }[] } }[];
@@ -114,6 +116,7 @@ function makeGroq(): Provider {
           max_tokens: req.maxTokens ?? 500,
           temperature: req.temperature ?? 0.7,
         }),
+        signal: req.signal ?? AbortSignal.timeout(20000),
       });
       const data = await resp.json() as {
         choices?: { message: { content: string } }[];
@@ -139,6 +142,7 @@ function makePollinations(): Provider {
           max_tokens: req.maxTokens ?? 500,
           temperature: req.temperature ?? 0.7,
         }),
+        signal: req.signal ?? AbortSignal.timeout(20000),
       });
       if (!resp.ok) throw new Error(`Pollinations: HTTP ${resp.status}`);
       const data = await resp.json() as {
@@ -172,10 +176,6 @@ const BUSY_PATTERNS = [
 
 function isBusyError(msg: string): boolean {
   return BUSY_PATTERNS.some(p => p.test(msg));
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // ── Router ──────────────────────────────────────────────────────────────────
@@ -226,22 +226,12 @@ export async function routeLLM(req: LLMRequest): Promise<string> {
     return { result: null, errors, allBusy };
   }
 
-  // Primeira tentativa
   const first = await tryPool();
   if (first.result !== null) return first.result;
 
-  // Se todos ocupados → aguardar 10 min e retentar
-  if (first.allBusy) {
-    const WAIT_MS = 10 * 60 * 1000; // 10 minutos
-    logger.warn({ pool: poolName, errors: first.errors }, `llm-router: todos os servidores ocupados — aguardando ${WAIT_MS / 60000}min antes de retentar`);
-    await sleep(WAIT_MS);
-    logger.info({ pool: poolName }, "llm-router: retentando após espera de 10 min");
-    const second = await tryPool();
-    if (second.result !== null) return second.result;
-    throw new Error(`llm-router: todos os provedores ocupados (após retry de 10min) no pool ${poolName}:\n${second.errors.join("\n")}`);
-  }
-
-  throw new Error(`llm-router: todos os provedores falharam no pool ${poolName}:\n${first.errors.join("\n")}`);
+  // Falha imediata — o caller decide se retenta (sleep de 10min causava OOM no Render)
+  const tag = first.allBusy ? "rate-limit" : "error";
+  throw new Error(`llm-router [${tag}] pool=${poolName}:\n${first.errors.join("\n")}`);
 }
 
 /**
