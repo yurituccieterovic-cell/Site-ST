@@ -989,7 +989,8 @@ function PertencesView({
           {pertences.map(p => {
             const vi = Number(p.valorInvestido);
             const va = Number(p.valorAtual ?? p.valorInvestido);
-            const res = va - vi;
+            const retirado = Number(p.totalRetirado ?? 0);
+            const res = (va + retirado) - vi;
             const rent = vi > 0 ? (res / vi) * 100 : 0;
             const isEdit = editId === p.id;
             return (
