@@ -789,11 +789,12 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   // Chamar LLM com timeout de 25s — sem timeout causava hang no Render até OOM
   let rawJson = "";
   try {
-    const trimContent = (s: string) => s.length > 800 ? s.slice(0, 800) + "…" : s;
+    const trimContent = (s: string) => s.length > 1500 ? s.slice(0, 1500) + "…" : s;
+    const trimMsg = (s: string) => s.length > 4000 ? s.slice(0, 4000) + "…" : s;
     const msgs: any[] = [
       { role: "system", content: systemWithContext },
       ...history.slice(-4).map((h: any) => ({ role: h.role, content: trimContent(String(h.content ?? "")) })),
-      { role: "user", content: message },
+      { role: "user", content: trimMsg(message) },
     ];
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 25000);

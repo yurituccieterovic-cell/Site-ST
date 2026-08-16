@@ -1658,9 +1658,11 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
   const [loading, setLoading] = useState(false);
   const [lastResult, setLastResult] = useState<{ acao: string; executado: boolean; itens?: any[] } | null>(null);
   const [queue, setQueue] = useState<string[]>([]);
+  const [chunkState, setChunkState] = useState<{ total: number; done: number; itens: number } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const historyRef = useRef(history);
   const processingRef = useRef(false);
+  const chunkRef = useRef<{ total: number; done: number; itens: number } | null>(null);
 
   // Persiste histórico em localStorage — funciona mesmo se o componente for desmontado
   function saveHistory(next: ChatMsg[]) {
@@ -1674,6 +1676,20 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
   }
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [history, loading, queue]);
+
+  // Divide texto grande em partes por parágrafos — padrão reutilizável (ver tango/protocolo_chunking_ia.md)
+  function splitIntoChunks(text: string, maxLen: number): string[] {
+    if (text.length <= maxLen) return [text];
+    const paras = text.split(/\n\n+/);
+    const chunks: string[] = [];
+    let cur = "";
+    for (const p of paras) {
+      if (cur && cur.length + p.length + 2 > maxLen) { chunks.push(cur.trim()); cur = p; }
+      else { cur = cur ? cur + "\n\n" + p : p; }
+    }
+    if (cur.trim()) chunks.push(cur.trim());
+    return chunks.length ? chunks : [text.slice(0, maxLen)];
+  }
 
   async function processMsg(msg: string) {
     processingRef.current = true;
@@ -1695,11 +1711,20 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
         setLastResult({ acao: d.acao, executado: !!d.executado, itens: d.itens });
         if (d.executado) onRefresh();
       }
+      if (chunkRef.current) chunkRef.current.itens += d.itens?.length ?? 0;
     } catch {
       saveHistory([...newHist, { role: "assistant", content: "Timeout ou erro de conexão. Tente novamente." }]);
     } finally {
       setLoading(false);
       processingRef.current = false;
+      if (chunkRef.current) {
+        chunkRef.current.done += 1;
+        const snap = { ...chunkRef.current };
+        setChunkState(snap);
+        if (snap.done >= snap.total) {
+          setTimeout(() => { chunkRef.current = null; setChunkState(null); }, 3500);
+        }
+      }
       // Drena a fila automaticamente
       setQueue(q => {
         if (q.length > 0) {
@@ -1712,10 +1737,26 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
     }
   }
 
+  const CHUNK_LIMIT = 2500;
+
   function send() {
     const msg = input.trim();
     if (!msg) return;
     setInput("");
+    if (msg.length > CHUNK_LIMIT && !chunkRef.current) {
+      const parts = splitIntoChunks(msg, CHUNK_LIMIT);
+      if (parts.length > 1) {
+        chunkRef.current = { total: parts.length, done: 0, itens: 0 };
+        setChunkState({ total: parts.length, done: 0, itens: 0 });
+        if (processingRef.current) {
+          setQueue(q => [...parts, ...q]);
+        } else {
+          setQueue(q => [...q, ...parts.slice(1)]);
+          processMsg(parts[0]);
+        }
+        return;
+      }
+    }
     if (processingRef.current) {
       setQueue(q => [...q, msg]);
       return;
@@ -1724,7 +1765,8 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
   }
 
   const canSend = input.trim().length > 0;
-  const isQueuing = processingRef.current && canSend;
+  const isChunking = chunkState !== null && chunkState.done < chunkState.total;
+  const isQueuing = processingRef.current && canSend && !isChunking;
 
   return (
     <div>
@@ -1786,6 +1828,33 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
           <div ref={bottomRef} />
         </div>
 
+        {/* Chunk progress card */}
+        {chunkState && (
+          <div style={{
+            margin: "0 16px 0", padding: "10px 14px", borderTop: "1px solid #0f1520",
+            background: chunkState.done >= chunkState.total ? "rgba(63,114,84,0.05)" : "rgba(200,150,59,0.04)",
+            display: "flex", alignItems: "center", gap: 14,
+          }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: chunkState.done >= chunkState.total ? "#3f7254" : "#c8963b", marginBottom: 5 }}>
+                {chunkState.done >= chunkState.total ? `✓ concluído — ${chunkState.itens} item${chunkState.itens !== 1 ? "s" : ""} processados` : `trabalhando — parte ${chunkState.done}/${chunkState.total}`}
+              </div>
+              <div style={{ height: 2, background: "#1a1f2a", borderRadius: 1 }}>
+                <div style={{
+                  height: "100%", borderRadius: 1, transition: "width 0.4s ease",
+                  background: chunkState.done >= chunkState.total ? "#3f7254" : "#c8963b",
+                  width: `${Math.round((chunkState.done / chunkState.total) * 100)}%`,
+                }} />
+              </div>
+            </div>
+            {chunkState.done < chunkState.total && (
+              <span style={{ fontSize: 9, color: "#5a4020", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
+                {chunkState.total - chunkState.done} restante{chunkState.total - chunkState.done !== 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Action badge */}
         {lastResult && (
           <div style={{
@@ -1831,15 +1900,15 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
               disabled={!canSend}
               style={{
                 padding: "8px 16px",
-                background: !canSend ? "#1a1f2a" : isQueuing ? "rgba(200,150,59,0.25)" : "#c8963b",
-                color: !canSend ? "#3d4a5e" : isQueuing ? "#c8963b" : "#040507",
-                fontSize: 12, fontWeight: 700, border: isQueuing ? "1px solid rgba(200,150,59,0.4)" : "none",
+                background: !canSend ? "#1a1f2a" : isChunking ? "rgba(200,150,59,0.12)" : isQueuing ? "rgba(200,150,59,0.25)" : "#c8963b",
+                color: !canSend ? "#3d4a5e" : isChunking ? "#c8963b" : isQueuing ? "#c8963b" : "#040507",
+                fontSize: 12, fontWeight: 700, border: (isChunking || isQueuing) ? "1px solid rgba(200,150,59,0.4)" : "none",
                 cursor: !canSend ? "not-allowed" : "pointer",
                 fontFamily: "inherit", letterSpacing: "0.05em",
               }}
               title={isQueuing ? "Enfileirar mensagem" : "Enviar"}
             >
-              {isQueuing ? "+" : "→"}
+              {isChunking ? `⏳ ${chunkState!.done}/${chunkState!.total}` : isQueuing ? "+" : "→"}
             </button>
             {history.length > 1 && (
               <button
