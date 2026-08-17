@@ -239,7 +239,7 @@ const PIE_COLORS = ["#c8963b", "#3f7254", "#4a6a9b", "#9b5f4a", "#6a4a9b", "#4a9
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 
-function LoginView({ onLogin }: { onLogin: (user: RapaduraUser) => void }) {
+function LoginView({ onLogin }: { onLogin: (user: RapaduraUser, saudacao?: string) => void }) {
   const [msgs, setMsgs] = useState<ChatMsg[]>([{
     role: "assistant",
     content: "Sistema privado de inteligência patrimonial.\n\nQuem é você?",
@@ -300,9 +300,9 @@ function LoginView({ onLogin }: { onLogin: (user: RapaduraUser) => void }) {
         credentials: "include",
         body: JSON.stringify({ candidate, password }),
       });
-      const data = await r.json() as { ok?: boolean; user?: RapaduraUser; error?: string };
+      const data = await r.json() as { ok?: boolean; user?: RapaduraUser; error?: string; saudacaoCana?: string };
       if (data.ok && data.user) {
-        onLogin(data.user);
+        onLogin(data.user, data.saudacaoCana);
       } else {
         setError(data.error ?? "Credencial incorreta.");
         setPassword("");
@@ -2833,6 +2833,7 @@ export function RapaduraPage() {
   const [dataLoading, setDataLoading] = useState(false);
   const [showChangePw, setShowChangePw] = useState(false);
   const [hideValues, setHideValues] = useState(false);
+  const [saudacaoCana, setSaudacaoCana] = useState<string | null>(null);
 
   const isAdmin = user?.role === "yuri" || user?.role === "mayumi";
   const isMobile = useIsMobile();
@@ -2880,7 +2881,7 @@ export function RapaduraPage() {
     );
   }
 
-  if (!user) return <LoginView onLogin={u => { setUser(u); }} />;
+  if (!user) return <LoginView onLogin={(u, saudacao) => { setUser(u); if (saudacao) setSaudacaoCana(saudacao); }} />;
 
   const TABS: { id: View; label: string; adminOnly?: boolean }[] = [
     { id: "oportunidades", label: "Oportunidades" },
@@ -3066,6 +3067,36 @@ export function RapaduraPage() {
       {dataLoading && (
         <div style={{ textAlign: "center", padding: "10px 0", fontSize: 9, letterSpacing: "0.2em", color: "#2a3545", textTransform: "uppercase" }}>
           atualizando…
+        </div>
+      )}
+
+      {/* Saudação da Cana após login */}
+      {saudacaoCana && (
+        <div style={{
+          maxWidth: 820, margin: "0 auto", padding: "0 20px",
+        }}>
+          <div style={{
+            background: "linear-gradient(90deg, #09101a 0%, #0a1218 100%)",
+            borderLeft: "2px solid #c8963b40",
+            padding: "12px 16px",
+            display: "flex", alignItems: "flex-start", gap: 10,
+          }}>
+            <span style={{ fontSize: 11, color: "#c8963b40", flexShrink: 0, marginTop: 1 }}>✦</span>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#4a4020", marginBottom: 4 }}>
+                Cana
+              </div>
+              <div style={{ fontSize: 12, color: "#8a7a60", lineHeight: 1.5 }}>
+                {saudacaoCana}
+              </div>
+            </div>
+            <button
+              onClick={() => setSaudacaoCana(null)}
+              style={{ background: "none", border: "none", color: "#2a3030", cursor: "pointer", fontSize: 14, padding: "0 2px", lineHeight: 1 }}
+            >
+              ×
+            </button>
+          </div>
         </div>
       )}
 

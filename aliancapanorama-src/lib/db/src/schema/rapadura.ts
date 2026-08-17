@@ -127,7 +127,11 @@ export const rapaduraAprovacoesTable = pgTable("rapadura_aprovacoes", {
 export const rapaduraCanaMemoryTable = pgTable("rapadura_cana_memory", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => rapaduraUsersTable.id),
-  messages: jsonb("messages").notNull().default([]),
-  summary: text("summary"),
+  messages: jsonb("messages").notNull().default([]),          // working window (últimas 12 msgs)
+  summary: text("summary"),                                   // resumo rolante de turns antigos
+  fullHistory: jsonb("full_history").notNull().default([]),   // TUDO que foi dito, com timestamp
+  userProfile: jsonb("user_profile").notNull().default({}),   // perfil observado: preferências, padrões
+  ecoSnapshot: jsonb("eco_snapshot").notNull().default({}),   // último pull do Conector
+  ecoUpdatedAt: timestamp("eco_updated_at", { withTimezone: true }),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

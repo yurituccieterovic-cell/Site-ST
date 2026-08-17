@@ -2226,6 +2226,12 @@ export async function ensureRapaduraTables(): Promise<void> {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       UNIQUE(user_id)
     );
+
+    -- Memória expandida (V2): histórico completo + perfil + ecossistema
+    ALTER TABLE rapadura_cana_memory ADD COLUMN IF NOT EXISTS full_history JSONB NOT NULL DEFAULT '[]';
+    ALTER TABLE rapadura_cana_memory ADD COLUMN IF NOT EXISTS user_profile JSONB NOT NULL DEFAULT '{}';
+    ALTER TABLE rapadura_cana_memory ADD COLUMN IF NOT EXISTS eco_snapshot JSONB NOT NULL DEFAULT '{}';
+    ALTER TABLE rapadura_cana_memory ADD COLUMN IF NOT EXISTS eco_updated_at TIMESTAMPTZ;
   `);
   logger.info("bootstrap: rapadura tables OK");
 }

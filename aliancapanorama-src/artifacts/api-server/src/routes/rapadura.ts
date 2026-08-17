@@ -254,7 +254,29 @@ router.post("/rapadura/auth/login", loginLimit, async (req, res) => {
   );
 
   await audit(user.id, "LOGIN", { nome: candidate }, req.ip ?? "");
-  res.json({ ok: true, user: { id: user.id, nome: user.nome, role: user.role } });
+
+  // Cana sabe quem chegou — gera saudação personalizada em background
+  let saudacaoCana = "";
+  try {
+    const [memLogin] = await db.select({ summary: rapaduraCanaMemoryTable.summary, userProfile: rapaduraCanaMemoryTable.userProfile })
+      .from(rapaduraCanaMemoryTable).where(eq(rapaduraCanaMemoryTable.userId, user.id)).limit(1);
+    const profile: any = (memLogin?.userProfile as any) ?? {};
+    const summary = memLogin?.summary ?? null;
+    const totalInteracoes = profile?._totalInteracoes ?? 0;
+    const ultimaInteracao = profile?._ultimaInteracao ? new Date(profile._ultimaInteracao).toLocaleDateString("pt-BR") : null;
+
+    const greetPrompt = totalInteracoes === 0
+      ? `Você é a Cana, assistente patrimonial do Rapadura. ${user.nome} fez login agora. O perfil está vazio — pode ser o primeiro acesso real, ou alguém testando essa conta. Seja acolhedora mas um pouco esperta: dê boas-vindas e insinue com humor leve que pode ser um teste (tipo "novo por aqui, ou só testando? 😄"). Máximo 2 frases. Sem JSON.`
+      : `Você é a Cana, assistente patrimonial do Rapadura. ${user.nome} voltou (${totalInteracoes} interações, última em ${ultimaInteracao ?? "data desconhecida"}).${summary ? ` Contexto recente: ${summary.slice(0, 200)}` : ""} Saudação personalizada e calorosa (máximo 2 frases). Se souber algo relevante da última sessão, mencione. Se o histórico parece de outra pessoa mas o nome não bate, seja esperta sobre isso ("kkk sei que é você"). Sem JSON.`;
+
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    try {
+      saudacaoCana = await routeLLM({ messages: [{ role: "user", content: greetPrompt }], maxTokens: 80, signal: ctrl.signal });
+    } finally { clearTimeout(timer); }
+  } catch { saudacaoCana = `Olá, ${user.nome}! Pronta para ajudar com seu patrimônio.`; }
+
+  res.json({ ok: true, user: { id: user.id, nome: user.nome, role: user.role }, saudacaoCana });
 });
 
 // Alterar senha (membro troca credencial individual no primeiro acesso)
@@ -840,42 +862,88 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const userRole = req.session.rapaduraRole as string;
   const isAdmin = userRole === "yuri" || userRole === "mayumi" || userRole === "admin";
 
-  // Identificar usuário pelo nome (bug: Cana não sabia com quem estava falando)
+  // ── Identificar usuário
   const [userRow] = await db.select({ nome: rapaduraUsersTable.nome })
     .from(rapaduraUsersTable).where(eq(rapaduraUsersTable.id, userId)).limit(1);
   const userName = userRow?.nome ?? "usuário";
 
-  // Carregar memória persistente da Cana (últimas 6 mensagens da sessão anterior)
-  const [memRow] = await db.select({ messages: rapaduraCanaMemoryTable.messages, summary: rapaduraCanaMemoryTable.summary })
-    .from(rapaduraCanaMemoryTable).where(eq(rapaduraCanaMemoryTable.userId, userId)).limit(1);
-  const storedMsgs: any[] = (memRow?.messages as any[] | null) ?? [];
+  // ── Carregar memória completa da Cana
+  const [memRow] = await db.select({
+    messages: rapaduraCanaMemoryTable.messages,
+    summary: rapaduraCanaMemoryTable.summary,
+    fullHistory: rapaduraCanaMemoryTable.fullHistory,
+    userProfile: rapaduraCanaMemoryTable.userProfile,
+    ecoSnapshot: rapaduraCanaMemoryTable.ecoSnapshot,
+    ecoUpdatedAt: rapaduraCanaMemoryTable.ecoUpdatedAt,
+  }).from(rapaduraCanaMemoryTable).where(eq(rapaduraCanaMemoryTable.userId, userId)).limit(1);
+
+  const fullHistory: any[] = (memRow?.fullHistory as any[] | null) ?? [];
   const storedSummary = memRow?.summary ?? null;
+  const userProfile: any  = (memRow?.userProfile as any | null) ?? {};
+  let   ecoSnapshot: any  = (memRow?.ecoSnapshot as any | null) ?? {};
+  const ecoUpdatedAt       = memRow?.ecoUpdatedAt;
 
-  // Buscar fundos existentes para contexto (top 15 por score)
-  const fundosExistentes = await db.select({
-    id: rapaduraFundosTable.id,
-    nome: rapaduraFundosTable.nome,
-    gestora: rapaduraFundosTable.gestora,
-    score: rapaduraFundosTable.scoreAtratividade,
-  }).from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true))
-    .orderBy(desc(rapaduraFundosTable.scoreAtratividade))
-    .limit(15);
+  // ── Atualizar ecossistema se > 30min sem pull
+  const BRIDGE = process.env["BRIDGE_SECRET"] ?? "";
+  const ecoStale = !ecoUpdatedAt || (Date.now() - new Date(ecoUpdatedAt).getTime() > 30 * 60 * 1000);
+  if (ecoStale && BRIDGE) {
+    try {
+      const [rPref, rConv] = await Promise.all([
+        fetch(`https://site-st.onrender.com/api/conector/memory/section?name=preferencias`, { signal: AbortSignal.timeout(4000) }).then(r => r.json()),
+        fetch(`https://site-st.onrender.com/api/conector/memory/section?name=conversas`, { signal: AbortSignal.timeout(4000) }).then(r => r.json()),
+      ]);
+      ecoSnapshot = {
+        preferencias: String(rPref?.content ?? "").slice(0, 600),
+        conversas_recentes: String(rConv?.content ?? "").slice(-600),
+        pulled_at: new Date().toISOString(),
+      };
+    } catch { /* falha silenciosa — eco não é crítico */ }
+  }
 
-  const contextoFundos = fundosExistentes.map(f => `ID${f.id}: ${f.nome} (${f.gestora}) score=${f.score}`).join("\n");
+  // ── Buscar pertences e fundos para contexto patrimonial completo
+  const [fundosExistentes, pertencesUsuario] = await Promise.all([
+    db.select({ id: rapaduraFundosTable.id, nome: rapaduraFundosTable.nome, gestora: rapaduraFundosTable.gestora, score: rapaduraFundosTable.scoreAtratividade })
+      .from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true))
+      .orderBy(desc(rapaduraFundosTable.scoreAtratividade)).limit(15),
+    db.select({ fundoNome: rapaduraPertencesTable.fundoNome, valorInvestido: rapaduraPertencesTable.valorInvestido, valorAtual: rapaduraPertencesTable.valorAtual, dataCompra: rapaduraPertencesTable.dataCompra })
+      .from(rapaduraPertencesTable).where(eq(rapaduraPertencesTable.userId, userId)).limit(20),
+  ]);
 
-  const contextoPessoa = `\n\nUsuário desta sessão: ${userName} (perfil: ${userRole}).${storedSummary ? `\nResumo da conversa anterior: ${storedSummary}` : ""}`;
-  const systemWithContext = CANA_SYSTEM + contextoPessoa + `\n\nFundos já cadastrados:\n${contextoFundos || "(nenhum ainda)"}`;
+  const contextoFundos     = fundosExistentes.map(f => `ID${f.id}: ${f.nome} (${f.gestora}) score=${f.score}`).join("\n");
+  const contextoPertences  = pertencesUsuario.length
+    ? pertencesUsuario.map(p => `• ${p.fundoNome}: investido R$${Number(p.valorInvestido).toFixed(0)}, atual R$${Number(p.valorAtual ?? p.valorInvestido).toFixed(0)} (desde ${p.dataCompra})`).join("\n")
+    : "(nenhuma posição ainda)";
 
-  // Chamar LLM com timeout de 25s — sem timeout causava hang no Render até OOM
+  // ── Construir bloco de perfil do usuário
+  const perfilBloco = Object.keys(userProfile).length
+    ? `\nPerfil observado de ${userName}:\n${JSON.stringify(userProfile, null, 0).slice(0, 400)}`
+    : "";
+
+  // ── Bloco de ecossistema
+  const ecoBloco = ecoSnapshot?.preferencias
+    ? `\nMemória do ecossistema Théo (preferências): ${ecoSnapshot.preferencias}\nConversas recentes: ${ecoSnapshot.conversas_recentes ?? "—"}`
+    : "";
+
+  const contextoPessoa = `\n\nUsuário desta sessão: ${userName} (perfil: ${userRole}).${perfilBloco}${storedSummary ? `\n\nResumo das conversas anteriores com ${userName}:\n${storedSummary}` : ""}${ecoBloco}`;
+
+  const systemWithContext = CANA_SYSTEM
+    + contextoPessoa
+    + `\n\nCarteira atual de ${userName}:\n${contextoPertences}`
+    + `\n\nFundos no catálogo:\n${contextoFundos || "(nenhum ainda)"}`;
+
+  // ── Histórico de contexto: últimas 12 msgs do full_history (prioridade request > stored)
+  const baseHistory = history.length > 0 ? history : fullHistory;
+  const contextHistory = baseHistory.slice(-12);
+
+  // Chamar LLM com timeout de 25s
   let rawJson = "";
   try {
     const trimContent = (s: string) => s.length > 1500 ? s.slice(0, 1500) + "…" : s;
-    const trimMsg = (s: string) => s.length > 4000 ? s.slice(0, 4000) + "…" : s;
-    // Mesclar memória persistente com histórico do request (prioridade: request > stored)
-    const combinedHistory = history.length > 0 ? history : storedMsgs;
+    const trimMsg    = (s: string) => s.length > 4000 ? s.slice(0, 4000) + "…" : s;
+    const combinedHistory = contextHistory;
     const msgs: any[] = [
       { role: "system", content: systemWithContext },
-      ...combinedHistory.slice(-4).map((h: any) => ({ role: h.role, content: trimContent(String(h.content ?? "")) })),
+      ...combinedHistory.map((h: any) => ({ role: h.role, content: trimContent(String(h.content ?? "")) })),
       { role: "user", content: trimMsg(message) },
     ];
     const ctrl = new AbortController();
@@ -1086,20 +1154,70 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
     }
   }
 
-  // Persistir as últimas 6 mensagens (3 turns) na memória da Cana
-  try {
-    const newMsgs = [
-      ...combinedHistory,
-      { role: "user", content: message },
-      { role: "assistant", content: resposta },
-    ].slice(-6);
-    await db.insert(rapaduraCanaMemoryTable)
-      .values({ userId, messages: newMsgs, updatedAt: new Date() })
-      .onConflictDoUpdate({
+  // ── Persistir memória expandida (não bloqueia resposta)
+  setImmediate(async () => {
+    try {
+      const now = new Date();
+      const thisTurn = [
+        { role: "user",      content: message,  ts: now.toISOString() },
+        { role: "assistant", content: resposta,  ts: now.toISOString() },
+      ];
+      // full_history: acumula tudo sem limite
+      const newFull = [...fullHistory, ...thisTurn];
+
+      // working window: últimas 12 msgs para próximo contexto
+      const newMsgs = newFull.slice(-12).map(({ ts: _ts, ...m }: any) => m);
+
+      // Atualizar perfil do usuário a partir das ações executadas
+      const novoProfile = { ...userProfile };
+      if (executado?.length) {
+        const acoes = executado.map((e: any) => e.acao).filter(Boolean);
+        novoProfile._ultimasAcoes = acoes;
+        novoProfile._totalInteracoes = (novoProfile._totalInteracoes ?? 0) + 1;
+        novoProfile._ultimaInteracao = now.toISOString();
+        if (acoes.some((a: string) => a.includes("PERTENCE"))) {
+          novoProfile._temPertences = true;
+        }
+      }
+
+      // Gerar summary automático quando full_history > 20 turns
+      let newSummary = storedSummary;
+      if (newFull.length > 20 && newFull.length % 10 === 0) {
+        try {
+          const turnsParaResumir = newFull.slice(0, -12);
+          const resumoPrompt = `Resuma em até 300 palavras as conversas abaixo entre ${userName} e a Cana. Foque em: decisões tomadas, ativos mencionados, preferências reveladas, padrões de comportamento. Responda apenas o resumo, sem JSON.\n\n${turnsParaResumir.map((t: any) => `${t.role}: ${String(t.content).slice(0, 200)}`).join("\n")}`;
+          const ctrl2 = new AbortController();
+          const timer2 = setTimeout(() => ctrl2.abort(), 15000);
+          try {
+            newSummary = await routeLLM({ messages: [{ role: "user", content: resumoPrompt }], maxTokens: 400, signal: ctrl2.signal });
+          } finally { clearTimeout(timer2); }
+        } catch { /* resumo falhou — mantém anterior */ }
+      }
+
+      const ecoNow = ecoStale && ecoSnapshot?.pulled_at ? now : (ecoUpdatedAt ?? now);
+      await db.insert(rapaduraCanaMemoryTable).values({
+        userId,
+        messages: newMsgs,
+        fullHistory: newFull,
+        summary: newSummary,
+        userProfile: novoProfile,
+        ecoSnapshot,
+        ecoUpdatedAt: ecoNow,
+        updatedAt: now,
+      }).onConflictDoUpdate({
         target: rapaduraCanaMemoryTable.userId,
-        set: { messages: newMsgs, updatedAt: new Date() },
+        set: {
+          messages: newMsgs,
+          fullHistory: newFull,
+          summary: newSummary,
+          userProfile: novoProfile,
+          ecoSnapshot,
+          ecoUpdatedAt: ecoNow,
+          updatedAt: now,
+        },
       });
-  } catch { /* não bloquear resposta por falha na memória */ }
+    } catch { /* falha silenciosa */ }
+  });
 
   res.json({ acao, resposta, executado, itens: itens.length });
 });
