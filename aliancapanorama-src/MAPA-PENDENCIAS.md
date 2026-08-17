@@ -346,3 +346,21 @@
 | 119 | Consolidação por instituição financeira (XP, BB, etc.) | MÉDIA | ⏳ I501 |
 | 120 | Alertas rebalanceamento 3 zonas + desvio transitório vs. estrutural | MÉDIA | ⏳ I502 |
 | 121 | Índice de Estado da Rapadura — qualidade dos dados (Dados%/Histórico%/Dossiês%/Confiança%) | MÉDIA | ⏳ I503 |
+
+## Rapadura v4 — Sessões 120–120c (2026-08-17) · #fim
+
+| # | Item | Prioridade | Status |
+|---|---|---|---|
+| 168 | hideValues default=true (valores escondidos ao entrar) | ALTA | ✅ Sessão 120c |
+| 169 | scoreMedioCarters exclui score=0 (poupança/earth2 fora da média) | ALTA | ✅ Sessão 120c |
+| 170 | sugestoesTroca filtra score=0 (sem oportunidades inválidas) | ALTA | ✅ Sessão 120c |
+| 171 | pdfParse import corrigido (new PDFParse() → await pdfParse()) | ALTA | ✅ Sessão 120c |
+| 172 | fundoMoeda no select + badge USD na lista de pertences | ALTA | ✅ Sessão 120c |
+| 173 | POST /rapadura/transacoes/deduzir + botão "Deduzir de ativos" | MÉDIA | ✅ Sessão 120c |
+| 174 | imagens cana-aurora + rapadura-bg deployadas (estavam faltando no aliancapanorama/) | ALTA | ✅ Sessão 120c |
+| 175 | Earth2: atualizar moeda=USD via Cana ("Atualize Earth2, moeda USD") | MÉDIA | ⏳ Yuri |
+| 176 | Earth2: confirmar variação real 369.74% e datas de compra | MÉDIA | ⏳ Yuri |
+| 177 | UptimeRobot: uptimerobot.com → /api/sistemas/ping → 5min | MÉDIA | ⏳ Yuri |
+| 178 | Curso 3 "Finanças Sustentáveis": iniciar pipeline (edge-tts + FFmpeg) | 🔴 URGENTE | ⏳ próxima sessão |
+| 179 | Rapadura: primeiro cliente pagante — validar proposta de valor (A6147) | 🔴 URGENTE | ⏳ decisão Yuri |
+| 180 | Mensagens Yuri↔Mayumi dentro do Rapadura (I525) | MÉDIA | ⏳ sessão futura |
