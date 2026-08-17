@@ -320,9 +320,25 @@ function LoginView({ onLogin }: { onLogin: (user: RapaduraUser, saudacao?: strin
       display: "flex", flexDirection: "column", alignItems: "center",
       justifyContent: "center", padding: "24px 16px",
       fontFamily: "'Inter', 'Helvetica Neue', sans-serif",
+      position: "relative", overflow: "hidden",
     }}>
+      {/* BG image — posicionada à direita, transparência suave */}
+      <div style={{
+        position: "absolute", inset: 0,
+        backgroundImage: "url('/rapadura-bg.png')",
+        backgroundSize: "60% auto", backgroundPosition: "right center",
+        backgroundRepeat: "no-repeat",
+        opacity: 0.07,
+        mixBlendMode: "screen",
+        pointerEvents: "none",
+      }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "linear-gradient(to right, #040507 45%, rgba(4,5,7,0.85) 70%, rgba(4,5,7,0.6) 100%)",
+        pointerEvents: "none",
+      }} />
       {/* Logo */}
-      <div style={{ textAlign: "center", marginBottom: 36 }}>
+      <div style={{ textAlign: "center", marginBottom: 36, position: "relative" }}>
         <img
           src={LOGO}
           alt="Rapadura R"
@@ -347,6 +363,7 @@ function LoginView({ onLogin }: { onLogin: (user: RapaduraUser, saudacao?: strin
       <div style={{
         width: "100%", maxWidth: 420,
         border: "1px solid #141b26", background: "#07090e",
+        position: "relative",
       }}>
         {/* Top bar */}
         <div style={{
@@ -2225,7 +2242,13 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
         </div>
       </div>
 
-      <div style={{ background: "#07090e", border: "1px solid #141b26", marginBottom: 16 }}>
+      <div style={{
+        background: "#07090e",
+        backgroundImage: "url('/rapadura-bg.png')",
+        backgroundSize: "65% auto", backgroundPosition: "right bottom",
+        backgroundRepeat: "no-repeat", backgroundBlendMode: "overlay",
+        border: "1px solid #141b26", marginBottom: 16
+      }}>
         {/* Messages */}
         <div style={{ height: 380, overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column", gap: 12 }}>
           {history.map((m, i) => (
@@ -2883,9 +2906,22 @@ export function RapaduraPage() {
 
   if (checking) {
     return (
-      <div style={{ minHeight: "100vh", background: "#040507", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ fontSize: 9, letterSpacing: "0.3em", textTransform: "uppercase", color: "#2a3545" }}>
-          carregando
+      <div style={{ minHeight: "100vh", background: "#040507", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{
+          position: "absolute", inset: 0,
+          backgroundImage: "url('/rapadura-bg.png')",
+          backgroundSize: "cover", backgroundPosition: "center right",
+          opacity: 0.09, filter: "saturate(0.5) blur(3px)",
+        }} />
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(135deg, #040507 40%, rgba(4,5,7,0.55) 100%)",
+        }} />
+        <div style={{ position: "relative", textAlign: "center" }}>
+          <img src={LOGO} alt="" style={{ width: 52, height: 52, objectFit: "contain", opacity: 0.35, marginBottom: 18 }} />
+          <div style={{ fontSize: 9, letterSpacing: "0.35em", textTransform: "uppercase", color: "#2a3545" }}>
+            carregando
+          </div>
         </div>
       </div>
     );
