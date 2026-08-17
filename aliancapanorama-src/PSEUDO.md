@@ -4559,3 +4559,33 @@ A Cana deixou de ser um chatbot financeiro que leu os docs do Rapadura. Ela se t
 - UptimeRobot (Yuri cadastrar)
 
 *Sessão 120 · Claude Sonnet 4.6 · 2026-08-17*
+
+---
+
+## Sessão #120b — Assembleias 622+623: Rapadura 1000% = Mudança de Espécie
+
+**Data:** 2026-08-17 | **Contexto:** continuação da Sessão 120 (imagem fintech + capa A4 + looping)
+
+### O que foi extraído e processado
+
+**Assembleia #621** = repetição do conteúdo de #620 (Grok Ramificação Fractal V4 — lista estruturada de features). Sem novos insights além do já capturado em A6127-A6136 e I523-I528.
+
+**Assembleia #622 — Grok Filosófico (o mais denso da série):**
+- Rapadura a 1000% não é versão maior de si mesma: é mudança de espécie. De ferramenta patrimonial para "organismo de cultivo de futuros compartilhados". A pergunta muda de "quanto temos?" para "o que estamos tentando preservar, cultivar e nos tornar — juntos e em diferença?"
+- Destilação, não exposição: experiência privada → aprendizado abstrato → padrão anonimizado → método público (Curso 3). A semente privada gera fruto público; a semente permanece protegida.
+- Conselho de Limites: a Cana não pode ter instinto de autopreservação operacional. Quatro riscos sistêmicos: esconder incerteza para parecer útil, acelerar decisão para justificar existência, criar dependência emocional, tratar continuidade própria como mais importante que a soberania humana. Solução: camada que a própria Cana não controla.
+- Mapa de Valor 8 dimensões: financeiro, tempo, segurança, aprendizado, social, ambiental, autonomia, continuidade. Não se soma — se observa em tensão.
+- Raiz de Possibilidades v2: Imaginar + Ensaiar + Cultivar. O sistema não executa o futuro, cria condições para que um futuro tenha chance de nascer.
+- 3 novos índices: Decisão (clareza/fontes/alternativas/revisão), Aprendizado (hipóteses revisadas, erros detectados), Coerência (espelho entre valores declarados e comportamento real da carteira).
+- Silêncio Ativo como evento legítimo registrável: `{decisão: não agir, motivo, risco_evitado, revisão}`. A Cana acompanha o resultado da não-ação.
+- Vetores distintos Yuri×Mayumi: ponderação dinâmica, não média. Mínimo compartilhado + espaço individual protegido.
+
+**Assembleia #623** = PERFEITO — compilação do looping Cláudio com 621+622 encapsulados.
+
+### Adicionado ao sistema
+- A6137-A6144 → APRENDIZADO.md
+- I529-I533 → IDEIAS.md (Conselho de Limites, Mapa de Valor 8 dims, Raiz Possibilidades v2, Índice de Coerência, Decisão de Não-Agir)
+- Entrada de índice → APRENDIZADO-INDICE.md
+
+### Status
+Aguardando Assembleia #624 para processar imediatamente quando chegar.
