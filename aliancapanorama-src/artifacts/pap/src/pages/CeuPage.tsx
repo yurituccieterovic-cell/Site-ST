@@ -865,13 +865,13 @@ export function CeuPage() {
             <button key={mode} onClick={() => setViewMode(mode)}
               style={{
                 padding:"6px 20px", fontSize:9, fontFamily:"monospace", letterSpacing:2,
-                background:"none", border:"1px solid #2a1a08",
+                border:"1px solid #2a1a08",
                 borderLeft: mode === "mapa" ? "none" : "1px solid #2a1a08",
                 borderRadius: mode === "conceito" ? "6px 0 0 6px" : "0 6px 6px 0",
                 color: viewMode === mode ? "#c8a050" : "#444",
                 borderColor: viewMode === mode ? "#5a3a10" : "#2a1a08",
                 cursor:"pointer",
-                background: viewMode === mode ? "#0d0a04" : "none",
+                background: viewMode === mode ? "#0d0a04" : "transparent",
               } as React.CSSProperties}>
               {mode.toUpperCase()}
             </button>

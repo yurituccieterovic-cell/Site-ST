@@ -21,6 +21,7 @@ import { PlaycenterPage } from "@/pages/PlaycenterPage";
 import { ArvorePage } from "@/pages/ArvorePage";
 import { RapaduraPage } from "@/pages/RapaduraPage";
 import { ManuelPage } from "@/pages/ManuelPage";
+import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
@@ -297,6 +298,7 @@ const isArvore     = path.includes("/arvore");
 const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
 const isCssTutorial = path.includes("/css-tutorial");
+const isCelular     = path.includes("/celular");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -313,6 +315,7 @@ function App() {
   }
 
   if (isIsa) return <IsaLandingPage />;
+  if (isCelular) return <CelularPage />;
 
   if (isArquitetura) {
     return (
