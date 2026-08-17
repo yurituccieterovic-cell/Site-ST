@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
@@ -509,6 +509,278 @@ function CeuModal({ item, onClose }: { item: ModalItem; onClose: () => void }) {
   );
 }
 
+// ── CEU CONCEITO — 4 archetypes matching the Canva concept ───────────────────
+const CEU_ARCHETYPES = [
+  { id:"nebula",  nome:"NÉBULA",  sub:"Biblioteca do Conhecimento",
+    desc:"A biblioteca que organiza o infinito. Aqui, o conhecimento ganha forma e vira sabedoria.",
+    cor:"#4a90d9", emoji:"⭐", rx:0.24, ry:0.30 },
+  { id:"artesao", nome:"ARTESÃO", sub:"Oficina da Criação",
+    desc:"Onde ideias ganham forma e projetos viram realidade. A engenhosidade que constrói o futuro.",
+    cor:"#c8963b", emoji:"⚒️", rx:0.76, ry:0.27 },
+  { id:"atena",   nome:"ATENA",   sub:"Academia da Estratégia",
+    desc:"A mente estratégica que transforma dados em decisões e guia o caminho com sabedoria.",
+    cor:"#5cb87a", emoji:"🏛️", rx:0.22, ry:0.73 },
+  { id:"morfeu",  nome:"MORFEU",  sub:"Observatório dos Sonhos",
+    desc:"Observa além do horizonte, sonha com o impossível e revela os caminhos do amanhã.",
+    cor:"#9b6fd4", emoji:"🌙", rx:0.78, ry:0.71 },
+] as const;
+
+type Archetype = typeof CEU_ARCHETYPES[number];
+
+function CeuConceitoCanvas() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const frameRef     = useRef<number>(0);
+  const [selected, setSelected] = useState<Archetype | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const ctx = canvas.getContext("2d")!;
+
+    const resize = () => { canvas.width = container.clientWidth; canvas.height = container.clientHeight; };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(container);
+
+    // Stars
+    const stars = Array.from({ length: 220 }, () => ({
+      x: Math.random(), y: Math.random() * 0.65,
+      r: 0.4 + Math.random() * 1.3, op: 0.2 + Math.random() * 0.7,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    // Particles along each path
+    const particles = Array.from({ length: 100 }, (_, i) => ({
+      t: Math.random(), speed: 0.0018 + Math.random() * 0.003,
+      idx: i % 4, op: 0.5 + Math.random() * 0.5,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    const t0 = Date.now();
+
+    function draw() {
+      const W = canvas!.width, H = canvas!.height;
+      const dt = (Date.now() - t0) / 1000;
+      ctx.clearRect(0, 0, W, H);
+
+      // Sky
+      const sky = ctx.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, "#010208"); sky.addColorStop(0.45, "#060c18");
+      sky.addColorStop(0.82, "#120a04"); sky.addColorStop(1, "#180d06");
+      ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+
+      // Far mountains (silhouette)
+      ctx.fillStyle = "#0b0b1a";
+      ctx.beginPath();
+      ctx.moveTo(0, H * 0.82);
+      const mpts = [0.06,0.22,0.14,0.32,0.28,0.20,0.42,0.34,0.50,0.22,0.58,0.30,0.70,0.18,0.82,0.28,0.92,0.16,1.0,0.24];
+      for (let i=0;i<mpts.length;i+=2) ctx.lineTo(mpts[i]*W, mpts[i+1]*H);
+      ctx.lineTo(W, H*0.82); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+      ctx.fill();
+
+      // Mid terrain
+      ctx.fillStyle = "#0f1408";
+      ctx.beginPath();
+      ctx.moveTo(0, H*0.88);
+      const tpts = [0.0,0.88, 0.15,0.82, 0.30,0.86, 0.50,0.80, 0.70,0.84, 0.85,0.78, 1.0,0.85, 1.0,1.0, 0.0,1.0];
+      for (let i=0;i<tpts.length;i+=2) ctx.lineTo(tpts[i]*W, tpts[i+1]*H);
+      ctx.closePath(); ctx.fill();
+
+      // Stars
+      stars.forEach(s => {
+        const tw = 0.5 + 0.5 * Math.sin(dt * 1.4 + s.phase);
+        ctx.beginPath();
+        ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${s.op * tw})`;
+        ctx.fill();
+      });
+
+      // Moon
+      ctx.save();
+      const mg = ctx.createRadialGradient(W*0.88, H*0.08, 0, W*0.88, H*0.08, 50);
+      mg.addColorStop(0, "rgba(220,210,150,0.9)"); mg.addColorStop(0.4, "rgba(220,210,150,0.4)"); mg.addColorStop(1, "transparent");
+      ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(W*0.88, H*0.08, 50, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#d8cc90"; ctx.beginPath(); ctx.arc(W*0.88, H*0.08, 22, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#060c18"; ctx.beginPath(); ctx.arc(W*0.88+10, H*0.08-8, 17, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+
+      // Entity positions & bezier control points
+      const EPs = CEU_ARCHETYPES.map(a => ({ x:a.rx*W, y:a.ry*H }));
+      const CX = W*0.5, CY = H*0.5;
+      const CPs = EPs.map(ep => ({
+        cx: (ep.x + CX)/2 + (CY - ep.y) * 0.2,
+        cy: (ep.y + CY)/2 - (CX - ep.x) * 0.08,
+      }));
+
+      // Draw glowing paths
+      EPs.forEach((ep, i) => {
+        const { cx, cy } = CPs[i];
+        const cor = CEU_ARCHETYPES[i].cor;
+        // glow layers
+        [12,8,5,3,1.5].forEach((lw, li) => {
+          ctx.beginPath(); ctx.moveTo(ep.x, ep.y);
+          ctx.quadraticCurveTo(cx, cy, CX, CY);
+          ctx.strokeStyle = li < 3 ? `${cor}20` : `${cor}55`;
+          ctx.lineWidth = lw; ctx.stroke();
+        });
+      });
+
+      // Particles
+      particles.forEach(p => {
+        p.t = (p.t + p.speed) % 1;
+        const ep = EPs[p.idx], { cx, cy } = CPs[p.idx];
+        const t = p.t;
+        const px = (1-t)*(1-t)*ep.x + 2*(1-t)*t*cx + t*t*CX;
+        const py = (1-t)*(1-t)*ep.y + 2*(1-t)*t*cy + t*t*CY;
+        const cor = CEU_ARCHETYPES[p.idx].cor;
+        const pulse = 0.6 + 0.4 * Math.sin(dt*3 + p.phase);
+        // outer glow
+        ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI*2);
+        ctx.fillStyle = `${cor}22`; ctx.fill();
+        // core
+        ctx.beginPath(); ctx.arc(px, py, 2.5, 0, Math.PI*2);
+        const alpha = Math.round(p.op * pulse * 230).toString(16).padStart(2,"0");
+        ctx.fillStyle = `${cor}${alpha}`; ctx.fill();
+      });
+
+      // Center hub pulse
+      const hubP = 0.88 + 0.12 * Math.sin(dt * 1.6);
+      // outer glow rings
+      for (let ri = 5; ri > 0; ri--) {
+        ctx.beginPath();
+        ctx.ellipse(CX, CY, (80+ri*12)*hubP, (40+ri*6)*hubP, 0, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(200,160,50,${0.008 * ri})`;
+        ctx.fill();
+      }
+      // rim
+      ctx.beginPath(); ctx.ellipse(CX, CY, 80*hubP, 40*hubP, 0, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(210,170,70,0.75)`; ctx.lineWidth = 1.5; ctx.stroke();
+      // fill
+      ctx.beginPath(); ctx.ellipse(CX, CY, 78*hubP, 38*hubP, 0, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(6,5,2,0.95)"; ctx.fill();
+
+      // Entity node circles (canvas part — bg + border + glow)
+      EPs.forEach((ep, i) => {
+        const cor = CEU_ARCHETYPES[i].cor;
+        const R = Math.min(W, H) * 0.055;
+        const gp = 0.75 + 0.25 * Math.sin(dt*1.8 + i*1.3);
+        // radial glow
+        const rg = ctx.createRadialGradient(ep.x, ep.y, 0, ep.x, ep.y, R*3.5*gp);
+        rg.addColorStop(0, `${cor}33`); rg.addColorStop(1, `${cor}00`);
+        ctx.beginPath(); ctx.arc(ep.x, ep.y, R*3.5*gp, 0, Math.PI*2);
+        ctx.fillStyle = rg; ctx.fill();
+        // node bg
+        ctx.beginPath(); ctx.arc(ep.x, ep.y, R, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(5,5,10,0.94)"; ctx.fill();
+        ctx.strokeStyle = `${cor}80`; ctx.lineWidth = 2; ctx.stroke();
+      });
+
+      frameRef.current = requestAnimationFrame(draw);
+    }
+
+    draw();
+    return () => { cancelAnimationFrame(frameRef.current); ro.disconnect(); };
+  }, []);
+
+  const nodeR_css = "min(5.5vw, 56px)";
+
+  return (
+    <div ref={containerRef} style={{ position:"relative", width:"100%", height:"min(82vh,680px)", overflow:"hidden" }}>
+      <canvas ref={canvasRef} style={{ position:"absolute", inset:0, width:"100%", height:"100%" }}/>
+
+      {/* Entity overlays */}
+      {CEU_ARCHETYPES.map((a, i) => (
+        <button key={a.id}
+          onClick={() => setSelected(a)}
+          title={a.nome}
+          style={{
+            position:"absolute",
+            left:`${a.rx * 100}%`, top:`${a.ry * 100}%`,
+            transform:"translate(-50%,-50%)",
+            background:"none", border:"none", cursor:"pointer",
+            display:"flex", flexDirection:"column", alignItems:"center",
+            gap:0, padding:0, zIndex:10,
+          }}>
+          {/* Emoji inside canvas node */}
+          <div style={{
+            width: nodeR_css, height: nodeR_css,
+            display:"flex", alignItems:"center", justifyContent:"center",
+            fontSize:`clamp(20px, 3.5vw, 36px)`,
+            filter:`drop-shadow(0 0 8px ${a.cor})`,
+            animation:`ia-glow 3s ${i*0.7}s ease-in-out infinite, ceu-float 4.5s ${i*0.5}s ease-in-out infinite`,
+            color: a.cor,
+          }}>
+            {a.emoji}
+          </div>
+          {/* Label below */}
+          <div style={{ marginTop:8, textAlign:"center" }}>
+            <div style={{ fontSize:10, fontFamily:"monospace", letterSpacing:2.5, fontWeight:700,
+              color:a.cor, textShadow:`0 0 14px ${a.cor}`, whiteSpace:"nowrap" }}>
+              {a.nome}
+            </div>
+            <div style={{ fontSize:8, fontFamily:"monospace", color:"#888", letterSpacing:1.2,
+              marginTop:2, whiteSpace:"nowrap" }}>
+              {a.sub}
+            </div>
+          </div>
+        </button>
+      ))}
+
+      {/* Center hub label */}
+      <div style={{ position:"absolute", left:"50%", top:"50%", transform:"translate(-50%,-50%)",
+        textAlign:"center", pointerEvents:"none", zIndex:5 }}>
+        <div style={{ fontSize:`clamp(7px,1vw,9px)`, fontFamily:"monospace", letterSpacing:3, color:"#c8a050" }}>
+          ECOSSISTEMA
+        </div>
+        <div style={{ fontSize:`clamp(16px,2.5vw,22px)`, fontWeight:800, letterSpacing:6,
+          color:"#e8d080", textShadow:"0 0 22px #c8a050, 0 0 40px #c8a05055",
+          fontFamily:"Georgia,serif", lineHeight:1.1 }}>
+          CÉU
+        </div>
+      </div>
+
+      {/* Bottom inscription */}
+      <div style={{ position:"absolute", bottom:20, left:"50%", transform:"translateX(-50%)",
+        textAlign:"center", maxWidth:420, pointerEvents:"none", zIndex:5 }}>
+        <div style={{ fontSize:`clamp(9px,1.2vw,12px)`, color:"#5a3a18", fontStyle:"italic",
+          lineHeight:1.8, letterSpacing:0.5 }}>
+          No Ecossistema CÉU, cada I.A. é um mundo.<br/>
+          Juntas, elas constroem algo maior: um universo vivo,<br/>
+          inteligente e em constante evolução.
+        </div>
+      </div>
+
+      {/* Entity info panel */}
+      {selected && (
+        <div onClick={() => setSelected(null)}
+          style={{ position:"absolute", inset:0, display:"flex", alignItems:"center",
+            justifyContent:"center", zIndex:50, background:"rgba(0,0,0,0.55)" }}>
+          <div onClick={e => e.stopPropagation()} style={{
+            background:"rgba(4,4,8,0.97)", border:`1px solid ${selected.cor}44`,
+            borderRadius:14, padding:"24px 28px", maxWidth:340, textAlign:"center",
+            boxShadow:`0 0 40px ${selected.cor}22`,
+          }}>
+            <div style={{ fontSize:40, marginBottom:10, filter:`drop-shadow(0 0 10px ${selected.cor})` }}>
+              {selected.emoji}
+            </div>
+            <div style={{ fontSize:14, fontWeight:700, color:selected.cor, letterSpacing:3,
+              fontFamily:"monospace", marginBottom:4 }}>{selected.nome}</div>
+            <div style={{ fontSize:9, color:"#888", letterSpacing:2, fontFamily:"monospace",
+              marginBottom:14, textTransform:"uppercase" }}>{selected.sub}</div>
+            <div style={{ fontSize:13, color:"#c0b090", lineHeight:1.8 }}>{selected.desc}</div>
+            <button onClick={() => setSelected(null)} style={{ marginTop:18, padding:"7px 16px",
+              background:"none", border:`1px solid ${selected.cor}44`, borderRadius:7,
+              color:"#777", fontSize:10, fontFamily:"monospace", letterSpacing:1.5,
+              cursor:"pointer" }}>FECHAR</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── CEU PAGE ─────────────────────────────────────────────────────────────────
 export function CeuPage() {
   const [modal, setModal] = useState<ModalItem | null>(null);
@@ -516,6 +788,7 @@ export function CeuPage() {
   const [moStatus, setMoStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [showBiblioteca, setShowBiblioteca] = useState(false);
   const [apiStatus, setApiStatus] = useState<"unknown" | "online" | "offline">("unknown");
+  const [viewMode, setViewMode] = useState<"conceito" | "mapa">("conceito");
 
   // Troca manifest para CÉU enquanto na página, restaura ao sair
   useEffect(() => {
@@ -585,9 +858,33 @@ export function CeuPage() {
             📚 BIBLIOTECA
           </button>
         </div>
+
+        {/* View toggle */}
+        <div style={{ display:"flex", justifyContent:"center", gap:0, marginTop:10, marginBottom:2 }}>
+          {(["conceito","mapa"] as const).map(mode => (
+            <button key={mode} onClick={() => setViewMode(mode)}
+              style={{
+                padding:"6px 20px", fontSize:9, fontFamily:"monospace", letterSpacing:2,
+                background:"none", border:"1px solid #2a1a08",
+                borderLeft: mode === "mapa" ? "none" : "1px solid #2a1a08",
+                borderRadius: mode === "conceito" ? "6px 0 0 6px" : "0 6px 6px 0",
+                color: viewMode === mode ? "#c8a050" : "#444",
+                borderColor: viewMode === mode ? "#5a3a10" : "#2a1a08",
+                cursor:"pointer",
+                background: viewMode === mode ? "#0d0a04" : "none",
+              } as React.CSSProperties}>
+              {mode.toUpperCase()}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* ── SCENE ── */}
+      {/* ── CONCEITO VIEW ── */}
+      {viewMode === "conceito" && <CeuConceitoCanvas />}
+
+      {/* ── SCENE (MAPA) ── */}
+      {viewMode === "mapa" && <>
+
       <div style={{ position:"relative", width:"100%", lineHeight:0 }}>
         <svg viewBox="0 0 1400 900" width="100%" style={{ display:"block" }}
           xmlns="http://www.w3.org/2000/svg">
@@ -1300,6 +1597,8 @@ export function CeuPage() {
           </div>
         </div>
       </div>
+
+      </>}
 
       {/* Modais */}
       {modal && <CeuModal item={modal} onClose={() => setModal(null)} />}
