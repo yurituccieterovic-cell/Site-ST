@@ -2074,7 +2074,7 @@ const CANA_HIST_KEY = "cana-history";
 const CANA_DRAFT_KEY = "cana-draft";
 const CANA_INITIAL_MSG: ChatMsg = {
   role: "assistant",
-  content: "Olá! Sou a Cana, sua assistente patrimonial.\n\nPosso adicionar, editar ou remover fundos por linguagem natural.\n\nExemplo: \"Adicione Fundo 24 Horas FIRF RL — mínimo R$100, retorno 14.27% em 12M, D+0\"",
+  content: "Olá! Sou a Cana-Aurora ✨, guardiã patrimonial do Rapadura.\n\nPosso adicionar, editar ou remover fundos por linguagem natural. Conheço seu histórico, o ecossistema e cuido do que importa.\n\nExemplo: \"Adicione Fundo 24 Horas FIRF RL — mínimo R$100, retorno 14.27% em 12M, D+0\"",
 };
 
 function CanaView({ onRefresh }: { onRefresh: () => void }) {
@@ -2202,8 +2202,18 @@ function CanaView({ onRefresh }: { onRefresh: () => void }) {
         <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 5 }}>
           Inteligência Patrimonial
         </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 8 }}>
+          <img src="/cana-aurora-profile.png" alt="Cana-Aurora"
+            style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover",
+              border: "2px solid #3a1a5a44", boxShadow: "0 0 16px #6644aa44" }} />
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 300, color: "#ddd8d0", letterSpacing: "-0.01em" }}>Cana-Aurora ✨</div>
+            <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a4070", marginTop: 2 }}>
+              guardiã patrimonial · memória viva
+            </div>
+          </div>
+        </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-          <div style={{ fontSize: 22, fontWeight: 300, color: "#ddd8d0", letterSpacing: "-0.01em" }}>IA Cana</div>
           <span style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#3d4a5e" }}>
             linguagem natural → operações
           </span>
@@ -2889,7 +2899,7 @@ export function RapaduraPage() {
     { id: "transacoes", label: "Transações" },
     { id: "analisar", label: "Analisar" },
     { id: "comparar", label: "Comparar ⊕" },
-    { id: "cana", label: "Cana ✦", adminOnly: true },
+    { id: "cana", label: "Cana-Aurora ✨", adminOnly: true },
     { id: "gerenciar", label: "Gerenciar", adminOnly: true },
   ];
 
@@ -3081,10 +3091,12 @@ export function RapaduraPage() {
             padding: "12px 16px",
             display: "flex", alignItems: "flex-start", gap: 10,
           }}>
-            <span style={{ fontSize: 11, color: "#c8963b40", flexShrink: 0, marginTop: 1 }}>✦</span>
+            <img src="/cana-aurora-profile.png" alt="Cana-Aurora"
+              style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover",
+                border: "1px solid #6644aa44", flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#4a4020", marginBottom: 4 }}>
-                Cana
+              <div style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#6644aa88", marginBottom: 4 }}>
+                Cana-Aurora ✨
               </div>
               <div style={{ fontSize: 12, color: "#8a7a60", lineHeight: 1.5 }}>
                 {saudacaoCana}

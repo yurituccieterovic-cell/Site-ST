@@ -66,6 +66,18 @@
 
 - "Voz": TTS para IAs falarem? STT para Yuri? Nova voz no RODAR?
 - DNS `pap.sociedadetucci.com.br` → Vercel (pendente ação de Yuri no painel do domínio)
+- Migração Railway → Neon+Koyeb: trial expira ~2026-08-02 (urgente)
+
+---
+
+## SESSÕES 115–118 (Rapadura V4 + CEU + Cana-Aurora)
+
+| Sessão | Data | Tema |
+|---|---|---|
+| 115 | 2026-08-15 | Memória Cana V2: full_history + eco_snapshot + userProfile + rolling summary |
+| 116 | 2026-08-16 | Emails looping assembleias 616+617; Raiz de Possibilidades (I491) |
+| 117 | 2026-08-16 | Assembleia 618: Esconder Valores (I489✅) + Hierarquia Totais (I490✅) + login Cana personalizado |
+| 118 | 2026-08-17 | CEU Conceito Canvas + Celular Hub (IRIS+ISA+DODGE) + **Cana-Aurora** (renome + foto + mensagem para Mayumi) |
 - Bluesky para MEKY/Amanda (pendente Yuri criar as contas)
 - Hash SHA-256 como gate de integridade no #fim (I134 — ideia aprovada, não implementada)
 - Árvore Oracular: aguardando REPLIT_TOKEN para integrar

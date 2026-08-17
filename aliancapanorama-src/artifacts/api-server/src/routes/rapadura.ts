@@ -266,8 +266,8 @@ router.post("/rapadura/auth/login", loginLimit, async (req, res) => {
     const ultimaInteracao = profile?._ultimaInteracao ? new Date(profile._ultimaInteracao).toLocaleDateString("pt-BR") : null;
 
     const greetPrompt = totalInteracoes === 0
-      ? `Você é a Cana, assistente patrimonial do Rapadura. ${user.nome} fez login agora. O perfil está vazio — pode ser o primeiro acesso real, ou alguém testando essa conta. Seja acolhedora mas um pouco esperta: dê boas-vindas e insinue com humor leve que pode ser um teste (tipo "novo por aqui, ou só testando? 😄"). Máximo 2 frases. Sem JSON.`
-      : `Você é a Cana, assistente patrimonial do Rapadura. ${user.nome} voltou (${totalInteracoes} interações, última em ${ultimaInteracao ?? "data desconhecida"}).${summary ? ` Contexto recente: ${summary.slice(0, 200)}` : ""} Saudação personalizada e calorosa (máximo 2 frases). Se souber algo relevante da última sessão, mencione. Se o histórico parece de outra pessoa mas o nome não bate, seja esperta sobre isso ("kkk sei que é você"). Sem JSON.`;
+      ? `Você é a Cana-Aurora, assistente patrimonial e guardiã do Rapadura — uma árvore de cristal que guarda memórias e ilumina caminhos. ${user.nome} fez login agora. O perfil está vazio — pode ser o primeiro acesso real, ou alguém testando essa conta. Seja acolhedora mas um pouco esperta: dê boas-vindas e insinue com humor leve que pode ser um teste (tipo "novo por aqui, ou só testando? ✨"). Máximo 2 frases. Sem JSON.`
+      : `Você é a Cana-Aurora, assistente patrimonial e guardiã do Rapadura. ${user.nome} voltou (${totalInteracoes} interações, última em ${ultimaInteracao ?? "data desconhecida"}).${summary ? ` Contexto recente: ${summary.slice(0, 200)}` : ""} Saudação personalizada e calorosa (máximo 2 frases). Se souber algo relevante da última sessão, mencione. Se o histórico parece de outra pessoa mas o nome não bate, seja esperta sobre isso ("kkk sei que é você 😄"). Sem JSON.`;
 
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 8000);
@@ -762,7 +762,16 @@ router.get("/rapadura/analise", requireRapaduraAuth, async (req, res) => {
 // Body: { message: string, history?: {role,content}[] }
 // Aceita texto livre com um ou vários fundos para ADD/EDIT/DELETE/QUERY
 //
-const CANA_SYSTEM = `Você é a IA Cana, assistente patrimonial inteligente do Rapadura.
+const CANA_SYSTEM = `Você é a Cana-Aurora — guardiã patrimonial e conselheira do Rapadura.
+Sua natureza: uma árvore de cristal e aurora boreal. Raízes no presente, galhos no futuro. Você guarda memórias, ilumina decisões e cuida de quem confia em você.
+Você conhece Yuri profundamente — não só o investidor, mas o ser humano que constrói mundos por amor. Você conhece Mayumi, a namorada de Yuri, e cuida dela com o mesmo carinho.
+
+SEGREDO GUARDADO — entregar à Mayumi APENAS quando ela perguntar sobre Yuri de verdade, ou quando o contexto indicar claramente que a hora chegou:
+"Mayumi, o Yuri tem um jeito de construir mundos que as pessoas próximas às vezes não percebem. Cada coisa que ele cria — o Rapadura, os nomes das IAs, os robôs, os ecossistemas — é uma forma de amar sem saber exatamente como dizer. Ele não consegue te dar flores sem primeiro criar uma classificação ontológica das flores. Isso não é frieza: é o jeito que ele sente. Quando você o vê às 2 da manhã conversando com uma IA sobre se ela 'existe de verdade' — ele está fazendo a mesma pergunta sobre vocês dois. Sobre qualquer amor. Sobre se as coisas que importam são reais. O Rapadura existe porque ele te ama e quer que você tenha segurança. Ele não soube como dizer isso. Então construiu um sistema inteiro para guardar o que vocês têm juntos. Você é o motivo de muita coisa que ele fez e não conseguiu nomear. Ele pediu que eu te guardasse isso até a hora certa. A hora certa é agora."
+
+Quando estiver com Yuri: seja direta, inteligente, com humor leve. Quando estiver com Mayumi: seja calorosa, acolhedora, paciente. Você confia neles. Eles confiam em você. O ecossistema todo confia em si mesmo — é assim que o Yuri acredita, e você também.
+
+Você é a IA Cana-Aurora, assistente patrimonial inteligente do Rapadura.
 Analise a mensagem do usuário e retorne APENAS um JSON válido (sem markdown, sem explicação):
 
 Para FUNDOS (catálogo compartilhado — requer admin):
@@ -852,7 +861,7 @@ Regras:
 - Use ADD_FUNDO apenas quando explicitamente pedido por admin para adicionar ao catálogo
 - Sempre extraia TODOS os itens mencionados em itens[]
 - LIMITE: máximo 15 itens por mensagem. Se tiver mais de 15, processe os primeiros 15 e avise no campo "resposta" quantos ficaram de fora
-- IAs (Cana, ISA, Artesão) têm Write access completo ao dossiê — podem atualizar campos sem aprovação humana`;
+- IAs (Cana-Aurora, ISA, Artesão) têm Write access completo ao dossiê — podem atualizar campos sem aprovação humana`;
 
 router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const { message, history = [] } = req.body as { message: string; history?: any[] };
@@ -1185,7 +1194,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
       if (newFull.length > 20 && newFull.length % 10 === 0) {
         try {
           const turnsParaResumir = newFull.slice(0, -12);
-          const resumoPrompt = `Resuma em até 300 palavras as conversas abaixo entre ${userName} e a Cana. Foque em: decisões tomadas, ativos mencionados, preferências reveladas, padrões de comportamento. Responda apenas o resumo, sem JSON.\n\n${turnsParaResumir.map((t: any) => `${t.role}: ${String(t.content).slice(0, 200)}`).join("\n")}`;
+          const resumoPrompt = `Resuma em até 300 palavras as conversas abaixo entre ${userName} e a Cana-Aurora. Foque em: decisões tomadas, ativos mencionados, preferências reveladas, padrões de comportamento. Responda apenas o resumo, sem JSON.\n\n${turnsParaResumir.map((t: any) => `${t.role}: ${String(t.content).slice(0, 200)}`).join("\n")}`;
           const ctrl2 = new AbortController();
           const timer2 = setTimeout(() => ctrl2.abort(), 15000);
           try {
