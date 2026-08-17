@@ -30,6 +30,7 @@ type Pertence = {
   precoCotaCompra: string | null; valorAtual: string | null; notas: string | null;
   // v3
   statusReconciliacao: string | null; totalRetirado: string | null;
+  fundoMoeda: string | null;
 };
 type Dashboard = {
   totalInvestido: number; totalAtual: number; totalRetirado: number;
@@ -1042,6 +1043,15 @@ function PertencesView({
                           background: "rgba(200,150,59,0.08)", padding: "2px 6px",
                         }}>
                           ⚠ parcial pendente
+                        </span>
+                      )}
+                      {p.fundoMoeda && p.fundoMoeda !== "BRL" && (
+                        <span style={{
+                          fontSize: 8, letterSpacing: "0.12em", textTransform: "uppercase",
+                          color: "#4a6a9b", border: "1px solid #2a3a5a40",
+                          background: "rgba(74,106,155,0.08)", padding: "2px 6px",
+                        }}>
+                          {p.fundoMoeda}
                         </span>
                       )}
                     </div>
@@ -2571,6 +2581,8 @@ function TransacoesView({ fundos }: { fundos: Fundo[] }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  const [deduzindo, setDeduzindo] = useState(false);
+  const [deduzidoMsg, setDeduzidoMsg] = useState("");
   const TIPOS = ["COMPRA", "RESGATE_PARCIAL", "RESGATE_TOTAL", "DIVIDENDO", "AJUSTE"];
   const TIPO_COLOR: Record<string, string> = {
     COMPRA: "#3f7254", RESGATE_PARCIAL: "#c8963b", RESGATE_TOTAL: "#9a4040",
@@ -2624,10 +2636,31 @@ function TransacoesView({ fundos }: { fundos: Fundo[] }) {
           <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 5 }}>Histórico</div>
           <div style={{ fontSize: 22, fontWeight: 300, color: "#ddd8d0" }}>Transações</div>
         </div>
-        <button onClick={() => setShowForm(s => !s)}
-          style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#c8963b", border: "1px solid #5a4020", background: "rgba(200,150,59,0.06)", padding: "7px 12px", cursor: "pointer", fontFamily: "inherit" }}>
-          + Nova transação
-        </button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            onClick={async () => {
+              setDeduzindo(true); setDeduzidoMsg("");
+              try {
+                const r = await fetch(`${API}/api/rapadura/transacoes/deduzir`, { method: "POST", credentials: "include" });
+                const d = await r.json() as { criadas: number; mensagem: string };
+                setDeduzidoMsg(d.mensagem ?? "Pronto.");
+                if ((d.criadas ?? 0) > 0) {
+                  const rt = await fetch(`${API}/api/rapadura/transacoes`, { credentials: "include" });
+                  const dt = await rt.json() as { transacoes: Transacao[] };
+                  setTransacoes(dt.transacoes ?? []);
+                }
+              } catch { setDeduzidoMsg("Erro ao deduzir."); }
+              finally { setDeduzindo(false); }
+            }}
+            disabled={deduzindo}
+            style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#4a6a9b", border: "1px solid #2a3a5a", background: "rgba(74,106,155,0.06)", padding: "7px 12px", cursor: "pointer", fontFamily: "inherit" }}>
+            {deduzindo ? "…" : "↺ Deduzir de ativos"}
+          </button>
+          <button onClick={() => setShowForm(s => !s)}
+            style={{ fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "#c8963b", border: "1px solid #5a4020", background: "rgba(200,150,59,0.06)", padding: "7px 12px", cursor: "pointer", fontFamily: "inherit" }}>
+            + Nova transação
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -2668,6 +2701,12 @@ function TransacoesView({ fundos }: { fundos: Fundo[] }) {
               {saving ? "Salvando…" : "Registrar"}
             </button>
           </div>
+        </div>
+      )}
+
+      {deduzidoMsg && (
+        <div style={{ fontSize: 11, color: "#4a6a9b", background: "rgba(74,106,155,0.07)", border: "1px solid #2a3a5a40", padding: "8px 14px", marginBottom: 14 }}>
+          {deduzidoMsg}
         </div>
       )}
 
@@ -2865,7 +2904,7 @@ export function RapaduraPage() {
   const [dashboard, setDashboard] = useState<Dashboard>({ totalInvestido: 0, totalAtual: 0, totalRetirado: 0, resultado: 0, rentabilidade: 0 });
   const [dataLoading, setDataLoading] = useState(false);
   const [showChangePw, setShowChangePw] = useState(false);
-  const [hideValues, setHideValues] = useState(false);
+  const [hideValues, setHideValues] = useState(true);
   const [saudacaoCana, setSaudacaoCana] = useState<string | null>(null);
 
   const isAdmin = user?.role === "yuri" || user?.role === "mayumi";

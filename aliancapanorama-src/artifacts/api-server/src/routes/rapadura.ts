@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import multer from "multer";
-import { PDFParse } from "pdf-parse";
+import pdfParse from "pdf-parse";
 import { db } from "@workspace/db";
 import {
   rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable,
@@ -476,6 +476,7 @@ router.get("/rapadura/pertences", requireRapaduraAuth, async (req, res) => {
       fundoBenchmark: rapaduraFundosTable.benchmark,
       fundoPrazoResgate: rapaduraFundosTable.prazoResgateDias,
       fundoScore: rapaduraFundosTable.scoreAtratividade,
+      fundoMoeda: rapaduraFundosTable.moeda,
     })
     .from(rapaduraPertencesTable)
     .innerJoin(rapaduraFundosTable, eq(rapaduraPertencesTable.fundoId, rapaduraFundosTable.id))
@@ -711,9 +712,10 @@ router.get("/rapadura/analise", requireRapaduraAuth, async (req, res) => {
     db.select().from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true)).orderBy(desc(rapaduraFundosTable.scoreAtratividade)),
   ]);
 
-  // Score médio da carteira
-  const scoreMedioCarters = pertences.length > 0
-    ? pertences.reduce((s, p) => s + Number(p.fundoScore ?? 0), 0) / pertences.length
+  // Score médio — apenas fundos com score real (exclui poupança/earth2 com score 0)
+  const pertencesComScore = pertences.filter(p => Number(p.fundoScore ?? 0) > 0);
+  const scoreMedioCarters = pertencesComScore.length > 0
+    ? pertencesComScore.reduce((s, p) => s + Number(p.fundoScore ?? 0), 0) / pertencesComScore.length
     : 0;
 
   // IDs de fundos já na carteira
@@ -728,9 +730,9 @@ router.get("/rapadura/analise", requireRapaduraAuth, async (req, res) => {
     CLASSES_FUNDO.includes(f.classe ?? "")
   );
 
-  // Sugestões de troca: apenas fundos (não ações individuais, poupança, ativo digital)
+  // Sugestões de troca: apenas fundos com score real (> 0) abaixo de 50
   const sugestoesTroca = pertences
-    .filter(p => Number(p.fundoScore ?? 0) < 50 && CLASSES_FUNDO.includes(String(p.fundoClasse ?? "")))
+    .filter(p => Number(p.fundoScore ?? 0) > 0 && Number(p.fundoScore ?? 0) < 50 && CLASSES_FUNDO.includes(String(p.fundoClasse ?? "")))
     .map(p => {
       const melhorAlternativa = oportunidades.find(f => f.classe === p.fundoClasse)
         ?? oportunidades[0];
@@ -1115,7 +1117,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
         if (!targetId) { executado.push({ erro: `Fundo não encontrado: ${item.nome}` }); continue; }
         const scores = calcularScore(item);
         const updates: Record<string, any> = {};
-        const fields = ["nome","gestora","classe","benchmark","taxaAdm","taxaPerformance","prazoResgateDias","sharpe12m","sortino12m","maxDrawdown","retorno12m","retorno36m","alfa36m","tempoRecuperacaoDias","volatilidade12m","valorMinAplicacao","fatorVerde","confiancaVerde","notas"];
+        const fields = ["nome","gestora","classe","benchmark","taxaAdm","taxaPerformance","prazoResgateDias","sharpe12m","sortino12m","maxDrawdown","retorno12m","retorno36m","alfa36m","tempoRecuperacaoDias","volatilidade12m","valorMinAplicacao","fatorVerde","confiancaVerde","notas","moeda"];
         for (const f of fields) if (item[f] != null) updates[f] = f === "fatorVerde" || f === "confiancaVerde" ? parseInt(item[f]) : (typeof item[f] === "number" ? String(item[f]) : item[f]);
         updates.scoreAtratividade = scores.scoreAtratividade;
         updates.scoreConfianca = scores.scoreConfianca;
@@ -1368,6 +1370,54 @@ router.post("/rapadura/transacoes", requireRapaduraAuth, async (req, res) => {
 
   await audit(userId, "TRANSACAO_ADD", { transacaoId: transacao.id, tipo, valor }, req.ip ?? "");
   res.json({ transacao });
+});
+
+// Auto-deduzir transações COMPRA a partir dos pertences existentes
+router.post("/rapadura/transacoes/deduzir", requireRapaduraAuth, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+
+  const pertences = await db
+    .select({
+      id: rapaduraPertencesTable.id,
+      fundoId: rapaduraPertencesTable.fundoId,
+      dataCompra: rapaduraPertencesTable.dataCompra,
+      valorInvestido: rapaduraPertencesTable.valorInvestido,
+      qtdCotas: rapaduraPertencesTable.qtdCotas,
+      precoCotaCompra: rapaduraPertencesTable.precoCotaCompra,
+    })
+    .from(rapaduraPertencesTable)
+    .where(and(eq(rapaduraPertencesTable.userId, userId), isNull(rapaduraPertencesTable.deletedAt)));
+
+  const existentes = await db
+    .select({ pertenceId: rapaduraTransacoesTable.pertenceId })
+    .from(rapaduraTransacoesTable)
+    .where(and(eq(rapaduraTransacoesTable.userId, userId), eq(rapaduraTransacoesTable.tipo, "COMPRA")));
+
+  const comTransacao = new Set(existentes.map(e => e.pertenceId).filter(Boolean));
+  const aDeduzir = pertences.filter(p => !comTransacao.has(p.id));
+
+  if (aDeduzir.length === 0) {
+    res.json({ criadas: 0, mensagem: "Todos os pertences já têm transação de compra." });
+    return;
+  }
+
+  const novas = await db.insert(rapaduraTransacoesTable).values(
+    aDeduzir.map(p => ({
+      userId,
+      fundoId: p.fundoId,
+      pertenceId: p.id,
+      tipo: "COMPRA",
+      valor: p.valorInvestido,
+      qtdCotas: p.qtdCotas ?? null,
+      dataTransacao: p.dataCompra,
+      notas: "Deduzida automaticamente do registro de ativo",
+      origem: "SISTEMA",
+      status: "CONFIRMADO",
+    }))
+  ).returning();
+
+  await audit(userId, "TRANSACOES_DEDUZIDAS", { criadas: novas.length }, req.ip ?? "");
+  res.json({ criadas: novas.length, mensagem: `${novas.length} transação(ões) de compra criada(s) a partir dos ativos.` });
 });
 
 // Confirmar reconciliação de pertence (após informar parcial)
@@ -1729,14 +1779,12 @@ router.post("/rapadura/documentos/upload", requireRapaduraAuth, requireAdmin,
     const resultados: any[] = [];
     for (const file of files) {
       try {
-        const parser = new PDFParse();
-        await parser.load(file.buffer);
-        const textResult = await parser.getText();
-        const texto = textResult.text.replace(/\s+/g, " ").trim();
+        const parsed = await pdfParse(file.buffer);
+        const texto = parsed.text.replace(/\s+/g, " ").trim();
         resultados.push({
           nome: file.originalname,
           tamanho: file.size,
-          paginas: textResult.total,
+          paginas: parsed.numpages,
           preview: texto.slice(0, 500),
           texto: texto.slice(0, 8000),
           totalChars: texto.length,
