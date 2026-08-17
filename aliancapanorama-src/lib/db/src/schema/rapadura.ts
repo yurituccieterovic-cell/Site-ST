@@ -40,6 +40,8 @@ export const rapaduraFundosTable = pgTable("rapadura_fundos", {
   // v2: Alocação inteligente
   valorMinAplicacao: numeric("valor_min_aplicacao", { precision: 12, scale: 2 }),
   notas: text("notas"),
+  moeda: text("moeda").default("BRL"),
+  exibirOportunidades: boolean("exibir_oportunidades").default(true),
   ativo: boolean("ativo").default(true),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

@@ -715,8 +715,9 @@ function PertencesView({
   async function submit() {
     if (!form.fundoId || !form.dataCompra || !form.valorInvestido) return;
     const valorNum = parseFloat(form.valorInvestido);
-    if (valorNum >= 1000 && !form.motivoI438.trim()) {
-      alert("Operação acima de R$1.000: preencha o campo 'Por que estou fazendo isso?' (I438).");
+    // I438 obrigatório apenas em novos aportes ≥ R$1.000 (não em edições de dados existentes)
+    if (!editId && valorNum >= 1000 && !form.motivoI438.trim()) {
+      alert("Novo aporte acima de R$1.000: preencha o campo 'Por que estou fazendo isso?' (I438).");
       return;
     }
     setSaving(true);

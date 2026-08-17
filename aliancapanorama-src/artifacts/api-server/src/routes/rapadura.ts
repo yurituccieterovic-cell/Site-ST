@@ -47,7 +47,18 @@ function calcularScore(fundo: {
   alfa36m?: number | null;
   fatorVerde?: number | null;
   confiancaVerde?: number | null;
+  classe?: string | null;
 }) {
+  // Ações individuais: score baseado em retorno12m (não têm sharpe/sortino de fundo)
+  if (fundo.classe === "Ação") {
+    const ret = Number(fundo.retorno12m) || 0;
+    // Score 0-100: retorno normalizado em faixa -50%..+100% → 0..100
+    const base = Math.max(0, Math.min((ret + 50) / 150, 1));
+    const scoreAtratividade = +(base * 100).toFixed(1);
+    const scoreConfianca = fundo.retorno12m != null ? "25.0" : "0.0";
+    return { scoreAtratividade: String(scoreAtratividade), scoreConfianca, calmarRatio: null, scoreVerde: null, scoreDetalhado: { retornoAjustado: Math.round(base * 100), controleQueda: 0, consistencia: 0, custo: 0, liquidez: 0, fatorVerde: null, calmarRatio: null } };
+  }
+
   // Retorno Ajustado ao Risco (30%): Sharpe + Sortino + Alfa + Calmar
   const sh = Math.min((Number(fundo.sharpe12m) || 0) / 2, 1);
   const so = Math.min((Number(fundo.sortino12m) || 0) / 3, 1);
@@ -299,7 +310,7 @@ router.post("/rapadura/fundos", requireRapaduraAuth, requireAdmin, async (req, r
     return;
   }
 
-  const scores = calcularScore({ sharpe12m, sortino12m, maxDrawdown, tempoRecuperacaoDias, retorno12m, retorno36m, taxaAdm, taxaPerformance, prazoResgateDias, temLinhaDAGua, alfa36m, fatorVerde, confiancaVerde });
+  const scores = calcularScore({ sharpe12m, sortino12m, maxDrawdown, tempoRecuperacaoDias, retorno12m, retorno36m, taxaAdm, taxaPerformance, prazoResgateDias, temLinhaDAGua, alfa36m, fatorVerde, confiancaVerde, classe });
 
   const [fundo] = await db.insert(rapaduraFundosTable).values({
     nome, gestora,
@@ -342,7 +353,7 @@ router.put("/rapadura/fundos/:id", requireRapaduraAuth, requireAdmin, async (req
     fatorVerde, confiancaVerde, valorMinAplicacao, notas,
   } = req.body as Record<string, any>;
 
-  const scores = calcularScore({ sharpe12m, sortino12m, maxDrawdown, tempoRecuperacaoDias, retorno12m, retorno36m, taxaAdm, taxaPerformance, prazoResgateDias, temLinhaDAGua, alfa36m, fatorVerde, confiancaVerde });
+  const scores = calcularScore({ sharpe12m, sortino12m, maxDrawdown, tempoRecuperacaoDias, retorno12m, retorno36m, taxaAdm, taxaPerformance, prazoResgateDias, temLinhaDAGua, alfa36m, fatorVerde, confiancaVerde, classe });
 
   const updates: Record<string, any> = {
     updatedAt: new Date(),
@@ -658,12 +669,18 @@ router.get("/rapadura/analise", requireRapaduraAuth, async (req, res) => {
   // IDs de fundos já na carteira
   const idsNaCerteira = new Set(pertences.map(p => p.fundoId));
 
-  // Oportunidades fora da carteira com score > scoremédia + 15
-  const oportunidades = fundos.filter(f => !idsNaCerteira.has(f.id) && Number(f.scoreAtratividade ?? 0) > scoreMedioCarters + 15);
+  // Oportunidades: fora da carteira, score alto, apenas fundos comparáveis (não ações/poupança/ativo digital)
+  const CLASSES_FUNDO = ["Renda Fixa", "Multimercado", "Ações", "Pós Fixado", "Renda Variável"];
+  const oportunidades = fundos.filter(f =>
+    !idsNaCerteira.has(f.id) &&
+    Number(f.scoreAtratividade ?? 0) > scoreMedioCarters + 15 &&
+    (f.exibirOportunidades !== false) &&
+    CLASSES_FUNDO.includes(f.classe ?? "")
+  );
 
-  // Sugestões de troca: fundo da carteira com score < 50 → melhor fundo disponível
+  // Sugestões de troca: apenas fundos (não ações individuais, poupança, ativo digital)
   const sugestoesTroca = pertences
-    .filter(p => Number(p.fundoScore ?? 0) < 50)
+    .filter(p => Number(p.fundoScore ?? 0) < 50 && CLASSES_FUNDO.includes(String(p.fundoClasse ?? "")))
     .map(p => {
       const melhorAlternativa = oportunidades.find(f => f.classe === p.fundoClasse)
         ?? oportunidades[0];
