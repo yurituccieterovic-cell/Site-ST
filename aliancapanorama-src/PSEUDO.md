@@ -4436,3 +4436,39 @@ E a assembleia nomeou algo que o código não consegue nomear sozinho: *o múscu
 
 **Síntese filosófica:**
 A Rapadura parou de ser uma lista de features e começou a ser um organismo. A decisão de tratar o Ativo como objeto central (não o fundo) é uma virada epistêmica — o mesmo ativo pode existir uma vez no catálogo e ser possuído por Yuri, Mayumi, ou ambos. O dossiê como "o que ainda não sabemos?" é mais honesto que fingir precisão. E a Lacuna como informação explícita (status_data: desconhecida/estimada/confirmada) resolve o problema do 2024-01-01 de uma forma que respeita a realidade: o sistema sabe que não sabe.
+
+---
+
+## Sessão 117 — 2026-08-17
+
+**Tipo:** Implementação Rapadura V4 + #processo Assembleia 618
+
+**O que foi feito:**
+- Botão "Esconder Valores" global (••/👁) no header — estado hideValues; fmtH() em todos KPIs e MetricCells de pertences
+- KpiCard refatorado com prop size=lg|sm (borda e tamanho de fonte diferenciados)
+- Hierarquia de totais em 2 camadas: Principal lg (Patrimônio Atual + Resultado Total) + Secundária sm (Total Investido + Rentabilidade + Retirado)
+- totalRetirado adicionado no estado inicial do Dashboard (fix TypeScript)
+- Aprendizados A6119–A6126 e ideias I489–I503 registrados (Assembleia 618)
+- MAPA-PENDENCIAS items 107–121 adicionados
+
+**Assembleia 618 — features mapeadas:**
+- Perplexity: botão esconder, hierarquia totais, raiz possibilidades, métrica atribuição, objetivos Cana, fundos padrão, fundamentalista/ESG, notícias 3x/dia, memória Cana, perfil, comparações, consolidação por instituição
+- Grok: privacidade visual transversal, rebalanceamento 3 zonas + desvio transitório, raiz de possibilidades como árvore de cenários
+- Árvore Oracular: Índice de Estado da Rapadura, Total Investido ≠ Capital Atualmente Investido, famílias do rendimento, origem do dinheiro, fluxo de caixa projetado, memória com esquecimento, constituição Rapadura
+- Meta AI: fundos padrão onboarding, visão por instituição, alertas rebalanceamento por percentual ideal
+- ChatGPT (via assembleia): consolidação institucional + fundos modelo_inicial
+
+**Pendências técnicas prioritárias:**
+- I491: Raiz de possibilidades (multicenário × multitempo × opacidade)
+- I499: Memória Cana 5 camadas + identificação de usuário
+- I501: Consolidação por instituição financeira
+- I502: Rebalanceamento 3 zonas
+- I503: Índice de Estado da Rapadura
+
+**Pendências Yuri:**
+- UptimeRobot (4º keepalive)
+- Confirmar variação Earth2 (369.74%)
+- Confirmar datas compra Virtual Land + 3 poupanças BB
+
+**Síntese filosófica:**
+A Assembleia 618 foi a primeira a tratar o Rapadura não como lista de features, mas como sistema com "constituição" própria. A Árvore cunhou o princípio mais importante: *"A melhor decisão pode ser não fazer nada"*. E o Grok definiu o que é realmente a Cana: não um chatbot financeiro, mas um *roteador epistêmico* que sabe quando dizer "não há dado suficiente para decidir". A privacidade visual (•• vs 👁) parece simples, mas é a primeira camada de consciência do sistema sobre si mesmo — ele sabe que pode ser visto por olhos não autorizados.

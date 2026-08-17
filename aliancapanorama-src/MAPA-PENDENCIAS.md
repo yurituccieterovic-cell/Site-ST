@@ -326,3 +326,23 @@
 | 165 | PDF export: res=(va+totalRetirado)-vi bug corrigido | ALTA | ✅ Sessão 111 |
 | 166 | Cana: queue de mensagens + draft localStorage + background processing (resposta persiste ao navegar) | ALTA | ✅ Sessão 111 |
 | 167 | healthz expõe memMb+heapMb; CI ping independente sem checkout | MÉDIA | ✅ Sessão 111 |
+
+## Rapadura V4 — Assembleia 618 (Sessão 117 · 2026-08-17)
+
+| # | Item | Prioridade | Status |
+|---|---|---|---|
+| 107 | Botão "Esconder Valores" global (•• → 👁) + fmtH() em todos KPIs e MetricCells | ALTA | ✅ Sessão 117 |
+| 108 | Hierarquia visual totais: Principal (lg) Patrimônio+Resultado / Secundário (sm) Investido+Rentabilidade+Retirado | ALTA | ✅ Sessão 117 |
+| 109 | Raiz de possibilidades — projeção multicenário (Conservador/Central/Otimista/Estressado) × multitempo (1m→10a) com opacidade=confiança | MÉDIA | ⏳ I491 |
+| 110 | "Total Rendido Graças à Rapadura" + tabela decisao_investimento + nível atribuição | MÉDIA | ⏳ I492 |
+| 111 | Porcentagem Rapadura → saldo interno → fundo único (config + confirmação sempre) | MÉDIA | ⏳ I493 |
+| 112 | Objetivos da Cana + mensagem "Você já pode investir no nosso sistema" | MÉDIA | ⏳ I494 |
+| 113 | Fundos padrão modelo_inicial — onboarding sem contaminar patrimônio real | MÉDIA | ⏳ I495 |
+| 114 | Análise fundamentalista estruturada (CVM + B3) com hierarquia de fontes | MÉDIA | ⏳ I496 |
+| 115 | ESG separado do Fator Verde — temporal, por componente, fonte rastreável | MÉDIA | ⏳ I497 |
+| 116 | Feed da Cana 3x/dia filtrado por carteira (manhã/tarde/noite, não rede social) | MÉDIA | ⏳ I498 |
+| 117 | Memória da Cana 5 camadas + identificação de usuário no início da sessão | ALTA | ⏳ I499 |
+| 118 | Perfil investidor multidimensional (declarado vs. observado + tensões) | MÉDIA | ⏳ I500 |
+| 119 | Consolidação por instituição financeira (XP, BB, etc.) | MÉDIA | ⏳ I501 |
+| 120 | Alertas rebalanceamento 3 zonas + desvio transitório vs. estrutural | MÉDIA | ⏳ I502 |
+| 121 | Índice de Estado da Rapadura — qualidade dos dados (Dados%/Histórico%/Dossiês%/Confiança%) | MÉDIA | ⏳ I503 |

@@ -156,17 +156,18 @@ function MetricCell({ label, value }: { label: string; value: string }) {
   );
 }
 
-function KpiCard({ label, value, color }: { label: string; value: string; color?: string }) {
+function KpiCard({ label, value, color, size = "lg" }: { label: string; value: string; color?: string; size?: "lg" | "sm" }) {
+  const isLg = size === "lg";
   return (
     <div style={{
-      padding: "14px 16px",
+      padding: isLg ? "14px 16px" : "10px 14px",
       background: "#09101a",
-      borderTop: "2px solid #c8963b",
+      borderTop: `2px solid ${isLg ? "#c8963b" : "#1a2030"}`,
     }}>
-      <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#4a4540", marginBottom: 6 }}>
+      <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#4a4540", marginBottom: isLg ? 6 : 4 }}>
         {label}
       </div>
-      <div style={{ fontSize: 18, fontFamily: "monospace", fontWeight: 700, color: color ?? "#ddd8d0", letterSpacing: "-0.02em" }}>
+      <div style={{ fontSize: isLg ? 18 : 13, fontFamily: "monospace", fontWeight: 700, color: color ?? "#ddd8d0", letterSpacing: "-0.02em" }}>
         {value}
       </div>
     </div>
@@ -657,12 +658,13 @@ function OportunidadesView({
 // ─── PERTENCES ────────────────────────────────────────────────────────────────
 
 function PertencesView({
-  pertences, dashboard, fundos, onRefresh,
+  pertences, dashboard, fundos, onRefresh, hideValues,
 }: {
   pertences: Pertence[];
   dashboard: Dashboard;
   fundos: Fundo[];
   onRefresh: () => void;
+  hideValues: boolean;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -678,6 +680,9 @@ function PertencesView({
 
   const resultado = dashboard.resultado;
   const rentabilidade = dashboard.rentabilidade;
+
+  const fmtH = (v: number) => hideValues ? "••••••" : fmt(v);
+  const pctH = (v: number) => hideValues ? "—" : `${v >= 0 ? "+" : ""}${v.toFixed(2)}%`;
 
   // Gráfico de patrimônio
   const sorted = [...pertences].sort((a, b) => a.dataCompra.localeCompare(b.dataCompra));
@@ -824,31 +829,28 @@ function PertencesView({
         </div>
       </div>
 
-      {/* KPIs */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2, marginBottom: dashboard.totalRetirado > 0 ? 8 : 24 }}>
-        <KpiCard label="Total investido" value={fmt(dashboard.totalInvestido)} />
-        <KpiCard label="Valor atual" value={fmt(dashboard.totalAtual)} />
+      {/* KPIs — camada principal */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, marginBottom: 2 }}>
+        <KpiCard label="Patrimônio atual" value={fmtH(dashboard.totalAtual)} />
         <KpiCard
           label="Resultado total"
-          value={`${resultado >= 0 ? "+" : ""}${fmt(resultado)}`}
+          value={`${resultado >= 0 ? "+" : ""}${fmtH(resultado)}`}
           color={resultado >= 0 ? "#3f7254" : "#7a3535"}
         />
+      </div>
+      {/* KPIs — camada secundária */}
+      <div style={{ display: "grid", gridTemplateColumns: dashboard.totalRetirado > 0 ? "1fr 1fr 1fr" : "1fr 1fr", gap: 2, marginBottom: 24 }}>
+        <KpiCard size="sm" label="Total investido" value={fmtH(dashboard.totalInvestido)} />
         <KpiCard
+          size="sm"
           label="Rentabilidade"
-          value={`${rentabilidade >= 0 ? "+" : ""}${rentabilidade.toFixed(2)}%`}
+          value={pctH(rentabilidade)}
           color={rentabilidade >= 0 ? "#3f7254" : "#7a3535"}
         />
+        {dashboard.totalRetirado > 0 && (
+          <KpiCard size="sm" label="Já retirado" value={fmtH(dashboard.totalRetirado)} color="#8a6b30" />
+        )}
       </div>
-      {dashboard.totalRetirado > 0 && (
-        <div style={{
-          background: "#09101a", padding: "10px 14px", marginBottom: 24,
-          borderLeft: "2px solid #5a4020", display: "flex", alignItems: "center", gap: 10,
-        }}>
-          <span style={{ fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "#5a4020" }}>Já retirado</span>
-          <span style={{ fontSize: 12, fontFamily: "monospace", color: "#8a6b30" }}>{fmt(dashboard.totalRetirado)}</span>
-          <span style={{ fontSize: 10, color: "#3d4a5e" }}>incluído no resultado total</span>
-        </div>
-      )}
 
       {/* Gráficos */}
       {pertences.length > 0 && (
@@ -1070,11 +1072,11 @@ function PertencesView({
                   </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2, marginTop: 10 }}>
-                  <MetricCell label="Investido" value={fmt(vi)} />
-                  <MetricCell label="Atual" value={fmt(va)} />
+                  <MetricCell label="Investido" value={fmtH(vi)} />
+                  <MetricCell label="Atual" value={fmtH(va)} />
                   <MetricCell
                     label="Resultado"
-                    value={`${res >= 0 ? "+" : ""}${fmt(res)} (${rent >= 0 ? "+" : ""}${rent.toFixed(2)}%)`}
+                    value={hideValues ? "••••••" : `${res >= 0 ? "+" : ""}${fmt(res)} (${rent >= 0 ? "+" : ""}${rent.toFixed(2)}%)`}
                   />
                 </div>
                 {isEdit && (
@@ -2694,9 +2696,10 @@ export function RapaduraPage() {
   const [view, setView] = useState<View>("oportunidades");
   const [fundos, setFundos] = useState<Fundo[]>([]);
   const [pertences, setPertences] = useState<Pertence[]>([]);
-  const [dashboard, setDashboard] = useState<Dashboard>({ totalInvestido: 0, totalAtual: 0, resultado: 0, rentabilidade: 0 });
+  const [dashboard, setDashboard] = useState<Dashboard>({ totalInvestido: 0, totalAtual: 0, totalRetirado: 0, resultado: 0, rentabilidade: 0 });
   const [dataLoading, setDataLoading] = useState(false);
   const [showChangePw, setShowChangePw] = useState(false);
+  const [hideValues, setHideValues] = useState(false);
 
   const isAdmin = user?.role === "yuri" || user?.role === "mayumi";
   const isMobile = useIsMobile();
@@ -2719,7 +2722,7 @@ export function RapaduraPage() {
       ]);
       setFundos(fr.fundos ?? []);
       setPertences(pr.pertences ?? []);
-      setDashboard(pr.dashboard ?? { totalInvestido: 0, totalAtual: 0, resultado: 0, rentabilidade: 0 });
+      setDashboard(pr.dashboard ?? { totalInvestido: 0, totalAtual: 0, totalRetirado: 0, resultado: 0, rentabilidade: 0 });
     } catch { /* silencioso */ } finally {
       setDataLoading(false);
     }
@@ -2813,6 +2816,18 @@ export function RapaduraPage() {
 
           {/* User actions */}
           <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 10, flexShrink: 0 }}>
+            <button
+              onClick={() => setHideValues(h => !h)}
+              title={hideValues ? "Exibir valores" : "Esconder valores"}
+              style={{
+                fontSize: 12, fontFamily: "monospace", letterSpacing: "-0.02em",
+                color: hideValues ? "#c8963b" : "#2a3545", background: "none", border: "none",
+                cursor: "pointer", padding: "2px 4px", transition: "color .15s",
+                lineHeight: 1,
+              }}
+            >
+              {hideValues ? "👁" : "••"}
+            </button>
             <span style={{ fontSize: 10, color: "#3d4a5e", letterSpacing: "0.08em" }}>{user.nome}</span>
             {!isMobile && (
               <>
@@ -2927,7 +2942,7 @@ export function RapaduraPage() {
           <OportunidadesView fundos={fundos} isAdmin={isAdmin} onGerenciar={() => setView("gerenciar")} />
         )}
         {view === "pertences" && (
-          <PertencesView pertences={pertences} dashboard={dashboard} fundos={fundos} onRefresh={loadData} />
+          <PertencesView pertences={pertences} dashboard={dashboard} fundos={fundos} onRefresh={loadData} hideValues={hideValues} />
         )}
         {view === "transacoes" && (
           <TransacoesView fundos={fundos} />
