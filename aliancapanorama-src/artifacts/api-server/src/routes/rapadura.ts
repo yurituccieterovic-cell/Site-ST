@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
+import multer from "multer";
+import { PDFParse } from "pdf-parse";
 import { db } from "@workspace/db";
 import {
   rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable,
@@ -20,6 +22,14 @@ const loginLimit = rateLimit({
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: { error: "Muitas tentativas. Tente em 15 minutos." },
+});
+
+const uploadMiddleware = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 20 * 1024 * 1024, files: 10 },
+  fileFilter: (_req, file, cb) => {
+    cb(null, file.mimetype === "application/pdf");
+  },
 });
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -135,6 +145,23 @@ async function audit(userId: number | null, acao: string, detalhes: any, ip: str
   try {
     await db.insert(rapaduraAuditTable).values({ userId, acao, detalhes, ip });
   } catch { /* não bloquear a requisição por falha no audit */ }
+}
+
+async function buscarFundoSimilar(nome: string, threshold = 0.7): Promise<{ id: number; nome: string; similaridade: number } | null> {
+  try {
+    const result = await db.execute(sql`
+      SELECT id, nome, similarity(lower(nome::text), lower(${nome})) as sim
+      FROM rapadura_fundos
+      WHERE ativo = true AND similarity(lower(nome::text), lower(${nome})) > ${threshold}
+      ORDER BY sim DESC
+      LIMIT 1
+    `);
+    const row = (result as any).rows?.[0];
+    if (!row) return null;
+    return { id: Number(row.id), nome: String(row.nome), similaridade: parseFloat(row.sim) };
+  } catch {
+    return null;
+  }
 }
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
@@ -768,6 +795,28 @@ Para CONSULTAS e CONVERSAS:
   "resposta": "resposta direta"
 }
 
+Para DOSSIÊ (base de conhecimento viva do ativo — IAs têm Write access):
+{
+  "acao": "UPDATE_DOSSIE",
+  "itens": [
+    {
+      "id": <fundoId ou null — use nome se não souber o id>,
+      "nome": "nome do fundo (alternativa ao id)",
+      "campos": {
+        "identidade": "...",
+        "mercado": "...",
+        "historico": "...",
+        "fundamentos": "...",
+        "custos": "...",
+        "risco": "...",
+        "liquidez": "...",
+        "cana_interpretacao": "..."
+      }
+    }
+  ],
+  "resposta": "mensagem amigável"
+}
+
 Regras:
 - prazoResgate "D+0" = 0, "D+1" = 1, "D+2" = 2, etc
 - Rentabilidade Bruta 12M = retorno12m
@@ -779,7 +828,8 @@ Regras:
 - Use ADD_PERTENCE quando o usuário diz "tenho", "investi", "adiciona ao meu patrimônio", etc
 - Use ADD_FUNDO apenas quando explicitamente pedido por admin para adicionar ao catálogo
 - Sempre extraia TODOS os itens mencionados em itens[]
-- LIMITE: máximo 15 itens por mensagem. Se tiver mais de 15, processe os primeiros 15 e avise no campo "resposta" quantos ficaram de fora`;
+- LIMITE: máximo 15 itens por mensagem. Se tiver mais de 15, processe os primeiros 15 e avise no campo "resposta" quantos ficaram de fora
+- IAs (Cana, ISA, Artesão) têm Write access completo ao dossiê — podem atualizar campos sem aprovação humana`;
 
 router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const { message, history = [] } = req.body as { message: string; history?: any[] };
@@ -870,6 +920,19 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
     try {
       if (acao === "ADD_FUNDO") {
         if (!isAdmin) { executado.push({ erro: "Sem permissão para adicionar fundos" }); continue; }
+        // Dedup: verificar fundo similar antes de criar
+        if (!item.forcar) {
+          const similar = await buscarFundoSimilar(item.nome ?? "");
+          if (similar) {
+            executado.push({
+              ok: false,
+              acao: "ADD_FUNDO",
+              duplicata: similar,
+              aviso: `Fundo similar encontrado: "${similar.nome}" (${Math.round(similar.similaridade * 100)}% de semelhança). Use EDIT_FUNDO para atualizar ou inclua "forcar": true para criar mesmo assim.`,
+            });
+            continue;
+          }
+        }
         const scores = calcularScore(item);
         const [fundo] = await db.insert(rapaduraFundosTable).values({
           nome: item.nome ?? "Fundo sem nome",
@@ -986,6 +1049,22 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
           .where(and(eq(rapaduraPertencesTable.id, item.id), eq(rapaduraPertencesTable.userId, userId)));
         await audit(userId, "PERTENCE_DELETE_CANA", { pertenceId: item.id }, req.ip ?? "");
         executado.push({ ok: true, acao: "DELETE_PERTENCE", pertenceId: item.id });
+
+      } else if (acao === "UPDATE_DOSSIE") {
+        const targetId = item.id ?? fundosExistentes.find(f => f.nome.toLowerCase().includes((item.nome ?? "").toLowerCase()))?.id;
+        if (!targetId) { executado.push({ erro: `Fundo não encontrado para dossiê: ${item.nome}` }); continue; }
+        const campos = item.campos ?? {};
+        const [fundoAtual] = await db.select({ dossie: rapaduraFundosTable.dossie })
+          .from(rapaduraFundosTable).where(eq(rapaduraFundosTable.id, targetId)).limit(1);
+        const dossieAtual = (fundoAtual?.dossie as Record<string, any>) ?? {};
+        const dossieNovo = { ...dossieAtual, ...campos, _atualizadoEm: new Date().toISOString(), _atualizadoPor: "Cana" };
+        await db.update(rapaduraFundosTable).set({
+          dossie: dossieNovo,
+          ultimaAtualizacaoDossie: new Date(),
+          updatedAt: new Date(),
+        }).where(eq(rapaduraFundosTable.id, targetId));
+        await audit(userId, "DOSSIE_UPDATE_CANA", { fundoId: targetId, campos: Object.keys(campos) }, req.ip ?? "");
+        executado.push({ ok: true, acao: "UPDATE_DOSSIE", fundoId: targetId, camposAtualizados: Object.keys(campos) });
       }
     } catch (e) {
       executado.push({ erro: String(e), item });
@@ -1390,6 +1469,134 @@ router.get("/rapadura/relatorio/pdf", requireRapaduraAuth, async (req, res) => {
 
   doc.end();
   await audit(userId, "RELATORIO_PDF", { pertences: pertences.length }, req.ip ?? "");
+});
+
+// ─── Dossiê — base de conhecimento viva por ativo ─────────────────────────────
+
+router.get("/rapadura/fundos/:id/dossie", requireRapaduraAuth, async (req, res) => {
+  const fundoId = parseInt(req.params.id ?? "0");
+  const [fundo] = await db.select({
+    id: rapaduraFundosTable.id,
+    nome: rapaduraFundosTable.nome,
+    dossie: rapaduraFundosTable.dossie,
+    ultimaAtualizacaoDossie: rapaduraFundosTable.ultimaAtualizacaoDossie,
+  }).from(rapaduraFundosTable).where(eq(rapaduraFundosTable.id, fundoId)).limit(1);
+  if (!fundo) { res.status(404).json({ error: "Fundo não encontrado" }); return; }
+  res.json({ id: fundo.id, nome: fundo.nome, dossie: fundo.dossie ?? {}, ultimaAtualizacao: fundo.ultimaAtualizacaoDossie });
+});
+
+router.put("/rapadura/fundos/:id/dossie", requireRapaduraAuth, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+  const fundoId = parseInt(req.params.id ?? "0");
+  const campos = req.body as Record<string, any>;
+  if (!campos || typeof campos !== "object" || Array.isArray(campos)) {
+    res.status(400).json({ error: "Body deve ser um objeto com os campos do dossiê a atualizar" }); return;
+  }
+  const [fundo] = await db.select({ dossie: rapaduraFundosTable.dossie })
+    .from(rapaduraFundosTable).where(eq(rapaduraFundosTable.id, fundoId)).limit(1);
+  if (!fundo) { res.status(404).json({ error: "Fundo não encontrado" }); return; }
+  const dossieAtual = (fundo.dossie as Record<string, any>) ?? {};
+  const autor = req.body._autor ?? `user:${userId}`;
+  const dossieNovo = { ...dossieAtual, ...campos, _atualizadoEm: new Date().toISOString(), _atualizadoPor: autor };
+  await db.update(rapaduraFundosTable).set({
+    dossie: dossieNovo,
+    ultimaAtualizacaoDossie: new Date(),
+    updatedAt: new Date(),
+  }).where(eq(rapaduraFundosTable.id, fundoId));
+  await audit(userId, "DOSSIE_UPDATE", { fundoId, campos: Object.keys(campos) }, req.ip ?? "");
+  res.json({ ok: true, dossie: dossieNovo });
+});
+
+// ─── Documentos PDF — upload + extração + confirmação ────────────────────────
+
+router.post("/rapadura/documentos/upload", requireRapaduraAuth, requireAdmin,
+  uploadMiddleware.array("files", 10),
+  async (req, res) => {
+    const files = req.files as Express.Multer.File[] | undefined;
+    if (!files?.length) { res.status(400).json({ error: "Envie ao menos 1 arquivo PDF (campo 'files')" }); return; }
+    const userId = req.session.rapaduraUserId!;
+    const resultados: any[] = [];
+    for (const file of files) {
+      try {
+        const parser = new PDFParse();
+        await parser.load(file.buffer);
+        const textResult = await parser.getText();
+        const texto = textResult.text.replace(/\s+/g, " ").trim();
+        resultados.push({
+          nome: file.originalname,
+          tamanho: file.size,
+          paginas: textResult.total,
+          preview: texto.slice(0, 500),
+          texto: texto.slice(0, 8000),
+          totalChars: texto.length,
+        });
+      } catch (e) {
+        resultados.push({ nome: file.originalname, erro: String(e) });
+      }
+    }
+    await audit(userId, "DOCUMENTOS_UPLOAD", { arquivos: files.map(f => f.originalname), total: resultados.length }, req.ip ?? "");
+    res.json({ documentos: resultados, total: resultados.length, dica: "Passe o texto extraído para a Cana e peça para processar as operações; depois chame /rapadura/documentos/confirmar com as operações confirmadas." });
+  }
+);
+
+router.post("/rapadura/documentos/confirmar", requireRapaduraAuth, requireAdmin, async (req, res) => {
+  const userId = req.session.rapaduraUserId!;
+  const { operacoes } = req.body as { operacoes?: Array<Record<string, any>> };
+  if (!Array.isArray(operacoes) || !operacoes.length) {
+    res.status(400).json({ error: "operacoes[] obrigatório — array de {acao, ...campos}" }); return;
+  }
+  const resultados: any[] = [];
+  for (const op of operacoes) {
+    try {
+      if (op.acao === "ADD_FUNDO") {
+        const scores = calcularScore(op);
+        const [fundo] = await db.insert(rapaduraFundosTable).values({
+          nome: op.nome ?? "Fundo sem nome",
+          gestora: op.gestora ?? "Desconhecida",
+          classe: op.classe ?? "Multimercado",
+          benchmark: op.benchmark ?? "CDI",
+          retorno12m: op.retorno12m != null ? String(op.retorno12m) : null,
+          sharpe12m: op.sharpe12m != null ? String(op.sharpe12m) : null,
+          sortino12m: op.sortino12m != null ? String(op.sortino12m) : null,
+          maxDrawdown: op.maxDrawdown != null ? String(op.maxDrawdown) : null,
+          taxaAdm: op.taxaAdm != null ? String(op.taxaAdm) : null,
+          taxaPerformance: op.taxaPerformance != null ? String(op.taxaPerformance) : null,
+          prazoResgateDias: op.prazoResgateDias ?? 30,
+          notas: op.notas ?? null,
+          fonte: "PDF_IMPORT",
+          scoreAtratividade: scores.scoreAtratividade,
+          scoreConfianca: scores.scoreConfianca,
+          scoreDetalhado: scores.scoreDetalhado,
+        }).returning();
+        await audit(userId, "FUNDO_ADD_PDF", { fundoId: fundo.id, nome: fundo.nome }, req.ip ?? "");
+        resultados.push({ ok: true, acao: "ADD_FUNDO", fundo: { id: fundo.id, nome: fundo.nome } });
+      } else if (op.acao === "ADD_PERTENCE") {
+        const busca = (op.fundoNome ?? op.nome ?? "").toLowerCase();
+        const [fundo] = await db.select({ id: rapaduraFundosTable.id, nome: rapaduraFundosTable.nome })
+          .from(rapaduraFundosTable)
+          .where(sql`lower(${rapaduraFundosTable.nome}) like ${"%" + busca + "%"}`)
+          .limit(1);
+        if (!fundo) { resultados.push({ erro: `Fundo não encontrado: ${op.fundoNome ?? op.nome}` }); continue; }
+        const hoje = new Date().toISOString().slice(0, 10);
+        const [pertence] = await db.insert(rapaduraPertencesTable).values({
+          userId,
+          fundoId: fundo.id,
+          dataCompra: op.dataCompra ?? hoje,
+          valorInvestido: String(op.valorInvestido ?? 0),
+          valorAtual: op.valorAtual != null ? String(op.valorAtual) : null,
+          notas: op.notas ?? null,
+        }).returning();
+        await audit(userId, "PERTENCE_ADD_PDF", { pertenceId: pertence.id, fundoId: fundo.id }, req.ip ?? "");
+        resultados.push({ ok: true, acao: "ADD_PERTENCE", pertenceId: pertence.id, fundo: { id: fundo.id, nome: fundo.nome } });
+      } else {
+        resultados.push({ erro: `Ação não suportada: ${op.acao}. Use ADD_FUNDO ou ADD_PERTENCE.` });
+      }
+    } catch (e) {
+      resultados.push({ erro: String(e), op });
+    }
+  }
+  await audit(userId, "DOCUMENTOS_CONFIRMAR", { total: operacoes.length, ok: resultados.filter(r => r.ok).length }, req.ip ?? "");
+  res.json({ resultados, total: resultados.length, ok: resultados.filter(r => r.ok).length });
 });
 
 export default router;
