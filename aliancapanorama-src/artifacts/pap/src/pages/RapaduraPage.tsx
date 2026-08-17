@@ -41,7 +41,7 @@ type Transacao = {
   notas: string | null; pertenceId: number | null; fundoId: number; fundoNome: string;
 };
 type ChatMsg = { role: "user" | "assistant"; content: string };
-type View = "oportunidades" | "pertences" | "transacoes" | "gerenciar" | "analisar" | "cana";
+type View = "oportunidades" | "pertences" | "transacoes" | "gerenciar" | "analisar" | "cana" | "comparar";
 type XpPreviewItem = { data: string; descricao: string; valor: number; tipo: string; motivoI438?: string };
 
 type AlocacaoItem = {
@@ -1538,6 +1538,298 @@ function ColherModal({ onClose }: { onClose: () => void }) {
 
 // ─── ANALISAR ────────────────────────────────────────────────────────────────
 
+// ─── COMPARADOR ──────────────────────────────────────────────────────────────
+
+type ComparadorMode = "direto" | "patrimonial" | "oportunidade" | "exploratorio";
+
+const MODO_LABELS: Record<ComparadorMode, string> = {
+  direto: "Direto", patrimonial: "Patrimonial", oportunidade: "Oportunidade", exploratorio: "Exploratório",
+};
+const MODO_DESC: Record<ComparadorMode, string> = {
+  direto: "Mesma classe — comparação apples-to-apples",
+  patrimonial: "Todos os ativos — valor, concentração, liquidez",
+  oportunidade: "Elegíveis para nova decisão de investimento",
+  exploratorio: "Classes diferentes — comparação cruzada com aviso",
+};
+const CLASSES_FUNDO_COMP = ["Renda Fixa", "Multimercado", "Ações", "Pós Fixado", "Renda Variável"];
+const SCORE_DIMS = [
+  { key: "retornoAjustado", label: "Retorno Ajustado" },
+  { key: "controleQueda",   label: "Controle de Queda" },
+  { key: "consistencia",    label: "Consistência" },
+  { key: "custo",           label: "Custo Real" },
+  { key: "liquidez",        label: "Liquidez (score)" },
+  { key: "fatorVerde",      label: "Fator Verde" },
+];
+
+function ComparisonTable({ fundos }: { fundos: Fundo[] }) {
+  const fmtN = (v: string | null, decimais = 2) => v != null ? Number(v).toFixed(decimais) : null;
+
+  type Row = { label: string; vals: { display: string; raw: number }[]; higherBetter?: boolean };
+
+  const rows: Row[] = [
+    {
+      label: "Retorno 12M",
+      vals: fundos.map(f => ({ display: f.retorno12m != null ? `${fmtN(f.retorno12m)}%` : "—", raw: Number(f.retorno12m ?? -999) })),
+    },
+    {
+      label: "Calmar Ratio",
+      vals: fundos.map(f => ({ display: fmtN(f.calmarRatio) ?? "—", raw: Number(f.calmarRatio ?? -999) })),
+    },
+    {
+      label: "Sharpe 12M",
+      vals: fundos.map(f => ({ display: fmtN(f.sharpe12m) ?? "—", raw: Number(f.sharpe12m ?? -999) })),
+    },
+    {
+      label: "Sortino 12M",
+      vals: fundos.map(f => ({ display: fmtN(f.sortino12m) ?? "—", raw: Number(f.sortino12m ?? -999) })),
+    },
+    {
+      label: "Max Drawdown",
+      vals: fundos.map(f => ({ display: f.maxDrawdown != null ? `-${fmtN(f.maxDrawdown)}%` : "—", raw: -Number(f.maxDrawdown ?? 999) })),
+    },
+    {
+      label: "Taxa Adm",
+      vals: fundos.map(f => ({ display: f.taxaAdm != null ? `${fmtN(f.taxaAdm)}%` : "—", raw: -Number(f.taxaAdm ?? 999) })),
+    },
+    {
+      label: "Liquidez",
+      vals: fundos.map(f => ({ display: f.prazoResgateDias <= 0 ? "D+0" : `D+${f.prazoResgateDias}`, raw: -f.prazoResgateDias })),
+    },
+    {
+      label: "Mínimo",
+      vals: fundos.map(f => ({
+        display: f.valorMinAplicacao != null ? `R$${Number(f.valorMinAplicacao).toLocaleString("pt-BR")}` : "—",
+        raw: -Number(f.valorMinAplicacao ?? 0),
+      })),
+    },
+  ];
+
+  const isBest = (vals: { raw: number }[], i: number) => {
+    const max = Math.max(...vals.map(v => v.raw));
+    return vals[i].raw === max && max > -999;
+  };
+
+  const colGrid = `140px repeat(${fundos.length}, 1fr)`;
+
+  return (
+    <div>
+      {/* Cabeçalho */}
+      <div style={{ display: "grid", gridTemplateColumns: colGrid, gap: 2, marginBottom: 4 }}>
+        <div />
+        {fundos.map(f => (
+          <div key={f.id} style={{ background: "#09101a", padding: "10px 12px", textAlign: "center", borderTop: "2px solid #1a2a40" }}>
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#ddd8d0", marginBottom: 2, lineHeight: 1.3 }}>{f.nome}</div>
+            <div style={{ fontSize: 9, color: "#3d4a5e", marginBottom: 6 }}>{f.gestora} · {f.classe}</div>
+            <ScoreBadge value={f.scoreAtratividade} />
+          </div>
+        ))}
+      </div>
+
+      {/* Métricas */}
+      {rows.map(row => (
+        <div key={row.label} style={{ display: "grid", gridTemplateColumns: colGrid, gap: 2, marginBottom: 1 }}>
+          <div style={{ padding: "7px 10px", background: "#060c12", display: "flex", alignItems: "center" }}>
+            <span style={{ fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3d4a5e" }}>{row.label}</span>
+          </div>
+          {row.vals.map((v, i) => {
+            const best = isBest(row.vals, i);
+            return (
+              <div key={i} style={{
+                padding: "7px 12px", textAlign: "center",
+                background: best ? "#0a1a0a" : "#09101a",
+                borderLeft: best ? "2px solid #3f725450" : "2px solid transparent",
+              }}>
+                <span style={{ fontSize: 12, fontFamily: "monospace", color: best ? "#3f7254" : "#ddd8d0" }}>{v.display}</span>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+
+      {/* Dimensões do Score */}
+      <div style={{ marginTop: 20, marginBottom: 4, padding: "6px 10px", background: "#060c12" }}>
+        <span style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#3d4a5e" }}>Dimensões do Score (0–100)</span>
+      </div>
+      {SCORE_DIMS.map(dim => {
+        const vals = fundos.map(f => {
+          const raw = Number(f.scoreDetalhado?.[dim.key] ?? null);
+          return { raw: isNaN(raw) ? -1 : raw, display: !isNaN(raw) && raw >= 0 ? String(Math.round(raw)) : "—" };
+        });
+        return (
+          <div key={dim.key} style={{ display: "grid", gridTemplateColumns: colGrid, gap: 2, marginBottom: 1 }}>
+            <div style={{ padding: "7px 10px", background: "#060c12", display: "flex", alignItems: "center" }}>
+              <span style={{ fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3d4a5e" }}>{dim.label}</span>
+            </div>
+            {vals.map((v, i) => {
+              const best = isBest(vals, i);
+              return (
+                <div key={i} style={{
+                  padding: "6px 12px",
+                  background: best ? "#0a1a0a" : "#09101a",
+                  borderLeft: best ? "2px solid #3f725450" : "2px solid transparent",
+                }}>
+                  <div style={{ textAlign: "center", marginBottom: v.raw >= 0 ? 4 : 0 }}>
+                    <span style={{ fontSize: 11, fontFamily: "monospace", color: best ? "#3f7254" : "#ddd8d0" }}>{v.display}</span>
+                  </div>
+                  {v.raw >= 0 && <ScoreRuler value={v.raw} />}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+
+      {/* Rodapé */}
+      <div style={{ marginTop: 16, padding: "8px 12px", background: "#060c12", fontSize: 10, color: "#3d4a5e", borderTop: "1px solid #0f1520" }}>
+        Verde = melhor nessa dimensão · Não existe vencedor geral — cada ativo tem pontos fortes em contextos diferentes
+      </div>
+    </div>
+  );
+}
+
+function ComparadorView({ fundos }: { fundos: Fundo[] }) {
+  const [modo, setModo] = useState<ComparadorMode>("direto");
+  const [selecionados, setSelecionados] = useState<Fundo[]>([]);
+  const [busca, setBusca] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const fundosDisponiveis = fundos.filter(f => {
+    if (modo === "oportunidade") return CLASSES_FUNDO_COMP.includes(f.classe);
+    return true;
+  });
+
+  const fundosFiltrados = busca.length >= 1
+    ? fundosDisponiveis.filter(f =>
+        !selecionados.find(s => s.id === f.id) &&
+        (f.nome.toLowerCase().includes(busca.toLowerCase()) || f.gestora.toLowerCase().includes(busca.toLowerCase()))
+      ).slice(0, 8)
+    : [];
+
+  const classes = [...new Set(selecionados.map(f => f.classe))];
+  const classesDiferentes = classes.length > 1;
+  const showAviso = classesDiferentes && (modo === "direto" || modo === "exploratorio");
+
+  const addFundo = (f: Fundo) => {
+    setSelecionados(s => s.length < 3 ? [...s, f] : s);
+    setBusca("");
+    inputRef.current?.focus();
+  };
+
+  const removeFundo = (id: number) => setSelecionados(s => s.filter(x => x.id !== id));
+
+  const onModoChange = (m: ComparadorMode) => {
+    setModo(m);
+    setSelecionados([]);
+    setBusca("");
+  };
+
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: 24, paddingBottom: 16, borderBottom: "1px solid #0f1520" }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 5 }}>Comparador</div>
+        <div style={{ fontSize: 22, fontWeight: 300, color: "#ddd8d0" }}>Análise Lado a Lado</div>
+      </div>
+
+      {/* Modos */}
+      <div style={{ display: "flex", gap: 2, flexWrap: "wrap", marginBottom: 8 }}>
+        {(Object.keys(MODO_LABELS) as ComparadorMode[]).map(m => (
+          <button key={m} onClick={() => onModoChange(m)} style={{
+            padding: "5px 11px", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
+            background: modo === m ? "#c8963b18" : "#09101a",
+            color: modo === m ? "#c8963b" : "#3d4a5e",
+            border: `1px solid ${modo === m ? "#c8963b50" : "#141b26"}`,
+            cursor: "pointer",
+          }}>{MODO_LABELS[m]}</button>
+        ))}
+      </div>
+      <div style={{ fontSize: 10, color: "#3d4a5e", marginBottom: 20, paddingLeft: 2 }}>{MODO_DESC[modo]}</div>
+
+      {/* Busca */}
+      {selecionados.length < 3 && (
+        <div style={{ position: "relative", marginBottom: 12 }}>
+          <input
+            ref={inputRef}
+            value={busca}
+            onChange={e => setBusca(e.target.value)}
+            placeholder={`Buscar ativo para comparar (${selecionados.length}/3 selecionado${selecionados.length !== 1 ? "s" : ""})…`}
+            style={{
+              width: "100%", padding: "10px 14px", boxSizing: "border-box",
+              background: "#09101a", border: "1px solid #1a2a40", color: "#ddd8d0",
+              fontSize: 13, outline: "none",
+            }}
+          />
+          {fundosFiltrados.length > 0 && (
+            <div style={{
+              position: "absolute", left: 0, right: 0, top: "100%", zIndex: 20,
+              background: "#09101a", border: "1px solid #1a2a40", borderTop: "none",
+              maxHeight: 220, overflowY: "auto",
+            }}>
+              {fundosFiltrados.map(f => (
+                <div key={f.id} onClick={() => addFundo(f)} style={{
+                  padding: "8px 14px", cursor: "pointer", borderBottom: "1px solid #0d1220",
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  transition: "background 0.1s",
+                }}
+                  onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = "#0d1520")}
+                  onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = "transparent")}
+                >
+                  <div>
+                    <div style={{ fontSize: 12, color: "#ddd8d0" }}>{f.nome}</div>
+                    <div style={{ fontSize: 10, color: "#3d4a5e", marginTop: 2 }}>{f.gestora} · {f.classe}</div>
+                  </div>
+                  <ScoreBadge value={f.scoreAtratividade} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Chips selecionados */}
+      {selecionados.length > 0 && (
+        <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 12 }}>
+          {selecionados.map(f => (
+            <span key={f.id} style={{
+              padding: "4px 10px", background: "#0d1520",
+              border: "1px solid #1a2a40", fontSize: 11, color: "#ddd8d0",
+              display: "flex", alignItems: "center", gap: 6,
+            }}>
+              {f.nome}
+              <button onClick={() => removeFundo(f.id)} style={{
+                background: "none", border: "none", color: "#7a3535",
+                cursor: "pointer", fontSize: 14, padding: 0, lineHeight: 1,
+              }}>×</button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Aviso cross-class */}
+      {showAviso && (
+        <div style={{
+          padding: "8px 12px", background: "#180e00",
+          border: "1px solid #7a353560", marginBottom: 16, fontSize: 11, color: "#c87060",
+        }}>
+          ⚠ Classes diferentes ({classes.join(" · ")}) — métricas podem não ser comparáveis diretamente.
+          Use o modo Exploratório para comparação cruzada intencional.
+        </div>
+      )}
+
+      {/* Tabela */}
+      {selecionados.length >= 2 ? (
+        <ComparisonTable fundos={selecionados} />
+      ) : (
+        <div style={{ textAlign: "center", padding: "52px 0", color: "#3d4a5e", fontSize: 13 }}>
+          {selecionados.length === 0
+            ? "Busque e selecione 2 ou 3 ativos para comparar"
+            : "Adicione mais 1 ativo para iniciar a comparação"}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AnalisarView() {
   const [data, setData] = useState<AnalisarResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -2459,6 +2751,7 @@ export function RapaduraPage() {
     { id: "pertences", label: "Pertences" },
     { id: "transacoes", label: "Transações" },
     { id: "analisar", label: "Analisar" },
+    { id: "comparar", label: "Comparar ⊕" },
     { id: "cana", label: "Cana ✦", adminOnly: true },
     { id: "gerenciar", label: "Gerenciar", adminOnly: true },
   ];
@@ -2641,6 +2934,9 @@ export function RapaduraPage() {
         )}
         {view === "analisar" && (
           <AnalisarView />
+        )}
+        {view === "comparar" && (
+          <ComparadorView fundos={fundos} />
         )}
         {view === "cana" && isAdmin && (
           <CanaView onRefresh={loadData} />
