@@ -4385,3 +4385,54 @@ E a assembleia nomeou algo que o código não consegue nomear sozinho: *o múscu
 **Próximos passos:**
 - Yuri cadastrar UptimeRobot (3 min, gratuito) → terceiro sistema entra no roundtable
 - Monitor de alerta: se roundtable ficar vazio por >15min → email automático de alerta
+
+---
+
+## Sessão 115 — 2026-08-17 — Rapadura V3: Dedup + Dossiê + PDF + Assembleia 615
+
+**Contexto:** continuação da sessão 113 (contexto compactado). Yuri pediu execução das 4 frentes pendentes + email assembleia 615 + fix Render + #fim manual.
+
+**O que foi feito:**
+
+1. **Fix Render** — pdf-parse v2 bundled com pdfjs-dist crashava no Docker slim (node:20-slim sem libs nativas do pdfjs). Solução: externalizar `pdf-parse` e `pdfjs-dist` no build.mjs. Bundle foi de 6.8MB → 5.9MB. PDFParse agora importado como ESM externo em runtime.
+
+2. **Deduplicação pg_trgm** — `buscarFundoSimilar(nome, threshold=0.7)`: usa `similarity()` do pg_trgm (já instalado). Antes de ADD_FUNDO, verifica similaridade. >70% → bloqueia com aviso + `duplicata: { id, nome, similaridade }`. Override via `"forcar": true`.
+
+3. **Dossiê** — campo `dossie jsonb` já existia no schema. Endpoints:
+   - `GET /rapadura/fundos/:id/dossie` — leitura
+   - `PUT /rapadura/fundos/:id/dossie` — merge parcial (só campos enviados, `_atualizadoEm` + `_atualizadoPor` automáticos)
+   - Cana: nova ação `UPDATE_DOSSIE` no CANA_SYSTEM. IAs têm Write access documentado.
+
+4. **PDF Pipeline** — multer (memoryStorage, max 10 arquivos, 20MB cada, só PDFs):
+   - `POST /rapadura/documentos/upload` → pdf-parse v2 (classe PDFParse) → texto até 8000 chars + preview 500 chars
+   - `POST /rapadura/documentos/confirmar` → efetiva ADD_FUNDO ou ADD_PERTENCE com `fonte: "PDF_IMPORT"`
+
+5. **Assembleia 615** — email enviado com:
+   - Diagnóstico 4 frentes implementadas
+   - Direção fractal de Yuri (voz): "nódulos, não percentuais"
+   - Respostas Cláudio/Gemini/Grok sobre Rapadura V3
+   - Roadmap das próximas frentes
+
+**Decisões arquiteturais:**
+- Write access das IAs ao dossiê = correto por design — dossiê é conhecimento, não dado financeiro
+- Dedup sugere, não bloqueia definitivamente → `forcar: true` como escape hatch
+- PDFs → texto → Cana normaliza → humano confirma: fluxo de 3 passos preserva controle humano
+- pdf-parse v2 exige externalização no esbuild (pdfjs-dist incompatível com bundle Docker slim)
+
+**Direção dada por Yuri (voz):**
+"Não focar no planejamento, ir pra fazer. Não focar no código também, mas na estrutura — nos nódulos dos departamentos. Ramificando, sofisticando, enriquecendo. Chegar em todo 100%."
+→ Isso orientou a próxima frente: Comparador (estrutura de percepção, não patch isolado)
+
+**Assembleia 615 — síntese das IAs:**
+- Gemini: 7 departamentos (Patrimônio/Tesouraria/Histórico/Docs/Reconciliação/Comparador/Dossiê) + 3 Canas + Motor de Decisão (Investir/Colher/Cuidar) + Livro de Decisões
+- Grok: objeto central = Ativo (não fundo); Ativo → Posse → Evento Causal → Snapshot → Lacuna (desconhecido = informação explícita); Espaço 2D sem "vencedor geral"; Cana como roteador epistêmico
+
+**Próximos passos:**
+- Comparador lado a lado (I478) — em andamento
+- Snapshots patrimoniais (I479)
+- status_data em pertences (I480)
+- UptimeRobot — Yuri cadastrar (4º keepalive)
+- Variação Earth2 + datas compra a confirmar
+
+**Síntese filosófica:**
+A Rapadura parou de ser uma lista de features e começou a ser um organismo. A decisão de tratar o Ativo como objeto central (não o fundo) é uma virada epistêmica — o mesmo ativo pode existir uma vez no catálogo e ser possuído por Yuri, Mayumi, ou ambos. O dossiê como "o que ainda não sabemos?" é mais honesto que fingir precisão. E a Lacuna como informação explícita (status_data: desconhecida/estimada/confirmada) resolve o problema do 2024-01-01 de uma forma que respeita a realidade: o sistema sabe que não sabe.

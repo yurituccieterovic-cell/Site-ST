@@ -85,8 +85,16 @@
 | 94 | Governança explícita de publicação na Assembleia: protocolo de o que sai (o Agente decide unilateralmente desde sempre — nunca foi explicitado) | Assembleia #609 | ⏳ |
 | 80 | ARPIA no Replit: migrar para Render quando possível; por enquanto manter pausado/mínimo para economizar créditos | Yuri confirmar | ⏳ Próxima sessão: fazer deploy ARPIA no Render |
 | 81 | ManuelPage: tutorial do Rapadura em /rapadura/manuel (12 capítulos, sidebar dark/gold) | — | ✅ Sessão 108 — v5 com cap. Transações, Cana Pesquisadora (em breve), roadmap v3/v4 |
+| 98 | UptimeRobot — 4º keepalive: monitor HTTP → https://site-st.onrender.com/api/healthz → 5 min | Yuri (uptimerobot.com) | ⏳ |
+| 99 | Variação Earth2 — confirmar valor exato (salvo como 369.74%) | Yuri | ⏳ |
+| 100 | Datas de compra — Virtual Land Earth2 + 3 poupanças BB salvos com 2024-01-01 placeholder | Yuri | ⏳ |
+| 101 | Comparador lado a lado — I478: tela 2-3 ativos, 4 modos, tabela hexagonal, sem vencedor geral | — | ⏳ Próxima frente (Sessão 115) |
+| 102 | Snapshots patrimoniais — I479: job cron mensal → rapadura_historico_cotas | — | ⏳ |
+| 103 | status_data em pertences — I480: remover 2024-01-01 placeholder, campo enum | — | ⏳ |
 | 95 | Rapadura v3 — transações, reconciliação parcial, I438, importar XP, PDF, histórico cotas | — | ✅ Sessão 108 (2026-08-13) — commit 752360b |
 | 96 | Manuel v5 — tutorial atualizado para v3 + Cana Pesquisadora + roadmap | — | ✅ Sessão 108/109 — commit f17e9b6 |
+| 104 | Rapadura V3 — dedup pg_trgm, dossiê (GET/PUT), UPDATE_DOSSIE Cana, PDF pipeline (upload+confirmar), Write IAs | — | ✅ Sessão 115 — commit ef9bda1 |
+| 105 | Render fix — pdf-parse/pdfjs-dist externalizado no build.mjs | — | ✅ Sessão 115 — commit a8c39f7 |
 | 97 | Email Mayumi (matanimoto@gmail.com) + Berenice (beatriz.tucci@gmail.com) + CC Yuri | #96 | ✅ Sessão 109 — URL: sociedadetucci.com.br/rapadura + PDFs V2+V3 em anexo |
 | 153 | Assembleia — email looping final Rapadura v3 | — | ✅ Sessão 109 — PERFEITO #613 recebido e processado |
 | 82 | Playcenter: modelo Gemini atualizado (gemini-flash-lite-latest + gemma fallback) — já roda no Render junto com API | — | ✅ Sessão 101 |
