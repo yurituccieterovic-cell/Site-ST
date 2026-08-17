@@ -85,6 +85,7 @@
 | 94 | Governança explícita de publicação na Assembleia: protocolo de o que sai (o Agente decide unilateralmente desde sempre — nunca foi explicitado) | Assembleia #609 | ⏳ |
 | 80 | ARPIA no Replit: migrar para Render quando possível; por enquanto manter pausado/mínimo para economizar créditos | Yuri confirmar | ⏳ Próxima sessão: fazer deploy ARPIA no Render |
 | 81 | ManuelPage: tutorial do Rapadura em /rapadura/manuel (12 capítulos, sidebar dark/gold) | — | ✅ Sessão 108 — v5 com cap. Transações, Cana Pesquisadora (em breve), roadmap v3/v4 |
+| 106 | 🔴 URGENTE — Curso 3 "Finanças Sustentáveis e Reais: a Moeda através dos Dados" — ao final do Rapadura como plataforma didática | I485 | ⏳ URGENTE |
 | 98 | UptimeRobot — 4º keepalive: monitor HTTP → https://site-st.onrender.com/api/healthz → 5 min | Yuri (uptimerobot.com) | ⏳ |
 | 99 | Variação Earth2 — confirmar valor exato (salvo como 369.74%) | Yuri | ⏳ |
 | 100 | Datas de compra — Virtual Land Earth2 + 3 poupanças BB salvos com 2024-01-01 placeholder | Yuri | ⏳ |
