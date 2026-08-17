@@ -53,6 +53,8 @@ async function buildAll() {
       "nodemailer",
       "pdfkit",
       "fontkit",
+      "pdf-parse",
+      "pdfjs-dist",
       "handlebars",
       "knex",
       "typeorm",
