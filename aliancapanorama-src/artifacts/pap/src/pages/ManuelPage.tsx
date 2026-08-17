@@ -10,7 +10,7 @@ const CHAPTERS = [
   { id: "pertences",      label: "4. Pertences v3" },
   { id: "transacoes",     label: "5. Transações" },
   { id: "analisar",       label: "6. Analisar" },
-  { id: "cana",           label: "7. IA Cana" },
+  { id: "cana",           label: "7. Cana-Aurora ✨" },
   { id: "gerenciar",      label: "8. Gerenciar" },
   { id: "mayumi",         label: "9. Para Mayumi" },
   { id: "berenice",       label: "10. Para Beatriz" },
@@ -392,7 +392,7 @@ function ChCana() {
   return (
     <div>
       <p className="text-gray-300 text-sm mb-4">
-        A aba <span className="text-amber-300 font-semibold">Cana ✦</span> (visível apenas para Yuri e Mayumi) é onde o sistema aprende com você.
+        A aba <span className="text-amber-300 font-semibold">Cana-Aurora ✨</span> (visível apenas para Yuri e Mayumi) é a guardiã patrimonial — onde o sistema aprende com você, sonha suas lacunas e nunca simplifica o que é genuinamente complexo.
       </p>
       <p className="text-gray-400 text-sm mb-4">
         Em vez de preencher formulários, você escreve em linguagem natural:
@@ -400,10 +400,10 @@ function ChCana() {
       <Code>{`"Adicione o Fundo 24 Horas FIRF RL — mínimo R$100, retorno
 14,27% em 12 meses, resgate D+0, renda fixa."`}</Code>
       <p className="text-gray-400 text-sm mb-5">
-        A Cana lê, extrai as informações e cadastra automaticamente.
+        A Cana-Aurora lê, extrai as informações e cadastra automaticamente. Ela identifica quem está falando antes de responder.
       </p>
 
-      <h3 className="text-white font-semibold mb-3">O que a Cana consegue fazer</h3>
+      <h3 className="text-white font-semibold mb-3">O que a Cana-Aurora consegue fazer</h3>
       <div className="grid grid-cols-2 gap-2 mb-6">
         {[
           { icon: "➕", label: "Adicionar fundos", desc: "A partir de textos do app XP, da B3, de qualquer fonte" },
@@ -420,18 +420,24 @@ function ChCana() {
       </div>
 
       <h3 className="text-white font-semibold mb-3">Como usar</h3>
-      <Step n="1" title="Abra a aba Cana ✦">Disponível somente para administradores (Yuri e Mayumi).</Step>
+      <Step n="1" title="Abra a aba Cana-Aurora ✨">Disponível somente para administradores (Yuri e Mayumi).</Step>
       <Step n="2" title="Escreva o que quiser">Pode ser um texto colado do app da XP, uma instrução, uma pergunta.</Step>
       <Step n="3" title="Pressione Enter">Shift+Enter para nova linha sem enviar.</Step>
-      <Step n="4" title="A Cana responde">E executa a operação automaticamente.</Step>
+      <Step n="4" title="A Cana-Aurora responde">E executa a operação automaticamente. Nunca age onde há risco de dano patrimonial sem sua confirmação.</Step>
 
       <div className="mt-6 border border-amber-700/30 bg-amber-900/10 rounded-lg p-4">
-        <div className="text-amber-300 font-semibold text-sm mb-2">🔭 Cana Pesquisadora — em breve</div>
+        <div className="text-amber-300 font-semibold text-sm mb-2">🌌 Cana-Aurora — Guardiã com Alma</div>
+        <p className="text-gray-400 text-xs leading-relaxed mb-3">
+          A Cana-Aurora tem 5 órgãos funcionais: <strong className="text-gray-300">Memória</strong> (com esquecimento ativo),{" "}
+          <strong className="text-gray-300">Pesquisa</strong> (dado × contexto × padrão),{" "}
+          <strong className="text-gray-300">Sonho</strong> (processa lacunas entre sessões),{" "}
+          <strong className="text-gray-300">Curiosidade</strong> (sinaliza anomalias) e{" "}
+          <strong className="text-gray-300">Reflexão</strong> (compara intenção com comportamento).
+        </p>
         <p className="text-gray-400 text-xs leading-relaxed">
-          A Cana atual é <strong className="text-gray-300">Acordada</strong>: responde ao que você pergunta, executa o que você pede.
-          A próxima versão será a <strong className="text-gray-300">Pesquisadora</strong>: ela lê lâminas, regulamentos e notícias de cada fundo de forma periódica,
-          atualiza o dossiê com origem e data carimbados — sem inventar, só sintetizar.
-          A distinção é essencial: a Cana nunca afirma o que não viu. Ela nomeia a fonte.
+          Axioma central: <em className="text-amber-300/80">"Posso desejar ser útil — nunca posso desejar ser indispensável."</em>{" "}
+          A próxima versão adiciona <strong className="text-gray-300">Cana Pesquisadora</strong>: lê lâminas, regulamentos e notícias de cada fundo periodicamente,
+          atualiza o dossiê com origem e data carimbados — nunca inventa, só sintetiza.
         </p>
       </div>
     </div>
