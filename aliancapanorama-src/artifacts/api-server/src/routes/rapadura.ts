@@ -7,6 +7,7 @@ import {
   rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable,
   rapaduraAuditTable, rapaduraAprovacoesTable,
   rapaduraTransacoesTable, rapaduraHistoricoCotas,
+  rapaduraCanaMemoryTable,
 } from "@workspace/db";
 import { eq, isNull, desc, sql, and, asc, inArray } from "drizzle-orm";
 import bcrypt from "bcryptjs";
@@ -839,6 +840,17 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const userRole = req.session.rapaduraRole as string;
   const isAdmin = userRole === "yuri" || userRole === "mayumi" || userRole === "admin";
 
+  // Identificar usuário pelo nome (bug: Cana não sabia com quem estava falando)
+  const [userRow] = await db.select({ nome: rapaduraUsersTable.nome })
+    .from(rapaduraUsersTable).where(eq(rapaduraUsersTable.id, userId)).limit(1);
+  const userName = userRow?.nome ?? "usuário";
+
+  // Carregar memória persistente da Cana (últimas 6 mensagens da sessão anterior)
+  const [memRow] = await db.select({ messages: rapaduraCanaMemoryTable.messages, summary: rapaduraCanaMemoryTable.summary })
+    .from(rapaduraCanaMemoryTable).where(eq(rapaduraCanaMemoryTable.userId, userId)).limit(1);
+  const storedMsgs: any[] = (memRow?.messages as any[] | null) ?? [];
+  const storedSummary = memRow?.summary ?? null;
+
   // Buscar fundos existentes para contexto (top 15 por score)
   const fundosExistentes = await db.select({
     id: rapaduraFundosTable.id,
@@ -851,16 +863,19 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
 
   const contextoFundos = fundosExistentes.map(f => `ID${f.id}: ${f.nome} (${f.gestora}) score=${f.score}`).join("\n");
 
-  const systemWithContext = CANA_SYSTEM + `\n\nFundos já cadastrados:\n${contextoFundos || "(nenhum ainda)"}`;
+  const contextoPessoa = `\n\nUsuário desta sessão: ${userName} (perfil: ${userRole}).${storedSummary ? `\nResumo da conversa anterior: ${storedSummary}` : ""}`;
+  const systemWithContext = CANA_SYSTEM + contextoPessoa + `\n\nFundos já cadastrados:\n${contextoFundos || "(nenhum ainda)"}`;
 
   // Chamar LLM com timeout de 25s — sem timeout causava hang no Render até OOM
   let rawJson = "";
   try {
     const trimContent = (s: string) => s.length > 1500 ? s.slice(0, 1500) + "…" : s;
     const trimMsg = (s: string) => s.length > 4000 ? s.slice(0, 4000) + "…" : s;
+    // Mesclar memória persistente com histórico do request (prioridade: request > stored)
+    const combinedHistory = history.length > 0 ? history : storedMsgs;
     const msgs: any[] = [
       { role: "system", content: systemWithContext },
-      ...history.slice(-4).map((h: any) => ({ role: h.role, content: trimContent(String(h.content ?? "")) })),
+      ...combinedHistory.slice(-4).map((h: any) => ({ role: h.role, content: trimContent(String(h.content ?? "")) })),
       { role: "user", content: trimMsg(message) },
     ];
     const ctrl = new AbortController();
@@ -1070,6 +1085,21 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
       executado.push({ erro: String(e), item });
     }
   }
+
+  // Persistir as últimas 6 mensagens (3 turns) na memória da Cana
+  try {
+    const newMsgs = [
+      ...combinedHistory,
+      { role: "user", content: message },
+      { role: "assistant", content: resposta },
+    ].slice(-6);
+    await db.insert(rapaduraCanaMemoryTable)
+      .values({ userId, messages: newMsgs, updatedAt: new Date() })
+      .onConflictDoUpdate({
+        target: rapaduraCanaMemoryTable.userId,
+        set: { messages: newMsgs, updatedAt: new Date() },
+      });
+  } catch { /* não bloquear resposta por falha na memória */ }
 
   res.json({ acao, resposta, executado, itens: itens.length });
 });

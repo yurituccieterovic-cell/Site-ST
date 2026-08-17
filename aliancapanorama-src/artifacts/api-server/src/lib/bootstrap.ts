@@ -2217,6 +2217,15 @@ export async function ensureRapaduraTables(): Promise<void> {
   await db.execute(sql`
     ALTER TABLE rapadura_pertences ADD COLUMN IF NOT EXISTS status_reconciliacao TEXT DEFAULT 'EM_DIA';
     ALTER TABLE rapadura_pertences ADD COLUMN IF NOT EXISTS total_retirado NUMERIC(12,2) DEFAULT 0;
+
+    CREATE TABLE IF NOT EXISTS rapadura_cana_memory (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES rapadura_users(id) ON DELETE CASCADE,
+      messages JSONB NOT NULL DEFAULT '[]',
+      summary TEXT,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE(user_id)
+    );
   `);
   logger.info("bootstrap: rapadura tables OK");
 }

@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell,
+  PieChart, Pie, Cell, ComposedChart, Area,
 } from "recharts";
 
 const API  = import.meta.env.VITE_API_URL ?? "";
@@ -903,6 +903,15 @@ function PertencesView({
         </div>
       )}
 
+      {/* Raiz de Possibilidades */}
+      {pertences.length > 0 && dashboard.totalAtual > 0 && (
+        <RaizPossibilidades
+          totalAtual={dashboard.totalAtual}
+          pertences={pertences}
+          hideValues={hideValues}
+        />
+      )}
+
       {/* Formulário */}
       {(showForm || editId !== null) && (
         <div style={{
@@ -1107,6 +1116,130 @@ function PertencesView({
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── RAIZ DE POSSIBILIDADES ──────────────────────────────────────────────────
+
+const CENARIOS = [
+  { key: "conservador", label: "Conservador", taxa: 0.105, cor: "#3d4a5e", opacidade: 0.6 },
+  { key: "central",     label: "Central",     taxa: 0.145, cor: "#8a6b30", opacidade: 0.75 },
+  { key: "otimista",    label: "Otimista",    taxa: 0.195, cor: "#3f7254", opacidade: 0.9  },
+] as const;
+
+const PERIODOS = [1, 2, 3, 5, 10];
+
+function RaizPossibilidades({
+  totalAtual, pertences, hideValues,
+}: { totalAtual: number; pertences: Pertence[]; hideValues: boolean }) {
+  const [horizonte, setHorizonte] = useState(5);
+
+  const taxaMedia = useMemo(() => {
+    const comRetorno = pertences.filter(p => {
+      const f = p as any;
+      return f.fundoRetorno12m != null || Number(p.valorAtual ?? 0) > Number(p.valorInvestido ?? 0);
+    });
+    if (comRetorno.length === 0) return 0.145;
+    // Estimativa simples: retorno médio ponderado pelo valorAtual
+    let sumPeso = 0, sumRetPeso = 0;
+    for (const p of pertences) {
+      const va = Number(p.valorAtual ?? p.valorInvestido ?? 0);
+      const vi = Number(p.valorInvestido ?? 0);
+      if (vi > 0) {
+        const ret = (va - vi) / vi;
+        sumRetPeso += ret * va;
+        sumPeso += va;
+      }
+    }
+    const r = sumPeso > 0 ? sumRetPeso / sumPeso : 0.145;
+    return Math.max(0.05, Math.min(0.50, r));
+  }, [pertences]);
+
+  const cenariosDinamicos = [
+    { key: "conservador", label: "Conservador (CDI)", taxa: 0.105, cor: "#3d4a5e", opacidade: 0.55 },
+    { key: "central",     label: "Central (carteira atual)", taxa: taxaMedia, cor: "#8a6b30", opacidade: 0.78 },
+    { key: "otimista",    label: "Otimista (+40%)",          taxa: taxaMedia * 1.4, cor: "#3f7254", opacidade: 0.95 },
+  ];
+
+  const periodos = Array.from({ length: horizonte }, (_, i) => i + 1);
+  const data = periodos.map(ano => {
+    const row: any = { ano: `${ano}a` };
+    for (const c of cenariosDinamicos) {
+      row[c.key] = Math.round(totalAtual * Math.pow(1 + c.taxa, ano));
+    }
+    return row;
+  });
+
+  const fmtH = (v: number) => hideValues ? "••••" : `R$${(v / 1000).toFixed(0)}k`;
+
+  return (
+    <div style={{ background: "#09101a", padding: "16px 18px", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+        <div>
+          <div style={{ fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "#3d4a5e" }}>
+            Raiz de Possibilidades
+          </div>
+          <div style={{ fontSize: 9, color: "#2a3545", marginTop: 2, letterSpacing: "0.04em" }}>
+            projeção · opacidade = certeza
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 4 }}>
+          {PERIODOS.map(p => (
+            <button
+              key={p}
+              onClick={() => setHorizonte(p)}
+              style={{
+                fontSize: 9, padding: "3px 8px", fontFamily: "monospace",
+                background: horizonte === p ? "#c8963b18" : "transparent",
+                border: `1px solid ${horizonte === p ? "#c8963b" : "#1a2030"}`,
+                color: horizonte === p ? "#c8963b" : "#3d4a5e",
+                cursor: "pointer",
+              }}
+            >
+              {p}a
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <ResponsiveContainer width="100%" height={140}>
+        <ComposedChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#0d1520" />
+          <XAxis dataKey="ano" tick={{ fontSize: 9, fill: "#3d4a5e" }} axisLine={false} tickLine={false} />
+          <YAxis tick={{ fontSize: 9, fill: "#3d4a5e" }} axisLine={false} tickLine={false} tickFormatter={v => hideValues ? "•••" : `${(v / 1000).toFixed(0)}k`} width={36} />
+          <Tooltip
+            formatter={(v: number, name: string) => [fmtH(v), name]}
+            contentStyle={{ background: "#07090e", border: "1px solid #141b26", borderRadius: 0, fontSize: 11 }}
+          />
+          {cenariosDinamicos.map(c => (
+            <Area
+              key={c.key}
+              type="monotone"
+              dataKey={c.key}
+              name={c.label}
+              stroke={c.cor}
+              strokeWidth={1.5}
+              strokeOpacity={c.opacidade}
+              fill={c.cor}
+              fillOpacity={c.opacidade * 0.12}
+              dot={false}
+            />
+          ))}
+        </ComposedChart>
+      </ResponsiveContainer>
+
+      <div style={{ display: "flex", gap: 16, marginTop: 10, flexWrap: "wrap" }}>
+        {cenariosDinamicos.map(c => (
+          <div key={c.key} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ width: 20, height: 2, background: c.cor, opacity: c.opacidade }} />
+            <span style={{ fontSize: 9, color: "#5a5650", letterSpacing: "0.06em" }}>{c.label}</span>
+            <span style={{ fontSize: 9, fontFamily: "monospace", color: c.cor }}>
+              {(c.taxa * 100).toFixed(1)}%aa
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

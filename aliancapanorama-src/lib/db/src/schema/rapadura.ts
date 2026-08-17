@@ -123,3 +123,11 @@ export const rapaduraAprovacoesTable = pgTable("rapadura_aprovacoes", {
   approvedAt: timestamp("approved_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+export const rapaduraCanaMemoryTable = pgTable("rapadura_cana_memory", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => rapaduraUsersTable.id),
+  messages: jsonb("messages").notNull().default([]),
+  summary: text("summary"),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
