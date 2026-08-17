@@ -4589,3 +4589,36 @@ A Cana deixou de ser um chatbot financeiro que leu os docs do Rapadura. Ela se t
 
 ### Status
 Aguardando Assembleia #624 para processar imediatamente quando chegar.
+
+---
+
+## Sessão #120c — Assembleia 624: Estratégia Comercial + Fixes Rapadura
+
+**Data:** 2026-08-17 | **Contexto:** continuação — #processo 624 + fixes bugs Rapadura + imagem Cana
+
+### Assembleia #624 — Relatório Editorial do Agente
+
+Grok (Editorial Agent) respondeu com uma análise estratégica direta sobre o ecossistema:
+- "Dispersão produtiva vs produtividade dispersa" — densidade técnica + filosófica + zero venda
+- Solução: sequenciar (não escolher) Curso3 → Rapadura como funil único
+- Rapadura v4 pronto para clientes pagantes AGORA — não em perfeição, em validação
+- "Um cliente antes de qualquer nova arquitetura" como âncora epistêmica
+- Conversão de volume em portfólio: vídeos→biblioteca, prompts→playbook, conversas→cases
+- A6145-A6150 / I534-I535
+
+### Fixes Rapadura (Sessão 120c)
+
+6 bugs corrigidos e deployados:
+1. `hideValues` default=`true` (valores escondidos ao entrar)
+2. `scoreMedioCarters` exclui score=0 → poupança/earth2 não puxam média
+3. `sugestoesTroca` filtra score=0 → somem das oportunidades
+4. Fix `pdfParse` import (new PDFParse() era inválido → bug no doc upload)
+5. `fundoMoeda` no select de pertences + badge USD na lista
+6. Nova rota `POST /rapadura/transacoes/deduzir` + botão "Deduzir de ativos"
+
+### Fix imagem Cana-Aurora
+
+Causa: `cana-aurora-profile.png`, `cana-aurora-cover.png`, `rapadura-bg.png` existiam em
+`artifacts/pap/public/` e no `dist/public/` mas nunca foram copiados para `aliancapanorama/`
+(o diretório servido pelo Vercel). O `build-pap.sh` faz a cópia, mas havia sido ignorado
+nas sessões anteriores. Fix: rebuild completo → arquivos presentes no `aliancapanorama/`.

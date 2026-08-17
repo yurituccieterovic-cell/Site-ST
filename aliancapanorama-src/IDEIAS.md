@@ -1573,3 +1573,11 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I531 | **Raiz de Possibilidades v2: Imaginar+Ensaiar+Cultivar** | 🟡 Média | ○ M | Além da projeção passiva — cria condições para futuros | 3 modos: Imaginar (texto livre do futuro desejado), Ensaiar (simular com dados reais: "preciso de X mensalmente, em Y anos"), Cultivar (micro-compromisos verificáveis com data de revisão). Modal sobre a raiz de possibilidades atual. |
 | I532 | **Índice de Coerência** | 🟡 Média | ○ M | Espelho entre valores declarados e comportamento real da carteira | Score automático calculado da carteira: se o usuário declarou prioridade ambiental mas tem 0% ESG, Índice de Coerência baixo. Não julgamento — observação. Aparece no Analisar. Tabela `rapadura_indices_qualidade`. |
 | I533 | **Decisão de Não-Agir como Evento** | 🟡 Média | ○ S | "Não agir" registrado e acompanhado pela Cana | POST /rapadura/decisoes com {tipo: "nao_agir", motivo, risco_evitado, revisao_em}. Cana lembra e pergunta na revisão: "Em [data] você decidiu não agir — o motivo ainda é válido?" Tabela `rapadura_decisoes`. |
+
+
+## ST System — Estratégia Comercial (Assembleia 624 · 2026-08-17)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I534 | **Rapadura — Modo Validação de Proposta** | 🔴 Alta | ○ S | Preparar para primeiro cliente pagante | Checklist de onboarding: perfil do usuário, primeiro ativo, primeiro insight da Cana, primeiro PDF importado. Fluxo guiado (5 etapas) para transformar cadastro em usuário ativo real. |
+| I535 | **Funil Curso3 → Rapadura** | 🔴 Alta | ○ M | Canal de aquisição via educação | Landing page pós-curso com call-to-action para Rapadura. Cupom de acesso antecipado incluso no Curso 3. Documentar casos de uso do Rapadura como exercícios práticos dentro do Curso 3. |
