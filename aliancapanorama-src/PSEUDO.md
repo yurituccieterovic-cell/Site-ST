@@ -4622,3 +4622,28 @@ Causa: `cana-aurora-profile.png`, `cana-aurora-cover.png`, `rapadura-bg.png` exi
 `artifacts/pap/public/` e no `dist/public/` mas nunca foram copiados para `aliancapanorama/`
 (o diretório servido pelo Vercel). O `build-pap.sh` faz a cópia, mas havia sido ignorado
 nas sessões anteriores. Fix: rebuild completo → arquivos presentes no `aliancapanorama/`.
+
+### Sessão 121 — Bugfixes Rapadura (2026-08-20)
+
+3 bugs corrigidos no backend Rapadura:
+
+1. **Cana crash "Cannot convert undefined or null to object"**
+   Raiz: `rapaduraPertencesTable.fundoNome` não existe no schema (pertences não tem essa coluna,
+   nome do fundo vive em `rapaduraFundosTable`). Drizzle ORM joga erro JS ao construir a query
+   com coluna `undefined`. Express captura → retorna `{error: "Cannot convert..."}` → frontend
+   mostrava esse texto como resposta da Cana no chat.
+   Fix: `innerJoin` com `rapaduraFundosTable` na query de contexto da Cana + filtro `deletedAt`.
+
+2. **Pertences soft-delete não filtrado**
+   `GET /rapadura/pertences` não tinha `isNull(deletedAt)` → ativos "excluídos" apareciam na
+   lista e somavam nos totais do dashboard (totalAtual, totalInvestido inflados).
+
+3. **Oportunidades com score=0 no topo**
+   PostgreSQL `ORDER BY score DESC` usa `NULLS FIRST` por padrão → fundos sem score (poupança,
+   Earth2 com score=0) apareciam no começo. Fix: CASE WHEN para score=0/NULL irem pro final.
+
+**Commit:** `db7c85d` · Deploy Render: automático via GitHub push.
+
+**Sobre totais "que tínhamos combinado":** os KPIs existem (Patrimônio atual, Resultado total,
+Total investido, Rentabilidade). Aparecem como •••••• porque `hideValues=true` por padrão.
+Botão 👁 no header revela os valores. Yuri confirmou.

@@ -17,15 +17,16 @@
                               │ /api/* → proxy
                               │
                     ┌─────────▼──────────┐
-                    │     RAILWAY        │
+                    │      RENDER        │
                     │  pap-api           │
-                    │  Nixpacks build    │
-                    │  restart on fail   │
+                    │  esbuild build     │
+                    │  auto-deploy GH    │
                     └──┬─────────────────┘
                        │
           ┌────────────▼──────────────────────┐
-          │     RAILWAY PostgreSQL            │
-          │   (incluso no plano Railway)      │
+          │         NEON PostgreSQL           │
+          │  ep-late-pond-acean4b0.sa-east-1  │
+          │  41 tabelas · 648KB dump orig     │
           └────────────┬──────────────────────┘
                        │
           ┌────────────▼──────────────────────┐
@@ -42,7 +43,7 @@
 | API PAP | Render (`site-st.onrender.com`) | ✅ LIVE |
 | Banco PAP | Neon PostgreSQL (`ep-late-pond-acean4b0.sa-east-1`) | ✅ LIVE |
 | Banco Rapadura | Neon (mesma instância) — 5 tabelas v2 | ✅ LIVE |
-| Conector | ❌ OFFLINE (estava no Railway) | 🔴 MIGRAR |
+| Conector | Render (`site-st.onrender.com/api/conector`) | ✅ LIVE (migrado Sessão 99) |
 | Railway | ❌ MORTO — trial expirou 2026-08-02 | ❌ Abandonado |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
 | Domínio | pap.sociedadetucci.com.br | 🔧 DNS a configurar |
