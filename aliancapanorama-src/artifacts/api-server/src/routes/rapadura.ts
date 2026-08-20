@@ -334,7 +334,7 @@ router.get("/rapadura/fundos", requireRapaduraAuth, async (req, res) => {
     .select()
     .from(rapaduraFundosTable)
     .where(eq(rapaduraFundosTable.ativo, true))
-    .orderBy(desc(rapaduraFundosTable.scoreAtratividade));
+    .orderBy(sql`CASE WHEN COALESCE(${rapaduraFundosTable.scoreAtratividade}::numeric, 0) = 0 THEN 1 ELSE 0 END, ${rapaduraFundosTable.scoreAtratividade} DESC NULLS LAST`);
   res.json({ fundos });
 });
 
@@ -480,7 +480,7 @@ router.get("/rapadura/pertences", requireRapaduraAuth, async (req, res) => {
     })
     .from(rapaduraPertencesTable)
     .innerJoin(rapaduraFundosTable, eq(rapaduraPertencesTable.fundoId, rapaduraFundosTable.id))
-    .where(eq(rapaduraPertencesTable.userId, userId))
+    .where(and(eq(rapaduraPertencesTable.userId, userId), isNull(rapaduraPertencesTable.deletedAt)))
     .orderBy(desc(rapaduraPertencesTable.createdAt));
 
   // Calcular totais com resultado correto: inclui retiradas parciais já feitas
@@ -970,8 +970,10 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
     db.select({ id: rapaduraFundosTable.id, nome: rapaduraFundosTable.nome, gestora: rapaduraFundosTable.gestora, score: rapaduraFundosTable.scoreAtratividade })
       .from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true))
       .orderBy(desc(rapaduraFundosTable.scoreAtratividade)).limit(15),
-    db.select({ fundoNome: rapaduraPertencesTable.fundoNome, valorInvestido: rapaduraPertencesTable.valorInvestido, valorAtual: rapaduraPertencesTable.valorAtual, dataCompra: rapaduraPertencesTable.dataCompra })
-      .from(rapaduraPertencesTable).where(eq(rapaduraPertencesTable.userId, userId)).limit(20),
+    db.select({ fundoNome: rapaduraFundosTable.nome, valorInvestido: rapaduraPertencesTable.valorInvestido, valorAtual: rapaduraPertencesTable.valorAtual, dataCompra: rapaduraPertencesTable.dataCompra })
+      .from(rapaduraPertencesTable)
+      .innerJoin(rapaduraFundosTable, eq(rapaduraPertencesTable.fundoId, rapaduraFundosTable.id))
+      .where(and(eq(rapaduraPertencesTable.userId, userId), isNull(rapaduraPertencesTable.deletedAt))).limit(20),
   ]);
 
   const contextoFundos     = fundosExistentes.map(f => `ID${f.id}: ${f.nome} (${f.gestora}) score=${f.score}`).join("\n");
