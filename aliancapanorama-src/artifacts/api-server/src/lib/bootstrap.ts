@@ -232,15 +232,12 @@ export async function ensureAgeTables(): Promise<void> {
   ];
 
   for (const p of professionals) {
-    const [existing] = await db.execute(sql`SELECT id FROM age_professionals WHERE slug = ${p.slug}`);
-    if (!(existing as any).rows?.length) {
-      await db.execute(sql`
-        INSERT INTO age_professionals (slug, nome, tipo, especialidade, cor, bio, password_hash)
-        VALUES (${p.slug}, ${p.nome}, ${p.tipo}, ${p.especialidade}, ${p.cor}, ${p.bio}, ${defaultHash})
-        ON CONFLICT (slug) DO NOTHING
-      `);
-      logger.info(`bootstrap: age profissional '${p.slug}' criada (senha padrão: ${defaultPass})`);
-    }
+    await db.execute(sql`
+      INSERT INTO age_professionals (slug, nome, tipo, especialidade, cor, bio, password_hash)
+      VALUES (${p.slug}, ${p.nome}, ${p.tipo}, ${p.especialidade}, ${p.cor}, ${p.bio}, ${defaultHash})
+      ON CONFLICT (slug) DO NOTHING
+    `);
+    logger.info(`bootstrap: age profissional '${p.slug}' garantida`);
   }
 }
 
