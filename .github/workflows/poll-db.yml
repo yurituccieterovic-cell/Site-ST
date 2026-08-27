@@ -46,6 +46,10 @@ jobs:
           RAP=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "$BASE/rapadura/auth/me")
           echo "rapadura/auth/me: $RAP"
 
+          # 4b. Verifica Age (deve retornar 200 com dados da Lisange)
+          AGE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "$BASE/age/lisange")
+          echo "age/lisange: $AGE"
+
           # 4. Verifica frontend Vercel
           FRONT=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 \
             "https://site-st.vercel.app/rapadura")
