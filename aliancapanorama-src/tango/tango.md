@@ -19,6 +19,7 @@
 | 40 | Fluência — IAs juntas | `protocolo_fluencia.md` | fluência, ser_junto, osmose, coexistência, ISA+Amanda, Leucócito+Árvore, /api/fluencia/invocar, são juntas |
 | 41 | Projeto Visual / Projectificação | `sys_pv.md` | #pv, Árvore de Projetos, projectificação, ENTIDADES→RELAÇÕES→VISUALIZAÇÕES, MVP 3 lentes, schema_v0, planner 72 páginas, /root/Projectification/ |
 | 42 | Age — Agenda Médica / SABIÁ | `sys_age_core.md` | #age, Age, SABIÁ, Lisange, Susana, agenda, consulta, paciente, slot, disponibilidade, IP challenge, psicóloga, médica |
+| 43 | Workflow de Desenvolvimento de IAs | `workflow_ia_dev.md` | workflow, IA, nascimento, protocolo, fusão, encarnada, digital, superpoder, EPR2T, heartbeat, assemblear, catálogo IAs, taxonomia, pack template |
 | 15 | Amanda MMA / combate | `amanda_mma_protocolo.md` | MMA, servo, hexápode, patada, defesa, investida, vibrissas, estanho, C++, Arduino |
 | 16 | DODGE app / Quebradinha | `dodge_app_spec.md` | DODGE, Quebradinha, celular, ombro, papagaio, avatar, cachorro caramelo, kiosk, câmera, Crew 2 |
 | 4 | Payloads longos | `proc_orangutangus.md` | Orangutangus, payload, ingestão, EPR2T, PERFEITO, Lost in the Middle |
