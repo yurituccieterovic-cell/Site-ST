@@ -115,10 +115,24 @@
 
 ---
 
+| 107 | Age — I552: Lembretes automáticos email (48h/24h antes da consulta) | — | ⏳ |
+| 108 | Age — I553: Feed operacional (log de eventos no painel profissional) | — | ⏳ |
+| 109 | Age — I554: SABIÁ popup flutuante persistente | — | ⏳ |
+| 110 | Age — I558: Confirmação Sim/Não para ações irreversíveis no painel | — | ⏳ |
+| 111 | Age — I564: Link de convite para pré-aprovação de paciente | — | ⏳ |
+| 112 | Age — Compliance: Política de Privacidade + Termos de Uso + checkbox consentimento | Assembleia | ⏳ |
+| 113 | Age — Landing page pública (produto comercial) + formulário de interesse | Assembleia decidir posicionamento | ⏳ |
+| 114 | Age — Configurar emails reais Lisange e Suzana via /api/age/admin/setup | Yuri | ⏳ |
+| 115 | Age — Trocar senhas padrão age2026 (primeiro acesso) | Yuri | ⏳ |
+
 ## Concluídos
 
 | # | Item | Commit/Data |
 |---|---|---|
+| I550/I551/I557 | Age — Cadastro paciente + confirmação email + aprovação manual + aba Pacientes | ✅ 95636b1 (Sessão Age-4b) |
+| I548 | Age — age_exceptions: exceções não-destrutivas de disponibilidade | ✅ c2a1d64 (Sessão Age-3) |
+| I549 | Age — toast "Apagado. Desfazer?" (soft-delete + undo) | ✅ c2a1d64 (Sessão Age-3) |
+| I556 | Age — Mostrar/ocultar senha no login | ✅ c2a1d64 (Sessão Age-3) |
 | 5 | Drizzle-kit migrate: `out: ./drizzle` + scripts generate/migrate | Sessão 27 |
 | 8 | Rate limiting exercises.ts: persistir no DB | ✅ 59b9387 |
 | 11 | MEKY — auto via ensureMekyTables() no bootstrap | ✅ auto |

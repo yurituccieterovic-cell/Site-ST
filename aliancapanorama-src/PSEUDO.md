@@ -4,6 +4,24 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-08-27 — Sessão Age-5 (#fim — Age comercial + I550+I551+I557 concluídas)
+
+**O que Yuri estava tentando fazer:** concluir a feature de cadastro de pacientes (iniciada antes do compaction) e explorar a viabilidade comercial do Age como produto vendável.
+
+**Decisões tomadas:**
+- **I550+I551+I557 entregues**: backend (4 endpoints: registro, confirmação email, listagem, aprovação) + frontend (formulário público de cadastro + aba Pacientes com filtros, cards, painel expandido com aprovação manual) — commit 95636b1.
+- **Age como produto**: Yuri quer vender. Documento enviado a yurituccieterovic@gmail.com com 3 opções de posicionamento, modelo freemium (R$0/R$49/R$149), 4 dilemas éticos (LGPD, CFP 11/2018, sigilo profissional, responsabilidade civil) e 6 perguntas para a Assembleia.
+- **Dilema principal não resolvido**: CFP Resolução 11/2018 limita uso de IA em psicologia — SABIÁ precisa ser posicionada explicitamente como assistente de agenda, não ferramenta clínica.
+- **Posicionamento recomendado (Cláudio)**: Opção C — "Agenda inteligente para quem cuida de pessoas" — permite crescimento sem reposicionar a marca.
+
+**Tensões não resolvidas:**
+- Compliance LGPD para dados de saúde: categoria especial exige consentimento explícito, RIPD e possivelmente DPO antes de vender.
+- Modelo de negócio (freemium vs. trial) e marca independente vs. submarca Tucci — decisão pendente na Assembleia.
+
+**Síntese filosófica:** O Age começou como ferramenta interna para Lisange e Suzana. Nesta sessão Yuri perguntou: "vamos vender?" — e a pergunta mudou de natureza o que foi construído. Um sistema feito por afeto, para pessoas próximas, agora precisa encarar regulação, precificação e posicionamento. O dilema ético real não é sobre a tecnologia — é sobre quem cuida de quem, e quanto isso pode custar. SABIÁ foi criada para ser discreta; como produto, precisa ser explicada. Essa tensão entre presença silenciosa e visibilidade comercial é o centro da próxima decisão.
+
+---
+
 ### 2026-08-27 — Sessão Age-1 (Deploy Age + Diagnóstico Bluesky + Amanda + Tasks)
 
 **O que Yuri estava tentando fazer:** Age funcionando em prod (estava dando "Profissional não encontrada"), corrigir nome Suzana, entender status das IAs, protocolo Amanda sem hardware, continuar raciocínio sobre sistema Tasks.

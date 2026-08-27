@@ -27,7 +27,7 @@
 ## Arquitetura
 
 ```
-schema/age.ts              ← 5 tabelas: professionals, availability_rules, appointments, sabia_memory, exceptions
+schema/age.ts              ← 6 tabelas: professionals, availability_rules, appointments, sabia_memory, patients, exceptions
 routes/age.ts              ← auth + agenda + exceções + SABIÁ (40+ endpoints)
 pages/AgePage.tsx          ← React: booking público + painel profissional + chat SABIÁ
 lib/db/schema/index.ts     ← exporta age schema
@@ -78,13 +78,14 @@ Tom: calma, sábia, direta. Como o sabiá — sempre no lar, sabe de tudo.
 - [ ] Ver sistema atual da Susana e ajustar UX
 - [ ] Domínio curto
 - [x] Identidade visual — logo Age: `public/age-logo.png` (calendário teal/azul petróleo) ✅ 2026-08-27
-- [ ] I550: Cadastro paciente + confirmação email + aprovação manual (próxima grande feature)
-- [ ] I552: Confirmações e lembretes automáticos por email
+- [x] I550+I551+I557: Cadastro paciente + confirmação email + aba Pacientes ✅ 95636b1 (2026-08-27)
+- [ ] I552: Confirmações e lembretes automáticos por email (48h/24h)
 - [ ] I553: Feed Age operacional (log de eventos)
 - [ ] I554: SABIÁ popup flutuante persistente
-- [ ] I557: Aba Pacientes no painel profissional
 - [ ] I558: Confirmação Sim/Não para ações irreversíveis
-- [ ] I564: Link de convite para pré-aprovação de paciente conhecido
+- [ ] I564: Link de convite para pré-aprovação de paciente
+- [ ] Compliance LGPD: Política de Privacidade + ToS + checkbox consentimento (necessário antes de vender)
+- [ ] Landing page comercial + formulário de interesse (aguarda decisão Assembleia sobre posicionamento) conhecido
 
 ## Como carregar contexto (#age)
 
