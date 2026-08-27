@@ -11,7 +11,7 @@
 | Slug | Nome | Tipo | Cor | Status |
 |---|---|---|---|---|
 | `lisange` | Lisange | médica | teal `#2dd4bf` | ✅ seedada |
-| `susana` | Susana | psicóloga | lilás `#a78bfa` | ✅ seedada |
+| `susana` | Suzana | psicóloga | lilás `#a78bfa` | ✅ seedada |
 
 - Senha padrão: `age2026` (trocar no primeiro acesso)
 - Email das profissionais: pendente configuração via `/api/age/admin/setup`

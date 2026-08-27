@@ -228,7 +228,7 @@ export async function ensureAgeTables(): Promise<void> {
 
   const professionals = [
     { slug: "lisange", nome: "Lisange", tipo: "médica", especialidade: "Medicina Geral", cor: "#2dd4bf", bio: "Consultas médicas com cuidado e atenção." },
-    { slug: "susana", nome: "Susana", tipo: "psicóloga", especialidade: "Psicologia Clínica", cor: "#a78bfa", bio: "Atendimento psicológico com escuta ativa e presença." },
+    { slug: "susana", nome: "Suzana", tipo: "psicóloga", especialidade: "Psicologia Clínica", cor: "#a78bfa", bio: "Atendimento psicológico com escuta ativa e presença." },
   ];
 
   for (const p of professionals) {
