@@ -217,10 +217,22 @@ export async function ensureAgeTables(): Promise<void> {
     )
   `);
   await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_exceptions (
+      id               SERIAL PRIMARY KEY,
+      professional_id  INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      data             TEXT NOT NULL,
+      tipo             TEXT NOT NULL DEFAULT 'bloqueio',
+      hora_inicio      TEXT,
+      hora_fim         TEXT,
+      descricao        TEXT,
+      created_at       TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
     CREATE INDEX IF NOT EXISTS idx_age_appts_prof_data
       ON age_appointments(professional_id, data_hora)
   `);
-  logger.info("bootstrap: age tables OK (age_professionals, age_availability_rules, age_appointments, age_sabia_memory)");
+  logger.info("bootstrap: age tables OK (age_professionals, age_availability_rules, age_appointments, age_sabia_memory, age_exceptions)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

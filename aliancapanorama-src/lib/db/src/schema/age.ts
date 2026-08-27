@@ -64,6 +64,18 @@ export const ageSabiaMemoryTable = pgTable("age_sabia_memory", {
   createdAt:       timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
+// ─── Exceções de disponibilidade ─────────────────────────────────────────────
+export const ageExceptionsTable = pgTable("age_exceptions", {
+  id:             serial("id").primaryKey(),
+  professionalId: integer("professional_id").notNull().references(() => ageProfessionalsTable.id, { onDelete: "cascade" }),
+  data:           text("data").notNull(),         // "2026-09-25" (YYYY-MM-DD)
+  tipo:           text("tipo").notNull().default("bloqueio"), // bloqueio | ferias | feriado | encaixe | outro
+  horaInicio:     text("hora_inicio"),            // null = dia inteiro bloqueado
+  horaFim:        text("hora_fim"),
+  descricao:      text("descricao"),
+  createdAt:      timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
 // ─── Zod ──────────────────────────────────────────────────────────────────────
 export const insertAgeProfessionalSchema = createInsertSchema(ageProfessionalsTable).omit({ id: true, createdAt: true });
 export type InsertAgeProfessional = z.infer<typeof insertAgeProfessionalSchema>;

@@ -4,7 +4,7 @@ import { createTransport } from "nodemailer";
 import { db } from "@workspace/db";
 import {
   ageProfessionalsTable, ageAvailabilityRulesTable,
-  ageAppointmentsTable, ageSabiaMemoryTable,
+  ageAppointmentsTable, ageSabiaMemoryTable, ageExceptionsTable,
 } from "@workspace/db";
 import { eq, and, gte, lte, desc, not, inArray } from "drizzle-orm";
 import bcrypt from "bcryptjs";
@@ -44,32 +44,53 @@ function canonicalIp(req: any): string {
   return (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ?? req.ip ?? "";
 }
 
+type ExceptionRow = { data: string; horaInicio: string | null; horaFim: string | null };
+
 // Gera slots livres a partir das regras de disponibilidade num intervalo de datas
 function generateSlots(
   rules: { diaSemana: number; horaInicio: string; horaFim: string; duracaoMin: number; intervaloMin: number; canal: string }[],
   from: Date,
   to: Date,
+  exceptions: ExceptionRow[] = [],
 ) {
+  // Exceções de dia inteiro (sem hora) e parciais (com hora)
+  const fullDayBlocks = new Set(exceptions.filter(e => !e.horaInicio).map(e => e.data));
+  const partialBlocks = exceptions.filter(e => e.horaInicio && e.horaFim);
+
   const slots: { dataHora: Date; duracaoMin: number; canal: string }[] = [];
   const cursor = new Date(from);
   cursor.setHours(0, 0, 0, 0);
 
   while (cursor <= to) {
-    const dow = cursor.getDay();
-    for (const rule of rules) {
-      if (rule.diaSemana !== dow) continue;
-      const [startH, startM] = rule.horaInicio.split(":").map(Number);
-      const [endH, endM]     = rule.horaFim.split(":").map(Number);
-      const slotDur = rule.duracaoMin + rule.intervaloMin;
+    const dateStr = cursor.toISOString().slice(0, 10);
 
-      let t = new Date(cursor);
-      t.setHours(startH!, startM!, 0, 0);
-      const end = new Date(cursor);
-      end.setHours(endH!, endM!, 0, 0);
+    if (!fullDayBlocks.has(dateStr)) {
+      const dayPartials = partialBlocks.filter(e => e.data === dateStr);
+      const dow = cursor.getDay();
 
-      while (t.getTime() + rule.duracaoMin * 60000 <= end.getTime()) {
-        slots.push({ dataHora: new Date(t), duracaoMin: rule.duracaoMin, canal: rule.canal });
-        t = new Date(t.getTime() + slotDur * 60000);
+      for (const rule of rules) {
+        if (rule.diaSemana !== dow) continue;
+        const [startH, startM] = rule.horaInicio.split(":").map(Number);
+        const [endH, endM]     = rule.horaFim.split(":").map(Number);
+        const slotDur = rule.duracaoMin + rule.intervaloMin;
+
+        let t = new Date(cursor);
+        t.setHours(startH!, startM!, 0, 0);
+        const end = new Date(cursor);
+        end.setHours(endH!, endM!, 0, 0);
+
+        while (t.getTime() + rule.duracaoMin * 60000 <= end.getTime()) {
+          const blocked = dayPartials.some(e => {
+            const [bH, bM] = e.horaInicio!.split(":").map(Number);
+            const [eH, eM] = e.horaFim!.split(":").map(Number);
+            const bStart = bH! * 60 + bM!;
+            const bEnd   = eH! * 60 + eM!;
+            const sMin   = t.getHours() * 60 + t.getMinutes();
+            return sMin >= bStart && sMin < bEnd;
+          });
+          if (!blocked) slots.push({ dataHora: new Date(t), duracaoMin: rule.duracaoMin, canal: rule.canal });
+          t = new Date(t.getTime() + slotDur * 60000);
+        }
       }
     }
     cursor.setDate(cursor.getDate() + 1);
@@ -263,11 +284,52 @@ router.post("/age/:slug/availability", requireAgeAuth, async (req, res): Promise
   res.status(201).json(rule);
 });
 
-// DELETE /api/age/:slug/availability/:id (auth required)
+// DELETE /api/age/:slug/availability/:id (auth required) — soft delete
 router.delete("/age/:slug/availability/:id", requireAgeAuth, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id ?? "0", 10);
   await db.update(ageAvailabilityRulesTable).set({ ativa: false }).where(
     and(eq(ageAvailabilityRulesTable.id, id), eq(ageAvailabilityRulesTable.professionalId, req.session.ageProfessionalId!))
+  );
+  res.json({ ok: true });
+});
+
+// PATCH /api/age/:slug/availability/:id (auth required) — restore soft-deleted rule
+router.patch("/age/:slug/availability/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  await db.update(ageAvailabilityRulesTable).set({ ativa: true }).where(
+    and(eq(ageAvailabilityRulesTable.id, id), eq(ageAvailabilityRulesTable.professionalId, req.session.ageProfessionalId!))
+  );
+  res.json({ ok: true });
+});
+
+// ─── Exceções ─────────────────────────────────────────────────────────────────
+
+// GET /api/age/:slug/exceptions (auth required)
+router.get("/age/:slug/exceptions", requireAgeAuth, async (req, res): Promise<void> => {
+  const rows = await db.select().from(ageExceptionsTable)
+    .where(eq(ageExceptionsTable.professionalId, req.session.ageProfessionalId!))
+    .orderBy(ageExceptionsTable.data);
+  res.json(rows);
+});
+
+// POST /api/age/:slug/exceptions (auth required)
+router.post("/age/:slug/exceptions", requireAgeAuth, async (req, res): Promise<void> => {
+  const { data, tipo = "bloqueio", horaInicio, horaFim, descricao } = req.body as {
+    data?: string; tipo?: string; horaInicio?: string; horaFim?: string; descricao?: string;
+  };
+  if (!data) { res.status(400).json({ error: "data (YYYY-MM-DD) obrigatória" }); return; }
+
+  const [row] = await db.insert(ageExceptionsTable)
+    .values({ professionalId: req.session.ageProfessionalId!, data, tipo, horaInicio: horaInicio ?? null, horaFim: horaFim ?? null, descricao })
+    .returning();
+  res.status(201).json(row);
+});
+
+// DELETE /api/age/:slug/exceptions/:id (auth required)
+router.delete("/age/:slug/exceptions/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  await db.delete(ageExceptionsTable).where(
+    and(eq(ageExceptionsTable.id, id), eq(ageExceptionsTable.professionalId, req.session.ageProfessionalId!))
   );
   res.json({ ok: true });
 });
@@ -298,10 +360,21 @@ router.get("/age/:slug/slots", async (req, res): Promise<void> => {
       not(inArray(ageAppointmentsTable.status, ["cancelado", "remarcado"])),
     ));
 
+  const exceptions = await db.select({
+    data: ageExceptionsTable.data,
+    horaInicio: ageExceptionsTable.horaInicio,
+    horaFim: ageExceptionsTable.horaFim,
+  }).from(ageExceptionsTable)
+    .where(and(
+      eq(ageExceptionsTable.professionalId, prof.id),
+      gte(ageExceptionsTable.data, de.toISOString().slice(0, 10)),
+      lte(ageExceptionsTable.data, ate.toISOString().slice(0, 10)),
+    ));
+
   const bookedSet = new Set(booked.map(b => b.dataHora.getTime()));
   const now = Date.now();
 
-  const allSlots = generateSlots(rules, de, ate)
+  const allSlots = generateSlots(rules, de, ate, exceptions)
     .filter(s => s.dataHora.getTime() > now && !bookedSet.has(s.dataHora.getTime()))
     .map(s => ({ dataHora: s.dataHora.toISOString(), duracaoMin: s.duracaoMin, canal: s.canal }));
 

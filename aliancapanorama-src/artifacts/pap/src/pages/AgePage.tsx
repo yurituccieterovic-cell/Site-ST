@@ -18,6 +18,7 @@ type AvailRule = {
   duracaoMin: number; intervaloMin: number; canal: string;
 };
 type ChatMsg = { role: "user" | "assistant"; content: string };
+type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
 type View = "agenda" | "pacientes" | "disponibilidade" | "sabia";
 type Mode = "public" | "professional";
 type AuthStep = "login" | "challenge" | "done";
@@ -66,8 +67,10 @@ export function AgePage() {
   const [view, setView] = useState<View>("agenda");
   const [appts, setAppts] = useState<Appt[]>([]);
   const [rules, setRules] = useState<AvailRule[]>([]);
+  const [exceptions, setExceptions] = useState<Exception[]>([]);
   const [selectedAppt, setSelectedAppt] = useState<Appt | null>(null);
   const [apptNotes, setApptNotes] = useState("");
+  const [undoRule, setUndoRule] = useState<{ id: number; label: string; timerId: ReturnType<typeof setTimeout> } | null>(null);
 
   // SABIÁ chat
   const [msgs, setMsgs] = useState<ChatMsg[]>([
@@ -80,9 +83,12 @@ export function AgePage() {
 
   // New rule form
   const [ruleForm, setRuleForm] = useState({ diaSemana: 1, horaInicio: "09:00", horaFim: "18:00", duracaoMin: 50, intervaloMin: 10, canal: "presencial" });
+  // Exception form
+  const [excForm, setExcForm] = useState({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
 
   // Auth form
   const [authPassword, setAuthPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [authCode, setAuthCode] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState("");
@@ -141,11 +147,17 @@ export function AgePage() {
       .then(r => r.json()).then(setRules).catch(() => {});
   }, [mode, slug]);
 
+  const loadExceptions = useCallback(() => {
+    if (mode !== "professional") return;
+    fetch(`${API}/api/age/${slug}/exceptions`, { credentials: "include" })
+      .then(r => r.json()).then(setExceptions).catch(() => {});
+  }, [mode, slug]);
+
   useEffect(() => {
     if (mode === "professional" && authStep === "done") {
-      loadAppts(); loadRules();
+      loadAppts(); loadRules(); loadExceptions();
     }
-  }, [mode, authStep, loadAppts, loadRules]);
+  }, [mode, authStep, loadAppts, loadRules, loadExceptions]);
 
   useEffect(() => {
     msgBottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -236,11 +248,49 @@ export function AgePage() {
     loadRules();
   }
 
-  async function removeRule(id: number) {
+  async function removeRule(id: number, label: string) {
     await fetch(`${API}/api/age/${slug}/availability/${id}`, {
       method: "DELETE", credentials: "include",
     });
+    if (undoRule) clearTimeout(undoRule.timerId);
+    const timerId = setTimeout(() => { setUndoRule(null); loadRules(); }, 5000);
+    setUndoRule({ id, label, timerId });
+  }
+
+  async function restoreRule(id: number) {
+    if (undoRule) clearTimeout(undoRule.timerId);
+    setUndoRule(null);
+    await fetch(`${API}/api/age/${slug}/availability/${id}`, {
+      method: "PATCH", credentials: "include",
+    });
     loadRules();
+  }
+
+  async function addException(e: React.FormEvent) {
+    e.preventDefault();
+    if (!excForm.data) return;
+    await fetch(`${API}/api/age/${slug}/exceptions`, {
+      method: "POST", credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        data: excForm.data,
+        tipo: excForm.tipo,
+        horaInicio: excForm.horaInicio || null,
+        horaFim: excForm.horaFim || null,
+        descricao: excForm.descricao || null,
+      }),
+    });
+    setExcForm({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
+    loadExceptions();
+    loadSlots();
+  }
+
+  async function removeException(id: number) {
+    await fetch(`${API}/api/age/${slug}/exceptions/${id}`, {
+      method: "DELETE", credentials: "include",
+    });
+    loadExceptions();
+    loadSlots();
   }
 
   // ─── SABIÁ ──────────────────────────────────────────────────────────────────
@@ -299,11 +349,17 @@ export function AgePage() {
 
           {authStep === "login" ? (
             <form onSubmit={handleLogin}>
-              <input
-                type="password" placeholder="Senha" value={authPassword}
-                onChange={e => setAuthPassword(e.target.value)}
-                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, marginBottom: 12, boxSizing: "border-box" }}
-              />
+              <div style={{ position: "relative", marginBottom: 12 }}>
+                <input
+                  type={showPassword ? "text" : "password"} placeholder="Senha" value={authPassword}
+                  onChange={e => setAuthPassword(e.target.value)}
+                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 40px 10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box" }}
+                />
+                <button type="button" onClick={() => setShowPassword(v => !v)}
+                  style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16, padding: 0, lineHeight: 1 }}>
+                  {showPassword ? "🙈" : "👁"}
+                </button>
+              </div>
               {authError && <div style={{ color: "#2dd4bf", fontSize: 12, marginBottom: 12 }}>{authError}</div>}
               <button type="submit" disabled={authLoading || !authPassword}
                 style={{ width: "100%", background: authLoading ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: authLoading ? "not-allowed" : "pointer" }}>
@@ -510,7 +566,19 @@ export function AgePage() {
       <div style={{ padding: "1rem" }}>
         <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Horários disponíveis</h2>
 
-        {/* Regras existentes */}
+        {/* Toast Desfazer */}
+        {undoRule && (
+          <div style={{ background: "#1a2030", border: `1px solid ${color}55`, borderRadius: 10, padding: "10px 14px", marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ color: "#94a3b8", fontSize: 13 }}>Apagado.</span>
+            <button onClick={() => restoreRule(undoRule.id)}
+              style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "4px 12px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+              Desfazer
+            </button>
+          </div>
+        )}
+
+        {/* Regras recorrentes */}
+        <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Regras semanais</div>
         {rules.length === 0 && <div style={{ color: "#64748b", fontSize: 13, marginBottom: 16 }}>Nenhuma regra configurada.</div>}
         {rules.map(r => (
           <div key={r.id} style={{ background: "#0f1318", border: `1px solid ${color}33`, borderRadius: 10, padding: "10px 14px", marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -518,13 +586,71 @@ export function AgePage() {
               <div style={{ color, fontWeight: 600, fontSize: 14 }}>{DIAS[r.diaSemana]} · {r.horaInicio}–{r.horaFim}</div>
               <div style={{ color: "#64748b", fontSize: 12 }}>{r.duracaoMin}min + {r.intervaloMin}min intervalo · {r.canal}</div>
             </div>
-            <button onClick={() => removeRule(r.id)} style={{ background: "none", border: "none", color: "#f87171", cursor: "pointer", fontSize: 16 }}>✕</button>
+            <button onClick={() => removeRule(r.id, `${DIAS[r.diaSemana]} ${r.horaInicio}–${r.horaFim}`)}
+              style={{ background: "none", border: "none", color: "#f87171", cursor: "pointer", fontSize: 16 }}>✕</button>
           </div>
         ))}
 
-        {/* Adicionar regra */}
-        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginTop: 16 }}>
-          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 12 }}>+ Nova regra</div>
+        {/* Exceções */}
+        <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, marginTop: 20, marginBottom: 8 }}>Exceções</div>
+        {exceptions.length === 0 && <div style={{ color: "#64748b", fontSize: 13, marginBottom: 8 }}>Nenhuma exceção.</div>}
+        {exceptions.map(e => (
+          <div key={e.id} style={{ background: "#0f1318", border: "1px solid #f87171aa", borderRadius: 10, padding: "8px 14px", marginBottom: 6, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <div style={{ color: "#f87171", fontWeight: 600, fontSize: 13 }}>{e.data} · {e.tipo}</div>
+              {e.horaInicio ? (
+                <div style={{ color: "#64748b", fontSize: 11 }}>{e.horaInicio}–{e.horaFim}</div>
+              ) : (
+                <div style={{ color: "#64748b", fontSize: 11 }}>dia inteiro</div>
+              )}
+              {e.descricao && <div style={{ color: "#475569", fontSize: 11 }}>{e.descricao}</div>}
+            </div>
+            <button onClick={() => removeException(e.id)} style={{ background: "none", border: "none", color: "#f87171", cursor: "pointer", fontSize: 14 }}>✕</button>
+          </div>
+        ))}
+
+        {/* Adicionar exceção */}
+        <div style={{ background: "#0f1318", border: "1px solid #f8717122", borderRadius: 12, padding: "1rem", marginTop: 8, marginBottom: 16 }}>
+          <div style={{ color: "#f87171", fontSize: 13, fontWeight: 600, marginBottom: 10 }}>+ Nova exceção</div>
+          <form onSubmit={addException}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+              <div style={{ gridColumn: "1/-1" }}>
+                <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Data</label>
+                <input type="date" required value={excForm.data} onChange={e => setExcForm(f => ({ ...f, data: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: "1px solid #f8717133", borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} />
+              </div>
+              <div>
+                <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Tipo</label>
+                <select value={excForm.tipo} onChange={e => setExcForm(f => ({ ...f, tipo: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: "1px solid #f8717133", borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }}>
+                  {["bloqueio", "ferias", "feriado", "encaixe", "outro"].map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Descrição (opcional)</label>
+                <input type="text" placeholder="ex: reunião" value={excForm.descricao} onChange={e => setExcForm(f => ({ ...f, descricao: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: "1px solid #f8717133", borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} />
+              </div>
+              <div>
+                <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Início (vazio = dia inteiro)</label>
+                <input type="time" value={excForm.horaInicio} onChange={e => setExcForm(f => ({ ...f, horaInicio: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: "1px solid #f8717133", borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} />
+              </div>
+              <div>
+                <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Fim</label>
+                <input type="time" value={excForm.horaFim} onChange={e => setExcForm(f => ({ ...f, horaFim: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: "1px solid #f8717133", borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} />
+              </div>
+            </div>
+            <button type="submit" style={{ width: "100%", background: "#f87171", color: "#fff", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+              Bloquear data
+            </button>
+          </form>
+        </div>
+
+        {/* Adicionar regra recorrente */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem" }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 12 }}>+ Nova regra semanal</div>
           <form onSubmit={addRule}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
               <div>

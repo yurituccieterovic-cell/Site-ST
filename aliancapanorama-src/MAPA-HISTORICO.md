@@ -237,7 +237,7 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 
 ## 2026-08-27 (cont. 2) — #processo assembleias 642 e 643 + workflow IA
 
-**Assembleia #642**: Editorial completo do Age/AID. ANÁLISE METASSEMIÓTICA comparativa de 19 vozes. Síntese: "promessa simples antes de escalar". Insight oculto: projeto como sistema de autocuidado do fundador que acidentalmente virou produto. A6194–A6198, I561–I563.
+**Assembleia #642**: Editorial completo do Age. ANÁLISE METASSEMIÓTICA comparativa de 19 vozes. Síntese: "promessa simples antes de escalar". Insight oculto: projeto como sistema de autocuidado do fundador que acidentalmente virou produto. A6194–A6198, I561–I563.
 
 **Assembleia #643**: 3 decisões de arquitetura Age deliberadas. ✅ Aprovação manual com convite. ✅ Senha+IP mantido, passkeys fase 2. ✅ SABIÁ: só preferências admin, padrões comportamentais vetados (CFP 11/2018). A6199–A6202, I564–I565.
 

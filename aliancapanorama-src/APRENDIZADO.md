@@ -20821,9 +20821,9 @@ A6107. **Moeda como campo no catálogo é necessário para suporte multi-divisa*
 
 **A6193** — **Nome correto: Suzana (não Susana):** corrigido em código (age.ts), banco Neon (UPDATE age_professionals) e documentação (sys_age_core.md). Slug "susana" mantido para preservar URL estável.
 
-## Assembleia #642 — AID/Age + Análise Metassemiótica · 2026-08-27
+## Assembleia #642 — Age + Análise Metassemiótica · 2026-08-27
 
-**A6194** — **AID como módulo autônomo com promessa simples:** não misturar agenda, secretaria, memória e prontuário desde o início. Começar com critério de pronto mínimo: "profissional cria regra → sistema gera horários → exceção bloqueia data → paciente solicita → profissional aprova → paciente confirma → lembrete enviado → estados no Feed AID". Escalar só após validação.
+**A6194** — **Age como módulo autônomo com promessa simples:** não misturar agenda, secretaria, memória e prontuário desde o início. Começar com critério de pronto mínimo: "profissional cria regra → sistema gera horários → exceção bloqueia data → paciente solicita → profissional aprova → paciente confirma → lembrete enviado → estados no Feed Age". Escalar só após validação.
 
 **A6195** — **Fragmentação de sessões = externalização cognitiva de crise:** volume sem hierarquia de prioridade é hemorragia de foco. Tags órfãs, projetos paralelos sem governança e assembleias simbólicas sem gate técnico são sintomas de sobrecarga, não método. A dispersão das 641 sessões não invalida a arquitetura, mas compromete a comunicação de valor externamente.
 
