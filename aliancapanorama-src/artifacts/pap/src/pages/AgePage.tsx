@@ -124,12 +124,15 @@ export function AgePage() {
   useEffect(() => { if (!loading) loadSlots(); }, [loading, loadSlots]);
 
   // Carregar agenda (professional)
-  const loadAppts = useCallback(() => {
+  const loadAppts = useCallback(async () => {
     if (mode !== "professional") return;
     const de = new Date().toISOString().slice(0, 10);
     const ate = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
-    fetch(`${API}/api/age/${slug}/appointments?de=${de}&ate=${ate}`, { credentials: "include" })
-      .then(r => r.json()).then(setAppts).catch(() => {});
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/appointments?de=${de}&ate=${ate}`, { credentials: "include" });
+      const data = await r.json() as Appt[];
+      setAppts(data);
+    } catch { /* silencia falha de rede */ }
   }, [mode, slug]);
 
   const loadRules = useCallback(() => {
@@ -219,8 +222,8 @@ export function AgePage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(patch),
     });
-    loadAppts();
     if (selectedAppt?.id === id) setSelectedAppt(null);
+    await loadAppts();
   }
 
   async function addRule(e: React.FormEvent) {
@@ -399,8 +402,9 @@ export function AgePage() {
       <div style={{ padding: "1rem" }}>
         <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Horários disponíveis</h2>
         {Object.keys(grouped).length === 0 && (
-          <div style={{ color: "#64748b", fontSize: 14, textAlign: "center", padding: "2rem" }}>
-            Nenhum horário disponível nos próximos 30 dias.
+          <div style={{ color: "#64748b", fontSize: 14, textAlign: "center", padding: "2rem", lineHeight: 1.7 }}>
+            Nenhum horário disponível no momento.<br />
+            <span style={{ fontSize: 12 }}>Entre em contato para verificar disponibilidade.</span>
           </div>
         )}
         {Object.entries(grouped).map(([day, daySlots]) => (
@@ -661,19 +665,19 @@ export function AgePage() {
                 <p style={{ color: "#94a3b8", fontSize: 13, lineHeight: 1.6, margin: 0 }}>{prof.bio}</p>
               </div>
             )}
-            <PublicView />
+            {PublicView()}
           </>
         ) : (
           <>
-            {view === "agenda"          && <AgendaView />}
-            {view === "disponibilidade" && <DisponibilidadeView />}
-            {view === "sabia"           && <SabiaView />}
+            {view === "agenda"          && AgendaView()}
+            {view === "disponibilidade" && DisponibilidadeView()}
+            {view === "sabia"           && SabiaView()}
           </>
         )}
       </div>
 
       {/* Login modal */}
-      {(mode as string) === "login" && authStep !== "done" && <LoginModal />}
+      {(mode as string) === "login" && authStep !== "done" && LoginModal()}
 
       <style>{`
         * { box-sizing: border-box; }

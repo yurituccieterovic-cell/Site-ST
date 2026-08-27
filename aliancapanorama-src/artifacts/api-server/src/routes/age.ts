@@ -6,7 +6,7 @@ import {
   ageProfessionalsTable, ageAvailabilityRulesTable,
   ageAppointmentsTable, ageSabiaMemoryTable,
 } from "@workspace/db";
-import { eq, and, gte, lte, desc } from "drizzle-orm";
+import { eq, and, gte, lte, desc, not, inArray } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
@@ -295,6 +295,7 @@ router.get("/age/:slug/slots", async (req, res): Promise<void> => {
       eq(ageAppointmentsTable.professionalId, prof.id),
       gte(ageAppointmentsTable.dataHora, de),
       lte(ageAppointmentsTable.dataHora, ate),
+      not(inArray(ageAppointmentsTable.status, ["cancelado", "remarcado"])),
     ));
 
   const bookedSet = new Set(booked.map(b => b.dataHora.getTime()));
