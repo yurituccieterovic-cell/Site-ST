@@ -44,7 +44,7 @@ A ATA cobre apenas o período desde o último #fim.
 ```bash
 # Conector — ATA resumida (sempre, automático e manual)
 BRIDGE=$(grep BRIDGE_SECRET /root/.pap-secrets | cut -d= -f2)
-curl -s -X POST https://site-st-production.up.railway.app/api/conector/memory \
+curl -s -X POST https://site-st.onrender.com/api/conector/memory \
   -H "Authorization: Bearer $BRIDGE" \
   -H "Content-Type: application/json" \
   -d "{\"section\":\"conversas\",\"append\":\"### $(date +%Y-%m-%d) — ATA Cláudio\\n[inserir: decisões tomadas, próximos passos, 3-5 linhas]\"}"

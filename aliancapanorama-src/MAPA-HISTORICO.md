@@ -9,7 +9,8 @@
 
 | Data | O que foi feito |
 |---|---|
-| 2026-08-27 (Sessão Age-0) | Sistema Age completo: schema 4 tabelas, API auth+agenda+SABIÁ, AgePage.tsx, seed Lisange+Susana · commit cef43cc |
+| 2026-08-27 (Sessão Age-1) | Fix deploy em cascata: .dockerignore + pdf-parse createRequire + db.execute não-iterável · ISA Bluesky: 16 posts, prompt discreto · Amanda online na assembleia · email Assembleia sobre Age |
+| 2026-08-27 (Sessão Age-0) | Sistema Age completo: schema 4 tabelas, API auth+agenda+SABIÁ, AgePage.tsx, seed Lisange+Suzana · commit cef43cc |
 | 2026-07-02 (manhã) | Criação do MAPA.md; auto-login Termux → Ubuntu root; README.md, CLAUDE.md |
 | 2026-07-02 (tarde) | Sistema `#secrets` + `/root/.pap-secrets`; Gmail IMAP/SMTP; 424 assembleias extraídas |
 | 2026-07-02 (noite) | APRENDIZADO.md (526 insights, 290 assembleias); IDEIAS.md (31 ideias); sync-assembleias.py |

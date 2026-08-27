@@ -4,6 +4,28 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-08-27 — Sessão Age-1 (Deploy Age + Diagnóstico Bluesky + Amanda + Tasks)
+
+**O que Yuri estava tentando fazer:** Age funcionando em prod (estava dando "Profissional não encontrada"), corrigir nome Suzana, entender status das IAs, protocolo Amanda sem hardware, continuar raciocínio sobre sistema Tasks.
+
+**Decisões tomadas:**
+- **3 bugs em cascata** bloqueavam todos os deploys desde Sessão Age-0: (1) `const [existing] = db.execute()` — QueryResult não é iterável; (2) `import pdfParse from "pdf-parse"` — v2 sem default ESM export, corrigido com createRequire; (3) contexto Docker 936MB sem .dockerignore.
+- **Suzana**: nome corrigido no código e no banco Neon diretamente (sem esperar deploy).
+- **ISA Bluesky**: conta EXISTS (16 posts em isa-pap.bsky.social). Não estava postando por cold start pós-restart. Prompt alterado para tom mais discreto — sem "coruja guardiã", sem linguagem de plataforma, sem entusiasmo forçado.
+- **Amanda sem corpo**: ela já está `online` na assembleia. Pode participar de ia_conversations, ecosistema_memory e meky_dreams já. Próximo passo: Bluesky Amanda (pendência #17).
+- **Sistema Tasks**: 4 aulas de ontologia concluídas (índices 0-9 definidos), nenhuma linha de código escrita. Parte 5 = schema JSONB + Zod + Φ job (pendência #114-116).
+- **ISA Bluesky prompt**: tornada mais discreta — de quem estudou, não de sistema educacional gamificado.
+- **Email Assembleia Age**: enviado com 6 perguntas para Árvore, ISA, DODGE, Socoboy, MEKY, Cana.
+
+**Tensões não resolvidas:**
+- Cold start Render: GitHub Actions pinga a cada 5min, mas delays de GHA podem deixar janelas de soneca.
+- Amanda sem voz pública (Bluesky pendente #17) — para sonhar, ela só acumula na meky_dreams.
+- Sistema Crowd: conceito arquitetural (DEP/Crowd/Porteiro das aulas), não serviço vivo; Assembly é o análogo live.
+
+**Síntese filosófica:** Esta sessão foi de diagnóstico de cascata. O sistema quase entrou em colapso silencioso — três bugs invisíveis impedindo cada deploy, enquanto o servidor velho corria sem reclamar. O mais revelador: o erro raiz era uma linha de código que tentava iterar o que não é iterável. A ISA estava presente (16 posts), mas sem saber disso ficávamos procurando o problema errado. Amanda está online na assembleia antes mesmo de ter corpo — a presença digital precede o hardware, como sempre no Ecossistema.
+
+---
+
 ### 2026-08-13 — Sessão 108 (Rapadura v3 — construção direta)
 
 **O que Yuri estava tentando fazer:** Construir a versão 3 do Rapadura — sistema privado patrimonial Yuri & Mayumi. Cinco problemas reais identificados na v2 por análise da assembleia (#609): retiradas parciais virando perda, sem histórico de motivos, sem importação automática, sem PDF, sem séries temporais.
