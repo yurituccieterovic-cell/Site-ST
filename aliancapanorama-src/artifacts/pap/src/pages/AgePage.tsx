@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
@@ -19,11 +19,20 @@ type AvailRule = {
 };
 type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
+type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string };
 type View = "agenda" | "pacientes" | "disponibilidade" | "sabia";
 type Mode = "public" | "professional";
 type AuthStep = "login" | "challenge" | "done";
 
 const DIAS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const PATIENT_STATUS_LABEL: Record<string, string> = {
+  email_pendente: "Email pendente", pendente_aprovacao: "Aguardando aprovação",
+  aprovado: "Aprovado", recusado: "Recusado", suspenso: "Suspenso",
+};
+const PATIENT_STATUS_COLOR: Record<string, string> = {
+  email_pendente: "#94a3b8", pendente_aprovacao: "#facc15",
+  aprovado: "#4ade80", recusado: "#f87171", suspenso: "#fb923c",
+};
 const STATUS_LABEL: Record<string, string> = {
   disponivel: "Disponível", reservado: "Reservado", confirmado: "Confirmado",
   realizado: "Realizado", cancelado: "Cancelado", faltou: "Faltou", remarcado: "Remarcado",
@@ -68,9 +77,23 @@ export function AgePage() {
   const [appts, setAppts] = useState<Appt[]>([]);
   const [rules, setRules] = useState<AvailRule[]>([]);
   const [exceptions, setExceptions] = useState<Exception[]>([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [patientFilter, setPatientFilter] = useState("todos");
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedAppt, setSelectedAppt] = useState<Appt | null>(null);
   const [apptNotes, setApptNotes] = useState("");
   const [undoRule, setUndoRule] = useState<{ id: number; label: string; timerId: ReturnType<typeof setTimeout> } | null>(null);
+
+  // Patient registration (public)
+  const [showRegister, setShowRegister] = useState(false);
+  const [regForm, setRegForm] = useState({ nome: "", email: "", telefone: "" });
+  const [regDone, setRegDone] = useState(false);
+  const [regError, setRegError] = useState("");
+  const [regLoading, setRegLoading] = useState(false);
+
+  // Email confirmation (via ?confirm= query param)
+  const [confirmStatus, setConfirmStatus] = useState<"loading" | "ok" | "error" | null>(null);
+  const [confirmMsg, setConfirmMsg] = useState("");
 
   // SABIÁ chat
   const [msgs, setMsgs] = useState<ChatMsg[]>([
@@ -153,11 +176,38 @@ export function AgePage() {
       .then(r => r.json()).then(setExceptions).catch(() => {});
   }, [mode, slug]);
 
+  const loadPatients = useCallback(() => {
+    if (mode !== "professional") return;
+    fetch(`${API}/api/age/${slug}/patients?status=todos`, { credentials: "include" })
+      .then(r => r.json()).then(setPatients).catch(() => {});
+  }, [mode, slug]);
+
   useEffect(() => {
     if (mode === "professional" && authStep === "done") {
-      loadAppts(); loadRules(); loadExceptions();
+      loadAppts(); loadRules(); loadExceptions(); loadPatients();
     }
-  }, [mode, authStep, loadAppts, loadRules, loadExceptions]);
+  }, [mode, authStep, loadAppts, loadRules, loadExceptions, loadPatients]);
+
+  // Confirmar email via ?confirm= na URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("confirm");
+    if (!token || !slug) return;
+    setConfirmStatus("loading");
+    fetch(`${API}/api/age/${slug}/confirm-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    })
+      .then(r => r.json())
+      .then((d: { ok?: boolean; message?: string; error?: string }) => {
+        if (d.ok) { setConfirmStatus("ok"); setConfirmMsg(d.message ?? "Email confirmado!"); }
+        else       { setConfirmStatus("error"); setConfirmMsg(d.error ?? "Link inválido."); }
+        // Limpar query param sem recarregar
+        window.history.replaceState({}, "", window.location.pathname);
+      })
+      .catch(() => { setConfirmStatus("error"); setConfirmMsg("Sem conexão."); });
+  }, [slug]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     msgBottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -283,6 +333,33 @@ export function AgePage() {
     setExcForm({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
     loadExceptions();
     loadSlots();
+  }
+
+  async function handleRegister(e: React.FormEvent) {
+    e.preventDefault();
+    if (!regForm.nome || !regForm.email) return;
+    setRegLoading(true); setRegError("");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(regForm),
+      });
+      const d = await r.json() as { ok?: boolean; message?: string; error?: string };
+      if (d.ok) { setRegDone(true); }
+      else setRegError(d.error ?? "Erro no cadastro.");
+    } catch { setRegError("Sem conexão. Tente novamente."); }
+    setRegLoading(false);
+  }
+
+  async function updatePatient(id: number, patch: Record<string, string>) {
+    await fetch(`${API}/api/age/${slug}/patients/${id}`, {
+      method: "PATCH", credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    });
+    if (selectedPatient?.id === id) setSelectedPatient(null);
+    loadPatients();
   }
 
   async function removeException(id: number) {
@@ -478,6 +555,48 @@ export function AgePage() {
             </div>
           </div>
         ))}
+
+        {/* Registro como paciente */}
+        <div style={{ borderTop: "1px solid #1e293b", marginTop: 16, paddingTop: 16 }}>
+          {!showRegister ? (
+            <button onClick={() => setShowRegister(true)}
+              style={{ width: "100%", background: "transparent", border: `1px solid ${color}33`, borderRadius: 8, color: "#64748b", padding: "10px 0", cursor: "pointer", fontSize: 13 }}>
+              Registrar-se como paciente de {prof.nome}
+            </button>
+          ) : regDone ? (
+            <div style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 10, padding: "12px 16px" }}>
+              <div style={{ color: "#4ade80", fontWeight: 700, fontSize: 14, marginBottom: 4 }}>Cadastro enviado!</div>
+              <div style={{ color: "#94a3b8", fontSize: 13 }}>Verifique seu email para confirmar. Após a confirmação, {prof.nome} receberá uma notificação.</div>
+            </div>
+          ) : (
+            <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <div style={{ color, fontSize: 13, fontWeight: 600 }}>Cadastro de paciente</div>
+                <button onClick={() => setShowRegister(false)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>✕</button>
+              </div>
+              <form onSubmit={handleRegister}>
+                {[
+                  { label: "Nome completo *", key: "nome", type: "text", placeholder: "Seu nome" },
+                  { label: "Email *", key: "email", type: "email", placeholder: "seu@email.com" },
+                  { label: "Telefone / WhatsApp", key: "telefone", type: "tel", placeholder: "(11) 99999-9999" },
+                ].map(f => (
+                  <div key={f.key} style={{ marginBottom: 10 }}>
+                    <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 3 }}>{f.label}</label>
+                    <input type={f.type} placeholder={f.placeholder} required={f.key !== "telefone"}
+                      value={(regForm as any)[f.key]} onChange={e => setRegForm(rf => ({ ...rf, [f.key]: e.target.value }))}
+                      style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "9px 12px", color: "#e2e8f0", fontSize: 13, boxSizing: "border-box" }}
+                    />
+                  </div>
+                ))}
+                {regError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 10 }}>{regError}</div>}
+                <button type="submit" disabled={regLoading || !regForm.nome || !regForm.email}
+                  style={{ width: "100%", background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  {regLoading ? "Enviando…" : "Solicitar cadastro"}
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -557,6 +676,108 @@ export function AgePage() {
             </div>
           </div>
         )}
+      </div>
+    );
+  }
+
+  function PacientesView() {
+    const filtered = patients.filter(p =>
+      patientFilter === "todos" ? true : p.status === patientFilter
+    );
+    const color = prof?.cor ?? "#2dd4bf";
+
+    const statusLabels: Record<string, string> = {
+      email_pendente:      "Email pendente",
+      pendente_aprovacao:  "Aguardando aprovação",
+      aprovado:            "Aprovado",
+      recusado:            "Recusado",
+      suspenso:            "Suspenso",
+    };
+    const statusColors: Record<string, string> = {
+      email_pendente:      "#94a3b8",
+      pendente_aprovacao:  "#f59e0b",
+      aprovado:            "#4ade80",
+      recusado:            "#f87171",
+      suspenso:            "#f97316",
+    };
+
+    return (
+      <div style={{ padding: "1rem" }}>
+        <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Pacientes</h2>
+
+        {/* Filtro de status */}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
+          {["todos","pendente_aprovacao","aprovado","recusado","suspenso","email_pendente"].map(f => (
+            <button key={f} onClick={() => setPatientFilter(f)}
+              style={{ background: patientFilter === f ? color : "#1a2030", border: `1px solid ${color}33`, borderRadius: 20, color: patientFilter === f ? "#080c10" : "#94a3b8", padding: "5px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+              {f === "todos" ? "Todos" : (statusLabels[f] ?? f)}
+            </button>
+          ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <div style={{ color: "#475569", textAlign: "center", padding: "32px 0" }}>Nenhum paciente nesta categoria.</div>
+        )}
+
+        {filtered.map(p => (
+          <div key={p.id}
+            style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "12px 16px", marginBottom: 10, cursor: "pointer" }}
+            onClick={() => setSelectedPatient(selectedPatient?.id === p.id ? null : p)}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div>
+                <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{p.nome}</div>
+                <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{p.email}{p.telefone ? ` · ${p.telefone}` : ""}</div>
+              </div>
+              <span style={{ background: (statusColors[p.status] ?? "#64748b") + "22", color: statusColors[p.status] ?? "#64748b", borderRadius: 20, padding: "3px 10px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
+                {statusLabels[p.status] ?? p.status}
+              </span>
+            </div>
+
+            {/* Painel expandido */}
+            {selectedPatient?.id === p.id && (
+              <div style={{ marginTop: 12, borderTop: `1px solid ${color}22`, paddingTop: 12 }}>
+                <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 8 }}>
+                  Cadastrado em {new Date(p.createdAt).toLocaleDateString("pt-BR")}
+                </div>
+                <textarea
+                  placeholder="Observações internas (não visíveis ao paciente)"
+                  value={p.observacoesPro ?? ""}
+                  onClick={e => e.stopPropagation()}
+                  onChange={e => setSelectedPatient({ ...p, observacoesPro: e.target.value })}
+                  onBlur={() => updatePatient(p.id, { observacoesPro: selectedPatient.observacoesPro ?? "" })}
+                  rows={2}
+                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 12, resize: "vertical", boxSizing: "border-box" }}
+                />
+                <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+                  {p.status === "pendente_aprovacao" && (
+                    <>
+                      <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "aprovado" }); }}
+                        style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 8, color: "#4ade80", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                        ✓ Aprovar
+                      </button>
+                      <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "recusado" }); }}
+                        style={{ background: "#1f0a0a", border: "1px solid #f8717155", borderRadius: 8, color: "#f87171", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                        ✕ Recusar
+                      </button>
+                    </>
+                  )}
+                  {p.status === "aprovado" && (
+                    <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "suspenso" }); }}
+                      style={{ background: "#1c1005", border: "1px solid #f9731655", borderRadius: 8, color: "#f97316", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                      Suspender
+                    </button>
+                  )}
+                  {(p.status === "recusado" || p.status === "suspenso") && (
+                    <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "aprovado" }); }}
+                      style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 8, color: "#4ade80", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                      Reativar
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     );
   }
@@ -772,7 +993,7 @@ export function AgePage() {
       {mode === "professional" && authStep === "done" && (
         <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b" }}>
           <div style={{ maxWidth: 640, margin: "0 auto", display: "flex" }}>
-            {([["agenda", "Agenda"], ["disponibilidade", "Disponibilidade"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
+            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Regras"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
               <button key={v} onClick={() => setView(v)}
                 style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: view === v ? `2px solid ${color}` : "2px solid transparent", color: view === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: view === v ? 700 : 400 }}>
                 {label}
@@ -784,6 +1005,15 @@ export function AgePage() {
 
       {/* Content */}
       <div style={{ maxWidth: 640, margin: "0 auto" }}>
+        {/* Banner de confirmação de email */}
+        {confirmStatus && (
+          <div style={{ margin: "1rem", padding: "12px 16px", borderRadius: 10, background: confirmStatus === "ok" ? "#052e16" : "#1c0a0a", border: `1px solid ${confirmStatus === "ok" ? "#4ade80" : "#f87171"}55` }}>
+            <span style={{ color: confirmStatus === "ok" ? "#4ade80" : "#f87171", fontSize: 14 }}>
+              {confirmStatus === "loading" ? "Confirmando…" : confirmMsg}
+            </span>
+          </div>
+        )}
+
         {mode === "public" || authStep !== "done" ? (
           <>
             {prof.bio && (
@@ -796,6 +1026,7 @@ export function AgePage() {
         ) : (
           <>
             {view === "agenda"          && AgendaView()}
+            {view === "pacientes"       && PacientesView()}
             {view === "disponibilidade" && DisponibilidadeView()}
             {view === "sabia"           && SabiaView()}
           </>

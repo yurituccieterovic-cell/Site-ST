@@ -64,6 +64,22 @@ export const ageSabiaMemoryTable = pgTable("age_sabia_memory", {
   createdAt:       timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
+// ─── Pacientes ────────────────────────────────────────────────────────────────
+export const agePatientsTable = pgTable("age_patients", {
+  id:               serial("id").primaryKey(),
+  professionalId:   integer("professional_id").notNull().references(() => ageProfessionalsTable.id, { onDelete: "cascade" }),
+  nome:             text("nome").notNull(),
+  email:            text("email").notNull(),
+  telefone:         text("telefone"),
+  // email_pendente → pendente_aprovacao → aprovado | recusado | suspenso
+  status:           text("status").notNull().default("email_pendente"),
+  tokenConfirmacao: text("token_confirmacao"),
+  tokenExpiraAt:    timestamp("token_expira_at", { withTimezone: true }),
+  observacoesPro:   text("observacoes_pro"),   // anotações internas da profissional
+  createdAt:        timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt:        timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 // ─── Exceções de disponibilidade ─────────────────────────────────────────────
 export const ageExceptionsTable = pgTable("age_exceptions", {
   id:             serial("id").primaryKey(),

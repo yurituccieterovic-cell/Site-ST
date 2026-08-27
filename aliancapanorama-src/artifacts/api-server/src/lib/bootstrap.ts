@@ -217,6 +217,21 @@ export async function ensureAgeTables(): Promise<void> {
     )
   `);
   await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_patients (
+      id                 SERIAL PRIMARY KEY,
+      professional_id    INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      nome               TEXT NOT NULL,
+      email              TEXT NOT NULL,
+      telefone           TEXT,
+      status             TEXT NOT NULL DEFAULT 'email_pendente',
+      token_confirmacao  TEXT,
+      token_expira_at    TIMESTAMPTZ,
+      observacoes_pro    TEXT,
+      created_at         TIMESTAMPTZ DEFAULT now(),
+      updated_at         TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
     CREATE TABLE IF NOT EXISTS age_exceptions (
       id               SERIAL PRIMARY KEY,
       professional_id  INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,

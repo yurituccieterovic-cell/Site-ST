@@ -4,8 +4,9 @@ import { createTransport } from "nodemailer";
 import { db } from "@workspace/db";
 import {
   ageProfessionalsTable, ageAvailabilityRulesTable,
-  ageAppointmentsTable, ageSabiaMemoryTable, ageExceptionsTable,
+  ageAppointmentsTable, ageSabiaMemoryTable, ageExceptionsTable, agePatientsTable,
 } from "@workspace/db";
+import { randomUUID } from "crypto";
 import { eq, and, gte, lte, desc, not, inArray } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
@@ -537,6 +538,165 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
   ]);
 
   res.json({ reply, sessionId: sid });
+});
+
+// ─── Pacientes ────────────────────────────────────────────────────────────────
+
+const FRONT_URL = process.env.FRONTEND_URL ?? "https://site-st.vercel.app/aliancapanorama";
+
+// POST /api/age/:slug/patients — paciente se cadastra (público)
+router.post("/age/:slug/patients", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { nome, email, telefone } = req.body as { nome?: string; email?: string; telefone?: string };
+  if (!nome || !email) { res.status(400).json({ error: "nome e email obrigatórios" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, email: ageProfessionalsTable.email })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  // Evitar duplicata por email no mesmo profissional
+  const [existing] = await db.select({ id: agePatientsTable.id, status: agePatientsTable.status })
+    .from(agePatientsTable)
+    .where(and(eq(agePatientsTable.professionalId, prof.id), eq(agePatientsTable.email, email.toLowerCase())))
+    .limit(1);
+
+  if (existing) {
+    const msg = existing.status === "aprovado"
+      ? "Este email já está cadastrado e aprovado."
+      : "Este email já está cadastrado. Verifique sua caixa de entrada.";
+    res.status(409).json({ error: msg });
+    return;
+  }
+
+  const token = randomUUID();
+  const expira = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24h
+
+  await db.insert(agePatientsTable).values({
+    professionalId: prof.id,
+    nome,
+    email: email.toLowerCase(),
+    telefone,
+    status: "email_pendente",
+    tokenConfirmacao: token,
+    tokenExpiraAt: expira,
+  });
+
+  const confirmLink = `${FRONT_URL}/age/${slug}?confirm=${token}`;
+  await sendEmail(
+    email,
+    `Age — Confirme seu cadastro com ${prof.nome}`,
+    `Olá ${nome},\n\nSeu cadastro foi recebido! Clique no link abaixo para confirmar seu email:\n\n${confirmLink}\n\nO link expira em 24 horas.\n\nApós a confirmação, ${prof.nome} receberá uma notificação e aprovará seu acesso.\n\n— SABIÁ`,
+  ).catch(e => logger.error({ err: e }, "age: sendEmail confirm patient"));
+
+  res.status(201).json({ ok: true, message: "Cadastro recebido! Verifique seu email para confirmar." });
+});
+
+// POST /api/age/:slug/confirm-email — paciente confirma email via token
+router.post("/age/:slug/confirm-email", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { token } = req.body as { token?: string };
+  if (!token) { res.status(400).json({ error: "token obrigatório" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, email: ageProfessionalsTable.email })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [patient] = await db.select()
+    .from(agePatientsTable)
+    .where(and(
+      eq(agePatientsTable.professionalId, prof.id),
+      eq(agePatientsTable.tokenConfirmacao, token),
+    )).limit(1);
+
+  if (!patient) { res.status(404).json({ error: "Link inválido ou já utilizado." }); return; }
+  if (patient.tokenExpiraAt && patient.tokenExpiraAt < new Date()) {
+    res.status(400).json({ error: "Link expirado. Solicite um novo cadastro." }); return;
+  }
+  if (patient.status !== "email_pendente") {
+    res.json({ ok: true, status: patient.status, message: "Email já confirmado." }); return;
+  }
+
+  await db.update(agePatientsTable)
+    .set({ status: "pendente_aprovacao", tokenConfirmacao: null, tokenExpiraAt: null, updatedAt: new Date() })
+    .where(eq(agePatientsTable.id, patient.id));
+
+  // Notificar profissional
+  if (prof.email) {
+    const profLink = `${FRONT_URL}/age/${slug}`;
+    sendEmail(
+      prof.email,
+      `Age — Novo paciente aguardando aprovação: ${patient.nome}`,
+      `Olá ${prof.nome},\n\n${patient.nome} (${patient.email}) confirmou o email e está aguardando sua aprovação.\n\nAcesse seu painel para aprovar ou recusar:\n${profLink}\n\n— SABIÁ`,
+    ).catch(e => logger.error({ err: e }, "age: sendEmail notify prof"));
+  }
+
+  res.json({ ok: true, status: "pendente_aprovacao", message: "Email confirmado! Aguardando aprovação." });
+});
+
+// GET /api/age/:slug/patients (auth required)
+router.get("/age/:slug/patients", requireAgeAuth, async (req, res): Promise<void> => {
+  const { status } = req.query as Record<string, string | undefined>;
+  const conditions = [eq(agePatientsTable.professionalId, req.session.ageProfessionalId!)];
+  if (status && status !== "todos") conditions.push(eq(agePatientsTable.status, status));
+
+  const rows = await db.select({
+    id:           agePatientsTable.id,
+    nome:         agePatientsTable.nome,
+    email:        agePatientsTable.email,
+    telefone:     agePatientsTable.telefone,
+    status:       agePatientsTable.status,
+    observacoesPro: agePatientsTable.observacoesPro,
+    createdAt:    agePatientsTable.createdAt,
+    updatedAt:    agePatientsTable.updatedAt,
+  }).from(agePatientsTable).where(and(...conditions)).orderBy(agePatientsTable.createdAt);
+
+  res.json(rows);
+});
+
+// PATCH /api/age/:slug/patients/:id (auth required) — aprovar/recusar/anotar
+router.patch("/age/:slug/patients/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  const { status, observacoesPro } = req.body as { status?: string; observacoesPro?: string };
+
+  const validStatus = ["aprovado", "recusado", "suspenso", "pendente_aprovacao"];
+  if (status && !validStatus.includes(status)) {
+    res.status(400).json({ error: "Status inválido" }); return;
+  }
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (status)             updates["status"]          = status;
+  if (observacoesPro !== undefined) updates["observacoesPro"] = observacoesPro;
+
+  const [updated] = await db.update(agePatientsTable)
+    .set(updates as any)
+    .where(and(eq(agePatientsTable.id, id), eq(agePatientsTable.professionalId, req.session.ageProfessionalId!)))
+    .returning();
+
+  if (!updated) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+
+  // Notificar paciente por email quando status muda
+  if (status && updated.email) {
+    const msgs: Record<string, string> = {
+      aprovado:  `Olá ${updated.nome},\n\nSua solicitação foi aprovada! Você já pode marcar consultas.\n\n— SABIÁ`,
+      recusado:  `Olá ${updated.nome},\n\nSua solicitação não foi aprovada desta vez. Entre em contato para mais informações.\n\n— SABIÁ`,
+      suspenso:  `Olá ${updated.nome},\n\nSeu acesso foi temporariamente suspenso. Entre em contato para esclarecimentos.\n\n— SABIÁ`,
+    };
+    if (msgs[status]) {
+      const [prof] = await db.select({ nome: ageProfessionalsTable.nome })
+        .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, req.session.ageProfessionalId!)).limit(1);
+      sendEmail(
+        updated.email,
+        `Age — Atualização do seu cadastro com ${prof?.nome ?? "a profissional"}`,
+        msgs[status]!,
+      ).catch(e => logger.error({ err: e }, "age: sendEmail patient status"));
+    }
+  }
+
+  res.json(updated);
 });
 
 // ─── Admin: criar profissional (tier 5) ───────────────────────────────────────
