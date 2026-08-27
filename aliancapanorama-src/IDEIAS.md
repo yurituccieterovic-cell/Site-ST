@@ -1632,3 +1632,14 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I563 | **Age — Estados do vínculo paciente** | 🟡 Média | ○ S | Estados claros evitam estados inconsistentes no DB | Enum: convite_enviado, cadastro_incompleto, email_pendente, pendente_aprovacao, aprovado, recusado, suspenso, encerrado. Campo `status` em age_patients. |
 | I564 | **Age — Link de convite para pré-aprovação** | 🟡 Média | ○ S | Profissional envia link para paciente já conhecido → pula fila | POST /age/:slug/invite { email }. Gera token com aprovação_automatica=true. Paciente cadastra, confirma email, já entra aprovado sem passar pelo feed de pendentes. |
 | I565 | **Age — Threshold de automação de aprovação** | 🟢 Baixa | ○ S | Definir quando habilitar auto-aprovação: >50 pacientes/semana | Métrica de gatilho: se agenda tem >50 slots ocupados/semana por 4 semanas consecutivas → oferecer auto-aprovação como opção no painel. Evitar sobrecarga de triagem manual em alto volume. |
+
+## Canvas — Novas Capacidades (2026-08-27)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I566 | **Canvas — criar e ler imagens (multimodal)** | 🟡 Média | ○ L | Canvas v3 vira workspace multimodal real | Criar: endpoint POST /canvas/generate-image → API OpenAI/Replicate SDXL. Ler: POST /canvas/analyze-image → Claude claude-sonnet-4-6 vision. Bloco "Imagem" no Canvas de Projetos. |
+| I567 | **Canvas — leitura de site por URL** | 🟡 Média | ○ M | Qualquer URL vira conteúdo estruturado dentro do Canvas | POST /canvas/fetch-url { url } → fetch + cheerio parse → retorna title, texto limpo, imagens principais. Bloco "URL" no Canvas. |
+| I568 | **Canvas — leitura de PDF** | 🟡 Média | ○ M | Upload de PDF vira nó de conteúdo no mapa mental | POST /canvas/parse-pdf multipart → pdf-parse (createRequire CJS) → retorna texto por página. Bloco "PDF" no Canvas. |
+| I569 | **Canvas — geração de vídeo** | 🟢 Baixa | ○ XL | Canvas vira estúdio de mídia | POST /canvas/generate-video → RunwayML API ou Replicate. Frame concept + prompt → URL do vídeo. Bloco "Vídeo" (fase tardia). |
+| I570 | **Canvas — OCR de captchas (por esporte)** | 🟢 Baixa | ○ S | Capacidade visual pura — mais didática que útil | POST /canvas/ocr { image_base64 } → Claude vision → retorna texto reconhecido. Para treinar e testar capacidades de visão do ecossistema. |
+| I571 | **Canvas v2 — primeira tarefa: atualizar CEU** | 🔴 Alta | ○ M | CEU está desatualizado: faltam Age/SABIÁ, Rapadura v2, Canvas, Workflow IA Dev | Lousa Ecossistema (Canvas v2) nasce com o CEU como canvas zero: 5 edificações + IAs novas. Cada IA vira um cartão com autoria colorida. |

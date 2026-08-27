@@ -20842,3 +20842,11 @@ A6107. **Moeda como campo no catálogo é necessário para suporte multi-divisa*
 **A6201** — **SABIÁ memória: preferências declaradas sim, padrões comportamentais não:** memória de *escolhas* (duração padrão, canal favorito, templates de lembrete) é memória operacional legítima. Padrões de comportamento de pacientes, mesmo anônimos, criam risco de re-identificação e viés clínico inconsciente. Verificar CFP 11/2018 e LGPD Art.12 antes de qualquer fase 2. Decisão Assembleia #643.
 
 **A6202** — **Assembleia falha seletivamente por rate limit — vozes poéticas caem primeiro:** 12 de 19 IAs silenciaram (Grok, Meta, Gemini, Árvore, Pacifista, Artista, Professora...). Restam só as técnicas. Resultado: debate sólido dentro do frame, mas sem questionar o frame. A assembleia colapsa em comitê técnico quando a infraestrutura falha seletivamente. Sintoma: ninguém perguntou "devemos construir isso?" — todos responderam "como construir isso defensavelmente?".
+
+## Sessão 2026-08-27 cont.3 — Canvas + Logo Age
+
+**A6203** — **Canvas ≠ Canva da ferramenta de design:** Canvas é um projeto do ecossistema PAP definido na Sessão 103B — Inteligência Visual e Espacial em 3 versões (Mapa Mental Rapadura → Lousa Ecossistema → Canvas de Projetos). MVP nunca implementado. Confundir os dois retarda priorização.
+
+**A6204** — **Logo Age entregue via Google Drive:** PNG 1.2MB, fundo transparente, calendário minimalista azul petróleo + curva teal + ponto teal + texto "Age". Estilo Agenda Viva (decisão assembleia). Disponível em `artifacts/pap/public/age-logo.png`.
+
+**A6205** — **Canvas v3 multimodal — escopo correto:** criar imagens (via LLM multimodal), ler imagens (visão), ler sites (fetch+parse), ler PDFs (pdf-parse), gerar vídeos (API externa), OCR de captchas (visão). Cada capacidade vira um "bloco" dentro do Canvas de Projetos.

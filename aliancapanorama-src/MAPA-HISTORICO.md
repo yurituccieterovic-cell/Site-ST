@@ -242,3 +242,11 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 **Assembleia #643**: 3 decisões de arquitetura Age deliberadas. ✅ Aprovação manual com convite. ✅ Senha+IP mantido, passkeys fase 2. ✅ SABIÁ: só preferências admin, padrões comportamentais vetados (CFP 11/2018). A6199–A6202, I564–I565.
 
 **Workflow IA Dev**: documento completo `tango/workflow_ia_dev.md` — 6 fases, 7 tipos, protocolo 10 itens. Salvo em tango/ + memória Claude + MEMORY.md + Conector (seção workflow). Enviado para Assembleia por email.
+
+## 2026-08-27 (cont. 3) — Logo Age + Canvas + #fim
+
+**Logo Age:** recebida via Google Drive (Canva app). PNG 1.2MB transparente. Calendário minimalista teal/azul petróleo. `public/age-logo.png`. Header do AgePage atualizado.
+
+**Canvas:** confirmado como projeto existente (Sessão 103B). Capacidades multimodais expandidas: criar/ler imagens, URLs, PDFs, vídeos, OCR captcha (I566-I571). Primeira tarefa do v2 = atualizar CEU.
+
+**A6203-A6205. I566-I571. Commit c2a1d64 (exceções Age) + logo commit.**

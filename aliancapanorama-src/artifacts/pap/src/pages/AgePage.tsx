@@ -744,7 +744,7 @@ export function AgePage() {
       <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b", padding: "0 1rem" }}>
         <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: 22 }}>🐦</span>
+            <img src="/aliancapanorama/age-logo.png" alt="Age" style={{ width: 32, height: 32, objectFit: "contain" }} />
             <div>
               <div style={{ color, fontWeight: 700, fontSize: 15 }}>{prof.nome}</div>
               <div style={{ color: "#64748b", fontSize: 11 }}>{prof.tipo}{prof.registro ? ` · ${prof.registro}` : ""}</div>

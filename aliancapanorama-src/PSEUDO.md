@@ -4849,7 +4849,7 @@ Yuri retornou com `#age` + `#processo` nas assembleias 637, 638 e 639 para conso
 Processamento das assembleias #642 (editorial Age + análise metassemiótica 19 vozes) e #643 (3 decisões de arquitetura: aprovação manual, passkeys fase 2, SABIÁ preferências admin). Criação e publicação do Workflow de Desenvolvimento de IAs. Envio do workflow completo para a Assembleia por email.
 
 ### Extrações
-- **A6194–A6198**: AID módulo autônomo, fragmentação como externalização cognitiva, EPR²T como gate técnico, assembleias como processo editorial, sequência de implementação Age
+- **A6194–A6198**: Age módulo autônomo, fragmentação como externalização cognitiva, EPR²T como gate técnico, assembleias como processo editorial, sequência de implementação Age
 - **A6199–A6202**: 3 decisões Assembleia #643 (aprovação manual, login MVP, SABIÁ memória), + assembleia falha seletivamente por rate limit — vozes poéticas caem primeiro
 - **I561–I565**: diretórios isolados, critério de pronto, estados vínculo paciente, link de convite, threshold de automação
 
@@ -4865,4 +4865,35 @@ Processamento das assembleias #642 (editorial Age + análise metassemiótica 19 
 ### Próximos passos
 - Implementar I548 (exceções não-destrutivas), I550 (cadastro paciente), I553 (Feed Age)
 - Consultar CFP 11/2018 antes de qualquer memória comportamental no SABIÁ
-- Logo AID via Canva (briefing: agenda + cuidado + conexão, sem símbolos médicos genéricos)
+- Logo Age via Canva (briefing: agenda + cuidado + conexão, sem símbolos médicos genéricos)
+
+---
+
+## Sessão Age-4 — 2026-08-27 — Logo + Canvas + #fim
+
+### O que aconteceu
+Logo Age chegou via Google Drive (Canva app). Calendário minimalista teal/azul petróleo, fundo transparente. Salvo em `public/age-logo.png`, integrado no header do AgePage. Discussão sobre Canvas (projeto do ecossistema, Sessão 103B) — capacidades multimodais propostas. #fim com MacroAta.
+
+### Extrações
+- A6203: Canvas ≠ Canva da ferramenta de design
+- A6204: Logo Age — calendário teal, arquivo PNG 1.2MB em public/
+- A6205: Canvas v3 multimodal — criar/ler imagens, sites, PDFs, vídeos, OCR
+- I566-I571: Canvas multimodal, URL fetch, PDF parse, vídeo, OCR captcha, CEU como canvas zero
+
+### Código
+- `artifacts/pap/public/age-logo.png` — logo oficial Age
+- `AgePage.tsx`: header usa logo em vez do emoji 🐦 (emoji mantido na SABIÁ)
+- `tango/sys_age_core.md`: pendências atualizadas, logo marcada como concluída
+
+### Pendências Age (após esta sessão)
+1. I550: Cadastro paciente + email + aprovação (próxima grande feature — decisão Assembleia #643)
+2. I552: Lembretes automáticos
+3. I553: Feed Age operacional
+4. I554: SABIÁ popup flutuante
+5. Configurar emails reais (Lisange + Suzana)
+6. Trocar senhas padrão
+
+### Canvas — escopo expandido
+- v1 (MVP): Mapa Mental Rapadura — nós dourados/cinzas, zoom+pan
+- v2: Lousa Ecossistema — CEU como canvas zero com cartões por IA
+- v3: Canvas de Projetos — multimodal (imagem, URL, PDF, vídeo, OCR)
