@@ -1581,3 +1581,26 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 |---|---|---|---|---|---|
 | I534 | **Rapadura — Modo Validação de Proposta** | 🔴 Alta | ○ S | Preparar para primeiro cliente pagante | Checklist de onboarding: perfil do usuário, primeiro ativo, primeiro insight da Cana, primeiro PDF importado. Fluxo guiado (5 etapas) para transformar cadastro em usuário ativo real. |
 | I535 | **Funil Curso3 → Rapadura** | 🔴 Alta | ○ M | Canal de aquisição via educação | Landing page pós-curso com call-to-action para Rapadura. Cupom de acesso antecipado incluso no Curso 3. Documentar casos de uso do Rapadura como exercícios práticos dentro do Curso 3. |
+
+
+## Docs PAP — Ideias Novas (2026-08-20)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I536 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I537 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I538 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I539 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I540 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I541 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I542 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Sistema Age — Ideias (2026-08-27)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I543 | **Age × ISA — Alerta de inatividade da profissional** | 🟡 Média | ○ S | ISA já tem cron horário — integrar para detectar profissional sem login por X dias | Cron ISA verifica last_login de age_professionals. Se > 7 dias e agenda ativa: envia alerta por email. Threshold configurável por slug. |
+| I544 | **Age × DODGE — Triagem de urgência por observações** | 🟡 Média | ○ M | DODGE analisa campo 'observações' do paciente na reserva e sinaliza urgências | POST /age/:slug/book recebe observacoes. LLM classifica: se flag de urgência → appointment.urgency = true + email prioritário para profissional. |
+| I545 | **Age × MEKY — Notificação presencial de consulta** | 🟢 Baixa | ○ L | Quando MEKY tiver hardware: anunciar consulta chegando com TTS/LED | Cron D-1 e H-1: se MC_TOKEN disponível, POST /api/mc/announce { msg, urgency }. Fallback email se MC offline. |
+| I546 | **Age × Socoboy — Curadoria de padrões de agenda** | 🟡 Média | ○ S | Socoboy gera relatórios semanais: horários mais procurados, canais, sazonalidade | GET /age/:slug/analytics (admin): slots mais reservados, taxa de confirmação, média de antecedência, canal preferido. Socoboy formata como mensagem Telegram. |
+| I547 | **Age — memória semântica por paciente (SABIÁ v2)** | 🟡 Média | ○ M | age_sabia_memory hoje só registra chat. v2: indexar por paciente + tema para recall estrutural | Campo patient_ref (texto normalizado) + topic_tags (array) em sabia_memory. Recall: "o que SABIÁ sabe sobre insônia dos pacientes da Lisange?" |
