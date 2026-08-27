@@ -1,0 +1,37 @@
+# Node modules — recriados pelo pnpm install no build
+node_modules/
+**/node_modules/
+
+# Dist e build artifacts — recriados pelo build
+**/dist/
+**/.turbo/
+
+# Documentação e arquivos de desenvolvimento
+aliancapanorama-src/tango/
+aliancapanorama-src/APRENDIZADO.md
+aliancapanorama-src/APRENDIZADO-INDICE.md
+aliancapanorama-src/PSEUDO.md
+aliancapanorama-src/PSEUDO2.md
+aliancapanorama-src/PSEUDO-INDICE.md
+aliancapanorama-src/MAPA.md
+aliancapanorama-src/MAPA-HISTORICO.md
+aliancapanorama-src/MAPA-PENDENCIAS.md
+aliancapanorama-src/IDEIAS.md
+aliancapanorama-src/YURI-NAVEGACAO.md
+aliancapanorama-src/projects/
+aliancapanorama-src/cursos/
+aliancapanorama-src/public-landing/
+
+# Git
+.git/
+
+# Secrets e env
+.env
+.env.*
+*.pem
+*.key
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
