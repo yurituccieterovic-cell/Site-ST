@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import multer from "multer";
-import pdfParse from "pdf-parse";
+import { createRequire } from "node:module";
+const _require = createRequire(import.meta.url);
+// pdf-parse v2 não tem default ESM export — usar CJS via require
+const pdfParse = _require("pdf-parse") as (buf: Buffer) => Promise<{ text: string; numpages: number }>;
 import { db } from "@workspace/db";
 import {
   rapaduraUsersTable, rapaduraFundosTable, rapaduraPertencesTable,
