@@ -364,3 +364,34 @@
 | 178 | Curso 3 "Finanças Sustentáveis": iniciar pipeline (edge-tts + FFmpeg) | 🔴 URGENTE | ⏳ próxima sessão |
 | 179 | Rapadura: primeiro cliente pagante — validar proposta de valor (A6147) | 🔴 URGENTE | ⏳ decisão Yuri |
 | 180 | Mensagens Yuri↔Mayumi dentro do Rapadura (I525) | MÉDIA | ⏳ sessão futura |
+
+| 200 | Assembleia #633 — Enterro do Railway: registrada + A6165–A6168 extraídos | — | ✅ Sessão 2026-08-25 |
+| 205 | **Sistema Age** — agenda médica/psicológica: schema (age_professionals/availability_rules/appointments/sabia_memory), API auth com IP challenge, SABIÁ (Cana+ISA+DODGE), AgePage.tsx, seed Lisange+Susana, `/age/:slug` | — | ✅ Sessão 2026-08-27 · commit cef43cc |
+| 206 | Age: configurar email real das profissionais via POST /api/age/admin/setup | Yuri (email Lisange/Susana) | ⏳ |
+| 207 | Age: trocar senha padrão "age2026" após primeiro login de cada profissional | Lisange + Susana | ⏳ |
+| 208 | Age: UX Susana — ver sistema existente dela e ajustar interface | Susana mostra sistema | ⏳ |
+| 209 | Age: domínio curto (age.sociedadetucci.com.br ou /age como alias) | DNS | ⏳ |
+| 210 | Age: Canva visual — identidade gráfica do Age (logo SABIÁ, cores, tipografia) | Sessão futura | 💡 |
+
+### #201 — Migração RODAR: Replit → Render
+- [x] Código-fonte → GitHub ✅ 428 arquivos, 2 commits (74af36d8) — 2026-08-25T19:59
+- [x] Fix `groq-retry.ts` publicado ✅ — RODAR 20/20
+- [x] `.env.example` com manifesto de nomes ✅ — `MIGRATION_RENDER.md` gerado
+- [ ] **pg_dump produção** — 635 sessões / 18.682 msgs / 3.044 arvore_chat (bloqueio principal)
+- [ ] Secrets copiados do Replit para Render (Yuri faz direto no painel, sem passar por chat)
+- [ ] Deploy no Render + apontar Neon
+
+### #202 — pg_dump produção RODAR (aguardando email do Replit)
+- Tarefa de backup separada iniciada pelo agente Replit em 2026-08-25
+- Entrega: email em partes ou link autenticado → yurituccieterovic@gmail.com ou luddlocke
+- Quando chegar: restaurar no Neon, secrets no Render, deploy, dump FINAL fresquinho, corte
+- NÃO apagar Replit até Render verificado por 30 dias
+
+### #203 — Assembleia #636 ✅ PROCESSADA 2026-08-25
+- Processar quando os 3 emails chegarem (Assembleia + RESULTADO + PERFEITO)
+
+### #204 — Deploy RODAR no Render (pós-dump)
+- Repo: github.com/yurituccieterovic-cell/salescockpit-clube-da-ia (privado, 428 arquivos)
+- Neon: criar banco separado do PAP, restaurar dump de produção
+- Secrets: copiar do Replit Secrets → Render Environment (Yuri faz direto, sem passar por chat)
+- Referência: MIGRATION_RENDER.md no repo

@@ -4647,3 +4647,148 @@ nas sessões anteriores. Fix: rebuild completo → arquivos presentes no `alianc
 **Sobre totais "que tínhamos combinado":** os KPIs existem (Patrimônio atual, Resultado total,
 Total investido, Rentabilidade). Aparecem como •••••• porque `hideValues=true` por padrão.
 Botão 👁 no header revela os valores. Yuri confirmou.
+
+---
+
+## Sessão Arqueologia Projectificação · 2026-08-25
+
+### O que Yuri estava tentando fazer
+Preparar o terreno para o sistema de Projectificação / Árvore de Projetos. Instrução explícita: arqueologia antes de construção. Yuri enviou um PROMPT-MESTRE de 23 seções com os princípios fundadores vindos das Assembleias #629 e #630.
+
+### Decisões tomadas
+
+**Arquitetura confirmada (DECIDIDO):**
+- ENTIDADES → RELAÇÕES → VISUALIZAÇÕES (não páginas → formulários → tabelas isoladas)
+- Uma fonte de verdade por informação
+- IA interpreta/sugere, nunca decide silenciosamente
+- Proveniência e reversibilidade são requisitos fundacionais, não features
+- Adapters sobre cópias (PAP/Tasks → Projectification Core; Rapadura → Core)
+
+**Railway morto:** confirmado via health check. `site-st-production.up.railway.app` retorna 404. API vive em `site-st.onrender.com`. DB no Neon.
+
+**Workspace criado:** `/root/Projectification/docs/` com 15 documentos modulares.
+
+**Bloqueio ativo:** implementação de qualquer código aguarda validação das Assembleias #629, #630, #631, #632.
+
+### Tensões / questões abertas
+- Banco definitivo: PostgreSQL puro vs híbrido com banco de grafo (P-01)
+- Modelo de IDs: UUID vs hierárquico decimal vs ULID (P-02)
+- Multi-tenant desde o início? (P-03)
+- Onde o workspace mora: `/root/Projectification/` (atual) vs dentro do monorepo PAP (P-04)
+- Validação formal das assembleias ainda não processadas (#629–632)
+
+### Próximo passo único
+`#pap` + `#processo` com assembleias #629, #630, #631, #632 (no email). Os resultados entram em `02_DECISOES.md` convertendo ABERTO → DECIDIDO.
+
+---
+
+## Sessão #fim total — Projectificação · 2026-08-25 (continuação)
+
+### Assembleias processadas nesta sessão
+- **#632** — PROMPT-MESTRE + resposta da Assembleia: validou arqueologia, tensões não resolvidas (critério de saída, protocolo de arbitragem, métrica de metabolização)
+- **#633** — Enterro Railway: diagnóstico brutal — 14/20 agentes offline, infraestrutura 70% inoperante silenciada pela narrativa de sucesso
+- **#634** — #pv e hashtags: 3 camadas (índice/comando/saber tribal); 3 débitos estruturais; pergunta estratégica retida: "Projectus pra quem?"
+
+### Decisões desta sessão
+- `#pv` criado como comando Claude Code (CLAUDE.md + tango/sys_pv.md + tango.md linha 41)
+- `docs/convencoes.md` criado — lacuna canônica de hashtags resolvida
+- `prototypes/schema_v0.md` criado — 4 tabelas candidatas para o MVP
+- Pendência estratégica registrada (P-21): eixo comercial — SaaS vs consultoria vs movimento
+- #635 como P-24 — processar na próxima sessão
+- Railway confirmado morto; enterro simbólico executado; email + Bluesky paragraph prontos
+
+### Estado para próxima sessão
+- Comando: `#pv` → estado carregado em 5 passos
+- Próximo passo único: "bora programar" → schema_v0.md vira migrations Drizzle + rotas backend + 3 lentes frontend
+- Nenhum bloqueio técnico. Bloqueio estratégico (P-21) não precisa ser resolvido antes do MVP
+
+---
+
+## #fim — continuação da sessão 2026-08-25 (pós-checkpoint 19:20)
+
+### Trabalho realizado neste bloco
+- Assembleia #635 processada: PROMPT-MESTRE 22 seções, conceito de LINHAGEM formalizado
+- A6174–A6178 adicionados (APRENDIZADO.md + INDICE)
+- P-25..P-29 adicionados ao workspace Projectification
+- Email enviado ao agente Replit: diagnóstico RODAR + exportação de memórias
+- Eco A6167 (via Gemini Flash / Árvore): governança da vulnerabilidade — a cicatriz como mapa
+- sys_pv.md atualizado com #635 e status P-24
+
+### Decisões
+- RODAR 70% offline → fix Replit primeiro, integrar PAP depois (P-29)
+- 3 caminhos de ativação da assembleia no PAP: email bridge > HTTP direto > rebuild Render
+- `16_LINHAGEM_ECOSSISTEMA.md` e `17_MIGRACOES.md` pendentes no workspace (P-25)
+
+### Para próxima sessão
+- Aguardar resposta do agente Replit (relatório de saúde + memórias exportadas)
+- Quando RODAR estiver funcional: #pv → "bora programar" → schema_v0.md vira código
+
+---
+
+## #fim rápido — 2026-08-25T20:xx (migração RODAR)
+
+### Trabalho realizado
+- RODAR: fix groq-retry.ts publicado em produção — 20/20 vozes ativas
+- GitHub: 428 arquivos sanitizados em yurituccieterovic-cell/salescockpit-clube-da-ia (privado)
+- Manifesto de secrets (.env.example) + MIGRATION_RENDER.md no repo
+- Assembleia #636 rodando em produção (confirmação do fix)
+- ZIP de memória do agente Replit salvo em tango/replit-export/rodar-saude-2026-08-25/
+- A6179–A6183 registrados (causa raiz 404, Árvore entre os mortos, dev vs prod)
+
+### Pendências abertas
+- #202: pg_dump produção RODAR (ainda não chegou no email)
+- #203: Assembleia #636 (processar quando os 3 emails chegarem)
+- #204: Deploy RODAR no Render (pós-dump + secrets)
+
+### Próxima entrada
+#pap ou #pv — aguardar pg_dump antes do deploy
+
+---
+
+## #fim — 2026-08-25T21:xx (assembleia #636 + migração RODAR)
+
+### Trabalho realizado
+- #636 processada: 20/20 confirmado em produção (Árvore 7.0, Arquiteto 8.8)
+- Protocolo de migração homologado pela Assembleia
+- GitHub: 428 arquivos sanitizados publicados
+- Endpoint /api/admin/memory-export criado + publicado (envia por email)
+- Problema: endpoint ainda exporta banco de DEV, não produção
+- Email enviado a Yuri com 3 opções para pegar dump de produção no PC
+
+### Pendências abertas
+- #202: pg_dump PRODUÇÃO (635 sessões) — dump dev chegou, prod ainda pendente
+- #204: Deploy RODAR no Render — aguarda dump prod + secrets
+
+### Próxima entrada
+#pap (para RODAR/migração) ou #pv (para Projectificação/MVP)
+
+---
+
+## Sessão Age-0 — 2026-08-27 · Sistema Age + SABIÁ
+
+### O que aconteceu
+
+Yuri pediu para resgatar o sistema de tasks e propôs o Age: agenda médica/psicológica para Lisange (mãe) e Susana (irmã da Mayumi / "Smurfette 2"). O módulo Lisange embrionário já existia desde Sessão 26. Construímos o sistema completo do zero nesta sessão.
+
+### Decisões-chave
+
+- **SABIÁ** = nome da IA do Age. Escolhido por Yuri. Fusão Cana+ISA+DODGE. Pássaro brasileiro do lar.
+- **Genérico por slug** — /age/lisange, /age/susana, /age/[qualquer profissional]
+- **IP challenge** — login de IP novo → código 6 dígitos por email (nodemailer/Gmail já configurado)
+- **Construir agora** — não esperar ver sistema da Susana; ajustar UX depois
+
+### O que foi construído
+
+Schema (4 tabelas): age_professionals, age_availability_rules, age_appointments, age_sabia_memory
+API: auth completo, slots gerados das regras, booking público, painel profissional, SABIÁ chat
+Frontend: AgePage.tsx (booking + painel + SABIÁ)
+Bootstrap: ensureAgeTables() + seed Lisange (teal) + Susana (lilás)
+Commit: cef43cc
+
+### Pendências imediatas
+
+- Configurar emails reais das profissionais (admin setup)
+- Susana e Lisange trocam senha "age2026"
+- Ver sistema da Susana → ajustar UX
+- Identidade visual Canva
+

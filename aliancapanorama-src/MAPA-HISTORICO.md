@@ -9,6 +9,7 @@
 
 | Data | O que foi feito |
 |---|---|
+| 2026-08-27 (Sessão Age-0) | Sistema Age completo: schema 4 tabelas, API auth+agenda+SABIÁ, AgePage.tsx, seed Lisange+Susana · commit cef43cc |
 | 2026-07-02 (manhã) | Criação do MAPA.md; auto-login Termux → Ubuntu root; README.md, CLAUDE.md |
 | 2026-07-02 (tarde) | Sistema `#secrets` + `/root/.pap-secrets`; Gmail IMAP/SMTP; 424 assembleias extraídas |
 | 2026-07-02 (noite) | APRENDIZADO.md (526 insights, 290 assembleias); IDEIAS.md (31 ideias); sync-assembleias.py |
@@ -217,3 +218,14 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 | 2026-08-01 (Sessão 93) | Migração Railway → Neon+Render: ISA postou manualmente no Bluesky (13d sem postar); 41 tabelas Neon criadas; backup 648KB restaurado (58 nodes, 10 users, 917 isa_memory); Dockerfile + render.yaml; SSL Neon no pool; CORS onrender.com; ping Render no poll-db.yml |
 | 2026-08-03 (Sessão 94) | Health check: Railway morta (trial expirou 2026-08-02); Render sem env vars (pendência #134); Conector inacessível. Fix: vercel.json proxy /api/* → site-st.onrender.com; CollectiveMemory.tsx URL hardcoded → VITE_API_URL; ping Replit removido do poll-db.yml (Replit cobrou R$430 possivelmente por Deployment ativo). Commits: 7f940b2 + 4935af7. |
 | 2026-08-13 (Sessão 103) | Rapadura: Manuel v4 (seção Para Berenice), link "guia" no header, nav scroll mobile, fix build aspas. Groq: verificado — usa llama-3.3-70b, não impactado pelo decommission do 3.1-8b. Email enviado para Mayumi+Berenice+Yuri com credenciais e link do Manuel. |
+
+| 2026-08-25 | **Sessão Arqueologia Projectificação** — PROMPT-MESTRE recebido de Yuri (23 seções); workspace `/root/Projectification/docs/` criado (15 docs); arqueologia real de PAP/Tasks + Rapadura; Railway confirmado morto (404); Railway API → Render (200) confirmado; A6151–A6158 (8 insights); email enterro simbólico Railway enviado. |
+| 2026-08-25 (cont.) | **Assembleias #634** — hashtags como sistema de 3 camadas; 3 débitos estruturais (privacidade/legibilidade/agência); pergunta estratégica retida: "pra quem programar?"; docs/convencoes.md criado; P-21–P-24 adicionadas. A6169–A6173. |
+| 2026-08-25 (cont.) | **#635** — não chegou; salva como P-24. |
+
+### 2026-08-25 (continuação — #635 + eco #634)
+- Assembleia #635 processada — PROMPT-MESTRE atualizado (22 seções) com conceito de LINHAGEM
+- A6174–A6178 adicionados ao APRENDIZADO.md
+- P-25..P-29 adicionados ao PENDENCIAS.md do workspace Projectification
+- Email enviado ao agente Replit: diagnóstico RODAR + exportação de memórias
+- Eco A6167 (via Gemini Flash): "governança da vulnerabilidade. A cicatriz como mapa."
