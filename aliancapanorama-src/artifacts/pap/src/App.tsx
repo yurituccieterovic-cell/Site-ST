@@ -20,6 +20,7 @@ import { CeuPage } from "@/pages/CeuPage";
 import { PlaycenterPage } from "@/pages/PlaycenterPage";
 import { ArvorePage } from "@/pages/ArvorePage";
 import { RapaduraPage } from "@/pages/RapaduraPage";
+import { AgePage } from "@/pages/AgePage";
 import { ManuelPage } from "@/pages/ManuelPage";
 import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
@@ -297,6 +298,7 @@ const isPlaycenter = path.includes("/playcenter");
 const isArvore     = path.includes("/arvore");
 const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
+const isAge         = path.includes("/age/");
 const isCssTutorial = path.includes("/css-tutorial");
 const isCelular     = path.includes("/celular");
 
@@ -383,6 +385,10 @@ function App() {
 
   if (isArvore) {
     return <ArvorePage />;
+  }
+
+  if (isAge) {
+    return <AgePage />;
   }
 
   if (isManuel) {

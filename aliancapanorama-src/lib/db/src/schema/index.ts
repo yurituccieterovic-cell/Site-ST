@@ -15,3 +15,4 @@ export * from "./lisange";
 export * from "./babel";
 export * from "./ecosistema";
 export * from "./rapadura";
+export * from "./age";

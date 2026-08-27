@@ -153,6 +153,97 @@ export async function ensureDomesticoTables(): Promise<void> {
   logger.info("bootstrap: domestico tables OK (lar_tasks, gastador_listas, patient_profiles, agenda_slots)");
 }
 
+// Garante tabelas Age — agenda médica/psicológica multi-profissional
+export async function ensureAgeTables(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_professionals (
+      id              SERIAL PRIMARY KEY,
+      slug            TEXT NOT NULL UNIQUE,
+      nome            TEXT NOT NULL,
+      tipo            TEXT NOT NULL DEFAULT 'psicóloga',
+      registro        TEXT,
+      especialidade   TEXT,
+      bio             TEXT,
+      cor             TEXT NOT NULL DEFAULT '#2dd4bf',
+      email           TEXT,
+      password_hash   TEXT NOT NULL,
+      last_login_ip   TEXT,
+      last_login_at   TIMESTAMPTZ,
+      challenge_code  TEXT,
+      challenge_at    TIMESTAMPTZ,
+      ativa           BOOLEAN NOT NULL DEFAULT true,
+      created_at      TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_availability_rules (
+      id               SERIAL PRIMARY KEY,
+      professional_id  INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      dia_semana       INTEGER NOT NULL,
+      hora_inicio      TEXT NOT NULL,
+      hora_fim         TEXT NOT NULL,
+      duracao_min      INTEGER NOT NULL DEFAULT 50,
+      intervalo_min    INTEGER NOT NULL DEFAULT 10,
+      canal            TEXT NOT NULL DEFAULT 'presencial',
+      ativa            BOOLEAN NOT NULL DEFAULT true,
+      created_at       TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_appointments (
+      id               SERIAL PRIMARY KEY,
+      professional_id  INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      patient_nome     TEXT,
+      patient_telefone TEXT,
+      patient_email    TEXT,
+      data_hora        TIMESTAMPTZ NOT NULL,
+      duracao_min      INTEGER NOT NULL DEFAULT 50,
+      status           TEXT NOT NULL DEFAULT 'disponivel',
+      canal            TEXT NOT NULL DEFAULT 'presencial',
+      observacoes      TEXT,
+      task_id          INTEGER,
+      created_at       TIMESTAMPTZ DEFAULT now(),
+      updated_at       TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_sabia_memory (
+      id               SERIAL PRIMARY KEY,
+      professional_id  INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      role             TEXT NOT NULL DEFAULT 'user',
+      content          TEXT NOT NULL,
+      session_id       TEXT,
+      created_at       TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`
+    CREATE INDEX IF NOT EXISTS idx_age_appts_prof_data
+      ON age_appointments(professional_id, data_hora)
+  `);
+  logger.info("bootstrap: age tables OK (age_professionals, age_availability_rules, age_appointments, age_sabia_memory)");
+
+  // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
+  const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";
+  const defaultHash = await bcrypt.hash(defaultPass, 12);
+
+  const professionals = [
+    { slug: "lisange", nome: "Lisange", tipo: "médica", especialidade: "Medicina Geral", cor: "#2dd4bf", bio: "Consultas médicas com cuidado e atenção." },
+    { slug: "susana", nome: "Susana", tipo: "psicóloga", especialidade: "Psicologia Clínica", cor: "#a78bfa", bio: "Atendimento psicológico com escuta ativa e presença." },
+  ];
+
+  for (const p of professionals) {
+    const [existing] = await db.execute(sql`SELECT id FROM age_professionals WHERE slug = ${p.slug}`);
+    if (!(existing as any).rows?.length) {
+      await db.execute(sql`
+        INSERT INTO age_professionals (slug, nome, tipo, especialidade, cor, bio, password_hash)
+        VALUES (${p.slug}, ${p.nome}, ${p.tipo}, ${p.especialidade}, ${p.cor}, ${p.bio}, ${defaultHash})
+        ON CONFLICT (slug) DO NOTHING
+      `);
+      logger.info(`bootstrap: age profissional '${p.slug}' criada (senha padrão: ${defaultPass})`);
+    }
+  }
+}
+
 // Garante que as tabelas MEKY existem — cria se não existirem (idempotente)
 export async function ensureMekyTables(): Promise<void> {
   await db.execute(sql`

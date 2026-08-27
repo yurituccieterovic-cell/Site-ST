@@ -42,6 +42,7 @@ import ethosRouter from "./ethos";
 import rapaduraRouter from "./rapadura";
 import socoboyRouter from "./socoboy";
 import sistemasRouter from "./sistemas";
+import ageRouter from "./age";
 
 const router: IRouter = Router();
 
@@ -70,6 +71,7 @@ router.use(ethosRouter);
 router.use(rapaduraRouter);
 router.use(socoboyRouter);
 router.use(sistemasRouter);
+router.use(ageRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
