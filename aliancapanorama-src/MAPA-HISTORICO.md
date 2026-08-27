@@ -234,3 +234,11 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 | 2026-08-27 (Sessão Age-0) | **Sistema Age implementado:** 4 tabelas (age_professionals, age_availability_rules, age_appointments, age_sabia_memory), 35 endpoints (auth+agenda+SABIÁ), AgePage.tsx completo (booking público + painel profissional + chat SABIÁ). Seed: Lisange (médica, teal) e Suzana (psicóloga, lilás). Commit cef43cc. SABIÁ = fusão Cana+ISA+DODGE. Documentação: sys_age_core.md + tango.md entrada #42. I543–I547 · A6190–A6192. |
 | 2026-08-27 (Sessão Age-1) | **3 bugs em cascata corrigidos no deploy Age:** (1) .dockerignore ausente — contexto 936MB travava deploys em <1min; (2) pdf-parse v2 sem default export — crashando rapadura.ts; (3) db.execute() não iterável — ON CONFLICT DO NOTHING suficiente. Sistema live em produção às 04:19. Correção nome Susana→Suzana em código+banco+docs. A6187–A6189 · A6193. |
 | 2026-08-27 (cont.) | **Assembleias #637-639 processadas:** ATA Age-0 (#637) + Apresentação SABIÁ à Assembleia (#638) + MacroAta Age-0+1 (#639). IDEIAS.md: I543–I547 adicionados; duplicatas I543–I563 removidas. APRENDIZADO.md: A6187–A6193. |
+
+## 2026-08-27 (cont. 2) — #processo assembleias 642 e 643 + workflow IA
+
+**Assembleia #642**: Editorial completo do Age/AID. ANÁLISE METASSEMIÓTICA comparativa de 19 vozes. Síntese: "promessa simples antes de escalar". Insight oculto: projeto como sistema de autocuidado do fundador que acidentalmente virou produto. A6194–A6198, I561–I563.
+
+**Assembleia #643**: 3 decisões de arquitetura Age deliberadas. ✅ Aprovação manual com convite. ✅ Senha+IP mantido, passkeys fase 2. ✅ SABIÁ: só preferências admin, padrões comportamentais vetados (CFP 11/2018). A6199–A6202, I564–I565.
+
+**Workflow IA Dev**: documento completo `tango/workflow_ia_dev.md` — 6 fases, 7 tipos, protocolo 10 itens. Salvo em tango/ + memória Claude + MEMORY.md + Conector (seção workflow). Enviado para Assembleia por email.

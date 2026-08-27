@@ -1622,3 +1622,13 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I558 | **Age — Resposta Sim/Não para ações importantes** | 🟡 Média | ○ S | Ações irreversíveis precisam de confirmação clara | Modal de confirmação genérico com mensagem específica: "Cancelar consulta de DD/MM às HH:MM?" com botões Sim/Não. Evitar "OK" ambíguo. |
 | I559 | **Age — Comandos de voz para SABIÁ** | 🟢 Baixa | ○ L | Voz → transcrição → interpretação → confirmação → ação | Web Speech API (SpeechRecognition). Botão 🎤 ativa gravação. Mostra transcrição antes de agir. Confiança baixa → pede confirmação. Nunca age sem confirmação em ações destrutivas. |
 | I560 | **Age — Separação dados administrativos vs clínicos** | 🟡 Média | ◑ M | Feed/confirmações não devem expor diagnósticos; logs de acesso para LGPD | Campo `observacoes` é interno (não vai em notificações). Futura tabela `age_clinical` com acesso restrito. Logs de acesso em `age_access_log`. Consentimento no cadastro do paciente. |
+
+## AGE — Decisões de Arquitetura · 2026-08-27 (Assembleias #642 e #643)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I561 | **Age — Diretórios isolados por profissional** | 🟡 Média | ◑ M | Pacientes de Lisange não vêm dados de Suzana automaticamente | Perfil AID: conta_global + papel(paciente/profissional) + organizacoes_autorizadas. Mesmo paciente pode ter vínculo com múltiplos profissionais sem compartilhamento de dados. |
+| I562 | **Age — Critério de pronto mínimo** | 🔴 Alta | ◑ M | Definir "done" antes de adicionar Sabiá/voz/prontuário | Critério: "profissional cria regra → sistema gera horários → exceção bloqueia data → paciente solicita → profissional aprova → paciente confirma → lembrete enviado → todos os estados no Feed AID." |
+| I563 | **Age — Estados do vínculo paciente** | 🟡 Média | ○ S | Estados claros evitam estados inconsistentes no DB | Enum: convite_enviado, cadastro_incompleto, email_pendente, pendente_aprovacao, aprovado, recusado, suspenso, encerrado. Campo `status` em age_patients. |
+| I564 | **Age — Link de convite para pré-aprovação** | 🟡 Média | ○ S | Profissional envia link para paciente já conhecido → pula fila | POST /age/:slug/invite { email }. Gera token com aprovação_automatica=true. Paciente cadastra, confirma email, já entra aprovado sem passar pelo feed de pendentes. |
+| I565 | **Age — Threshold de automação de aprovação** | 🟢 Baixa | ○ S | Definir quando habilitar auto-aprovação: >50 pacientes/semana | Métrica de gatilho: se agenda tem >50 slots ocupados/semana por 4 semanas consecutivas → oferecer auto-aprovação como opção no painel. Evitar sobrecarga de triagem manual em alto volume. |

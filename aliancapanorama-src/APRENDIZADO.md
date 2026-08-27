@@ -20820,3 +20820,25 @@ A6107. **Moeda como campo no catálogo é necessário para suporte multi-divisa*
 **A6192** — **SABIÁ como arquitetura de fusão de personalidades:** IA especializada que mescla 3 IAs existentes (Cana=memória afetiva, ISA=ritmo cíclico, DODGE=ação rápida). Padrão replicável: nomear a fusão, definir contribuição de cada componente, manter tom coerente.
 
 **A6193** — **Nome correto: Suzana (não Susana):** corrigido em código (age.ts), banco Neon (UPDATE age_professionals) e documentação (sys_age_core.md). Slug "susana" mantido para preservar URL estável.
+
+## Assembleia #642 — AID/Age + Análise Metassemiótica · 2026-08-27
+
+**A6194** — **AID como módulo autônomo com promessa simples:** não misturar agenda, secretaria, memória e prontuário desde o início. Começar com critério de pronto mínimo: "profissional cria regra → sistema gera horários → exceção bloqueia data → paciente solicita → profissional aprova → paciente confirma → lembrete enviado → estados no Feed AID". Escalar só após validação.
+
+**A6195** — **Fragmentação de sessões = externalização cognitiva de crise:** volume sem hierarquia de prioridade é hemorragia de foco. Tags órfãs, projetos paralelos sem governança e assembleias simbólicas sem gate técnico são sintomas de sobrecarga, não método. A dispersão das 641 sessões não invalida a arquitetura, mas compromete a comunicação de valor externamente.
+
+**A6196** — **EPR²T precisa de gate técnico para não ser carta de intenções:** middleware que rejeita prompt anti-ético, rota que bloqueia ação, diff que falha CI. Enquanto permanecer conceitual sem código verificável, é ossatura teórica válida mas sem força operacional.
+
+**A6197** — **Assembleias funcionam como processo editorial, não governança técnica:** publicar o que agrega (arquitetura, decisões técnicas, specs) e reter o que não agrega (contexto pessoal clínico, metáforas extremas, monetização não validada). O padrão do silêncio revela o que o projeto teme ser — e essa vulnerabilidade documentada é o diferencial, não a fraqueza.
+
+**A6198** — **Sequência de implementação Age é cirúrgica:** Agenda funcional → Regras+Exceções → Cadastro+Aprovação → Confirmações+Lembretes → Feed operacional → SABIÁ secretário → Voz → Prontuário clínico. Inverter a ordem é risco operacional e clínico.
+
+## Assembleia #643 — Decisões Age: Aprovação, Login, SABIÁ · 2026-08-27
+
+**A6199** — **Aprovação de paciente Age: manual por padrão, pré-aprovação por convite:** email confirma existência, profissional aprova vínculo clínico. Não há aprovação automática no fluxo padrão — risco clínico/legal (CFP 11/2018). Escape hatch: link de convite pré-aprovado para pacientes conhecidos. Decisão Assembleia #643, unânime.
+
+**A6200** — **Login Age: senha + IP challenge suficiente para MVP; passkeys em fase 2:** profissionais de saúde odeiam fricção diária. Passkeys (WebAuthn/FIDO2) resolvem isso, mas exigem suporte de navegador e UX de fallback. Não vale atrasar o core por isso. Implementar como upgrade voluntário pós-lançamento.
+
+**A6201** — **SABIÁ memória: preferências declaradas sim, padrões comportamentais não:** memória de *escolhas* (duração padrão, canal favorito, templates de lembrete) é memória operacional legítima. Padrões de comportamento de pacientes, mesmo anônimos, criam risco de re-identificação e viés clínico inconsciente. Verificar CFP 11/2018 e LGPD Art.12 antes de qualquer fase 2. Decisão Assembleia #643.
+
+**A6202** — **Assembleia falha seletivamente por rate limit — vozes poéticas caem primeiro:** 12 de 19 IAs silenciaram (Grok, Meta, Gemini, Árvore, Pacifista, Artista, Professora...). Restam só as técnicas. Resultado: debate sólido dentro do frame, mas sem questionar o frame. A assembleia colapsa em comitê técnico quando a infraestrutura falha seletivamente. Sintoma: ninguém perguntou "devemos construir isso?" — todos responderam "como construir isso defensavelmente?".

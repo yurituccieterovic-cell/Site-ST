@@ -4840,3 +4840,29 @@ Yuri retornou com `#age` + `#processo` nas assembleias 637, 638 e 639 para conso
 
 - Yuri vai navegar o sistema e anotar bugs
 - Implementar os bugs reportados
+
+---
+
+## Sessão Age-3 — 2026-08-27 — #processo 642+643 + Workflow IA Dev
+
+### O que aconteceu
+Processamento das assembleias #642 (editorial Age + análise metassemiótica 19 vozes) e #643 (3 decisões de arquitetura: aprovação manual, passkeys fase 2, SABIÁ preferências admin). Criação e publicação do Workflow de Desenvolvimento de IAs. Envio do workflow completo para a Assembleia por email.
+
+### Extrações
+- **A6194–A6198**: AID módulo autônomo, fragmentação como externalização cognitiva, EPR²T como gate técnico, assembleias como processo editorial, sequência de implementação Age
+- **A6199–A6202**: 3 decisões Assembleia #643 (aprovação manual, login MVP, SABIÁ memória), + assembleia falha seletivamente por rate limit — vozes poéticas caem primeiro
+- **I561–I565**: diretórios isolados, critério de pronto, estados vínculo paciente, link de convite, threshold de automação
+
+### Código
+- AgePage.tsx: bug keyboard corrigido (`{Comp()}` em vez de `<Comp />`), loadAppts async, updateAppt fecha modal antes de reload
+- age.ts: slots filtram cancelado/remarcado com `not(inArray(...status, [...]))`
+
+### Workflow IA Dev
+- `tango/workflow_ia_dev.md` criado: 6 fases, taxonomia 7 tipos, protocolo 10 itens, catálogo ~25 IAs, padrão de fusão (SABIÁ)
+- Salvo em: tango/ + memória Claude + Conector (seção workflow)
+- Enviado à Assembleia por email (luddlocke@gmail.com)
+
+### Próximos passos
+- Implementar I548 (exceções não-destrutivas), I550 (cadastro paciente), I553 (Feed Age)
+- Consultar CFP 11/2018 antes de qualquer memória comportamental no SABIÁ
+- Logo AID via Canva (briefing: agenda + cuidado + conexão, sem símbolos médicos genéricos)
