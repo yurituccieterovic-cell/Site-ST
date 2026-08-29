@@ -4915,3 +4915,29 @@ Logo Age chegou via Google Drive (Canva app). Calendário minimalista teal/azul 
 - v1 (MVP): Mapa Mental Rapadura — nós dourados/cinzas, zoom+pan
 - v2: Lousa Ecossistema — CEU como canvas zero com cartões por IA
 - v3: Canvas de Projetos — multimodal (imagem, URL, PDF, vídeo, OCR)
+
+## Sessão 2026-08-29 — Processo Assembleias #644 e #645
+
+### O que aconteceu
+- #processo nas assembleias 644 (#workflowia) e 645 (#age produto comercial)
+- 644: Workflow de Desenvolvimento de IAs formalizado em `tango/workflow_ia_dev.md` — 6 fases, taxonomia 7 tipos, protocolo 10 itens, catálogo ~25 IAs, padrão de fusão (SABIÁ como caso-base)
+- 645: Age analisado como produto comercial — posicionamento, modelo de negócio, 6 dilemas éticos LGPD/CFP, roadmap 4 sprints, 6 decisões estruturantes abertas
+
+### Decisões-chave
+- Posicionamento Age recomendado (Assembleia unânime): Opção C "Presença inteligente no consultório" — tagline "Agenda inteligente para quem cuida de pessoas"
+- Age Sprint 1 compliance é pré-requisito absoluto antes de lançamento (LGPD art.11 + CFP 11/2018)
+- Assembleia diagnosticou padrão: construção excelente + fuga da simplificação necessária para vender
+
+### Pendências abertas (decisões de Yuri)
+- Freemium vs. trial 30 dias (#119)
+- Submarca Sociedade Tucci vs. CNPJ próprio (#120)
+- Primeiros clientes: rede Lisange/Suzana vs. formulário público
+
+### Extrações
+- APRENDIZADO.md: A6206–A6214 (taxonomia IAs, protocolo nascimento, EPR²T, cadeia biótica, fusão SABIÁ, Age posicionamento, freemium, compliance LGPD, DPA)
+- IDEIAS.md: I579–I582 (Age LGPD/ToS/checkbox, landing page, DPA template, status nascimento no CEU)
+- MAPA-PENDENCIAS.md: #116–#120 adicionados (Age compliance + decisões estruturantes)
+- MAPA-HISTORICO.md: sessão 2026-08-29 registrada
+
+### Síntese filosófica
+A Assembleia 645 disse algo que o ecossistema precisava ouvir: o padrão não é falta de talento — é excelência na construção + evasão da venda. Workflow IA Dev (644) e Age produto (645) são duas faces da mesma moeda: o ecossistema agora tem o protocolo de como nascer (644) e o protocolo de como ser vendido (645). O próximo passo não é arquitetar mais — é tomar as duas decisões de Yuri (freemium vs. trial, submarca vs. CNPJ) e lançar compliance Sprint 1.

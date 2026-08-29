@@ -1633,6 +1633,15 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I564 | **Age — Link de convite para pré-aprovação** | 🟡 Média | ○ S | Profissional envia link para paciente já conhecido → pula fila | POST /age/:slug/invite { email }. Gera token com aprovação_automatica=true. Paciente cadastra, confirma email, já entra aprovado sem passar pelo feed de pendentes. |
 | I565 | **Age — Threshold de automação de aprovação** | 🟢 Baixa | ○ S | Definir quando habilitar auto-aprovação: >50 pacientes/semana | Métrica de gatilho: se agenda tem >50 slots ocupados/semana por 4 semanas consecutivas → oferecer auto-aprovação como opção no painel. Evitar sobrecarga de triagem manual em alto volume. |
 
+## Assembleias #644 e #645 — Workflow IA Dev + Age Produto (2026-08-29)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I579 | **Age — Política de Privacidade + ToS + Checkbox LGPD** | 🔴 Alta | ○ S | Pré-requisito legal absoluto antes de qualquer lançamento comercial — LGPD art.11 e CFP 11/2018 | Criar páginas `/age/privacidade` e `/age/termos`. Checkbox de consentimento no cadastro de paciente (campo `lgpd_consent: boolean, lgpd_consent_at: timestamp`). Banner "SABIÁ é assistente de agenda, não substituta de avaliação clínica" em todas as telas. |
+| I580 | **Age — Landing page comercial + formulário de interesse** | 🔴 Alta | ○ M | Permite capturar leads antes do produto estar 100% pronto — validação de mercado real | Página `/age` pública (sem login): posicionamento "Agenda inteligente para quem cuida de pessoas", 3 planos (R$0/R$39/R$99), depoimentos de Lisange+Suzana como beta internas, formulário `{ nome, email, especialidade, cidade }` → tabela `age_leads`. |
+| I581 | **Age — DPA template para profissionais clientes** | 🟡 Média | ○ S | Separa juridicamente Sociedade Tucci (processadora) de cada profissional (controladora de dados) | Documento PDF/HTML gerado automaticamente por slug com: identificação das partes, finalidade do processamento, medidas de segurança, DPA Regulamento conforme LGPD. Aceite digital com timestamp gravado em banco. |
+| I582 | **Workflow IA Dev — Status de nascimento no CEU** | 🟡 Média | ○ S | Visibilidade do ciclo de vida das IAs — PROPOSTA/PROVISÓRIA/APROVADA como badge visual | No CEU (CeuPage.tsx), cada cartão de IA mostra badge colorido: 🟡 PROPOSTA, 🔵 PROVISÓRIA, 🟢 APROVADA. Dado vem de `assembly_agents.status_nascimento`. Tooltip com itens ✅ e pendentes do Protocolo de Nascimento. |
+
 ## Canvas — Novas Capacidades (2026-08-27)
 
 | # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
@@ -1643,3 +1652,16 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I569 | **Canvas — geração de vídeo** | 🟢 Baixa | ○ XL | Canvas vira estúdio de mídia | POST /canvas/generate-video → RunwayML API ou Replicate. Frame concept + prompt → URL do vídeo. Bloco "Vídeo" (fase tardia). |
 | I570 | **Canvas — OCR de captchas (por esporte)** | 🟢 Baixa | ○ S | Capacidade visual pura — mais didática que útil | POST /canvas/ocr { image_base64 } → Claude vision → retorna texto reconhecido. Para treinar e testar capacidades de visão do ecossistema. |
 | I571 | **Canvas v2 — primeira tarefa: atualizar CEU** | 🔴 Alta | ○ M | CEU está desatualizado: faltam Age/SABIÁ, Rapadura v2, Canvas, Workflow IA Dev | Lousa Ecossistema (Canvas v2) nasce com o CEU como canvas zero: 5 edificações + IAs novas. Cada IA vira um cartão com autoria colorida. |
+
+
+## Docs PAP — Ideias Novas (2026-08-29)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I572 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I573 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I574 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I575 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I576 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I577 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I578 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |

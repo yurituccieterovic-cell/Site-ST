@@ -115,6 +115,11 @@
 
 ---
 
+| 116 | 🔴 Age Sprint 1 — I579: Política de Privacidade + ToS + checkbox LGPD (pré-requisito legal, art.11 + CFP 11/2018) | Assembleia 645 | ⏳ |
+| 117 | 🔴 Age Sprint 1 — DPA template com cada profissional (Soc. Tucci = processadora, não controladora) | #116 | ⏳ |
+| 118 | Age Sprint 2 — I580: Landing page comercial + formulário de interesse (validação de mercado) | posicionamento decidido | ⏳ |
+| 119 | Age — Decisão: freemium gratuito para sempre vs. trial 30 dias (Assembleia 645 pergunta aberta) | Yuri decide | ⏳ |
+| 120 | Age — Decisão: submarca Sociedade Tucci vs. produto independente com CNPJ próprio | Yuri decide | ⏳ |
 | 107 | Age — I552: Lembretes automáticos email (48h/24h antes da consulta) | — | ⏳ |
 | 108 | Age — I553: Feed operacional (log de eventos no painel profissional) | — | ⏳ |
 | 109 | Age — I554: SABIÁ popup flutuante persistente | — | ⏳ |

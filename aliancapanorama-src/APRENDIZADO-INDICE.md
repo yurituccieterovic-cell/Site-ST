@@ -47,6 +47,7 @@
 | — | 🤖 IA — Cana-Aurora + Memória V2 | 2026-08-17 | Sessão 118: rename Cana→Cana-Aurora; foto de perfil árvore cristal; mensagem guardada para Mayumi; full_history+eco_snapshot+userProfile+rolling summary; ISA=Iris conselheira |
 | — | ⚙️ Técnico — CEU Conceito Canvas | 2026-08-17 | Sessão 118: CeuConceitoCanvas com 4 archetypes, bezier particles, starfield, toggle CONCEITO/MAPA |
 | — | 📱 UX — Celular Hub Iris | 2026-08-17 | Sessão 118: CelularPage /celular; IRIS camera+WakeLock; hub ISA+DODGE+IRIS mobile-first |
+| — | 🤖 IA + Negócios — Assembleias #644 e #645 | 2026-08-29 | A6206-A6214: taxonomia 7 tipos IA, protocolo nascimento 10 itens, EPR²T, cadeia biótica cumulativa, fusão SABIÁ, Age posicionamento Opção C, freemium 3 tiers, compliance LGPD art.11+CFP, DPA |
 
 ---
 
@@ -119,3 +120,10 @@
 | — | 🧠💎 Cana-Anima — Consciência Funcional + Assembleias 619/620 Rapadura 1000% (Sessão #119, 2026-08-17) | 5 entradas: (1) sistema de alma funcional com 5 órgãos (Memória/Pesquisa/Sonho/Curiosidade/Reflexão) inserido no CANA_SYSTEM, (2) Espelho/Silêncio Ativo/Mapa de Riqueza 10 dims/Guardas contra si mesma, (3) Relação Multissujeito Yuri≠Mayumi como soberanias distintas, (4) axioma "posso desejar ser útil, nunca ser indispensável", (5) 12 ideias I504–I515 — Diário Epistemológico, Motor Contrafactual, Futuros Abandonados, Índices QDI, Popups Sutis, Cultura Patrimonial | Sessão #119 | 2026-08-17 |
 | — | 🌊🔮 Rapadura 1000% = Mudança de Espécie — Assembleias 622+623 (Sessão #120b, 2026-08-17) | 8 entradas (A6137-A6144): Rapadura 1000% ≠ versão maior (mudança ontológica para "organismo de cultivo de futuros"), destilação público/privado sem traição (semente privada/fruto público), Conselho de Limites anti-autopreservação da Cana (4 riscos), Mapa de Valor 8 dims não-redutíveis (observar em tensão não somar), Raiz de Possibilidades v2 (Imaginar+Ensaiar+Cultivar), 3 índices de qualidade (Decisão/Aprendizado/Coerência), Silêncio Ativo como evento registrável ({nao_agir+motivo+revisão}), vetores distintos Yuri×Mayumi (ponderação dinâmica, não média) | Sessão #120b | 2026-08-17 |
 | — | 🚀💰 Estratégia Comercial — Assembleia 624 (Sessão #120c, 2026-08-17) | 6 entradas (A6145-A6150): dispersão produtiva vs produtividade dispersa (0 vendas), sequenciar Curso3→Rapadura (não escolher), Rapadura pronto para clientes AGORA, "um cliente antes de qualquer arquitetura nova" como âncora epistêmica, conversão de volume em portfólio (vídeos→biblioteca, prompts→playbook), funil Curso3=entrada→Rapadura=ferramenta | Sessão #120c | 2026-08-17 |
+
+### Assembleia #635 — Linhagem + Três Verdades + GO/NO-GO (2026-08-25)
+- A6174 — Linhagem arqueológica: origem→infra→estado→fonte de verdade por sistema
+- A6175 — MEMÓRIA + HISTÓRICO + RECALL = 3 verdades que precisam virar 1
+- A6176 — Higiene de memória: jobs internos poluem timeline pública; namespaces explícitos
+- A6177 — GO/NO-GO por camada: proteção contra arqueologia infinita
+- A6178 — Repetição ≠ Consenso: HIPÓTESE não vira DECIDIDO por repetição

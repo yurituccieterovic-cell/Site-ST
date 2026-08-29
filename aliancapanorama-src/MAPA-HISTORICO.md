@@ -9,6 +9,7 @@
 
 | Data | O que foi feito |
 |---|---|
+| 2026-08-29 (Sessão 644-645) | #processo nas assembleias 644 (#workflowia) e 645 (#age produto comercial) · A6206-A6214 extraídas · I579-I582 adicionadas · MAPA+PSEUDO atualizados |
 | 2026-08-27 (Sessão Age-5) | Age comercial: documento de produto enviado a Yuri (posicionamento, modelo de negócio, 4 dilemas éticos LGPD/CFP/sigilo/responsabilidade civil) |
 | 2026-08-27 (Sessão Age-4b) | I550+I551+I557: cadastro de paciente, confirmação email token 24h, aprovação manual profissional, aba Pacientes (filtros, cards, aprovar/recusar/suspender/reativar) · commit 95636b1 |
 | 2026-08-27 (Sessão Age-1) | Fix deploy em cascata: .dockerignore + pdf-parse createRequire + db.execute não-iterável · ISA Bluesky: 16 posts, prompt discreto · Amanda online na assembleia · email Assembleia sobre Age |
