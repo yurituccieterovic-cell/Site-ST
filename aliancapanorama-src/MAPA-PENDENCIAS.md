@@ -121,8 +121,8 @@
 | 119 | Age — Decisão: freemium gratuito para sempre vs. trial 30 dias (Assembleia 645 pergunta aberta) | Yuri decide | ⏳ |
 | 120 | Age — Decisão: submarca Sociedade Tucci vs. produto independente com CNPJ próprio | Yuri decide | ⏳ |
 | 107 | Age — I552: Lembretes automáticos email (48h/24h antes da consulta) | — | ✅ commit 4b544cf |
-| 108 | Age — I553: Feed operacional (log de eventos no painel profissional) | — | ⏳ |
-| 109 | Age — I554: SABIÁ popup flutuante persistente | — | ⏳ |
+| 108 | Age — I553: Feed operacional (log de eventos no painel profissional) | — | ✅ commit 0ba156f |
+| 109 | Age — I554: SABIÁ popup flutuante persistente | — | ✅ commit c5ddadb |
 | 110 | Age — I558: Confirmação Sim/Não para ações irreversíveis no painel | — | ⏳ |
 | 111 | Age — I564: Link de convite para pré-aprovação de paciente | — | ⏳ |
 | 112 | Age — Compliance: Política de Privacidade + Termos de Uso + checkbox consentimento | Assembleia | ✅ commit 4b544cf |
