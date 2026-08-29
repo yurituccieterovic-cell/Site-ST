@@ -50,6 +50,10 @@ export const ageAppointmentsTable = pgTable("age_appointments", {
   canal:           text("canal").notNull().default("presencial"),
   observacoes:     text("observacoes"),
   taskId:          integer("task_id"),
+  lgpdConsent:     boolean("lgpd_consent").default(false),
+  lgpdConsentAt:   timestamp("lgpd_consent_at", { withTimezone: true }),
+  lembrete48hAt:   timestamp("lembrete48h_at", { withTimezone: true }),
+  lembrete24hAt:   timestamp("lembrete24h_at", { withTimezone: true }),
   createdAt:       timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt:       timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
@@ -75,7 +79,9 @@ export const agePatientsTable = pgTable("age_patients", {
   status:           text("status").notNull().default("email_pendente"),
   tokenConfirmacao: text("token_confirmacao"),
   tokenExpiraAt:    timestamp("token_expira_at", { withTimezone: true }),
-  observacoesPro:   text("observacoes_pro"),   // anotações internas da profissional
+  observacoesPro:   text("observacoes_pro"),
+  lgpdConsent:      boolean("lgpd_consent").notNull().default(false),
+  lgpdConsentAt:    timestamp("lgpd_consent_at", { withTimezone: true }),
   createdAt:        timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt:        timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });

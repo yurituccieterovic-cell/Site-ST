@@ -247,7 +247,15 @@ export async function ensureAgeTables(): Promise<void> {
     CREATE INDEX IF NOT EXISTS idx_age_appts_prof_data
       ON age_appointments(professional_id, data_hora)
   `);
-  logger.info("bootstrap: age tables OK (age_professionals, age_availability_rules, age_appointments, age_sabia_memory, age_exceptions)");
+  // Migrations incrementais — colunas adicionadas após o CREATE TABLE inicial
+  await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS lgpd_consent BOOLEAN DEFAULT false`);
+  await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS lgpd_consent_at TIMESTAMPTZ`);
+  await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS lembrete48h_at TIMESTAMPTZ`);
+  await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS lembrete24h_at TIMESTAMPTZ`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS lgpd_consent BOOLEAN NOT NULL DEFAULT false`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS lgpd_consent_at TIMESTAMPTZ`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_appts_lembrete ON age_appointments(data_hora, lembrete24h_at, lembrete48h_at) WHERE status IN ('reservado','confirmado')`);
+  logger.info("bootstrap: age tables OK (age_professionals, age_availability_rules, age_appointments, age_sabia_memory, age_exceptions, age_patients +lgpd +lembretes)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

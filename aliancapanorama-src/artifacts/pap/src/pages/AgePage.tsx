@@ -69,6 +69,7 @@ export function AgePage() {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [bookForm, setBookForm] = useState({ nome: "", telefone: "", email: "", canal: "presencial" });
+  const [bookLgpd, setBookLgpd] = useState(false);
   const [bookDone, setBookDone] = useState(false);
   const [bookError, setBookError] = useState("");
 
@@ -87,6 +88,7 @@ export function AgePage() {
   // Patient registration (public)
   const [showRegister, setShowRegister] = useState(false);
   const [regForm, setRegForm] = useState({ nome: "", email: "", telefone: "" });
+  const [regLgpd, setRegLgpd] = useState(false);
   const [regDone, setRegDone] = useState(false);
   const [regError, setRegError] = useState("");
   const [regLoading, setRegLoading] = useState(false);
@@ -268,7 +270,7 @@ export function AgePage() {
       const r = await fetch(`${API}/api/age/${slug}/book`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...bookForm, dataHora: selectedSlot.dataHora }),
+        body: JSON.stringify({ ...bookForm, dataHora: selectedSlot.dataHora, lgpdConsent: bookLgpd }),
       });
       const d = await r.json() as { id?: number; error?: string };
       if (d.id) { setBookDone(true); loadSlots(); }
@@ -343,7 +345,7 @@ export function AgePage() {
       const r = await fetch(`${API}/api/age/${slug}/patients`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(regForm),
+        body: JSON.stringify({ ...regForm, lgpdConsent: regLgpd }),
       });
       const d = await r.json() as { ok?: boolean; message?: string; error?: string };
       if (d.ok) { setRegDone(true); }
@@ -522,9 +524,23 @@ export function AgePage() {
               />
             </div>
           ))}
+          {/* Consentimento LGPD */}
+          <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14, cursor: "pointer" }}>
+            <input type="checkbox" checked={bookLgpd} onChange={e => setBookLgpd(e.target.checked)}
+              style={{ marginTop: 2, accentColor: color, flexShrink: 0 }} />
+            <span style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.5 }}>
+              Li e aceito a{" "}
+              <a href={`/aliancapanorama/age/privacidade`} target="_blank" rel="noopener noreferrer"
+                style={{ color, textDecoration: "underline" }}>Política de Privacidade</a>{" "}
+              e os{" "}
+              <a href={`/aliancapanorama/age/termos`} target="_blank" rel="noopener noreferrer"
+                style={{ color, textDecoration: "underline" }}>Termos de Uso</a>{" "}
+              do Age. Meus dados serão usados exclusivamente para gestão da consulta.
+            </span>
+          </label>
           {bookError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 12 }}>{bookError}</div>}
-          <button type="submit" disabled={!bookForm.nome}
-            style={{ width: "100%", background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "12px 0", fontWeight: 700, fontSize: 15, cursor: bookForm.nome ? "pointer" : "not-allowed" }}>
+          <button type="submit" disabled={!bookForm.nome || !bookLgpd}
+            style={{ width: "100%", background: bookLgpd ? color : "#334155", color: bookLgpd ? "#080c10" : "#64748b", border: "none", borderRadius: 8, padding: "12px 0", fontWeight: 700, fontSize: 15, cursor: (bookForm.nome && bookLgpd) ? "pointer" : "not-allowed", transition: "background 0.2s" }}>
             Confirmar agendamento
           </button>
         </form>
@@ -588,9 +604,22 @@ export function AgePage() {
                     />
                   </div>
                 ))}
+                {/* Consentimento LGPD */}
+                <label style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10, cursor: "pointer" }}>
+                  <input type="checkbox" checked={regLgpd} onChange={e => setRegLgpd(e.target.checked)}
+                    style={{ marginTop: 2, accentColor: color, flexShrink: 0 }} />
+                  <span style={{ color: "#94a3b8", fontSize: 11, lineHeight: 1.5 }}>
+                    Li e aceito a{" "}
+                    <a href="/aliancapanorama/age/privacidade" target="_blank" rel="noopener noreferrer"
+                      style={{ color, textDecoration: "underline" }}>Política de Privacidade</a>{" "}
+                    e os{" "}
+                    <a href="/aliancapanorama/age/termos" target="_blank" rel="noopener noreferrer"
+                      style={{ color, textDecoration: "underline" }}>Termos de Uso</a>. Autorizo o uso dos meus dados para gestão do vínculo clínico.
+                  </span>
+                </label>
                 {regError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 10 }}>{regError}</div>}
-                <button type="submit" disabled={regLoading || !regForm.nome || !regForm.email}
-                  style={{ width: "100%", background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                <button type="submit" disabled={regLoading || !regForm.nome || !regForm.email || !regLgpd}
+                  style={{ width: "100%", background: regLgpd ? color : "#334155", color: regLgpd ? "#080c10" : "#64748b", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: (regForm.nome && regForm.email && regLgpd) ? "pointer" : "not-allowed", transition: "background 0.2s" }}>
                   {regLoading ? "Enviando…" : "Solicitar cadastro"}
                 </button>
               </form>
@@ -921,6 +950,10 @@ export function AgePage() {
   function SabiaView() {
     return (
       <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 200px)" }}>
+        {/* Disclaimer CFP/LGPD — obrigatório */}
+        <div style={{ background: "#0c1a12", border: "1px solid #4ade8033", borderRadius: 8, margin: "0.75rem 1rem 0", padding: "8px 12px", fontSize: 11, color: "#6b8f6b", lineHeight: 1.5 }}>
+          🐦 <strong>SABIÁ é assistente de agenda</strong>, não substituta de avaliação clínica. Não emite laudos nem toma decisões sobre pacientes. Conforme CFP Resolução 11/2018.
+        </div>
         <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: 12 }}>
           {msgs.map((m, i) => (
             <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>

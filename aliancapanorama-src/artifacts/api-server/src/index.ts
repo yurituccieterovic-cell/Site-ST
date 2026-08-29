@@ -4,6 +4,7 @@ import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgent
 import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
 import { startKeepaliveCron } from "./lib/keepalive";
+import { startAgeRemindersCron } from "./age/reminders";
 
 const rawPort = process.env["PORT"];
 
@@ -40,6 +41,7 @@ ensureSessionTable()
       logger.info({ port }, "Server listening");
       startIsaCron();
       startKeepaliveCron();
+      startAgeRemindersCron();
     });
   })
   .catch((err) => {

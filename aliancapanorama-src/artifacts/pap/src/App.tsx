@@ -21,6 +21,8 @@ import { PlaycenterPage } from "@/pages/PlaycenterPage";
 import { ArvorePage } from "@/pages/ArvorePage";
 import { RapaduraPage } from "@/pages/RapaduraPage";
 import { AgePage } from "@/pages/AgePage";
+import { AgePrivacidadePage } from "@/pages/AgePrivacidadePage";
+import { AgeTermosPage } from "@/pages/AgeTermosPage";
 import { ManuelPage } from "@/pages/ManuelPage";
 import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
@@ -298,7 +300,9 @@ const isPlaycenter = path.includes("/playcenter");
 const isArvore     = path.includes("/arvore");
 const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
-const isAge         = path.includes("/age/");
+const isAgePrivacidade = path.includes("/age/privacidade");
+const isAgeTermos      = path.includes("/age/termos");
+const isAge            = path.includes("/age/");
 const isCssTutorial = path.includes("/css-tutorial");
 const isCelular     = path.includes("/celular");
 
@@ -387,6 +391,8 @@ function App() {
     return <ArvorePage />;
   }
 
+  if (isAgePrivacidade) return <AgePrivacidadePage />;
+  if (isAgeTermos)      return <AgeTermosPage />;
   if (isAge) {
     return <AgePage />;
   }

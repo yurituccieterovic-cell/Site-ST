@@ -400,13 +400,17 @@ router.get("/age/:slug/appointments", requireAgeAuth, async (req, res): Promise<
 // POST /api/age/:slug/book — paciente marca horário (público)
 router.post("/age/:slug/book", async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const { patientNome, patientTelefone, patientEmail, dataHora, canal = "presencial" } = req.body as {
+  const { patientNome, patientTelefone, patientEmail, dataHora, canal = "presencial", lgpdConsent } = req.body as {
     patientNome?: string; patientTelefone?: string; patientEmail?: string;
-    dataHora?: string; canal?: string;
+    dataHora?: string; canal?: string; lgpdConsent?: boolean;
   };
 
   if (!patientNome || !dataHora) {
     res.status(400).json({ error: "patientNome e dataHora obrigatórios" });
+    return;
+  }
+  if (!lgpdConsent) {
+    res.status(400).json({ error: "É necessário aceitar a Política de Privacidade para agendar." });
     return;
   }
 
@@ -432,6 +436,8 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
     duracaoMin: 50,
     status: "reservado",
     canal,
+    lgpdConsent: true,
+    lgpdConsentAt: new Date(),
   }).returning();
 
   // Notificar profissional por email
@@ -547,8 +553,9 @@ const FRONT_URL = process.env.FRONTEND_URL ?? "https://site-st.vercel.app/alianc
 // POST /api/age/:slug/patients — paciente se cadastra (público)
 router.post("/age/:slug/patients", async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const { nome, email, telefone } = req.body as { nome?: string; email?: string; telefone?: string };
+  const { nome, email, telefone, lgpdConsent } = req.body as { nome?: string; email?: string; telefone?: string; lgpdConsent?: boolean };
   if (!nome || !email) { res.status(400).json({ error: "nome e email obrigatórios" }); return; }
+  if (!lgpdConsent) { res.status(400).json({ error: "É necessário aceitar a Política de Privacidade para se cadastrar." }); return; }
 
   const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, email: ageProfessionalsTable.email })
     .from(ageProfessionalsTable)
@@ -581,6 +588,8 @@ router.post("/age/:slug/patients", async (req, res): Promise<void> => {
     status: "email_pendente",
     tokenConfirmacao: token,
     tokenExpiraAt: expira,
+    lgpdConsent: true,
+    lgpdConsentAt: new Date(),
   });
 
   const confirmLink = `${FRONT_URL}/age/${slug}?confirm=${token}`;
