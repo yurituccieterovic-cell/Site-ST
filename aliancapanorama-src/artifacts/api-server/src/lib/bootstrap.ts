@@ -263,7 +263,12 @@ export async function ensureAgeTables(): Promise<void> {
   // Visibilidade de regras (pública ou só para pacientes aprovados)
   await db.execute(sql`ALTER TABLE age_availability_rules ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT true`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_appts_token ON age_appointments(cancel_token) WHERE cancel_token IS NOT NULL`);
-  logger.info("bootstrap: age tables OK (+cancel_token +remarcado_de_id +cancel_min_horas +is_public)");
+  // Autenticação do paciente (Fase 3)
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS password_hash TEXT`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS reset_token TEXT`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS reset_token_expira_at TIMESTAMPTZ`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_patients_reset_token ON age_patients(reset_token) WHERE reset_token IS NOT NULL`);
+  logger.info("bootstrap: age tables OK (+cancel_token +remarcado_de_id +cancel_min_horas +is_public +patient_auth)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

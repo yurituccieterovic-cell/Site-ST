@@ -33,8 +33,12 @@ type FeedItem = {
   lembrete48h_sent?: boolean;
   lembrete24h_sent?: boolean;
 };
-type Mode = "public" | "professional";
+type Mode = "public" | "professional" | "patient" | "patient-login";
 type AuthStep = "login" | "challenge" | "done";
+type PatientAppt = {
+  id: number; dataHora: string; duracaoMin: number; status: string; canal: string;
+  observacoes?: string | null; cancelToken?: string | null;
+};
 
 const DIAS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const PATIENT_STATUS_LABEL: Record<string, string> = {
@@ -139,6 +143,27 @@ export function AgePage() {
   // Feed operacional
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [feedLoading, setFeedLoading] = useState(false);
+
+  // Área do paciente
+  const [patientNome, setPatientNome] = useState("");
+  const [patientLoginForm, setPatientLoginForm] = useState({ email: "", password: "" });
+  const [patientLoginError, setPatientLoginError] = useState("");
+  const [patientLoginLoading, setPatientLoginLoading] = useState(false);
+  const [patientAppts, setPatientAppts] = useState<PatientAppt[]>([]);
+  const [patientApptLoading, setPatientApptLoading] = useState(false);
+  const [patientView, setPatientView] = useState<"appointments" | "password">("appointments");
+  const [patientPwForm, setPatientPwForm] = useState({ current: "", next: "" });
+  const [patientPwError, setPatientPwError] = useState("");
+  const [patientPwOk, setPatientPwOk] = useState(false);
+  // Recuperação de senha
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotMsg, setForgotMsg] = useState("");
+  // set-password via token (aprovação ou reset)
+  const [setPwToken, setSetPwToken] = useState("");
+  const [setPwForm, setSetPwForm] = useState({ password: "", confirm: "" });
+  const [setPwStatus, setSetPwStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [setPwMsg, setSetPwMsg] = useState("");
 
   // SABIÁ popup flutuante
   const [sabiaOpen, setSabiaOpen] = useState(false);
@@ -281,6 +306,38 @@ export function AgePage() {
       })
       .catch(() => { setTokenStatus("error"); setTokenMsg("Sem conexão. Tente novamente."); });
   }, [slug, loading]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Verificar sessão do paciente
+  useEffect(() => {
+    if (!slug) return;
+    fetch(`${API}/api/age/${slug}/patients/auth/me`, { credentials: "include" })
+      .then(r => r.json())
+      .then((d: { authenticated: boolean; nome?: string }) => {
+        if (d.authenticated) { setMode("patient"); setPatientNome(d.nome ?? ""); }
+      })
+      .catch(() => {});
+  }, [slug]);
+
+  // Detectar ?set-password= na URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tok = params.get("set-password");
+    if (!tok || !slug) return;
+    setSetPwToken(tok);
+    setSetPwStatus("idle");
+    window.history.replaceState({}, "", window.location.pathname);
+  }, [slug]);
+
+  // Carregar agendamentos do paciente ao entrar na área
+  useEffect(() => {
+    if (mode !== "patient" || !slug) return;
+    setPatientApptLoading(true);
+    fetch(`${API}/api/age/${slug}/patients/my/appointments`, { credentials: "include" })
+      .then(r => r.json())
+      .then((d: { appointments?: PatientAppt[] }) => { setPatientAppts(d.appointments ?? []); })
+      .catch(() => {})
+      .finally(() => setPatientApptLoading(false));
+  }, [mode, slug]);
 
   useEffect(() => {
     msgBottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -464,6 +521,74 @@ export function AgePage() {
       setMsgs(m => [...m, { role: "assistant", content: "Sem conexão no momento." }]);
     }
     setSabiaLoading(false);
+  }
+
+  async function handlePatientLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setPatientLoginLoading(true); setPatientLoginError("");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/auth/login`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(patientLoginForm),
+      });
+      const d = await r.json() as { ok?: boolean; nome?: string; error?: string };
+      if (d.ok) { setMode("patient"); setPatientNome(d.nome ?? ""); }
+      else setPatientLoginError(d.error ?? "Email ou senha incorretos.");
+    } catch { setPatientLoginError("Sem conexão."); }
+    setPatientLoginLoading(false);
+  }
+
+  async function handlePatientLogout() {
+    await fetch(`${API}/api/age/${slug}/patients/auth/logout`, { method: "POST", credentials: "include" });
+    setMode("public"); setPatientNome(""); setPatientAppts([]);
+  }
+
+  async function handleForgotPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setForgotMsg("");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+      const d = await r.json() as { ok?: boolean; message?: string };
+      setForgotMsg(d.message ?? "Link enviado!");
+    } catch { setForgotMsg("Sem conexão."); }
+  }
+
+  async function handleSetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (setPwForm.password !== setPwForm.confirm) { setSetPwMsg("As senhas não coincidem."); return; }
+    if (setPwForm.password.length < 8) { setSetPwMsg("Mínimo 8 caracteres."); return; }
+    setSetPwStatus("loading"); setSetPwMsg("");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/auth/set-password`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: setPwToken, password: setPwForm.password }),
+      });
+      const d = await r.json() as { ok?: boolean; nome?: string; error?: string };
+      if (d.ok) { setSetPwStatus("done"); setMode("patient"); setPatientNome(d.nome ?? ""); setSetPwToken(""); }
+      else { setSetPwStatus("error"); setSetPwMsg(d.error ?? "Erro ao criar senha."); }
+    } catch { setSetPwStatus("error"); setSetPwMsg("Sem conexão."); }
+  }
+
+  async function handlePatientChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPatientPwError(""); setPatientPwOk(false);
+    if (patientPwForm.next.length < 8) { setPatientPwError("Nova senha: mínimo 8 caracteres."); return; }
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/auth/change-password`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: patientPwForm.current, newPassword: patientPwForm.next }),
+      });
+      const d = await r.json() as { ok?: boolean; error?: string };
+      if (d.ok) { setPatientPwOk(true); setPatientPwForm({ current: "", next: "" }); }
+      else setPatientPwError(d.error ?? "Erro ao trocar senha.");
+    } catch { setPatientPwError("Sem conexão."); }
   }
 
   async function handleCancelByToken() {
@@ -1199,6 +1324,213 @@ export function AgePage() {
     );
   }
 
+  function PatientAreaOrSetPw() {
+    return SetPasswordView();
+  }
+
+  // ─── SET PASSWORD VIEW (via token de aprovação ou reset) ─────────────────────
+
+  function SetPasswordView() {
+    if (setPwStatus === "done") return (
+      <div style={{ textAlign: "center", padding: "3rem 1rem" }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>🐦</div>
+        <div style={{ color: "#4ade80", fontSize: 18, fontWeight: 700, marginBottom: 8 }}>Senha criada!</div>
+        <div style={{ color: "#94a3b8", fontSize: 14 }}>Você já está na sua área do paciente.</div>
+      </div>
+    );
+    return (
+      <div style={{ padding: "2rem 1rem", maxWidth: 380, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+          <span style={{ fontSize: 28 }}>🔑</span>
+          <div>
+            <div style={{ color, fontWeight: 700, fontSize: 16 }}>Criar sua senha</div>
+            <div style={{ color: "#64748b", fontSize: 12 }}>Área do paciente — {prof.nome}</div>
+          </div>
+        </div>
+        <form onSubmit={handleSetPassword} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <input type="password" placeholder="Nova senha (mín. 8 caracteres)" value={setPwForm.password}
+            onChange={e => setSetPwForm(f => ({ ...f, password: e.target.value }))}
+            style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+          <input type="password" placeholder="Confirmar senha" value={setPwForm.confirm}
+            onChange={e => setSetPwForm(f => ({ ...f, confirm: e.target.value }))}
+            style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+          {setPwMsg && <div style={{ color: "#f87171", fontSize: 13 }}>{setPwMsg}</div>}
+          <button type="submit" disabled={setPwStatus === "loading" || !setPwForm.password || !setPwForm.confirm}
+            style={{ background: setPwStatus === "loading" ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+            {setPwStatus === "loading" ? "Salvando…" : "Criar senha"}
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // ─── PATIENT LOGIN VIEW ───────────────────────────────────────────────────────
+
+  function PatientLoginView() {
+    return (
+      <div style={{ padding: "2rem 1rem", maxWidth: 380, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+          <span style={{ fontSize: 28 }}>🐦</span>
+          <div>
+            <div style={{ color, fontWeight: 700, fontSize: 16 }}>Área do paciente</div>
+            <div style={{ color: "#64748b", fontSize: 12 }}>{prof.nome}</div>
+          </div>
+        </div>
+
+        {!forgotMode ? (
+          <form onSubmit={handlePatientLogin} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <input type="email" placeholder="Seu email" value={patientLoginForm.email}
+              onChange={e => setPatientLoginForm(f => ({ ...f, email: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            <input type="password" placeholder="Senha" value={patientLoginForm.password}
+              onChange={e => setPatientLoginForm(f => ({ ...f, password: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            {patientLoginError && <div style={{ color: "#f87171", fontSize: 13 }}>{patientLoginError}</div>}
+            <button type="submit" disabled={patientLoginLoading || !patientLoginForm.email || !patientLoginForm.password}
+              style={{ background: patientLoginLoading ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              {patientLoginLoading ? "Entrando…" : "Entrar"}
+            </button>
+            <button type="button" onClick={() => setForgotMode(true)}
+              style={{ background: "none", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer", padding: "4px 0" }}>
+              Esqueci minha senha
+            </button>
+            <button type="button" onClick={() => setMode("public")}
+              style={{ background: "none", border: "none", color: "#475569", fontSize: 12, cursor: "pointer", padding: "4px 0" }}>
+              Voltar
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleForgotPassword} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ color: "#94a3b8", fontSize: 13 }}>
+              Informe seu email e enviaremos um link para redefinir sua senha.
+            </div>
+            <input type="email" placeholder="Seu email" value={forgotEmail}
+              onChange={e => setForgotEmail(e.target.value)}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            {forgotMsg && <div style={{ color: "#4ade80", fontSize: 13 }}>{forgotMsg}</div>}
+            <button type="submit" disabled={!forgotEmail}
+              style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              Enviar link
+            </button>
+            <button type="button" onClick={() => { setForgotMode(false); setForgotMsg(""); }}
+              style={{ background: "none", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer" }}>
+              Voltar ao login
+            </button>
+          </form>
+        )}
+      </div>
+    );
+  }
+
+  // ─── PATIENT AREA VIEW ────────────────────────────────────────────────────────
+
+  function PatientAreaView() {
+    const upcoming = patientAppts.filter(a => new Date(a.dataHora) >= new Date() && !["cancelado", "remarcado"].includes(a.status));
+    const past     = patientAppts.filter(a => new Date(a.dataHora) < new Date() || ["cancelado", "remarcado"].includes(a.status));
+
+    function ApptCard({ a }: { a: PatientAppt }) {
+      const future = new Date(a.dataHora) > new Date();
+      return (
+        <div style={{ background: "#0a0f16", border: `1px solid ${STATUS_COLOR[a.status] ?? "#1e293b"}33`, borderRadius: 10, padding: "12px 14px", marginBottom: 10 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <div style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600 }}>
+                {fmtDate(a.dataHora, { weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+              </div>
+              <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{a.canal} · {a.duracaoMin} min</div>
+            </div>
+            <span style={{ fontSize: 11, background: (STATUS_COLOR[a.status] ?? "#334155") + "22", color: STATUS_COLOR[a.status] ?? "#94a3b8", borderRadius: 6, padding: "2px 8px" }}>
+              {STATUS_LABEL[a.status] ?? a.status}
+            </span>
+          </div>
+          {a.cancelToken && future && !["cancelado", "remarcado", "realizado"].includes(a.status) && (
+            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+              <a href={`?reschedule=${a.cancelToken}`}
+                style={{ fontSize: 12, color, background: colorDark, borderRadius: 6, padding: "4px 10px", textDecoration: "none" }}>
+                Remarcar
+              </a>
+              <a href={`?cancel=${a.cancelToken}`}
+                style={{ fontSize: 12, color: "#f87171", background: "#1c0a0a", borderRadius: 6, padding: "4px 10px", textDecoration: "none" }}>
+                Cancelar
+              </a>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ padding: "1.5rem 1rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <div>
+            <div style={{ color, fontWeight: 700, fontSize: 16 }}>Olá, {patientNome}!</div>
+            <div style={{ color: "#64748b", fontSize: 12 }}>Área do paciente — {prof.nome}</div>
+          </div>
+          <button onClick={handlePatientLogout}
+            style={{ background: "#1a2030", border: "1px solid #334155", borderRadius: 6, color: "#94a3b8", padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
+            Sair
+          </button>
+        </div>
+
+        {/* Nav interna */}
+        <div style={{ display: "flex", borderBottom: "1px solid #1e293b", marginBottom: 20 }}>
+          {([["appointments", "Consultas"], ["password", "Senha"]] as const).map(([v, label]) => (
+            <button key={v} onClick={() => setPatientView(v)}
+              style={{ padding: "8px 14px", background: "none", border: "none", borderBottom: patientView === v ? `2px solid ${color}` : "2px solid transparent", color: patientView === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: patientView === v ? 700 : 400 }}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {patientView === "appointments" && (
+          <>
+            {patientApptLoading ? (
+              <div style={{ color: "#64748b", fontSize: 13 }}>Carregando…</div>
+            ) : (
+              <>
+                {upcoming.length > 0 && (
+                  <>
+                    <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Próximas</div>
+                    {upcoming.map(a => <ApptCard key={a.id} a={a} />)}
+                  </>
+                )}
+                {past.length > 0 && (
+                  <>
+                    <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, margin: "16px 0 10px", textTransform: "uppercase", letterSpacing: 1 }}>Histórico</div>
+                    {past.slice(0, 10).map(a => <ApptCard key={a.id} a={a} />)}
+                  </>
+                )}
+                {patientAppts.length === 0 && (
+                  <div style={{ color: "#64748b", fontSize: 14, textAlign: "center", padding: "2rem 0" }}>
+                    Nenhuma consulta registrada ainda.
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        )}
+
+        {patientView === "password" && (
+          <form onSubmit={handlePatientChangePassword} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 360 }}>
+            <div style={{ color: "#94a3b8", fontSize: 13 }}>Alterar senha</div>
+            <input type="password" placeholder="Senha atual" value={patientPwForm.current}
+              onChange={e => setPatientPwForm(f => ({ ...f, current: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            <input type="password" placeholder="Nova senha (mín. 8 chars)" value={patientPwForm.next}
+              onChange={e => setPatientPwForm(f => ({ ...f, next: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            {patientPwError && <div style={{ color: "#f87171", fontSize: 13 }}>{patientPwError}</div>}
+            {patientPwOk && <div style={{ color: "#4ade80", fontSize: 13 }}>Senha alterada com sucesso!</div>}
+            <button type="submit" disabled={!patientPwForm.current || !patientPwForm.next}
+              style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              Alterar senha
+            </button>
+          </form>
+        )}
+      </div>
+    );
+  }
+
   // ─── LAYOUT ──────────────────────────────────────────────────────────────────
 
   return (
@@ -1221,11 +1553,24 @@ export function AgePage() {
                   Sair
                 </button>
               </>
+            ) : mode === "patient" ? (
+              <>
+                <span style={{ color: "#64748b", fontSize: 12 }}>{patientNome}</span>
+                <button onClick={handlePatientLogout} style={{ background: "#1a2030", border: "1px solid #334155", borderRadius: 6, color: "#94a3b8", padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
+                  Sair
+                </button>
+              </>
             ) : (
-              <button onClick={() => setMode("login" as any)}
-                style={{ background: colorDark, border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 12px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
-                Entrar
-              </button>
+              <div style={{ display: "flex", gap: 6 }}>
+                <button onClick={() => setMode("patient-login")}
+                  style={{ background: "transparent", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
+                  Paciente
+                </button>
+                <button onClick={() => setMode("login" as any)}
+                  style={{ background: colorDark, border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 12px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                  Profissional
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -1362,7 +1707,14 @@ export function AgePage() {
           </div>
         )}
 
-        {mode === "public" || authStep !== "done" ? (
+        {/* Área de criação de senha via token */}
+        {setPwToken && PatientAreaOrSetPw()}
+
+        {!setPwToken && (mode === "patient" ? (
+          PatientAreaView()
+        ) : mode === "patient-login" ? (
+          PatientLoginView()
+        ) : mode === "public" || authStep !== "done" ? (
           <>
             {prof.bio && (
               <div style={{ padding: "1rem 1rem 0" }}>
@@ -1379,7 +1731,7 @@ export function AgePage() {
             {view === "feed"            && FeedView()}
             {view === "sabia"           && SabiaView()}
           </>
-        )}
+        ))}
       </div>
 
       {/* Login modal */}

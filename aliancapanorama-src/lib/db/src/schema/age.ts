@@ -84,6 +84,10 @@ export const agePatientsTable = pgTable("age_patients", {
   tokenConfirmacao: text("token_confirmacao"),
   tokenExpiraAt:    timestamp("token_expira_at", { withTimezone: true }),
   observacoesPro:   text("observacoes_pro"),
+  // Autenticação do paciente
+  passwordHash:     text("password_hash"),
+  resetToken:       text("reset_token"),
+  resetTokenExpiraAt: timestamp("reset_token_expira_at", { withTimezone: true }),
   lgpdConsent:      boolean("lgpd_consent").notNull().default(false),
   lgpdConsentAt:    timestamp("lgpd_consent_at", { withTimezone: true }),
   createdAt:        timestamp("created_at", { withTimezone: true }).defaultNow(),

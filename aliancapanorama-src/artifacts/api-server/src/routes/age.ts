@@ -941,19 +941,35 @@ router.patch("/age/:slug/patients/:id", requireAgeAuth, async (req, res): Promis
 
   // Notificar paciente por email quando status muda
   if (status && updated.email) {
-    const msgs: Record<string, string> = {
-      aprovado:  `Olá ${updated.nome},\n\nSua solicitação foi aprovada! Você já pode marcar consultas.\n\n— SABIÁ`,
-      recusado:  `Olá ${updated.nome},\n\nSua solicitação não foi aprovada desta vez. Entre em contato para mais informações.\n\n— SABIÁ`,
-      suspenso:  `Olá ${updated.nome},\n\nSeu acesso foi temporariamente suspenso. Entre em contato para esclarecimentos.\n\n— SABIÁ`,
-    };
-    if (msgs[status]) {
-      const [prof] = await db.select({ nome: ageProfessionalsTable.nome })
-        .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, req.session.ageProfessionalId!)).limit(1);
+    const [prof] = await db.select({ slug: ageProfessionalsTable.slug, nome: ageProfessionalsTable.nome })
+      .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, req.session.ageProfessionalId!)).limit(1);
+    const profNome = prof?.nome ?? "a profissional";
+
+    if (status === "aprovado") {
+      // Gerar token para o paciente criar sua senha
+      const resetTok = randomUUID();
+      const resetExp = new Date(Date.now() + 72 * 3600 * 1000); // 72h
+      await db.update(agePatientsTable)
+        .set({ resetToken: resetTok, resetTokenExpiraAt: resetExp } as any)
+        .where(eq(agePatientsTable.id, updated.id));
+      const setPasswordLink = `${FRONT_URL}/age/${prof?.slug}?set-password=${resetTok}`;
       sendEmail(
         updated.email,
-        `Age — Atualização do seu cadastro com ${prof?.nome ?? "a profissional"}`,
-        msgs[status]!,
-      ).catch(e => logger.error({ err: e }, "age: sendEmail patient status"));
+        `Cadastro aprovado — crie sua senha para acessar a área do paciente`,
+        `Olá ${updated.nome},\n\nSeu cadastro com ${profNome} foi aprovado!\n\nClique no link abaixo para criar sua senha e acessar sua área do paciente:\n\n${setPasswordLink}\n\nO link expira em 72 horas.\n\n— SABIÁ`,
+      ).catch(e => logger.error({ err: e }, "age: sendEmail patient approved"));
+    } else if (status === "recusado") {
+      sendEmail(
+        updated.email,
+        `Age — Atualização do seu cadastro com ${profNome}`,
+        `Olá ${updated.nome},\n\nSua solicitação não foi aprovada desta vez. Entre em contato para mais informações.\n\n— SABIÁ`,
+      ).catch(e => logger.error({ err: e }, "age: sendEmail patient recusado"));
+    } else if (status === "suspenso") {
+      sendEmail(
+        updated.email,
+        `Age — Atualização do seu cadastro com ${profNome}`,
+        `Olá ${updated.nome},\n\nSeu acesso foi temporariamente suspenso. Entre em contato para esclarecimentos.\n\n— SABIÁ`,
+      ).catch(e => logger.error({ err: e }, "age: sendEmail patient suspenso"));
     }
   }
 
@@ -1020,6 +1036,211 @@ router.get("/age/:slug/feed", requireAgeAuth, async (req, res): Promise<void> =>
   ).slice(0, limit);
 
   res.json(merged);
+});
+
+// ─── Auth do paciente ─────────────────────────────────────────────────────────
+
+function requirePatientAuth(req: any, res: any, next: any) {
+  if (!req.session?.agePatientId) {
+    res.status(401).json({ error: "Área do paciente: faça login primeiro." });
+    return;
+  }
+  next();
+}
+
+// POST /api/age/:slug/patients/auth/set-password — define senha pela 1ª vez (via token de aprovação)
+router.post("/age/:slug/patients/auth/set-password", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { token, password } = req.body as { token?: string; password?: string };
+  if (!token || !password || password.length < 8) {
+    res.status(400).json({ error: "token e password (mín. 8 chars) obrigatórios" }); return;
+  }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [patient] = await db.select().from(agePatientsTable)
+    .where(and(
+      eq(agePatientsTable.professionalId, prof.id),
+      eq((agePatientsTable as any).resetToken, token),
+    )).limit(1);
+
+  if (!patient) { res.status(404).json({ error: "Link inválido ou já utilizado." }); return; }
+  if ((patient as any).resetTokenExpiraAt && new Date((patient as any).resetTokenExpiraAt) < new Date()) {
+    res.status(400).json({ error: "Link expirado. Solicite um novo link à profissional." }); return;
+  }
+  if (patient.status !== "aprovado") {
+    res.status(403).json({ error: "Cadastro ainda não aprovado." }); return;
+  }
+
+  const hash = await bcrypt.hash(password, 12);
+  await db.update(agePatientsTable)
+    .set({ passwordHash: hash, resetToken: null, resetTokenExpiraAt: null, updatedAt: new Date() } as any)
+    .where(eq(agePatientsTable.id, patient.id));
+
+  req.session.agePatientId   = patient.id;
+  req.session.agePatientSlug = slug;
+  req.session.agePatientNome = patient.nome;
+  await new Promise<void>((resolve, reject) =>
+    req.session.save((err: unknown) => (err ? reject(err) : resolve())));
+
+  res.json({ ok: true, nome: patient.nome });
+});
+
+// POST /api/age/:slug/patients/auth/login
+router.post("/age/:slug/patients/auth/login", loginLimit, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { email, password } = req.body as { email?: string; password?: string };
+  if (!email || !password) { res.status(400).json({ error: "email e password obrigatórios" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [patient] = await db.select().from(agePatientsTable)
+    .where(and(
+      eq(agePatientsTable.professionalId, prof.id),
+      eq(agePatientsTable.email, email.toLowerCase()),
+    )).limit(1);
+
+  if (!patient || !(patient as any).passwordHash) {
+    res.status(401).json({ error: "Email ou senha incorretos." }); return;
+  }
+  if (patient.status !== "aprovado") {
+    res.status(403).json({ error: "Cadastro não aprovado. Aguarde aprovação ou entre em contato." }); return;
+  }
+
+  const ok = await bcrypt.compare(password, (patient as any).passwordHash);
+  if (!ok) { res.status(401).json({ error: "Email ou senha incorretos." }); return; }
+
+  req.session.agePatientId   = patient.id;
+  req.session.agePatientSlug = slug;
+  req.session.agePatientNome = patient.nome;
+  await new Promise<void>((resolve, reject) =>
+    req.session.save((err: unknown) => (err ? reject(err) : resolve())));
+
+  res.json({ ok: true, nome: patient.nome });
+});
+
+// GET /api/age/:slug/patients/auth/me
+router.get("/age/:slug/patients/auth/me", (req, res) => {
+  const { slug } = req.params;
+  if (!req.session?.agePatientId || req.session.agePatientSlug !== slug) {
+    res.json({ authenticated: false }); return;
+  }
+  res.json({ authenticated: true, id: req.session.agePatientId, nome: req.session.agePatientNome });
+});
+
+// POST /api/age/:slug/patients/auth/logout
+router.post("/age/:slug/patients/auth/logout", (req, res) => {
+  req.session.agePatientId   = undefined;
+  req.session.agePatientSlug = undefined;
+  req.session.agePatientNome = undefined;
+  req.session.save(() => res.json({ ok: true }));
+});
+
+// POST /api/age/:slug/patients/auth/forgot-password
+router.post("/age/:slug/patients/auth/forgot-password", loginLimit, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { email } = req.body as { email?: string };
+  if (!email) { res.status(400).json({ error: "email obrigatório" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [patient] = await db.select({ id: agePatientsTable.id, nome: agePatientsTable.nome, status: agePatientsTable.status })
+    .from(agePatientsTable)
+    .where(and(
+      eq(agePatientsTable.professionalId, prof.id),
+      eq(agePatientsTable.email, email.toLowerCase()),
+    )).limit(1);
+
+  // Resposta sempre neutra (não revelar se email existe)
+  if (!patient || patient.status !== "aprovado") {
+    res.json({ ok: true, message: "Se o email estiver cadastrado, você receberá um link em breve." }); return;
+  }
+
+  const tok = randomUUID();
+  const exp = new Date(Date.now() + 2 * 3600 * 1000); // 2h
+  await db.update(agePatientsTable)
+    .set({ resetToken: tok, resetTokenExpiraAt: exp, updatedAt: new Date() } as any)
+    .where(eq(agePatientsTable.id, patient.id));
+
+  const link = `${FRONT_URL}/age/${slug}?set-password=${tok}`;
+  sendEmail(
+    email.toLowerCase(),
+    `Age — Redefinir senha`,
+    `Olá ${patient.nome},\n\nClique no link para redefinir sua senha:\n\n${link}\n\nVálido por 2 horas. Se não foi você, ignore.\n\n— SABIÁ`,
+  ).catch(e => logger.error({ err: e }, "age: sendEmail forgot-password"));
+
+  res.json({ ok: true, message: "Se o email estiver cadastrado, você receberá um link em breve." });
+});
+
+// POST /api/age/:slug/patients/auth/change-password (paciente logado)
+router.post("/age/:slug/patients/auth/change-password", requirePatientAuth, async (req, res): Promise<void> => {
+  const { currentPassword, newPassword } = req.body as { currentPassword?: string; newPassword?: string };
+  if (!currentPassword || !newPassword || newPassword.length < 8) {
+    res.status(400).json({ error: "Senha atual e nova senha (mín. 8 chars) obrigatórias" }); return;
+  }
+
+  const [patient] = await db.select().from(agePatientsTable)
+    .where(eq(agePatientsTable.id, req.session.agePatientId!)).limit(1);
+  if (!patient || !(patient as any).passwordHash) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+
+  const ok = await bcrypt.compare(currentPassword, (patient as any).passwordHash);
+  if (!ok) { res.status(401).json({ error: "Senha atual incorreta." }); return; }
+
+  const hash = await bcrypt.hash(newPassword, 12);
+  await db.update(agePatientsTable)
+    .set({ passwordHash: hash, updatedAt: new Date() } as any)
+    .where(eq(agePatientsTable.id, patient.id));
+
+  res.json({ ok: true });
+});
+
+// GET /api/age/:slug/patients/my/appointments (paciente logado)
+router.get("/age/:slug/patients/my/appointments", requirePatientAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+  if (req.session.agePatientSlug !== slug) {
+    res.status(403).json({ error: "Sem permissão" }); return;
+  }
+
+  // Buscar pelo email do paciente logado
+  const [patient] = await db.select({ email: agePatientsTable.email })
+    .from(agePatientsTable).where(eq(agePatientsTable.id, req.session.agePatientId!)).limit(1);
+  if (!patient) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+
+  const appts = await db.select({
+    id:          ageAppointmentsTable.id,
+    dataHora:    ageAppointmentsTable.dataHora,
+    duracaoMin:  ageAppointmentsTable.duracaoMin,
+    status:      ageAppointmentsTable.status,
+    canal:       ageAppointmentsTable.canal,
+    observacoes: ageAppointmentsTable.observacoes,
+    cancelToken: (ageAppointmentsTable as any).cancelToken,
+  }).from(ageAppointmentsTable)
+    .where(and(
+      eq(ageAppointmentsTable.professionalId, prof.id),
+      eq(ageAppointmentsTable.patientEmail, patient.email),
+    ))
+    .orderBy(desc(ageAppointmentsTable.dataHora))
+    .limit(50);
+
+  res.json({ profNome: prof.nome, appointments: appts });
 });
 
 // ─── Admin: criar profissional (tier 5) ───────────────────────────────────────

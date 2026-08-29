@@ -12,5 +12,13 @@ declare module "express-session" {
     rapaduraUserId?: number;
     rapaduraRole?: string;
     rapaduraNome?: string;
+    // Age — profissional
+    ageProfessionalId?: number;
+    ageProfessionalSlug?: string;
+    ageProfessionalNome?: string;
+    // Age — paciente
+    agePatientId?: number;
+    agePatientSlug?: string;
+    agePatientNome?: string;
   }
 }
