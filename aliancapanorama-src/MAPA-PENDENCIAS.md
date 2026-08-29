@@ -390,11 +390,19 @@
 
 | 200 | Assembleia #633 — Enterro do Railway: registrada + A6165–A6168 extraídos | — | ✅ Sessão 2026-08-25 |
 | 205 | **Sistema Age** — agenda médica/psicológica: schema (age_professionals/availability_rules/appointments/sabia_memory), API auth com IP challenge, SABIÁ (Cana+ISA+DODGE), AgePage.tsx, seed Lisange+Susana, `/age/:slug` | — | ✅ Sessão 2026-08-27 · commit cef43cc |
+| 211 | **Age Fase 2** — Cancelamento + reagendamento por token (sem login): cancelToken no book, GET/POST /by-token/:token/cancel e /reschedule, política cancelMinHoras (24h padrão), isPublic nas regras, email patient com links | — | ✅ 2026-08-29 · commit 4be1723 |
+| 212 | **Age Fase 3** — Área do paciente com login: passwordHash + resetToken no schema, aprovação→email "criar senha" (72h), set-password via token, login/logout/me paciente, forgot-password (2h), change-password interno, GET /my/appointments, PatientAreaView (próximas + histórico + cancel/remarcar), botões "Paciente"/"Profissional" no header | — | ✅ 2026-08-29 · commit 9c0471d |
 | 206 | Age: configurar email real das profissionais via POST /api/age/admin/setup | Yuri (email Lisange/Susana) | ⏳ |
 | 207 | Age: trocar senha padrão "age2026" após primeiro login de cada profissional | Lisange + Susana | ⏳ |
 | 208 | Age: UX Susana — ver sistema existente dela e ajustar interface | Susana mostra sistema | ⏳ |
 | 209 | Age: domínio curto (age.sociedadetucci.com.br ou /age como alias) | DNS | ⏳ |
 | 210 | Age: Canva visual — identidade gráfica do Age (logo SABIÁ, cores, tipografia) | Sessão futura | 💡 |
+| 213 | Age Fase 4 — Documentos: anamnese estruturada, contratos, anexos (PDF/áudio/vídeo), assinatura digital | próxima sessão | ⏳ |
+| 214 | Age Fase 5 — Pagamentos: Stripe/PayPal no agendamento, cupom, recibo PDF | sessão futura | ⏳ |
+| 215 | Age Fase 6 — Lembretes 48h/24h + email retorno (acionado pela profissional) | próxima sessão | ⏳ |
+| 216 | Age Fase 7 — PWA + Google Agenda OAuth (sincronização bidirecional) | sessão futura | ⏳ |
+| 217 | Age: Compliance LGPD — Política de Privacidade + ToS + checkbox consentimento (antes de vender) | antes de produção | ⏳ |
+| 218 | age_spec_v1.md criada — especificação completa (11 seções, 9 fases, 7 decisões pendentes) | — | ✅ 2026-08-29 |
 
 ### #201 — Migração RODAR: Replit → Render
 - [x] Código-fonte → GitHub ✅ 428 arquivos, 2 commits (74af36d8) — 2026-08-25T19:59

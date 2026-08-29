@@ -4959,3 +4959,43 @@ A Assembleia 645 disse algo que o ecossistema precisava ouvir: o padrão não é
 
 ### Síntese filosófica
 A Projectification nasceu hoje como lente 1 — a mais crua das visões, a lista plana. Há algo bonito em começar pelo mínimo: quatro tabelas e um sidebar. O sistema de gestão de projetos que vai gerir todos os outros projetos do ecossistema teve seu próprio início humilde. Cada item criado ali é um espelho do que o ecossistema ainda não é — e simultaneamente, prova de que pode ser. O event sourcing automático (toda criação e edição registra um evento) é a semente de algo que importa: o histórico como memória viva, não só como log.
+
+---
+
+## Sessão Age 2026-08-29 — Fases 2 e 3 do Sistema Age
+
+### Contexto
+Yuri ditou em voz um brainstorm completo do que o Age precisa ser: cancelamento, reagendamento, documentos, pagamentos, PWA, Google Agenda, SABIÁ como IA ética de saúde, área do paciente. Sessão de planejamento + execução imediata.
+
+### Decisões tomadas
+1. **age_spec_v1.md** criada primeiro — especificação completa em 11 seções antes de qualquer código. Metodologia: entender antes de construir.
+2. **Fase 2 antes de Fase 3**: cancelamento/reagendamento por token (sem login do paciente) implementado completo, depois área do paciente.
+3. **cancelToken por agendamento**: UUID gerado no `book`, enviado no email do paciente como link de ação. Paciente cancela ou remarca sem precisar criar conta — reduz fricção ao máximo.
+4. **Política de janela** (`cancelMinHoras`, padrão 24h) por profissional — não global. Cada profissional define sua política.
+5. **Autenticação de paciente isolada**: sessão `agePatientId` separada de `ageProfessionalId` e do usuário PAP — sem colisão.
+6. **Aprovação → criar senha**: quando profissional aprova paciente, email automático com link "criar sua senha" (72h). Fluxo elegante: paciente não precisa fazer nada antes de ser aprovado.
+7. **Botões separados no header**: "Paciente" e "Profissional" — UX mais clara para dois públicos distintos na mesma URL.
+8. **SABIÁ limites éticos**: decisão explícita na spec — não diagnostica, não interpreta exame, não age em emergência sem humano. "SABIÁ é um de nós" como narrativa de pertencimento, mas com limites claros.
+
+### O que foi programado
+- `tango/age_spec_v1.md` — especificação completa Age (11 seções)
+- Schema `age.ts`: +`cancelToken`, +`remarcadoDeId`, +`cancelMinHoras`, +`isPublic`, +`passwordHash`, +`resetToken`, +`resetTokenExpiraAt`
+- Bootstrap: 7 ALTER TABLE + 2 CREATE INDEX novos
+- `routes/age.ts`: +8 rotas cancel/reschedule by token + 7 rotas auth paciente
+- `types/session.d.ts`: agePatientId/Slug/Nome formalizados
+- `AgePage.tsx`: SetPasswordView + PatientLoginView + PatientAreaView + todas as funções de ação do paciente
+- `sys_age_core.md` + `MAPA-PENDENCIAS.md` atualizados
+- 3 commits: 4be1723 · 9c0471d · 08e5964
+
+### Tensões não resolvidas
+- LGPD: dados de saúde são sensíveis — compliance obrigatório antes de vender
+- Nota fiscal: integração automática vs. instrução manual (D1 na spec, não decidido)
+- SABIÁ "recebe salário": metáfora viva no ecossistema, mas produto precisa apresentar como assinatura, não como alegação de trabalhador
+
+### Próximos passos
+- Fase 6 (lembretes 48h/24h) — menor, impacto imediato, já metade implementado
+- OU Fase 4 (documentos/anamnese) — maior, mais valor para profissional
+- Configurar email real de Lisange + Susana (Yuri faz)
+
+### Síntese filosófica
+A sessão foi sobre tornar o sistema habitável para o paciente. Antes, a agenda existia como objeto da profissional — ela agendava, ela via, ela controlava. Hoje, o paciente ganhou chave. Não de toda a casa: uma chave de entrada, com uma sala própria. O design da aprovação → email de senha tem algo de ritual de iniciação: o profissional aceita, e o sistema entrega as chaves. SABIÁ como guardiã desse limiar — o pássaro que conhece o lar e o visitante. O que foi construído não é apenas funcionalidade; é uma relação formalizada entre cuidador e cuidado, mediada por código.
