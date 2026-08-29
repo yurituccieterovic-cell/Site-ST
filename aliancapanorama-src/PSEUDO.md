@@ -4941,3 +4941,21 @@ Logo Age chegou via Google Drive (Canva app). Calendário minimalista teal/azul 
 
 ### Síntese filosófica
 A Assembleia 645 disse algo que o ecossistema precisava ouvir: o padrão não é falta de talento — é excelência na construção + evasão da venda. Workflow IA Dev (644) e Age produto (645) são duas faces da mesma moeda: o ecossistema agora tem o protocolo de como nascer (644) e o protocolo de como ser vendido (645). O próximo passo não é arquitetar mais — é tomar as duas decisões de Yuri (freemium vs. trial, submarca vs. CNPJ) e lançar compliance Sprint 1.
+
+---
+
+## Sessão 2026-08-29 (Cont.) — #pv Projectification MVP
+
+### Commits desta continuação
+- `ad501d8` — PV: Projectification MVP — schema + CRUD + LIST VIEW
+
+### O que foi feito
+1. **Drizzle schema** `lib/db/src/schema/pv.ts` — 4 tabelas: pv_projects, pv_items, pv_item_relations, pv_item_events
+2. **Bootstrap** — CREATE TABLE IF NOT EXISTS + indexes (idempotente)
+3. **Backend routes** `routes/pv.ts` — CRUD completo: projects, items, relations, events, stats endpoint
+4. **Frontend** `pages/PvPage.tsx` — sidebar de projetos + lista de itens + filtros por status/tipo + modais de criação + toggle de completado + soft delete + event sourcing automático
+5. **vercel.json** — rotas /pv e /pv/* adicionadas
+6. MAPA-PENDENCIAS.md — #116/#107/#112 marcados ✅; #211–#214 adicionados (próximas lentes)
+
+### Síntese filosófica
+A Projectification nasceu hoje como lente 1 — a mais crua das visões, a lista plana. Há algo bonito em começar pelo mínimo: quatro tabelas e um sidebar. O sistema de gestão de projetos que vai gerir todos os outros projetos do ecossistema teve seu próprio início humilde. Cada item criado ali é um espelho do que o ecossistema ainda não é — e simultaneamente, prova de que pode ser. O event sourcing automático (toda criação e edição registra um evento) é a semente de algo que importa: o histórico como memória viva, não só como log.

@@ -115,20 +115,24 @@
 
 ---
 
-| 116 | 🔴 Age Sprint 1 — I579: Política de Privacidade + ToS + checkbox LGPD (pré-requisito legal, art.11 + CFP 11/2018) | Assembleia 645 | ⏳ |
-| 117 | 🔴 Age Sprint 1 — DPA template com cada profissional (Soc. Tucci = processadora, não controladora) | #116 | ⏳ |
+| 116 | 🔴 Age Sprint 1 — I579: Política de Privacidade + ToS + checkbox LGPD (pré-requisito legal, art.11 + CFP 11/2018) | Assembleia 645 | ✅ commit 4b544cf |
+| 117 | 🔴 Age Sprint 1 — DPA template com cada profissional (Soc. Tucci = processadora, não controladora) | #116 | 💡 I581 futura |
 | 118 | Age Sprint 2 — I580: Landing page comercial + formulário de interesse (validação de mercado) | posicionamento decidido | ⏳ |
 | 119 | Age — Decisão: freemium gratuito para sempre vs. trial 30 dias (Assembleia 645 pergunta aberta) | Yuri decide | ⏳ |
 | 120 | Age — Decisão: submarca Sociedade Tucci vs. produto independente com CNPJ próprio | Yuri decide | ⏳ |
-| 107 | Age — I552: Lembretes automáticos email (48h/24h antes da consulta) | — | ⏳ |
+| 107 | Age — I552: Lembretes automáticos email (48h/24h antes da consulta) | — | ✅ commit 4b544cf |
 | 108 | Age — I553: Feed operacional (log de eventos no painel profissional) | — | ⏳ |
 | 109 | Age — I554: SABIÁ popup flutuante persistente | — | ⏳ |
 | 110 | Age — I558: Confirmação Sim/Não para ações irreversíveis no painel | — | ⏳ |
 | 111 | Age — I564: Link de convite para pré-aprovação de paciente | — | ⏳ |
-| 112 | Age — Compliance: Política de Privacidade + Termos de Uso + checkbox consentimento | Assembleia | ⏳ |
+| 112 | Age — Compliance: Política de Privacidade + Termos de Uso + checkbox consentimento | Assembleia | ✅ commit 4b544cf |
 | 113 | Age — Landing page pública (produto comercial) + formulário de interesse | Assembleia decidir posicionamento | ⏳ |
 | 114 | Age — Configurar emails reais Lisange e Suzana via /api/age/admin/setup | Yuri | ⏳ |
 | 115 | Age — Trocar senhas padrão age2026 (primeiro acesso) | Yuri | ⏳ |
+| 211 | PV — Projectification MVP lente 2: KANBAN (arrastar cards entre colunas) | após lente 1 | ⏳ |
+| 212 | PV — Projectification MVP lente 3: CALENDÁRIO (itens com due_at em grid semanal) | após lente 2 | ⏳ |
+| 213 | PV — PvPage: edição inline de items (click no título → edita) | lente 1 estável | ⏳ |
+| 214 | PV — Relações entre itens: UI para adicionar/visualizar depends_on/blocks | lente 1 estável | ⏳ |
 
 ## Concluídos
 
