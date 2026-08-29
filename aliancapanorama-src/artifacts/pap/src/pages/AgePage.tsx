@@ -20,7 +20,19 @@ type AvailRule = {
 type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
 type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string };
-type View = "agenda" | "pacientes" | "disponibilidade" | "sabia";
+type View = "agenda" | "pacientes" | "disponibilidade" | "sabia" | "feed";
+type FeedItem = {
+  tipo: "appointment" | "patient";
+  id: string;
+  titulo: string;
+  status: string;
+  canal?: string | null;
+  data_evento?: string | null;
+  ts: string;
+  email?: string;
+  lembrete48h_sent?: boolean;
+  lembrete24h_sent?: boolean;
+};
 type Mode = "public" | "professional";
 type AuthStep = "login" | "challenge" | "done";
 
@@ -111,6 +123,10 @@ export function AgePage() {
   // Exception form
   const [excForm, setExcForm] = useState({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
 
+  // Feed operacional
+  const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
+  const [feedLoading, setFeedLoading] = useState(false);
+
   // Auth form
   const [authPassword, setAuthPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -184,11 +200,21 @@ export function AgePage() {
       .then(r => r.json()).then(setPatients).catch(() => {});
   }, [mode, slug]);
 
+  const loadFeed = useCallback(async () => {
+    if (mode !== "professional") return;
+    setFeedLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/feed?limit=60`, { credentials: "include" });
+      if (r.ok) setFeedItems(await r.json() as FeedItem[]);
+    } catch { /* silencia */ }
+    setFeedLoading(false);
+  }, [mode, slug]);
+
   useEffect(() => {
     if (mode === "professional" && authStep === "done") {
-      loadAppts(); loadRules(); loadExceptions(); loadPatients();
+      loadAppts(); loadRules(); loadExceptions(); loadPatients(); loadFeed();
     }
-  }, [mode, authStep, loadAppts, loadRules, loadExceptions, loadPatients]);
+  }, [mode, authStep, loadAppts, loadRules, loadExceptions, loadPatients, loadFeed]);
 
   // Confirmar email via ?confirm= na URL
   useEffect(() => {
@@ -947,6 +973,118 @@ export function AgePage() {
     );
   }
 
+  function FeedView() {
+    const FEED_ICON: Record<string, string> = {
+      appointment: "📅",
+      patient: "👤",
+    };
+    const FEED_TIPO_LABEL: Record<string, string> = {
+      appointment: "Consulta",
+      patient: "Paciente",
+    };
+    const APPT_STATUS_LABEL: Record<string, string> = {
+      disponivel: "Disponível", reservado: "Reservado", confirmado: "Confirmado",
+      realizado: "Realizado", cancelado: "Cancelado", faltou: "Faltou", remarcado: "Remarcado",
+    };
+    const APPT_STATUS_COLOR: Record<string, string> = {
+      disponivel: "#2dd4bf", reservado: "#facc15", confirmado: "#4ade80",
+      realizado: "#94a3b8", cancelado: "#f87171", faltou: "#fb923c", remarcado: "#a78bfa",
+    };
+    const PAT_STATUS_COLOR: Record<string, string> = {
+      email_pendente: "#94a3b8", pendente_aprovacao: "#facc15",
+      aprovado: "#4ade80", recusado: "#f87171", suspenso: "#fb923c",
+    };
+    const PAT_STATUS_LABEL: Record<string, string> = {
+      email_pendente: "Email pendente", pendente_aprovacao: "Aguardando aprovação",
+      aprovado: "Aprovado", recusado: "Recusado", suspenso: "Suspenso",
+    };
+
+    function timeAgo(ts: string) {
+      const diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000);
+      if (diff < 60)    return "agora";
+      if (diff < 3600)  return `${Math.floor(diff/60)}min atrás`;
+      if (diff < 86400) return `${Math.floor(diff/3600)}h atrás`;
+      return `${Math.floor(diff/86400)}d atrás`;
+    }
+
+    return (
+      <div style={{ padding: "1rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600 }}>Feed — Atividade recente</h2>
+          <button onClick={loadFeed} disabled={feedLoading}
+            style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
+            {feedLoading ? "..." : "Atualizar"}
+          </button>
+        </div>
+
+        {feedLoading && feedItems.length === 0 && (
+          <div style={{ color: "#475569", fontSize: 14 }}>Carregando feed...</div>
+        )}
+        {!feedLoading && feedItems.length === 0 && (
+          <div style={{ color: "#475569", fontSize: 14 }}>Nenhuma atividade recente.</div>
+        )}
+
+        {feedItems.map((item, i) => {
+          const isAppt = item.tipo === "appointment";
+          const statusColor = isAppt
+            ? (APPT_STATUS_COLOR[item.status] ?? "#64748b")
+            : (PAT_STATUS_COLOR[item.status] ?? "#64748b");
+          const statusLabel = isAppt
+            ? (APPT_STATUS_LABEL[item.status] ?? item.status)
+            : (PAT_STATUS_LABEL[item.status] ?? item.status);
+
+          return (
+            <div key={`${item.tipo}-${item.id}-${i}`} style={{
+              background: "#0f1318",
+              border: `1px solid ${statusColor}33`,
+              borderLeft: `3px solid ${statusColor}`,
+              borderRadius: 8,
+              padding: "10px 14px",
+              marginBottom: 8,
+              display: "flex",
+              gap: 12,
+              alignItems: "flex-start",
+            }}>
+              <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{FEED_ICON[item.tipo]}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14, color: "#e2e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {item.titulo}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#475569", flexShrink: 0 }}>{timeAgo(item.ts)}</div>
+                </div>
+                <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap", alignItems: "center" }}>
+                  <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>{FEED_TIPO_LABEL[item.tipo]}</span>
+                  <span style={{ fontSize: 11, color: statusColor, fontWeight: 700, background: statusColor + "22", borderRadius: 4, padding: "1px 6px" }}>
+                    {statusLabel}
+                  </span>
+                  {isAppt && item.canal && (
+                    <span style={{ fontSize: 11, color: "#64748b" }}>{item.canal}</span>
+                  )}
+                  {isAppt && item.data_evento && (
+                    <span style={{ fontSize: 11, color: "#475569" }}>
+                      {fmtDate(item.data_evento, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  )}
+                </div>
+                {isAppt && (item.lembrete48h_sent || item.lembrete24h_sent) && (
+                  <div style={{ marginTop: 4, display: "flex", gap: 6 }}>
+                    {item.lembrete48h_sent && (
+                      <span style={{ fontSize: 10, color: "#4ade80", background: "#052e16", borderRadius: 4, padding: "1px 6px" }}>✓ 48h</span>
+                    )}
+                    {item.lembrete24h_sent && (
+                      <span style={{ fontSize: 10, color: "#4ade80", background: "#052e16", borderRadius: 4, padding: "1px 6px" }}>✓ 24h</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   function SabiaView() {
     return (
       <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 200px)" }}>
@@ -1026,7 +1164,7 @@ export function AgePage() {
       {mode === "professional" && authStep === "done" && (
         <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b" }}>
           <div style={{ maxWidth: 640, margin: "0 auto", display: "flex" }}>
-            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Regras"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
+            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Regras"], ["feed", "Feed 📋"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
               <button key={v} onClick={() => setView(v)}
                 style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: view === v ? `2px solid ${color}` : "2px solid transparent", color: view === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: view === v ? 700 : 400 }}>
                 {label}
@@ -1061,6 +1199,7 @@ export function AgePage() {
             {view === "agenda"          && AgendaView()}
             {view === "pacientes"       && PacientesView()}
             {view === "disponibilidade" && DisponibilidadeView()}
+            {view === "feed"            && FeedView()}
             {view === "sabia"           && SabiaView()}
           </>
         )}

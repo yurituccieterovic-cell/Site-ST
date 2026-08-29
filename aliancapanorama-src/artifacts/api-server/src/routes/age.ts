@@ -7,7 +7,7 @@ import {
   ageAppointmentsTable, ageSabiaMemoryTable, ageExceptionsTable, agePatientsTable,
 } from "@workspace/db";
 import { randomUUID } from "crypto";
-import { eq, and, gte, lte, desc, not, inArray } from "drizzle-orm";
+import { eq, and, gte, lte, desc, not, inArray, sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
@@ -706,6 +706,68 @@ router.patch("/age/:slug/patients/:id", requireAgeAuth, async (req, res): Promis
   }
 
   res.json(updated);
+});
+
+// ─── Feed operacional ─────────────────────────────────────────────────────────
+
+// GET /api/age/:slug/feed — log de eventos recentes (auth required)
+router.get("/age/:slug/feed", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const limit = Math.min(Number(req.query["limit"] ?? 50), 100);
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable)
+    .where(eq(ageProfessionalsTable.slug, slug)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+  if (req.session.ageProfessionalId !== prof.id) {
+    res.status(403).json({ error: "Sem permissão" }); return;
+  }
+
+  // Últimos agendamentos com atividade (ordenados por updated_at)
+  const appts = await db.execute(sql`
+    SELECT
+      'appointment' AS tipo,
+      id::text,
+      COALESCE(patient_nome, 'Paciente') AS titulo,
+      status,
+      canal,
+      data_hora AS data_evento,
+      updated_at AS ts,
+      COALESCE(patient_email, '') AS email,
+      lembrete48h_at IS NOT NULL AS lembrete48h_sent,
+      lembrete24h_at IS NOT NULL AS lembrete24h_sent
+    FROM age_appointments
+    WHERE professional_id = ${prof.id}
+    ORDER BY updated_at DESC
+    LIMIT ${limit}
+  `);
+
+  // Últimos pacientes
+  const pats = await db.execute(sql`
+    SELECT
+      'patient' AS tipo,
+      id::text,
+      nome AS titulo,
+      status,
+      NULL AS canal,
+      created_at AS data_evento,
+      updated_at AS ts,
+      email,
+      FALSE AS lembrete48h_sent,
+      FALSE AS lembrete24h_sent
+    FROM age_patients
+    WHERE professional_id = ${prof.id}
+    ORDER BY updated_at DESC
+    LIMIT 20
+  `);
+
+  // Merge cronológico
+  const merged = [...appts.rows, ...pats.rows].sort(
+    (a, b) => new Date((b as Record<string, unknown>).ts as string).getTime()
+            - new Date((a as Record<string, unknown>).ts as string).getTime()
+  ).slice(0, limit);
+
+  res.json(merged);
 });
 
 // ─── Admin: criar profissional (tier 5) ───────────────────────────────────────
