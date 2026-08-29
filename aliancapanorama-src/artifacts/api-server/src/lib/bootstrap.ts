@@ -255,7 +255,15 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS lgpd_consent BOOLEAN NOT NULL DEFAULT false`);
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS lgpd_consent_at TIMESTAMPTZ`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_appts_lembrete ON age_appointments(data_hora, lembrete24h_at, lembrete48h_at) WHERE status IN ('reservado','confirmado')`);
-  logger.info("bootstrap: age tables OK (age_professionals, age_availability_rules, age_appointments, age_sabia_memory, age_exceptions, age_patients +lgpd +lembretes)");
+  // Cancelamento e reagendamento por token (paciente sem login)
+  await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS cancel_token TEXT UNIQUE`);
+  await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS remarcado_de_id INTEGER REFERENCES age_appointments(id) ON DELETE SET NULL`);
+  // Política de cancelamento: janela mínima em horas (padrão 24h)
+  await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS cancel_min_horas INTEGER NOT NULL DEFAULT 24`);
+  // Visibilidade de regras (pública ou só para pacientes aprovados)
+  await db.execute(sql`ALTER TABLE age_availability_rules ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT true`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_appts_token ON age_appointments(cancel_token) WHERE cancel_token IS NOT NULL`);
+  logger.info("bootstrap: age tables OK (+cancel_token +remarcado_de_id +cancel_min_horas +is_public)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

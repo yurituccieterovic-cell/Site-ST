@@ -18,6 +18,7 @@ export const ageProfessionalsTable = pgTable("age_professionals", {
   lastLoginAt:  timestamp("last_login_at", { withTimezone: true }),
   challengeCode: text("challenge_code"),                  // código 6 dígitos (TTL 10min)
   challengeAt:  timestamp("challenge_at", { withTimezone: true }),
+  cancelMinHoras: integer("cancel_min_horas").notNull().default(24),
   ativa:        boolean("ativa").notNull().default(true),
   createdAt:    timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
@@ -32,6 +33,7 @@ export const ageAvailabilityRulesTable = pgTable("age_availability_rules", {
   duracaoMin:      integer("duracao_min").notNull().default(50),
   intervaloMin:    integer("intervalo_min").notNull().default(10),
   canal:           text("canal").notNull().default("presencial"), // presencial | online | ambos
+  isPublic:        boolean("is_public").notNull().default(true),
   ativa:           boolean("ativa").notNull().default(true),
   createdAt:       timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
@@ -54,6 +56,8 @@ export const ageAppointmentsTable = pgTable("age_appointments", {
   lgpdConsentAt:   timestamp("lgpd_consent_at", { withTimezone: true }),
   lembrete48hAt:   timestamp("lembrete48h_at", { withTimezone: true }),
   lembrete24hAt:   timestamp("lembrete24h_at", { withTimezone: true }),
+  cancelToken:     text("cancel_token"),
+  remarcadoDeId:   integer("remarcado_de_id"),
   createdAt:       timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt:       timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });

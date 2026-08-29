@@ -429,6 +429,7 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
 
   if (existing) { res.status(409).json({ error: "Horário já reservado. Escolha outro." }); return; }
 
+  const cancelToken = randomUUID();
   const [appt] = await db.insert(ageAppointmentsTable).values({
     professionalId: prof.id,
     patientNome, patientTelefone, patientEmail,
@@ -438,11 +439,24 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
     canal,
     lgpdConsent: true,
     lgpdConsentAt: new Date(),
+    cancelToken,
   }).returning();
 
-  // Notificar profissional por email
+  const dt = new Date(dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+  const cancelLink     = `${FRONT_URL}/age/${slug}?cancel=${cancelToken}`;
+  const rescheduleLink = `${FRONT_URL}/age/${slug}?reschedule=${cancelToken}`;
+
+  // Email para o paciente
+  if (patientEmail) {
+    sendEmail(
+      patientEmail,
+      `Consulta confirmada — ${prof.nome}`,
+      `Olá ${patientNome},\n\nSua consulta foi marcada!\n\n📅 ${dt}\n👤 ${prof.nome} (${prof.tipo})\n📍 Canal: ${canal}\n\nPrecisa cancelar ou remarcar?\n• Cancelar: ${cancelLink}\n• Remarcar: ${rescheduleLink}\n\n— SABIÁ`,
+    ).catch(e => logger.error({ err: e }, "age: sendEmail book patient"));
+  }
+
+  // Email para a profissional
   if (prof.email) {
-    const dt = new Date(dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
     sendEmail(
       prof.email,
       `Age — Nova consulta marcada: ${patientNome}`,
@@ -451,6 +465,244 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
   }
 
   res.status(201).json(appt);
+});
+
+// ─── Cancelamento e reagendamento por token (sem login) ───────────────────────
+
+// GET /api/age/:slug/appointments/by-token/:token — info pública do agendamento
+router.get("/age/:slug/appointments/by-token/:token", async (req, res): Promise<void> => {
+  const { slug, token } = req.params;
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, cancelMinHoras: (ageProfessionalsTable as any).cancelMinHoras })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [appt] = await db.select({
+    id: ageAppointmentsTable.id,
+    dataHora: ageAppointmentsTable.dataHora,
+    duracaoMin: ageAppointmentsTable.duracaoMin,
+    status: ageAppointmentsTable.status,
+    canal: ageAppointmentsTable.canal,
+    patientNome: ageAppointmentsTable.patientNome,
+  }).from(ageAppointmentsTable)
+    .where(and(
+      eq(ageAppointmentsTable.professionalId, prof.id),
+      eq((ageAppointmentsTable as any).cancelToken, token!),
+    )).limit(1);
+
+  if (!appt) { res.status(404).json({ error: "Agendamento não encontrado." }); return; }
+
+  const cancelMinHoras: number = (prof as any).cancelMinHoras ?? 24;
+  const horasRestantes = (appt.dataHora.getTime() - Date.now()) / 3600000;
+  const dentroJanela   = horasRestantes >= cancelMinHoras;
+
+  res.json({
+    ...appt,
+    profNome: prof.nome,
+    cancelMinHoras,
+    dentroJanela,
+    horasRestantes: Math.round(horasRestantes),
+  });
+});
+
+// POST /api/age/:slug/appointments/by-token/:token/cancel
+router.post("/age/:slug/appointments/by-token/:token/cancel", async (req, res): Promise<void> => {
+  const { slug, token } = req.params;
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, email: ageProfessionalsTable.email })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [appt] = await db.select().from(ageAppointmentsTable)
+    .where(and(
+      eq(ageAppointmentsTable.professionalId, prof.id),
+      eq((ageAppointmentsTable as any).cancelToken, token!),
+    )).limit(1);
+
+  if (!appt) { res.status(404).json({ error: "Agendamento não encontrado." }); return; }
+  if (["cancelado", "realizado", "faltou"].includes(appt.status)) {
+    res.status(409).json({ error: `Agendamento já está ${appt.status}.` }); return;
+  }
+
+  const cancelMinHoras = (prof as any).cancelMinHoras ?? 24;
+  const horasRestantes = (appt.dataHora.getTime() - Date.now()) / 3600000;
+  if (horasRestantes < cancelMinHoras) {
+    res.status(422).json({
+      error: `Cancelamento só é permitido com ${cancelMinHoras}h de antecedência. Faltam ${Math.round(horasRestantes)}h para a consulta. Entre em contato diretamente com ${prof.nome}.`,
+    });
+    return;
+  }
+
+  await db.update(ageAppointmentsTable)
+    .set({ status: "cancelado", updatedAt: new Date() })
+    .where(eq(ageAppointmentsTable.id, appt.id));
+
+  const dt = appt.dataHora.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+
+  if (appt.patientEmail) {
+    sendEmail(
+      appt.patientEmail,
+      `Consulta cancelada — ${prof.nome}`,
+      `Olá ${appt.patientNome ?? ""},\n\nSua consulta do dia ${dt} com ${prof.nome} foi cancelada.\n\nSe quiser remarcar, entre em contato ou acesse o site.\n\n— SABIÁ`,
+    ).catch(e => logger.error({ err: e }, "age: sendEmail cancel patient"));
+  }
+  if (prof.email) {
+    sendEmail(
+      prof.email,
+      `Age — Consulta cancelada: ${appt.patientNome ?? "paciente"}`,
+      `Olá ${prof.nome},\n\n${appt.patientNome ?? "Um paciente"} cancelou a consulta do dia ${dt}.\n\nO horário está novamente disponível.\n\n— SABIÁ`,
+    ).catch(e => logger.error({ err: e }, "age: sendEmail cancel prof"));
+  }
+
+  res.json({ ok: true, message: "Consulta cancelada com sucesso." });
+});
+
+// GET /api/age/:slug/appointments/by-token/:token/reschedule-slots — slots disponíveis para remarcar
+router.get("/age/:slug/appointments/by-token/:token/reschedule-slots", async (req, res): Promise<void> => {
+  const { slug, token } = req.params;
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [appt] = await db.select({ id: ageAppointmentsTable.id, status: ageAppointmentsTable.status })
+    .from(ageAppointmentsTable)
+    .where(and(
+      eq(ageAppointmentsTable.professionalId, prof.id),
+      eq((ageAppointmentsTable as any).cancelToken, token!),
+    )).limit(1);
+  if (!appt) { res.status(404).json({ error: "Agendamento não encontrado." }); return; }
+  if (["cancelado", "realizado", "faltou"].includes(appt.status)) {
+    res.status(409).json({ error: "Este agendamento não pode ser remarcado." }); return;
+  }
+
+  const de  = new Date();
+  const ate = new Date(Date.now() + 45 * 864e5);
+  ate.setHours(23, 59, 59, 999);
+
+  const rules = await db.select().from(ageAvailabilityRulesTable)
+    .where(and(eq(ageAvailabilityRulesTable.professionalId, prof.id), eq(ageAvailabilityRulesTable.ativa, true)));
+
+  const booked = await db.select({ dataHora: ageAppointmentsTable.dataHora })
+    .from(ageAppointmentsTable)
+    .where(and(
+      eq(ageAppointmentsTable.professionalId, prof.id),
+      gte(ageAppointmentsTable.dataHora, de),
+      lte(ageAppointmentsTable.dataHora, ate),
+      not(inArray(ageAppointmentsTable.status, ["cancelado", "remarcado"])),
+      sql`id != ${appt.id}`,
+    ));
+
+  const exceptions = await db.select({
+    data: ageExceptionsTable.data,
+    horaInicio: ageExceptionsTable.horaInicio,
+    horaFim: ageExceptionsTable.horaFim,
+  }).from(ageExceptionsTable)
+    .where(and(
+      eq(ageExceptionsTable.professionalId, prof.id),
+      gte(ageExceptionsTable.data, de.toISOString().slice(0, 10)),
+      lte(ageExceptionsTable.data, ate.toISOString().slice(0, 10)),
+    ));
+
+  const bookedSet = new Set(booked.map(b => b.dataHora.getTime()));
+  const now = Date.now();
+
+  const slots = generateSlots(rules, de, ate, exceptions)
+    .filter(s => s.dataHora.getTime() > now && !bookedSet.has(s.dataHora.getTime()))
+    .map(s => ({ dataHora: s.dataHora.toISOString(), duracaoMin: s.duracaoMin, canal: s.canal }));
+
+  res.json(slots);
+});
+
+// POST /api/age/:slug/appointments/by-token/:token/reschedule — confirma remarcação
+router.post("/age/:slug/appointments/by-token/:token/reschedule", async (req, res): Promise<void> => {
+  const { slug, token } = req.params;
+  const { novaDataHora } = req.body as { novaDataHora?: string };
+  if (!novaDataHora) { res.status(400).json({ error: "novaDataHora obrigatório" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, email: ageProfessionalsTable.email, cancelMinHoras: (ageProfessionalsTable as any).cancelMinHoras })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [appt] = await db.select().from(ageAppointmentsTable)
+    .where(and(
+      eq(ageAppointmentsTable.professionalId, prof.id),
+      eq((ageAppointmentsTable as any).cancelToken, token!),
+    )).limit(1);
+  if (!appt) { res.status(404).json({ error: "Agendamento não encontrado." }); return; }
+  if (["cancelado", "realizado", "faltou", "remarcado"].includes(appt.status)) {
+    res.status(409).json({ error: "Este agendamento não pode ser remarcado." }); return;
+  }
+
+  const cancelMinHoras = (prof as any).cancelMinHoras ?? 24;
+  const horasRestantes = (appt.dataHora.getTime() - Date.now()) / 3600000;
+  if (horasRestantes < cancelMinHoras) {
+    res.status(422).json({
+      error: `Remarcação só é permitida com ${cancelMinHoras}h de antecedência. Entre em contato diretamente com ${prof.nome}.`,
+    });
+    return;
+  }
+
+  // Verificar se novo slot está livre
+  const [conflito] = await db.select({ id: ageAppointmentsTable.id })
+    .from(ageAppointmentsTable)
+    .where(and(
+      eq(ageAppointmentsTable.professionalId, prof.id),
+      eq(ageAppointmentsTable.dataHora, new Date(novaDataHora)),
+      not(inArray(ageAppointmentsTable.status, ["cancelado", "remarcado"])),
+    )).limit(1);
+  if (conflito) { res.status(409).json({ error: "Horário já ocupado. Escolha outro." }); return; }
+
+  // Marcar original como "remarcado" e criar novo agendamento
+  await db.update(ageAppointmentsTable)
+    .set({ status: "remarcado", updatedAt: new Date() })
+    .where(eq(ageAppointmentsTable.id, appt.id));
+
+  const newToken = randomUUID();
+  const [newAppt] = await db.insert(ageAppointmentsTable).values({
+    professionalId: prof.id,
+    patientNome: appt.patientNome,
+    patientTelefone: appt.patientTelefone,
+    patientEmail: appt.patientEmail,
+    dataHora: new Date(novaDataHora),
+    duracaoMin: appt.duracaoMin,
+    status: "reservado",
+    canal: appt.canal,
+    lgpdConsent: appt.lgpdConsent ?? false,
+    lgpdConsentAt: appt.lgpdConsentAt,
+    cancelToken: newToken,
+    remarcadoDeId: appt.id,
+  } as any).returning();
+
+  const dtAntes = appt.dataHora.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+  const dtNovo  = new Date(novaDataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+  const cancelLink     = `${FRONT_URL}/age/${slug}?cancel=${newToken}`;
+  const rescheduleLink = `${FRONT_URL}/age/${slug}?reschedule=${newToken}`;
+
+  if (appt.patientEmail) {
+    sendEmail(
+      appt.patientEmail,
+      `Consulta remarcada — ${prof.nome}`,
+      `Olá ${appt.patientNome ?? ""},\n\nSua consulta foi remarcada!\n\n✅ Novo horário: ${dtNovo}\n❌ Horário anterior: ${dtAntes}\n\nPrecisa cancelar ou remarcar novamente?\n• Cancelar: ${cancelLink}\n• Remarcar: ${rescheduleLink}\n\n— SABIÁ`,
+    ).catch(e => logger.error({ err: e }, "age: sendEmail reschedule patient"));
+  }
+  if (prof.email) {
+    sendEmail(
+      prof.email,
+      `Age — Consulta remarcada: ${appt.patientNome ?? "paciente"}`,
+      `Olá ${prof.nome},\n\n${appt.patientNome ?? "Um paciente"} remarcou a consulta:\n❌ Antes: ${dtAntes}\n✅ Agora: ${dtNovo}\n\n— SABIÁ`,
+    ).catch(e => logger.error({ err: e }, "age: sendEmail reschedule prof"));
+  }
+
+  res.status(201).json({ ok: true, appt: newAppt, message: "Consulta remarcada com sucesso!" });
 });
 
 // PATCH /api/age/:slug/appointments/:id (auth required)

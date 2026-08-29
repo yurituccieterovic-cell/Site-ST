@@ -109,6 +109,19 @@ export function AgePage() {
   const [confirmStatus, setConfirmStatus] = useState<"loading" | "ok" | "error" | null>(null);
   const [confirmMsg, setConfirmMsg] = useState("");
 
+  // Cancelamento / reagendamento por token (via ?cancel= e ?reschedule=)
+  type TokenApptInfo = {
+    id: number; dataHora: string; duracaoMin: number; status: string; canal: string;
+    patientNome?: string; profNome: string; cancelMinHoras: number; dentroJanela: boolean; horasRestantes: number;
+  };
+  const [tokenFlow, setTokenFlow] = useState<"cancel" | "reschedule" | null>(null);
+  const [tokenValue, setTokenValue] = useState("");
+  const [tokenAppt, setTokenAppt] = useState<TokenApptInfo | null>(null);
+  const [tokenStatus, setTokenStatus] = useState<"loading" | "info" | "done" | "error">("loading");
+  const [tokenMsg, setTokenMsg] = useState("");
+  const [rescheduleSlots, setRescheduleSlots] = useState<Slot[]>([]);
+  const [rescheduleSelected, setRescheduleSelected] = useState<Slot | null>(null);
+
   // SABIÁ chat
   const [msgs, setMsgs] = useState<ChatMsg[]>([
     { role: "assistant", content: "Olá! Sou a SABIÁ, sua assistente de agenda. Pode perguntar sobre sua semana, seus pacientes ou pedir sugestões. 🐦" }
@@ -234,11 +247,40 @@ export function AgePage() {
       .then((d: { ok?: boolean; message?: string; error?: string }) => {
         if (d.ok) { setConfirmStatus("ok"); setConfirmMsg(d.message ?? "Email confirmado!"); }
         else       { setConfirmStatus("error"); setConfirmMsg(d.error ?? "Link inválido."); }
-        // Limpar query param sem recarregar
         window.history.replaceState({}, "", window.location.pathname);
       })
       .catch(() => { setConfirmStatus("error"); setConfirmMsg("Sem conexão."); });
   }, [slug]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Cancelamento / reagendamento via ?cancel= ou ?reschedule= na URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const cancelTok = params.get("cancel");
+    const rescheduleTok = params.get("reschedule");
+    const tok = cancelTok ?? rescheduleTok;
+    const flow = cancelTok ? "cancel" : rescheduleTok ? "reschedule" : null;
+    if (!tok || !flow || !slug || loading) return;
+
+    setTokenFlow(flow);
+    setTokenValue(tok);
+    setTokenStatus("loading");
+    window.history.replaceState({}, "", window.location.pathname);
+
+    fetch(`${API}/api/age/${slug}/appointments/by-token/${tok}`)
+      .then(r => r.json())
+      .then((d: TokenApptInfo & { error?: string }) => {
+        if (d.error) { setTokenStatus("error"); setTokenMsg(d.error); return; }
+        setTokenAppt(d);
+        setTokenStatus("info");
+        if (flow === "reschedule") {
+          fetch(`${API}/api/age/${slug}/appointments/by-token/${tok}/reschedule-slots`)
+            .then(r => r.json())
+            .then((s: Slot[]) => setRescheduleSlots(s))
+            .catch(() => {});
+        }
+      })
+      .catch(() => { setTokenStatus("error"); setTokenMsg("Sem conexão. Tente novamente."); });
+  }, [slug, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     msgBottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -422,6 +464,32 @@ export function AgePage() {
       setMsgs(m => [...m, { role: "assistant", content: "Sem conexão no momento." }]);
     }
     setSabiaLoading(false);
+  }
+
+  async function handleCancelByToken() {
+    if (!tokenValue || !slug) return;
+    setTokenStatus("loading");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/appointments/by-token/${tokenValue}/cancel`, { method: "POST" });
+      const d = await r.json() as { ok?: boolean; message?: string; error?: string };
+      if (d.ok) { setTokenStatus("done"); setTokenMsg(d.message ?? "Consulta cancelada."); }
+      else { setTokenStatus("error"); setTokenMsg(d.error ?? "Erro ao cancelar."); }
+    } catch { setTokenStatus("error"); setTokenMsg("Sem conexão. Tente novamente."); }
+  }
+
+  async function handleRescheduleByToken() {
+    if (!tokenValue || !slug || !rescheduleSelected) return;
+    setTokenStatus("loading");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/appointments/by-token/${tokenValue}/reschedule`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ novaDataHora: rescheduleSelected.dataHora }),
+      });
+      const d = await r.json() as { ok?: boolean; message?: string; error?: string };
+      if (d.ok) { setTokenStatus("done"); setTokenMsg(d.message ?? "Consulta remarcada!"); }
+      else { setTokenStatus("error"); setTokenMsg(d.error ?? "Erro ao remarcar."); }
+    } catch { setTokenStatus("error"); setTokenMsg("Sem conexão. Tente novamente."); }
   }
 
   // ─── Render helpers ──────────────────────────────────────────────────────────
@@ -1185,6 +1253,112 @@ export function AgePage() {
             <span style={{ color: confirmStatus === "ok" ? "#4ade80" : "#f87171", fontSize: 14 }}>
               {confirmStatus === "loading" ? "Confirmando…" : confirmMsg}
             </span>
+          </div>
+        )}
+
+        {/* Fluxo de cancelamento / reagendamento por token */}
+        {tokenFlow && (
+          <div style={{ margin: "1.5rem 1rem" }}>
+            <div style={{ background: "#0a0f16", border: `1px solid ${color}33`, borderRadius: 14, padding: "1.5rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                <span style={{ fontSize: 28 }}>{tokenFlow === "cancel" ? "❌" : "🔄"}</span>
+                <div>
+                  <div style={{ color, fontWeight: 700, fontSize: 16 }}>
+                    {tokenFlow === "cancel" ? "Cancelar consulta" : "Remarcar consulta"}
+                  </div>
+                  <div style={{ color: "#64748b", fontSize: 12 }}>via SABIÁ 🐦</div>
+                </div>
+              </div>
+
+              {tokenStatus === "loading" && (
+                <div style={{ color: "#64748b", fontSize: 14 }}>Carregando informações…</div>
+              )}
+
+              {tokenStatus === "error" && (
+                <div style={{ color: "#f87171", fontSize: 14 }}>{tokenMsg}</div>
+              )}
+
+              {tokenStatus === "done" && (
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
+                  <div style={{ color: "#4ade80", fontSize: 15, fontWeight: 600 }}>{tokenMsg}</div>
+                  <button onClick={() => setTokenFlow(null)} style={{ marginTop: 20, background: colorDark, border: `1px solid ${color}44`, borderRadius: 8, color, padding: "8px 20px", cursor: "pointer", fontSize: 13 }}>
+                    Voltar
+                  </button>
+                </div>
+              )}
+
+              {tokenStatus === "info" && tokenAppt && (
+                <>
+                  <div style={{ background: "#131a24", borderRadius: 10, padding: "1rem", marginBottom: 16 }}>
+                    <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 4 }}>Sua consulta</div>
+                    <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 15, marginBottom: 4 }}>
+                      {fmtDate(tokenAppt.dataHora, { weekday: "long", day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" })}
+                    </div>
+                    <div style={{ color: "#64748b", fontSize: 12 }}>
+                      {tokenAppt.profNome} · {tokenAppt.canal} · {tokenAppt.duracaoMin} min
+                    </div>
+                    {!tokenAppt.dentroJanela && (
+                      <div style={{ marginTop: 10, color: "#fb923c", fontSize: 12, background: "#1c0a0a", borderRadius: 6, padding: "8px 10px" }}>
+                        Fora da janela de cancelamento ({tokenAppt.cancelMinHoras}h de antecedência necessária).
+                        Restam {tokenAppt.horasRestantes}h. Entre em contato com {tokenAppt.profNome} diretamente.
+                      </div>
+                    )}
+                  </div>
+
+                  {tokenFlow === "cancel" && tokenAppt.dentroJanela && (
+                    <>
+                      <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 16 }}>
+                        Tem certeza que deseja cancelar esta consulta?
+                      </div>
+                      <div style={{ display: "flex", gap: 10 }}>
+                        <button onClick={handleCancelByToken}
+                          style={{ flex: 1, background: "#1c0a0a", border: "1px solid #f8717155", borderRadius: 8, color: "#f87171", padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                          Sim, cancelar
+                        </button>
+                        <button onClick={() => setTokenFlow(null)}
+                          style={{ flex: 1, background: "#0a0f16", border: "1px solid #334155", borderRadius: 8, color: "#94a3b8", padding: "10px 0", fontSize: 14, cursor: "pointer" }}>
+                          Voltar
+                        </button>
+                      </div>
+                    </>
+                  )}
+
+                  {tokenFlow === "reschedule" && tokenAppt.dentroJanela && (
+                    <>
+                      <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 12 }}>
+                        Escolha um novo horário:
+                      </div>
+                      {rescheduleSlots.length === 0 ? (
+                        <div style={{ color: "#64748b", fontSize: 13 }}>Nenhum horário disponível nos próximos 45 dias.</div>
+                      ) : (
+                        <>
+                          <div style={{ maxHeight: 220, overflowY: "auto", display: "flex", flexDirection: "column", gap: 6, marginBottom: 16 }}>
+                            {rescheduleSlots.slice(0, 20).map(s => (
+                              <button key={s.dataHora} onClick={() => setRescheduleSelected(s)}
+                                style={{ background: rescheduleSelected?.dataHora === s.dataHora ? colorDark : "#131a24", border: `1px solid ${rescheduleSelected?.dataHora === s.dataHora ? color : "#1e293b"}`, borderRadius: 8, color: rescheduleSelected?.dataHora === s.dataHora ? color : "#94a3b8", padding: "8px 12px", fontSize: 13, cursor: "pointer", textAlign: "left" }}>
+                                {fmtDate(s.dataHora, { weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                                <span style={{ marginLeft: 8, fontSize: 11, opacity: 0.7 }}>{s.canal}</span>
+                              </button>
+                            ))}
+                          </div>
+                          <div style={{ display: "flex", gap: 10 }}>
+                            <button onClick={handleRescheduleByToken} disabled={!rescheduleSelected}
+                              style={{ flex: 1, background: rescheduleSelected ? color : "#1a2030", border: "none", borderRadius: 8, color: "#080c10", padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: rescheduleSelected ? "pointer" : "not-allowed" }}>
+                              Confirmar remarcação
+                            </button>
+                            <button onClick={() => setTokenFlow(null)}
+                              style={{ background: "#0a0f16", border: "1px solid #334155", borderRadius: 8, color: "#94a3b8", padding: "10px 16px", fontSize: 14, cursor: "pointer" }}>
+                              Voltar
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         )}
 
