@@ -268,7 +268,52 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS reset_token TEXT`);
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS reset_token_expira_at TIMESTAMPTZ`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_patients_reset_token ON age_patients(reset_token) WHERE reset_token IS NOT NULL`);
-  logger.info("bootstrap: age tables OK (+cancel_token +remarcado_de_id +cancel_min_horas +is_public +patient_auth)");
+  // Formulários e documentos (Fase 4)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_forms (
+      id              SERIAL PRIMARY KEY,
+      professional_id INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      titulo          TEXT NOT NULL,
+      descricao       TEXT,
+      tipo            TEXT NOT NULL DEFAULT 'formulario',
+      campos          JSONB NOT NULL DEFAULT '[]',
+      ativa           BOOLEAN NOT NULL DEFAULT true,
+      created_at      TIMESTAMPTZ DEFAULT NOW(),
+      updated_at      TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_form_responses (
+      id              SERIAL PRIMARY KEY,
+      form_id         INTEGER NOT NULL REFERENCES age_forms(id) ON DELETE CASCADE,
+      patient_id      INTEGER NOT NULL REFERENCES age_patients(id) ON DELETE CASCADE,
+      professional_id INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      respostas       JSONB NOT NULL DEFAULT '{}',
+      assinado_at     TIMESTAMPTZ,
+      assinado_ip     TEXT,
+      created_at      TIMESTAMPTZ DEFAULT NOW(),
+      updated_at      TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_documents (
+      id                     SERIAL PRIMARY KEY,
+      patient_id             INTEGER NOT NULL REFERENCES age_patients(id) ON DELETE CASCADE,
+      professional_id        INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      tipo                   TEXT NOT NULL DEFAULT 'documento',
+      filename               TEXT NOT NULL,
+      mimetype               TEXT,
+      tamanho_kb             INTEGER,
+      conteudo_b64           TEXT,
+      compartilhado_paciente BOOLEAN NOT NULL DEFAULT false,
+      descricao              TEXT,
+      created_at             TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_forms_prof ON age_forms(professional_id)`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_form_responses_patient ON age_form_responses(patient_id, form_id)`);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_documents_patient ON age_documents(patient_id, professional_id)`);
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

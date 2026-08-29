@@ -151,10 +151,34 @@ export function AgePage() {
   const [patientLoginLoading, setPatientLoginLoading] = useState(false);
   const [patientAppts, setPatientAppts] = useState<PatientAppt[]>([]);
   const [patientApptLoading, setPatientApptLoading] = useState(false);
-  const [patientView, setPatientView] = useState<"appointments" | "password">("appointments");
+  const [patientView, setPatientView] = useState<"appointments" | "password" | "docs" | "forms">("appointments");
   const [patientPwForm, setPatientPwForm] = useState({ current: "", next: "" });
   const [patientPwError, setPatientPwError] = useState("");
   const [patientPwOk, setPatientPwOk] = useState(false);
+  // Área do paciente — docs e formulários
+  type PatientDoc = { id: number; tipo: string; filename: string; mimetype?: string | null; tamanhoKb?: number | null; descricao?: string | null; createdAt: string };
+  type PatientForm = { id: number; titulo: string; descricao?: string | null; tipo: string; campos: { label: string; tipo: string; opcoes?: string[]; obrigatorio?: boolean }[] };
+  const [patientDocs, setPatientDocs] = useState<PatientDoc[]>([]);
+  const [patientDocsLoading, setPatientDocsLoading] = useState(false);
+  const [patientForms, setPatientForms] = useState<{ pending: PatientForm[]; completed: number[] }>({ pending: [], completed: [] });
+  const [patientFormsLoading, setPatientFormsLoading] = useState(false);
+  const [activeFormId, setActiveFormId] = useState<number | null>(null);
+  const [formAnswers, setFormAnswers] = useState<Record<number, unknown>>({});
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSubmitMsg, setFormSubmitMsg] = useState("");
+
+  // Profissional — painel do paciente selecionado
+  type SelPatientDoc = { id: number; tipo: string; filename: string; tamanhoKb?: number | null; compartilhadoPaciente: boolean; descricao?: string | null; createdAt: string };
+  type SelPatientFormResp = { id: number; formId: number; formTitulo?: string | null; formTipo?: string | null; assinadoAt?: string | null; createdAt: string };
+  const [selectedPatientTab, setSelectedPatientTab] = useState<"info" | "docs" | "forms">("info");
+  const [selectedPatientDocs, setSelectedPatientDocs] = useState<SelPatientDoc[]>([]);
+  const [selectedPatientForms, setSelectedPatientForms] = useState<SelPatientFormResp[]>([]);
+  const [docUploadFile, setDocUploadFile] = useState<File | null>(null);
+  const [docUploadTipo, setDocUploadTipo] = useState("documento");
+  const [docUploadDesc, setDocUploadDesc] = useState("");
+  const [docUploading, setDocUploading] = useState(false);
+  const [docUploadMsg, setDocUploadMsg] = useState("");
+
   // Recuperação de senha
   const [forgotMode, setForgotMode] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
@@ -338,6 +362,28 @@ export function AgePage() {
       .catch(() => {})
       .finally(() => setPatientApptLoading(false));
   }, [mode, slug]);
+
+  // Carregar docs do paciente ao mudar para aba "docs"
+  useEffect(() => {
+    if (mode !== "patient" || patientView !== "docs" || !slug) return;
+    setPatientDocsLoading(true);
+    fetch(`${API}/api/age/${slug}/patients/my/documents`, { credentials: "include" })
+      .then(r => r.json())
+      .then((d: PatientDoc[]) => setPatientDocs(d))
+      .catch(() => {})
+      .finally(() => setPatientDocsLoading(false));
+  }, [mode, patientView, slug]);
+
+  // Carregar formulários do paciente ao mudar para aba "forms"
+  useEffect(() => {
+    if (mode !== "patient" || patientView !== "forms" || !slug) return;
+    setPatientFormsLoading(true);
+    fetch(`${API}/api/age/${slug}/patients/my/forms`, { credentials: "include" })
+      .then(r => r.json())
+      .then((d: { pending: PatientForm[]; completed: number[] }) => setPatientForms(d))
+      .catch(() => {})
+      .finally(() => setPatientFormsLoading(false));
+  }, [mode, patientView, slug]);
 
   useEffect(() => {
     msgBottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -617,6 +663,76 @@ export function AgePage() {
     } catch { setTokenStatus("error"); setTokenMsg("Sem conexão. Tente novamente."); }
   }
 
+  // Carregar docs e forms do paciente selecionado (painel profissional)
+  async function loadSelectedPatientDocs(patientId: number) {
+    const r = await fetch(`${API}/api/age/${slug}/patients/${patientId}/documents`, { credentials: "include" });
+    const d = await r.json() as SelPatientDoc[];
+    setSelectedPatientDocs(d);
+  }
+  async function loadSelectedPatientForms(patientId: number) {
+    const r = await fetch(`${API}/api/age/${slug}/patients/${patientId}/form-responses`, { credentials: "include" });
+    const d = await r.json() as SelPatientFormResp[];
+    setSelectedPatientForms(d);
+  }
+
+  async function handleDocUpload(patientId: number) {
+    if (!docUploadFile) return;
+    setDocUploading(true); setDocUploadMsg("");
+    const fd = new FormData();
+    fd.append("file", docUploadFile);
+    fd.append("tipo", docUploadTipo);
+    if (docUploadDesc) fd.append("descricao", docUploadDesc);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/${patientId}/documents`, { method: "POST", credentials: "include", body: fd });
+      const d = await r.json() as { id?: number; error?: string };
+      if (d.id) {
+        setDocUploadMsg("Documento enviado!");
+        setDocUploadFile(null); setDocUploadTipo("documento"); setDocUploadDesc("");
+        loadSelectedPatientDocs(patientId);
+      } else { setDocUploadMsg(d.error ?? "Erro ao enviar"); }
+    } catch { setDocUploadMsg("Sem conexão."); }
+    finally { setDocUploading(false); }
+  }
+
+  async function handleToggleShareDoc(docId: number, shared: boolean, patientId: number) {
+    await fetch(`${API}/api/age/${slug}/documents/${docId}`, {
+      method: "PATCH", credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ compartilhadoPaciente: shared }),
+    });
+    loadSelectedPatientDocs(patientId);
+  }
+
+  async function handleDeleteDoc(docId: number, patientId: number) {
+    await fetch(`${API}/api/age/${slug}/documents/${docId}`, { method: "DELETE", credentials: "include" });
+    loadSelectedPatientDocs(patientId);
+  }
+
+  // Submeter formulário (área do paciente)
+  async function handleFormSubmit(formId: number) {
+    setFormSubmitting(true); setFormSubmitMsg("");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/my/form-responses`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ formId, respostas: formAnswers, assinar: true }),
+      });
+      const d = await r.json() as { id?: number; error?: string };
+      if (d.id) {
+        setFormSubmitMsg("Formulário enviado com sucesso!");
+        setActiveFormId(null); setFormAnswers({});
+        // Recarregar lista
+        setPatientFormsLoading(true);
+        fetch(`${API}/api/age/${slug}/patients/my/forms`, { credentials: "include" })
+          .then(rr => rr.json())
+          .then((dd: { pending: PatientForm[]; completed: number[] }) => setPatientForms(dd))
+          .catch(() => {})
+          .finally(() => setPatientFormsLoading(false));
+      } else { setFormSubmitMsg(d.error ?? "Erro ao enviar formulário."); }
+    } catch { setFormSubmitMsg("Sem conexão."); }
+    finally { setFormSubmitting(false); }
+  }
+
   // ─── Render helpers ──────────────────────────────────────────────────────────
 
   const color = prof?.cor ?? "#2dd4bf";
@@ -644,7 +760,7 @@ export function AgePage() {
             <span style={{ fontSize: 28 }}>🐦</span>
             <div>
               <div style={{ color, fontWeight: 700, fontSize: 16 }}>SABIÁ</div>
-              <div style={{ color: "#64748b", fontSize: 12 }}>Acesso profissional — {prof.nome}</div>
+              <div style={{ color: "#64748b", fontSize: 12 }}>Acesso profissional — {prof!.nome}</div>
             </div>
           </div>
 
@@ -799,12 +915,12 @@ export function AgePage() {
           {!showRegister ? (
             <button onClick={() => setShowRegister(true)}
               style={{ width: "100%", background: "transparent", border: `1px solid ${color}33`, borderRadius: 8, color: "#64748b", padding: "10px 0", cursor: "pointer", fontSize: 13 }}>
-              Registrar-se como paciente de {prof.nome}
+              Registrar-se como paciente de {prof!.nome}
             </button>
           ) : regDone ? (
             <div style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 10, padding: "12px 16px" }}>
               <div style={{ color: "#4ade80", fontWeight: 700, fontSize: 14, marginBottom: 4 }}>Cadastro enviado!</div>
-              <div style={{ color: "#94a3b8", fontSize: 13 }}>Verifique seu email para confirmar. Após a confirmação, {prof.nome} receberá uma notificação.</div>
+              <div style={{ color: "#94a3b8", fontSize: 13 }}>Verifique seu email para confirmar. Após a confirmação, {prof!.nome} receberá uma notificação.</div>
             </div>
           ) : (
             <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem" }}>
@@ -986,45 +1102,137 @@ export function AgePage() {
 
             {/* Painel expandido */}
             {selectedPatient?.id === p.id && (
-              <div style={{ marginTop: 12, borderTop: `1px solid ${color}22`, paddingTop: 12 }}>
-                <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 8 }}>
-                  Cadastrado em {new Date(p.createdAt).toLocaleDateString("pt-BR")}
-                </div>
-                <textarea
-                  placeholder="Observações internas (não visíveis ao paciente)"
-                  value={p.observacoesPro ?? ""}
-                  onClick={e => e.stopPropagation()}
-                  onChange={e => setSelectedPatient({ ...p, observacoesPro: e.target.value })}
-                  onBlur={() => updatePatient(p.id, { observacoesPro: selectedPatient.observacoesPro ?? "" })}
-                  rows={2}
-                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 12, resize: "vertical", boxSizing: "border-box" }}
-                />
-                <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
-                  {p.status === "pendente_aprovacao" && (
-                    <>
-                      <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "aprovado" }); }}
-                        style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 8, color: "#4ade80", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
-                        ✓ Aprovar
-                      </button>
-                      <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "recusado" }); }}
-                        style={{ background: "#1f0a0a", border: "1px solid #f8717155", borderRadius: 8, color: "#f87171", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
-                        ✕ Recusar
-                      </button>
-                    </>
-                  )}
-                  {p.status === "aprovado" && (
-                    <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "suspenso" }); }}
-                      style={{ background: "#1c1005", border: "1px solid #f9731655", borderRadius: 8, color: "#f97316", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
-                      Suspender
+              <div style={{ marginTop: 12, borderTop: `1px solid ${color}22`, paddingTop: 12 }} onClick={e => e.stopPropagation()}>
+                {/* Tabs internas */}
+                <div style={{ display: "flex", borderBottom: "1px solid #1e293b", marginBottom: 12 }}>
+                  {([["info", "Info"], ["docs", "Docs"], ["forms", "Formulários"]] as const).map(([tab, label]) => (
+                    <button key={tab} onClick={e => {
+                      e.stopPropagation();
+                      setSelectedPatientTab(tab);
+                      if (tab === "docs") loadSelectedPatientDocs(p.id);
+                      if (tab === "forms") loadSelectedPatientForms(p.id);
+                    }}
+                      style={{ padding: "6px 12px", background: "none", border: "none", borderBottom: selectedPatientTab === tab ? `2px solid ${color}` : "2px solid transparent", color: selectedPatientTab === tab ? color : "#64748b", cursor: "pointer", fontSize: 12, fontWeight: selectedPatientTab === tab ? 700 : 400 }}>
+                      {label}
                     </button>
-                  )}
-                  {(p.status === "recusado" || p.status === "suspenso") && (
-                    <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "aprovado" }); }}
-                      style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 8, color: "#4ade80", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
-                      Reativar
-                    </button>
-                  )}
+                  ))}
                 </div>
+
+                {/* Tab Info */}
+                {selectedPatientTab === "info" && (
+                  <>
+                    <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 8 }}>
+                      Cadastrado em {new Date(p.createdAt).toLocaleDateString("pt-BR")}
+                    </div>
+                    <textarea
+                      placeholder="Observações internas (não visíveis ao paciente)"
+                      value={p.observacoesPro ?? ""}
+                      onChange={e => setSelectedPatient({ ...p, observacoesPro: e.target.value })}
+                      onBlur={() => updatePatient(p.id, { observacoesPro: selectedPatient.observacoesPro ?? "" })}
+                      rows={2}
+                      style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 12, resize: "vertical", boxSizing: "border-box" }}
+                    />
+                    <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+                      {p.status === "pendente_aprovacao" && (
+                        <>
+                          <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "aprovado" }); }}
+                            style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 8, color: "#4ade80", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                            ✓ Aprovar
+                          </button>
+                          <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "recusado" }); }}
+                            style={{ background: "#1f0a0a", border: "1px solid #f8717155", borderRadius: 8, color: "#f87171", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                            ✕ Recusar
+                          </button>
+                        </>
+                      )}
+                      {p.status === "aprovado" && (
+                        <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "suspenso" }); }}
+                          style={{ background: "#1c1005", border: "1px solid #f9731655", borderRadius: 8, color: "#f97316", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                          Suspender
+                        </button>
+                      )}
+                      {(p.status === "recusado" || p.status === "suspenso") && (
+                        <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "aprovado" }); }}
+                          style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 8, color: "#4ade80", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                          Reativar
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* Tab Docs */}
+                {selectedPatientTab === "docs" && (
+                  <div>
+                    {/* Upload */}
+                    <div style={{ background: "#080c10", border: `1px solid ${color}22`, borderRadius: 10, padding: "12px", marginBottom: 12 }}>
+                      <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8 }}>Enviar documento</div>
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+                        <select value={docUploadTipo} onChange={e => setDocUploadTipo(e.target.value)}
+                          style={{ background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", fontSize: 12, padding: "4px 8px" }}>
+                          {["documento", "exame", "receita", "laudo", "contrato", "outro"].map(t => (
+                            <option key={t} value={t}>{t}</option>
+                          ))}
+                        </select>
+                        <input type="text" placeholder="Descrição (opcional)" value={docUploadDesc}
+                          onChange={e => setDocUploadDesc(e.target.value)}
+                          style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", fontSize: 12, padding: "4px 8px" }} />
+                      </div>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                        <input type="file" accept="*/*" onChange={e => setDocUploadFile(e.target.files?.[0] ?? null)}
+                          style={{ fontSize: 12, color: "#94a3b8", flex: 1 }} />
+                        <button onClick={() => handleDocUpload(p.id)} disabled={!docUploadFile || docUploading}
+                          style={{ background: color, color: "#080c10", border: "none", borderRadius: 6, padding: "5px 14px", fontWeight: 700, fontSize: 12, cursor: "pointer", whiteSpace: "nowrap" }}>
+                          {docUploading ? "…" : "Enviar"}
+                        </button>
+                      </div>
+                      {docUploadMsg && <div style={{ color: docUploadMsg.includes("!") ? "#4ade80" : "#f87171", fontSize: 12, marginTop: 6 }}>{docUploadMsg}</div>}
+                    </div>
+
+                    {/* Lista */}
+                    {selectedPatientDocs.length === 0 ? (
+                      <div style={{ color: "#475569", fontSize: 13, textAlign: "center", padding: "1rem 0" }}>Nenhum documento ainda.</div>
+                    ) : selectedPatientDocs.map(doc => (
+                      <div key={doc.id} style={{ background: "#0a0f16", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 12px", marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.filename}</div>
+                          <div style={{ color: "#64748b", fontSize: 11 }}>{doc.tipo}{doc.tamanhoKb ? ` · ${doc.tamanhoKb}KB` : ""}{doc.descricao ? ` · ${doc.descricao}` : ""}</div>
+                        </div>
+                        <div style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
+                          <button onClick={() => handleToggleShareDoc(doc.id, !doc.compartilhadoPaciente, p.id)}
+                            title={doc.compartilhadoPaciente ? "Ocultar do paciente" : "Compartilhar com paciente"}
+                            style={{ background: doc.compartilhadoPaciente ? "#052e16" : "#1a2030", border: `1px solid ${doc.compartilhadoPaciente ? "#4ade80" : "#334155"}55`, borderRadius: 6, color: doc.compartilhadoPaciente ? "#4ade80" : "#94a3b8", padding: "4px 8px", cursor: "pointer", fontSize: 11 }}>
+                            {doc.compartilhadoPaciente ? "Partilhado" : "Oculto"}
+                          </button>
+                          <a href={`${API}/api/age/${slug}/documents/${doc.id}/download`} target="_blank" rel="noreferrer"
+                            style={{ fontSize: 11, color, background: colorDark, borderRadius: 6, padding: "4px 8px", textDecoration: "none" }}>
+                            Baixar
+                          </a>
+                          <button onClick={() => handleDeleteDoc(doc.id, p.id)}
+                            style={{ background: "#1f0a0a", border: "1px solid #f8717133", borderRadius: 6, color: "#f87171", padding: "4px 8px", cursor: "pointer", fontSize: 11 }}>
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Tab Formulários */}
+                {selectedPatientTab === "forms" && (
+                  <div>
+                    {selectedPatientForms.length === 0 ? (
+                      <div style={{ color: "#475569", fontSize: 13, textAlign: "center", padding: "1rem 0" }}>Nenhuma resposta de formulário ainda.</div>
+                    ) : selectedPatientForms.map(resp => (
+                      <div key={resp.id} style={{ background: "#0a0f16", border: "1px solid #1e293b", borderRadius: 8, padding: "10px 12px", marginBottom: 8 }}>
+                        <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 600 }}>{resp.formTitulo ?? `Form #${resp.formId}`}</div>
+                        <div style={{ color: "#64748b", fontSize: 11, marginTop: 2 }}>
+                          {resp.formTipo} · {resp.assinadoAt ? `Assinado em ${new Date(resp.assinadoAt).toLocaleDateString("pt-BR")}` : `Enviado em ${new Date(resp.createdAt).toLocaleDateString("pt-BR")}`}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -1344,7 +1552,7 @@ export function AgePage() {
           <span style={{ fontSize: 28 }}>🔑</span>
           <div>
             <div style={{ color, fontWeight: 700, fontSize: 16 }}>Criar sua senha</div>
-            <div style={{ color: "#64748b", fontSize: 12 }}>Área do paciente — {prof.nome}</div>
+            <div style={{ color: "#64748b", fontSize: 12 }}>Área do paciente — {prof!.nome}</div>
           </div>
         </div>
         <form onSubmit={handleSetPassword} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -1373,7 +1581,7 @@ export function AgePage() {
           <span style={{ fontSize: 28 }}>🐦</span>
           <div>
             <div style={{ color, fontWeight: 700, fontSize: 16 }}>Área do paciente</div>
-            <div style={{ color: "#64748b", fontSize: 12 }}>{prof.nome}</div>
+            <div style={{ color: "#64748b", fontSize: 12 }}>{prof!.nome}</div>
           </div>
         </div>
 
@@ -1464,7 +1672,7 @@ export function AgePage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <div>
             <div style={{ color, fontWeight: 700, fontSize: 16 }}>Olá, {patientNome}!</div>
-            <div style={{ color: "#64748b", fontSize: 12 }}>Área do paciente — {prof.nome}</div>
+            <div style={{ color: "#64748b", fontSize: 12 }}>Área do paciente — {prof!.nome}</div>
           </div>
           <button onClick={handlePatientLogout}
             style={{ background: "#1a2030", border: "1px solid #334155", borderRadius: 6, color: "#94a3b8", padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
@@ -1473,8 +1681,8 @@ export function AgePage() {
         </div>
 
         {/* Nav interna */}
-        <div style={{ display: "flex", borderBottom: "1px solid #1e293b", marginBottom: 20 }}>
-          {([["appointments", "Consultas"], ["password", "Senha"]] as const).map(([v, label]) => (
+        <div style={{ display: "flex", borderBottom: "1px solid #1e293b", marginBottom: 20, flexWrap: "wrap" }}>
+          {([["appointments", "Consultas"], ["docs", "Documentos"], ["forms", "Formulários"], ["password", "Senha"]] as const).map(([v, label]) => (
             <button key={v} onClick={() => setPatientView(v)}
               style={{ padding: "8px 14px", background: "none", border: "none", borderBottom: patientView === v ? `2px solid ${color}` : "2px solid transparent", color: patientView === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: patientView === v ? 700 : 400 }}>
               {label}
@@ -1510,6 +1718,142 @@ export function AgePage() {
           </>
         )}
 
+        {patientView === "docs" && (
+          <div>
+            {patientDocsLoading ? (
+              <div style={{ color: "#64748b", fontSize: 13 }}>Carregando…</div>
+            ) : patientDocs.length === 0 ? (
+              <div style={{ color: "#475569", fontSize: 14, textAlign: "center", padding: "2rem 0" }}>
+                Nenhum documento compartilhado com você ainda.
+              </div>
+            ) : patientDocs.map(doc => (
+              <div key={doc.id} style={{ background: "#0a0f16", border: "1px solid #1e293b", borderRadius: 10, padding: "12px 14px", marginBottom: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div>
+                    <div style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600 }}>{doc.filename}</div>
+                    <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{doc.tipo}{doc.tamanhoKb ? ` · ${doc.tamanhoKb}KB` : ""}{doc.descricao ? ` · ${doc.descricao}` : ""}</div>
+                  </div>
+                  <a href={`${API}/api/age/${slug}/documents/${doc.id}/download`}
+                    style={{ fontSize: 12, color, background: colorDark, borderRadius: 6, padding: "4px 10px", textDecoration: "none", whiteSpace: "nowrap" }}>
+                    Baixar
+                  </a>
+                </div>
+                <div style={{ color: "#334155", fontSize: 11, marginTop: 6 }}>
+                  {new Date(doc.createdAt).toLocaleDateString("pt-BR")}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {patientView === "forms" && (
+          <div>
+            {patientFormsLoading ? (
+              <div style={{ color: "#64748b", fontSize: 13 }}>Carregando…</div>
+            ) : (
+              <>
+                {formSubmitMsg && (
+                  <div style={{ color: formSubmitMsg.includes("sucesso") ? "#4ade80" : "#f87171", fontSize: 13, marginBottom: 14 }}>{formSubmitMsg}</div>
+                )}
+                {/* Formulário ativo */}
+                {activeFormId !== null && (() => {
+                  const form = patientForms.pending.find(f => f.id === activeFormId);
+                  if (!form) return null;
+                  return (
+                    <div style={{ background: "#0a0f16", border: `1px solid ${color}33`, borderRadius: 12, padding: "16px" }}>
+                      <div style={{ color, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{form.titulo}</div>
+                      {form.descricao && <div style={{ color: "#64748b", fontSize: 13, marginBottom: 14 }}>{form.descricao}</div>}
+                      {(form.campos as { label: string; tipo: string; opcoes?: string[]; obrigatorio?: boolean }[]).map((campo, idx) => (
+                        <div key={idx} style={{ marginBottom: 14 }}>
+                          <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 4 }}>
+                            {campo.label}{campo.obrigatorio ? " *" : ""}
+                          </div>
+                          {campo.tipo === "area" ? (
+                            <textarea rows={3} value={(formAnswers[idx] as string) ?? ""}
+                              onChange={e => setFormAnswers(a => ({ ...a, [idx]: e.target.value }))}
+                              style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 13, resize: "vertical", boxSizing: "border-box" }} />
+                          ) : campo.tipo === "select" || campo.tipo === "radio" ? (
+                            <select value={(formAnswers[idx] as string) ?? ""}
+                              onChange={e => setFormAnswers(a => ({ ...a, [idx]: e.target.value }))}
+                              style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 13 }}>
+                              <option value="">Selecionar…</option>
+                              {campo.opcoes?.map(o => <option key={o} value={o}>{o}</option>)}
+                            </select>
+                          ) : campo.tipo === "checkbox" ? (
+                            <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+                              <input type="checkbox" checked={!!formAnswers[idx]}
+                                onChange={e => setFormAnswers(a => ({ ...a, [idx]: e.target.checked }))} />
+                              <span style={{ color: "#e2e8f0", fontSize: 13 }}>Sim</span>
+                            </label>
+                          ) : campo.tipo === "escala" ? (
+                            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                              {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                                <button key={n} onClick={() => setFormAnswers(a => ({ ...a, [idx]: n }))}
+                                  style={{ width: 36, height: 36, borderRadius: 6, border: `1px solid ${color}44`, background: formAnswers[idx] === n ? color : "#1a2030", color: formAnswers[idx] === n ? "#080c10" : "#e2e8f0", fontWeight: 700, cursor: "pointer" }}>
+                                  {n}
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <input type={campo.tipo === "data" ? "date" : "text"}
+                              value={(formAnswers[idx] as string) ?? ""}
+                              onChange={e => setFormAnswers(a => ({ ...a, [idx]: e.target.value }))}
+                              style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 13, boxSizing: "border-box" }} />
+                          )}
+                        </div>
+                      ))}
+                      <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+                        <button onClick={() => handleFormSubmit(form.id)} disabled={formSubmitting}
+                          style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 20px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                          {formSubmitting ? "Enviando…" : "Assinar e Enviar"}
+                        </button>
+                        <button onClick={() => { setActiveFormId(null); setFormAnswers({}); }}
+                          style={{ background: "#1a2030", border: "1px solid #334155", borderRadius: 8, color: "#94a3b8", padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Lista de formulários pendentes */}
+                {activeFormId === null && (
+                  <>
+                    {patientForms.pending.length === 0 && patientForms.completed.length === 0 && (
+                      <div style={{ color: "#475569", fontSize: 14, textAlign: "center", padding: "2rem 0" }}>
+                        Nenhum formulário disponível.
+                      </div>
+                    )}
+                    {patientForms.pending.length > 0 && (
+                      <>
+                        <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Pendentes</div>
+                        {patientForms.pending.map(f => (
+                          <div key={f.id} style={{ background: "#0a0f16", border: `1px solid ${color}33`, borderRadius: 10, padding: "12px 14px", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <div>
+                              <div style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600 }}>{f.titulo}</div>
+                              {f.descricao && <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{f.descricao}</div>}
+                              <div style={{ color: "#64748b", fontSize: 11, marginTop: 2 }}>{f.tipo}</div>
+                            </div>
+                            <button onClick={() => { setActiveFormId(f.id); setFormAnswers({}); setFormSubmitMsg(""); }}
+                              style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "8px 16px", fontWeight: 700, fontSize: 12, cursor: "pointer", whiteSpace: "nowrap" }}>
+                              Preencher
+                            </button>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                    {patientForms.completed.length > 0 && (
+                      <div style={{ color: "#4ade80", fontSize: 12, marginTop: 10 }}>
+                        ✓ {patientForms.completed.length} formulário(s) já respondido(s).
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
         {patientView === "password" && (
           <form onSubmit={handlePatientChangePassword} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 360 }}>
             <div style={{ color: "#94a3b8", fontSize: 13 }}>Alterar senha</div>
@@ -1541,7 +1885,7 @@ export function AgePage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <img src="/aliancapanorama/age-logo.png" alt="Age" style={{ width: 32, height: 32, objectFit: "contain" }} />
             <div>
-              <div style={{ color, fontWeight: 700, fontSize: 15 }}>{prof.nome}</div>
+              <div style={{ color, fontWeight: 700, fontSize: 15 }}>{prof!.nome}</div>
               <div style={{ color: "#64748b", fontSize: 11 }}>{prof.tipo}{prof.registro ? ` · ${prof.registro}` : ""}</div>
             </div>
           </div>

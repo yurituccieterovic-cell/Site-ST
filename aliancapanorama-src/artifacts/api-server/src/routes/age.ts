@@ -1,16 +1,20 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { createTransport } from "nodemailer";
+import multer from "multer";
 import { db } from "@workspace/db";
 import {
   ageProfessionalsTable, ageAvailabilityRulesTable,
   ageAppointmentsTable, ageSabiaMemoryTable, ageExceptionsTable, agePatientsTable,
+  ageFormsTable, ageFormResponsesTable, ageDocumentsTable,
 } from "@workspace/db";
 import { randomUUID } from "crypto";
-import { eq, and, gte, lte, desc, not, inArray, sql } from "drizzle-orm";
+import { eq, and, gte, lte, desc, not, inArray, sql, isNull } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 
 const router = Router();
 
@@ -1092,13 +1096,13 @@ router.post("/age/:slug/patients/auth/set-password", async (req, res): Promise<v
 
 // POST /api/age/:slug/patients/auth/login
 router.post("/age/:slug/patients/auth/login", loginLimit, async (req, res): Promise<void> => {
-  const { slug } = req.params;
+  const slug = String(req.params.slug ?? "");
   const { email, password } = req.body as { email?: string; password?: string };
   if (!email || !password) { res.status(400).json({ error: "email e password obrigatórios" }); return; }
 
   const [prof] = await db.select({ id: ageProfessionalsTable.id })
     .from(ageProfessionalsTable)
-    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .where(and(eq(ageProfessionalsTable.slug, slug), eq(ageProfessionalsTable.ativa, true)))
     .limit(1);
   if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
 
@@ -1146,13 +1150,13 @@ router.post("/age/:slug/patients/auth/logout", (req, res) => {
 
 // POST /api/age/:slug/patients/auth/forgot-password
 router.post("/age/:slug/patients/auth/forgot-password", loginLimit, async (req, res): Promise<void> => {
-  const { slug } = req.params;
+  const slug = String(req.params.slug ?? "");
   const { email } = req.body as { email?: string };
   if (!email) { res.status(400).json({ error: "email obrigatório" }); return; }
 
   const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome })
     .from(ageProfessionalsTable)
-    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .where(and(eq(ageProfessionalsTable.slug, slug), eq(ageProfessionalsTable.ativa, true)))
     .limit(1);
   if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
 
@@ -1241,6 +1245,262 @@ router.get("/age/:slug/patients/my/appointments", requirePatientAuth, async (req
     .limit(50);
 
   res.json({ profNome: prof.nome, appointments: appts });
+});
+
+// ─── Formulários (profissional) ───────────────────────────────────────────────
+
+// GET /api/age/:slug/forms
+router.get("/age/:slug/forms", requireAgeAuth, async (req, res): Promise<void> => {
+  const forms = await db.select().from(ageFormsTable)
+    .where(and(eq(ageFormsTable.professionalId, req.session.ageProfessionalId!), eq(ageFormsTable.ativa, true)))
+    .orderBy(desc(ageFormsTable.createdAt));
+  res.json(forms);
+});
+
+// POST /api/age/:slug/forms
+router.post("/age/:slug/forms", requireAgeAuth, async (req, res): Promise<void> => {
+  const { titulo, descricao, tipo = "formulario", campos = [] } = req.body as { titulo?: string; descricao?: string; tipo?: string; campos?: unknown[] };
+  if (!titulo) { res.status(400).json({ error: "titulo obrigatório" }); return; }
+  const [form] = await db.insert(ageFormsTable)
+    .values({ professionalId: req.session.ageProfessionalId!, titulo, descricao, tipo, campos })
+    .returning();
+  res.status(201).json(form);
+});
+
+// PATCH /api/age/:slug/forms/:id
+router.patch("/age/:slug/forms/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  const { titulo, descricao, tipo, campos, ativa } = req.body as Record<string, unknown>;
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (titulo !== undefined) updates.titulo = titulo;
+  if (descricao !== undefined) updates.descricao = descricao;
+  if (tipo !== undefined) updates.tipo = tipo;
+  if (campos !== undefined) updates.campos = campos;
+  if (ativa !== undefined) updates.ativa = ativa;
+  const [updated] = await db.update(ageFormsTable).set(updates as any)
+    .where(and(eq(ageFormsTable.id, id), eq(ageFormsTable.professionalId, req.session.ageProfessionalId!)))
+    .returning();
+  if (!updated) { res.status(404).json({ error: "Formulário não encontrado" }); return; }
+  res.json(updated);
+});
+
+// DELETE /api/age/:slug/forms/:id — soft delete
+router.delete("/age/:slug/forms/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  await db.update(ageFormsTable).set({ ativa: false, updatedAt: new Date() } as any)
+    .where(and(eq(ageFormsTable.id, id), eq(ageFormsTable.professionalId, req.session.ageProfessionalId!)));
+  res.json({ ok: true });
+});
+
+// GET /api/age/:slug/patients/:patientId/form-responses (profissional vê respostas de paciente)
+router.get("/age/:slug/patients/:patientId/form-responses", requireAgeAuth, async (req, res): Promise<void> => {
+  const patientId = parseInt(req.params.patientId ?? "0", 10);
+  const responses = await db.select({
+    id:         ageFormResponsesTable.id,
+    formId:     ageFormResponsesTable.formId,
+    respostas:  ageFormResponsesTable.respostas,
+    assinadoAt: ageFormResponsesTable.assinadoAt,
+    createdAt:  ageFormResponsesTable.createdAt,
+    formTitulo: ageFormsTable.titulo,
+    formTipo:   ageFormsTable.tipo,
+    formCampos: ageFormsTable.campos,
+  }).from(ageFormResponsesTable)
+    .leftJoin(ageFormsTable, eq(ageFormResponsesTable.formId, ageFormsTable.id))
+    .where(and(
+      eq(ageFormResponsesTable.professionalId, req.session.ageProfessionalId!),
+      eq(ageFormResponsesTable.patientId, patientId),
+    )).orderBy(desc(ageFormResponsesTable.createdAt));
+  res.json(responses);
+});
+
+// ─── Documentos (profissional) ────────────────────────────────────────────────
+
+// GET /api/age/:slug/patients/:patientId/documents
+router.get("/age/:slug/patients/:patientId/documents", requireAgeAuth, async (req, res): Promise<void> => {
+  const patientId = parseInt(req.params.patientId ?? "0", 10);
+  const docs = await db.select({
+    id:                    ageDocumentsTable.id,
+    tipo:                  ageDocumentsTable.tipo,
+    filename:              ageDocumentsTable.filename,
+    mimetype:              ageDocumentsTable.mimetype,
+    tamanhoKb:             ageDocumentsTable.tamanhoKb,
+    compartilhadoPaciente: ageDocumentsTable.compartilhadoPaciente,
+    descricao:             ageDocumentsTable.descricao,
+    createdAt:             ageDocumentsTable.createdAt,
+  }).from(ageDocumentsTable)
+    .where(and(
+      eq(ageDocumentsTable.professionalId, req.session.ageProfessionalId!),
+      eq(ageDocumentsTable.patientId, patientId),
+    )).orderBy(desc(ageDocumentsTable.createdAt));
+  res.json(docs);
+});
+
+// POST /api/age/:slug/patients/:patientId/documents — upload (multipart)
+router.post("/age/:slug/patients/:patientId/documents", requireAgeAuth, upload.single("file"), async (req, res): Promise<void> => {
+  const patientId = parseInt(String(req.params.patientId ?? "0"), 10);
+  const { tipo = "documento", descricao, compartilhado = "false" } = req.body as Record<string, string>;
+  const file = (req as any).file as Express.Multer.File | undefined;
+
+  if (!file) { res.status(400).json({ error: "Arquivo obrigatório (campo: file)" }); return; }
+  const tamanhoKb = Math.round(file.size / 1024);
+  if (tamanhoKb > 5120) { res.status(413).json({ error: "Arquivo excede 5MB" }); return; }
+
+  const conteudoB64 = file.buffer.toString("base64");
+  const [doc] = await db.insert(ageDocumentsTable).values({
+    patientId,
+    professionalId:       req.session.ageProfessionalId!,
+    tipo,
+    filename:             file.originalname,
+    mimetype:             file.mimetype,
+    tamanhoKb,
+    conteudoB64,
+    compartilhadoPaciente: compartilhado === "true",
+    descricao,
+  }).returning({ id: ageDocumentsTable.id, filename: ageDocumentsTable.filename, tipo: ageDocumentsTable.tipo, tamanhoKb: ageDocumentsTable.tamanhoKb, compartilhadoPaciente: ageDocumentsTable.compartilhadoPaciente, createdAt: ageDocumentsTable.createdAt });
+  res.status(201).json(doc);
+});
+
+// PATCH /api/age/:slug/documents/:id — toggle compartilhado + descricao
+router.patch("/age/:slug/documents/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  const { compartilhadoPaciente, descricao } = req.body as { compartilhadoPaciente?: boolean; descricao?: string };
+  const updates: Record<string, unknown> = {};
+  if (compartilhadoPaciente !== undefined) updates.compartilhadoPaciente = compartilhadoPaciente;
+  if (descricao !== undefined) updates.descricao = descricao;
+  const [updated] = await db.update(ageDocumentsTable).set(updates as any)
+    .where(and(eq(ageDocumentsTable.id, id), eq(ageDocumentsTable.professionalId, req.session.ageProfessionalId!)))
+    .returning({ id: ageDocumentsTable.id, compartilhadoPaciente: ageDocumentsTable.compartilhadoPaciente });
+  if (!updated) { res.status(404).json({ error: "Documento não encontrado" }); return; }
+  res.json(updated);
+});
+
+// DELETE /api/age/:slug/documents/:id
+router.delete("/age/:slug/documents/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  await db.delete(ageDocumentsTable)
+    .where(and(eq(ageDocumentsTable.id, id), eq(ageDocumentsTable.professionalId, req.session.ageProfessionalId!)));
+  res.json({ ok: true });
+});
+
+// GET /api/age/:slug/documents/:id/download — retorna o arquivo (profissional ou paciente)
+router.get("/age/:slug/documents/:id/download", async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  const { slug } = req.params;
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.slug, slug!)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const isProfAuth  = req.session?.ageProfessionalId === prof.id;
+  const isPatientAuth = req.session?.agePatientSlug === slug;
+
+  const [doc] = await db.select().from(ageDocumentsTable)
+    .where(and(eq(ageDocumentsTable.id, id), eq(ageDocumentsTable.professionalId, prof.id)))
+    .limit(1);
+  if (!doc) { res.status(404).json({ error: "Documento não encontrado" }); return; }
+
+  if (!isProfAuth && !(isPatientAuth && doc.compartilhadoPaciente)) {
+    res.status(403).json({ error: "Sem permissão para este documento" }); return;
+  }
+  if (!doc.conteudoB64) { res.status(404).json({ error: "Conteúdo não disponível" }); return; }
+
+  const buf = Buffer.from(doc.conteudoB64, "base64");
+  res.set({
+    "Content-Type": doc.mimetype ?? "application/octet-stream",
+    "Content-Disposition": `attachment; filename="${doc.filename}"`,
+    "Content-Length": buf.length,
+  });
+  res.send(buf);
+});
+
+// ─── Formulários e documentos (paciente logado) ───────────────────────────────
+
+// GET /api/age/:slug/patients/my/forms — formulários pendentes de resposta
+router.get("/age/:slug/patients/my/forms", requirePatientAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  if (req.session.agePatientSlug !== slug) { res.status(403).json({ error: "Sem permissão" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.slug, slug!)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  // Formulários ativos desta profissional
+  const allForms = await db.select({
+    id: ageFormsTable.id, titulo: ageFormsTable.titulo, descricao: ageFormsTable.descricao,
+    tipo: ageFormsTable.tipo, campos: ageFormsTable.campos,
+  }).from(ageFormsTable)
+    .where(and(eq(ageFormsTable.professionalId, prof.id), eq(ageFormsTable.ativa, true)));
+
+  // IDs de formulários que o paciente já respondeu
+  const responded = await db.select({ formId: ageFormResponsesTable.formId })
+    .from(ageFormResponsesTable)
+    .where(and(
+      eq(ageFormResponsesTable.patientId, req.session.agePatientId!),
+      eq(ageFormResponsesTable.professionalId, prof.id),
+    ));
+  const respondedIds = new Set(responded.map(r => r.formId));
+
+  res.json({
+    pending:    allForms.filter(f => !respondedIds.has(f.id)),
+    completed:  allForms.filter(f =>  respondedIds.has(f.id)).map(f => f.id),
+  });
+});
+
+// POST /api/age/:slug/patients/my/form-responses — paciente envia resposta
+router.post("/age/:slug/patients/my/form-responses", requirePatientAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  if (req.session.agePatientSlug !== slug) { res.status(403).json({ error: "Sem permissão" }); return; }
+
+  const { formId, respostas, assinar = false } = req.body as { formId?: number; respostas?: Record<string, unknown>; assinar?: boolean };
+  if (!formId || !respostas) { res.status(400).json({ error: "formId e respostas obrigatórios" }); return; }
+
+  const [form] = await db.select({ id: ageFormsTable.id, professionalId: ageFormsTable.professionalId })
+    .from(ageFormsTable).where(eq(ageFormsTable.id, formId)).limit(1);
+  if (!form) { res.status(404).json({ error: "Formulário não encontrado" }); return; }
+
+  // Verificar se já respondeu
+  const [existing] = await db.select({ id: ageFormResponsesTable.id })
+    .from(ageFormResponsesTable)
+    .where(and(eq(ageFormResponsesTable.formId, formId), eq(ageFormResponsesTable.patientId, req.session.agePatientId!)))
+    .limit(1);
+  if (existing) { res.status(409).json({ error: "Você já respondeu este formulário." }); return; }
+
+  const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ?? req.ip ?? "";
+  const [response] = await db.insert(ageFormResponsesTable).values({
+    formId,
+    patientId:      req.session.agePatientId!,
+    professionalId: form.professionalId,
+    respostas,
+    assinadoAt:     assinar ? new Date() : null,
+    assinadoIp:     assinar ? ip : null,
+  }).returning();
+  res.status(201).json(response);
+});
+
+// GET /api/age/:slug/patients/my/documents — documentos compartilhados com o paciente
+router.get("/age/:slug/patients/my/documents", requirePatientAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  if (req.session.agePatientSlug !== slug) { res.status(403).json({ error: "Sem permissão" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.slug, slug!)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const docs = await db.select({
+    id:       ageDocumentsTable.id,
+    tipo:     ageDocumentsTable.tipo,
+    filename: ageDocumentsTable.filename,
+    mimetype: ageDocumentsTable.mimetype,
+    tamanhoKb:ageDocumentsTable.tamanhoKb,
+    descricao:ageDocumentsTable.descricao,
+    createdAt:ageDocumentsTable.createdAt,
+  }).from(ageDocumentsTable)
+    .where(and(
+      eq(ageDocumentsTable.patientId, req.session.agePatientId!),
+      eq(ageDocumentsTable.professionalId, prof.id),
+      eq(ageDocumentsTable.compartilhadoPaciente, true),
+    )).orderBy(desc(ageDocumentsTable.createdAt));
+  res.json(docs);
 });
 
 // ─── Admin: criar profissional (tier 5) ───────────────────────────────────────

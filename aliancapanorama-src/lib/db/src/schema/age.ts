@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -104,6 +104,48 @@ export const ageExceptionsTable = pgTable("age_exceptions", {
   horaFim:        text("hora_fim"),
   descricao:      text("descricao"),
   createdAt:      timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+// ─── Formulários de anamnese / contratos ─────────────────────────────────────
+export const ageFormsTable = pgTable("age_forms", {
+  id:             serial("id").primaryKey(),
+  professionalId: integer("professional_id").notNull().references(() => ageProfessionalsTable.id, { onDelete: "cascade" }),
+  titulo:         text("titulo").notNull(),
+  descricao:      text("descricao"),
+  tipo:           text("tipo").notNull().default("formulario"), // anamnese | contrato | formulario
+  // [{label, tipo: texto|area|radio|select|data|escala|checkbox, opcoes?, obrigatorio?}]
+  campos:         jsonb("campos").notNull().default([]),
+  ativa:          boolean("ativa").notNull().default(true),
+  createdAt:      timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt:      timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+// ─── Respostas de formulários ─────────────────────────────────────────────────
+export const ageFormResponsesTable = pgTable("age_form_responses", {
+  id:             serial("id").primaryKey(),
+  formId:         integer("form_id").notNull().references(() => ageFormsTable.id, { onDelete: "cascade" }),
+  patientId:      integer("patient_id").notNull().references(() => agePatientsTable.id, { onDelete: "cascade" }),
+  professionalId: integer("professional_id").notNull().references(() => ageProfessionalsTable.id, { onDelete: "cascade" }),
+  respostas:      jsonb("respostas").notNull().default({}), // { campo_index: valor }
+  assinadoAt:     timestamp("assinado_at", { withTimezone: true }),
+  assinadoIp:     text("assinado_ip"),
+  createdAt:      timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt:      timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+// ─── Documentos do paciente ───────────────────────────────────────────────────
+export const ageDocumentsTable = pgTable("age_documents", {
+  id:                   serial("id").primaryKey(),
+  patientId:            integer("patient_id").notNull().references(() => agePatientsTable.id, { onDelete: "cascade" }),
+  professionalId:       integer("professional_id").notNull().references(() => ageProfessionalsTable.id, { onDelete: "cascade" }),
+  tipo:                 text("tipo").notNull().default("documento"), // anamnese | contrato | exame | formulario | audio | video | outro
+  filename:             text("filename").notNull(),
+  mimetype:             text("mimetype"),
+  tamanhoKb:            integer("tamanho_kb"),
+  conteudoB64:          text("conteudo_b64"),  // base64 — máx 5MB
+  compartilhadoPaciente: boolean("compartilhado_paciente").notNull().default(false),
+  descricao:            text("descricao"),
+  createdAt:            timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
 // ─── Zod ──────────────────────────────────────────────────────────────────────
