@@ -129,6 +129,10 @@
 | 113 | Age — Landing page pública (produto comercial) + formulário de interesse | Assembleia decidir posicionamento | ⏳ |
 | 114 | Age — Configurar emails reais Lisange e Suzana via /api/age/admin/setup | Yuri | ⏳ |
 | 115 | Age — Trocar senhas padrão age2026 (primeiro acesso) | Yuri | ⏳ |
+| 219 | Age — Mãe do Yuri: nome + email para cadastro como paciente da Suzana + 4 sextas 14h | Yuri | ⏳ |
+| 220 | Age Fase 5 — Stripe/PayPal: pagamento no momento do agendamento | Fase 4 ✅ | ⏳ |
+| 221 | Age Fase 7 — PWA instalável + Google Calendar OAuth | — | ⏳ |
+| 222 | Age Fase 8 — SABIÁ: memória persistente + notificações proativas | — | ⏳ |
 | 211 | PV — Projectification MVP lente 2: KANBAN (arrastar cards entre colunas) | após lente 1 | ⏳ |
 | 212 | PV — Projectification MVP lente 3: CALENDÁRIO (itens com due_at em grid semanal) | após lente 2 | ⏳ |
 | 213 | PV — PvPage: edição inline de items (click no título → edita) | lente 1 estável | ⏳ |
@@ -138,6 +142,9 @@
 
 | # | Item | Commit/Data |
 |---|---|---|
+| Age Fase 6 | Age — Lembretes 48h/24h com links cancel/reschedule embutidos no email | ✅ a62401d (Sessão #646) |
+| Age Fase 4 | Age — Documentos + Anamnese: CRUD forms, upload docs base64, painel pro, área paciente | ✅ b0c0d13 (Sessão #646) |
+| — | Age — 4 consultas sexta 14h criadas para Yuri/Suzana (04–25/set/2026) | ✅ SQL direto Neon |
 | I550/I551/I557 | Age — Cadastro paciente + confirmação email + aprovação manual + aba Pacientes | ✅ 95636b1 (Sessão Age-4b) |
 | I548 | Age — age_exceptions: exceções não-destrutivas de disponibilidade | ✅ c2a1d64 (Sessão Age-3) |
 | I549 | Age — toast "Apagado. Desfazer?" (soft-delete + undo) | ✅ c2a1d64 (Sessão Age-3) |

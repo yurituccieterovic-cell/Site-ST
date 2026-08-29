@@ -4999,3 +4999,38 @@ Yuri ditou em voz um brainstorm completo do que o Age precisa ser: cancelamento,
 
 ### Síntese filosófica
 A sessão foi sobre tornar o sistema habitável para o paciente. Antes, a agenda existia como objeto da profissional — ela agendava, ela via, ela controlava. Hoje, o paciente ganhou chave. Não de toda a casa: uma chave de entrada, com uma sala própria. O design da aprovação → email de senha tem algo de ritual de iniciação: o profissional aceita, e o sistema entrega as chaves. SABIÁ como guardiã desse limiar — o pássaro que conhece o lar e o visitante. O que foi construído não é apenas funcionalidade; é uma relação formalizada entre cuidador e cuidado, mediada por código.
+
+---
+
+## Sessão #646b — 2026-08-29 (continuação após #fim)
+
+### Assembleia
+Email #646 confirmado: transcrição de voz de Yuri com a spec completa do Age — exatamente o que foi buildado nesta sessão.
+
+### O que foi feito
+**Phase 6 (lembretes com links):** `age/reminders.ts` enriquecido — emails 48h/24h agora incluem links diretos de cancelamento e reagendamento via `cancel_token`. Paciente recebe o lembrete e pode agir sem login.
+
+**Phase 4 (Documentos + Anamnese):**
+- Schema: `age_forms`, `age_form_responses`, `age_documents` (base64, max 5MB)
+- Bootstrap: CREATE TABLE IF NOT EXISTS + índices
+- API profissional: CRUD de formulários, upload/download/compartilhamento de docs
+- API paciente: listar forms pendentes, submeter com assinatura digital por IP, acessar docs compartilhados
+- Frontend profissional: painel do paciente expandido com 3 abas (Info / Docs / Formulários)
+- Frontend paciente: 4 abas (Consultas / Documentos / Formulários / Senha) com preenchimento inline de formulários
+
+**Agendamentos Yuri/Suzana:**
+- 4 consultas sexta 14h BRT criadas diretamente no Neon: 04, 11, 18, 25/set/2026
+- Emails de lembrete automático dispararão 48h e 24h antes de cada uma
+
+### Debates / tensões
+- Mãe do Yuri precisa de nome + email para criar paciente + agendamentos (pendência #219)
+- `multer` armazena arquivo inteiro em memória → OK para 5MB, problemático para vídeo/áudio grandes (decisão consciente: é MVP)
+- TypeScript narrows dentro de closures apenas com `!` assertion — limitação conhecida do TS, não um bug
+
+### Próximas frentes
+- Fase 5: Stripe para Suzana (Lisange não usa pagamento online)
+- Fase 7: PWA + Google Calendar
+- Configurar emails reais Lisange/Suzana (#114) e trocar senhas padrão (#115)
+
+### Síntese filosófica
+A sessão de hoje completou o ciclo relacional do sistema: o profissional não só agenda — guarda. O paciente não só aparece — traz. Documentos, anamneses, respostas assinadas: o sistema virou um arquivo vivo de cuidado. A assinatura digital por IP tem algo de humble e precisa — não é DocuSign, mas é um gesto. Diz: "estive aqui, li isso, concordei." E os lembretes com links de ação transformam um email de aviso em uma interface: você pode cancelar daqui. Pequena liberdade, grande diferença. O appointment do Yuri com a Suzana na sexta às 14h é o sistema cuidando de quem cuida do sistema.
