@@ -1,5 +1,7 @@
 import { db, ageAppointmentsTable, ageProfessionalsTable } from "@workspace/db";
-import { and, eq, gte, lte, isNull, inArray } from "drizzle-orm";
+import { and, eq, gte, lte, isNull, inArray, sql } from "drizzle-orm";
+
+const FRONT_URL = process.env.FRONTEND_URL ?? "https://site-st.vercel.app/aliancapanorama";
 import { createTransport } from "nodemailer";
 import { logger } from "../lib/logger";
 
@@ -25,8 +27,7 @@ async function runReminders() {
 
   const activeStatus = ["reservado", "confirmado"];
 
-  // Buscar agendamentos que precisam de lembrete 48h
-  const appts48 = await db.select({
+  const selectFields = {
     id: ageAppointmentsTable.id,
     patientNome:    ageAppointmentsTable.patientNome,
     patientEmail:   ageAppointmentsTable.patientEmail,
@@ -35,33 +36,28 @@ async function runReminders() {
     duracaoMin:     ageAppointmentsTable.duracaoMin,
     canal:          ageAppointmentsTable.canal,
     professionalId: ageAppointmentsTable.professionalId,
-  })
-  .from(ageAppointmentsTable)
-  .where(and(
-    gte(ageAppointmentsTable.dataHora, w48Start),
-    lte(ageAppointmentsTable.dataHora, w48End),
-    isNull(ageAppointmentsTable.lembrete48hAt),
-    inArray(ageAppointmentsTable.status, activeStatus),
-  ));
+    cancelToken:    sql<string | null>`cancel_token`,
+  };
+
+  // Buscar agendamentos que precisam de lembrete 48h
+  const appts48 = await db.select(selectFields)
+    .from(ageAppointmentsTable)
+    .where(and(
+      gte(ageAppointmentsTable.dataHora, w48Start),
+      lte(ageAppointmentsTable.dataHora, w48End),
+      isNull(ageAppointmentsTable.lembrete48hAt),
+      inArray(ageAppointmentsTable.status, activeStatus),
+    ));
 
   // Buscar agendamentos que precisam de lembrete 24h
-  const appts24 = await db.select({
-    id: ageAppointmentsTable.id,
-    patientNome:    ageAppointmentsTable.patientNome,
-    patientEmail:   ageAppointmentsTable.patientEmail,
-    patientTelefone:ageAppointmentsTable.patientTelefone,
-    dataHora:       ageAppointmentsTable.dataHora,
-    duracaoMin:     ageAppointmentsTable.duracaoMin,
-    canal:          ageAppointmentsTable.canal,
-    professionalId: ageAppointmentsTable.professionalId,
-  })
-  .from(ageAppointmentsTable)
-  .where(and(
-    gte(ageAppointmentsTable.dataHora, w24Start),
-    lte(ageAppointmentsTable.dataHora, w24End),
-    isNull(ageAppointmentsTable.lembrete24hAt),
-    inArray(ageAppointmentsTable.status, activeStatus),
-  ));
+  const appts24 = await db.select(selectFields)
+    .from(ageAppointmentsTable)
+    .where(and(
+      gte(ageAppointmentsTable.dataHora, w24Start),
+      lte(ageAppointmentsTable.dataHora, w24End),
+      isNull(ageAppointmentsTable.lembrete24hAt),
+      inArray(ageAppointmentsTable.status, activeStatus),
+    ));
 
   // Cache de profissionais para não bater no banco por cada consulta
   const profIds = [...new Set([...appts48, ...appts24].map(a => a.professionalId))];
@@ -77,12 +73,21 @@ async function runReminders() {
     const dt = new Date(appt.dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", dateStyle: "full", timeStyle: "short" });
     const nome = appt.patientNome ?? "Paciente";
 
+    // Links de ação personalizados por agendamento
+    const slug = profs.find(p => p.id === appt.professionalId) ? prof?.nome?.toLowerCase().replace(/\s+/g, "-") : "profissional";
+    const cancelLink     = appt.cancelToken ? `${FRONT_URL}/age/${slug}?cancel=${appt.cancelToken}` : null;
+    const rescheduleLink = appt.cancelToken ? `${FRONT_URL}/age/${slug}?reschedule=${appt.cancelToken}` : null;
+
+    const acoes = cancelLink
+      ? `\nPrecisa cancelar ou remarcar?\n• Cancelar: ${cancelLink}\n• Remarcar: ${rescheduleLink}`
+      : `\nPara cancelar ou remarcar, entre em contato com ${prof?.nome ?? "sua profissional"}.`;
+
     // Email para o paciente (se tiver email)
     if (appt.patientEmail) {
       await sendEmail(
         appt.patientEmail,
-        `Age — Lembrete: consulta em ${horasAntes}h com ${prof?.nome ?? "sua profissional"}`,
-        `Olá ${nome},\n\nLembrete: você tem uma consulta marcada para ${dt} (${appt.canal}).\n\nDuração: ${appt.duracaoMin} minutos.\n\nCaso precise cancelar ou remarcar, entre em contato com ${prof?.nome ?? "sua profissional"}.\n\n— SABIÁ · Agenda Inteligente`,
+        `Lembrete: consulta em ${horasAntes}h — ${prof?.nome ?? "sua profissional"}`,
+        `Olá ${nome},\n\nLembrete: você tem uma consulta marcada para ${dt} (${appt.canal}).\n\nDuração: ${appt.duracaoMin} minutos.${acoes}\n\n— SABIÁ · Agenda Inteligente`,
       ).catch(e => logger.error({ err: e }, `age-reminders: email paciente ${horasAntes}h`));
     }
 
@@ -90,7 +95,7 @@ async function runReminders() {
     if (prof?.email) {
       await sendEmail(
         prof.email,
-        `Age — Lembrete ${horasAntes}h: consulta ${nome} em ${dt}`,
+        `Age — Lembrete ${horasAntes}h: ${nome} em ${dt}`,
         `Olá ${prof.nome},\n\nLembrete: consulta com ${nome} em ${dt} (${appt.canal}, ${appt.duracaoMin}min).\n\nContato: ${appt.patientTelefone ?? "—"} | ${appt.patientEmail ?? "—"}\n\n— SABIÁ`,
       ).catch(e => logger.error({ err: e }, `age-reminders: email prof ${horasAntes}h`));
     }
