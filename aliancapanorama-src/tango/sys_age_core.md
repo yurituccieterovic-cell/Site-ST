@@ -77,15 +77,21 @@ Tom: calma, sábia, direta. Como o sabiá — sempre no lar, sabe de tudo.
 - [ ] Trocar senhas padrão
 - [ ] Ver sistema atual da Susana e ajustar UX
 - [ ] Domínio curto
-- [x] Identidade visual — logo Age: `public/age-logo.png` (calendário teal/azul petróleo) ✅ 2026-08-27
-- [x] I550+I551+I557: Cadastro paciente + confirmação email + aba Pacientes ✅ 95636b1 (2026-08-27)
-- [ ] I552: Confirmações e lembretes automáticos por email (48h/24h)
+- [x] Identidade visual — logo Age: `public/age-logo.png` ✅ 2026-08-27
+- [x] I550+I551+I557: Cadastro paciente + confirmação email + aba Pacientes ✅ 2026-08-27
+- [x] Fase 2 — Cancelamento + reagendamento por token ✅ 2026-08-29 (commit 4be1723)
+- [x] Fase 3 — Área do paciente com login ✅ 2026-08-29 (commit 9c0471d)
+- [ ] I552: Confirmações e lembretes automáticos por email (48h/24h) — Fase 6
 - [ ] I553: Feed Age operacional (log de eventos)
 - [ ] I554: SABIÁ popup flutuante persistente
 - [ ] I558: Confirmação Sim/Não para ações irreversíveis
 - [ ] I564: Link de convite para pré-aprovação de paciente
 - [ ] Compliance LGPD: Política de Privacidade + ToS + checkbox consentimento (necessário antes de vender)
-- [ ] Landing page comercial + formulário de interesse (aguarda decisão Assembleia sobre posicionamento) conhecido
+- [ ] Landing page comercial + formulário de interesse (aguarda decisão Assembleia sobre posicionamento)
+- [ ] Fase 4 — Documentos (anamnese, contratos, anexos)
+- [ ] Fase 5 — Pagamentos no agendamento (Stripe/PayPal)
+- [ ] Fase 6 — Emails completos (lembretes 48h/24h + retorno)
+- [ ] Fase 7 — PWA + Google Agenda
 
 ## Como carregar contexto (#age)
 
