@@ -2391,3 +2391,72 @@ export async function seedRapaduraUsers(): Promise<void> {
   }
   logger.info("bootstrap: rapadura users OK (11 membros)");
 }
+
+// Garante tabelas Projectification (pv_projects, pv_items, pv_item_relations, pv_item_events)
+export async function ensurePvTables(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS pv_projects (
+      id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      title       TEXT        NOT NULL,
+      description TEXT,
+      domain      TEXT        NOT NULL DEFAULT 'producao_cultural',
+      status      TEXT        NOT NULL DEFAULT 'active',
+      created_by  INTEGER     REFERENCES users(id) ON DELETE SET NULL,
+      source_ref  TEXT,
+      confidence  INTEGER     DEFAULT 80,
+      created_at  TIMESTAMPTZ DEFAULT now() NOT NULL,
+      updated_at  TIMESTAMPTZ DEFAULT now() NOT NULL,
+      deleted_at  TIMESTAMPTZ
+    );
+    CREATE TABLE IF NOT EXISTS pv_items (
+      id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      project_id  UUID        NOT NULL REFERENCES pv_projects(id) ON DELETE CASCADE,
+      type        TEXT        NOT NULL DEFAULT 'task',
+      title       TEXT        NOT NULL,
+      description TEXT,
+      parent_id   UUID        REFERENCES pv_items(id) ON DELETE SET NULL,
+      depth_level INTEGER     NOT NULL DEFAULT 0,
+      status      TEXT        NOT NULL DEFAULT 'pending',
+      priority    INTEGER     NOT NULL DEFAULT 5,
+      starts_at   TIMESTAMPTZ,
+      ends_at     TIMESTAMPTZ,
+      due_at      TIMESTAMPTZ,
+      payload     JSONB       DEFAULT '{}',
+      created_by  INTEGER     REFERENCES users(id) ON DELETE SET NULL,
+      source_ref  TEXT,
+      confidence  INTEGER     DEFAULT 80,
+      created_at  TIMESTAMPTZ DEFAULT now() NOT NULL,
+      updated_at  TIMESTAMPTZ DEFAULT now() NOT NULL,
+      deleted_at  TIMESTAMPTZ
+    );
+    CREATE TABLE IF NOT EXISTS pv_item_relations (
+      id              UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      item_id         UUID        NOT NULL REFERENCES pv_items(id) ON DELETE CASCADE,
+      related_item_id UUID        NOT NULL REFERENCES pv_items(id) ON DELETE CASCADE,
+      relation_type   TEXT        NOT NULL DEFAULT 'related',
+      created_by      INTEGER     REFERENCES users(id) ON DELETE SET NULL,
+      created_at      TIMESTAMPTZ DEFAULT now() NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS pv_item_events (
+      id               UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      item_id          UUID        NOT NULL REFERENCES pv_items(id) ON DELETE CASCADE,
+      project_id       UUID        NOT NULL REFERENCES pv_projects(id) ON DELETE CASCADE,
+      action           TEXT        NOT NULL,
+      field_name       TEXT,
+      old_value        JSONB,
+      new_value        JSONB,
+      reason           TEXT,
+      changed_by_user  INTEGER     REFERENCES users(id) ON DELETE SET NULL,
+      changed_by_agent TEXT,
+      source_ref       TEXT,
+      created_at       TIMESTAMPTZ DEFAULT now() NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_pv_items_project  ON pv_items(project_id) WHERE deleted_at IS NULL;
+    CREATE INDEX IF NOT EXISTS idx_pv_items_parent   ON pv_items(parent_id)  WHERE parent_id IS NOT NULL;
+    CREATE INDEX IF NOT EXISTS idx_pv_items_status   ON pv_items(status, priority DESC) WHERE deleted_at IS NULL;
+    CREATE INDEX IF NOT EXISTS idx_pv_relations_item ON pv_item_relations(item_id);
+    CREATE INDEX IF NOT EXISTS idx_pv_events_item    ON pv_item_events(item_id, created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_pv_projects_status ON pv_projects(status) WHERE deleted_at IS NULL;
+  `);
+  logger.info("bootstrap: pv tables OK (pv_projects, pv_items, pv_item_relations, pv_item_events)");
+}

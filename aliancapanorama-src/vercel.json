@@ -28,6 +28,8 @@
     { "source": "/css-tutorial", "destination": "/index.html" },
     { "source": "/css-tutorial/(.*)", "destination": "/index.html" },
     { "source": "/celular", "destination": "/index.html" },
-    { "source": "/celular/(.*)", "destination": "/index.html" }
+    { "source": "/celular/(.*)", "destination": "/index.html" },
+    { "source": "/pv", "destination": "/index.html" },
+    { "source": "/pv/(.*)", "destination": "/index.html" }
   ]
 }
