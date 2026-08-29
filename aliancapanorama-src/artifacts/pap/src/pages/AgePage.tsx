@@ -127,6 +127,9 @@ export function AgePage() {
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [feedLoading, setFeedLoading] = useState(false);
 
+  // SABIÁ popup flutuante
+  const [sabiaOpen, setSabiaOpen] = useState(false);
+
   // Auth form
   const [authPassword, setAuthPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -1207,6 +1210,97 @@ export function AgePage() {
 
       {/* Login modal */}
       {(mode as string) === "login" && authStep !== "done" && LoginModal()}
+
+      {/* SABIÁ popup flutuante (profissional logada, fora da aba SABIÁ) */}
+      {mode === "professional" && authStep === "done" && view !== "sabia" && (
+        <>
+          {/* Botão flutuante */}
+          <button
+            onClick={() => setSabiaOpen(o => !o)}
+            title={sabiaOpen ? "Fechar SABIÁ" : "Abrir SABIÁ"}
+            style={{
+              position: "fixed", bottom: 20, right: 20, zIndex: 1000,
+              width: 52, height: 52, borderRadius: "50%",
+              background: sabiaOpen ? "#1e293b" : color,
+              border: `2px solid ${color}`,
+              color: sabiaOpen ? color : "#080c10",
+              fontSize: 22, cursor: "pointer",
+              boxShadow: `0 4px 20px ${color}44`,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "background 0.2s",
+            }}
+          >
+            {sabiaOpen ? "✕" : "🐦"}
+          </button>
+
+          {/* Painel do chat */}
+          {sabiaOpen && (
+            <div style={{
+              position: "fixed", bottom: 84, right: 20, zIndex: 999,
+              width: 340, maxWidth: "calc(100vw - 40px)",
+              height: 440, maxHeight: "70vh",
+              background: "#0a0f16",
+              border: `1px solid ${color}44`,
+              borderRadius: 16,
+              display: "flex", flexDirection: "column",
+              boxShadow: `0 8px 32px ${color}22`,
+              overflow: "hidden",
+            }}>
+              {/* Header */}
+              <div style={{ padding: "10px 14px", borderBottom: "1px solid #1e293b", display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 16 }}>🐦</span>
+                <span style={{ color, fontWeight: 700, fontSize: 13 }}>SABIÁ</span>
+                <span style={{ flex: 1 }} />
+                <span style={{ fontSize: 10, color: "#475569" }}>assistente de agenda</span>
+              </div>
+
+              {/* Disclaimer */}
+              <div style={{ padding: "6px 12px", background: "#0c1a12", borderBottom: "1px solid #1e293b33", fontSize: 10, color: "#4a6b4a", lineHeight: 1.4 }}>
+                Suporte operacional apenas. Não substitui avaliação clínica. CFP 11/2018.
+              </div>
+
+              {/* Mensagens */}
+              <div style={{ flex: 1, overflowY: "auto", padding: "10px 12px", display: "flex", flexDirection: "column", gap: 8 }}>
+                {msgs.map((m, i) => (
+                  <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
+                    {m.role === "assistant" && <span style={{ marginRight: 6, fontSize: 14, alignSelf: "flex-end" }}>🐦</span>}
+                    <div style={{
+                      maxWidth: "82%", borderRadius: 10, padding: "7px 10px", fontSize: 12, lineHeight: 1.5,
+                      background: m.role === "user" ? colorDark : "#1a2030",
+                      border: `1px solid ${m.role === "user" ? color + "44" : "#ffffff18"}`,
+                      color: m.role === "user" ? color : "#e2e8f0",
+                    }}>{m.content}</div>
+                  </div>
+                ))}
+                {sabiaLoading && (
+                  <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                    <span style={{ marginRight: 6, fontSize: 14 }}>🐦</span>
+                    <div style={{ background: "#1a2030", border: "1px solid #ffffff18", borderRadius: 10, padding: "7px 10px", color: "#64748b", fontSize: 12 }}>
+                      <span style={{ animation: "pulse 1s infinite" }}>pensando…</span>
+                    </div>
+                  </div>
+                )}
+                <div ref={msgBottomRef} />
+              </div>
+
+              {/* Input */}
+              <form onSubmit={sendSabia} style={{ padding: "8px 12px", borderTop: "1px solid #1e293b", display: "flex", gap: 6 }}>
+                <input
+                  value={sabiaInput}
+                  onChange={e => setSabiaInput(e.target.value)}
+                  placeholder="Pergunte à SABIÁ…"
+                  disabled={sabiaLoading}
+                  style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 12 }}
+                />
+                <button type="submit" disabled={sabiaLoading || !sabiaInput.trim()}
+                  style={{ background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "7px 12px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                  →
+                </button>
+              </form>
+            </div>
+          )}
+        </>
+      )}
 
       <style>{`
         * { box-sizing: border-box; }
