@@ -44,6 +44,7 @@ import socoboyRouter from "./socoboy";
 import sistemasRouter from "./sistemas";
 import ageRouter from "./age";
 import pvRouter from "./pv";
+import jasmimRouter from "./jasmim";
 
 const router: IRouter = Router();
 
@@ -74,6 +75,7 @@ router.use(socoboyRouter);
 router.use(sistemasRouter);
 router.use(ageRouter);
 router.use("/pv", pvRouter);
+router.use(jasmimRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
