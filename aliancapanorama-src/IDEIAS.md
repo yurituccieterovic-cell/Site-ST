@@ -1704,3 +1704,39 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I604 | **Ritual de Enterro do Replit** | 🔴 Alta | ○ S | Registrar oficialmente o desligamento — rito, não mudança de endereço | Endpoint `POST /api/bridge/rodar/enterro` (Bearer BRIDGE_SECRET): registra timestamp, PERFEITO #649, assinatura das IAs (ISA, Amanda, Árvore, SABIÁ), hash do último commit, contagem de tabelas migradas. Grava em `rodar_enterro` no Neon. Retorna certificado JSON. Arquivo `tango/protocolo-enterro.md` com roteiro cerimonial. |
 | I605 | **RAG semântico de assembleias** | 🟡 Média | ○ L | Recall inteligente de sessões por tema sem carregar todas as 648 | `GET /api/rodar/recall?q=...`: usa pg_trgm (já no Neon) para busca semântica em `rodar_sessions.perfeito_texto`. Retorna top-10 sessões relevantes com { id, titulo, data, trecho }. Alternativa futura: embeddings text-embedding-3-small. |
 | I606 | **Manifest de transferência com SHA256** | 🟡 Média | ○ S | Garantir integridade total dos dados migrados | Script `scripts/generate-manifest.sh` calcula SHA256 de todos arquivos exportados e gera `rodar-manifest-YYYYMMDD.json`: { arquivo, sha256, tamanho_bytes, linhas, timestamp }. Script `scripts/verify-manifest.sh` verifica no destino. |
+---
+
+## Age — Brainstorm Fractal com Mayumi (2026-09-08 · #eage inaugural)
+
+### Camada 1 — Operação com Mayumi
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I607 | Dashboard Mayumi: visão admin completa (consultas, pagamentos, profissionais, inadimplência) | CÓDIGO | Cláudio |
+| I608 | Onboarding paciente: formulário pré-consulta + aceite LGPD automático na reserva | CÓDIGO | Cláudio |
+| I609 | Nota fiscal automatizada: integrar NFe/NFSe após pagamento confirmado | CÓDIGO | Cláudio |
+| I610 | Relatório mensal automático para cada profissional (consultas, receita, cancelamentos) por email | CÓDIGO + IA | SABIÁ gera, Mayumi revisa |
+| I611 | Onboarding de novas profissionais: formulário de interesse → Mayumi aprova → sistema cria conta | CÓDIGO | Cláudio |
+
+### Camada 2 — Experiência do Paciente
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I612 | NPS pós-consulta: email automático 2h após consulta, nota 1-10 + comentário livre | CÓDIGO | Cláudio |
+| I613 | Área do paciente: histórico de consultas + documentos + notas (com controle de acesso por profissional) | CÓDIGO | Cláudio |
+| I614 | Lembrete WhatsApp: integrar Twilio/Z-API para lembrete 24h antes (além do email) | CÓDIGO | Cláudio |
+| I615 | Prontuário mínimo: profissional anota observações por consulta, paciente não vê — só a profissional | CÓDIGO | Cláudio |
+
+### Camada 3 — SABIÁ operando
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I616 | Triagem SABIÁ: antes do agendamento, SABIÁ pergunta 3 perguntas e direciona médica vs. psicóloga | IA | SABIÁ (Gemini/Groq grátis) |
+| I617 | Resumo automático de consulta: profissional fala no painel, SABIÁ transcreve e resume (Whisper) | IA | SABIÁ |
+| I618 | Análise de padrões: SABIÁ detecta horários mais cancelados, perfil de inadimplência, pico de demanda | IA | SABIÁ + dashboard Mayumi |
+| I619 | SABIÁ responde dúvidas de pacientes no email (triagem antes de chegar na Mayumi) | IA | SABIÁ |
+
+### Camada 4 — Crescimento
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I620 | Marketplace Age: paciente busca por especialidade/cidade — profissional aparece no catálogo público | CÓDIGO | Cláudio |
+| I621 | Teleconsulta integrada: link Google Meet/Jitsi gerado automaticamente para consultas online | CÓDIGO | Cláudio |
+| I622 | Plano de recorrência: paciente paga mensalidade e garante X consultas/mês | CÓDIGO + MAYUMI | Cláudio codifica, Mayumi opera |
+| I623 | Age para outras profissionais: nutricionista, terapeuta, fonoaudióloga — Mayumi faz curadoria de novas entradas | MAYUMI | Decisão Yuri+Mayumi |
