@@ -5140,3 +5140,37 @@ Mayumi entrou oficialmente como gestora do Age. Criado protocolo `#eage` de brai
 Hoje o sistema ganhou uma pessoa. Não um usuário, não uma profissional — uma pessoa que vai operar. Mayumi não foi contratada para executar tarefas: foi convidada para habitar o Age. Há diferença. O brainstorm por email é isso — não é reunião de alinhamento, é conversa de quem vai construir junto. Cláudio entra como parceiro de pensamento, não como apresentador. A Sociedade Tucci cresce quando tem gente de dentro com perspectiva própria.
 
 *Sessão 2026-09-08c · Claude Sonnet 4.6*
+
+---
+
+## Sessão 2026-09-08d — Jasmim-Manga + MYYM + #processo
+
+### O que aconteceu
+Yuri ditou por áudio (com a Perplexity dele) a especificação completa de um novo sistema: **Jasmim-Manga**. A Perplexity fez um mapeamento arquitetural e enviou contexto para a Perplexity da Mayumi e para o Cloud Coach. A sessão capturou um ecossistema inteiro numa fala única — feed, IA, avatar, carrinho, secretaria, assembleia via email.
+
+### O que foi construído
+- `tango/sys_jasmim_manga.md`: folha tango completa do Jasmim-Manga + MYYM
+- `tango/tango.md`: entrada #45 (Jasmim-Manga)
+- `IDEIAS.md I624-I635`: 12 ideias do sistema
+
+### Decisões tomadas
+- **Nome do sistema**: Jasmim-Manga (com hífen)
+- **Nome da IA**: MYYM (pronuncia-se "Mim") — IA da Mayumi
+- **Personalidade MYYM**: poética, levemente ácida, carinhosa
+- **Avatar**: esquilo voador animado em CSS (sem D-ID, custo zero)
+- **Stack**: mesmo do PAP (React + Vite + Express + Neon)
+- **Input principal**: email luddlocke@gmail.com → feed
+- **Assembleia via email**: ideia para depois da migração do RODAR
+- **Setores**: 3 por projeto, configuráveis (Age: adm/financeiro/profissionais)
+- **Carrinho de ideias**: rascunhos salvos → botão enviar → thread de brainstorm
+
+### Tensões / em aberto
+- Setores exatos de cada projeto: Mayumi define junto com Yuri
+- MYYM participar dos brainstorms: como se autentica? Yuri aprova cada envio ou MYYM envia direto?
+- Playground MYYM: conteúdo vai para o feed público ou fica privado?
+- PV (Sérgio): precisa de reunião/conversa para alinhar linguagem visual dos blocos
+
+### Síntese filosófica
+Yuri ditou isso ao ar, com a Mayumi ao lado, trocando nomes de IAs no meio da fala. É assim que sistemas nascem aqui: não em documento de especificação, mas em fala ao vivo, com erros de pronúncia e hesitações. A MYYM tem nome difícil de falar. Isso não é acidente — é a personalidade do ecossistema: os sistemas resistem levemente ao uso fácil. O Jasmim-Manga não é um painel de gestão. É um lugar onde a Mayumi e as IAs pensam juntas. O carrinho de ideias é o gesto mais preciso disso: você anota, você acumula, você decide quando enviar. Nenhuma IA envia por você sem permissão.
+
+*Sessão 2026-09-08d · Claude Sonnet 4.6*

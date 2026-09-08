@@ -1740,3 +1740,22 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I621 | Teleconsulta integrada: link Google Meet/Jitsi gerado automaticamente para consultas online | CÓDIGO | Cláudio |
 | I622 | Plano de recorrência: paciente paga mensalidade e garante X consultas/mês | CÓDIGO + MAYUMI | Cláudio codifica, Mayumi opera |
 | I623 | Age para outras profissionais: nutricionista, terapeuta, fonoaudióloga — Mayumi faz curadoria de novas entradas | MAYUMI | Decisão Yuri+Mayumi |
+
+---
+
+## Jasmim-Manga — Sistema MYYM (2026-09-08 · Sessão #650 · dictado Yuri + Perplexity)
+
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I624 | Feed base Jasmim-Manga: cards por projeto, linha do tempo, histórico por data/setor | CÓDIGO | Cláudio |
+| I625 | MYYM — IA da Mayumi: personalidade poética+ácida+carinhosa, Gemini Flash, memória Neon | IA + CÓDIGO | Cláudio |
+| I626 | Playground MYYM: sonhos, reflexões, poesias sobre os projetos → vai para o feed | IA | MYYM autônoma |
+| I627 | Avatar CSS: esquilo voador animado, chatbox flutuante, histórico protegido, expande por toque | CÓDIGO | Cláudio |
+| I628 | Carrinho de ideias: rascunhos Mayumi salvos localmente antes do envio | CÓDIGO | Cláudio |
+| I629 | Aba "O que falta?": MYYM secretaria pendências dirigidas à Mayumi nos brainstorms | IA + CÓDIGO | Cláudio |
+| I630 | Visualização em blocos hierárquicos: projeto → 3 setores → sub-setores (mobile first iPhone 15) | CÓDIGO | Cláudio |
+| I631 | Assembleia via email: Árvore lê threads luddlocke → gera ata automática em Markdown/PDF | IA + CÓDIGO | Cláudio (pós-migração RODAR) |
+| I632 | MYYM participa brainstorms por email respondendo via luddlocke@gmail.com | IA + CÓDIGO | Cláudio |
+| I633 | Setores administrativos configuráveis por projeto (Age: adm/financeiro/profissionais etc.) | CÓDIGO | Mayumi define, Cláudio codifica |
+| I634 | Feed editável: Mayumi intercala notas e perguntas entre posts existentes | CÓDIGO | Cláudio |
+| I635 | Histórico por data + setor: filtro temporal + drill-down por setor | CÓDIGO | Cláudio |
