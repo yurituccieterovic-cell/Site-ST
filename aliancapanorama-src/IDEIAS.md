@@ -1793,3 +1793,11 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I653 | Age próxima sessão automática: após consulta sistema sugere datas pré-selecionadas (7/14/21/30 dias); profissional só clica | CÓDIGO | Cláudio (bloco 4) |
 | I654 | Age blocos 1-4: (1)agenda+cancelamento (2)pacientes+ficha interna (3)pagamento+PDF (4)próxima sessão+lembretes | DECISÃO | Yuri+Mayumi |
 | I655 | Age novo paciente: profissional conhece em conversa; ficha interna no sistema; PDF automático; sem ficha online para paciente preencher | DECISÃO | Mayumi |
+| I656 | Painel Mayumi gestora: visão consolidada de todas as profissionais — agenda do dia, financeiro, inadimplência, alertas SABIÁ | CÓDIGO | Cláudio (próxima frente) |
+| I657 | Ficha via voz Bloco 2.5: profissional fala durante consulta → keywords capturadas → campos auto-preenchidos (nome, nascimento, contato) | CÓDIGO | Cláudio (após template manual) |
+| I658 | Age cancelamento: 24h mínimo sem custo; <24h = taxa configurável por profissional (sugestão Mayumi: 50%) | DECISÃO | Mayumi+profissionais |
+| I659 | Age reagendamento com travas: máx N reagendamentos por ciclo (ex:2) + janela mínima (ex:12h antes) | CÓDIGO | Cláudio |
+| I660 | Age pagamento: PIX como padrão + cartão por link (Mercado Pago/Stripe) como alternativa; configurável antes/depois por profissional | DECISÃO | Mayumi+profissionais |
+| I661 | Age consentimento digital: após 1ª conversa → PDF gerado → assinatura digital obrigatória antes de próximos agendamentos | CÓDIGO | Cláudio (Bloco 2) |
+| I662 | Age Passo 3 financeiro (Mayumi): contas, plataformas pagamento, recibos/NF automáticos, relatório IR, fluxo de caixa, metas anuais | BACKLOG | Cláudio (fase 3+) |
+| I663 | Age dashboard paciente: gráfico evolução, situação financeira, últimos/próximos agendamentos, estágio tratamento, avaliação profissional | BACKLOG | Cláudio (fase 4+) |

@@ -145,6 +145,11 @@
 | 228 | Age Bloco 4 — Próxima sessão automática: após consulta sugere datas (7/14/21/30 dias); 1 clique | — | ⏳ |
 | 229 | Age Bloco 2 — Ficha interna: profissional preenche no sistema após conhecer o paciente em conversa | — | ⏳ |
 | 230 | Mayumi — conta criada (login:mayumi tier:3) + email enviado com credenciais | ✅ | ✅ 2026-09-08 |
+| 231 | Age — Painel Mayumi gestora: visão consolidada (agenda+financeiro+alertas) — próxima frente de código | — | ⏳ |
+| 232 | Age — Reunião Lisange+Suzana: levantar 5 perguntas de ficha por profissional + preferência de preenchimento | Yuri+Mayumi marcar | ⏳ URGENTE |
+| 233 | Age — Decisão: prazo mínimo cancelamento (24h? 48h? por profissional?) + taxa (50%? 100%?) | Mayumi | ⏳ |
+| 234 | Age — Decisão: modelo de cobrança do Age (mensalidade por profissional vs % por consulta) | Yuri | ⏳ |
+| 235 | Age — Decisão: pagamento PIX padrão + cartão por link (Mercado Pago/Stripe) | Mayumi+profissionais | ⏳ |
 
 ## Concluídos
 
