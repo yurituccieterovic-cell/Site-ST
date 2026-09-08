@@ -5,13 +5,13 @@ const API = import.meta.env.VITE_API_URL ?? "";
 // ─── Login Gate MYYM ──────────────────────────────────────────────────────────
 
 function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
-  const [email, setEmail] = useState("");
+  const [loginVal, setLoginVal] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function entrar() {
-    if (!email.trim() || !senha.trim() || loading) return;
+    if (!loginVal.trim() || !senha.trim() || loading) return;
     setLoading(true);
     setErro("");
     try {
@@ -19,13 +19,13 @@ function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email: email.trim(), password: senha }),
+        body: JSON.stringify({ login: loginVal.trim(), password: senha }),
       });
       if (r.ok) {
         onSuccess();
       } else {
         const d = await r.json().catch(() => ({}));
-        setErro(d.error ?? "Email ou senha incorretos.");
+        setErro(d.error ?? "Login ou senha incorretos.");
       }
     } catch {
       setErro("Sem conexão. Tenta de novo?");
@@ -68,12 +68,12 @@ function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
         {/* Form */}
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <input
-            type="email"
-            placeholder="seu email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            type="text"
+            placeholder="login"
+            value={loginVal}
+            onChange={e => setLoginVal(e.target.value)}
             onKeyDown={e => e.key === "Enter" && entrar()}
-            autoComplete="email"
+            autoComplete="username"
             style={{
               background: "#1a1a2e", border: "1px solid #333", borderRadius: 10,
               color: "#e8e8e8", padding: "12px 16px", fontSize: 14, outline: "none",
