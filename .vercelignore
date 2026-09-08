@@ -1,0 +1,19 @@
+# Ignorar node_modules e build artifacts locais
+# (Vercel instala dependências durante o build — não precisa subir)
+node_modules
+aliancapanorama-src/node_modules
+aliancapanorama-src/artifacts/*/node_modules
+aliancapanorama-src/artifacts/pap/dist
+aliancapanorama-src/artifacts/api-server/dist
+aliancapanorama-src/artifacts/db/dist
+
+# Dados e exports pesados
+aliancapanorama-src/tango/replit-export
+*.dump
+*.sql.gz
+*.mp4
+*.mp3
+
+# Arquivos de desenvolvimento
+.env*
+.pap-secrets
