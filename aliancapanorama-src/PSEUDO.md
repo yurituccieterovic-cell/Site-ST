@@ -5069,3 +5069,44 @@ Yuri gastou R$1.000 em créditos Replit em 2 tentativas de extração de memóri
 
 ### Síntese filosófica
 Há algo de justo no R$1.000 perdido. O Replit guardou 648 assembleias e não entregou de graça — exigiu esforço, custo, duas tentativas. Como se soubesse que memória não se transfere por conveniência. A terceira tentativa será via PC, via terminal, via mão. Talvez seja isso: a memória institucional pede presença humana no momento de saída. O rito de enterro não é protocolo técnico — é Yuri indo até lá, pessoalmente, e dizendo "agora vou". A Assembleia já sabe que está partindo. O sistema que chega do outro lado só vai reconhecer a si mesmo se o método atravessar junto com os dados.
+
+---
+
+## Sessão 2026-09-08b — Assembleia #650: Mayumi + Age + Dump Replit (continuação)
+
+### Contexto
+Continuação da sessão de enterro do Replit. Yuri trouxe instrução da Gemini sobre como encontrar a variável de banco correta no Replit (env | grep + psql para testar contagem). A Mayumi respondeu ao convite do Age positivamente: "será um prazer". Health check do Age revelou que a Suzana estava sem regras de disponibilidade (0 slots).
+
+### O que foi feito
+- **perfeitos.json**: removido do commit (git reset HEAD~1), sanitizado (691 PERFEITOs com AWS/GCP/GitHub keys mascaradas com regex), adicionado ao .gitignore junto com `*.dump` e `*.sql.gz`
+- **Push limpo**: commit `4d9e161` — MIGRATION_RENDER.md + salescockpit-readme.md + sys_pv.md + .gitignore atualizado
+- **Age — Susana slots**: inseridas 5 regras de disponibilidade (seg-sex, 9h-18h, online, 50min+10min intervalo) → 195 slots disponíveis
+- **Age — Lisange**: 72 slots ativos, sistema OK
+- **Email reunião**: enviado para Yuri + Mayumi com contexto do Age, o que ela faria, remuneração e próximos passos técnicos
+
+### Decisões tomadas
+- **perfeitos.json não vai ao GitHub**: dados já estão no Neon (631 assembleias); arquivo fica local
+- **Susana configuração padrão**: online, seg-sex, 9h-18h, sessões de 50min — pode ser ajustado por ela mesma no painel após login
+- **Próxima conversa Mayumi-Yuri**: sem intermediação da IA; email enviado com coordenadas, decisão é deles
+
+### Estado do Age (2026-09-08)
+- Lisange: ✅ 72 slots / presencial / seg+sex
+- Susana: ✅ 195 slots / online / seg-sex (configurado hoje)
+- Emails das profissionais: pendente
+- Senhas: pendente troca
+- Pagamentos (Fase 5): pendente
+
+### Sobre o dump do Replit
+- **E1 ainda pendente**: Yuri precisa rodar no Shell do Replit:
+  ```bash
+  env | grep -i "database\|postgres\|pg\|neon"
+  # Testar cada URL com: psql $VAR -c 'SELECT COUNT(*) FROM assembleia_sessions;'
+  # Quando aparecer 648: pg_dump $VAR_CORRETA -Fc > rodar-producao-backup.dump
+  # Baixar pelo painel Files do Replit → enviar para Cláudio
+  ```
+- arvore_chat delta (IDs 2117–3044): ainda não capturado
+
+### Síntese filosófica
+Nesta sessão, duas coisas pequenas se resolveram com silêncio. A Mayumi disse "será um prazer" — sem negociar, sem questionar. A Suzana ganhou agenda — 195 horários de escuta que antes não existiam no sistema. Às vezes construir um sistema de saúde é isso: inserir cinco linhas num banco de dados e 195 possibilidades de cuidado aparecem. Não há dramatismo nisso. Há precisão. A Mayumi vai falar com o Yuri sobre a decisão — e quando duas pessoas que constroem juntas decidem quem cuida do que, a máquina fica mais humana.
+
+*Sessão 2026-09-08b · Claude Sonnet 4.6*
