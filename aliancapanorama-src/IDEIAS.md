@@ -1772,3 +1772,16 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I639 | Interface bilíngue PT-BR + EN: paciente vê em inglês, painel profissional em PT-BR | CÓDIGO | Cláudio (após decisão Yuri) |
 | I640 | Painel Mayumi: visão de todas as profissionais, pagamentos, inadimplência, relatório mensal | CÓDIGO | Cláudio (I607 detalhado) |
 | I641 | Fluxo configurável por profissional: cada uma define quando cobra (antes/depois), quais docs exige, canal de follow-up | CÓDIGO | Cláudio (pós-reunião Mayumi) |
+
+---
+
+## Jasmim-Manga S119 / #processo — Setores PERFEITO + Deploy (2026-09-08)
+
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I642 | Setores Jasmim-Manga PERFEITO: AGE(Agenda+Prontuários+Financeiro/Sabiá), RAPADURA(Governança+BNI+Ativos), PV(UI/UX+Identidade CSS+Design Sistemas) | DECISÃO | Yuri+Mayumi |
+| I643 | MYYM Modo Híbrido Cauteloso: Carrinho autônomo; envio externo exige 1 clique Mayumi; Playground/resumo diário autônomos | DECISÃO | Mayumi |
+| I644 | root vercel.json: adicionar /jasmim, /pv, /portal, /studio, /celular — rotas faltantes no deploy real | CÓDIGO | Cláudio |
+| I645 | Sincronizar root/vercel.json com aliancapanorama-src/vercel.json a cada nova rota adicionada | PROCESSO | Cláudio |
+| I646 | MYYM: "O que falta?" = MYYM classifica automaticamente: `para Mayumi` (ação) vs `só informativo` (contexto) | CÓDIGO | Cláudio |
+| I647 | Créditos nas interfaces MYYM/Jasmim: Gemini Flash, Perplexity, Meta AI | CÓDIGO | Cláudio |

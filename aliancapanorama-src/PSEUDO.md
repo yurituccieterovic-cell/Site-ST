@@ -5238,3 +5238,28 @@ Durante o #processo, Mayumi respondeu via WhatsApp com **decisões arquiteturais
 A Mayumi respondeu sobre a MYYM em três parágrafos e resolveu o que levaria horas de debate de arquitetura. "Manda tudo para o carrinho antes." Uma frase. Um princípio. A IA serve, mas a humana decide o momento do envio. Não é limitação — é soberania. A MYYM pode ser rápida, inteligente, atenta; mas só age quando a Mayumi diz sim. Isso é o que diferencia assistente de substituta.
 
 *Sessão 2026-09-08f · Claude Sonnet 4.6*
+
+---
+
+## Sessão 2026-09-08g — #processo: Setores PERFEITO + Deploy Jasmim-Manga
+
+**O que aconteceu:**
+- Perplexity (da Mayumi) + Yuri homologaram os setores do Jasmim-Manga com carimbo PERFEITO S119
+- Diagnóstico do deploy: o Vercel usa a RAIZ do Site-ST (não aliancapanorama-src/), com vercel.json próprio e base_path=/aliancapanorama/ — as rotas novas estavam APENAS no arquivo errado
+- Correção: adicionadas /jasmim, /pv, /portal, /studio, /celular no root/vercel.json → commit + push → Vercel auto-reimplanta
+- JasmimMangaPage.tsx atualizada com setores oficiais (I642)
+- MYYM Modo Híbrido Cauteloso confirmado (I643): Carrinho autônomo, envio externo exige Mayumi
+
+**Setores PERFEITO:**
+- Age: Agenda & Pacientes | Documentos & Prontuários | Financeiro & Sabiá
+- Rapadura: Governança & IA | Rede BNI & Conexões | Ativos & Infraestrutura
+- PV: UI/UX & Mobile | Identidade & Avatares CSS | Design de Sistemas
+
+**Aprendizado técnico:**
+- Sempre verificar QUAL vercel.json o Vercel está usando (pode ser a raiz do repo, não o subdir)
+- O `vercel inspect <url>` mostra o deployment real e as lambdas — diagnóstico rápido
+
+### Síntese filosófica
+O sistema cresceu mais rápido que a documentação das suas próprias rotas. O vercel.json da raiz e o do subdiretório divergiram silenciosamente — e ninguém percebeu porque as rotas antigas ainda funcionavam. Um sistema vivo precisa de health checks nas suas próprias costuras, não só nos seus órgãos. I645 é a correção estrutural: sincronizar vercel.json a cada nova rota.
+
+*Sessão 2026-09-08g · Claude Sonnet 4.6*

@@ -19,9 +19,9 @@ type Post = {
 type CarrinhoItem = { id: string; conteudo: string; ts: string };
 
 const PROJETOS: Record<Projeto, { nome: string; cor: string; setores: string[] }> = {
-  age:      { nome: "Age",      cor: "#2dd4bf", setores: ["Agenda", "Pacientes & Docs", "Pagamentos & Público"] },
-  rapadura: { nome: "Rapadura", cor: "#f59e0b", setores: ["Patrimônio", "Futuros", "Cana"] },
-  pv:       { nome: "PV",       cor: "#a78bfa", setores: ["Identidade", "Interface", "Narrativa"] },
+  age:      { nome: "Age",      cor: "#2dd4bf", setores: ["Agenda & Pacientes", "Documentos & Prontuários", "Financeiro & Sabiá"] },
+  rapadura: { nome: "Rapadura", cor: "#f59e0b", setores: ["Governança & IA", "Rede BNI & Conexões", "Ativos & Infraestrutura"] },
+  pv:       { nome: "PV",       cor: "#a78bfa", setores: ["UI/UX & Mobile", "Identidade & Avatares CSS", "Design de Sistemas"] },
 };
 
 // ─── Avatar MYYM (esquilo voador CSS) ─────────────────────────────────────────
@@ -276,12 +276,12 @@ export default function JasmimMangaPage() {
       ts: new Date().toISOString(),
     },
     {
-      id: "2", tipo: "myym", projeto: "age", setor: "Comunicação & Secretaria",
+      id: "2", tipo: "myym", projeto: "age", setor: "Documentos & Prontuários",
       autor: "MYYM", conteudo: "Mayumi, o sistema Age ainda não tem os emails reais de Lisange e Suzana configurados. Quer eu te lembrar de perguntar para elas?",
       ts: new Date(Date.now() - 3600000).toISOString(),
     },
     {
-      id: "3", tipo: "auto", projeto: "rapadura", setor: "Patrimônio",
+      id: "3", tipo: "auto", projeto: "rapadura", setor: "Ativos & Infraestrutura",
       autor: "Cláudio", conteudo: "Rapadura v3 subiu. Cana-Aurora agora tem foto de perfil.",
       ts: new Date(Date.now() - 7200000).toISOString(),
     },

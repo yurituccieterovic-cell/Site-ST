@@ -58,13 +58,13 @@ Nível 1 — Card do Projeto (ex: Age, Rapadura, PV)
 | PV (Projeto Visual / Sérgio) | linguagem visual + grid dos blocos |
 | Age, Rapadura | projetos no feed |
 
-## Setores por Projeto (a definir com Mayumi)
+## Setores por Projeto ✅ PERFEITO — Aprovado Yuri+Mayumi (2026-09-08 · S119)
 
 | Projeto | Setor 1 | Setor 2 | Setor 3 |
 |---|---|---|---|
-| Age | Agenda | Pacientes & Docs | Pagamentos & Público |
-| Rapadura | Patrimônio | Futuros | Cana |
-| PV | Identidade | Interface | Narrativa |
+| Age | Agenda & Pacientes | Documentos & Prontuários | Financeiro & Sabiá |
+| Rapadura | Governança & IA | Rede BNI & Conexões | Ativos & Infraestrutura |
+| PV / Sérgio | UI/UX & Mobile | Identidade & Avatares CSS | Design de Sistemas |
 
 ## Setores administrativos globais (transversais a todos os projetos)
 1. **Administrativo-Financeiro**
@@ -105,7 +105,7 @@ Nível 1 — Card do Projeto (ex: Age, Rapadura, PV)
 | MYYM envia sozinha? | **Não** — MYYM processa e manda para o **Carrinho de Ideias** primeiro; Mayumi aprova e envia |
 | MYYM pode avisar? | **Sim** — pode enviar email para matanimoto@gmail.com com pendências, prazos, status |
 | Playground | **Feed privado** — não público |
-| Setores/Blocos | A decidir + acrescentar créditos: Gemini, Perplexity, Meta AI |
+| Setores/Blocos | ✅ DEFINIDOS (ver tabela acima) + créditos: Gemini, Perplexity, Meta AI |
 | Pendências MYYM | Avisar pendências de todas as pessoas envolvidas por projeto (Sérgio/PV, Lisange+Suzana/Age, etc.) |
 
 ## Fluxo MYYM confirmado
