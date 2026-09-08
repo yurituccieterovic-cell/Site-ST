@@ -268,6 +268,10 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS reset_token TEXT`);
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS reset_token_expira_at TIMESTAMPTZ`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_patients_reset_token ON age_patients(reset_token) WHERE reset_token IS NOT NULL`);
+  // Bloco 2 — campo de escopo + semáforo de tratamento
+  await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS busca_tratar TEXT`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS frequencia_esperada TEXT NOT NULL DEFAULT 'livre'`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS alerta_enviado_at TIMESTAMPTZ`);
   // Formulários e documentos (Fase 4)
   await db.execute(sql`
     CREATE TABLE IF NOT EXISTS age_forms (

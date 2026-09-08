@@ -19,7 +19,7 @@ type AvailRule = {
 };
 type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
-type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string };
+type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null };
 type View = "agenda" | "pacientes" | "disponibilidade" | "sabia" | "feed";
 type FeedItem = {
   tipo: "appointment" | "patient";
@@ -84,7 +84,7 @@ export function AgePage() {
   // Public booking state
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
-  const [bookForm, setBookForm] = useState({ nome: "", telefone: "", email: "", canal: "presencial" });
+  const [bookForm, setBookForm] = useState({ nome: "", telefone: "", email: "", canal: "presencial", buscaTratar: "" });
   const [bookLgpd, setBookLgpd] = useState(false);
   const [bookDone, setBookDone] = useState(false);
   const [bookError, setBookError] = useState("");
@@ -188,6 +188,10 @@ export function AgePage() {
   const [setPwForm, setSetPwForm] = useState({ password: "", confirm: "" });
   const [setPwStatus, setSetPwStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [setPwMsg, setSetPwMsg] = useState("");
+
+  // Alerta de tratamento
+  const [alertandoId, setAlertandoId] = useState<number | null>(null);
+  const [alertaMsg, setAlertaMsg] = useState<Record<number, string>>({});
 
   // SABIÁ popup flutuante
   const [sabiaOpen, setSabiaOpen] = useState(false);
@@ -831,7 +835,7 @@ export function AgePage() {
         <div style={{ color: "#64748b", fontSize: 13 }}>
           Você receberá uma confirmação em breve. Obrigado!
         </div>
-        <button onClick={() => { setBookDone(false); setSelectedSlot(null); setBookForm({ nome: "", telefone: "", email: "", canal: "presencial" }); }}
+        <button onClick={() => { setBookDone(false); setSelectedSlot(null); setBookForm({ nome: "", telefone: "", email: "", canal: "presencial", buscaTratar: "" }); }}
           style={{ marginTop: 24, background: colorDark, border: `1px solid ${color}55`, borderRadius: 8, color, padding: "8px 24px", cursor: "pointer", fontSize: 14 }}>
           Marcar outro horário
         </button>
@@ -862,6 +866,14 @@ export function AgePage() {
               />
             </div>
           ))}
+          {/* O que busca tratar */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={{ color: "#94a3b8", fontSize: 12, display: "block", marginBottom: 4 }}>O que você busca tratar? <span style={{ color: "#64748b" }}>(opcional)</span></label>
+            <textarea placeholder="Descreva brevemente o motivo da consulta..." rows={2}
+              value={bookForm.buscaTratar} onChange={e => setBookForm(bf => ({ ...bf, buscaTratar: e.target.value }))}
+              style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box", resize: "vertical", fontFamily: "inherit" }}
+            />
+          </div>
           {/* Consentimento LGPD */}
           <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 14, cursor: "pointer" }}>
             <input type="checkbox" checked={bookLgpd} onChange={e => setBookLgpd(e.target.checked)}
@@ -1090,12 +1102,17 @@ export function AgePage() {
           <div key={p.id}
             style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "12px 16px", marginBottom: 10, cursor: "pointer" }}
             onClick={() => setSelectedPatient(selectedPatient?.id === p.id ? null : p)}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-              <div>
-                <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{p.nome}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  {p.semaforo && p.semaforo !== "cinza" && p.frequenciaEsperada !== "livre" && (
+                    <span title={`Semáforo: ${p.semaforo}`} style={{ width: 10, height: 10, borderRadius: "50%", flexShrink: 0, background: p.semaforo === "verde" ? "#4ade80" : p.semaforo === "amarelo" ? "#fbbf24" : "#f87171", display: "inline-block" }} />
+                  )}
+                  <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{p.nome}</div>
+                </div>
                 <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{p.email}{p.telefone ? ` · ${p.telefone}` : ""}</div>
               </div>
-              <span style={{ background: (statusColors[p.status] ?? "#64748b") + "22", color: statusColors[p.status] ?? "#64748b", borderRadius: 20, padding: "3px 10px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
+              <span style={{ background: (statusColors[p.status] ?? "#64748b") + "22", color: statusColors[p.status] ?? "#64748b", borderRadius: 20, padding: "3px 10px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0 }}>
                 {statusLabels[p.status] ?? p.status}
               </span>
             </div>
@@ -1123,6 +1140,7 @@ export function AgePage() {
                   <>
                     <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 8 }}>
                       Cadastrado em {new Date(p.createdAt).toLocaleDateString("pt-BR")}
+                      {p.ultimaConsulta && <> · Última consulta: {new Date(p.ultimaConsulta).toLocaleDateString("pt-BR")}</>}
                     </div>
                     <textarea
                       placeholder="Observações internas (não visíveis ao paciente)"
@@ -1132,6 +1150,34 @@ export function AgePage() {
                       rows={2}
                       style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 12, resize: "vertical", boxSizing: "border-box" }}
                     />
+                    {/* Frequência esperada + semáforo */}
+                    <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <label style={{ color: "#64748b", fontSize: 11, whiteSpace: "nowrap" }}>Frequência:</label>
+                      <select value={p.frequenciaEsperada ?? "livre"}
+                        onChange={async e => {
+                          const freq = e.target.value;
+                          setPatients(ps => ps.map(x => x.id === p.id ? { ...x, frequenciaEsperada: freq } : x));
+                          setSelectedPatient({ ...p, frequenciaEsperada: freq });
+                          await fetch(`${API}/api/age/${slug}/patients/${p.id}/frequencia`, {
+                            method: "PATCH", credentials: "include",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ frequenciaEsperada: freq }),
+                          });
+                        }}
+                        style={{ background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", fontSize: 12, padding: "4px 8px" }}>
+                        <option value="livre">Livre (sem semáforo)</option>
+                        <option value="semanal">Semanal</option>
+                        <option value="quinzenal">Quinzenal</option>
+                        <option value="mensal">Mensal</option>
+                      </select>
+                      {p.semaforo && p.semaforo !== "cinza" && p.frequenciaEsperada !== "livre" && (
+                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: p.semaforo === "verde" ? "#4ade80" : p.semaforo === "amarelo" ? "#fbbf24" : "#f87171" }}>
+                          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "currentColor", display: "inline-block" }} />
+                          {p.semaforo === "verde" ? "Em dia" : p.semaforo === "amarelo" ? "Atrasado" : "Atenção"}
+                        </span>
+                      )}
+                    </div>
+                    {alertaMsg[p.id] && <div style={{ fontSize: 11, color: alertaMsg[p.id].includes("✓") ? "#4ade80" : "#f87171", marginTop: 6 }}>{alertaMsg[p.id]}</div>}
                     <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
                       {p.status === "pendente_aprovacao" && (
                         <>
@@ -1155,6 +1201,21 @@ export function AgePage() {
                         <button onClick={e => { e.stopPropagation(); updatePatient(p.id, { status: "aprovado" }); }}
                           style={{ background: "#052e16", border: "1px solid #4ade8055", borderRadius: 8, color: "#4ade80", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
                           Reativar
+                        </button>
+                      )}
+                      {p.email && p.status === "aprovado" && (
+                        <button disabled={alertandoId === p.id}
+                          onClick={async e => {
+                            e.stopPropagation();
+                            setAlertandoId(p.id);
+                            try {
+                              const r = await fetch(`${API}/api/age/${slug}/patients/${p.id}/alerta`, { method: "POST", credentials: "include" });
+                              setAlertaMsg(m => ({ ...m, [p.id]: r.ok ? "✓ Alerta enviado!" : "Erro ao enviar" }));
+                            } catch { setAlertaMsg(m => ({ ...m, [p.id]: "Erro ao enviar" })); }
+                            finally { setAlertandoId(null); }
+                          }}
+                          style={{ background: "#0c1a2e", border: "1px solid #38bdf855", borderRadius: 8, color: "#38bdf8", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                          {alertandoId === p.id ? "…" : "📧 Enviar alerta"}
                         </button>
                       )}
                     </div>

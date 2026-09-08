@@ -404,9 +404,9 @@ router.get("/age/:slug/appointments", requireAgeAuth, async (req, res): Promise<
 // POST /api/age/:slug/book — paciente marca horário (público)
 router.post("/age/:slug/book", async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const { patientNome, patientTelefone, patientEmail, dataHora, canal = "presencial", lgpdConsent } = req.body as {
+  const { patientNome, patientTelefone, patientEmail, dataHora, canal = "presencial", lgpdConsent, buscaTratar } = req.body as {
     patientNome?: string; patientTelefone?: string; patientEmail?: string;
-    dataHora?: string; canal?: string; lgpdConsent?: boolean;
+    dataHora?: string; canal?: string; lgpdConsent?: boolean; buscaTratar?: string;
   };
 
   if (!patientNome || !dataHora) {
@@ -444,7 +444,8 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
     lgpdConsent: true,
     lgpdConsentAt: new Date(),
     cancelToken,
-  }).returning();
+    ...(buscaTratar?.trim() ? { buscaTratar: buscaTratar.trim() } : {}),
+  } as any).returning();
 
   const dt = new Date(dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
   const cancelLink     = `${FRONT_URL}/age/${slug}?cancel=${cancelToken}`;
@@ -904,23 +905,59 @@ router.post("/age/:slug/confirm-email", async (req, res): Promise<void> => {
 
 // GET /api/age/:slug/patients (auth required)
 router.get("/age/:slug/patients", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
   const { status } = req.query as Record<string, string | undefined>;
-  const conditions = [eq(agePatientsTable.professionalId, req.session.ageProfessionalId!)];
-  if (status && status !== "todos") conditions.push(eq(agePatientsTable.status, status));
 
-  const rows = await db.select({
-    id:           agePatientsTable.id,
-    nome:         agePatientsTable.nome,
-    email:        agePatientsTable.email,
-    telefone:     agePatientsTable.telefone,
-    status:       agePatientsTable.status,
-    observacoesPro: agePatientsTable.observacoesPro,
-    createdAt:    agePatientsTable.createdAt,
-    updatedAt:    agePatientsTable.updatedAt,
-  }).from(agePatientsTable).where(and(...conditions)).orderBy(agePatientsTable.createdAt);
+  const statusFilter = (status && status !== "todos") ? `AND p.status = '${status.replace(/'/g, "''")}'` : "";
+
+  const result = await db.execute(sql`
+    SELECT
+      p.id, p.nome, p.email, p.telefone, p.status,
+      p.observacoes_pro AS "observacoesPro",
+      p.created_at AS "createdAt", p.updated_at AS "updatedAt",
+      p.frequencia_esperada AS "frequenciaEsperada",
+      p.alerta_enviado_at AS "alertaEnviadoAt",
+      MAX(a.data_hora) FILTER (
+        WHERE a.status NOT IN ('cancelado','remarcado','faltou')
+      ) AS "ultimaConsulta",
+      MIN(a.data_hora) FILTER (
+        WHERE a.data_hora > now() AND a.status NOT IN ('cancelado','remarcado')
+      ) AS "proximaConsulta"
+    FROM age_patients p
+    LEFT JOIN age_appointments a
+      ON LOWER(a.patient_email) = LOWER(p.email)
+      AND a.professional_id = p.professional_id
+    WHERE p.professional_id = ${profId}
+    ${sql.raw(statusFilter)}
+    GROUP BY p.id
+    ORDER BY p.created_at
+  `);
+
+  const rows = result.rows.map((p: Record<string, unknown>) => {
+    const freq = (p["frequenciaEsperada"] as string) ?? "livre";
+    const ultima = p["ultimaConsulta"] ? new Date(p["ultimaConsulta"] as string) : null;
+    const proxima = p["proximaConsulta"] ? new Date(p["proximaConsulta"] as string) : null;
+    const semaforo = computeSemaforo(freq, ultima, proxima);
+    return { ...p, semaforo };
+  });
 
   res.json(rows);
 });
+
+function computeSemaforo(freq: string, ultima: Date | null, proxima: Date | null): string {
+  if (proxima && proxima > new Date()) return "verde";
+  if (!ultima) return "cinza";
+  const dias = (Date.now() - ultima.getTime()) / 86_400_000;
+  const limites: Record<string, [number, number]> = {
+    semanal:   [7,  14],
+    quinzenal: [21, 30],
+    mensal:    [45, 60],
+  };
+  const [limA, limV] = limites[freq] ?? [Infinity, Infinity];
+  if (dias >= limV) return "vermelho";
+  if (dias >= limA) return "amarelo";
+  return "verde";
+}
 
 // PATCH /api/age/:slug/patients/:id (auth required) — aprovar/recusar/anotar
 router.patch("/age/:slug/patients/:id", requireAgeAuth, async (req, res): Promise<void> => {
@@ -978,6 +1015,80 @@ router.patch("/age/:slug/patients/:id", requireAgeAuth, async (req, res): Promis
   }
 
   res.json(updated);
+});
+
+// PATCH /api/age/:slug/patients/:id/frequencia — define frequência esperada do tratamento
+router.patch("/age/:slug/patients/:id/frequencia", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+  const { frequenciaEsperada } = req.body as { frequenciaEsperada?: string };
+  const validas = ["semanal", "quinzenal", "mensal", "livre"];
+  if (!frequenciaEsperada || !validas.includes(frequenciaEsperada)) {
+    res.status(400).json({ error: "frequenciaEsperada inválida (semanal|quinzenal|mensal|livre)" }); return;
+  }
+  const result = await db.execute(sql`
+    UPDATE age_patients SET frequencia_esperada = ${frequenciaEsperada}, updated_at = now()
+    WHERE id = ${id} AND professional_id = ${req.session.ageProfessionalId!}
+    RETURNING id, frequencia_esperada AS "frequenciaEsperada"
+  `);
+  const updated = (result.rows as Record<string, unknown>[])[0];
+  if (!updated) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+  res.json(updated);
+});
+
+// POST /api/age/:slug/patients/:id/alerta — envia email de alerta de tratamento
+router.post("/age/:slug/patients/:id/alerta", requireAgeAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id ?? "0", 10);
+
+  const profId = req.session.ageProfessionalId!;
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, slug: ageProfessionalsTable.slug })
+    .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const patResult = await db.execute(sql`
+    SELECT id, nome, email, frequencia_esperada AS "frequenciaEsperada"
+    FROM age_patients WHERE id = ${id} AND professional_id = ${profId}
+  `);
+  const pat = (patResult.rows as Record<string, unknown>[])[0];
+  if (!pat) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+  if (!pat["email"]) { res.status(400).json({ error: "Paciente sem email cadastrado" }); return; }
+
+  // Últimas 3 consultas realizadas
+  const ultResult = await db.execute(sql`
+    SELECT data_hora, status, canal
+    FROM age_appointments
+    WHERE LOWER(patient_email) = LOWER(${pat["email"] as string})
+      AND professional_id = ${profId}
+      AND status NOT IN ('cancelado','remarcado')
+    ORDER BY data_hora DESC
+    LIMIT 3
+  `);
+  const ultimas = (ultResult.rows as Record<string, unknown>[]).map(r => {
+    const dt = new Date(r["data_hora"] as string).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
+    return `• ${dt} (${r["status"]} · ${r["canal"] ?? "presencial"})`;
+  });
+
+  const agendaLink = `${FRONT_URL}/age/${prof.slug}`;
+  const historico = ultimas.length > 0 ? `Suas últimas consultas com ${prof.nome}:\n${ultimas.join("\n")}` : "Ainda não há consultas registradas.";
+
+  const corpo = `Olá ${pat["nome"]},
+
+Notamos que faz um tempo desde sua última consulta com ${prof.nome}. Interromper o acompanhamento pode comprometer seus resultados — e estamos aqui para apoiar você a manter o fluxo.
+
+${historico}
+
+Quando quiser retomar, é só agendar pelo link abaixo — leva menos de 2 minutos:
+${agendaLink}
+
+Estamos à disposição.
+— SABIÁ, assistente do Age`;
+
+  await sendEmail(pat["email"] as string, `${prof.nome} está com saudades — que tal retomar?`, corpo);
+
+  await db.execute(sql`
+    UPDATE age_patients SET alerta_enviado_at = now() WHERE id = ${id}
+  `);
+
+  res.json({ ok: true, enviado_para: pat["email"] });
 });
 
 // ─── Feed operacional ─────────────────────────────────────────────────────────
