@@ -5,16 +5,26 @@
 
 **Age** = sistema de agenda e controle de pacientes para profissionais de saúde da Sociedade Tucci.
 **SABIÁ** = IA assistente do Age (fusão Cana + ISA + DODGE). Sempre presente, sábia, cuidadosa.
+**Mayumi Tanimoto** = gestora administrativa do Age (confirmado 2026-09-08). Cuida de pacientes, pagamentos, suporte às profissionais e faturamento. Remuneração: % do faturamento mensal.
 
 ## Usuárias atuais
 
 | Slug | Nome | Tipo | Cor | Status |
 |---|---|---|---|---|
-| `lisange` | Lisange | médica | teal `#2dd4bf` | ✅ seedada |
-| `susana` | Suzana | psicóloga | lilás `#a78bfa` | ✅ seedada |
+| `lisange` | Lisange | médica | teal `#2dd4bf` | ✅ seedada · 72 slots ativos |
+| `susana` | Suzana | psicóloga | lilás `#a78bfa` | ✅ seedada · 195 slots ativos (online seg-sex) |
 
 - Senha padrão: `age2026` (trocar no primeiro acesso)
 - Email das profissionais: pendente configuração via `/api/age/admin/setup`
+
+## Equipe
+
+| Pessoa | Papel | Status |
+|---|---|---|
+| Yuri Tuccieterovic | fundador / arquiteto | ativo |
+| Mayumi Tanimoto | gestora administrativa | ✅ confirmada 2026-09-08 |
+| Lisange | profissional médica | ativa |
+| Suzana | profissional psicóloga | ativa |
 
 ## URLs
 
