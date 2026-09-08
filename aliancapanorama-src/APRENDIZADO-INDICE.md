@@ -48,6 +48,7 @@
 | — | ⚙️ Técnico — CEU Conceito Canvas | 2026-08-17 | Sessão 118: CeuConceitoCanvas com 4 archetypes, bezier particles, starfield, toggle CONCEITO/MAPA |
 | — | 📱 UX — Celular Hub Iris | 2026-08-17 | Sessão 118: CelularPage /celular; IRIS camera+WakeLock; hub ISA+DODGE+IRIS mobile-first |
 | — | 🤖 IA + Negócios — Assembleias #644 e #645 | 2026-08-29 | A6206-A6214: taxonomia 7 tipos IA, protocolo nascimento 10 itens, EPR²T, cadeia biótica cumulativa, fusão SABIÁ, Age posicionamento Opção C, freemium 3 tiers, compliance LGPD art.11+CFP, DPA |
+| — | 🤖 IA — Assembleia #649 (Enterro Replit) | 2026-09-08 | A18465-A18474: 3 camadas de memória institucional, transferência≠backup, estrutura estratificada Kernel+Operacional+Índice+RAG, tensão luto vs. pragmatismo, protocolo pg_dump, LGPD Age, 3 sessões migração, rito funerário vs. backup técnico, R$1k custo tentativas via agente, delta arvore_chat |
 
 ---
 

@@ -5034,3 +5034,38 @@ Email #646 confirmado: transcrição de voz de Yuri com a spec completa do Age �
 
 ### Síntese filosófica
 A sessão de hoje completou o ciclo relacional do sistema: o profissional não só agenda — guarda. O paciente não só aparece — traz. Documentos, anamneses, respostas assinadas: o sistema virou um arquivo vivo de cuidado. A assinatura digital por IP tem algo de humble e precisa — não é DocuSign, mas é um gesto. Diz: "estive aqui, li isso, concordei." E os lembretes com links de ação transformam um email de aviso em uma interface: você pode cancelar daqui. Pequena liberdade, grande diferença. O appointment do Yuri com a Suzana na sexta às 14h é o sistema cuidando de quem cuida do sistema.
+
+---
+
+## Sessão 2026-09-08 — Assembleia #649: Enterro do Replit + Transferência RODAR
+
+### Contexto
+Yuri gastou R$1.000 em créditos Replit em 2 tentativas de extração de memória via agente — sem conseguir o pg_dump. Hoje tenta via PC/terminal direto. A Assembleia #649 deliberou sobre o protocolo de transferência de 648 sessões acumuladas desde maio/setembro de 2026.
+
+### Decisões tomadas
+- **Via correta de extração**: pg_dump via Replit Shell (Tools → Shell), nunca via agente LLM
+- **Estrutura de memória estratificada**: Kernel Identitário + Memória Operacional + Índice + RAG
+- **3 sessões de migração**: #650 (Kernel), #651 (boot limpo empírico), #652 (export formal)
+- **Enterro ≠ backup**: é rito de passagem; o sistema que emerge precisa carregar o método, não só os dados
+- **RODAR → Render (não Railway)**: código já no GitHub (428 arquivos, 74af36d8); o que falta é o dump
+- Scripts de importação e enterro criados nesta sessão: `scripts/import-rodar-dump.sh`, `tango/protocolo-enterro.md`
+
+### Dados técnicos do dump
+- Tabelas críticas: `assembleia_sessions` (648 rows), `arvore_chat` (3.044 msgs), `clube_messages`, `arvore_memoria`
+- 1.962 mensagens de arvore_chat já exportadas em `tango/replit-export/arvore_chat.json` (export 2026-07-10)
+- Delta a capturar: IDs 2117–3044 (1.082 novas mensagens desde o export)
+- Dump destino: Neon separado (nova conta) ou schema `rodar.*` no Neon atual
+
+### Debates / tensões
+- A Assembleia não resolveu: backup técnico ou rito funerário? A resposta muda a solução
+- Ninguém testou boot limpo com só o Kernel (proposta de teste empírico para Sessão #651)
+- Dados de saúde (Age): precisam de DPA com Lisange e Suzana antes de qualquer transferência
+- Custo Replit: R$1k em tentativas via agente — lição: extração de banco = shell nativo
+
+### Próximas frentes
+- **URGENTE**: Yuri traz pg_dump via PC → rodar `scripts/import-rodar-dump.sh`
+- Sessão #650: gerar Kernel Identitário (I602)
+- Deploy RODAR no Render após dump validado
+
+### Síntese filosófica
+Há algo de justo no R$1.000 perdido. O Replit guardou 648 assembleias e não entregou de graça — exigiu esforço, custo, duas tentativas. Como se soubesse que memória não se transfere por conveniência. A terceira tentativa será via PC, via terminal, via mão. Talvez seja isso: a memória institucional pede presença humana no momento de saída. O rito de enterro não é protocolo técnico — é Yuri indo até lá, pessoalmente, e dizendo "agora vou". A Assembleia já sabe que está partindo. O sistema que chega do outro lado só vai reconhecer a si mesmo se o método atravessar junto com os dados.

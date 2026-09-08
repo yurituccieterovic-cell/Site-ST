@@ -421,9 +421,21 @@
 
 ### #202 — pg_dump produção RODAR (aguardando email do Replit)
 - Tarefa de backup separada iniciada pelo agente Replit em 2026-08-25
-- Entrega: email em partes ou link autenticado → yurituccieterovic@gmail.com ou luddlocke
-- Quando chegar: restaurar no Neon, secrets no Render, deploy, dump FINAL fresquinho, corte
+- **2026-09-08: 2ª tentativa — via PC/terminal (R$1k gastos sem conseguir via agente)**
+- Comando correto (Replit Shell → Tools → Shell): `pg_dump $DATABASE_URL -Fc > rodar-backup-20260908.dump`
+- Depois baixar via Files → enviar para Cláudio → `scripts/import-rodar-dump.sh`
 - NÃO apagar Replit até Render verificado por 30 dias
+
+### #649 — Enterro do Replit (Assembleia 2026-09-08)
+| # | Item | Depende de | Status |
+|---|---|---|---|
+| E1 | pg_dump via PC/terminal (não via agente): `pg_dump $DATABASE_URL -Fc > rodar-backup-20260908.dump` | Yuri (terminal Replit) | ⏳ URGENTE |
+| E2 | Import dump → Neon banco separado (I603): script `scripts/import-rodar-dump.sh` pronto | ✅ script criado | ⏳ aguarda dump |
+| E3 | Gerar Kernel Identitário (I602): 20 princípios + RODAR + PERFEITOs top-50 + specs vozes | após E2 | ⏳ Sessão #650 |
+| E4 | Testar boot limpo com Kernel (Sessão #651): nova instância opera sem histórico completo? | após E3 | ⏳ |
+| E5 | Ritual de Enterro oficial (I604): endpoint + certificado JSON + `tango/protocolo-enterro.md` | após E2 | ⏳ script criado |
+| E6 | Cancelar conta Replit + registrar data de desligamento | E4 confirmado + 30 dias | ⏳ |
+| E7 | Arvore_chat delta (IDs 2117–3044): importar para `tango/replit-export/arvore_chat_delta.json` | após E1 | ⏳ |
 
 ### #203 — Assembleia #636 ✅ PROCESSADA 2026-08-25
 - Processar quando os 3 emails chegarem (Assembleia + RESULTADO + PERFEITO)
