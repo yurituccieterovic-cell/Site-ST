@@ -2526,7 +2526,7 @@ export async function ensureJasmimTables(): Promise<void> {
       id         UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
       projeto    TEXT        NOT NULL CHECK (projeto IN ('age','rapadura','pv')),
       setor      TEXT,
-      tipo       TEXT        NOT NULL DEFAULT 'auto' CHECK (tipo IN ('auto','nota','myym')),
+      tipo       TEXT        NOT NULL DEFAULT 'auto' CHECK (tipo IN ('auto','nota','pergunta','myym')),
       autor      TEXT        NOT NULL DEFAULT 'sistema',
       conteudo   TEXT        NOT NULL,
       fonte      TEXT,

@@ -41,59 +41,68 @@ function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
       fontFamily: "system-ui, sans-serif", padding: 24,
     }}>
       <div style={{ width: "min(360px, 100%)", textAlign: "center" }}>
-        {/* Esquilo voador animado */}
-        <div style={{ width: 90, height: 90, margin: "0 auto 20px", position: "relative" }}>
+        {/* Esquilo-voador animado — patagium (membrana lateral real) */}
+        <div style={{ width: 96, height: 96, margin: "0 auto 20px", position: "relative" }}>
           <style>{`
-            @keyframes jmFly {
-              0%,100% { transform: translateY(0) rotate(-4deg); }
-              50% { transform: translateY(-12px) rotate(4deg); }
+            @keyframes jmGlide {
+              0%,100% { transform: translateY(0) rotate(-3deg); }
+              50% { transform: translateY(-14px) rotate(3deg); }
             }
-            @keyframes jmFlap {
-              0%,100% { transform: rotate(-25deg) scaleY(0.8); }
-              50% { transform: rotate(20deg) scaleY(1); }
+            @keyframes jmMembrane {
+              0%,100% { d: path("M18,54 Q10,42 18,30 L38,40 L42,62 Z"); }
+              50%      { d: path("M18,54 Q8,44 18,30 L38,40 L42,64 Z"); }
             }
-            @keyframes jmTail {
-              0%,100% { transform: rotate(-8deg); }
-              50% { transform: rotate(14deg); }
+            @keyframes jmMembraneR {
+              0%,100% { d: path("M78,54 Q86,42 78,30 L58,40 L54,62 Z"); }
+              50%      { d: path("M78,54 Q88,44 78,30 L58,40 L54,64 Z"); }
             }
-            .jm-squirrel { animation: jmFly 2.4s ease-in-out infinite; }
-            .jm-wing-l { animation: jmFlap 0.7s ease-in-out infinite; transform-origin: right center; }
-            .jm-wing-r { animation: jmFlap 0.7s ease-in-out infinite reverse; transform-origin: left center; }
-            .jm-tail   { animation: jmTail 2s ease-in-out infinite; transform-origin: top left; }
+            @keyframes jmTailWag {
+              0%,100% { transform: rotate(-6deg); transform-origin: 58px 52px; }
+              50%      { transform: rotate(10deg); transform-origin: 58px 52px; }
+            }
+            .jm-sq    { animation: jmGlide 2.6s ease-in-out infinite; }
+            .jm-mem-l { animation: jmMembrane 2.6s ease-in-out infinite; }
+            .jm-mem-r { animation: jmMembraneR 2.6s ease-in-out infinite; }
+            .jm-tail  { animation: jmTailWag 2.6s ease-in-out infinite; }
           `}</style>
-          <svg className="jm-squirrel" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" style={{ width: 90, height: 90 }}>
-            {/* brilho de fundo */}
-            <circle cx="45" cy="48" r="34" fill="url(#jmGlow)" opacity="0.35"/>
+          <svg className="jm-sq" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 96, height: 96 }}>
             <defs>
-              <radialGradient id="jmGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#a78bfa"/>
+              <radialGradient id="jmGlow2" cx="50%" cy="55%" r="50%">
+                <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.4"/>
                 <stop offset="100%" stopColor="#f59e0b" stopOpacity="0"/>
               </radialGradient>
             </defs>
-            {/* asas */}
-            <ellipse className="jm-wing-l" cx="26" cy="48" rx="13" ry="7" fill="#f59e0b" opacity="0.85"/>
-            <ellipse className="jm-wing-r" cx="64" cy="48" rx="13" ry="7" fill="#f59e0b" opacity="0.85"/>
-            {/* cauda */}
-            <ellipse className="jm-tail" cx="68" cy="38" rx="10" ry="6" fill="#c7701a" opacity="0.9" transform="rotate(-30 68 38)"/>
+            <ellipse cx="48" cy="54" r="36" fill="url(#jmGlow2)" opacity="1"/>
+            {/* patagium esquerdo — membrana braço→perna */}
+            <path className="jm-mem-l" d="M18,54 Q10,42 18,30 L38,40 L42,62 Z" fill="#c2700a" opacity="0.82"/>
+            {/* patagium direito */}
+            <path className="jm-mem-r" d="M78,54 Q86,42 78,30 L58,40 L54,62 Z" fill="#c2700a" opacity="0.82"/>
+            {/* cauda fofa */}
+            <ellipse className="jm-tail" cx="62" cy="58" rx="14" ry="8" fill="#92400e" transform="rotate(25 62 58)"/>
+            <ellipse className="jm-tail" cx="64" cy="55" rx="11" ry="6" fill="#d97706" transform="rotate(25 64 55)"/>
             {/* corpo */}
-            <ellipse cx="45" cy="50" rx="18" ry="16" fill="#d97706"/>
-            {/* orelha esq */}
-            <ellipse cx="34" cy="30" rx="5" ry="8" fill="#d97706" transform="rotate(-15 34 30)"/>
-            <ellipse cx="34" cy="30" rx="3" ry="5" fill="#fbbf24" transform="rotate(-15 34 30)"/>
+            <ellipse cx="48" cy="54" rx="16" ry="14" fill="#d97706"/>
+            {/* braços estendidos */}
+            <ellipse cx="26" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(-35 26 40)"/>
+            <ellipse cx="70" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(35 70 40)"/>
+            {/* orelha esq — pequena e arredondada */}
+            <ellipse cx="37" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(-10 37 26)"/>
+            <ellipse cx="37" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(-10 37 27)"/>
             {/* orelha dir */}
-            <ellipse cx="56" cy="30" rx="5" ry="8" fill="#d97706" transform="rotate(15 56 30)"/>
-            <ellipse cx="56" cy="30" rx="3" ry="5" fill="#fbbf24" transform="rotate(15 56 30)"/>
+            <ellipse cx="59" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(10 59 26)"/>
+            <ellipse cx="59" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(10 59 27)"/>
             {/* cabeça */}
-            <circle cx="45" cy="36" r="14" fill="#d97706"/>
-            {/* rosto */}
-            <ellipse cx="40" cy="36" rx="3.5" ry="4" fill="#1a1a2e"/>
-            <ellipse cx="50" cy="36" rx="3.5" ry="4" fill="#1a1a2e"/>
-            <circle cx="41" cy="35" r="1.2" fill="white"/>
-            <circle cx="51" cy="35" r="1.2" fill="white"/>
-            <ellipse cx="45" cy="42" rx="4" ry="2.5" fill="#c7701a"/>
+            <circle cx="48" cy="36" r="13" fill="#d97706"/>
+            {/* olhos grandes — característica do esquilo-voador */}
+            <ellipse cx="43" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
+            <ellipse cx="53" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
+            <circle cx="44" cy="33.5" r="1.5" fill="white"/>
+            <circle cx="54" cy="33.5" r="1.5" fill="white"/>
+            {/* narizinho */}
+            <ellipse cx="48" cy="40" rx="2.5" ry="1.8" fill="#92400e"/>
             {/* bochechas */}
-            <circle cx="35" cy="40" r="4" fill="#f59e0b" opacity="0.4"/>
-            <circle cx="55" cy="40" r="4" fill="#f59e0b" opacity="0.4"/>
+            <circle cx="38" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
+            <circle cx="58" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
           </svg>
         </div>
         <h1 style={{ color: "#e8e8e8", fontSize: 22, fontWeight: 800, margin: "0 0 4px", letterSpacing: -0.5 }}>
@@ -140,12 +149,12 @@ function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
           )}
           <button
             onClick={entrar}
-            disabled={loading || !email.trim() || !senha.trim()}
+            disabled={loading || !loginVal.trim() || !senha.trim()}
             style={{
               background: loading ? "#333" : "linear-gradient(135deg, #f59e0b, #a78bfa)",
               border: "none", borderRadius: 10, padding: "13px",
               color: "#111", fontWeight: 800, fontSize: 14, cursor: loading ? "not-allowed" : "pointer",
-              transition: "opacity 0.2s", opacity: (!email.trim() || !senha.trim()) ? 0.5 : 1,
+              transition: "opacity 0.2s", opacity: (!loginVal.trim() || !senha.trim()) ? 0.5 : 1,
             }}
           >
             {loading ? "Entrando…" : "Entrar no Jasmim-Manga →"}
@@ -194,7 +203,7 @@ type Projeto = "age" | "rapadura" | "pv";
 
 type Post = {
   id: string;
-  tipo: "auto" | "nota" | "myym";
+  tipo: "auto" | "nota" | "pergunta" | "myym";
   projeto: Projeto;
   setor?: string;
   autor: string;
@@ -384,15 +393,16 @@ function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: 
   const proj = PROJETOS[post.projeto];
 
   const corTipo: Record<Post["tipo"], string> = {
-    auto:  "#444",
-    nota:  "#2dd4bf22",
-    myym:  "#f59e0b11",
+    auto:     "#444",
+    nota:     "#2dd4bf22",
+    pergunta: "#f59e0b22",
+    myym:     "#a78bfa22",
   };
 
   return (
     <div style={{
       background: corTipo[post.tipo],
-      border: `1px solid ${post.tipo === "nota" ? "#2dd4bf44" : post.tipo === "myym" ? "#f59e0b33" : "#2a2a2a"}`,
+      border: `1px solid ${post.tipo === "nota" ? "#2dd4bf44" : post.tipo === "pergunta" ? "#f59e0b44" : post.tipo === "myym" ? "#a78bfa44" : "#2a2a2a"}`,
       borderRadius: 12, padding: "12px 16px", marginBottom: 10,
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
@@ -447,6 +457,7 @@ function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: 
 
 function NovaNota({ projeto, onSalva }: { projeto: Projeto; onSalva: () => void }) {
   const [texto, setTexto] = useState("");
+  const [tipo, setTipo] = useState<"nota" | "pergunta">("nota");
   const [salvando, setSalvando] = useState(false);
 
   async function salvar() {
@@ -456,8 +467,23 @@ function NovaNota({ projeto, onSalva }: { projeto: Projeto; onSalva: () => void 
       await fetch(`${API}/api/jasmim/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projeto, tipo: "nota", autor: "Mayumi", conteudo: texto.trim() }),
+        body: JSON.stringify({ projeto, tipo, autor: "Mayumi", conteudo: texto.trim() }),
       });
+      // Se é pergunta, pede resposta à MYYM e posta automaticamente
+      if (tipo === "pergunta") {
+        const r = await fetch(`${API}/api/jasmim/myym/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mensagem: texto.trim(), historico: [] }),
+        }).then(r => r.json()).catch(() => null);
+        if (r?.resposta) {
+          await fetch(`${API}/api/jasmim/posts`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ projeto, tipo: "myym", autor: "MYYM", conteudo: r.resposta }),
+          });
+        }
+      }
       setTexto("");
       onSalva();
     } finally {
@@ -467,13 +493,28 @@ function NovaNota({ projeto, onSalva }: { projeto: Projeto; onSalva: () => void 
 
   return (
     <div style={{
-      background: "#1a1a2e", border: "1px solid #2dd4bf44",
+      background: "#1a1a2e",
+      border: `1px solid ${tipo === "pergunta" ? "#f59e0b44" : "#2dd4bf44"}`,
       borderRadius: 12, padding: "12px 16px", marginBottom: 16,
     }}>
+      {/* Selector nota / pergunta */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+        {(["nota", "pergunta"] as const).map(t => (
+          <button key={t} onClick={() => setTipo(t)} style={{
+            background: tipo === t ? (t === "pergunta" ? "#f59e0b" : "#2dd4bf") : "transparent",
+            border: `1px solid ${t === "pergunta" ? "#f59e0b66" : "#2dd4bf66"}`,
+            borderRadius: 16, padding: "3px 12px", fontSize: 11, fontWeight: tipo === t ? 700 : 400,
+            color: tipo === t ? "#111" : "#888", cursor: "pointer",
+          }}>
+            {t === "nota" ? "📝 nota" : "❓ pergunta → MYYM"}
+          </button>
+        ))}
+      </div>
       <textarea
         value={texto}
         onChange={e => setTexto(e.target.value)}
-        placeholder="Nova nota para o feed…"
+        onKeyDown={e => e.key === "Enter" && e.metaKey && salvar()}
+        placeholder={tipo === "pergunta" ? "Pergunta para a MYYM…" : "Nova nota para o feed…"}
         rows={2}
         style={{
           width: "100%", background: "transparent", border: "none",
@@ -486,12 +527,12 @@ function NovaNota({ projeto, onSalva }: { projeto: Projeto; onSalva: () => void 
           onClick={salvar}
           disabled={salvando || !texto.trim()}
           style={{
-            background: texto.trim() ? "#2dd4bf" : "#333",
+            background: texto.trim() ? (tipo === "pergunta" ? "#f59e0b" : "#2dd4bf") : "#333",
             border: "none", borderRadius: 8, padding: "6px 16px",
             color: "#111", fontWeight: 700, fontSize: 12,
             cursor: texto.trim() ? "pointer" : "not-allowed", transition: "background 0.2s",
           }}
-        >{salvando ? "salvando…" : "Postar nota"}</button>
+        >{salvando ? (tipo === "pergunta" ? "perguntando…" : "salvando…") : (tipo === "pergunta" ? "Perguntar à MYYM →" : "Postar nota")}</button>
       </div>
     </div>
   );
