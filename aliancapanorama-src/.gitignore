@@ -60,3 +60,11 @@ artifacts/api-server/.env
 artifacts/pap/.env
 # Templates de exemplo: commitados (sem secrets reais)
 !.env.local.example
+
+# Exports com dados sensíveis — ficar só local e no Neon
+tango/replit-export/perfeitos.json
+tango/replit-export/rodar-saude-2026-08-25/
+
+# Dumps de banco nunca no git
+*.dump
+*.sql.gz
