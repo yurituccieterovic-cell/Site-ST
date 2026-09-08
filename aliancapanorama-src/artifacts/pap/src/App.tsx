@@ -24,7 +24,7 @@ import { AgePage } from "@/pages/AgePage";
 import { AgePrivacidadePage } from "@/pages/AgePrivacidadePage";
 import { AgeTermosPage } from "@/pages/AgeTermosPage";
 import { PvPage } from "@/pages/PvPage";
-import JasmimMangaPage from "@/pages/JasmimMangaPage";
+import JasmimMangaPage, { JasmimGate } from "@/pages/JasmimMangaPage";
 import { ManuelPage } from "@/pages/ManuelPage";
 import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
@@ -327,7 +327,7 @@ function App() {
   if (isIsa) return <IsaLandingPage />;
   if (isCelular) return <CelularPage />;
   if (isPv) return <PvPage />;
-  if (isJasmim) return <JasmimMangaPage />;
+  if (isJasmim) return <JasmimGate />;
 
   if (isArquitetura) {
     return (

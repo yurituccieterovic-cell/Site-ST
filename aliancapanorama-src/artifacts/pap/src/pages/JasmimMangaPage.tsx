@@ -2,6 +2,154 @@ import { useState, useEffect, useRef } from "react";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
+// ─── Login Gate MYYM ──────────────────────────────────────────────────────────
+
+function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function entrar() {
+    if (!email.trim() || !senha.trim() || loading) return;
+    setLoading(true);
+    setErro("");
+    try {
+      const r = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email: email.trim(), password: senha }),
+      });
+      if (r.ok) {
+        onSuccess();
+      } else {
+        const d = await r.json().catch(() => ({}));
+        setErro(d.error ?? "Email ou senha incorretos.");
+      }
+    } catch {
+      setErro("Sem conexão. Tenta de novo?");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div style={{
+      minHeight: "100vh", background: "#0f0f1a", display: "flex",
+      alignItems: "center", justifyContent: "center",
+      fontFamily: "system-ui, sans-serif", padding: 24,
+    }}>
+      <div style={{ width: "min(360px, 100%)", textAlign: "center" }}>
+        {/* Avatar */}
+        <div style={{
+          width: 72, height: 72, margin: "0 auto 20px",
+          borderRadius: "50%",
+          background: "linear-gradient(135deg, #f59e0b, #a78bfa)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 36, animation: "floatLogin 3s ease-in-out infinite",
+          boxShadow: "0 0 30px rgba(167,139,250,0.3)",
+        }}>
+          🐿️
+          <style>{`
+            @keyframes floatLogin {
+              0%,100% { transform: translateY(0) rotate(-5deg); }
+              50% { transform: translateY(-10px) rotate(5deg); }
+            }
+          `}</style>
+        </div>
+        <h1 style={{ color: "#e8e8e8", fontSize: 22, fontWeight: 800, margin: "0 0 4px", letterSpacing: -0.5 }}>
+          Jasmim-Manga
+        </h1>
+        <p style={{ color: "#888", fontSize: 13, margin: "0 0 28px" }}>
+          espaço da Mayumi · ecossistema Théo
+        </p>
+
+        {/* Form */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <input
+            type="email"
+            placeholder="seu email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && entrar()}
+            autoComplete="email"
+            style={{
+              background: "#1a1a2e", border: "1px solid #333", borderRadius: 10,
+              color: "#e8e8e8", padding: "12px 16px", fontSize: 14, outline: "none",
+              transition: "border-color 0.2s",
+            }}
+            onFocus={e => (e.target.style.borderColor = "#a78bfa")}
+            onBlur={e => (e.target.style.borderColor = "#333")}
+          />
+          <input
+            type="password"
+            placeholder="senha"
+            value={senha}
+            onChange={e => setSenha(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && entrar()}
+            autoComplete="current-password"
+            style={{
+              background: "#1a1a2e", border: "1px solid #333", borderRadius: 10,
+              color: "#e8e8e8", padding: "12px 16px", fontSize: 14, outline: "none",
+              transition: "border-color 0.2s",
+            }}
+            onFocus={e => (e.target.style.borderColor = "#a78bfa")}
+            onBlur={e => (e.target.style.borderColor = "#333")}
+          />
+          {erro && (
+            <p style={{ color: "#f87171", fontSize: 13, margin: 0 }}>{erro}</p>
+          )}
+          <button
+            onClick={entrar}
+            disabled={loading || !email.trim() || !senha.trim()}
+            style={{
+              background: loading ? "#333" : "linear-gradient(135deg, #f59e0b, #a78bfa)",
+              border: "none", borderRadius: 10, padding: "13px",
+              color: "#111", fontWeight: 800, fontSize: 14, cursor: loading ? "not-allowed" : "pointer",
+              transition: "opacity 0.2s", opacity: (!email.trim() || !senha.trim()) ? 0.5 : 1,
+            }}
+          >
+            {loading ? "Entrando…" : "Entrar no Jasmim-Manga →"}
+          </button>
+        </div>
+
+        <p style={{ color: "#555", fontSize: 11, marginTop: 20 }}>
+          acesso restrito · use as mesmas credenciais do portal
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function JasmimGate() {
+  const [estado, setEstado] = useState<"verificando" | "ok" | "login">("verificando");
+
+  useEffect(() => {
+    fetch(`${API}/api/auth/me`, { credentials: "include" })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => setEstado(d?.user ? "ok" : "login"))
+      .catch(() => setEstado("login"));
+  }, []);
+
+  if (estado === "verificando") {
+    return (
+      <div style={{
+        minHeight: "100vh", background: "#0f0f1a",
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <div style={{ fontSize: 32, animation: "floatLogin 1.5s ease-in-out infinite" }}>🐿️</div>
+      </div>
+    );
+  }
+
+  if (estado === "login") {
+    return <JasmimLogin onSuccess={() => setEstado("ok")} />;
+  }
+
+  return <JasmimMangaPage />;
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Projeto = "age" | "rapadura" | "pv";
