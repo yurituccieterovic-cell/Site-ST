@@ -1759,3 +1759,16 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I633 | Setores administrativos configuráveis por projeto (Age: adm/financeiro/profissionais etc.) | CÓDIGO | Mayumi define, Cláudio codifica |
 | I634 | Feed editável: Mayumi intercala notas e perguntas entre posts existentes | CÓDIGO | Cláudio |
 | I635 | Histórico por data + setor: filtro temporal + drill-down por setor | CÓDIGO | Cláudio |
+
+---
+
+## Age — Brainstorm Rodada 2 · Mayumi + Yuri (2026-09-08 · #eage)
+
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I636 | Acompanhamento intermediário: cron job X dias pós-consulta → envia formulário por email (futuro: WhatsApp) | CÓDIGO | Cláudio |
+| I637 | Grade de valores variáveis: campo `preco` em availability_rules por dia/horário | CÓDIGO | Cláudio (simples) |
+| I638 | Levantamento estruturado: documento com perguntas para reunião Mayumi+Lisange+Suzana | IA + MAYUMI | Cláudio gera, Mayumi usa |
+| I639 | Interface bilíngue PT-BR + EN: paciente vê em inglês, painel profissional em PT-BR | CÓDIGO | Cláudio (após decisão Yuri) |
+| I640 | Painel Mayumi: visão de todas as profissionais, pagamentos, inadimplência, relatório mensal | CÓDIGO | Cláudio (I607 detalhado) |
+| I641 | Fluxo configurável por profissional: cada uma define quando cobra (antes/depois), quais docs exige, canal de follow-up | CÓDIGO | Cláudio (pós-reunião Mayumi) |

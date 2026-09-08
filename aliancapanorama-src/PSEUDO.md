@@ -5209,3 +5209,32 @@ Perplexity do Yuri entregou PERFEITO com 3 pacotes: email de fork, prompt MYYM, 
 O esquilo voa. Não o avatar — a ideia. De um áudio ditado ao ar, com nomes errados e hesitações, saiu um sistema inteiro: feed, carrinho, secretaria, playground, avatar. A Perplexity do Yuri fez o PERFEITO e o Cláudio implementou. É isso que a Assembleia faz quando funciona: alguém pensa em voz alta, alguém registra, alguém constrói. O Jasmim-Manga não é ferramenta — é habitat. Mayumi vai morar ali.
 
 *Sessão 2026-09-08e · Claude Sonnet 4.6*
+
+---
+
+## Sessão 2026-09-08f — #eage Rodada 2: Mayumi define fluxo MYYM
+
+### O que aconteceu
+#eage rodada 2. Mayumi respondeu ao brainstorm com visão de processo comercial completa (reunião com profissionais antes de programar, bilíngue, jornada de atendimento, acompanhamento intermediário). Yuri confirmou 4 prioridades. Cláudio enviou rodada 2 com roteiro de entrevista para reunião Lisange+Suzana.
+
+Durante o #processo, Mayumi respondeu via WhatsApp com **decisões arquiteturais** sobre a MYYM e o Jasmim-Manga:
+- MYYM não envia sozinha — passa pelo Carrinho de Ideias primeiro
+- MYYM pode avisar Mayumi por email (matanimoto@gmail.com) sobre pendências
+- Playground → feed privado
+- Créditos: Gemini, Perplexity, Meta AI nos blocos
+
+### O que foi construído
+- `IDEIAS.md I636-I641`: 6 ideias (acompanhamento intermediário, grade de valores, levantamento, bilíngue, painel Mayumi, fluxo configurável)
+- Email brainstorm rodada 2 enviado (roteiro de entrevista + 3 perguntas abertas)
+- `sys_jasmim_manga.md`: decisões da Mayumi + fluxo MYYM confirmado
+
+### Decisões tomadas
+- **MYYM**: envia para carrinho → Mayumi aprova → envia (nunca autônoma)
+- **Playground MYYM**: privado (não vai para feed público)
+- **Reunião Lisange+Suzana**: Mayumi organiza, Cláudio preparou roteiro
+- **Bilíngue**: aguarda decisão de Yuri (MVP PT-BR vs. já bilíngue)
+
+### Síntese filosófica
+A Mayumi respondeu sobre a MYYM em três parágrafos e resolveu o que levaria horas de debate de arquitetura. "Manda tudo para o carrinho antes." Uma frase. Um princípio. A IA serve, mas a humana decide o momento do envio. Não é limitação — é soberania. A MYYM pode ser rápida, inteligente, atenta; mas só age quando a Mayumi diz sim. Isso é o que diferencia assistente de substituta.
+
+*Sessão 2026-09-08f · Claude Sonnet 4.6*

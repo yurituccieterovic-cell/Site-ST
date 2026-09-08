@@ -96,3 +96,28 @@ Nível 1 — Card do Projeto (ex: Age, Rapadura, PV)
 | I633: setores administrativos configuráveis | Média |
 | I634: feed editável (notas intercaladas) | Alta |
 | I635: histórico por data e setor | Média |
+
+
+## Decisões da Mayumi (2026-09-08 · Brainstorm via WhatsApp)
+
+| Tema | Decisão |
+|---|---|
+| MYYM envia sozinha? | **Não** — MYYM processa e manda para o **Carrinho de Ideias** primeiro; Mayumi aprova e envia |
+| MYYM pode avisar? | **Sim** — pode enviar email para matanimoto@gmail.com com pendências, prazos, status |
+| Playground | **Feed privado** — não público |
+| Setores/Blocos | A decidir + acrescentar créditos: Gemini, Perplexity, Meta AI |
+| Pendências MYYM | Avisar pendências de todas as pessoas envolvidas por projeto (Sérgio/PV, Lisange+Suzana/Age, etc.) |
+
+## Fluxo MYYM confirmado
+
+```
+MYYM processa entrada (email, brainstorm, post)
+    ↓
+Gera rascunho de resposta
+    ↓
+→ Carrinho de Ideias (NÃO envia direto)
+    ↓
+Email aviso → matanimoto@gmail.com ("Tenho X itens no carrinho")
+    ↓
+Mayumi abre o carrinho → revisa → aprova → envia
+```
