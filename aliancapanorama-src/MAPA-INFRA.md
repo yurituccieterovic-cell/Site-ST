@@ -35,23 +35,25 @@
           └───────────────────────────────────┘
 ```
 
-### Estado da Infraestrutura (atualizado 2026-08-13)
+### Estado da Infraestrutura (atualizado 2026-09-08)
 
 | Componente | Onde roda | Status |
 |---|---|---|
-| Frontend | Vercel hobby (`site-st.vercel.app/aliancapanorama`) | ✅ LIVE |
+| Frontend | Vercel hobby (`site-st.vercel.app/aliancapanorama`) + domínio `sociedadetucci.com.br` | ✅ LIVE |
 | API PAP | Render (`site-st.onrender.com`) | ✅ LIVE |
 | Banco PAP | Neon PostgreSQL (`ep-late-pond-acean4b0.sa-east-1`) | ✅ LIVE |
 | Banco Rapadura | Neon (mesma instância) — 5 tabelas v2 | ✅ LIVE |
+| Banco Jasmim | Neon (mesma instância) — 3 tabelas: jm_posts, jm_carrinho, jm_myym_memory | ✅ LIVE (Sessão 119) |
 | Conector | Render (`site-st.onrender.com/api/conector`) | ✅ LIVE (migrado Sessão 99) |
 | Railway | ❌ MORTO — trial expirou 2026-08-02 | ❌ Abandonado |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
-| Domínio | pap.sociedadetucci.com.br | 🔧 DNS a configurar |
+| Domínio | sociedadetucci.com.br (Vercel) | ✅ LIVE — rotas: /jasmim /pv /portal /studio /celular /adm |
 | GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
 | Bluesky ISA | isa-pap.bsky.social | ✅ LIVE |
 | ARPIA | `/root/Arpia/` — sem servidor ativo | ⏸ Backlog |
 | Render API Key | `rnd_1PsQCvl3KXTnySlOnoIo879iqe1S` (em .pap-secrets) | ✅ Configurado |
 | Render Service ID | `srv-d9n682bm8hqs73dmg4kg` | ✅ |
+| Vercel storage | Limpeza Sessão 119: 99+ deploys deletados → 2 restantes; .vercelignore ativo | ✅ Saneado |
 
 ---
 

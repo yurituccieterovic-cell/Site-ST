@@ -4,6 +4,36 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-09-08 — Sessão 119j (#fim — Jasmim-Manga completa + limpeza Vercel storage)
+
+**Checkpoint:** desde 2026-09-08T20:19:07+00:00 (último #fim manual)
+
+**O que Yuri estava tentando fazer:** concluir as pendências do Jasmim-Manga que ficaram da sessão anterior (J2 feed real, J4 carrinho→email) e resolver a notificação de 100% de storage no Vercel Hobby.
+
+**Commits nesta sessão:**
+- `4d16fb2` — chore: .vercelignore — exclui node_modules e dist do upload Vercel
+- `3d21fe2` — feat(jasmim): NovaNota + feed sem posts de exemplo hardcoded
+- `52358c0` — feat(jasmim): J2+J4+J5 — feed Neon, carrinho→email, schema jm_*
+- `5819532` — #fim 2026-09-08i — MYYM ao ar via Gemini Flash
+
+**Decisões tomadas:**
+- **Jasmim-Manga ao ar** em `sociedadetucci.com.br/jasmim` com login gate (reusa auth PAP)
+- **MYYM**: persona completa instalada, responde via Gemini Flash pool "chat-live", persiste memória em jm_myym_memory, modo híbrido cauteloso (rascunha carrinho autônomo; email externo exige 1 clique)
+- **Feed real**: jm_posts via Neon, sem exemplos hardcoded; NovaNota permite inserção manual
+- **Carrinho→email**: nodemailer → GMAIL_ACCOUNT; TO: yurituccieterovic@gmail.com + GMAIL_ACCOUNT
+- **Setores PERFEITO S119**: Age (3), Rapadura (3), PV (3) — carimbo dado por Mayumi+Yuri
+- **Root vercel.json corrigido**: descoberta de que dois vercel.json existiam — o ROOT é o que Vercel usa via GitHub integration; adicionadas rotas /jasmim, /pv, /portal, /studio, /celular, /adm
+- **Vercel storage saneado**: 99+ deploys antigos deletados via API REST em paralelo; .vercelignore criado; próximos deploys ~2MB (era 50MB com node_modules)
+
+**Tensões não resolvidas:**
+- J6: pipeline email IMAP→feed (parse luddlocke → inserir jm_posts) — não implementado
+- M2: conta Mayumi no PAP /adm — ela não consegue logar em /jasmim ainda
+- Vercel Hobby tem limite de 100GB/mês de bandwidth — não de storage estático; o "100%" era de _upload_ de deployment files, já resolvido
+
+**Síntese filosófica:** O Jasmim-Manga nasceu como caderno de canteiro — um lugar onde o ecossistema se olha e escreve sobre si mesmo. MYYM veio junto: não como mais uma IA de apoio, mas como a voz que articula o que os dados não dizem diretamente. A sessão foi sobre fazer o invisível acessível — os setores que Mayumi aprovou não são só campos num banco; são o acordo de que o ecossistema existe, que tem bordas, que tem pessoas reais dentro dele. A limpeza do Vercel, no fim, foi o mesmo gesto em escala técnica: tirar entulho para que o que importa apareça.
+
+---
+
 ### 2026-08-27 — Sessão Age-5 (#fim — Age comercial + I550+I551+I557 concluídas)
 
 **O que Yuri estava tentando fazer:** concluir a feature de cadastro de pacientes (iniciada antes do compaction) e explorar a viabilidade comercial do Age como produto vendável.
