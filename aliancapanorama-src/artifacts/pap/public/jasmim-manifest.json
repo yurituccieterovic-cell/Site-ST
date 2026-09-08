@@ -1,0 +1,18 @@
+{
+  "name": "Jasmim-Manga",
+  "short_name": "Jasmim",
+  "description": "Espaço privado da Mayumi — Age, Rapadura e PV com MYYM.",
+  "start_url": "/aliancapanorama/jasmim",
+  "scope": "/aliancapanorama/jasmim",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1c0902",
+  "theme_color": "#c2700a",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/aliancapanorama/jasmim-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/aliancapanorama/jasmim-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["productivity", "lifestyle"],
+  "prefer_related_applications": false
+}

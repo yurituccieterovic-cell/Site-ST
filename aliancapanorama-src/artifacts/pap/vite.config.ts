@@ -27,6 +27,7 @@ export default defineConfig({
       input: {
         main: path.resolve(import.meta.dirname, "index.html"),
         rapadura: path.resolve(import.meta.dirname, "rapadura.html"),
+        jasmim: path.resolve(import.meta.dirname, "jasmim.html"),
       },
     },
   },
