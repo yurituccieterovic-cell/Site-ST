@@ -405,6 +405,60 @@ function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: 
   );
 }
 
+// ─── Formulário nova nota ─────────────────────────────────────────────────────
+
+function NovaNota({ projeto, onSalva }: { projeto: Projeto; onSalva: () => void }) {
+  const [texto, setTexto] = useState("");
+  const [salvando, setSalvando] = useState(false);
+
+  async function salvar() {
+    if (!texto.trim() || salvando) return;
+    setSalvando(true);
+    try {
+      await fetch(`${API}/api/jasmim/posts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projeto, tipo: "nota", autor: "Mayumi", conteudo: texto.trim() }),
+      });
+      setTexto("");
+      onSalva();
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  return (
+    <div style={{
+      background: "#1a1a2e", border: "1px solid #2dd4bf44",
+      borderRadius: 12, padding: "12px 16px", marginBottom: 16,
+    }}>
+      <textarea
+        value={texto}
+        onChange={e => setTexto(e.target.value)}
+        placeholder="Nova nota para o feed…"
+        rows={2}
+        style={{
+          width: "100%", background: "transparent", border: "none",
+          color: "#e8e8e8", fontSize: 14, resize: "vertical",
+          outline: "none", fontFamily: "system-ui, sans-serif", boxSizing: "border-box",
+        }}
+      />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 8 }}>
+        <button
+          onClick={salvar}
+          disabled={salvando || !texto.trim()}
+          style={{
+            background: texto.trim() ? "#2dd4bf" : "#333",
+            border: "none", borderRadius: 8, padding: "6px 16px",
+            color: "#111", fontWeight: 700, fontSize: 12,
+            cursor: texto.trim() ? "pointer" : "not-allowed", transition: "background 0.2s",
+          }}
+        >{salvando ? "salvando…" : "Postar nota"}</button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Página principal ─────────────────────────────────────────────────────────
 
 export default function JasmimMangaPage() {
@@ -416,33 +470,16 @@ export default function JasmimMangaPage() {
 
   const proj = PROJETOS[projetoAtivo];
 
-  // Posts de exemplo enquanto API não existe
-  const postsExemplo: Post[] = [
-    {
-      id: "1", tipo: "auto", projeto: "age", setor: "Pacientes & Docs",
-      autor: "Cláudio", conteudo: "Suzana ganhou 195 slots disponíveis — seg a sex, 9h-18h, sessões online de 50min.",
-      ts: new Date().toISOString(),
-    },
-    {
-      id: "2", tipo: "myym", projeto: "age", setor: "Documentos & Prontuários",
-      autor: "MYYM", conteudo: "Mayumi, o sistema Age ainda não tem os emails reais de Lisange e Suzana configurados. Quer eu te lembrar de perguntar para elas?",
-      ts: new Date(Date.now() - 3600000).toISOString(),
-    },
-    {
-      id: "3", tipo: "auto", projeto: "rapadura", setor: "Ativos & Infraestrutura",
-      autor: "Cláudio", conteudo: "Rapadura v3 subiu. Cana-Aurora agora tem foto de perfil.",
-      ts: new Date(Date.now() - 7200000).toISOString(),
-    },
-  ];
-
-  useEffect(() => {
+  function carregarFeed() {
     setLoading(true);
     fetch(`${API}/api/jasmim/feed?projeto=${projetoAtivo}`)
       .then(r => r.ok ? r.json() : null)
-      .then(d => d?.posts ? setPosts(d.posts) : setPosts(postsExemplo.filter(p => p.projeto === projetoAtivo)))
-      .catch(() => setPosts(postsExemplo.filter(p => p.projeto === projetoAtivo)))
+      .then(d => setPosts(d?.posts ?? []))
+      .catch(() => setPosts([]))
       .finally(() => setLoading(false));
-  }, [projetoAtivo]);
+  }
+
+  useEffect(() => { carregarFeed(); }, [projetoAtivo]);
 
   function addCarrinho(texto: string) {
     if (!texto.trim()) return;
@@ -511,9 +548,13 @@ export default function JasmimMangaPage() {
 
       {/* Feed */}
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "20px 16px" }}>
+        <NovaNota projeto={projetoAtivo} onSalva={carregarFeed} />
         {loading && <p style={{ color: "#666", textAlign: "center" }}>carregando feed…</p>}
         {!loading && posts.length === 0 && (
-          <p style={{ color: "#666", textAlign: "center" }}>Nenhuma atualização ainda para {proj.nome}.</p>
+          <p style={{ color: "#666", textAlign: "center", marginTop: 32 }}>
+            Nenhuma atualização ainda para {proj.nome}.<br/>
+            <span style={{ fontSize: 12, color: "#555" }}>Use o campo acima para adicionar a primeira nota.</span>
+          </p>
         )}
         {posts.map(post => (
           <PostCard key={post.id} post={post} onAddCarrinho={addCarrinho} />
