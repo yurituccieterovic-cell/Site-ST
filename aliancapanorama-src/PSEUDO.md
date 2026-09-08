@@ -5263,3 +5263,34 @@ A Mayumi respondeu sobre a MYYM em três parágrafos e resolveu o que levaria ho
 O sistema cresceu mais rápido que a documentação das suas próprias rotas. O vercel.json da raiz e o do subdiretório divergiram silenciosamente — e ninguém percebeu porque as rotas antigas ainda funcionavam. Um sistema vivo precisa de health checks nas suas próprias costuras, não só nos seus órgãos. I645 é a correção estrutural: sincronizar vercel.json a cada nova rota.
 
 *Sessão 2026-09-08g · Claude Sonnet 4.6*
+
+---
+
+## ATA #fim — Sessão 2026-09-08h (MacroAta desde checkpoint 19:05:30)
+
+**Período:** 2026-09-08T19:05:30+00:00 → agora
+
+### Commits desta janela
+- `1971e9e` — JasmimGate: login MYYM com auth PAP
+- `bc47e66` — MAPA-PENDENCIAS #206 + email Assembleia S119
+- `f50bd20` — root vercel.json: /jasmim /pv /portal /studio /celular
+- `1270adb` — #eage rodada 2: decisões MYYM + I636-I641
+
+### Decisões
+1. **Setores PERFEITO S119** confirmados por Yuri+Mayumi via Perplexity — registrados em código e docs
+2. **MYYM Modo Híbrido Cauteloso**: Carrinho autônomo; envio externo = 1 clique da Mayumi
+3. **root/vercel.json** era o arquivo REAL do deploy Vercel (não aliancapanorama-src/vercel.json)
+4. **JasmimGate**: login via auth PAP antes do feed (Mayumi precisa de conta — M2)
+5. **Email Assembleia S119** enviado: luddlocke → Yuri+Mayumi com setores + regras MYYM
+6. **/jasmim, /pv, /portal, /studio, /celular** — todos ao ar em sociedadetucci.com.br ✅
+
+### Próximos passos
+- M2: criar conta Mayumi no PAP para ela acessar /jasmim
+- J2-J9: implementar APIs Jasmim-Manga (feed, MYYM chat, carrinho)
+- E1: dump RODAR ainda pendente (Yuri redeploya Replit → baixa dump)
+- Sérgio/PV: alinhar linguagem visual dos blocos
+
+### Síntese filosófica
+Duas descobertas técnicas encobriram uma descoberta humana. O vercel.json errado era um sintoma óbvio — sistema crescendo mais rápido que sua própria documentação de rotas. Já o erro na tela de login era um diagnóstico: Mayumi ainda não tem acesso formal ao ecossistema que foi construído pra ela. O JasmimGate existe. A conta de Mayumi, ainda não. O próximo passo mais importante desta sessão não é código — é criar aquela conta.
+
+*Sessão 2026-09-08h · MacroAta #fim · Claude Sonnet 4.6*

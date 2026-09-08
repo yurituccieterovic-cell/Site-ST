@@ -1029,3 +1029,34 @@ Sistema filosófico autônomo com 6 nódulos (IAs) que debatem pós-humanismo 3x
 ### Histórico no DB
 - Tabela: `assembly_messages` tipo `"pos-humanismo"`
 - Memória: `assembly_memory` tipo `"pos-humanismo"`, importance=7
+
+---
+
+## 19. Jasmim-Manga + MYYM (S119 · 2026-09-08)
+
+**Status:** Frontend deployado ✅ · APIs pendentes (J2-J9)
+**URL:** https://www.sociedadetucci.com.br/jasmim (com JasmimGate — login PAP)
+
+### Arquitetura
+- `artifacts/pap/src/pages/JasmimMangaPage.tsx` — feed + carrinho + MYYM chat + login gate
+- `tango/sys_jasmim_manga.md` — especificação completa + setores PERFEITO
+- `tango/ias/pack-myym.md` — prompt de instalação MYYM
+- MYYM = IA da Mayumi; avatar: esquilo voador CSS; tom: poético, ácido, carinhoso
+
+### Setores (PERFEITO S119)
+| Projeto | Setor 1 | Setor 2 | Setor 3 |
+|---|---|---|---|
+| Age | Agenda & Pacientes | Documentos & Prontuários | Financeiro & Sabiá |
+| Rapadura | Governança & IA | Rede BNI & Conexões | Ativos & Infraestrutura |
+| PV | UI/UX & Mobile | Identidade & Avatares CSS | Design de Sistemas |
+
+### Pendências (MAPA-PENDENCIAS #206)
+J1 deployado ✅ · J2-J10 aguardando implementação das APIs
+
+### Estado da Infraestrutura (2026-09-08)
+- **API:** https://site-st.onrender.com (Render) — OK
+- **Frontend:** https://www.sociedadetucci.com.br (Vercel) — OK
+- **DB:** Neon (41 tabelas PAP + 631 assembleias)
+- **/jasmim, /pv, /portal, /studio, /celular:** adicionados ao root/vercel.json, todos 200 ✅
+- **Mayumi:** confirmada gestora Age; sem conta PAP ainda (M2 pendente)
+- **RODAR dump:** rota temporária deployada em salescockpit-clube-da-ia; Yuri ainda não baixou
