@@ -482,3 +482,15 @@
 | J8 | Validação visual PV: Sérgio revisa blocos hierárquicos Jasmim-Manga | Sérgio (email pendente) | ⏳ |
 | J9 | Creditar Gemini/Perplexity/Meta AI nas interfaces MYYM | após J2-J3 ok | ⏳ |
 | J10 | sync root/vercel.json automático a cada nova rota (I645) | processo | ⏳ |
+
+### S119m — #eage Rodada 2 (2026-09-08)
+
+| # | Pendência | Tipo | Bloqueia |
+|---|---|---|---|
+| #236 | Definir modelo de pagamento Age: A (reserva), B (24h antes) ou C (pós) — decisão Yuri+Mayumi+profissionais | DECISÃO | Bloco 3 |
+| #237 | Reunião Mayumi+Lisange+Susana: entrevista gamificada (etapas Quem/Como/Antes/Depois); Mayumi conduz por vídeo ou WhatsApp | MAYUMI | Bloco 2 |
+| #238 | Aprovação manual Nível 3 paciente: Mayumi aprova manualmente ou automático após 1ª consulta? | DECISÃO | I664 |
+| #239 | Convergência MYYM↔Sabiá: protocolo de fusão por tema; job semanal Assembleias → Sabiá | IA | I667+I668 |
+| #240 | Gateway de pagamento: Stripe (já integrado) vs Mercado Pago; decisão antes do Bloco 3 | DECISÃO | #236 |
+| #241 | Email das profissionais (Lisange+Susana): configurar via /api/age/admin/setup para confirmações funcionarem | INFRA | Bloco 2 |
+| #242 | LGPD: checkbox consentimento WhatsApp no cadastro + Política de Privacidade + ToS antes de ativar pagamentos | JURÍDICO | Bloco 3 |

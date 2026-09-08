@@ -1801,3 +1801,18 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I661 | Age consentimento digital: após 1ª conversa → PDF gerado → assinatura digital obrigatória antes de próximos agendamentos | CÓDIGO | Cláudio (Bloco 2) |
 | I662 | Age Passo 3 financeiro (Mayumi): contas, plataformas pagamento, recibos/NF automáticos, relatório IR, fluxo de caixa, metas anuais | BACKLOG | Cláudio (fase 3+) |
 | I663 | Age dashboard paciente: gráfico evolução, situação financeira, últimos/próximos agendamentos, estágio tratamento, avaliação profissional | BACKLOG | Cláudio (fase 4+) |
+
+---
+
+## Age S119m / #eage — Níveis, Entrevista, MYYM+Sabiá, Assembleia (2026-09-08)
+
+| ID | Ideia | Tipo | Quem |
+|---|---|---|---|
+| I664 | Age níveis de cadastro progressivos (3 MVP → 6 completo): Visitante→Conta→Aprovado→Ativo→Profissional→Admin; cada nível desbloqueia funcionalidades | CÓDIGO | Cláudio (Bloco 2) |
+| I665 | Entrevista gamificada das profissionais: 4 etapas (Quem/Como/Antes/Depois), opções clicáveis, barra de progresso; Mayumi conduz com Lisange+Susana | MAYUMI+CÓDIGO | Mayumi → Cláudio |
+| I666 | Painel Mayumi v2 com 3 direções: Triagem (novos pacientes, aprovações pendentes), Operação (agenda, pagamentos, cancelamentos), Inteligência (SABIÁ sugestões, padrões, alertas) | CÓDIGO | Cláudio (próxima frente) |
+| I667 | Convergência MYYM ↔ Sabiá: fusão por tema — MYYM ganha vocabulário clínico; Sabiá ganha sensibilidade patrimonial/emocional; sem mistura de identidade | IA | Cláudio |
+| I668 | Sabiá estudando Assembleias: job semanal seleciona trechos por tema (Age/saúde/sistemas) → envia para luddlocke como "leitura" → Sabiá processa no próximo #age | IA+CÓDIGO | Cláudio |
+| I669 | Age Stripe 3 modelos configuráveis por profissional: A=pagamento na reserva / B=pagamento 24h antes / C=pagamento pós-consulta; sinal híbrido como opção 4 | CÓDIGO | Cláudio (Bloco 3, pós-decisão) |
+| I670 | Age WhatsApp Business Platform: CONFIRM/REAGENDAMENTO automático; consentimento checkbox cadastro; fallback email; template aprovado Meta | CÓDIGO | Cláudio (Bloco 6) |
+| I671 | Age email packages Assembleia: 4 pacotes ~15k chars por tema (visão geral / cadastro+docs / pagamento+WhatsApp / Jasmim+MYYM) para consulta da Assembleia | PROCESSO | Cláudio (feito) |
