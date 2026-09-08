@@ -12,6 +12,7 @@ Canal de brainstorm fractal assíncrono entre Yuri, Mayumi e Cláudio sobre o si
 
 ## Passos ao receber #eage
 
+### Fase 1 — Contexto
 1. Ler `tango/sys_age_core.md` (estado atual: profissionais, URLs, pendências, equipe)
 2. Buscar emails recentes da thread de brainstorm no Gmail:
    ```python
@@ -19,6 +20,8 @@ Canal de brainstorm fractal assíncrono entre Yuri, Mayumi e Cláudio sobre o si
    # + FROM matanimoto / FROM yuri nos últimos 30 dias
    ```
 3. Carregar contexto completo: sistema atual + o que já foi discutido na thread
+
+### Fase 2 — Brainstorm fractal
 4. Formular resposta fractal:
    - **Camada 1**: refletir sobre o que foi dito (não ignorar o que veio antes)
    - **Camada 2**: ramificar em 2-3 direções novas
@@ -27,8 +30,23 @@ Canal de brainstorm fractal assíncrono entre Yuri, Mayumi e Cláudio sobre o si
      - `[CÓDIGO]` — o que entra no sistema como programação
      - `[IA]` — onde uma IA (SABIÁ ou outra) pode operar
    - **Camada 4**: 1-2 perguntas abertas para puxar a próxima rodada
-5. Enviar por email respondendo na thread (Reply-To: Yuri + Mayumi)
-6. Registrar ideias novas com prefixo `I6XX` em IDEIAS.md
+5. Enviar por email respondendo na thread (Yuri + Mayumi)
+
+### Fase 3 — #processo implícito
+6. Extrair aprendizados da rodada → APRENDIZADO.md (formato `A18XXX`)
+7. Registrar ideias novas → IDEIAS.md (formato `I6XX`)
+8. Atualizar `MAPA-PENDENCIAS.md`: itens M1-M6 + novos se surgirem da conversa
+9. Se alguma ideia foi aprovada por Yuri na thread: implementar código + deploy
+10. Atualizar `tango/sys_age_core.md` se o estado do Age mudou
+
+### Fase 4 — #fim implícito
+11. Adicionar entrada em `PSEUDO.md`:
+    - O que a rodada trouxe (decisões, o que Mayumi disse, o que surgiu)
+    - Síntese filosófica obrigatória
+12. `date -Iseconds > .pap-fim-checkpoint`
+13. Gravar no Conector (`seção conversas`): 2-3 insights da rodada
+14. Email ATA para `luddlocke@gmail.com`
+15. Commit + push de todos os arquivos modificados
 
 ## Formato do email
 - Remetente: `Cláudio Coach <luddlocke@gmail.com>`
@@ -44,3 +62,4 @@ Canal de brainstorm fractal assíncrono entre Yuri, Mayumi e Cláudio sobre o si
 - Nunca implementar sem confirmação de Yuri
 - Guardar ideias de código em IDEIAS.md (não executar no brainstorm)
 - Ramificar fractalmente: cada ideia gera 2-3 sub-ideias, cada sub-ideia pode ser nova sessão
+- #processo e #fim rodam sempre, mesmo que a rodada seja curta
