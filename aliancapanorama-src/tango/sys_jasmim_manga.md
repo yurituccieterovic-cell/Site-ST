@@ -62,9 +62,14 @@ Nível 1 — Card do Projeto (ex: Age, Rapadura, PV)
 
 | Projeto | Setor 1 | Setor 2 | Setor 3 |
 |---|---|---|---|
-| Age | Administrativo | Financeiro | Profissionais |
-| Rapadura | Patrimônio | Análise | Família |
-| PV | Design | Conteúdo | Parcerias |
+| Age | Agenda | Pacientes & Docs | Pagamentos & Público |
+| Rapadura | Patrimônio | Futuros | Cana |
+| PV | Identidade | Interface | Narrativa |
+
+## Setores administrativos globais (transversais a todos os projetos)
+1. **Administrativo-Financeiro**
+2. **Comunicação & Secretaria** ← onde ficam SABIÁ (Age) e MYYM
+3. **Criação & Desenvolvimento**
 
 ## Stack sugerido
 

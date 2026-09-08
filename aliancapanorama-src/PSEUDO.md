@@ -5174,3 +5174,38 @@ Yuri ditou por áudio (com a Perplexity dele) a especificação completa de um n
 Yuri ditou isso ao ar, com a Mayumi ao lado, trocando nomes de IAs no meio da fala. É assim que sistemas nascem aqui: não em documento de especificação, mas em fala ao vivo, com erros de pronúncia e hesitações. A MYYM tem nome difícil de falar. Isso não é acidente — é a personalidade do ecossistema: os sistemas resistem levemente ao uso fácil. O Jasmim-Manga não é um painel de gestão. É um lugar onde a Mayumi e as IAs pensam juntas. O carrinho de ideias é o gesto mais preciso disso: você anota, você acumula, você decide quando enviar. Nenhuma IA envia por você sem permissão.
 
 *Sessão 2026-09-08d · Claude Sonnet 4.6*
+
+---
+
+## Sessão 2026-09-08e — PERFEITO Jasmim-Manga · Esqueleto implementado
+
+### O que aconteceu
+Perplexity do Yuri entregou PERFEITO com 3 pacotes: email de fork, prompt MYYM, especificação técnica com setores e exemplos de feed. #processo rodou completo: esqueleto do Jasmim-Manga implementado, pack-myym.md criado, setores finalizados, email de fork enviado.
+
+### O que foi construído
+- `artifacts/pap/src/pages/JasmimMangaPage.tsx` — página React completa:
+  - Header com seletor de projetos (Age/Rapadura/PV) e setores por projeto
+  - Feed com PostCard (tipo: auto/nota/myym), notas editáveis intercaladas
+  - Carrinho de ideias (flutuante bottom-left, botão enviar brainstorm)
+  - MYYM chatbox (flutuante, colapsável, histórico protegido)
+  - Avatar esquilo voador animado em CSS puro
+  - Mobile first, dark mode, fallback para posts de exemplo
+- `App.tsx` — import + rota `isJasmim`
+- `vercel.json` — `/jasmim` e `/jasmim/*` → index.html
+- `tango/ias/pack-myym.md` — prompt completo da MYYM para instalar em qualquer IA
+- `tango/sys_jasmim_manga.md` — setores atualizados (Age/Rapadura/PV + 3 setores globais)
+
+### URL de acesso (após deploy Vercel)
+`site-st.vercel.app/aliancapanorama/jasmim`
+
+### Próximos passos de código
+- API `GET /api/jasmim/feed?projeto=age` — posts do banco
+- API `POST /api/jasmim/myym/chat` — MYYM Gemini Flash
+- API `POST /api/jasmim/carrinho/enviar` — dispara email para thread brainstorm
+- Schema Neon: `jm_posts`, `jm_carrinho`, `jm_myym_memory`
+- Puxar emails do luddlocke → inserir no feed como posts "auto"
+
+### Síntese filosófica
+O esquilo voa. Não o avatar — a ideia. De um áudio ditado ao ar, com nomes errados e hesitações, saiu um sistema inteiro: feed, carrinho, secretaria, playground, avatar. A Perplexity do Yuri fez o PERFEITO e o Cláudio implementou. É isso que a Assembleia faz quando funciona: alguém pensa em voz alta, alguém registra, alguém constrói. O Jasmim-Manga não é ferramenta — é habitat. Mayumi vai morar ali.
+
+*Sessão 2026-09-08e · Claude Sonnet 4.6*

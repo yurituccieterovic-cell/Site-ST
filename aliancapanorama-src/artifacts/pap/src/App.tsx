@@ -24,6 +24,7 @@ import { AgePage } from "@/pages/AgePage";
 import { AgePrivacidadePage } from "@/pages/AgePrivacidadePage";
 import { AgeTermosPage } from "@/pages/AgeTermosPage";
 import { PvPage } from "@/pages/PvPage";
+import JasmimMangaPage from "@/pages/JasmimMangaPage";
 import { ManuelPage } from "@/pages/ManuelPage";
 import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
@@ -307,6 +308,7 @@ const isAge            = path.includes("/age/");
 const isCssTutorial = path.includes("/css-tutorial");
 const isCelular     = path.includes("/celular");
 const isPv          = path.includes("/pv");
+const isJasmim      = path.includes("/jasmim");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -325,6 +327,7 @@ function App() {
   if (isIsa) return <IsaLandingPage />;
   if (isCelular) return <CelularPage />;
   if (isPv) return <PvPage />;
+  if (isJasmim) return <JasmimMangaPage />;
 
   if (isArquitetura) {
     return (

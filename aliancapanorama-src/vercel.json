@@ -30,6 +30,8 @@
     { "source": "/celular", "destination": "/index.html" },
     { "source": "/celular/(.*)", "destination": "/index.html" },
     { "source": "/pv", "destination": "/index.html" },
-    { "source": "/pv/(.*)", "destination": "/index.html" }
+    { "source": "/pv/(.*)", "destination": "/index.html" },
+    { "source": "/jasmim", "destination": "/index.html" },
+    { "source": "/jasmim/(.*)", "destination": "/index.html" }
   ]
 }
