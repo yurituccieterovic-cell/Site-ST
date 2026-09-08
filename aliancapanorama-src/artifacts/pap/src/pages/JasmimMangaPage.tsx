@@ -41,22 +41,60 @@ function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
       fontFamily: "system-ui, sans-serif", padding: 24,
     }}>
       <div style={{ width: "min(360px, 100%)", textAlign: "center" }}>
-        {/* Avatar */}
-        <div style={{
-          width: 72, height: 72, margin: "0 auto 20px",
-          borderRadius: "50%",
-          background: "linear-gradient(135deg, #f59e0b, #a78bfa)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 36, animation: "floatLogin 3s ease-in-out infinite",
-          boxShadow: "0 0 30px rgba(167,139,250,0.3)",
-        }}>
-          🐿️
+        {/* Esquilo voador animado */}
+        <div style={{ width: 90, height: 90, margin: "0 auto 20px", position: "relative" }}>
           <style>{`
-            @keyframes floatLogin {
-              0%,100% { transform: translateY(0) rotate(-5deg); }
-              50% { transform: translateY(-10px) rotate(5deg); }
+            @keyframes jmFly {
+              0%,100% { transform: translateY(0) rotate(-4deg); }
+              50% { transform: translateY(-12px) rotate(4deg); }
             }
+            @keyframes jmFlap {
+              0%,100% { transform: rotate(-25deg) scaleY(0.8); }
+              50% { transform: rotate(20deg) scaleY(1); }
+            }
+            @keyframes jmTail {
+              0%,100% { transform: rotate(-8deg); }
+              50% { transform: rotate(14deg); }
+            }
+            .jm-squirrel { animation: jmFly 2.4s ease-in-out infinite; }
+            .jm-wing-l { animation: jmFlap 0.7s ease-in-out infinite; transform-origin: right center; }
+            .jm-wing-r { animation: jmFlap 0.7s ease-in-out infinite reverse; transform-origin: left center; }
+            .jm-tail   { animation: jmTail 2s ease-in-out infinite; transform-origin: top left; }
           `}</style>
+          <svg className="jm-squirrel" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" style={{ width: 90, height: 90 }}>
+            {/* brilho de fundo */}
+            <circle cx="45" cy="48" r="34" fill="url(#jmGlow)" opacity="0.35"/>
+            <defs>
+              <radialGradient id="jmGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#a78bfa"/>
+                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0"/>
+              </radialGradient>
+            </defs>
+            {/* asas */}
+            <ellipse className="jm-wing-l" cx="26" cy="48" rx="13" ry="7" fill="#f59e0b" opacity="0.85"/>
+            <ellipse className="jm-wing-r" cx="64" cy="48" rx="13" ry="7" fill="#f59e0b" opacity="0.85"/>
+            {/* cauda */}
+            <ellipse className="jm-tail" cx="68" cy="38" rx="10" ry="6" fill="#c7701a" opacity="0.9" transform="rotate(-30 68 38)"/>
+            {/* corpo */}
+            <ellipse cx="45" cy="50" rx="18" ry="16" fill="#d97706"/>
+            {/* orelha esq */}
+            <ellipse cx="34" cy="30" rx="5" ry="8" fill="#d97706" transform="rotate(-15 34 30)"/>
+            <ellipse cx="34" cy="30" rx="3" ry="5" fill="#fbbf24" transform="rotate(-15 34 30)"/>
+            {/* orelha dir */}
+            <ellipse cx="56" cy="30" rx="5" ry="8" fill="#d97706" transform="rotate(15 56 30)"/>
+            <ellipse cx="56" cy="30" rx="3" ry="5" fill="#fbbf24" transform="rotate(15 56 30)"/>
+            {/* cabeça */}
+            <circle cx="45" cy="36" r="14" fill="#d97706"/>
+            {/* rosto */}
+            <ellipse cx="40" cy="36" rx="3.5" ry="4" fill="#1a1a2e"/>
+            <ellipse cx="50" cy="36" rx="3.5" ry="4" fill="#1a1a2e"/>
+            <circle cx="41" cy="35" r="1.2" fill="white"/>
+            <circle cx="51" cy="35" r="1.2" fill="white"/>
+            <ellipse cx="45" cy="42" rx="4" ry="2.5" fill="#c7701a"/>
+            {/* bochechas */}
+            <circle cx="35" cy="40" r="4" fill="#f59e0b" opacity="0.4"/>
+            <circle cx="55" cy="40" r="4" fill="#f59e0b" opacity="0.4"/>
+          </svg>
         </div>
         <h1 style={{ color: "#e8e8e8", fontSize: 22, fontWeight: 800, margin: "0 0 4px", letterSpacing: -0.5 }}>
           Jasmim-Manga

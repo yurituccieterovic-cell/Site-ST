@@ -1785,3 +1785,11 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I645 | Sincronizar root/vercel.json com aliancapanorama-src/vercel.json a cada nova rota adicionada | PROCESSO | Cláudio |
 | I646 | MYYM: "O que falta?" = MYYM classifica automaticamente: `para Mayumi` (ação) vs `só informativo` (contexto) | CÓDIGO | Cláudio |
 | I647 | Créditos nas interfaces MYYM/Jasmim: Gemini Flash, Perplexity, Meta AI | CÓDIGO | Cláudio |
+| I648 | Esquilo voador animado (CSS) no login Jasmim: corpo+orelhas+asas+cauda; voa suave; estilo corujinha PAP/ISA | CÓDIGO | Cláudio |
+| I649 | Avatar Sérgio (PV): pacu gordo e simpático com voz de gordo — personagem oficial do Projeto Visual | IA+MAYUMI | Yuri+Mayumi |
+| I650 | Age i18n: 7 idiomas (pt-BR, en, es, eo, ru, zh, ja) com bandeirinhas no menu; default pt-BR; JSON de traduções | CÓDIGO | Cláudio (backlog) |
+| I651 | Age notas entre posts: tipo=nota/pergunta; MYYM responde perguntas; carrinho agrega antes de enviar | CÓDIGO | Cláudio |
+| I652 | Age PDF automático: ao final da consulta profissional fala; sistema gera PDF resumo (sem ficha prévia para o paciente) | CÓDIGO | Cláudio (bloco 3) |
+| I653 | Age próxima sessão automática: após consulta sistema sugere datas pré-selecionadas (7/14/21/30 dias); profissional só clica | CÓDIGO | Cláudio (bloco 4) |
+| I654 | Age blocos 1-4: (1)agenda+cancelamento (2)pacientes+ficha interna (3)pagamento+PDF (4)próxima sessão+lembretes | DECISÃO | Yuri+Mayumi |
+| I655 | Age novo paciente: profissional conhece em conversa; ficha interna no sistema; PDF automático; sem ficha online para paciente preencher | DECISÃO | Mayumi |

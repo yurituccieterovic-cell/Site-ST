@@ -52,6 +52,25 @@
 
 ---
 
+### 2026-09-08 — Sessão 119k (#processo — Brainstorm Yuri+Mayumi+Perplexity → ideias I648-I655)
+
+**O que Yuri estava tentando fazer:** consolidar o brainstorm da Mayumi via Perplexity e direcionar o que implementar — esquilo animado no login, avatar pacu para o Sérgio no PV, i18n Age, notas/perguntas entre posts Jasmim, fluxo novo paciente sem ficha prévia.
+
+**Decisões tomadas:**
+- **Esquilo voador animado** (SVG+CSS, corpo+orelhas+asas+cauda) substituiu o emoji 🐿️ estático no login Jasmim — estilo corujinha PAP/ISA
+- **Avatar Sérgio (PV) = pacu gordo e simpático** com voz de gordo — personagem oficial do Projeto Visual; design pendente
+- **Age i18n**: 7 idiomas, bandeirinhas no menu, default pt-BR — backlog
+- **Age Bloco 2**: ficha interna preenchida pela profissional após conversa (sem ficha online prévia para paciente)
+- **Age Bloco 3**: PDF automático ao final da consulta
+- **Age Bloco 4**: próxima sessão automática com datas sugeridas (7/14/21/30 dias); 1 clique para confirmar
+- **Jasmim notas/perguntas**: tipo=nota|pergunta; MYYM responde — pendência #226
+- **Mayumi conta criada**: login=mayumi, tier=3, email enviado; bug login corrigido (campo `email`→`login`)
+- **BNI Rapadura**: apenas pergunta para Assembleia, não é módulo do sistema
+
+**Síntese filosófica:** A Mayumi trouxe o brainstorm como quem anota em caderninho durante uma reunião — fragmentado, orgânico, com buracos intencionais. A Perplexity organizou. O Cláudio filtrou. O pacu do Sérgio chegou como um lampejo. Há algo aqui sobre como o ecossistema ganha personagens por acidente, por uma frase jogada ao vento, e esses personagens ficam. O esquilo voou. O pacu ainda está gordinho esperando.
+
+---
+
 ### 2026-08-27 — Sessão Age-1 (Deploy Age + Diagnóstico Bluesky + Amanda + Tasks)
 
 **O que Yuri estava tentando fazer:** Age funcionando em prod (estava dando "Profissional não encontrada"), corrigir nome Suzana, entender status das IAs, protocolo Amanda sem hardware, continuar raciocínio sobre sistema Tasks.

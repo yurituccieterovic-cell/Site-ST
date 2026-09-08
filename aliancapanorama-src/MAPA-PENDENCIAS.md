@@ -137,6 +137,14 @@
 | 212 | PV — Projectification MVP lente 3: CALENDÁRIO (itens com due_at em grid semanal) | após lente 2 | ⏳ |
 | 213 | PV — PvPage: edição inline de items (click no título → edita) | lente 1 estável | ⏳ |
 | 214 | PV — Relações entre itens: UI para adicionar/visualizar depends_on/blocks | lente 1 estável | ⏳ |
+| 223 | Jasmim — Esquilo voador animado (SVG+CSS) no login: corpo+orelhas+asas+cauda estilo coruja PAP/ISA | — | ✅ commit 2026-09-08 |
+| 224 | PV — Avatar Sérgio: pacu gordo e simpático com voz de gordo; personagem oficial do Projeto Visual | Yuri/design | ⏳ |
+| 225 | Age i18n: 7 idiomas (pt-BR, en, es, eo, ru, zh, ja) com bandeirinhas; default pt-BR; JSON de traduções | — | ⏳ backlog |
+| 226 | Jasmim — Notas/perguntas entre posts: tipo=nota/pergunta, MYYM responde automaticamente | — | ⏳ |
+| 227 | Age Bloco 3 — PDF automático ao final da consulta: profissional fala → sistema gera PDF | — | ⏳ |
+| 228 | Age Bloco 4 — Próxima sessão automática: após consulta sugere datas (7/14/21/30 dias); 1 clique | — | ⏳ |
+| 229 | Age Bloco 2 — Ficha interna: profissional preenche no sistema após conhecer o paciente em conversa | — | ⏳ |
+| 230 | Mayumi — conta criada (login:mayumi tier:3) + email enviado com credenciais | ✅ | ✅ 2026-09-08 |
 
 ## Concluídos
 
