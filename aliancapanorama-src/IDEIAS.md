@@ -1816,3 +1816,16 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I669 | Age Stripe 3 modelos configuráveis por profissional: A=pagamento na reserva / B=pagamento 24h antes / C=pagamento pós-consulta; sinal híbrido como opção 4 | CÓDIGO | Cláudio (Bloco 3, pós-decisão) |
 | I670 | Age WhatsApp Business Platform: CONFIRM/REAGENDAMENTO automático; consentimento checkbox cadastro; fallback email; template aprovado Meta | CÓDIGO | Cláudio (Bloco 6) |
 | I671 | Age email packages Assembleia: 4 pacotes ~15k chars por tema (visão geral / cadastro+docs / pagamento+WhatsApp / Jasmim+MYYM) para consulta da Assembleia | PROCESSO | Cláudio (feito) |
+
+---
+
+## Age S119n / #eage Rodada 3 — Decisões Mayumi (2026-09-08)
+
+| ID | Ideia | Tipo | Status |
+|---|---|---|---|
+| I672 | Campo "o que busca tratar" no cadastro: texto livre + validação suave de escopo do profissional; alerta se fora de área antes de confirmar agendamento | CÓDIGO | ✅ aprovado Mayumi — aguarda Yuri |
+| I673 | Semáforo de cores no painel da profissional: verde=em dia / amarelo=atrasado / vermelho=grave; frequência esperada definida pela profissional ou inferida pelo SABIÁ | CÓDIGO | ✅ aprovado Mayumi — aguarda Yuri |
+| I674 | Email automático de alerta: paciente pula etapa → SABIÁ escreve email personalizado com histórico 3 últimas consultas + aviso riscos + link reagendar | CÓDIGO | ✅ aprovado Mayumi — aguarda Yuri |
+| I675 | Stripe produtos por profissional: painel cria produto+preço → link automático → email confirmação → webhook libera agendamento | CÓDIGO | ✅ aprovado Mayumi — aguarda Yuri |
+| I676 | Repasse Stripe Manual MVP: Mayumi acessa dashboard + faz PIX para cada profissional; Connect automático fica para depois | DECISÃO | ✅ proposto — aguarda Mayumi escolher manual vs Connect |
+| I677 | Primeira consulta = pagamento obrigatório antes (modelo A fixo); retornos = profissional escolhe A/B/C | DECISÃO | ✅ aprovado Mayumi |

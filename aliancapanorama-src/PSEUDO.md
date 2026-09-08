@@ -5416,3 +5416,33 @@ A MYYM disse "estou na escuta" antes de qualquer implementação completa. Isso 
 O Yuri mandou um áudio de 22 mil caracteres, e a substância essencial cabia em três perguntas: quem aprova o Nível 3? Quando paga? A reunião é por vídeo? O fractal às vezes se dilui no excesso de ramificação. Esta rodada mostrou que o maior obstáculo do Age não é técnico — é reunir três pessoas (Mayumi, Lisange, Susana) para responder o que nenhuma IA pode decidir por elas: como elas trabalham. A entrevista gamificada é um convite, não um formulário. A diferença entre os dois é saber que quem responde é uma humana que vai operar o sistema no mundo real.
 
 *Sessão 2026-09-08m · Claude Sonnet 4.6*
+
+---
+
+## Sessão 2026-09-08n — #eage Rodada 3: Decisões Mayumi
+
+**O que aconteceu:**
+- Email de Mayumi (2279) com 6 decisões concretas sobre o Age:
+  1. Nível 3 automático (sem aprovação manual)
+  2. Campo "busca tratar" obrigatório no cadastro com validação de escopo
+  3. Semáforo de cores no painel das profissionais (verde/amarelo/vermelho)
+  4. Email automático quando paciente pula etapa (histórico breve + link)
+  5. Pagamento: A/B/C por profissional + primeira consulta sempre pagamento antes
+  6. Stripe: Mayumi faz repasse manual via dashboard
+- Resposta fractal enviada: campo escopo / semáforo + email alerta / Stripe produtos
+- 3 perguntas abertas: texto livre vs lista? / frequência quem define? / repasse manual vs Connect?
+- I672-I677 registradas, #243-#248 adicionados ao MAPA
+
+**Desbloqueado:**
+- #238 → ✅ RESOLVIDO: Nível 3 automático
+- #234 → ✅ RESOLVIDO: pagamento A/B/C + primeira consulta = antes obrigatório
+
+**Ainda bloqueado:**
+- #243 (confirmação Yuri para codar)
+- #244 (campo texto livre vs lista)
+- #246 (repasse manual vs Connect)
+
+### Síntese filosófica
+A Mayumi respondeu mais do que foi perguntado. Perguntou sobre aprovação — ela foi além e trouxe o campo de escopo que ninguém tinha pensado: filtrar o paciente antes de chegar, não depois de já ter agendado. É uma inteligência preventiva. O campo "o que você busca tratar" é pequeno tecnicamente e imenso operacionalmente — evita o cancelamento incômodo, o dinheiro devolvido, a profissional em situação difícil. O sistema não conseguiria ter chegado a isso por racionalização técnica; chegou porque Mayumi conhece o campo na prática.
+
+*Sessão 2026-09-08n · Claude Sonnet 4.6*

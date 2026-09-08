@@ -494,3 +494,14 @@
 | #240 | Gateway de pagamento: Stripe (já integrado) vs Mercado Pago; decisão antes do Bloco 3 | DECISÃO | #236 |
 | #241 | Email das profissionais (Lisange+Susana): configurar via /api/age/admin/setup para confirmações funcionarem | INFRA | Bloco 2 |
 | #242 | LGPD: checkbox consentimento WhatsApp no cadastro + Política de Privacidade + ToS antes de ativar pagamentos | JURÍDICO | Bloco 3 |
+
+### S119n — #eage Rodada 3 / Decisões Mayumi (2026-09-08)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #243 | Confirmação Yuri para implementar Bloco 2: aprovação automática + campo escopo + semáforo + email alerta | DECISÃO | 🔴 bloqueia I672-I674 |
+| #244 | Campo "busca tratar": texto livre ou lista de opções por profissional? — Mayumi decide | DECISÃO | 🔴 bloqueia I672 |
+| #245 | Frequência de tratamento: profissional define manualmente ou SABIÁ infere pelo histórico? | DECISÃO | 🟡 bloqueia I673 |
+| #246 | Repasse Stripe: manual (PIX da Mayumi) ou automático (Connect)? — Mayumi decide | DECISÃO | 🟡 bloqueia I676 |
+| #247 | Criar produtos no Stripe (tipos de consulta + preços) — após decisão de repasse | STRIPE | 🟡 bloqueia I675 |
+| #248 | Reunião Mayumi+Lisange+Suzana: Mayumi vai avisar data/formato | MAYUMI | ⏳ aguardando |
