@@ -505,3 +505,20 @@
 | #246 | Repasse Stripe: manual (PIX da Mayumi) ou automático (Connect)? — Mayumi decide | DECISÃO | 🟡 bloqueia I676 |
 | #247 | Criar produtos no Stripe (tipos de consulta + preços) — após decisão de repasse | STRIPE | 🟡 bloqueia I675 |
 | #248 | Reunião Mayumi+Lisange+Suzana: Mayumi vai avisar data/formato | MAYUMI | ⏳ aguardando |
+
+### S119o — #eage Rodada 4 / Teste ao vivo Mayumi (2026-09-08)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #249 | Jasmim: show/hide senha no login (ícone olho) | CÓDIGO | 🔴 imediato |
+| #250 | Jasmim: esquilo aparecer dentro do app (não só no login) | CÓDIGO | 🔴 imediato |
+| #251 | MYYM: conversa anterior colapsada por default | CÓDIGO | 🔴 imediato |
+| #252 | Jasmim: botão carrinho com loading + "Enviado ✓" | CÓDIGO | 🔴 imediato |
+| #253 | Age: Nível 3 condicional (auto SE escopo OK, manual SE fora) | CÓDIGO | 🔴 bloqueia fluxo de aprovação |
+| #254 | Age: triagem por formulário de opções predefinidas + SABIÁ classifica "Outro" | CÓDIGO | 🟡 bloqueia Bloco 2 completo |
+| #255 | Gateway pagamento: Stripe (exterior) vs Mercado Pago (Brasil) — Yuri decide | DECISÃO | 🔴 bloqueia Bloco 4 |
+| #256 | Dia do relatório semanal: segunda ou sexta? — Mayumi decide | DECISÃO | 🟡 bloqueia I686 |
+| #257 | Lista opções triagem: Mayumi monta com profissionais na reunião? | DECISÃO | 🟡 bloqueia I683 |
+| #258 | Age: 1ª consulta sem cancel/reagendamento automático | CÓDIGO | 🟡 Bloco 4 |
+| #259 | Bloco 3: PDF automático + próxima sessão automática — AUTORIZADO | CÓDIGO | 🟢 próxima sprint |
+| #260 | Mapa geral Age enviado por email ✅ | FEITO | ✅ |

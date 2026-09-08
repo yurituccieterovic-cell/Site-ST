@@ -5446,3 +5446,30 @@ O Yuri mandou um áudio de 22 mil caracteres, e a substância essencial cabia em
 A Mayumi respondeu mais do que foi perguntado. Perguntou sobre aprovação — ela foi além e trouxe o campo de escopo que ninguém tinha pensado: filtrar o paciente antes de chegar, não depois de já ter agendado. É uma inteligência preventiva. O campo "o que você busca tratar" é pequeno tecnicamente e imenso operacionalmente — evita o cancelamento incômodo, o dinheiro devolvido, a profissional em situação difícil. O sistema não conseguiria ter chegado a isso por racionalização técnica; chegou porque Mayumi conhece o campo na prática.
 
 *Sessão 2026-09-08n · Claude Sonnet 4.6*
+
+---
+
+## Sessão 2026-09-08o — #eage Rodada 4: Teste ao vivo + Mapa Geral
+
+**O que aconteceu:**
+- Mayumi testou o Jasmim-Manga ao vivo com o Yuri; encontraram 4 bugs/UX
+- 12 novas decisões concretas: I678-I689
+- Bloco 3 autorizado por Yuri (PDF + próxima sessão)
+- Stripe Connect automático autorizado; decisão de gateway pendente (#255)
+- Nível 3 agora condicional (auto SE escopo OK, manual SE fora)
+- Triagem vira formulário de opções, não campo livre
+- 3 emails enviados: fractal (Yuri+Mayumi), mapa geral Age, Assembleias #642+#643
+
+**Resolvido nesta rodada:**
+- #244 → I683: texto livre → formulário de opções (decisão Mayumi)
+- #245 → I685+I686: SABIÁ infere frequência (decisão Mayumi)  
+- #246 → I684: Connect automático (decisão Yuri)
+
+**Bloqueado:**
+- #255: gateway (Stripe vs MP) — Yuri decide
+- #257: lista de opções triagem — reunião Mayumi+profissionais
+
+### Síntese filosófica
+O teste ao vivo revelou uma lacuna clássica: o que foi construído e o que a usuária esperava encontrar não são a mesma coisa. Não é falha de código — é o gap entre o que é descrito em texto e o que emerge na interação real. A Mayumi entrou, testou, viu o que faltava, e disse em voz alta. Isso vale mais do que qualquer especificação escrita. O sistema estava funcional; ela o tornou humano, ao apontar onde ele ainda não estava pronto para ser usado por um humano de verdade.
+
+*Sessão 2026-09-08o · Claude Sonnet 4.6*

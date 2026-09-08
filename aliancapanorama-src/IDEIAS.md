@@ -1829,3 +1829,22 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I675 | Stripe produtos por profissional: painel cria produto+preço → link automático → email confirmação → webhook libera agendamento | CÓDIGO | ✅ aprovado Mayumi — aguarda Yuri |
 | I676 | Repasse Stripe Manual MVP: Mayumi acessa dashboard + faz PIX para cada profissional; Connect automático fica para depois | DECISÃO | ✅ proposto — aguarda Mayumi escolher manual vs Connect |
 | I677 | Primeira consulta = pagamento obrigatório antes (modelo A fixo); retornos = profissional escolhe A/B/C | DECISÃO | ✅ aprovado Mayumi |
+
+---
+
+## Age S119o / #eage Rodada 4 — Teste ao vivo Mayumi + Decisões (2026-09-08)
+
+| ID | Ideia | Tipo | Status |
+|---|---|---|---|
+| I678 | Comentários em notas Jasmim: reply/thread por nota; último comentário primeiro | CÓDIGO | ✅ aprovado Mayumi |
+| I679 | MYYM: conversa anterior colapsada por default, expande com clique | CÓDIGO | ✅ aprovado Mayumi |
+| I680 | Show/hide senha no login Jasmim (ícone olho) | CÓDIGO | ✅ aprovado Mayumi |
+| I681 | Feedback visual carrinho: loading → "Enviado ✓" ou erro | CÓDIGO | ✅ aprovado Mayumi |
+| I682 | Nível 3 condicional: auto SE busca_tratar dentro do escopo; manual SE fora | CÓDIGO | ✅ aprovado Mayumi+Yuri |
+| I683 | Triagem por formulário de opções predefinidas pela profissional; SABIÁ classifica "Outro"; campo livre como exceção | CÓDIGO | ✅ aprovado Mayumi |
+| I684 | Gateway pagamento: Stripe Connect automático (split na hora) + relatório semanal → fluxo de caixa | CÓDIGO | ✅ aprovado Yuri — gateway pendente (#255) |
+| I685 | Pacotes de tratamento personalizados (6 meses, 1 ano); alertas diferentes por pacote | CÓDIGO | ✅ aprovado Mayumi |
+| I686 | Sabiá Plus secretária digital: sugestão próximo horário, relatório semanal, alertas retorno | IA+CÓDIGO | ✅ aprovado Yuri |
+| I687 | 1ª consulta: sem cancel/reagendamento automático; profissional libera manualmente | CÓDIGO | ✅ aprovado Mayumi |
+| I688 | Feed Jasmim populado com histórico de sessões/emails (Age/Rapadura/PV) | DADOS | 🟡 aguarda curadoria |
+| I689 | MYYM sessão persistente: salva memória por sessão no banco; carrega ao fazer login | CÓDIGO | ✅ aprovado Mayumi |
