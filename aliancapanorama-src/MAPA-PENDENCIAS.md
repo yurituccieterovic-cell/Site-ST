@@ -455,3 +455,17 @@
 | M4 | Trocar senhas padrão das profissionais | Mayumi | ⏳ |
 | M5 | Ajustar disponibilidade real Suzana (dias/horários/canal) | Mayumi + Suzana | ⏳ |
 | M6 | Quando Age gerar receita: ativar Stripe + registrar % Mayumi | M1 | ⏳ |
+
+### #206 — Jasmim-Manga: APIs + Deploy (S119 · 2026-09-08)
+| # | Item | Depende de | Status |
+|---|---|---|---|
+| J1 | /jasmim ao ar em sociedadetucci.com.br | root vercel.json corrigido ✅ commit f50bd20 | ⏳ build Vercel |
+| J2 | API GET /api/jasmim/feed — lista posts por projeto | Neon schema | ⏳ |
+| J3 | API POST /api/jasmim/myym/chat — MYYM responde com Gemini Flash | Gemini key ok | ⏳ |
+| J4 | API POST /api/jasmim/carrinho/enviar — envia email brainstorm | Gmail ok | ⏳ |
+| J5 | Neon schema: jm_posts, jm_carrinho, jm_myym_memory | criar tabelas IF NOT EXISTS | ⏳ |
+| J6 | Pipeline email→feed: IMAP luddlocke → parse → inserir jm_posts | J5 | ⏳ |
+| J7 | Prompt MYYM instalado na Perplexity da Mayumi | Mayumi (manual) | ⏳ |
+| J8 | Validação visual PV: Sérgio revisa blocos hierárquicos Jasmim-Manga | Sérgio (email pendente) | ⏳ |
+| J9 | Creditar Gemini/Perplexity/Meta AI nas interfaces MYYM | após J2-J3 ok | ⏳ |
+| J10 | sync root/vercel.json automático a cada nova rota (I645) | processo | ⏳ |
