@@ -37,6 +37,8 @@
     { "source": "/studio", "destination": "/aliancapanorama/index.html" },
     { "source": "/studio/(.*)", "destination": "/aliancapanorama/index.html" },
     { "source": "/celular", "destination": "/aliancapanorama/index.html" },
-    { "source": "/celular/(.*)", "destination": "/aliancapanorama/index.html" }
+    { "source": "/celular/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/adm", "destination": "/aliancapanorama/index.html" },
+    { "source": "/adm/(.*)", "destination": "/aliancapanorama/index.html" }
   ]
 }

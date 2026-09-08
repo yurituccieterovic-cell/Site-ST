@@ -2518,3 +2518,36 @@ export async function ensurePvTables(): Promise<void> {
   `);
   logger.info("bootstrap: pv tables OK (pv_projects, pv_items, pv_item_relations, pv_item_events)");
 }
+
+// Garante tabelas Jasmim-Manga (jm_posts, jm_carrinho, jm_myym_memory)
+export async function ensureJasmimTables(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS jm_posts (
+      id         UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      projeto    TEXT        NOT NULL CHECK (projeto IN ('age','rapadura','pv')),
+      setor      TEXT,
+      tipo       TEXT        NOT NULL DEFAULT 'auto' CHECK (tipo IN ('auto','nota','myym')),
+      autor      TEXT        NOT NULL DEFAULT 'sistema',
+      conteudo   TEXT        NOT NULL,
+      fonte      TEXT,
+      created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_jm_posts_projeto ON jm_posts(projeto, created_at DESC);
+
+    CREATE TABLE IF NOT EXISTS jm_carrinho (
+      id         UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      conteudo   TEXT        NOT NULL,
+      enviado    BOOLEAN     NOT NULL DEFAULT false,
+      created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS jm_myym_memory (
+      id         UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+      tipo       TEXT        NOT NULL DEFAULT 'conversa',
+      conteudo   TEXT        NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_jm_myym_memory_tipo ON jm_myym_memory(tipo, created_at DESC);
+  `);
+  logger.info("bootstrap: jm tables OK (jm_posts, jm_carrinho, jm_myym_memory)");
+}

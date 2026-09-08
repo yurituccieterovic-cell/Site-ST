@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso, seedAuliasCursoAvancado, ensureVectorMemory, seedRoteirosVideo, ensureRapaduraTables, seedRapaduraUsers, ensureAgeTables, ensurePvTables } from "./lib/bootstrap";
+import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso, seedAuliasCursoAvancado, ensureVectorMemory, seedRoteirosVideo, ensureRapaduraTables, seedRapaduraUsers, ensureAgeTables, ensurePvTables, ensureJasmimTables } from "./lib/bootstrap";
 import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
 import { startKeepaliveCron } from "./lib/keepalive";
@@ -33,6 +33,7 @@ ensureSessionTable()
   .then(() => seedRapaduraUsers())
   .then(() => ensureAgeTables())
   .then(() => ensurePvTables())
+  .then(() => ensureJasmimTables())
   .then(() => {
     app.listen(port, (err) => {
       if (err) {
