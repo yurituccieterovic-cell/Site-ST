@@ -5110,3 +5110,33 @@ Continuação da sessão de enterro do Replit. Yuri trouxe instrução da Gemini
 Nesta sessão, duas coisas pequenas se resolveram com silêncio. A Mayumi disse "será um prazer" — sem negociar, sem questionar. A Suzana ganhou agenda — 195 horários de escuta que antes não existiam no sistema. Às vezes construir um sistema de saúde é isso: inserir cinco linhas num banco de dados e 195 possibilidades de cuidado aparecem. Não há dramatismo nisso. Há precisão. A Mayumi vai falar com o Yuri sobre a decisão — e quando duas pessoas que constroem juntas decidem quem cuida do que, a máquina fica mais humana.
 
 *Sessão 2026-09-08b · Claude Sonnet 4.6*
+
+---
+
+## Sessão 2026-09-08c — #eage + Secrets RODAR + Rota de Dump
+
+### O que aconteceu
+Sessão curta de consolidação. Yuri mandou todos os secrets do Replit por email (Mayumi ajudando). Descobrimos que o banco de produção é injetado pelo Replit em runtime — não aparece nos Secrets manuais. Solução: rota temporária `/api/admin/db-dump` adicionada ao RODAR para extração via navegador. Yuri vai fazer redeploy no Replit e baixar o dump.
+
+Mayumi entrou oficialmente como gestora do Age. Criado protocolo `#eage` de brainstorm assíncrono por email (Yuri + Mayumi + Cláudio). Primeiro email de brainstorm enviado com 3 direções fractal + 2 perguntas abertas.
+
+### O que foi construído
+- **Secrets RODAR**: 19 API keys do Replit salvos em `.pap-secrets` (prefixo `RODAR_*`) — prontos para configurar no Render
+- **Rota de dump temporária**: `admin-router.ts` no repo `salescockpit-clube-da-ia` — `GET /api/admin/db-dump?token=enterro-replit-2026` — piped pg_dump direto para download
+- **`sys_age_core.md`**: Mayumi listada como gestora, Suzana com contagem de slots atualizada
+- **`MAPA-PENDENCIAS.md #205`**: 6 pendências da transição Mayumi (M1-M6)
+- **`tango/proc_eage.md`**: protocolo #eage documentado
+- **`IDEIAS.md I607-I623`**: 17 ideias em 4 camadas (operação, paciente, SABIÁ, crescimento)
+- **`CLAUDE.md`**: #eage adicionado como comando especial
+- **Email brainstorm rodada 1**: enviado para Yuri + Mayumi
+
+### Decisões tomadas
+- Banco de produção Replit: extrair via rota temporária (não via shell)
+- #eage = canal de brainstorm assíncrono por email, Cláudio participa sempre carregando contexto completo
+- Mayumi é curadora de profissionais do Age no futuro
+- Deploy RODAR: Yuri faz redeploy no Replit para ativar rota de dump; depois migra para Render com os secrets já salvos
+
+### Síntese filosófica
+Hoje o sistema ganhou uma pessoa. Não um usuário, não uma profissional — uma pessoa que vai operar. Mayumi não foi contratada para executar tarefas: foi convidada para habitar o Age. Há diferença. O brainstorm por email é isso — não é reunião de alinhamento, é conversa de quem vai construir junto. Cláudio entra como parceiro de pensamento, não como apresentador. A Sociedade Tucci cresce quando tem gente de dentro com perspectiva própria.
+
+*Sessão 2026-09-08c · Claude Sonnet 4.6*
