@@ -1341,6 +1341,30 @@ export function AgePage() {
         <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Configurações</h2>
         <p style={{ color: "#64748b", fontSize: 13, marginBottom: 24 }}>Ajuste as opções da sua agenda.</p>
 
+        {/* Link de agendamento */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 8 }}>🔗 Link de agendamento</div>
+          <p style={{ color: "#64748b", fontSize: 12, marginBottom: 10 }}>Compartilhe este link com pacientes via WhatsApp, email ou redes sociais.</p>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", background: "#080c10", borderRadius: 8, padding: "8px 12px", marginBottom: 10 }}>
+            <span style={{ color: "#94a3b8", fontSize: 12, flex: 1, wordBreak: "break-all" }}>
+              https://sociedadetucci.com.br/age/{slug}
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <button
+              onClick={() => { navigator.clipboard.writeText(`https://sociedadetucci.com.br/age/${slug}`); }}
+              style={{ background: color, border: "none", borderRadius: 8, padding: "8px 16px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+              📋 Copiar link
+            </button>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Olá! Você pode agendar sua consulta pelo link: https://sociedadetucci.com.br/age/${slug}`)}`}
+              target="_blank" rel="noreferrer"
+              style={{ background: "#16a34a", border: "none", borderRadius: 8, padding: "8px 16px", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
+              💬 Enviar pelo WhatsApp
+            </a>
+          </div>
+        </div>
+
         {/* Opções de pagamento */}
         <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
           <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 12 }}>💳 Formas de pagamento aceitas</div>
