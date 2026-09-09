@@ -84,5 +84,31 @@ export function startKeepaliveCron(): void {
     }
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min · email-diário:11h UTC)");
+  // Rapadura snapshot mensal: 1º de cada mês às 06h UTC
+  // Grava rapadura_historico_cotas com valor_cota atual de todos os fundos ativos
+  cron.schedule("0 6 1 * *", async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      const fundos = await db.execute(sql`
+        SELECT id, valor_cota FROM rapadura_fundos WHERE deleted_at IS NULL AND valor_cota IS NOT NULL
+      `);
+      const rows = (fundos as any).rows ?? [];
+      let inseridos = 0;
+      for (const f of rows) {
+        await db.execute(sql`
+          INSERT INTO rapadura_historico_cotas (fundo_id, data, valor_cota, fonte)
+          VALUES (${f.id}, ${today}, ${f.valor_cota}, 'CRON_MENSAL')
+          ON CONFLICT (fundo_id, data) DO NOTHING
+        `);
+        inseridos++;
+      }
+      registrarPulso("rapadura-snapshot", "ok", `fundos:${inseridos} data:${today}`);
+      logger.info({ inseridos, today }, "Rapadura: snapshot mensal concluído");
+    } catch (err) {
+      registrarPulso("rapadura-snapshot", "erro", String(err));
+      logger.error({ err }, "Rapadura: erro no snapshot mensal");
+    }
+  });
+
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h)");
 }

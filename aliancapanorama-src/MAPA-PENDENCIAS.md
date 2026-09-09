@@ -90,7 +90,7 @@
 | 99 | Variação Earth2 — confirmar valor exato (salvo como 369.74%) | Yuri | ⏳ |
 | 100 | Datas de compra — Virtual Land Earth2 + 3 poupanças BB salvos com 2024-01-01 placeholder | Yuri | ⏳ |
 | 101 | Comparador lado a lado — I478: tela 2-3 ativos, 4 modos, tabela hexagonal, sem vencedor geral | — | ⏳ Próxima frente (Sessão 115) |
-| 102 | Snapshots patrimoniais — I479: job cron mensal → rapadura_historico_cotas | — | ⏳ |
+| 102 | Snapshots patrimoniais — I479: job cron mensal → rapadura_historico_cotas | — | ✅ S120c — cron "0 6 1 * *" em keepalive.ts; ON CONFLICT DO NOTHING |
 | 103 | status_data em pertences — I480: remover 2024-01-01 placeholder, campo enum | — | ⏳ |
 | 95 | Rapadura v3 — transações, reconciliação parcial, I438, importar XP, PDF, histórico cotas | — | ✅ Sessão 108 (2026-08-13) — commit 752360b |
 | 96 | Manuel v5 — tutorial atualizado para v3 + Cana Pesquisadora + roadmap | — | ✅ Sessão 108/109 — commit f17e9b6 |
