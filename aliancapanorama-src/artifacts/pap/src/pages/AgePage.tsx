@@ -1832,6 +1832,10 @@ export function AgePage() {
   function PatientAreaView() {
     const upcoming = patientAppts.filter(a => new Date(a.dataHora) >= new Date() && !["cancelado", "remarcado"].includes(a.status));
     const past     = patientAppts.filter(a => new Date(a.dataHora) < new Date() || ["cancelado", "remarcado"].includes(a.status));
+    // 1ª consulta protegida — profissional não quer que paciente cancele/remarque antes de chegar
+    const primeiraId = patientAppts.length > 0
+      ? patientAppts.reduce((min, a) => new Date(a.dataHora) < new Date(min.dataHora) ? a : min).id
+      : null;
 
     function ApptCard({ a }: { a: PatientAppt }) {
       const future = new Date(a.dataHora) > new Date();
@@ -1848,7 +1852,7 @@ export function AgePage() {
               {STATUS_LABEL[a.status] ?? a.status}
             </span>
           </div>
-          {a.cancelToken && future && !["cancelado", "remarcado", "realizado"].includes(a.status) && (
+          {a.cancelToken && future && !["cancelado", "remarcado", "realizado"].includes(a.status) && a.id !== primeiraId && (
             <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
               <a href={`?reschedule=${a.cancelToken}`}
                 style={{ fontSize: 12, color, background: colorDark, borderRadius: 6, padding: "4px 10px", textDecoration: "none" }}>

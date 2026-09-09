@@ -519,8 +519,8 @@
 | #255 | Gateway pagamento: Stripe (exterior) vs Mercado Pago (Brasil) — Yuri decide | DECISÃO | 🔴 bloqueia Bloco 4 |
 | #256 | Dia do relatório semanal: segunda ou sexta? — Mayumi decide | DECISÃO | 🟡 bloqueia I686 |
 | #257 | Lista opções triagem: Mayumi monta com profissionais na reunião? | DECISÃO | 🟡 bloqueia I683 |
-| #258 | Age: 1ª consulta sem cancel/reagendamento automático | CÓDIGO | 🟡 Bloco 4 |
-| #259 | Bloco 3: PDF automático + próxima sessão automática — AUTORIZADO | CÓDIGO | 🟢 próxima sprint |
+| #258 | Age: 1ª consulta sem cancel/reagendamento automático | CÓDIGO | ✅ S120a — primeiraId bloqueia cancel/remarcar |
+| #259 | Bloco 3: PDF automático + próxima sessão automática — AUTORIZADO | CÓDIGO | ✅ S119w — email pós-realizado + slot automático |
 | #260 | Mapa geral Age enviado por email ✅ | FEITO | ✅ |
 
 ### S119p — #eage Rodada 5 — RSRS + ISCA + admin Jasmim (2026-09-09)
