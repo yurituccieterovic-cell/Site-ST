@@ -559,7 +559,7 @@ function PostCard({ post, prevPost, onAddCarrinho }: { post: Post; prevPost?: Po
 
 // ─── Formulário nova nota ─────────────────────────────────────────────────────
 
-function NovaNota({ projeto, onSalva, autor = "usuário" }: { projeto: Projeto; onSalva: () => void; autor?: string }) {
+function NovaNota({ projeto, setor, onSalva, autor = "usuário" }: { projeto: Projeto; setor?: string | null; onSalva: () => void; autor?: string }) {
   const [texto, setTexto] = useState("");
   const [tipo, setTipo] = useState<"nota" | "pergunta">("nota");
   const [salvando, setSalvando] = useState(false);
@@ -571,7 +571,7 @@ function NovaNota({ projeto, onSalva, autor = "usuário" }: { projeto: Projeto; 
       await fetch(`${API}/api/jasmim/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projeto, tipo, autor: autor || "usuário", conteudo: texto.trim() }),
+        body: JSON.stringify({ projeto, setor: setor ?? undefined, tipo, autor: autor || "usuário", conteudo: texto.trim() }),
       });
       // Se é pergunta, pede resposta à MYYM e posta automaticamente
       if (tipo === "pergunta") {
@@ -584,7 +584,7 @@ function NovaNota({ projeto, onSalva, autor = "usuário" }: { projeto: Projeto; 
           await fetch(`${API}/api/jasmim/posts`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ projeto, tipo: "myym", autor: "MYYM", conteudo: r.resposta }),
+            body: JSON.stringify({ projeto, setor: setor ?? undefined, tipo: "myym", autor: "MYYM", conteudo: r.resposta }),
           });
         }
       }
@@ -646,6 +646,7 @@ function NovaNota({ projeto, onSalva, autor = "usuário" }: { projeto: Projeto; 
 
 export default function JasmimMangaPage() {
   const [projetoAtivo, setProjetoAtivo] = useState<Projeto>("age");
+  const [setorAtivo, setSetorAtivo] = useState<string | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [carrinho, setCarrinho] = useState<CarrinhoItem[]>([]);
   const [myymAberto, setMyymAberto] = useState(false);
@@ -669,16 +670,19 @@ export default function JasmimMangaPage() {
   const projetosVisiveis = (Object.entries(PROJETOS) as [Projeto, typeof PROJETOS.age][])
     .filter(([, p]) => !p.secreto || userTier >= 4);
 
-  function carregarFeed() {
+  function carregarFeed(setor?: string | null) {
     setLoading(true);
-    fetch(`${API}/api/jasmim/feed?projeto=${projetoAtivo}`)
+    const s = setor !== undefined ? setor : setorAtivo;
+    const url = `${API}/api/jasmim/feed?projeto=${projetoAtivo}${s ? `&setor=${encodeURIComponent(s)}` : ""}`;
+    fetch(url)
       .then(r => r.ok ? r.json() : null)
       .then(d => setPosts(d?.posts ?? []))
       .catch(() => setPosts([]))
       .finally(() => setLoading(false));
   }
 
-  useEffect(() => { carregarFeed(); }, [projetoAtivo]);
+  useEffect(() => { setSetorAtivo(null); }, [projetoAtivo]);
+  useEffect(() => { carregarFeed(setorAtivo); }, [projetoAtivo, setorAtivo]);
 
   function addCarrinho(texto: string) {
     if (!texto.trim()) return;
@@ -750,11 +754,26 @@ export default function JasmimMangaPage() {
           </div>
           {/* Setores */}
           <div style={{ display: "flex", gap: 6, marginTop: 8, overflowX: "auto" }}>
+            <span
+              key="__todos"
+              onClick={() => setSetorAtivo(null)}
+              style={{
+                background: setorAtivo === null ? proj.cor : `${proj.cor}18`,
+                border: `1px solid ${proj.cor}66`,
+                borderRadius: 10, padding: "3px 10px", fontSize: 11,
+                color: setorAtivo === null ? "#111" : proj.cor,
+                whiteSpace: "nowrap", cursor: "pointer", fontWeight: setorAtivo === null ? 700 : 400,
+              }}>Todos</span>
             {proj.setores.map(s => (
-              <span key={s} style={{
-                background: `${proj.cor}18`, border: `1px solid ${proj.cor}44`,
-                borderRadius: 10, padding: "3px 10px", fontSize: 11, color: proj.cor, whiteSpace: "nowrap",
-              }}>{s}</span>
+              <span key={s}
+                onClick={() => setSetorAtivo(s === setorAtivo ? null : s)}
+                style={{
+                  background: s === setorAtivo ? proj.cor : `${proj.cor}18`,
+                  border: `1px solid ${proj.cor}${s === setorAtivo ? "ff" : "44"}`,
+                  borderRadius: 10, padding: "3px 10px", fontSize: 11,
+                  color: s === setorAtivo ? "#111" : proj.cor,
+                  whiteSpace: "nowrap", cursor: "pointer", fontWeight: s === setorAtivo ? 700 : 400,
+                }}>{s}</span>
             ))}
           </div>
         </div>
@@ -813,11 +832,51 @@ export default function JasmimMangaPage() {
             ))}
           </div>
         )}
-        <NovaNota projeto={projetoAtivo} onSalva={carregarFeed} autor={userName || "usuário"} />
+        {/* Painel contextual: Age — Documentos & Prontuários */}
+        {projetoAtivo === "age" && setorAtivo === "Documentos & Prontuários" && (
+          <div style={{ background: "#2dd4bf11", border: "1px solid #2dd4bf44", borderRadius: 12, padding: 14, marginBottom: 12 }}>
+            <p style={{ color: "#2dd4bf", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>📄 Prontuários & Documentos — acesso rápido</p>
+            {[
+              ["Lisange (Médica)", "/aliancapanorama/age/lisange"],
+              ["Suzana (Psicóloga)", "/aliancapanorama/age/susana"],
+              ["Painel Gestora", "/aliancapanorama/age/gestora"],
+            ].map(([label, href]) => (
+              <a key={href} href={href} style={{
+                display: "inline-block", marginRight: 8, marginBottom: 4,
+                background: "#2dd4bf22", border: "1px solid #2dd4bf44",
+                borderRadius: 8, padding: "3px 10px", fontSize: 12, color: "#2dd4bf", textDecoration: "none",
+              }}>{label}</a>
+            ))}
+            <p style={{ color: "#64748b", fontSize: 12, margin: "8px 0 0" }}>
+              Notas neste setor ficam visíveis apenas para a equipe Age.
+            </p>
+          </div>
+        )}
+        {/* Painel contextual: Age — Financeiro & Sabiá */}
+        {projetoAtivo === "age" && setorAtivo === "Financeiro & Sabiá" && (
+          <div style={{ background: "#2dd4bf11", border: "1px solid #2dd4bf44", borderRadius: 12, padding: 14, marginBottom: 12 }}>
+            <p style={{ color: "#2dd4bf", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>💰 Financeiro & SABIÁ</p>
+            {[
+              ["Config Pagamentos — Lisange", "/aliancapanorama/age/lisange?adm=1"],
+              ["Config Pagamentos — Suzana", "/aliancapanorama/age/susana?adm=1"],
+              ["Painel Gestora (receita)", "/aliancapanorama/age/gestora"],
+            ].map(([label, href]) => (
+              <a key={href} href={href} style={{
+                display: "inline-block", marginRight: 8, marginBottom: 4,
+                background: "#2dd4bf22", border: "1px solid #2dd4bf44",
+                borderRadius: 8, padding: "3px 10px", fontSize: 12, color: "#2dd4bf", textDecoration: "none",
+              }}>{label}</a>
+            ))}
+            <p style={{ color: "#64748b", fontSize: 12, margin: "8px 0 0" }}>
+              SABIÁ — IA de acolhimento Age. Registre aqui decisões financeiras e configurações da IA.
+            </p>
+          </div>
+        )}
+        <NovaNota projeto={projetoAtivo} setor={setorAtivo} onSalva={() => carregarFeed()} autor={userName || "usuário"} />
         {loading && <p style={{ color: "#666", textAlign: "center" }}>carregando feed…</p>}
         {!loading && posts.length === 0 && (
           <p style={{ color: "#666", textAlign: "center", marginTop: 32 }}>
-            Nenhuma atualização ainda para {proj.nome}.<br/>
+            Nenhuma atualização ainda para {proj.nome}{setorAtivo ? ` · ${setorAtivo}` : ""}.<br/>
             <span style={{ fontSize: 12, color: "#555" }}>Use o campo acima para adicionar a primeira nota.</span>
           </p>
         )}

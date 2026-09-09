@@ -71,6 +71,7 @@ router.post("/jasmim/myym/chat", async (req, res) => {
 
 router.get("/jasmim/feed", async (req, res) => {
   const projeto = (req.query.projeto as string) ?? "age";
+  const setor   = (req.query.setor as string) ?? null;
   const validos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim"];
   if (!validos.includes(projeto)) {
     res.status(400).json({ error: "projeto inválido" });
@@ -78,13 +79,17 @@ router.get("/jasmim/feed", async (req, res) => {
   }
 
   try {
-    const rows = await db.execute(sql`
-      SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
-      FROM jm_posts
-      WHERE projeto = ${projeto}
-      ORDER BY created_at ASC
-      LIMIT 80
-    `);
+    const rows = setor
+      ? await db.execute(sql`
+          SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
+          FROM jm_posts
+          WHERE projeto = ${projeto} AND setor = ${setor}
+          ORDER BY created_at ASC LIMIT 80`)
+      : await db.execute(sql`
+          SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
+          FROM jm_posts
+          WHERE projeto = ${projeto}
+          ORDER BY created_at ASC LIMIT 80`);
 
     const posts = rows.rows.map((r: Record<string, unknown>) => ({
       id: r.id,

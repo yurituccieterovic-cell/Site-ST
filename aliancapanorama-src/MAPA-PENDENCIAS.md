@@ -527,7 +527,7 @@
 
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
-| #261 | Admin Jasmim: guias "Financeiro & Sabiá" e "Documentos & Prontuários" — backend + UI (não implementadas ainda) | CÓDIGO | 🔴 Bloco 3 |
+| #261 | Admin Jasmim: guias "Financeiro & Sabiá" e "Documentos & Prontuários" — backend + UI (não implementadas ainda) | CÓDIGO | ✅ S120a — chips clickáveis + filtro por setor + painéis contextuais Age |
 | #262 | Pedir arquivos para Suzana (docs de referência — Yuri mencionou) | MAYUMI/YURI | ⏳ lembrar na reunião |
 | #263 | Protótipo comandos de acesso rápido: radial menu desktop + barra flutuante mobile (I692) | CÓDIGO | 🟡 aguarda aprovação visual |
 | #264 | Formulário base reuniões Mayumi: doc por reunião (Lisange + Suzana), enviado por email antes das datas (I695) | PROCESSO | ⏳ Cláudio prepara |
