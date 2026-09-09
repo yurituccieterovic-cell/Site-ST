@@ -63,8 +63,8 @@ export function startIsaCron(): void {
     }
   });
 
-  // ISA Bluesky: reflexões sobre FUVEST a cada 2 horas (nos minutos :15)
-  cron.schedule("15 */2 * * *", async () => {
+  // ISA Bluesky: reflexões a cada 2 horas — horário :45 para não coincidir com Replit Árvore
+  cron.schedule("45 */2 * * *", async () => {
     try {
       logger.info("ISA Bluesky: disparando reflexão");
       await runIsaBluesky();

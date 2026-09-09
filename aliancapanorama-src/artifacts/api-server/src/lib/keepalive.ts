@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import nodemailer from "nodemailer";
 import { logger } from "./logger";
 import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
@@ -56,5 +57,32 @@ export function startKeepaliveCron(): void {
     }
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min)");
+  // Scheduled emails: verifica diariamente às 08:00 BRT (11:00 UTC)
+  cron.schedule("0 11 * * *", async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      const pending = await db.execute(sql`
+        SELECT id, to_email, subject, body FROM scheduled_emails
+        WHERE send_at = ${today} AND sent = false
+      `);
+      const rows = (pending as any).rows ?? [];
+      if (rows.length === 0) return;
+
+      const mailer = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: process.env["GMAIL_ACCOUNT"], pass: process.env["GMAIL_APP_PASSWORD"] },
+      });
+      for (const r of rows) {
+        await mailer.sendMail({ from: process.env["GMAIL_ACCOUNT"], to: r.to_email, subject: r.subject, text: r.body });
+        await db.execute(sql`UPDATE scheduled_emails SET sent = true, sent_at = now() WHERE id = ${r.id}`);
+        registrarPulso("scheduled-email", "ok", `Enviado para ${r.to_email}: ${r.subject.slice(0, 40)}`);
+        logger.info(`Scheduled email enviado: ${r.subject.slice(0, 40)}`);
+      }
+    } catch (err) {
+      registrarPulso("scheduled-email", "erro", String(err));
+      logger.error({ err }, "Scheduled email: erro ao enviar");
+    }
+  });
+
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min · email-diário:11h UTC)");
 }

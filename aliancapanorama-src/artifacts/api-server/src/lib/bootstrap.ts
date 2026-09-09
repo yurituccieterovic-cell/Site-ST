@@ -2587,6 +2587,20 @@ export async function ensureJasmimTables(): Promise<void> {
         CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo','jasmim'));
     EXCEPTION WHEN others THEN NULL; END $$;
   `).catch(() => {});
+  // Tabela de emails agendados (lembretes de cancelamento, notificações futuras)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS scheduled_emails (
+      id          SERIAL      PRIMARY KEY,
+      send_at     DATE        NOT NULL,
+      to_email    TEXT        NOT NULL,
+      subject     TEXT        NOT NULL,
+      body        TEXT        NOT NULL,
+      sent        BOOLEAN     DEFAULT false,
+      sent_at     TIMESTAMPTZ,
+      created_at  TIMESTAMPTZ DEFAULT now()
+    )
+  `).catch(() => {});
+
   // Tabela de histórico de assembleias Replit (importada via exportação v3)
   await db.execute(sql`
     CREATE TABLE IF NOT EXISTS arvore_assembleias (

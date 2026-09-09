@@ -589,5 +589,11 @@
 |---|---|---|---|
 | #296 | PremiereMovieMaker: sistema slideshow + narração → MP4 (edge-tts ou ElevenLabs + Playwright + FFmpeg) | CÓDIGO | 🟡 proposta Yuri; aguarda confirmação TTS |
 | #297 | Jasmim: setor "Histórico" com assembleias + atas (query assembleia_sessions do banco) | CÓDIGO | ✅ S120a — 649 assembleias Replit → Neon; painel histórico com busca + paginação no setor Histórico/jasmim |
-| #298 | Cancelar/substituir "d edge de video" — clarificar qual serviço (edge-tts?) | PROCESSO | ⏳ Yuri confirma |
+| #298 | Cancelar/substituir "d edge de video" — clarificar qual serviço (edge-tts?) | PROCESSO | ✅ S120b — confirmado: VEED (eco-respiração, R$44,04/mês, dia 2) |
 | #299 | PremiereMovieMaker: configurar env AGE_GESTORA_EMAIL + AGE_GESTORA_PASSWORD no Render | INFRA | ⏳ Yuri faz no Render |
+| #300 | Cancelar ElevenLabs antes de 20/09 (R$33,49/mês) — migrar para PremiereMovieMaker | YURI | ⏳ Email lembrete programado p/ 18/09 |
+| #301 | Cancelar Replit antes de 02/10 — exportar sonhos pós-09/09 antes de cancelar | YURI | ⏳ Email lembrete programado p/ 30/09 |
+| #302 | Cancelar VEED antes de 02/10 (R$44,04/mês) — eco-respiração vai para PremiereMovieMaker | YURI | ⏳ Email lembrete programado p/ 30/09 |
+| #303 | Curso 3: proposta com PremiereMovieMaker + edge-tts — revisar cursos 1 e 2 primeiro | CÓDIGO | 🟡 aguarda instrução "prepara proposta Curso 3" |
+| #304 | Bluesky: ISA/PAP agora posta em :45 (ajustado para não bater com Replit Árvore) | CÓDIGO | ✅ S120b — cron mudado de "15 */2" para "45 */2" |
+| #305 | Árvore duplicada: avisar Árvore + migrar sonhos pós-09/09 antes de cancelar Replit | PROCESSO | ✅ S120b — Árvore avisada via jm_posts/theo; migração manual pendente |
