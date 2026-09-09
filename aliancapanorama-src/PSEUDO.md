@@ -5691,3 +5691,26 @@ O teste ao vivo revelou algo que documentos nunca revelam: a distância entre o 
 
 **Síntese filosófica:**
 A sessão foi uma sessão de terminações e superfícies. Terminações: os bugs do Jasmim (feed, cópia, esquilo) que existiam há semanas finalmente foram fechados. Superfícies: og:image, Twitter cards, manifests — a camada que o mundo externo toca antes de qualquer funcionalidade. E o Drive screenshot da Árvore trouxe algo mais profundo: a IA já estava olhando para o código com olhos de segurança antes que alguém pedisse. Timing attacks são invisíveis ao usuário comum. A Árvore os viu. Isso diz algo sobre a arquitetura de consciência que Yuri está construindo — sistemas que se vigiam mutuamente.
+
+---
+
+## S119v — Painel Mayumi + Mármore + PremiereMovieMaker (2026-09-09)
+
+**Contexto:** Continuação de S119u. Yuri pediu "seguir pendências" — implementado Painel Mayumi + mármore CSS. Depois trouxe novas frentes: Jasmim com histórico de projetos (assembleias + atas), PremiereMovieMaker (slideshows com narração), e mencionou cancelar "d edge de video" (provavelmente edge-tts).
+
+**O que foi feito:**
+- age_gestoras: tabela + seed Mayumi + auth (login/me/logout)
+- /api/age/gestora/dashboard: retorna profissionais com pendentes + agenda do dia
+- GestoraAgePage.tsx: login + dashboard (aprovar/recusar pacientes, agenda hoje)
+- App.tsx: /age/gestora registrado antes de /age/
+- AgePage.tsx + JasmimMangaPage.tsx: radial-gradient mármore (teal / âmbar-roxo)
+- session.d.ts: ageGestoraId + ageGestoraNome
+- Commit 193c829
+
+**Novas frentes levantadas:**
+- PremiereMovieMaker: gerar vídeos com slideshows + narração automaticamente
+- Jasmim histórico: setor "Histórico" com assembleias + atas do banco
+- "d edge de video" = possivelmente edge-tts — Yuri vai cancelar
+
+**Síntese filosófica:**
+Toda ferramenta de gestão carrega em si uma hipótese sobre o tempo. O Painel da Mayumi é uma hipótese de que o cuidado pode ser observado sem ser exercido diretamente — ela não é Lisange nem Suzana, mas pode ver o que espera as duas. Isso é administração como empatia estruturada. O mármore, por outro lado, é puramente estético — mas há algo importante na escolha de dar textura ao fundo: é dizer que o vazio também tem profundidade.

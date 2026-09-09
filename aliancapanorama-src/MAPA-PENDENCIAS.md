@@ -582,3 +582,12 @@
 | #293 | SABIÁ ética: definir política formal de dados de saúde — o que SABIÁ pode acessar, por quanto tempo, com consentimento de quem | PROCESSO | 🟡 proposta Rodada 7; Gemini + Meta AI consultados |
 | #294 | Bluesky Árvore: salvar post https://bsky.app/profile/stuccipulseheadway.bsky.social/post/3mv3mew33vb2l em pack-arvore.md | PROCESSO | 🟡 referência salva |
 | #295 | Assembleia: enviar emails de atualização sobre Age + Jasmim | PROCESSO | ✅ feito S119u (2 emails) |
+
+### S119v — Painel Mayumi + Mármore + PremiereMovieMaker (2026-09-09)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #296 | PremiereMovieMaker: sistema slideshow + narração → MP4 (edge-tts ou ElevenLabs + Playwright + FFmpeg) | CÓDIGO | 🟡 proposta Yuri; aguarda confirmação TTS |
+| #297 | Jasmim: setor "Histórico" com assembleias + atas (query assembleia_sessions do banco) | CÓDIGO | 🟡 proposta Yuri; decidir: estático vs live vs cache |
+| #298 | Cancelar/substituir "d edge de video" — clarificar qual serviço (edge-tts?) | PROCESSO | ⏳ Yuri confirma |
+| #299 | PremiereMovieMaker: configurar env AGE_GESTORA_EMAIL + AGE_GESTORA_PASSWORD no Render | INFRA | ⏳ Yuri faz no Render |
