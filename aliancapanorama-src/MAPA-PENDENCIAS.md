@@ -522,3 +522,15 @@
 | #258 | Age: 1ª consulta sem cancel/reagendamento automático | CÓDIGO | 🟡 Bloco 4 |
 | #259 | Bloco 3: PDF automático + próxima sessão automática — AUTORIZADO | CÓDIGO | 🟢 próxima sprint |
 | #260 | Mapa geral Age enviado por email ✅ | FEITO | ✅ |
+
+### S119p — #eage Rodada 5 — RSRS + ISCA + admin Jasmim (2026-09-09)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #261 | Admin Jasmim: guias "Financeiro & Sabiá" e "Documentos & Prontuários" — backend + UI (não implementadas ainda) | CÓDIGO | 🔴 Bloco 3 |
+| #262 | Pedir arquivos para Suzana (docs de referência — Yuri mencionou) | MAYUMI/YURI | ⏳ lembrar na reunião |
+| #263 | Protótipo comandos de acesso rápido: radial menu desktop + barra flutuante mobile (I692) | CÓDIGO | 🟡 aguarda aprovação visual |
+| #264 | Formulário base reuniões Mayumi: doc por reunião (Lisange + Suzana), enviado por email antes das datas (I695) | PROCESSO | ⏳ Cláudio prepara |
+| #265 | Gateway múltiplo Age: profissional configura quais aceita (Stripe + MP); #255 resolvido — ambos (I694) | CÓDIGO | 🟡 Bloco 4 |
+| #266 | RSRS — spec arquitetural: começar por comentários entre profissionais no prontuário (I690) | SPEC | 🟡 aguarda confirmação |
+| #267 | ISCA — decisão arquitetura: IAs separadas com personalidade ou modos da MYYM? (I691) | DECISÃO | 🟡 Yuri decide |

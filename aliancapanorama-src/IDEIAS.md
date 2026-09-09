@@ -1848,3 +1848,16 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I687 | 1ª consulta: sem cancel/reagendamento automático; profissional libera manualmente | CÓDIGO | ✅ aprovado Mayumi |
 | I688 | Feed Jasmim populado com histórico de sessões/emails (Age/Rapadura/PV) | DADOS | 🟡 aguarda curadoria |
 | I689 | MYYM sessão persistente: salva memória por sessão no banco; carrega ao fazer login | CÓDIGO | ✅ aprovado Mayumi |
+
+---
+
+## Age S119p / #eage Rodada 5 — RSRS + ISCA + atalhos + pagamento múltiplo (2026-09-09)
+
+| ID | Ideia | Tipo | Status |
+|---|---|---|---|
+| I690 | RSRS — Rede Social de Saúde entre profissionais: comentários em prontuário compartilhado; assimétrico (prof→paciente) e simétrico (prof↔prof); acoplável a todos os apps | SISTEMA | 🟡 proposta aprovada — aguarda spec |
+| I691 | ISCA — 4 IAs modulares por baixo da MYYM: Interpretação / Síntese / Curadoria / Análise; MYYM é a interface unificada; cada motor mais profundo e auditável | IA | 🟡 proposta — aguarda decisão arquitetura |
+| I692 | Comandos de acesso rápido: radial menu estilo Autodesk Maya (tecla no desktop); barra flutuante no mobile; acoplável como componente único | CÓDIGO | 🟡 protótipo pendente |
+| I693 | Age i18n — portal profissional em múltiplos idiomas via i18next; arquivo JSON por idioma; profissional escolhe idioma do portal de agendamento | CÓDIGO | 🟡 aguarda demanda real |
+| I694 | Gateway múltiplo: cada profissional ativa quais aceita (Stripe + Mercado Pago + futuros); paciente vê opções ativas — Yuri confirmou "máximo de opções" | CÓDIGO | ✅ confirmado Yuri (2026-09-09) |
+| I695 | Formulário base reuniões Mayumi: doc completo com tudo decidido, separado por reunião (Lisange / Suzana); enviado por email antes das reuniões | PROCESSO | ⏳ Cláudio prepara |
