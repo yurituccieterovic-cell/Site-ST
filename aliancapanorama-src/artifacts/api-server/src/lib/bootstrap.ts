@@ -2587,7 +2587,21 @@ export async function ensureJasmimTables(): Promise<void> {
         CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo','jasmim'));
     EXCEPTION WHEN others THEN NULL; END $$;
   `).catch(() => {});
-  logger.info("bootstrap: jm tables OK (jm_posts, jm_carrinho, jm_myym_memory)");
+  // Tabela de histórico de assembleias Replit (importada via exportação v3)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS arvore_assembleias (
+      id            INTEGER     PRIMARY KEY,
+      topic         TEXT        NOT NULL,
+      mode          TEXT,
+      status        TEXT,
+      created_by    TEXT,
+      created_at    TIMESTAMPTZ,
+      closed_at     TIMESTAMPTZ,
+      meta_analysis TEXT,
+      agora_result  TEXT
+    )
+  `).catch(() => {});
+  logger.info("bootstrap: jm tables OK (jm_posts, jm_carrinho, jm_myym_memory, arvore_assembleias)");
 }
 
 // Garante usuário Yuri no sistema Jasmim

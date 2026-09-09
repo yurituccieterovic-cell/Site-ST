@@ -653,6 +653,13 @@ export default function JasmimMangaPage() {
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState<string>("");
   const [userTier, setUserTier] = useState<number>(0);
+  // Histórico Assembleias Replit
+  type Assembleia = { id: number; topic: string; status: string; createdAt: string; createdBy: string; metaAnalysis?: string | null };
+  const [assembleias, setAssembleias] = useState<Assembleia[]>([]);
+  const [assembleiaLoading, setAssembleiaLoading] = useState(false);
+  const [assembleiaSearch, setAssembleiaSearch] = useState("");
+  const [assembleiaTotal, setAssembleiaTotal] = useState(0);
+  const [assembleiaPage, setAssembleiaPage] = useState(1);
 
   useEffect(() => {
     fetch(`${API}/api/auth/me`, { credentials: "include" })
@@ -683,6 +690,17 @@ export default function JasmimMangaPage() {
 
   useEffect(() => { setSetorAtivo(null); }, [projetoAtivo]);
   useEffect(() => { carregarFeed(setorAtivo); }, [projetoAtivo, setorAtivo]);
+
+  useEffect(() => {
+    if (projetoAtivo !== "jasmim" || setorAtivo !== "Histórico") return;
+    setAssembleiaLoading(true);
+    const q = assembleiaSearch ? `&q=${encodeURIComponent(assembleiaSearch)}` : "";
+    fetch(`${API}/api/jasmim/assembleias?page=${assembleiaPage}&limit=20${q}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { setAssembleias(d?.assembleias ?? []); setAssembleiaTotal(d?.total ?? 0); })
+      .catch(() => setAssembleias([]))
+      .finally(() => setAssembleiaLoading(false));
+  }, [projetoAtivo, setorAtivo, assembleiaPage, assembleiaSearch]);
 
   function addCarrinho(texto: string) {
     if (!texto.trim()) return;
@@ -870,6 +888,42 @@ export default function JasmimMangaPage() {
             <p style={{ color: "#64748b", fontSize: 12, margin: "8px 0 0" }}>
               SABIÁ — IA de acolhimento Age. Registre aqui decisões financeiras e configurações da IA.
             </p>
+          </div>
+        )}
+        {/* Painel: Jasmim — Histórico (Assembleias Replit) */}
+        {projetoAtivo === "jasmim" && setorAtivo === "Histórico" && (
+          <div style={{ background: "#c2700a11", border: "1px solid #c2700a44", borderRadius: 12, padding: 14, marginBottom: 12 }}>
+            <p style={{ color: "#c2700a", fontWeight: 700, margin: "0 0 10px", fontSize: 13 }}>📜 Histórico — Assembleias Replit ({assembleiaTotal} no total)</p>
+            <input
+              type="text" placeholder="Buscar assembleia…"
+              value={assembleiaSearch}
+              onChange={e => { setAssembleiaSearch(e.target.value); setAssembleiaPage(1); }}
+              style={{ width: "100%", background: "#1a1008", border: "1px solid #c2700a44", borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 13, marginBottom: 10, boxSizing: "border-box" }}
+            />
+            {assembleiaLoading && <div style={{ color: "#64748b", fontSize: 13 }}>Carregando…</div>}
+            {!assembleiaLoading && assembleias.map(a => (
+              <div key={a.id} style={{ borderBottom: "1px solid #c2700a22", paddingBottom: 8, marginBottom: 8 }}>
+                <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 500 }}>#{a.id} — {a.topic.slice(0, 80)}{a.topic.length > 80 ? "…" : ""}</div>
+                <div style={{ color: "#64748b", fontSize: 11, marginTop: 2 }}>
+                  {a.createdAt ? new Date(a.createdAt).toLocaleDateString("pt-BR") : ""} · {a.createdBy ?? "—"} · {a.status}
+                </div>
+                {a.metaAnalysis && (
+                  <div style={{ color: "#94a3b8", fontSize: 11, marginTop: 3, fontStyle: "italic" }}>{a.metaAnalysis.slice(0, 100)}…</div>
+                )}
+              </div>
+            ))}
+            {!assembleiaLoading && assembleias.length === 0 && (
+              <div style={{ color: "#64748b", fontSize: 13 }}>Nenhuma assembleia encontrada.</div>
+            )}
+            {assembleiaTotal > 20 && (
+              <div style={{ display: "flex", gap: 8, marginTop: 8, justifyContent: "center" }}>
+                <button onClick={() => setAssembleiaPage(p => Math.max(1, p - 1))} disabled={assembleiaPage === 1}
+                  style={{ background: "#1a1008", border: "1px solid #c2700a44", borderRadius: 6, color: "#c2700a", padding: "4px 12px", cursor: "pointer", fontSize: 12, opacity: assembleiaPage === 1 ? 0.4 : 1 }}>← Ant</button>
+                <span style={{ color: "#64748b", fontSize: 12, alignSelf: "center" }}>p{assembleiaPage} · {assembleiaTotal} total</span>
+                <button onClick={() => setAssembleiaPage(p => p + 1)} disabled={assembleiaPage * 20 >= assembleiaTotal}
+                  style={{ background: "#1a1008", border: "1px solid #c2700a44", borderRadius: 6, color: "#c2700a", padding: "4px 12px", cursor: "pointer", fontSize: 12, opacity: assembleiaPage * 20 >= assembleiaTotal ? 0.4 : 1 }}>Próx →</button>
+              </div>
+            )}
           </div>
         )}
         <NovaNota projeto={projetoAtivo} setor={setorAtivo} onSalva={() => carregarFeed()} autor={userName || "usuário"} />

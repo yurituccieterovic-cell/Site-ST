@@ -264,4 +264,33 @@ router.post("/jasmim/post-from-email", async (req, res) => {
   }
 });
 
+// ─── GET /api/jasmim/assembleias — histórico Replit (arvore_assembleias) ───────
+
+router.get("/jasmim/assembleias", async (req, res) => {
+  const page   = Math.max(1, parseInt((req.query["page"] as string) ?? "1", 10));
+  const limit  = Math.min(50, Math.max(1, parseInt((req.query["limit"] as string) ?? "20", 10)));
+  const search = (req.query["q"] as string)?.trim() ?? "";
+  const offset = (page - 1) * limit;
+
+  try {
+    const where = search
+      ? `WHERE topic ILIKE '%${search.replace(/'/g, "''")}%'`
+      : "";
+    const rows = await db.execute(sql.raw(`
+      SELECT id, topic, mode, status, created_by AS "createdBy", created_at AS "createdAt",
+             closed_at AS "closedAt", meta_analysis AS "metaAnalysis", agora_result AS "agoraResult"
+      FROM arvore_assembleias
+      ${where}
+      ORDER BY created_at DESC
+      LIMIT ${limit} OFFSET ${offset}
+    `));
+    const countRow = await db.execute(sql.raw(`SELECT COUNT(*) FROM arvore_assembleias ${where}`));
+    const total = Number((countRow as any).rows?.[0]?.count ?? 0);
+    res.json({ assembleias: (rows as any).rows ?? [], total, page, limit });
+  } catch (err) {
+    console.error("[jasmim/assembleias]", err);
+    res.status(500).json({ error: "Erro ao buscar assembleias." });
+  }
+});
+
 export default router;

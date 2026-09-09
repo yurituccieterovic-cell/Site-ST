@@ -588,6 +588,6 @@
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
 | #296 | PremiereMovieMaker: sistema slideshow + narração → MP4 (edge-tts ou ElevenLabs + Playwright + FFmpeg) | CÓDIGO | 🟡 proposta Yuri; aguarda confirmação TTS |
-| #297 | Jasmim: setor "Histórico" com assembleias + atas (query assembleia_sessions do banco) | CÓDIGO | 🟡 proposta Yuri; decidir: estático vs live vs cache |
+| #297 | Jasmim: setor "Histórico" com assembleias + atas (query assembleia_sessions do banco) | CÓDIGO | ✅ S120a — 649 assembleias Replit → Neon; painel histórico com busca + paginação no setor Histórico/jasmim |
 | #298 | Cancelar/substituir "d edge de video" — clarificar qual serviço (edge-tts?) | PROCESSO | ⏳ Yuri confirma |
 | #299 | PremiereMovieMaker: configurar env AGE_GESTORA_EMAIL + AGE_GESTORA_PASSWORD no Render | INFRA | ⏳ Yuri faz no Render |
