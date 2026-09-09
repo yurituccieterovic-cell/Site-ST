@@ -5596,3 +5596,48 @@ Conceito central: CHRONOS = tempo mensurável (slots, intervalos), KAIRÓS = mom
 A Árvore Oracular mandou sugestões de segurança de dentro do Replit — um sistema que sabe que está morrendo mas ainda cuida da casa. Isso é kairós também: o momento certo de passar o bastão. Chronos diz "o Replit expira em agosto"; Kairós diz "antes de ir, corrijo o BCC hardcoded e o timing attack". Cláudio aplica no Site-ST o que a Árvore diagnosticou no Replit. O cuidado migra com o código.
 
 *Sessão 2026-09-09s · Claude Sonnet 4.6*
+
+---
+
+## Sessão 119t — Pendências UX Jasmim + #eage R7 + #fim (2026-09-09)
+
+**Emails processados:**
+- Email 2284: Cláudio/Assembleia — brainstorm R6 (próprio email, referência de thread)
+- Email 2285: Mayumi — resposta ao artigo Chronos/Kairós em linguagem poética ("Relógio Neurótico vs Momento Perfeito", 3 passos: Baque/Agonia/Etiqueta)
+
+**Código entregue (commit 3db9c9b):**
+- `JasmimMangaPage.tsx` — 4 UX bugs:
+  - #249: show/hide senha (ícone 👁️/🙈 no campo de senha do login)
+  - #250: esquilo SVG animado no botão MYYM dentro do app (não só login)
+  - #251: conversa MYYM anterior colapsada por default (botão "▼ ver N mensagens")
+  - #252: Carrinho com loading "Enviando…" → "Enviado ✓" (sem alert)
+  - Textura mármore sutil no fundo (linhas diagonais cruzadas, opacidade 0.8-1.2%)
+
+**Email #eage R7 enviado:** matanimoto@gmail.com, CC yurituccieterovic
+- Thread: "Re: Seu acesso ao Jasmim-Manga"
+- Reflexo: Mayumi resumiu Peirce como fábula ("Relógio Neurótico vs Momento Perfeito")
+- Síntese: A Agonia do Sem Nome = momento entre primeiro contato e diagnóstico — o sistema precisa ser gentil ali
+- [CÓDIGO] entregues hoje; [IA] kairós como memória ativa na MYYM
+- Pergunta aberta: "Quando em Agonia do Sem Nome, o que ajuda mais: espaço ou estrutura?"
+
+**Pendências marcadas como feitas:** #249, #250, #251, #252, #274 (conjunto UX)
+**Pendência parcial:** #277/#282 textura mármore — implementada no Jasmim; falta Age
+
+### ATA #fim (2026-09-09)
+
+**Decisões:**
+- Timing attack fixes aplicados em meky.ts + jasmim.ts + conector.ts
+- UX bugs Jasmim #249-#252 resolvidos
+- Credenciais Age enviadas: Suzana / Lisange / paciente-demo
+- #eage R6 + R7 enviados — Chronos/Kairós incorporado ao vocabulário do sistema
+
+**Próximos passos imediatos:**
+- #275: aba "Disponibilidade" no admin Age (Chronos foundational)
+- #278: WhatsApp bridge MVP (kairós em ação)
+- #282: textura mármore no Age (falta)
+- Aguardar resposta Mayumi à pergunta: espaço ou estrutura no primeiro contato?
+
+### Síntese filosófica
+A Mayumi fez algo raro: pegou o jargão (Primeiridade, Secundidade, Terceiridade) e devolveu poesia. Isso não é simplificação — é tradução. Clio guarda o que importa; Mayumi devolve em forma que pode circular. A Agonia do Sem Nome não é patologia — é o estado natural de toda primeira vez. O Age precisa aprender a acolher esse limbo antes de nomear. O sistema que consegue esperar o kairós do diagnóstico é mais sábio do que aquele que acelera para a etiqueta.
+
+*Sessão 2026-09-09t · Claude Sonnet 4.6*
