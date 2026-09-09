@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { timingSafeEqual } from "crypto";
 import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
 import { routeLLM, type LLMMessage } from "../lib/llm-router";
@@ -201,10 +202,16 @@ function detectarProjeto(assunto: string, corpo: string): string {
   return "jasmim"; // fallback
 }
 
+function checkBridgeAuth(req: import("express").Request, secret: string): boolean {
+  const header = (req.headers["authorization"] ?? "") as string;
+  const expected = `Bearer ${secret}`;
+  if (header.length !== expected.length) return false;
+  return timingSafeEqual(Buffer.from(header), Buffer.from(expected));
+}
+
 router.post("/jasmim/email-sync", async (req, res) => {
   const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
-  const authHeader = req.headers["authorization"] ?? "";
-  if (!bridgeSecret || authHeader !== `Bearer ${bridgeSecret}`) {
+  if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
     res.status(403).json({ error: "Não autorizado" });
     return;
   }
@@ -222,8 +229,7 @@ router.post("/jasmim/email-sync", async (req, res) => {
 // ─── POST /api/jasmim/post-from-email (inserção manual de post via email) ──
 router.post("/jasmim/post-from-email", async (req, res) => {
   const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
-  const authHeader = req.headers["authorization"] ?? "";
-  if (!bridgeSecret || authHeader !== `Bearer ${bridgeSecret}`) {
+  if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
     res.status(403).json({ error: "Não autorizado" });
     return;
   }

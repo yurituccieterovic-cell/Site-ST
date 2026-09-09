@@ -71,18 +71,22 @@ bootstrapTables().catch(console.error);
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
+function timingSafeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
+
 function verifyBearerToken(authHeader: string | undefined): boolean {
   if (!authHeader?.startsWith("Bearer ")) return false;
   const token = authHeader.slice(7);
-  // Admin: BRIDGE_SECRET como token funciona para Yuri
-  if (BRIDGE_SECRET && token === BRIDGE_SECRET) return true;
+  if (BRIDGE_SECRET && timingSafeCompare(token, BRIDGE_SECRET)) return true;
   return false;
 }
 
 async function verifyIaToken(authHeader: string | undefined): Promise<string | null> {
   if (!authHeader?.startsWith("Bearer ")) return null;
   const token = authHeader.slice(7);
-  if (BRIDGE_SECRET && token === BRIDGE_SECRET) return "admin";
+  if (BRIDGE_SECRET && timingSafeCompare(token, BRIDGE_SECRET)) return "admin";
   const { rows } = await pool.query(
     `SELECT agent_name FROM ia_access_requests WHERE token = $1 AND status = 'approved' LIMIT 1`,
     [token]
@@ -419,7 +423,8 @@ router.post("/conector/connect/verify", async (req, res): Promise<void> => {
 // ── GET: solicitações pendentes (admin Yuri) ───────────────────────────────────
 
 router.get("/conector/connect/pending", async (req, res): Promise<void> => {
-  if (!BRIDGE_SECRET || req.headers["x-bridge-secret"] !== BRIDGE_SECRET) {
+  const headerSecret = String(req.headers["x-bridge-secret"] ?? "");
+  if (!BRIDGE_SECRET || !timingSafeCompare(headerSecret, BRIDGE_SECRET)) {
     res.status(401).json({ error: "Não autorizado" });
     return;
   }

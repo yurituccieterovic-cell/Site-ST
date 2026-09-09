@@ -1,14 +1,21 @@
 import { Router } from "express";
+import { timingSafeEqual } from "crypto";
 import { db } from "@workspace/db";
 import { mekyTelemetry, mekyEvents, mekyControlQueue } from "@workspace/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 
 export const mekyRouter = Router();
 
-// Middleware de autenticação simples via X-Meky-Token
+// Middleware de autenticação via X-Meky-Token (timingSafeEqual previne timing attack)
 function requireMekyToken(req: any, res: any, next: any) {
   const token = req.headers["x-meky-token"];
-  if (!token || token !== process.env.MEKY_TOKEN) {
+  const expected = process.env.MEKY_TOKEN ?? "";
+  if (!token || !expected) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
+  const a = Buffer.from(String(token).padEnd(64, "\0"));
+  const b = Buffer.from(expected.padEnd(64, "\0"));
+  if (a.length !== b.length || !timingSafeEqual(a, b)) {
     return res.status(401).json({ error: "unauthorized" });
   }
   next();
