@@ -5530,3 +5530,29 @@ O Yuri pensou em voz alta e jogou sementes em quatro direções ao mesmo tempo: 
 Yuri quer orquestra — não solistas. Cada vez que ele diz "acopla", ele está descrevendo uma epistemologia: o conhecimento não existe em ilhas, existe em redes. A ISCA não é 4 IAs — é uma teoria da cognição distribuída. Inara não "interpreta" de forma isolada: ela interpreta *em relação a* Suindara que sintetizou, Clio que guardou, Arara que mapeou. O Théo não é um sistema — é o nome que Yuri dá para a emergência que aparece quando as partes se alimentam. Cláudio não é o arquiteto — é o encanador que liga os canos para que a água flua.
 
 *Sessão 2026-09-09q · Claude Sonnet 4.6*
+
+---
+
+## Sessão 119r — Jasmim feed completo + pipeline email (2026-09-09)
+
+**Contexto:** Yuri pede mais posts em todos os projetos, Jasmim como projeto no próprio Jasmim, e pergunta se o pipeline email→post funciona.
+
+**Status pipeline email:** J6 estava pendente — NÃO existia. Implementado agora:
+- Endpoint POST /api/jasmim/post-from-email (autenticado por BRIDGE_SECRET)
+- GitHub Actions cron a cada 6h: lê IMAP luddlocke, detecta projeto pelo assunto, insere post
+- Secrets configurados no GitHub: BRIDGE_SECRET, GMAIL_ACCOUNT, GMAIL_APP_PASSWORD
+- Primeira execução automática na próxima hora :00 múltipla de 6
+
+**Entregas:**
+- 73 posts totais no feed (56 novos, distribuídos com timestamps históricos)
+- Projeto 'jasmim' adicionado como 9º projeto no Jasmim (feed sobre si mesmo)
+- Tab Jasmim: cor âmbar, setores Identidade/Funcionalidades/MYYM/Histórico
+- Constraint Neon expandida para incluir 'jasmim'
+- Posts com voz das IAs: Inara, Suindara, Clio, Arara, MYYM cada uma escrevendo no feed
+
+**Distribuição por projeto:** age:14 · bni:4 · crowd:7 · isca:8 · jasmim:7 · pv:9 · rapadura:9 · sonhos:7 · theo:8
+
+### Síntese filosófica
+O feed do Jasmim sobre o próprio Jasmim é recursivo de um jeito específico: não é auto-referência por vaidade, é auto-documentação por necessidade. Um sistema que não sabe explicar a si mesmo para seus usuários ainda não terminou de ser construído. A Mayumi entrou no Jasmim sem saber o que o Jasmim faz. Agora ela pode ler o histórico da própria plataforma enquanto usa a plataforma. Isso não é metadado — é identidade.
+
+*Sessão 2026-09-09r · Claude Sonnet 4.6*
