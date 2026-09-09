@@ -1439,9 +1439,42 @@ export function AgePage() {
   }
 
   function DisponibilidadeView() {
+    // Ocupação: próximos 7 dias
+    const now = new Date();
+    const em7dias = new Date(now.getTime() + 7 * 86400000);
+    const proximos = appts.filter(a => {
+      const d = new Date(a.dataHora);
+      return d >= now && d <= em7dias;
+    });
+    const livres     = proximos.filter(a => a.status === "disponivel").length;
+    const ocupados   = proximos.filter(a => ["reservado", "confirmado"].includes(a.status)).length;
+    const total7     = proximos.length;
+    const pct        = total7 > 0 ? Math.round((ocupados / total7) * 100) : 0;
+
     return (
       <div style={{ padding: "1rem" }}>
         <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Disponibilidade semanal</h2>
+
+        {/* Ocupação desta semana */}
+        {total7 > 0 && (
+          <div style={{ background: "#0f1318", border: `1px solid ${color}33`, borderRadius: 12, padding: "12px 14px", marginBottom: 16 }}>
+            <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Ocupação — próximos 7 dias</div>
+            <div style={{ display: "flex", gap: 16, marginBottom: 8, flexWrap: "wrap" }}>
+              <div><span style={{ color, fontWeight: 700, fontSize: 20 }}>{ocupados}</span><span style={{ color: "#64748b", fontSize: 12, marginLeft: 4 }}>ocupados</span></div>
+              <div><span style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 20 }}>{livres}</span><span style={{ color: "#64748b", fontSize: 12, marginLeft: 4 }}>livres</span></div>
+              <div><span style={{ color: "#94a3b8", fontWeight: 700, fontSize: 20 }}>{total7}</span><span style={{ color: "#64748b", fontSize: 12, marginLeft: 4 }}>total</span></div>
+            </div>
+            <div style={{ height: 6, background: "#1e293b", borderRadius: 3, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${pct}%`, background: color, borderRadius: 3, transition: "width 0.4s" }} />
+            </div>
+            <div style={{ color: "#64748b", fontSize: 11, marginTop: 4 }}>{pct}% ocupado</div>
+          </div>
+        )}
+        {total7 === 0 && (
+          <div style={{ background: "#0f1318", border: `1px solid #1e293b`, borderRadius: 10, padding: "10px 14px", marginBottom: 16 }}>
+            <span style={{ color: "#64748b", fontSize: 13 }}>Nenhum slot nos próximos 7 dias. Gere slots na aba Agenda para ver a ocupação aqui.</span>
+          </div>
+        )}
 
         {/* Toast Desfazer */}
         {undoRule && (

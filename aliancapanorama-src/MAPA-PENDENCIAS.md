@@ -551,7 +551,7 @@
 
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
-| #275 | Admin Age: aba "Disponibilidade" — profissional configura dias/horários; bloqueia datas; vê ocupação (I708) | CÓDIGO | 🔴 Yuri pediu ao vivo |
+| #275 | Admin Age: aba "Disponibilidade" — profissional configura dias/horários; bloqueia datas; vê ocupação (I708) | CÓDIGO | ✅ S120a — ocupação 7 dias (barra + stats) adicionada à DisponibilidadeView |
 | #276 | Enviar por email: senhas Suzana + Lisange + login paciente-demo (Yuri pediu) | PROCESSO | ✅ feito S119t |
 | #277 | Textura mármore: variável CSS global `--bg-texture` em todos os sistemas (I707) | CÓDIGO | ✅ feito S119v — radial-gradient aplicado em Age + Jasmim |
 | #278 | WhatsApp bridge Age MVP: botão "Copiar link agendamento" no perfil do profissional (I705) | CÓDIGO | 🟡 aguarda aprovação Yuri |
