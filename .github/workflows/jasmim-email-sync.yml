@@ -1,0 +1,88 @@
+name: Jasmim — Pipeline email → feed
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # a cada 6 horas
+  workflow_dispatch:          # disparo manual
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync emails → feed Jasmim
+        env:
+          BRIDGE_SECRET: ${{ secrets.BRIDGE_SECRET }}
+          GMAIL_ACCOUNT: ${{ secrets.GMAIL_ACCOUNT }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          API_URL: https://site-st.onrender.com
+        run: |
+          python3 - << 'PYEOF'
+          import imaplib, email, email.header, requests, os, json
+          from datetime import datetime, timedelta, timezone
+
+          GMAIL = os.environ["GMAIL_ACCOUNT"]
+          PWD   = os.environ["GMAIL_APP_PASSWORD"]
+          API   = os.environ["API_URL"]
+          BRG   = os.environ["BRIDGE_SECRET"]
+
+          # Conectar IMAP
+          m = imaplib.IMAP4_SSL("imap.gmail.com")
+          m.login(GMAIL, PWD)
+          m.select("INBOX")
+
+          # Buscar emails das últimas 7 horas (margem de segurança)
+          desde = (datetime.now(timezone.utc) - timedelta(hours=7)).strftime("%d-%b-%Y")
+          _, ids = m.search(None, f'(SINCE "{desde}") (FROM "matanimoto@gmail.com" OR FROM "yurituccieterovic@gmail.com")')
+
+          synced = 0
+          for eid in (ids[0].split() if ids[0] else []):
+              _, data = m.fetch(eid, "(RFC822)")
+              msg = email.message_from_bytes(data[0][1])
+
+              # Extrair assunto
+              subj_parts = email.header.decode_header(msg.get("Subject", ""))
+              assunto = "".join(
+                  (s.decode(enc or "utf-8") if isinstance(s, bytes) else s)
+                  for s, enc in subj_parts
+              )
+
+              # Pular emails do próprio sistema
+              if any(tag in assunto for tag in ["[PAP]", "[Jasmim-Manga]", "[Age]", "PIN de acesso"]):
+                  continue
+
+              # Extrair corpo
+              corpo = ""
+              if msg.is_multipart():
+                  for part in msg.walk():
+                      if part.get_content_type() == "text/plain":
+                          p = part.get_payload(decode=True)
+                          if p:
+                              corpo = p.decode("utf-8", errors="replace")
+                              break
+              else:
+                  p = msg.get_payload(decode=True)
+                  if p:
+                      corpo = p.decode("utf-8", errors="replace")
+
+              if len(corpo.strip()) < 20:
+                  continue
+
+              # Truncar para 2000 chars
+              corpo = corpo.strip()[:2000]
+              from_ = msg.get("From", "")
+
+              r = requests.post(
+                  f"{API}/api/jasmim/post-from-email",
+                  headers={"Authorization": f"Bearer {BRG}", "Content-Type": "application/json"},
+                  json={"assunto": assunto, "remetente": from_, "corpo": corpo},
+                  timeout=15,
+              )
+              if r.ok:
+                  synced += 1
+                  print(f"✅ Post criado: {assunto[:50]} → {r.json().get('projeto')}")
+              else:
+                  print(f"⚠️  Falhou: {assunto[:50]} — {r.text[:100]}")
+
+          m.logout()
+          print(f"Sync completo: {synced} novos posts")
+          PYEOF

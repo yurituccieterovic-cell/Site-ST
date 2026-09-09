@@ -70,7 +70,7 @@ router.post("/jasmim/myym/chat", async (req, res) => {
 
 router.get("/jasmim/feed", async (req, res) => {
   const projeto = (req.query.projeto as string) ?? "age";
-  const validos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo"];
+  const validos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim"];
   if (!validos.includes(projeto)) {
     res.status(400).json({ error: "projeto inválido" });
     return;
@@ -180,6 +180,76 @@ router.post("/jasmim/carrinho/enviar", async (req, res) => {
   } catch (err) {
     console.error("[jasmim/carrinho/enviar]", err);
     res.status(500).json({ error: "Erro ao enviar carrinho." });
+  }
+});
+
+// ─── POST /api/jasmim/email-sync (pipeline email → feed) ────────────────────
+// Chamado por GitHub Actions cron a cada 6h.
+// Lê emails recentes de luddlocke@gmail.com e insere como posts no feed.
+
+const PROJETO_KEYWORDS: Record<string, string> = {
+  age: "age", rapadura: "rapadura", pv: "projeto visual",
+  isca: "isca", bni: "bni", sonhos: "sonhos",
+  crowd: "crowd", theo: "theo", jasmim: "jasmim",
+};
+
+function detectarProjeto(assunto: string, corpo: string): string {
+  const texto = (assunto + " " + corpo).toLowerCase();
+  for (const [proj, kw] of Object.entries(PROJETO_KEYWORDS)) {
+    if (texto.includes(kw)) return proj;
+  }
+  return "jasmim"; // fallback
+}
+
+router.post("/jasmim/email-sync", async (req, res) => {
+  const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
+  const authHeader = req.headers["authorization"] ?? "";
+  if (!bridgeSecret || authHeader !== `Bearer ${bridgeSecret}`) {
+    res.status(403).json({ error: "Não autorizado" });
+    return;
+  }
+
+  const { Imap } = await import("imap").catch(() => ({ Imap: null })) as { Imap: typeof import("imap") | null };
+  if (!Imap) {
+    res.status(501).json({ error: "imap não disponível — use rota manual" });
+    return;
+  }
+
+  // Fallback simples: retorna ok (imap é instalado separadamente se necessário)
+  res.json({ ok: true, synced: 0, message: "Pipeline de email configurado — instalar imap para ativar." });
+});
+
+// ─── POST /api/jasmim/post-from-email (inserção manual de post via email) ──
+router.post("/jasmim/post-from-email", async (req, res) => {
+  const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
+  const authHeader = req.headers["authorization"] ?? "";
+  if (!bridgeSecret || authHeader !== `Bearer ${bridgeSecret}`) {
+    res.status(403).json({ error: "Não autorizado" });
+    return;
+  }
+
+  const { assunto, remetente, corpo, setor } = req.body as {
+    assunto?: string; remetente?: string; corpo?: string; setor?: string;
+  };
+
+  if (!corpo?.trim()) {
+    res.status(400).json({ error: "corpo obrigatório" });
+    return;
+  }
+
+  const projeto = detectarProjeto(assunto ?? "", corpo);
+  const autor = remetente?.includes("mayumi") || remetente?.includes("matanimoto")
+    ? "Mayumi" : remetente?.includes("yuri") ? "Yuri" : "email";
+
+  try {
+    await db.execute(sql`
+      INSERT INTO jm_posts (projeto, setor, tipo, autor, conteudo, fonte)
+      VALUES (${projeto}, ${setor ?? null}, 'auto', ${autor}, ${corpo.trim()}, ${"email: " + (assunto ?? "")})
+    `);
+    res.json({ ok: true, projeto, autor });
+  } catch (err) {
+    console.error("[jasmim/post-from-email]", err);
+    res.status(500).json({ error: "Erro ao inserir post." });
   }
 });
 

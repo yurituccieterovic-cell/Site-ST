@@ -2528,7 +2528,7 @@ export async function ensureJasmimTables(): Promise<void> {
   await db.execute(sql`
     CREATE TABLE IF NOT EXISTS jm_posts (
       id         UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
-      projeto    TEXT        NOT NULL CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo')),
+      projeto    TEXT        NOT NULL CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo','jasmim')),
       setor      TEXT,
       tipo       TEXT        NOT NULL DEFAULT 'auto' CHECK (tipo IN ('auto','nota','pergunta','myym')),
       autor      TEXT        NOT NULL DEFAULT 'sistema',
@@ -2558,7 +2558,7 @@ export async function ensureJasmimTables(): Promise<void> {
     DO $$ BEGIN
       ALTER TABLE jm_posts DROP CONSTRAINT IF EXISTS jm_posts_projeto_check;
       ALTER TABLE jm_posts ADD CONSTRAINT jm_posts_projeto_check
-        CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo'));
+        CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo','jasmim'));
     EXCEPTION WHEN others THEN NULL; END $$;
   `).catch(() => {});
   logger.info("bootstrap: jm tables OK (jm_posts, jm_carrinho, jm_myym_memory)");

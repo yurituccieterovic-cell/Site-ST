@@ -199,7 +199,7 @@ export function JasmimGate() {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Projeto = "age" | "rapadura" | "pv" | "isca" | "sonhos" | "crowd" | "theo" | "bni";
+type Projeto = "age" | "rapadura" | "pv" | "isca" | "sonhos" | "crowd" | "theo" | "bni" | "jasmim";
 
 type Post = {
   id: string;
@@ -222,6 +222,7 @@ const PROJETOS: Record<Projeto, { nome: string; cor: string; emoji: string; seto
   crowd:    { nome: "CROWD",    cor: "#34d399", emoji: "🌐", setores: ["Rede Social", "Profissionais", "Conexões"] },
   theo:     { nome: "Théo",     cor: "#fbbf24", emoji: "🌳", setores: ["Ecossistema", "Assembleias", "Orchestração"] },
   bni:      { nome: "BNI",      cor: "#94a3b8", emoji: "🔒", setores: ["Forças Ocultas", "Rede Estratégica", "Sábias"], secreto: true },
+  jasmim:   { nome: "Jasmim",  cor: "#c2700a", emoji: "🐿️", setores: ["Identidade", "Funcionalidades", "MYYM", "Histórico"] },
 };
 
 // ─── Avatar MYYM (esquilo voador CSS) ─────────────────────────────────────────
