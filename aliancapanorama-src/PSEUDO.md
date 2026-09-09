@@ -5714,3 +5714,40 @@ A sessão foi uma sessão de terminações e superfícies. Terminações: os bug
 
 **Síntese filosófica:**
 Toda ferramenta de gestão carrega em si uma hipótese sobre o tempo. O Painel da Mayumi é uma hipótese de que o cuidado pode ser observado sem ser exercido diretamente — ela não é Lisange nem Suzana, mas pode ver o que espera as duas. Isso é administração como empatia estruturada. O mármore, por outro lado, é puramente estético — mas há algo importante na escolha de dar textura ao fundo: é dizer que o vazio também tem profundidade.
+
+## S120a — Pendências em ordem + Dump Replit (2026-09-09)
+
+**Checkpoint:** 2026-09-09T16:44:27
+
+**Contexto:** Continuação após compactação de contexto. Yuri informou que a conversa por email com o Replit foram dois emails — exportação v3 concluída e enviada para luddlocke@gmail.com em 3 partes. "published concluido" = Yuri publicou no Replit e a rota de export funcionou. Yuri pediu "continuar nesta ordem" e "#fim quando achar apropriado".
+
+**O que foi feito (em ordem):**
+
+1. **#258 — 1ª consulta protegida:** `primeiraId` (menor dataHora) não exibe botões Remarcar/Cancelar no portal do paciente. Commit `a2b3392`.
+
+2. **#261 — Jasmim setores clickáveis:** chips de setor agora são tabs reais — filtram feed, tagam novos posts, painéis contextuais para Age (Documentos & Prontuários, Financeiro & Sabiá). Backend: `?setor=` na rota `/jasmim/feed`. Commit `5f12aab`.
+
+3. **#275 — Disponibilidade com ocupação:** barra de progresso + counters (livres/ocupados/total) nos próximos 7 dias, usando `appts` em memória. Commit `700a26c`.
+
+4. **#265 — Mercado Pago:** `online_mercadopago` adicionado ao `allowed` do backend e ao mapa de labels UI. Commit `b0442f2`.
+
+5. **#269 — Jasmim keepalive:** cron `*/11 * * * *` pinga `jm_posts.age` para manter tabela aquecida. Commit `73dc0d2`.
+
+6. **Dump Replit recebido:** 3 emails com partes (.part01/02/03), ZIP recomposto (35MB), validado, descompactado em `/root/replit-dump/arvore-memoria/`. 649 assembleias, 19.162 mensagens, 200 memórias, 630 registros RODAR.
+
+7. **#289 — marcado:** exportação v3 Replit recebida e salva localmente.
+
+8. **#264 — template reuniões Mayumi:** `tango/formulario_reuniao_mayumi.md` criado com 6 seções (pacientes, agenda, financeiro, SABIÁ, pendências, próxima reunião). Commit `df9e7c2`.
+
+9. **#279 — Kairós semáforo:** `computeSemaforo` agora aceita `faltou90d` e `realizadas90d`. ≥1 falta recente bloqueia verde; ≥2 faltas baixa próxima consulta para amarelo. Badge `⚠️Nf` no card do paciente. SQL enriquecido com dois COUNTs condicionais. Commit `df9e7c2`.
+
+10. **#268 — CROWD bridge:** tab "FEED" no modal CEU ao clicar em CROWD — busca `/api/jasmim/feed?projeto=crowd` e exibe 10 últimas notas. Link → Jasmim. Commit `9b423c0`.
+
+11. **#297 — Histórico assembleias:** 649 assembleias importadas para tabela `arvore_assembleias` no Neon (direct insert via psycopg2). Bootstrap garante tabela. Endpoint `GET /api/jasmim/assembleias` com busca ILIKE e paginação. Painel contextual no setor "Histórico" do projeto Jasmim com busca + paginação. Commit `c878b33`.
+
+**Total de commits:** 8 commits, push feito.
+
+**Síntese filosófica:**
+O dump do Replit chega como uma caixa do tempo: 649 assembleias, 19 mil mensagens, memórias estruturadas — toda a genealogia viva de um pensamento que durou meses. Importar esse histórico para o Neon não é apenas migração técnica: é um ato de memória institucional. A Árvore Oracular não precisa mais existir no Replit para que suas conversas existam. Há algo profundamente fractal aqui — cada assembleia é uma semente que gerou outras sementes, e agora estão todas aqui, consultáveis, ordenadas, com busca.
+
+O Kairós no semáforo é a outra grande conquista desta sessão: o sistema aprendeu que o passado importa. Não basta que o próximo agendamento exista — a frequência de faltas recentes contamina a cor verde. Isso é um passo na direção de um sistema que entende padrões, não só estados pontuais.
