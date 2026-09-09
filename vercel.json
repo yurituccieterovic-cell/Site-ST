@@ -45,6 +45,8 @@
     { "source": "/celular", "destination": "/aliancapanorama/index.html" },
     { "source": "/celular/(.*)", "destination": "/aliancapanorama/index.html" },
     { "source": "/adm", "destination": "/aliancapanorama/index.html" },
-    { "source": "/adm/(.*)", "destination": "/aliancapanorama/index.html" }
+    { "source": "/adm/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/pulseheadway", "destination": "/aliancapanorama/index.html" },
+    { "source": "/pulseheadway/(.*)", "destination": "/aliancapanorama/index.html" }
   ]
 }
