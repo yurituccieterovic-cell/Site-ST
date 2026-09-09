@@ -510,10 +510,10 @@
 
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
-| #249 | Jasmim: show/hide senha no login (ícone olho) | CÓDIGO | 🔴 imediato |
-| #250 | Jasmim: esquilo aparecer dentro do app (não só no login) | CÓDIGO | 🔴 imediato |
-| #251 | MYYM: conversa anterior colapsada por default | CÓDIGO | 🔴 imediato |
-| #252 | Jasmim: botão carrinho com loading + "Enviado ✓" | CÓDIGO | 🔴 imediato |
+| #249 | Jasmim: show/hide senha no login (ícone olho) | CÓDIGO | ✅ implementado (showSenha + 👁️/🙈) |
+| #250 | Jasmim: esquilo aparecer dentro do app (não só no login) | CÓDIGO | ✅ 🐿️ no avatar MYYM + header |
+| #251 | MYYM: conversa anterior colapsada por default | CÓDIGO | ✅ implementado (conversa anterior colapsada por default) |
+| #252 | Jasmim: botão carrinho com loading + "Enviado ✓" | CÓDIGO | ✅ implementado |
 | #253 | Age: Nível 3 condicional (auto SE escopo OK, manual SE fora) | CÓDIGO | 🔴 bloqueia fluxo de aprovação |
 | #254 | Age: triagem por formulário de opções predefinidas + SABIÁ classifica "Outro" | CÓDIGO | 🟡 bloqueia Bloco 2 completo |
 | #255 | Gateway pagamento: Stripe (exterior) vs Mercado Pago (Brasil) — Yuri decide | DECISÃO | 🔴 bloqueia Bloco 4 |
