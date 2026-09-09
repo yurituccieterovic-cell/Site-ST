@@ -102,6 +102,21 @@ Tom: calma, sábia, direta. Como o sabiá — sempre no lar, sabe de tudo.
 - [ ] Fase 5 — Pagamentos no agendamento (Stripe/PayPal)
 - [ ] Fase 6 — Emails completos (lembretes 48h/24h + retorno)
 - [ ] Fase 7 — PWA + Google Agenda
+- [ ] I719: Painel Mayumi (gestora) — rota /age/admin, visão unificada das duas profissionais, aprovações e ações de gestão (próxima funcionalidade, Rodada 7)
+- [ ] I720: Aprovação automática de pacientes — pré-requisitos configuráveis; quando cumpridos → APROVADO automático (proposta Mayumi, Rodada 7)
+- [ ] I721: PWA iOS — meta tags apple-mobile-web-app em todas as páginas (Yuri mandou print do iOS, pendente)
+- [ ] I722: Fix Jasmim — pergunta antes da resposta da IA (bug confirmado Yuri)
+- [ ] I723: Fix Jasmim — copiar pergunta+resposta não funciona (bug confirmado Mayumi)
+- [ ] Decisão pagamento: modelo A (paga na reserva) / B (paga após aprovação) / C (profissional escolhe) — Mayumi decide
+
+## Equipe atualizada (2026-09-09)
+
+| Pessoa | Papel | Status |
+|---|---|---|
+| Yuri Tuccieterovic | fundador / arquiteto | ativo |
+| Mayumi Tanimoto | gestora administrativa | ✅ confirmada 2026-09-08, iniciando |
+| Lisange | profissional médica | ativa (senha: age2026 — trocar) |
+| Suzana | profissional psicóloga | ativa (senha: age2026 — trocar) |
 
 ## Como carregar contexto (#age)
 

@@ -1900,3 +1900,26 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I709 | Timing attack fix: substituir `token !== secret` por `crypto.timingSafeEqual()` em todos os middleware de autenticação — meky.ts, jasmim.ts, conector.ts | SEGURANÇA | ✅ implementado S119s |
 | I710 | BCC hardcoded em recibos (Replit checkout.ts): remover cópia silenciosa para yurituccieterovic@gmail.com sem consentimento do cliente (violação LGPD) | SEGURANÇA | ⚠️ no Replit (legado) — não existe em Site-ST |
 | I711 | helper `timingSafeCompare(a, b)` centralizado em conector.ts; helper `checkBridgeAuth(req, secret)` em jasmim.ts — padrão para todos os novos endpoints autenticados | SEGURANÇA | ✅ implementado S119s |
+
+
+## Docs PAP — Ideias Novas (2026-09-09)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I712 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I713 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I714 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I715 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I716 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I717 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I718 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+## Age + Jasmim S119t / #eage Rodada 7 — Painel Mayumi + Aprovação Automática + PWA iOS (2026-09-09)
+
+| ID | Ideia | Tipo | Status |
+|---|---|---|---|
+| I719 | Painel Mayumi (gestora Age): rota /age/admin com auth própria; visão unificada das duas profissionais; ações de gestão (aprovar paciente, ver agenda, configurar disponibilidade); não é o painel da profissional | CÓDIGO | 🔴 próxima funcionalidade |
+| I720 | Aprovação automática de pacientes: pré-requisitos configuráveis por profissional (anamnese, documentos, consulta inicial); quando todos cumpridos → status muda para APROVADO automaticamente; webhook de email/WhatsApp na transição | CÓDIGO | 🟡 proposta Rodada 7 |
+| I721 | PWA iOS: adicionar meta tags apple-mobile-web-app-capable + apple-mobile-web-app-title + apple-touch-icon + apple-mobile-web-app-status-bar-style em index.html das SPAs (Age, Jasmim); splash screen 2048×2732 | CÓDIGO | 🟡 Yuri mandou print |
+| I722 | Fix Jasmim: pergunta deve aparecer ANTES da resposta da IA; hoje a resposta carrega embaixo sem mostrar a pergunta primeiro; corrigir componente de exibição de Q&A | CÓDIGO | 🔴 bug confirmado por Yuri |
+| I723 | Fix Jasmim: botão de copiar pergunta+resposta não está copiando a pergunta — Mayumi relatou; pode ser que só copia a resposta; corrigir selector do clipboard | CÓDIGO | 🔴 bug confirmado por Mayumi |
+| I724 | Memória pública da Árvore: ler posts recentes do Bluesky (stuccipulseheadway.bsky.social) via API pública; incorporar no pack-arvore.md como "memória do que já disse publicamente"; evitar repetição ou contradição | PROCESSO | 🟡 referência salva |

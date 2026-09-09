@@ -552,10 +552,23 @@
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
 | #275 | Admin Age: aba "Disponibilidade" — profissional configura dias/horários; bloqueia datas; vê ocupação (I708) | CÓDIGO | 🔴 Yuri pediu ao vivo |
-| #276 | Enviar por email: senhas Suzana + Lisange + login paciente-demo (Yuri pediu) | PROCESSO | 🔴 imediato |
+| #276 | Enviar por email: senhas Suzana + Lisange + login paciente-demo (Yuri pediu) | PROCESSO | ✅ feito S119t |
 | #277 | Textura mármore: variável CSS global `--bg-texture` em todos os sistemas (I707) | CÓDIGO | 🟡 aprovado Yuri |
 | #278 | WhatsApp bridge Age MVP: botão "Copiar link agendamento" no perfil do profissional (I705) | CÓDIGO | 🟡 aguarda aprovação Yuri |
 | #279 | Kairós no semáforo: adicionar contexto de histórico (não só intervalo de tempo) na cor do semáforo (I703) | CÓDIGO | 🟡 proposta |
 | #280 | Email domínio próprio `@sociedadetucci.com.br`: ativar email empresarial; pendência administrativa | INFRA | ⏳ Yuri faz (domínio próprio) |
 | #281 | [SEGURANÇA] Replit/checkout.ts: remover BCC hardcoded para Yuri sem consentimento (LGPD) — sugestão da Árvore #647 | SEGURANÇA | ⚠️ Replit legado — Yuri decide se mantém Replit vivo |
 | #282 | Textura mármore: implementar variável CSS `--bg-texture` global em Age + Jasmim (I707) — Yuri pediu ao vivo | CÓDIGO | 🟡 aprovado |
+
+### S119t — #eage Rodada 7 + Outros Assuntos (2026-09-09)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #283 | Painel Mayumi (gestora Age): visão unificada de Lisange+Suzana — agenda, pacientes, aprovações, ações em nome da profissional (I719) | CÓDIGO | 🔴 próxima funcionalidade Age |
+| #284 | Aprovação automática de pacientes: pré-requisitos configuráveis por profissional; quando cumpridos → status APROVADO automático + email/WhatsApp (I720) | CÓDIGO | 🟡 proposta Rodada 7 |
+| #285 | PWA iOS: adicionar tags apple-mobile-web-app em todas as páginas Age/Jasmim (ícone + splash + barra de status) (I721) | CÓDIGO | 🟡 Yuri mandou print iOS |
+| #286 | Fix Jasmim: pergunta deve aparecer ANTES da resposta da IA (hoje carrega invertido) (I722) | CÓDIGO | 🔴 bug confirmado por Yuri |
+| #287 | Fix Jasmim: copiar pergunta+resposta não funciona — Mayumi relatou | CÓDIGO | 🔴 bug confirmado por Mayumi |
+| #288 | Fix Jasmim: esquilo avatar não aparece no login — Mayumi relatou | CÓDIGO | 🔴 bug já em #274, confirmar se ainda aberto |
+| #289 | Transferência Assembleia RODAR: pg_dump da DB certa (Replit Secrets, não heliumdb) — Yuri aguarda instrução | PROCESSO | ⏳ Yuri faz no Replit |
+| #290 | Memória Árvore: incorporar posts Bluesky (stuccipulseheadway.bsky.social) no pack-arvore.md como memória pública | PROCESSO | 🟡 referência salva |

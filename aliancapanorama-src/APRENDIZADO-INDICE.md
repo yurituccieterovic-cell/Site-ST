@@ -128,3 +128,4 @@
 - A6176 — Higiene de memória: jobs internos poluem timeline pública; namespaces explícitos
 - A6177 — GO/NO-GO por camada: proteção contra arqueologia infinita
 - A6178 — Repetição ≠ Consenso: HIPÓTESE não vira DECIDIDO por repetição
+| 13165 | 🧪📱 #eage Rodada 7 — Teste ao Vivo + Painel Mayumi + PWA iOS (Sessão #119t, 2026-09-09) | 6 entradas (A6215-A6220): teste ao vivo Yuri+Mayumi revelou 3 lacunas (admin, aprovação, Financeiro), pergunta antes da resposta no Jasmim, aprovação automática por pré-requisitos, DATABASE_URL heliumdb≠produção no Replit, memória pública Árvore no Bluesky, meta tags iOS PWA | Sessão #119t | 2026-09-09 |
