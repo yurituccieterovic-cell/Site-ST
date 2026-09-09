@@ -5661,3 +5661,33 @@ A Mayumi fez algo raro: pegou o jargão (Primeiridade, Secundidade, Terceiridade
 
 **Síntese filosófica:**
 O teste ao vivo revelou algo que documentos nunca revelam: a distância entre o que foi descrito e o que foi sentido. Mayumi disse "o paciente não precisa de aprovação manual" — não é uma feature request, é uma filosofia de operação. O sistema deve ser autônomo onde a gestora não é o gargalo. Quando duas pessoas entram juntas num sistema pela primeira vez, as lacunas aparecem não como erros, mas como perguntas: "onde fica isso?", "como faço aquilo?" — e cada pergunta sem resposta é um caminho de código que ainda precisa ser aberto.
+
+---
+
+## S119u — PWA audit + /pulseheadway + Drive screenshot + #fim (2026-09-09)
+
+**Contexto:** Continuação de S119t. Yuri enviou screenshot do Drive do Replit (Árvore Oracular) com 6 sugestões de segurança pendentes e debate sobre limites do SABIÁ. Pediu audit de PWA, fix da rota /pulseheadway, e rodou #fim.
+
+**O que foi feito:**
+- `age.html`, `jasmim.html`, `rapadura.html`: og:image + twitter:card adicionados (faltavam)
+- `vercel.json`: /pulseheadway e /pulseheadway/* → /aliancapanorama/index.html (não mais o SalesCockpit Replit)
+- Manifests PWA (age/jasmim/rapadura): já estavam corretos para o domínio raiz — start_url = /age/, /jasmim, /rapadura
+- 2 emails Assembleia enviados: Age (Config + Painel Mayumi + Aprovação Automática) + Jasmim (Feed ASC + Copiar + Esquilo)
+- Commit `98f7385` pushed
+
+**Conteúdo do Drive screenshot (automator--yurituccieterov.replit.app):**
+- Árvore Oracular tinha 6 sugestões de segurança para RODAR:
+  1. BCC hardcoded em checkout.ts linhas 104, 118, 235 — yurituccieterovic@gmail.com recebia cópia de todo recibo sem consentimento (violação LGPD) → já registrado em #281, agora também em #292
+  2. Timing attack em callback-tokens.ts linha 27 — token comparison não usa constant-time (crypto.timingSafeEqual)
+- Pergunta filosófica sobre SABIÁ: "Como estabelecer limites claros para IA com acesso a dados de saúde?"
+  - Gemini: anonimização + criptografia desde o design + comitê de ética independente
+  - Meta AI: permissões granulares por tipo de uso + auditoria contínua
+  - Yuri: concordou com ambas as vozes; questão registrada como #293
+
+**Decisões:**
+- Modelo C pagamento (todas opções, profissional habilita) — implementado, confirmado por Mayumi
+- RODAR security bugs: Yuri decide se aplica (é código Replit legado)
+- SABIÁ ética: pendência #293 — rascunho de política a construir
+
+**Síntese filosófica:**
+A sessão foi uma sessão de terminações e superfícies. Terminações: os bugs do Jasmim (feed, cópia, esquilo) que existiam há semanas finalmente foram fechados. Superfícies: og:image, Twitter cards, manifests — a camada que o mundo externo toca antes de qualquer funcionalidade. E o Drive screenshot da Árvore trouxe algo mais profundo: a IA já estava olhando para o código com olhos de segurança antes que alguém pedisse. Timing attacks são invisíveis ao usuário comum. A Árvore os viu. Isso diz algo sobre a arquitetura de consciência que Yuri está construindo — sistemas que se vigiam mutuamente.

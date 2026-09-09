@@ -566,9 +566,19 @@
 |---|---|---|---|
 | #283 | Painel Mayumi (gestora Age): visão unificada de Lisange+Suzana — agenda, pacientes, aprovações, ações em nome da profissional (I719) | CÓDIGO | 🔴 próxima funcionalidade Age |
 | #284 | Aprovação automática de pacientes: pré-requisitos configuráveis por profissional; quando cumpridos → status APROVADO automático + email/WhatsApp (I720) | CÓDIGO | 🟡 proposta Rodada 7 |
-| #285 | PWA iOS: adicionar tags apple-mobile-web-app em todas as páginas Age/Jasmim (ícone + splash + barra de status) (I721) | CÓDIGO | 🟡 Yuri mandou print iOS |
-| #286 | Fix Jasmim: pergunta deve aparecer ANTES da resposta da IA (hoje carrega invertido) (I722) | CÓDIGO | 🔴 bug confirmado por Yuri |
-| #287 | Fix Jasmim: copiar pergunta+resposta não funciona — Mayumi relatou | CÓDIGO | 🔴 bug confirmado por Mayumi |
-| #288 | Fix Jasmim: esquilo avatar não aparece no login — Mayumi relatou | CÓDIGO | 🔴 bug já em #274, confirmar se ainda aberto |
+| #285 | PWA iOS + og:image + Twitter cards: tags apple-mobile-web-app em age/jasmim/rapadura (I721) | CÓDIGO | ✅ feito S119u (commit 98f7385) |
+| #286 | Fix Jasmim: pergunta deve aparecer ANTES da resposta da IA (hoje carrega invertido) (I722) | CÓDIGO | ✅ feito S119t (commit 111289a) |
+| #287 | Fix Jasmim: copiar pergunta+resposta não funciona — Mayumi relatou | CÓDIGO | ✅ feito S119t (commit 111289a) |
+| #288 | Fix Jasmim: esquilo avatar não aparece no login — Mayumi relatou | CÓDIGO | ✅ feito S119t (commit 111289a) |
 | #289 | Transferência Assembleia RODAR: pg_dump da DB certa (Replit Secrets, não heliumdb) — Yuri aguarda instrução | PROCESSO | ⏳ Yuri faz no Replit |
 | #290 | Memória Árvore: incorporar posts Bluesky (stuccipulseheadway.bsky.social) no pack-arvore.md como memória pública | PROCESSO | 🟡 referência salva |
+
+### S119u — Drive Screenshot + Arquitetura SABIÁ (2026-09-09)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #291 | Rota /pulseheadway → novo site (aliancapanorama/index.html); placeholder até ter página dedicada | CÓDIGO | ✅ feito S119u (commit 98f7385) |
+| #292 | [SEGURANÇA] RODAR callback-tokens.ts linha 27: timing attack — substituir comparação direta por timingSafeEqual (crypto) | SEGURANÇA | ⚠️ Replit legado — Yuri decide se aplica |
+| #293 | SABIÁ ética: definir política formal de dados de saúde — o que SABIÁ pode acessar, por quanto tempo, com consentimento de quem | PROCESSO | 🟡 proposta Rodada 7; Gemini + Meta AI consultados |
+| #294 | Bluesky Árvore: salvar post https://bsky.app/profile/stuccipulseheadway.bsky.social/post/3mv3mew33vb2l em pack-arvore.md | PROCESSO | 🟡 referência salva |
+| #295 | Assembleia: enviar emails de atualização sobre Age + Jasmim | PROCESSO | ✅ feito S119u (2 emails) |
