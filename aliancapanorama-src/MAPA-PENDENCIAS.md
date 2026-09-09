@@ -539,7 +539,7 @@
 
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
-| #268 | CROWD real: bridge Jasmim → CEU/CROWD (publicar posts do CROWD no feed 'crowd') | CÓDIGO | 🟡 stub ok, integração real pendente |
+| #268 | CROWD real: bridge Jasmim → CEU/CROWD (publicar posts do CROWD no feed 'crowd') | CÓDIGO | ✅ S120a — tab "FEED" no modal CROWD do CEU mostra jm_posts?projeto=crowd em tempo real |
 | #269 | Théo ecosystem "never sleep": ping automático entre todos os sistemas para manter servidores vivos | INFRA | ✅ S120a — cron */11min em keepalive.ts pinga jm_posts (Jasmim) |
 | #270 | ISCA: implementar roteamento de chamadas MYYM → Inara/Suindara/Clio/Arara por tipo de pergunta | CÓDIGO | 🟡 arquitetura definida, código pendente |
 | #271 | BNI: spec completa do departamento de forças ocultas (em segredo) | SPEC | 🔒 aguarda Yuri + Mayumi |

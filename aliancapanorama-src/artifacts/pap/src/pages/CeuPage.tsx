@@ -395,9 +395,22 @@ function BibliotecaPanel({ onClose }: { onClose: () => void }) {
 type ModalItem = { kind: "ia"; data: IA } | { kind: "building"; data: Building };
 
 function CeuModal({ item, onClose }: { item: ModalItem; onClose: () => void }) {
-  const [tab, setTab] = useState<"conversa" | "ficha">("conversa");
+  const isCrowd = item.kind === "ia" && item.data.id === "crowd";
+  const [tab, setTab] = useState<"conversa" | "ficha" | "feed">("conversa");
+  const [crowdPosts, setCrowdPosts] = useState<{ id: number; autor: string; conteudo: string; ts: string; setor?: string | null }[]>([]);
+  const [crowdLoading, setCrowdLoading] = useState(false);
   const bairro = item.kind === "ia" ? item.data.bairro : item.data.bairro;
   const color = BAIRRO_COLOR[bairro] ?? "#c8a050";
+
+  useEffect(() => {
+    if (!isCrowd || tab !== "feed") return;
+    setCrowdLoading(true);
+    fetch(`${API}/api/jasmim/feed?projeto=crowd`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => setCrowdPosts((d?.posts ?? []).slice(-10).reverse()))
+      .catch(() => setCrowdPosts([]))
+      .finally(() => setCrowdLoading(false));
+  }, [tab, isCrowd]);
 
   return (
     <div onClick={onClose} style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.88)",
@@ -426,7 +439,10 @@ function CeuModal({ item, onClose }: { item: ModalItem; onClose: () => void }) {
 
         {/* Tabs */}
         <div style={{ display:"flex", borderBottom:`1px solid ${color}22` }}>
-          {(["conversa","ficha"] as const).map(t => (
+          {([
+            "conversa", "ficha",
+            ...(isCrowd ? ["feed"] : []),
+          ] as ("conversa" | "ficha" | "feed")[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
               style={{ flex:1, padding:"10px 0", fontSize:11, fontFamily:"monospace", letterSpacing:1.5,
                 background:"none", border:"none", cursor:"pointer",
@@ -451,6 +467,26 @@ function CeuModal({ item, onClose }: { item: ModalItem; onClose: () => void }) {
                 <div style={{ fontSize:10, color:"#444", fontFamily:"monospace", letterSpacing:1, marginBottom:6 }}>ÚLTIMA TRANSMISSÃO</div>
                 <div style={{ fontSize:14, color:"#d0c0a0", lineHeight:1.7 }}>{item.data.conversa}</div>
               </div>
+            </div>
+          )}
+          {tab === "feed" && (
+            <div>
+              <div style={{ fontSize:10, color:"#444", fontFamily:"monospace", letterSpacing:1, marginBottom:10 }}>FEED CROWD — últimas 10 notas do Jasmim</div>
+              {crowdLoading && <div style={{ color:"#555", fontSize:12 }}>carregando…</div>}
+              {!crowdLoading && crowdPosts.length === 0 && (
+                <div style={{ color:"#555", fontSize:12 }}>Nenhuma nota ainda no feed CROWD.<br/>Acesse Jasmim → projeto CROWD para postar.</div>
+              )}
+              {crowdPosts.map(p => (
+                <div key={p.id} style={{ borderBottom:"1px solid #1a1a14", paddingBottom:10, marginBottom:10 }}>
+                  <div style={{ fontSize:11, color:"#888", marginBottom:4 }}>{p.autor} · {p.setor ?? "Rede Social"}</div>
+                  <div style={{ fontSize:13, color:"#c8b88a", lineHeight:1.6 }}>{p.conteudo}</div>
+                </div>
+              ))}
+              {crowdPosts.length > 0 && (
+                <a href="/aliancapanorama/jasmim" style={{ fontSize:10, color, fontFamily:"monospace", letterSpacing:1 }}>
+                  VER TUDO NO JASMIM →
+                </a>
+              )}
             </div>
           )}
           {tab === "ficha" && (
