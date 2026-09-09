@@ -124,7 +124,7 @@
 | 108 | Age — I553: Feed operacional (log de eventos no painel profissional) | — | ✅ commit 0ba156f |
 | 109 | Age — I554: SABIÁ popup flutuante persistente | — | ✅ commit c5ddadb |
 | 110 | Age — I558: Confirmação Sim/Não para ações irreversíveis no painel | — | ✅ commit 8b3a6e5 (S120c) |
-| 111 | Age — I564: Link de convite para pré-aprovação de paciente | — | ⏳ |
+| 111 | Age — I564: Link de convite para pré-aprovação de paciente | — | ✅ commit 92a2d8c (S121) |
 | 112 | Age — Compliance: Política de Privacidade + Termos de Uso + checkbox consentimento | Assembleia | ✅ commit 4b544cf |
 | 113 | Age — Landing page pública (produto comercial) + formulário de interesse | Assembleia decidir posicionamento | ⏳ |
 | 114 | Age — Configurar emails reais Lisange e Suzana via /api/age/admin/setup | Yuri | ⏳ |
