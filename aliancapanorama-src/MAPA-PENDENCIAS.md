@@ -543,7 +543,7 @@
 | #269 | Théo ecosystem "never sleep": ping automático entre todos os sistemas para manter servidores vivos | INFRA | ✅ S120a — cron */11min em keepalive.ts pinga jm_posts (Jasmim) |
 | #270 | ISCA: implementar roteamento de chamadas MYYM → Inara/Suindara/Clio/Arara por tipo de pergunta | CÓDIGO | 🟡 arquitetura definida, código pendente |
 | #271 | BNI: spec completa do departamento de forças ocultas (em segredo) | SPEC | 🔒 aguarda Yuri + Mayumi |
-| #272 | Starter pack IAs: doc formal com ISCA + RSRS como itens obrigatórios | PROCESSO | 🟡 conceito definido |
+| #272 | Starter pack IAs: doc formal com ISCA + RSRS como itens obrigatórios | PROCESSO | ✅ tango/starter-pack-ias.md v1.0 — tabela projetos + checklist nascimento |
 | #273 | CROWD + Théo: acoplamento completo do ecossistema Théo (todos os sistemas se alimentando) | SISTEMA | 🟡 grande projeto — próxima fase |
 | #274 | Jasmim UX bugs ainda pendentes: #249-#252 (show/hide senha, esquilo, MYYM colapsado, carrinho loading) | CÓDIGO | ✅ feito (esquilo S119t; show/hide senha, MYYM colapsado e carrinho loading já estavam no código) |
 
@@ -579,7 +579,7 @@
 |---|---|---|---|
 | #291 | Rota /pulseheadway → novo site (aliancapanorama/index.html); placeholder até ter página dedicada | CÓDIGO | ✅ feito S119u (commit 98f7385) |
 | #292 | [SEGURANÇA] RODAR callback-tokens.ts linha 27: timing attack — substituir comparação direta por timingSafeEqual (crypto) | SEGURANÇA | ⚠️ Replit legado — Yuri decide se aplica |
-| #293 | SABIÁ ética: definir política formal de dados de saúde — o que SABIÁ pode acessar, por quanto tempo, com consentimento de quem | PROCESSO | 🟡 proposta Rodada 7; Gemini + Meta AI consultados |
+| #293 | SABIÁ ética: definir política formal de dados de saúde — o que SABIÁ pode acessar, por quanto tempo, com consentimento de quem | PROCESSO | ✅ tango/sabia-etica-dados.md v1.0 — CFP+LGPD; revisão antes Bloco 3 |
 | #294 | Bluesky Árvore: salvar post https://bsky.app/profile/stuccipulseheadway.bsky.social/post/3mv3mew33vb2l em pack-arvore.md | PROCESSO | ✅ post salvo + seção Posts Destacados |
 | #295 | Assembleia: enviar emails de atualização sobre Age + Jasmim | PROCESSO | ✅ feito S119u (2 emails) |
 
