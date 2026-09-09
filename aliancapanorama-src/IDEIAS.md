@@ -1861,3 +1861,17 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I693 | Age i18n — portal profissional em múltiplos idiomas via i18next; arquivo JSON por idioma; profissional escolhe idioma do portal de agendamento | CÓDIGO | 🟡 aguarda demanda real |
 | I694 | Gateway múltiplo: cada profissional ativa quais aceita (Stripe + Mercado Pago + futuros); paciente vê opções ativas — Yuri confirmou "máximo de opções" | CÓDIGO | ✅ confirmado Yuri (2026-09-09) |
 | I695 | Formulário base reuniões Mayumi: doc completo com tudo decidido, separado por reunião (Lisange / Suzana); enviado por email antes das reuniões | PROCESSO | ⏳ Cláudio prepara |
+
+---
+
+## Jasmim + ISCA S119q — Expansão do ecossistema (2026-09-09)
+
+| ID | Ideia | Tipo | Status |
+|---|---|---|---|
+| I696 | BNI — Departamento de Forças Ocultas: acoplado ao Jasmim em segredo (tier 4+); rede estratégica entre sábias | SISTEMA | 🔒 secreto — registrado |
+| I697 | ISCA no starter pack: toda nova IA do ecossistema herda ISCA como motor modular por padrão | PROCESSO | ✅ definido |
+| I698 | RSRS no starter pack: toda nova plataforma com profissionais inclui RSRS por padrão | PROCESSO | ✅ definido |
+| I699 | Jasmim multi-usuário: cada login vê o próprio nome no header; NovaNota usa nome real | CÓDIGO | ✅ implementado |
+| I700 | Theó Hub no Jasmim: tab que lista todos os sistemas ativos com links diretos | CÓDIGO | ✅ implementado |
+| I701 | CROWD integrado ao Jasmim: posts do CROWD aparecem no feed 'crowd'; plano de acoplamento ativo | CÓDIGO | 🟡 stub criado |
+| I702 | Sonhos: espaço não-linear no Jasmim para intuições e registros sem categoria | PROJETO | ✅ tab criado |

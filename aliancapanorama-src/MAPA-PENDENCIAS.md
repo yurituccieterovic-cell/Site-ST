@@ -534,3 +534,15 @@
 | #265 | Gateway múltiplo Age: profissional configura quais aceita (Stripe + MP); #255 resolvido — ambos (I694) | CÓDIGO | 🟡 Bloco 4 |
 | #266 | RSRS — spec arquitetural: começar por comentários entre profissionais no prontuário (I690) | SPEC | 🟡 aguarda confirmação |
 | #267 | ISCA — decisão arquitetura: IAs separadas com personalidade ou modos da MYYM? (I691) | DECISÃO | 🟡 Yuri decide |
+
+### S119q — Expansão ecossistema Jasmim + ISCA (2026-09-09)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #268 | CROWD real: bridge Jasmim → CEU/CROWD (publicar posts do CROWD no feed 'crowd') | CÓDIGO | 🟡 stub ok, integração real pendente |
+| #269 | Théo ecosystem "never sleep": ping automático entre todos os sistemas para manter servidores vivos | INFRA | 🟡 Playcenter já faz isso; estender para Jasmim |
+| #270 | ISCA: implementar roteamento de chamadas MYYM → Inara/Suindara/Clio/Arara por tipo de pergunta | CÓDIGO | 🟡 arquitetura definida, código pendente |
+| #271 | BNI: spec completa do departamento de forças ocultas (em segredo) | SPEC | 🔒 aguarda Yuri + Mayumi |
+| #272 | Starter pack IAs: doc formal com ISCA + RSRS como itens obrigatórios | PROCESSO | 🟡 conceito definido |
+| #273 | CROWD + Théo: acoplamento completo do ecossistema Théo (todos os sistemas se alimentando) | SISTEMA | 🟡 grande projeto — próxima fase |
+| #274 | Jasmim UX bugs ainda pendentes: #249-#252 (show/hide senha, esquilo, MYYM colapsado, carrinho loading) | CÓDIGO | 🔴 imediato |
