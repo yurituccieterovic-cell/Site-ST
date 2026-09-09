@@ -18,6 +18,12 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 *
 
 const router = Router();
 
+// Redirect legado: /age/susana → /age/suzana (slug corrigido com 'z')
+router.use("/age/susana", (req, res) => {
+  const rest = req.url;
+  res.redirect(301, `/api/age/suzana${rest}`);
+});
+
 const loginLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,

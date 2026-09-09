@@ -2,6 +2,10 @@
   "installCommand": "npm install -g pnpm@9.15.9",
   "buildCommand": "bash scripts/build-pap.sh",
   "outputDirectory": ".",
+  "redirects": [
+    { "source": "/age/susana", "destination": "/age/suzana", "permanent": true },
+    { "source": "/age/susana/:path*", "destination": "/age/suzana/:path*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "https://site-st.onrender.com/api/:path*" },
     { "source": "/aliancapanorama/api/:path*", "destination": "https://site-st.onrender.com/api/:path*" },
@@ -26,8 +30,8 @@
     { "source": "/aliancapanorama/arvore", "destination": "/aliancapanorama/index.html" },
     { "source": "/rapadura", "destination": "/aliancapanorama/rapadura.html" },
     { "source": "/rapadura/(.*)", "destination": "/aliancapanorama/rapadura.html" },
-    { "source": "/age/(.*)", "destination": "/aliancapanorama/index.html" },
-    { "source": "/aliancapanorama/age/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/age/(.*)", "destination": "/aliancapanorama/age.html" },
+    { "source": "/aliancapanorama/age/(.*)", "destination": "/aliancapanorama/age.html" },
     { "source": "/jasmim", "destination": "/aliancapanorama/jasmim.html" },
     { "source": "/jasmim/(.*)", "destination": "/aliancapanorama/jasmim.html" },
     { "source": "/aliancapanorama/jasmim", "destination": "/aliancapanorama/jasmim.html" },
