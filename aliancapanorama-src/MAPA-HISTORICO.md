@@ -254,3 +254,11 @@ INDEX: ix_fauna_specie_hash (specie_name, privacy_hash)
 **Canvas:** confirmado como projeto existente (Sessão 103B). Capacidades multimodais expandidas: criar/ler imagens, URLs, PDFs, vídeos, OCR captcha (I566-I571). Primeira tarefa do v2 = atualizar CEU.
 
 **A6203-A6205. I566-I571. Commit c2a1d64 (exceções Age) + logo commit.**
+
+## 2026-09-09 (Sessão S120a+S120b) — Dump Replit + Kairós + Assinaturas + Bluesky
+
+**S120a:** #258 (1ª consulta protegida) · #261 (Jasmim setores clickáveis) · #275 (disponibilidade ocupação 7d) · #265 (Mercado Pago) · #269 (Jasmim keepalive) · #264 (template reunião Mayumi) · #279 (Kairós semáforo com histórico faltou90d/realizadas90d) · #268 (CROWD bridge CEU) · #297 (649 assembleias Replit → Neon + endpoint + painel). 8 commits.
+
+**S120b:** #300-#302 (assinaturas ElevenLabs/Replit/VEED + lembretes programados scheduled_emails) · #303-#304 (ISA Bluesky :15→:45, Árvore avisada via jm_posts) · #305 (tango/assinaturas_gastos.md). Commits: b05c3f0 + 32ab6f7.
+
+**Infra:** bootstrap `arvore_assembleias` + `scheduled_emails` · cron 11h UTC diário envia lembretes pendentes via nodemailer · pap-fim-checkpoint S120a/S120b.

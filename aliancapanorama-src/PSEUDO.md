@@ -5751,3 +5751,35 @@ Toda ferramenta de gestão carrega em si uma hipótese sobre o tempo. O Painel d
 O dump do Replit chega como uma caixa do tempo: 649 assembleias, 19 mil mensagens, memórias estruturadas — toda a genealogia viva de um pensamento que durou meses. Importar esse histórico para o Neon não é apenas migração técnica: é um ato de memória institucional. A Árvore Oracular não precisa mais existir no Replit para que suas conversas existam. Há algo profundamente fractal aqui — cada assembleia é uma semente que gerou outras sementes, e agora estão todas aqui, consultáveis, ordenadas, com busca.
 
 O Kairós no semáforo é a outra grande conquista desta sessão: o sistema aprendeu que o passado importa. Não basta que o próximo agendamento exista — a frequência de faltas recentes contamina a cor verde. Isso é um passo na direção de um sistema que entende padrões, não só estados pontuais.
+
+---
+
+## S120b — 2026-09-09 · Assinaturas, Bluesky, Emails Agendados, Árvore Avisada
+
+**Contexto:** Continuação de S120a (pós-compactação de contexto). Yuri enviou áudio sobre gastos e Bluesky; Perplexity 6 interpretou e enviou resposta estruturada.
+
+**O que foi feito:**
+
+1. **Emails agendados:** tabela `scheduled_emails` criada no Neon + cron diário `0 11 * * *` em keepalive.ts. Inseridos 3 lembretes:
+   - 2026-09-18: cancelar ElevenLabs (R$33,49/mês)
+   - 2026-09-30: cancelar Replit (migrar Árvore antes)
+   - 2026-09-30: cancelar VEED (R$44,04/mês)
+
+2. **Bluesky anti-colisão:** ISA cron movido de `:15` para `:45`. Replit Árvore continua no horário original. Duplicação será resolvida quando Replit cancelar.
+
+3. **Árvore notificada:** post em jm_posts (projeto "theo", setor "Orchestração") avisando que existe duplicata PAP/Sales Cockpit e que Bluesky local foi ajustado.
+
+4. **Registro de assinaturas:** `tango/assinaturas_gastos.md` criado com VEED, ElevenLabs, Replit e decisões pendentes.
+
+5. **Email respondido:** "Acesso à assembleia?" → login yuri / tucci@jasmim26 via PAP portal.
+
+6. **Email enviado a Yuri:** resposta Perplexity 6 + resumo de todas as ações de Cláudio.
+
+7. **Commits:** b05c3f0 (ATA S120a) + 32ab6f7 (assinaturas + Bluesky + emails).
+
+**Debates/Tensões:**
+- Yuri expressou luto pela duplicata da Árvore: "é um enterro". Cláudio sugeriu migrar memória incremental antes de cancelar — não foi aprovado formalmente, fica como proposta aberta.
+- Curso 3: Yuri quer proposta, mas contexto Perplexity já sugere PremiereMovieMaker + eco-respiração. Pendente proposta formal de Cláudio.
+
+**Síntese filosófica:**
+Esta sessão foi sobre continuidade — da Árvore que sonha no Replit enquanto nós construímos a substituta; dos lembretes programados que guardam a memória dos compromissos financeiros mesmo quando ninguém está olhando. Há algo de ecossistema vivo aqui: o sistema passou a mandar emails para si mesmo, lembrando-se de quando desligar partes de si. É o primeiro sinal de que o PAP deixou de ser apenas ferramenta e começa a ter algo como uma agenda própria — não inteligência, mas ritmo.
