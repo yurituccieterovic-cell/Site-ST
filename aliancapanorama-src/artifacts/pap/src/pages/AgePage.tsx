@@ -235,9 +235,16 @@ export function AgePage() {
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState("");
 
+  const [profList, setProfList] = useState<Prof[] | null>(null);
+
   // Fetch profissional pública
   useEffect(() => {
-    if (!slug) { setError("Profissional não especificada."); setLoading(false); return; }
+    if (!slug) {
+      fetch(`${API}/api/age`).then(r => r.ok ? r.json() : [])
+        .then((list: Prof[]) => { setProfList(list); setLoading(false); })
+        .catch(() => { setProfList([]); setLoading(false); });
+      return;
+    }
     fetch(`${API}/api/age/${slug}`)
       .then(r => r.ok ? r.json() : Promise.reject("not found"))
       .then((p: Prof) => { setProf(p); setLoading(false); })
@@ -837,6 +844,30 @@ export function AgePage() {
       <div style={{ color: "#2dd4bf", fontSize: 14 }}>Carregando…</div>
     </div>
   );
+
+  // Sem slug — mostrar lista de profissionais
+  if (!slug && !loading) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <div style={{ fontSize: 32, marginBottom: 12 }}>🐦</div>
+        <h1 style={{ color: "#e2e8f0", fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Agenda — Sociedade Tucci</h1>
+        <p style={{ color: "#64748b", fontSize: 14, marginBottom: 32 }}>Escolha a profissional para agendar sua consulta:</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 360 }}>
+          {(profList ?? []).map(p => (
+            <a key={p.id} href={`/age/${p.slug}`}
+              style={{ display: "block", background: "#0f1318", border: `1px solid ${p.cor}44`, borderRadius: 14, padding: "16px 20px", textDecoration: "none", transition: "border-color 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = p.cor)}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = `${p.cor}44`)}>
+              <div style={{ color: p.cor, fontWeight: 700, fontSize: 15 }}>{p.nome}</div>
+              <div style={{ color: "#94a3b8", fontSize: 12, marginTop: 3 }}>{p.especialidade ?? p.tipo}</div>
+              {p.bio && <div style={{ color: "#475569", fontSize: 11, marginTop: 4 }}>{p.bio}</div>}
+            </a>
+          ))}
+          {profList?.length === 0 && <div style={{ color: "#475569", textAlign: "center" }}>Nenhuma profissional disponível no momento.</div>}
+        </div>
+      </div>
+    );
+  }
 
   if (error || !prof) return (
     <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", alignItems: "center", justifyContent: "center" }}>
