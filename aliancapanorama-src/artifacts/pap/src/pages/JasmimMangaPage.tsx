@@ -7,6 +7,7 @@ const API = import.meta.env.VITE_API_URL ?? "";
 function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
   const [loginVal, setLoginVal] = useState("");
   const [senha, setSenha] = useState("");
+  const [showSenha, setShowSenha] = useState(false);
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -129,21 +130,35 @@ function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
             onFocus={e => (e.target.style.borderColor = "#a78bfa")}
             onBlur={e => (e.target.style.borderColor = "#333")}
           />
-          <input
-            type="password"
-            placeholder="senha"
-            value={senha}
-            onChange={e => setSenha(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && entrar()}
-            autoComplete="current-password"
-            style={{
-              background: "#1a1a2e", border: "1px solid #333", borderRadius: 10,
-              color: "#e8e8e8", padding: "12px 16px", fontSize: 14, outline: "none",
-              transition: "border-color 0.2s",
-            }}
-            onFocus={e => (e.target.style.borderColor = "#a78bfa")}
-            onBlur={e => (e.target.style.borderColor = "#333")}
-          />
+          <div style={{ position: "relative" }}>
+            <input
+              type={showSenha ? "text" : "password"}
+              placeholder="senha"
+              value={senha}
+              onChange={e => setSenha(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && entrar()}
+              autoComplete="current-password"
+              style={{
+                width: "100%", boxSizing: "border-box",
+                background: "#1a1a2e", border: "1px solid #333", borderRadius: 10,
+                color: "#e8e8e8", padding: "12px 44px 12px 16px", fontSize: 14, outline: "none",
+                transition: "border-color 0.2s",
+              }}
+              onFocus={e => (e.target.style.borderColor = "#a78bfa")}
+              onBlur={e => (e.target.style.borderColor = "#333")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowSenha(s => !s)}
+              style={{
+                position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+                background: "none", border: "none", cursor: "pointer",
+                color: "#666", fontSize: 16, lineHeight: 1, padding: 4,
+              }}
+              tabIndex={-1}
+              title={showSenha ? "Ocultar senha" : "Mostrar senha"}
+            >{showSenha ? "🙈" : "👁️"}</button>
+          </div>
           {erro && (
             <p style={{ color: "#f87171", fontSize: 13, margin: 0 }}>{erro}</p>
           )}
@@ -233,22 +248,42 @@ function MyymAvatar({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       style={{
         position: "fixed", bottom: 24, right: 20,
-        width: 56, height: 56, borderRadius: "50%",
-        background: "linear-gradient(135deg, #f59e0b, #a78bfa)",
-        border: "none", cursor: "pointer", zIndex: 100,
+        width: 60, height: 60, borderRadius: "50%",
+        background: "linear-gradient(135deg, #1a1a2e, #2a1a0e)",
+        border: "2px solid #f59e0b88", cursor: "pointer", zIndex: 100,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 28, boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-        animation: "float 3s ease-in-out infinite",
+        boxShadow: "0 4px 20px rgba(245,158,11,0.3)",
+        overflow: "hidden",
       }}
       title="Falar com MYYM"
     >
-      🐿️
       <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(-5deg); }
-          50%       { transform: translateY(-10px) rotate(5deg); }
-        }
+        @keyframes jmFloat { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-5px) rotate(3deg); } }
+        @keyframes jmTailW { 0%,100% { transform:rotate(-6deg); transform-origin:62px 58px; } 50% { transform:rotate(10deg); transform-origin:62px 58px; } }
+        .jm-av { animation: jmFloat 2.6s ease-in-out infinite; }
+        .jm-at { animation: jmTailW 2.6s ease-in-out infinite; }
       `}</style>
+      <svg className="jm-av" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 48, height: 48 }}>
+        <path d="M18,54 Q10,42 18,30 L38,40 L42,62 Z" fill="#c2700a" opacity="0.82"/>
+        <path d="M78,54 Q86,42 78,30 L58,40 L54,62 Z" fill="#c2700a" opacity="0.82"/>
+        <ellipse className="jm-at" cx="62" cy="58" rx="14" ry="8" fill="#92400e" transform="rotate(25 62 58)"/>
+        <ellipse className="jm-at" cx="64" cy="55" rx="11" ry="6" fill="#d97706" transform="rotate(25 64 55)"/>
+        <ellipse cx="48" cy="54" rx="16" ry="14" fill="#d97706"/>
+        <ellipse cx="26" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(-35 26 40)"/>
+        <ellipse cx="70" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(35 70 40)"/>
+        <ellipse cx="37" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(-10 37 26)"/>
+        <ellipse cx="37" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(-10 37 27)"/>
+        <ellipse cx="59" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(10 59 26)"/>
+        <ellipse cx="59" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(10 59 27)"/>
+        <circle cx="48" cy="36" r="13" fill="#d97706"/>
+        <ellipse cx="43" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
+        <ellipse cx="53" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
+        <circle cx="44" cy="33.5" r="1.5" fill="white"/>
+        <circle cx="54" cy="33.5" r="1.5" fill="white"/>
+        <ellipse cx="48" cy="40" rx="2.5" ry="1.8" fill="#92400e"/>
+        <circle cx="38" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
+        <circle cx="58" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
+      </svg>
     </button>
   );
 }
@@ -256,12 +291,17 @@ function MyymAvatar({ onClick }: { onClick: () => void }) {
 // ─── Chatbox MYYM ─────────────────────────────────────────────────────────────
 
 function MyymChat({ onClose }: { onClose: () => void }) {
-  const [msgs, setMsgs] = useState<{ role: "myym" | "user"; texto: string }[]>([
-    { role: "myym", texto: "Oi. Sou a MYYM — a parte que pensa enquanto você faz.\n\nComo você quer que eu te chame?" },
-  ]);
+  const saudacao = { role: "myym" as const, texto: "Oi. Sou a MYYM — a parte que pensa enquanto você faz.\n\nComo você quer que eu te chame?" };
+  const [msgs, setMsgs] = useState<{ role: "myym" | "user"; texto: string }[]>([saudacao]);
+  const [historicoAberto, setHistoricoAberto] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  // Mensagens da sessão atual (após o primeiro envio do usuário)
+  const primeiroUserIdx = msgs.findIndex(m => m.role === "user");
+  const historico = primeiroUserIdx > 0 ? msgs.slice(0, primeiroUserIdx) : [];
+  const sessaoAtual = primeiroUserIdx > 0 ? msgs.slice(primeiroUserIdx) : msgs;
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
 
@@ -299,7 +339,28 @@ function MyymChat({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} style={{ background: "none", border: "none", color: "#888", cursor: "pointer", fontSize: 18 }}>×</button>
       </div>
       <div style={{ flex: 1, overflowY: "auto", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
-        {msgs.map((m, i) => (
+        {/* Conversa anterior colapsada */}
+        {historico.length > 0 && (
+          <div>
+            <button
+              onClick={() => setHistoricoAberto(h => !h)}
+              style={{
+                background: "none", border: "1px solid #333", borderRadius: 8,
+                color: "#666", fontSize: 11, padding: "4px 10px", cursor: "pointer", width: "100%",
+              }}
+            >{historicoAberto ? "▲ ocultar conversa anterior" : `▼ ver conversa anterior (${historico.length} mensagens)`}</button>
+            {historicoAberto && historico.map((m, i) => (
+              <div key={`h${i}`} style={{
+                alignSelf: m.role === "user" ? "flex-end" : "flex-start",
+                background: m.role === "user" ? "#a78bfa11" : "#f59e0b08",
+                border: `1px solid ${m.role === "user" ? "#a78bfa22" : "#f59e0b22"}`,
+                borderRadius: 12, padding: "8px 12px", maxWidth: "85%", opacity: 0.6,
+                color: "#e8e8e8", fontSize: 12, lineHeight: 1.4, whiteSpace: "pre-wrap", marginTop: 6,
+              }}>{m.texto}</div>
+            ))}
+          </div>
+        )}
+        {sessaoAtual.map((m, i) => (
           <div key={i} style={{
             alignSelf: m.role === "user" ? "flex-end" : "flex-start",
             background: m.role === "user" ? "#a78bfa22" : "#f59e0b11",
@@ -338,9 +399,22 @@ function MyymChat({ onClose }: { onClose: () => void }) {
 function Carrinho({ items, onRemover, onEnviar }: {
   items: CarrinhoItem[];
   onRemover: (id: string) => void;
-  onEnviar: () => void;
+  onEnviar: () => Promise<void>;
 }) {
   const [aberto, setAberto] = useState(false);
+  const [status, setStatus] = useState<"idle" | "enviando" | "enviado">("idle");
+
+  async function handleEnviar() {
+    setStatus("enviando");
+    try {
+      await onEnviar();
+      setStatus("enviado");
+      setTimeout(() => { setStatus("idle"); setAberto(false); }, 2000);
+    } catch {
+      setStatus("idle");
+    }
+  }
+
   return (
     <div style={{ position: "fixed", bottom: 24, left: 16, zIndex: 98 }}>
       <button
@@ -350,6 +424,7 @@ function Carrinho({ items, onRemover, onEnviar }: {
           border: "none", borderRadius: 28, padding: "10px 18px",
           color: "#111", fontWeight: 700, cursor: "pointer", fontSize: 13,
           boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+          transition: "background 0.2s",
         }}
       >
         🧺 {items.length > 0 ? `${items.length} ideia${items.length > 1 ? "s" : ""}` : "Carrinho"}
@@ -377,12 +452,18 @@ function Carrinho({ items, onRemover, onEnviar }: {
             </div>
           ))}
           {items.length > 0 && (
-            <button onClick={onEnviar} style={{
-              width: "100%", marginTop: 8, background: "#2dd4bf",
-              border: "none", borderRadius: 8, padding: "10px",
-              color: "#111", fontWeight: 700, cursor: "pointer", fontSize: 13,
-            }}>
-              Enviar email / Responder brainstorm →
+            <button
+              onClick={handleEnviar}
+              disabled={status !== "idle"}
+              style={{
+                width: "100%", marginTop: 8,
+                background: status === "enviado" ? "#34d399" : status === "enviando" ? "#555" : "#2dd4bf",
+                border: "none", borderRadius: 8, padding: "10px",
+                color: "#111", fontWeight: 700, cursor: status === "idle" ? "pointer" : "default",
+                fontSize: 13, transition: "background 0.3s",
+              }}
+            >
+              {status === "enviado" ? "Enviado ✓" : status === "enviando" ? "Enviando…" : "Enviar email / Responder brainstorm →"}
             </button>
           )}
         </div>
@@ -594,19 +675,24 @@ export default function JasmimMangaPage() {
   async function enviarBrainstorm() {
     if (carrinho.length === 0) return;
     const corpo = carrinho.map(i => `- ${i.conteudo}`).join("\n");
-    await fetch(`${API}/api/jasmim/carrinho/enviar`, {
+    const r = await fetch(`${API}/api/jasmim/carrinho/enviar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ itens: carrinho, corpo }),
     });
+    if (!r.ok) throw new Error("Falha ao enviar");
     setCarrinho([]);
-    alert("Enviado para o brainstorm! ✅");
   }
 
   return (
     <div style={{
-      minHeight: "100vh", background: "#0f0f1a", color: "#e8e8e8",
+      minHeight: "100vh", color: "#e8e8e8",
       fontFamily: "system-ui, sans-serif", paddingBottom: 120,
+      background: "#0f0f1a",
+      backgroundImage: `
+        repeating-linear-gradient(135deg, transparent, transparent 30px, rgba(255,255,255,0.012) 30px, rgba(255,255,255,0.012) 31px),
+        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.008) 20px, rgba(255,255,255,0.008) 21px)
+      `,
     }}>
       {/* Header */}
       <div style={{
