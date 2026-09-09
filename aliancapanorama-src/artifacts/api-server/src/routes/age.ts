@@ -971,7 +971,13 @@ router.get("/age/:slug/patients", requireAgeAuth, async (req, res): Promise<void
       ) AS "ultimaConsulta",
       MIN(a.data_hora) FILTER (
         WHERE a.data_hora > now() AND a.status NOT IN ('cancelado','remarcado')
-      ) AS "proximaConsulta"
+      ) AS "proximaConsulta",
+      COUNT(a.id) FILTER (
+        WHERE a.status = 'faltou' AND a.data_hora > now() - INTERVAL '90 days'
+      ) AS "faltou90d",
+      COUNT(a.id) FILTER (
+        WHERE a.status = 'realizado' AND a.data_hora > now() - INTERVAL '90 days'
+      ) AS "realizadas90d"
     FROM age_patients p
     LEFT JOIN age_appointments a
       ON LOWER(a.patient_email) = LOWER(p.email)
@@ -986,16 +992,32 @@ router.get("/age/:slug/patients", requireAgeAuth, async (req, res): Promise<void
     const freq = (p["frequenciaEsperada"] as string) ?? "livre";
     const ultima = p["ultimaConsulta"] ? new Date(p["ultimaConsulta"] as string) : null;
     const proxima = p["proximaConsulta"] ? new Date(p["proximaConsulta"] as string) : null;
-    const semaforo = computeSemaforo(freq, ultima, proxima);
-    return { ...p, semaforo };
+    const faltou90d = Number(p["faltou90d"] ?? 0);
+    const realizadas90d = Number(p["realizadas90d"] ?? 0);
+    const semaforo = computeSemaforo(freq, ultima, proxima, faltou90d, realizadas90d);
+    return { ...p, semaforo, faltou90d, realizadas90d };
   });
 
   res.json(rows);
 });
 
-function computeSemaforo(freq: string, ultima: Date | null, proxima: Date | null): string {
-  if (proxima && proxima > new Date()) return "verde";
+function computeSemaforo(
+  freq: string,
+  ultima: Date | null,
+  proxima: Date | null,
+  faltou90d = 0,
+  realizadas90d = 0,
+): string {
+  // Kairós: histórico de faltas contamina a cor — 2+ faltas recentes = nunca verde puro
+  const historicoPesado = faltou90d >= 2;
+  // Kairós: aprovado há >30d mas sem nenhuma consulta realizada = cinza (não chegou de fato)
+  if (!ultima && realizadas90d === 0) return "cinza";
+
+  if (proxima && proxima > new Date()) {
+    return historicoPesado ? "amarelo" : "verde";
+  }
   if (!ultima) return "cinza";
+
   const dias = (Date.now() - ultima.getTime()) / 86_400_000;
   const limites: Record<string, [number, number]> = {
     semanal:   [7,  14],
@@ -1003,9 +1025,14 @@ function computeSemaforo(freq: string, ultima: Date | null, proxima: Date | null
     mensal:    [45, 60],
   };
   const [limA, limV] = limites[freq] ?? [Infinity, Infinity];
-  if (dias >= limV) return "vermelho";
-  if (dias >= limA) return "amarelo";
-  return "verde";
+  let cor: string;
+  if (dias >= limV) cor = "vermelho";
+  else if (dias >= limA) cor = "amarelo";
+  else cor = "verde";
+
+  // Kairós: 1 falta recente = não pode ser verde
+  if (cor === "verde" && faltou90d >= 1) cor = "amarelo";
+  return cor;
 }
 
 // PATCH /api/age/:slug/patients/:id (auth required) — aprovar/recusar/anotar

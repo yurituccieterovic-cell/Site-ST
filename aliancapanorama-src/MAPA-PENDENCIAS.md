@@ -530,7 +530,7 @@
 | #261 | Admin Jasmim: guias "Financeiro & Sabiá" e "Documentos & Prontuários" — backend + UI (não implementadas ainda) | CÓDIGO | ✅ S120a — chips clickáveis + filtro por setor + painéis contextuais Age |
 | #262 | Pedir arquivos para Suzana (docs de referência — Yuri mencionou) | MAYUMI/YURI | ⏳ lembrar na reunião |
 | #263 | Protótipo comandos de acesso rápido: radial menu desktop + barra flutuante mobile (I692) | CÓDIGO | 🟡 aguarda aprovação visual |
-| #264 | Formulário base reuniões Mayumi: doc por reunião (Lisange + Suzana), enviado por email antes das datas (I695) | PROCESSO | ⏳ Cláudio prepara |
+| #264 | Formulário base reuniões Mayumi: doc por reunião (Lisange + Suzana), enviado por email antes das datas (I695) | PROCESSO | ✅ S120a — template criado em tango/formulario_reuniao_mayumi.md; envio aguarda datas das reuniões |
 | #265 | Gateway múltiplo Age: profissional configura quais aceita (Stripe + MP); #255 resolvido — ambos (I694) | CÓDIGO | ✅ S120a — online_mercadopago adicionado ao allowed list + label UI |
 | #266 | RSRS — spec arquitetural: começar por comentários entre profissionais no prontuário (I690) | SPEC | 🟡 aguarda confirmação |
 | #267 | ISCA — decisão arquitetura: IAs separadas com personalidade ou modos da MYYM? (I691) | DECISÃO | 🟡 Yuri decide |
@@ -555,7 +555,7 @@
 | #276 | Enviar por email: senhas Suzana + Lisange + login paciente-demo (Yuri pediu) | PROCESSO | ✅ feito S119t |
 | #277 | Textura mármore: variável CSS global `--bg-texture` em todos os sistemas (I707) | CÓDIGO | ✅ feito S119v — radial-gradient aplicado em Age + Jasmim |
 | #278 | WhatsApp bridge Age MVP: botão "Copiar link agendamento" no perfil do profissional (I705) | CÓDIGO | 🟡 aguarda aprovação Yuri |
-| #279 | Kairós no semáforo: adicionar contexto de histórico (não só intervalo de tempo) na cor do semáforo (I703) | CÓDIGO | 🟡 proposta |
+| #279 | Kairós no semáforo: adicionar contexto de histórico (não só intervalo de tempo) na cor do semáforo (I703) | CÓDIGO | ✅ S120a — faltou90d/realizadas90d: ≥1 falta bloqueia verde; ≥2 faltas baixa próxima sessão para amarelo |
 | #280 | Email domínio próprio `@sociedadetucci.com.br`: ativar email empresarial; pendência administrativa | INFRA | ⏳ Yuri faz (domínio próprio) |
 | #281 | [SEGURANÇA] Replit/checkout.ts: remover BCC hardcoded para Yuri sem consentimento (LGPD) — sugestão da Árvore #647 | SEGURANÇA | ⚠️ Replit legado — Yuri decide se mantém Replit vivo |
 | #282 | Textura mármore: implementar variável CSS `--bg-texture` global em Age + Jasmim (I707) — Yuri pediu ao vivo | CÓDIGO | ✅ feito S119v |
@@ -570,7 +570,7 @@
 | #286 | Fix Jasmim: pergunta deve aparecer ANTES da resposta da IA (hoje carrega invertido) (I722) | CÓDIGO | ✅ feito S119t (commit 111289a) |
 | #287 | Fix Jasmim: copiar pergunta+resposta não funciona — Mayumi relatou | CÓDIGO | ✅ feito S119t (commit 111289a) |
 | #288 | Fix Jasmim: esquilo avatar não aparece no login — Mayumi relatou | CÓDIGO | ✅ feito S119t (commit 111289a) |
-| #289 | Transferência Assembleia RODAR: pg_dump da DB certa (Replit Secrets, não heliumdb) — Yuri aguarda instrução | PROCESSO | ⏳ Yuri faz no Replit |
+| #289 | Transferência Assembleia RODAR: pg_dump da DB certa (Replit Secrets, não heliumdb) — Yuri aguarda instrução | PROCESSO | ✅ S120a — exportação JSON v3 recebida (35MB, 649 assembleias, 19.162 msgs); dump em /root/replit-dump/ |
 | #290 | Memória Árvore: incorporar posts Bluesky (stuccipulseheadway.bsky.social) no pack-arvore.md como memória pública | PROCESSO | 🟡 referência salva |
 
 ### S119u — Drive Screenshot + Arquitetura SABIÁ (2026-09-09)

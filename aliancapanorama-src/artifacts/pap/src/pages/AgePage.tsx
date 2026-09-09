@@ -19,7 +19,7 @@ type AvailRule = {
 };
 type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
-type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null };
+type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null; faltou90d?: number; realizadas90d?: number };
 type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed";
 type FeedItem = {
   tipo: "appointment" | "patient";
@@ -1196,6 +1196,11 @@ export function AgePage() {
                         <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: p.semaforo === "verde" ? "#4ade80" : p.semaforo === "amarelo" ? "#fbbf24" : "#f87171" }}>
                           <span style={{ width: 8, height: 8, borderRadius: "50%", background: "currentColor", display: "inline-block" }} />
                           {p.semaforo === "verde" ? "Em dia" : p.semaforo === "amarelo" ? "Atrasado" : "Atenção"}
+                          {(p.faltou90d ?? 0) > 0 && (
+                            <span title={`${p.faltou90d} falta(s) nos últimos 90 dias`} style={{ color: "#fb923c", marginLeft: 2 }}>
+                              · ⚠️ {p.faltou90d}f
+                            </span>
+                          )}
                         </span>
                       )}
                     </div>
