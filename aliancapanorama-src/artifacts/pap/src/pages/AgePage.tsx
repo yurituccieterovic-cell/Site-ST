@@ -99,6 +99,7 @@ export function AgePage() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedAppt, setSelectedAppt] = useState<Appt | null>(null);
   const [apptNotes, setApptNotes] = useState("");
+  const [confirmApptAction, setConfirmApptAction] = useState<{ id: number; status: string } | null>(null);
   const [undoRule, setUndoRule] = useState<{ id: number; label: string; timerId: ReturnType<typeof setTimeout> } | null>(null);
 
   // Config — opções de pagamento
@@ -1051,14 +1052,39 @@ export function AgePage() {
                 <button onClick={() => setSelectedAppt(null)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 18 }}>✕</button>
               </div>
 
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
-                {["confirmado", "realizado", "cancelado", "faltou", "remarcado"].map(s => (
-                  <button key={s} onClick={() => updateAppt(selectedAppt.id, { status: s })}
-                    style={{ background: selectedAppt.status === s ? STATUS_COLOR[s] + "33" : "#1a2030", border: `1px solid ${STATUS_COLOR[s] ?? color}55`, borderRadius: 6, color: STATUS_COLOR[s] ?? "#e2e8f0", padding: "4px 10px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
-                    {STATUS_LABEL[s]}
-                  </button>
-                ))}
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: confirmApptAction ? 8 : 16 }}>
+                {["confirmado", "realizado", "cancelado", "faltou", "remarcado"].map(s => {
+                  const destrutivo = s === "cancelado" || s === "faltou";
+                  return (
+                    <button key={s}
+                      onClick={() => {
+                        if (destrutivo && selectedAppt.status !== s) {
+                          setConfirmApptAction({ id: selectedAppt.id, status: s });
+                        } else {
+                          updateAppt(selectedAppt.id, { status: s });
+                        }
+                      }}
+                      style={{ background: selectedAppt.status === s ? STATUS_COLOR[s] + "33" : "#1a2030", border: `1px solid ${STATUS_COLOR[s] ?? color}55`, borderRadius: 6, color: STATUS_COLOR[s] ?? "#e2e8f0", padding: "4px 10px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
+                      {STATUS_LABEL[s]}
+                    </button>
+                  );
+                })}
               </div>
+              {confirmApptAction && confirmApptAction.id === selectedAppt.id && (
+                <div style={{ background: "#1a0a0a", border: "1px solid #f8717155", borderRadius: 8, padding: "10px 14px", marginBottom: 14, display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ color: "#f87171", fontSize: 13, flex: 1 }}>
+                    Marcar como <strong>{STATUS_LABEL[confirmApptAction.status]}</strong>? Esta ação afeta o histórico do paciente.
+                  </span>
+                  <button onClick={() => { updateAppt(confirmApptAction.id, { status: confirmApptAction.status }); setConfirmApptAction(null); }}
+                    style={{ background: "#7f1d1d", border: "none", borderRadius: 6, color: "#fca5a5", padding: "4px 12px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+                    Sim
+                  </button>
+                  <button onClick={() => setConfirmApptAction(null)}
+                    style={{ background: "#1e2a3a", border: "1px solid #334155", borderRadius: 6, color: "#94a3b8", padding: "4px 12px", cursor: "pointer", fontSize: 12 }}>
+                    Não
+                  </button>
+                </div>
+              )}
 
               {selectedAppt.patientTelefone && (
                 <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 6 }}>📱 {selectedAppt.patientTelefone}</div>
