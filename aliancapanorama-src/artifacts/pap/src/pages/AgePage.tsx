@@ -108,6 +108,7 @@ export function AgePage() {
     presencial_cartao:   "Cartão (presencial)",
     online_pix:          "Pix (online)",
     online_stripe:       "Cartão online (Stripe)",
+    online_mercadopago:  "Mercado Pago (online)",
     plano_saude:         "Plano de saúde",
     cortesia:            "Cortesia / gratuito",
   };

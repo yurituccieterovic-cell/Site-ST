@@ -1220,7 +1220,7 @@ router.patch("/age/:slug/payment-options", requireAgeAuth, async (req, res): Pro
     res.status(403).json({ error: "Sem permissão" }); return;
   }
   const opcoes = req.body as Record<string, boolean>;
-  const allowed = ["presencial_dinheiro", "presencial_pix", "presencial_cartao", "online_pix", "online_stripe", "plano_saude", "cortesia"];
+  const allowed = ["presencial_dinheiro", "presencial_pix", "presencial_cartao", "online_pix", "online_stripe", "online_mercadopago", "plano_saude", "cortesia"];
   const filtered = Object.fromEntries(Object.entries(opcoes).filter(([k, v]) => allowed.includes(k) && typeof v === "boolean"));
   await db.execute(sql`UPDATE age_professionals SET opcoes_pagamento = ${JSON.stringify(filtered)}::jsonb WHERE slug = ${slug}`);
   res.json({ ok: true, opcoes: filtered });

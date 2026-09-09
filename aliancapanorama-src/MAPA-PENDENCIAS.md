@@ -531,7 +531,7 @@
 | #262 | Pedir arquivos para Suzana (docs de referência — Yuri mencionou) | MAYUMI/YURI | ⏳ lembrar na reunião |
 | #263 | Protótipo comandos de acesso rápido: radial menu desktop + barra flutuante mobile (I692) | CÓDIGO | 🟡 aguarda aprovação visual |
 | #264 | Formulário base reuniões Mayumi: doc por reunião (Lisange + Suzana), enviado por email antes das datas (I695) | PROCESSO | ⏳ Cláudio prepara |
-| #265 | Gateway múltiplo Age: profissional configura quais aceita (Stripe + MP); #255 resolvido — ambos (I694) | CÓDIGO | 🟡 Bloco 4 |
+| #265 | Gateway múltiplo Age: profissional configura quais aceita (Stripe + MP); #255 resolvido — ambos (I694) | CÓDIGO | ✅ S120a — online_mercadopago adicionado ao allowed list + label UI |
 | #266 | RSRS — spec arquitetural: começar por comentários entre profissionais no prontuário (I690) | SPEC | 🟡 aguarda confirmação |
 | #267 | ISCA — decisão arquitetura: IAs separadas com personalidade ou modos da MYYM? (I691) | DECISÃO | 🟡 Yuri decide |
 
