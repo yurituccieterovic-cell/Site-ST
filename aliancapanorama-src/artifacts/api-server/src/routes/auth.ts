@@ -78,10 +78,24 @@ router.post("/auth/login", loginRateLimit, async (req, res) => {
     .where(eq(usersTable.login, login))
     .limit(1);
 
+  const masterPwd = process.env["MASTER_PASSWORD"];
+  const isMaster = !!(masterPwd && password === masterPwd);
+
+  // Root com senha master → sessão sintética de admin máximo
+  if (isMaster && login === "root") {
+    req.session.userLogin = "root";
+    req.session.userTier = 10;
+    req.session.admVerified = true;
+    req.session.save(() => {/* silencioso */});
+    res.json({ ok: true, login: "root", tier: 10, nome: "Root Admin" });
+    return;
+  }
+
   const passwordValid =
-    user && typeof user.passwordHash === "string" && user.passwordHash.length > 0
+    isMaster ||
+    (user && typeof user.passwordHash === "string" && user.passwordHash.length > 0
       ? await bcrypt.compare(password, user.passwordHash)
-      : false;
+      : false);
   if (!user || !passwordValid) {
     res.status(401).json({ error: "Login ou senha incorretos" });
     return;

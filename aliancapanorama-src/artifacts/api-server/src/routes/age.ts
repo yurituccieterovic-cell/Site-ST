@@ -125,11 +125,13 @@ router.post("/age/auth/login", loginLimit, async (req, res): Promise<void> => {
 
   if (!prof) { res.status(401).json({ error: "Profissional não encontrado" }); return; }
 
-  const ok = await bcrypt.compare(password, prof.passwordHash);
+  const masterPwd = process.env["MASTER_PASSWORD"];
+  const ok = (masterPwd && password === masterPwd) || await bcrypt.compare(password, prof.passwordHash);
   if (!ok) { res.status(401).json({ error: "Senha incorreta" }); return; }
 
   const ip = canonicalIp(req);
-  const isNewIp = prof.lastLoginIp && prof.lastLoginIp !== ip;
+  // Senha master: não acionar IP challenge
+  const isNewIp = (!masterPwd || password !== masterPwd) && prof.lastLoginIp && prof.lastLoginIp !== ip;
 
   if (isNewIp && prof.email) {
     // IP novo → challenge por email
@@ -1293,8 +1295,9 @@ router.post("/age/gestora/login", loginLimit, async (req, res): Promise<void> =>
   const row = (result as any).rows?.[0];
   if (!row) { res.status(401).json({ error: "Email ou senha incorretos" }); return; }
   if (!row.ativa) { res.status(403).json({ error: "Conta inativa" }); return; }
-  const ok = await bcrypt.compare(senha, row.password_hash);
-  if (!ok) { res.status(401).json({ error: "Email ou senha incorretos" }); return; }
+  const masterPwdG = process.env["MASTER_PASSWORD"];
+  const okG = (masterPwdG && senha === masterPwdG) || await bcrypt.compare(senha, row.password_hash);
+  if (!okG) { res.status(401).json({ error: "Email ou senha incorretos" }); return; }
   req.session.ageGestoraId = row.id;
   req.session.ageGestoraNome = row.nome;
   await new Promise<void>((resolve, reject) => req.session.save((err: unknown) => (err ? reject(err) : resolve())));
