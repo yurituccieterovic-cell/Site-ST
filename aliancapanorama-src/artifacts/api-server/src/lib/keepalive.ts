@@ -45,5 +45,16 @@ export function startKeepaliveCron(): void {
     logger.debug("Keepalive: backend acordado");
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min)");
+  // Jasmim keepalive: conta posts para manter jm_posts aquecido no cache Neon
+  cron.schedule("*/11 * * * *", async () => {
+    try {
+      const r = await db.execute(sql`SELECT COUNT(*) FROM jm_posts WHERE projeto = 'age'`);
+      const total = (r as any).rows?.[0]?.count ?? 0;
+      registrarPulso("jasmim-keepalive", "ok", `jm_posts.age=${total}`);
+    } catch (err) {
+      registrarPulso("jasmim-keepalive", "erro", String(err));
+    }
+  });
+
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min)");
 }
