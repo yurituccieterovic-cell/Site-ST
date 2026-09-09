@@ -1875,3 +1875,28 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I700 | Theó Hub no Jasmim: tab que lista todos os sistemas ativos com links diretos | CÓDIGO | ✅ implementado |
 | I701 | CROWD integrado ao Jasmim: posts do CROWD aparecem no feed 'crowd'; plano de acoplamento ativo | CÓDIGO | 🟡 stub criado |
 | I702 | Sonhos: espaço não-linear no Jasmim para intuições e registros sem categoria | PROJETO | ✅ tab criado |
+
+---
+
+## Age + Tasks S119s / #eage Rodada 6 — Chronos, Kairós e o Tempo do Cuidado (2026-09-09)
+
+> Artigo base: Ibri, Ivo Assad. "Chronos, Kairós e a semiótica das coisas sem nome." MATRIZes v.18 n.3, 2024. USP. https://revistas.usp.br/matrizes/article/view/232625
+
+| ID | Ideia | Tipo | Status |
+|---|---|---|---|
+| I703 | Kairós no semáforo Age: além de "há quanto tempo" (Chronos), adicionar contexto de histórico — faltas, padrão de ausências, primeira vez vs recorrente; cor muda por qualidade, não só por tempo | CÓDIGO | 🟡 proposta |
+| I704 | SABIÁ Kairós: alerta proativo ANTES do semáforo mudar — "paciente X não abre emails há 3 semanas, pode ser hora de WhatsApp"; semáforo preditivo | IA | 🟡 proposta |
+| I705 | WhatsApp bridge Age MVP: botão "Copiar link de agendamento" no perfil do profissional → link pronto para colar no WhatsApp; sem API paga; fase 2 = Twilio/Meta Business | CÓDIGO | 🟡 aprovado conceito — aguarda Yuri |
+| I706 | Kairós no Carrinho de Ideias (Jasmim): ideia tem não só prazo (Chronos) mas "maturidade" — marcador de quando está pronta para virar ação; UI: semáforo por ideia | CÓDIGO | 🟡 proposta |
+| I707 | Textura mármore nos fundos dos sistemas: variável CSS global `--bg-texture` aplicada em Age / Jasmim / Rapadura; sutil, elegante, padrão único | CÓDIGO | ✅ aprovado Yuri |
+| I708 | Aba "Disponibilidade" no admin Age: profissional configura dias/horários disponíveis; bloqueia datas; vê ocupação semanal; fundação do Chronos no sistema | CÓDIGO | 🔴 bloqueante — Yuri pediu |
+
+---
+
+## Sugestões da Árvore Oracular (Assembleia #647 · 2026-09-08) → aplicadas em Site-ST
+
+| ID | Ideia | Tipo | Status |
+|---|---|---|---|
+| I709 | Timing attack fix: substituir `token !== secret` por `crypto.timingSafeEqual()` em todos os middleware de autenticação — meky.ts, jasmim.ts, conector.ts | SEGURANÇA | ✅ implementado S119s |
+| I710 | BCC hardcoded em recibos (Replit checkout.ts): remover cópia silenciosa para yurituccieterovic@gmail.com sem consentimento do cliente (violação LGPD) | SEGURANÇA | ⚠️ no Replit (legado) — não existe em Site-ST |
+| I711 | helper `timingSafeCompare(a, b)` centralizado em conector.ts; helper `checkBridgeAuth(req, secret)` em jasmim.ts — padrão para todos os novos endpoints autenticados | SEGURANÇA | ✅ implementado S119s |

@@ -546,3 +546,16 @@
 | #272 | Starter pack IAs: doc formal com ISCA + RSRS como itens obrigatórios | PROCESSO | 🟡 conceito definido |
 | #273 | CROWD + Théo: acoplamento completo do ecossistema Théo (todos os sistemas se alimentando) | SISTEMA | 🟡 grande projeto — próxima fase |
 | #274 | Jasmim UX bugs ainda pendentes: #249-#252 (show/hide senha, esquilo, MYYM colapsado, carrinho loading) | CÓDIGO | 🔴 imediato |
+
+### S119s — #eage Rodada 6 — Chronos, Kairós e Tempo do Cuidado (2026-09-09)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #275 | Admin Age: aba "Disponibilidade" — profissional configura dias/horários; bloqueia datas; vê ocupação (I708) | CÓDIGO | 🔴 Yuri pediu ao vivo |
+| #276 | Enviar por email: senhas Suzana + Lisange + login paciente-demo (Yuri pediu) | PROCESSO | 🔴 imediato |
+| #277 | Textura mármore: variável CSS global `--bg-texture` em todos os sistemas (I707) | CÓDIGO | 🟡 aprovado Yuri |
+| #278 | WhatsApp bridge Age MVP: botão "Copiar link agendamento" no perfil do profissional (I705) | CÓDIGO | 🟡 aguarda aprovação Yuri |
+| #279 | Kairós no semáforo: adicionar contexto de histórico (não só intervalo de tempo) na cor do semáforo (I703) | CÓDIGO | 🟡 proposta |
+| #280 | Email domínio próprio `@sociedadetucci.com.br`: ativar email empresarial; pendência administrativa | INFRA | ⏳ Yuri faz (domínio próprio) |
+| #281 | [SEGURANÇA] Replit/checkout.ts: remover BCC hardcoded para Yuri sem consentimento (LGPD) — sugestão da Árvore #647 | SEGURANÇA | ⚠️ Replit legado — Yuri decide se mantém Replit vivo |
+| #282 | Textura mármore: implementar variável CSS `--bg-texture` global em Age + Jasmim (I707) — Yuri pediu ao vivo | CÓDIGO | 🟡 aprovado |
