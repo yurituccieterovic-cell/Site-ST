@@ -19,6 +19,7 @@ export const ageProfessionalsTable = pgTable("age_professionals", {
   challengeCode: text("challenge_code"),                  // código 6 dígitos (TTL 10min)
   challengeAt:  timestamp("challenge_at", { withTimezone: true }),
   cancelMinHoras: integer("cancel_min_horas").notNull().default(24),
+  opcoesPagamento: jsonb("opcoes_pagamento").$type<Record<string, boolean>>().default({ presencial_dinheiro: true }),
   ativa:        boolean("ativa").notNull().default(true),
   createdAt:    timestamp("created_at", { withTimezone: true }).defaultNow(),
 });

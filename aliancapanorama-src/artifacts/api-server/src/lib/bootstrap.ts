@@ -317,7 +317,9 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_forms_prof ON age_forms(professional_id)`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_form_responses_patient ON age_form_responses(patient_id, form_id)`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_documents_patient ON age_documents(patient_id, professional_id)`);
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents)");
+  // Opções de pagamento (Modelo C — profissional habilita as que aceita)
+  await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS opcoes_pagamento JSONB NOT NULL DEFAULT '{"presencial_dinheiro": true}'`);
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

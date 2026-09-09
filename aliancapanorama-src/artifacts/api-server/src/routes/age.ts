@@ -1159,6 +1159,31 @@ router.get("/age/:slug/feed", requireAgeAuth, async (req, res): Promise<void> =>
   res.json(merged);
 });
 
+// ─── Opções de pagamento (Modelo C — profissional habilita as que aceita) ──────
+
+// GET /api/age/:slug/payment-options (auth required)
+router.get("/age/:slug/payment-options", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const [prof] = await db.select({ opcoesPagamento: ageProfessionalsTable.opcoesPagamento })
+    .from(ageProfessionalsTable)
+    .where(eq(ageProfessionalsTable.slug, slug)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+  res.json({ opcoes: prof.opcoesPagamento ?? { presencial_dinheiro: true } });
+});
+
+// PATCH /api/age/:slug/payment-options (auth required) — atualiza opções habilitadas
+router.patch("/age/:slug/payment-options", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  if (req.session.ageProfessionalSlug !== slug) {
+    res.status(403).json({ error: "Sem permissão" }); return;
+  }
+  const opcoes = req.body as Record<string, boolean>;
+  const allowed = ["presencial_dinheiro", "presencial_pix", "presencial_cartao", "online_pix", "online_stripe", "plano_saude", "cortesia"];
+  const filtered = Object.fromEntries(Object.entries(opcoes).filter(([k, v]) => allowed.includes(k) && typeof v === "boolean"));
+  await db.execute(sql`UPDATE age_professionals SET opcoes_pagamento = ${JSON.stringify(filtered)}::jsonb WHERE slug = ${slug}`);
+  res.json({ ok: true, opcoes: filtered });
+});
+
 // ─── Auth do paciente ─────────────────────────────────────────────────────────
 
 function requirePatientAuth(req: any, res: any, next: any) {

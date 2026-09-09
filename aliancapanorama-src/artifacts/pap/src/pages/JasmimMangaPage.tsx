@@ -248,41 +248,41 @@ function MyymAvatar({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       style={{
         position: "fixed", bottom: 24, right: 20,
-        width: 60, height: 60, borderRadius: "50%",
+        width: 64, height: 64, borderRadius: "50%",
         background: "linear-gradient(135deg, #1a1a2e, #2a1a0e)",
         border: "2px solid #f59e0b88", cursor: "pointer", zIndex: 100,
         display: "flex", alignItems: "center", justifyContent: "center",
         boxShadow: "0 4px 20px rgba(245,158,11,0.3)",
-        overflow: "hidden",
       }}
       title="Falar com MYYM"
     >
-      <style>{`
-        @keyframes jmFloat { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-5px) rotate(3deg); } }
-        @keyframes jmTailW { 0%,100% { transform:rotate(-6deg); transform-origin:62px 58px; } 50% { transform:rotate(10deg); transform-origin:62px 58px; } }
-        .jm-av { animation: jmFloat 2.6s ease-in-out infinite; }
-        .jm-at { animation: jmTailW 2.6s ease-in-out infinite; }
-      `}</style>
-      <svg className="jm-av" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 48, height: 48 }}>
-        <path d="M18,54 Q10,42 18,30 L38,40 L42,62 Z" fill="#c2700a" opacity="0.82"/>
-        <path d="M78,54 Q86,42 78,30 L58,40 L54,62 Z" fill="#c2700a" opacity="0.82"/>
-        <ellipse className="jm-at" cx="62" cy="58" rx="14" ry="8" fill="#92400e" transform="rotate(25 62 58)"/>
-        <ellipse className="jm-at" cx="64" cy="55" rx="11" ry="6" fill="#d97706" transform="rotate(25 64 55)"/>
-        <ellipse cx="48" cy="54" rx="16" ry="14" fill="#d97706"/>
-        <ellipse cx="26" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(-35 26 40)"/>
-        <ellipse cx="70" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(35 70 40)"/>
-        <ellipse cx="37" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(-10 37 26)"/>
-        <ellipse cx="37" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(-10 37 27)"/>
-        <ellipse cx="59" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(10 59 26)"/>
-        <ellipse cx="59" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(10 59 27)"/>
-        <circle cx="48" cy="36" r="13" fill="#d97706"/>
-        <ellipse cx="43" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
-        <ellipse cx="53" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
-        <circle cx="44" cy="33.5" r="1.5" fill="white"/>
-        <circle cx="54" cy="33.5" r="1.5" fill="white"/>
-        <ellipse cx="48" cy="40" rx="2.5" ry="1.8" fill="#92400e"/>
-        <circle cx="38" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
-        <circle cx="58" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
+      <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 44, height: 44 }}>
+        <defs>
+          <style>{`
+            @keyframes jmAvFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
+          `}</style>
+        </defs>
+        <g style={{ animation: "jmAvFloat 2.6s ease-in-out infinite" }}>
+          <path d="M18,54 Q10,42 18,30 L38,40 L42,62 Z" fill="#c2700a" opacity="0.82"/>
+          <path d="M78,54 Q86,42 78,30 L58,40 L54,62 Z" fill="#c2700a" opacity="0.82"/>
+          <ellipse cx="62" cy="58" rx="14" ry="8" fill="#92400e" transform="rotate(25 62 58)"/>
+          <ellipse cx="64" cy="55" rx="11" ry="6" fill="#d97706" transform="rotate(25 64 55)"/>
+          <ellipse cx="48" cy="54" rx="16" ry="14" fill="#d97706"/>
+          <ellipse cx="26" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(-35 26 40)"/>
+          <ellipse cx="70" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(35 70 40)"/>
+          <ellipse cx="37" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(-10 37 26)"/>
+          <ellipse cx="37" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(-10 37 27)"/>
+          <ellipse cx="59" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(10 59 26)"/>
+          <ellipse cx="59" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(10 59 27)"/>
+          <circle cx="48" cy="36" r="13" fill="#d97706"/>
+          <ellipse cx="43" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
+          <ellipse cx="53" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
+          <circle cx="44" cy="33.5" r="1.5" fill="white"/>
+          <circle cx="54" cy="33.5" r="1.5" fill="white"/>
+          <ellipse cx="48" cy="40" rx="2.5" ry="1.8" fill="#92400e"/>
+          <circle cx="38" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
+          <circle cx="58" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
+        </g>
       </svg>
     </button>
   );
@@ -474,9 +474,10 @@ function Carrinho({ items, onRemover, onEnviar }: {
 
 // ─── Post Card ────────────────────────────────────────────────────────────────
 
-function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: string) => void }) {
+function PostCard({ post, prevPost, onAddCarrinho }: { post: Post; prevPost?: Post; onAddCarrinho: (texto: string) => void }) {
   const [editando, setEditando] = useState(false);
   const [nota, setNota] = useState("");
+  const [copiado, setCopiado] = useState(false);
   const proj = PROJETOS[post.projeto];
 
   const corTipo: Record<Post["tipo"], string> = {
@@ -485,6 +486,17 @@ function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: 
     pergunta: "#f59e0b22",
     myym:     "#a78bfa22",
   };
+
+  function copiar() {
+    let texto = post.conteudo;
+    if (post.tipo === "myym" && prevPost?.tipo === "pergunta") {
+      texto = `Pergunta: ${prevPost.conteudo}\n\nResposta: ${post.conteudo}`;
+    }
+    navigator.clipboard.writeText(texto).then(() => {
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 1500);
+    });
+  }
 
   return (
     <div style={{
@@ -500,7 +512,7 @@ function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: 
           {post.autor} · {new Date(post.ts).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
         </span>
       </div>
-      <p style={{ color: "#e8e8e8", margin: 0, fontSize: 14, lineHeight: 1.5 }}>{post.conteudo}</p>
+      <p style={{ color: "#e8e8e8", margin: 0, fontSize: 14, lineHeight: 1.5, userSelect: "text" }}>{post.conteudo}</p>
       <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
         <button onClick={() => setEditando(e => !e)} style={{
           background: "none", border: "1px solid #333", borderRadius: 6,
@@ -510,6 +522,11 @@ function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: 
           background: "none", border: "1px solid #333", borderRadius: 6,
           color: "#888", fontSize: 11, padding: "3px 10px", cursor: "pointer",
         }}>🧺</button>
+        <button onClick={copiar} style={{
+          background: "none", border: "1px solid #333", borderRadius: 6,
+          color: copiado ? "#2dd4bf" : "#888", fontSize: 11, padding: "3px 10px", cursor: "pointer",
+          transition: "color 0.2s",
+        }}>{copiado ? "✓ copiado" : "📋"}</button>
       </div>
       {editando && (
         <div style={{ marginTop: 10 }}>
@@ -807,8 +824,8 @@ export default function JasmimMangaPage() {
             <span style={{ fontSize: 12, color: "#555" }}>Use o campo acima para adicionar a primeira nota.</span>
           </p>
         )}
-        {posts.map(post => (
-          <PostCard key={post.id} post={post} onAddCarrinho={addCarrinho} />
+        {posts.map((post, idx) => (
+          <PostCard key={post.id} post={post} prevPost={idx > 0 ? posts[idx - 1] : undefined} onAddCarrinho={addCarrinho} />
         ))}
       </div>
 

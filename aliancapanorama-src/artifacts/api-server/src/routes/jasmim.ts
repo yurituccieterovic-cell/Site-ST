@@ -82,8 +82,8 @@ router.get("/jasmim/feed", async (req, res) => {
       SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
       FROM jm_posts
       WHERE projeto = ${projeto}
-      ORDER BY created_at DESC
-      LIMIT 50
+      ORDER BY created_at ASC
+      LIMIT 80
     `);
 
     const posts = rows.rows.map((r: Record<string, unknown>) => ({

@@ -20,7 +20,7 @@ type AvailRule = {
 type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
 type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null };
-type View = "agenda" | "pacientes" | "disponibilidade" | "sabia" | "feed";
+type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed";
 type FeedItem = {
   tipo: "appointment" | "patient";
   id: string;
@@ -100,6 +100,20 @@ export function AgePage() {
   const [selectedAppt, setSelectedAppt] = useState<Appt | null>(null);
   const [apptNotes, setApptNotes] = useState("");
   const [undoRule, setUndoRule] = useState<{ id: number; label: string; timerId: ReturnType<typeof setTimeout> } | null>(null);
+
+  // Config — opções de pagamento
+  const OPCOES_PAGAMENTO_LABELS: Record<string, string> = {
+    presencial_dinheiro: "Dinheiro (presencial)",
+    presencial_pix:      "Pix (presencial)",
+    presencial_cartao:   "Cartão (presencial)",
+    online_pix:          "Pix (online)",
+    online_stripe:       "Cartão online (Stripe)",
+    plano_saude:         "Plano de saúde",
+    cortesia:            "Cortesia / gratuito",
+  };
+  const [paymentOpts, setPaymentOpts] = useState<Record<string, boolean>>({ presencial_dinheiro: true });
+  const [paymentSaving, setPaymentSaving] = useState(false);
+  const [paymentMsg, setPaymentMsg] = useState("");
 
   // Patient registration (public)
   const [showRegister, setShowRegister] = useState(false);
@@ -255,6 +269,8 @@ export function AgePage() {
     if (mode !== "professional") return;
     fetch(`${API}/api/age/${slug}/availability`, { credentials: "include" })
       .then(r => r.json()).then(setRules).catch(() => {});
+    fetch(`${API}/api/age/${slug}/payment-options`, { credentials: "include" })
+      .then(r => r.ok ? r.json() : null).then(d => { if (d?.opcoes) setPaymentOpts(d.opcoes); }).catch(() => {});
   }, [mode, slug]);
 
   const loadExceptions = useCallback(() => {
@@ -1302,10 +1318,66 @@ export function AgePage() {
     );
   }
 
+  function ConfigView() {
+    async function salvarPagamento() {
+      setPaymentSaving(true);
+      setPaymentMsg("");
+      try {
+        const r = await fetch(`${API}/api/age/${slug}/payment-options`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(paymentOpts),
+        });
+        if (r.ok) setPaymentMsg("✓ Salvo");
+        else setPaymentMsg("Erro ao salvar.");
+      } catch { setPaymentMsg("Sem conexão."); }
+      setPaymentSaving(false);
+      setTimeout(() => setPaymentMsg(""), 2500);
+    }
+
+    return (
+      <div style={{ padding: "1rem", maxWidth: 520 }}>
+        <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Configurações</h2>
+        <p style={{ color: "#64748b", fontSize: 13, marginBottom: 24 }}>Ajuste as opções da sua agenda.</p>
+
+        {/* Opções de pagamento */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 12 }}>💳 Formas de pagamento aceitas</div>
+          <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>Marque quais você aceita. Essas opções ficam visíveis para os pacientes ao agendar.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {Object.entries(OPCOES_PAGAMENTO_LABELS).map(([key, label]) => (
+              <label key={key} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={!!paymentOpts[key]}
+                  onChange={e => setPaymentOpts(p => ({ ...p, [key]: e.target.checked }))}
+                  style={{ width: 16, height: 16, accentColor: color, cursor: "pointer" }}
+                />
+                <span style={{ color: "#e2e8f0", fontSize: 14 }}>{label}</span>
+              </label>
+            ))}
+          </div>
+          <button
+            onClick={salvarPagamento}
+            disabled={paymentSaving}
+            style={{
+              marginTop: 16, background: paymentSaving ? "#333" : color, border: "none",
+              borderRadius: 8, padding: "10px 20px", color: "#080c10",
+              fontWeight: 700, fontSize: 13, cursor: paymentSaving ? "default" : "pointer",
+              transition: "background 0.2s",
+            }}
+          >{paymentSaving ? "Salvando…" : "Salvar"}</button>
+          {paymentMsg && <span style={{ marginLeft: 12, color: paymentMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{paymentMsg}</span>}
+        </div>
+      </div>
+    );
+  }
+
   function DisponibilidadeView() {
     return (
       <div style={{ padding: "1rem" }}>
-        <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Horários disponíveis</h2>
+        <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Disponibilidade semanal</h2>
 
         {/* Toast Desfazer */}
         {undoRule && (
@@ -1985,7 +2057,7 @@ export function AgePage() {
       {mode === "professional" && authStep === "done" && (
         <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b" }}>
           <div style={{ maxWidth: 640, margin: "0 auto", display: "flex" }}>
-            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Regras"], ["feed", "Feed 📋"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
+            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Disponibilidade"], ["config", "Configurações"], ["feed", "Feed 📋"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
               <button key={v} onClick={() => setView(v)}
                 style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: view === v ? `2px solid ${color}` : "2px solid transparent", color: view === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: view === v ? 700 : 400 }}>
                 {label}
@@ -2133,6 +2205,7 @@ export function AgePage() {
             {view === "agenda"          && AgendaView()}
             {view === "pacientes"       && PacientesView()}
             {view === "disponibilidade" && DisponibilidadeView()}
+            {view === "config"          && ConfigView()}
             {view === "feed"            && FeedView()}
             {view === "sabia"           && SabiaView()}
           </>
