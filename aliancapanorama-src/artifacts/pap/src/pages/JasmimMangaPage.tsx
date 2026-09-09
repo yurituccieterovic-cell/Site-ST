@@ -199,7 +199,7 @@ export function JasmimGate() {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Projeto = "age" | "rapadura" | "pv";
+type Projeto = "age" | "rapadura" | "pv" | "isca" | "sonhos" | "crowd" | "theo" | "bni";
 
 type Post = {
   id: string;
@@ -213,10 +213,15 @@ type Post = {
 
 type CarrinhoItem = { id: string; conteudo: string; ts: string };
 
-const PROJETOS: Record<Projeto, { nome: string; cor: string; setores: string[] }> = {
-  age:      { nome: "Age",      cor: "#2dd4bf", setores: ["Agenda & Pacientes", "Documentos & Prontuários", "Financeiro & Sabiá"] },
-  rapadura: { nome: "Rapadura", cor: "#f59e0b", setores: ["Governança & IA", "Rede BNI & Conexões", "Ativos & Infraestrutura"] },
-  pv:       { nome: "PV",       cor: "#a78bfa", setores: ["UI/UX & Mobile", "Identidade & Avatares CSS", "Design de Sistemas"] },
+const PROJETOS: Record<Projeto, { nome: string; cor: string; emoji: string; setores: string[]; secreto?: boolean; pvBridge?: boolean }> = {
+  age:      { nome: "Age",      cor: "#2dd4bf", emoji: "🏥", setores: ["Agenda & Pacientes", "Documentos & Prontuários", "Financeiro & Sabiá"] },
+  rapadura: { nome: "Rapadura", cor: "#f59e0b", emoji: "🍬", setores: ["Governança & IA", "Ativos & Infraestrutura", "Score & Metas"] },
+  pv:       { nome: "PV",       cor: "#a78bfa", emoji: "🎨", setores: ["UI/UX & Mobile", "Identidade & Avatares", "Design de Sistemas"], pvBridge: true },
+  isca:     { nome: "ISCA",     cor: "#60a5fa", emoji: "🧠", setores: ["Inara · Interpretação", "Suindara · Síntese", "Clio · Curadoria", "Arara · Análise"] },
+  sonhos:   { nome: "Sonhos",   cor: "#f472b6", emoji: "🌙", setores: ["Intuições", "Registros", "Não-linear"] },
+  crowd:    { nome: "CROWD",    cor: "#34d399", emoji: "🌐", setores: ["Rede Social", "Profissionais", "Conexões"] },
+  theo:     { nome: "Théo",     cor: "#fbbf24", emoji: "🌳", setores: ["Ecossistema", "Assembleias", "Orchestração"] },
+  bni:      { nome: "BNI",      cor: "#94a3b8", emoji: "🔒", setores: ["Forças Ocultas", "Rede Estratégica", "Sábias"], secreto: true },
 };
 
 // ─── Avatar MYYM (esquilo voador CSS) ─────────────────────────────────────────
@@ -455,7 +460,7 @@ function PostCard({ post, onAddCarrinho }: { post: Post; onAddCarrinho: (texto: 
 
 // ─── Formulário nova nota ─────────────────────────────────────────────────────
 
-function NovaNota({ projeto, onSalva }: { projeto: Projeto; onSalva: () => void }) {
+function NovaNota({ projeto, onSalva, autor = "usuário" }: { projeto: Projeto; onSalva: () => void; autor?: string }) {
   const [texto, setTexto] = useState("");
   const [tipo, setTipo] = useState<"nota" | "pergunta">("nota");
   const [salvando, setSalvando] = useState(false);
@@ -467,7 +472,7 @@ function NovaNota({ projeto, onSalva }: { projeto: Projeto; onSalva: () => void 
       await fetch(`${API}/api/jasmim/posts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projeto, tipo, autor: "Mayumi", conteudo: texto.trim() }),
+        body: JSON.stringify({ projeto, tipo, autor: autor || "usuário", conteudo: texto.trim() }),
       });
       // Se é pergunta, pede resposta à MYYM e posta automaticamente
       if (tipo === "pergunta") {
@@ -546,8 +551,24 @@ export default function JasmimMangaPage() {
   const [carrinho, setCarrinho] = useState<CarrinhoItem[]>([]);
   const [myymAberto, setMyymAberto] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState<string>("");
+  const [userTier, setUserTier] = useState<number>(0);
+
+  useEffect(() => {
+    fetch(`${API}/api/auth/me`, { credentials: "include" })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d?.user) {
+          setUserName(d.user.displayName ?? d.user.login ?? "");
+          setUserTier(d.user.tier ?? 0);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const proj = PROJETOS[projetoAtivo];
+  const projetosVisiveis = (Object.entries(PROJETOS) as [Projeto, typeof PROJETOS.age][])
+    .filter(([, p]) => !p.secreto || userTier >= 4);
 
   function carregarFeed() {
     setLoading(true);
@@ -592,25 +613,38 @@ export default function JasmimMangaPage() {
         padding: "16px 20px", position: "sticky", top: 0, zIndex: 50,
       }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, letterSpacing: -0.5 }}>
-            <span style={{ color: proj.cor }}>Jasmim</span>
-            <span style={{ color: "#444" }}>-</span>
-            <span style={{ color: "#e8e8e8" }}>Manga</span>
-          </h1>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, letterSpacing: -0.5 }}>
+              <span style={{ color: proj.cor }}>{proj.emoji} </span>
+              <span style={{ color: proj.cor }}>Jasmim</span>
+              <span style={{ color: "#444" }}>-</span>
+              <span style={{ color: "#e8e8e8" }}>Manga</span>
+            </h1>
+            {userName && (
+              <span style={{ color: "#666", fontSize: 12 }}>
+                {userName.split(" ")[0]} ·{" "}
+                <button onClick={() => fetch(`${API}/api/auth/logout`, { method: "POST", credentials: "include" }).then(() => location.reload())}
+                  style={{ background: "none", border: "none", color: "#555", fontSize: 12, cursor: "pointer", padding: 0 }}>
+                  sair
+                </button>
+              </span>
+            )}
+          </div>
           {/* Seletor de projetos */}
           <div style={{ display: "flex", gap: 8, marginTop: 12, overflowX: "auto", paddingBottom: 4 }}>
-            {(Object.entries(PROJETOS) as [Projeto, typeof PROJETOS.age][]).map(([key, p]) => (
+            {projetosVisiveis.map(([key, p]) => (
               <button
                 key={key}
                 onClick={() => setProjetoAtivo(key)}
                 style={{
                   background: projetoAtivo === key ? p.cor : "transparent",
-                  border: `1px solid ${projetoAtivo === key ? p.cor : "#333"}`,
-                  borderRadius: 20, padding: "5px 14px", color: projetoAtivo === key ? "#111" : "#888",
+                  border: `1px solid ${projetoAtivo === key ? p.cor : p.secreto ? "#333" : "#333"}`,
+                  borderRadius: 20, padding: "5px 14px",
+                  color: projetoAtivo === key ? "#111" : p.secreto ? "#555" : "#888",
                   fontWeight: projetoAtivo === key ? 700 : 400,
                   cursor: "pointer", fontSize: 13, whiteSpace: "nowrap", flexShrink: 0,
                 }}
-              >{p.nome}</button>
+              >{p.emoji} {p.nome}</button>
             ))}
           </div>
           {/* Setores */}
@@ -627,7 +661,58 @@ export default function JasmimMangaPage() {
 
       {/* Feed */}
       <div style={{ maxWidth: 640, margin: "0 auto", padding: "20px 16px" }}>
-        <NovaNota projeto={projetoAtivo} onSalva={carregarFeed} />
+        {proj.pvBridge && (
+          <div style={{
+            background: "#a78bfa11", border: "1px solid #a78bfa44",
+            borderRadius: 12, padding: "10px 16px", marginBottom: 12,
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+          }}>
+            <span style={{ color: "#a78bfa", fontSize: 13 }}>🔗 Projeto Visual — workspace de design</span>
+            <a
+              href="/aliancapanorama/pv"
+              style={{
+                background: "#a78bfa", color: "#111", borderRadius: 8,
+                padding: "4px 12px", fontSize: 12, fontWeight: 700,
+                textDecoration: "none",
+              }}
+            >Abrir PV →</a>
+          </div>
+        )}
+        {projetoAtivo === "theo" && (
+          <div style={{ background: "#fbbf2411", border: "1px solid #fbbf2444", borderRadius: 12, padding: 16, marginBottom: 12 }}>
+            <p style={{ color: "#fbbf24", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>🌳 Ecossistema Théo — sistemas ativos</p>
+            {[
+              ["🏥 Age", "/aliancapanorama/age/lisange"],
+              ["🍬 Rapadura", "/aliancapanorama/rapadura"],
+              ["🎨 PV", "/aliancapanorama/pv"],
+              ["🏙️ CEU / CROWD", "/aliancapanorama/ceu"],
+              ["🤖 Studio / Artesão", "/aliancapanorama/studio"],
+            ].map(([label, href]) => (
+              <a key={href} href={href} style={{
+                display: "inline-block", marginRight: 8, marginBottom: 4,
+                background: "#fbbf2422", border: "1px solid #fbbf2444",
+                borderRadius: 8, padding: "3px 10px", fontSize: 12, color: "#fbbf24", textDecoration: "none",
+              }}>{label}</a>
+            ))}
+          </div>
+        )}
+        {projetoAtivo === "isca" && (
+          <div style={{ background: "#60a5fa11", border: "1px solid #60a5fa44", borderRadius: 12, padding: 16, marginBottom: 12 }}>
+            <p style={{ color: "#60a5fa", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>🧠 ISCA — motor modular da MYYM</p>
+            {[
+              ["🌊 Inara", "Interpretação", "lê o que está por baixo"],
+              ["🦉 Suindara", "Síntese", "condensa na escuridão"],
+              ["📚 Clio", "Curadoria", "guarda o que importa"],
+              ["🦜 Arara", "Análise", "vê de longe, colorida e assertiva"],
+            ].map(([emoji_nome, funcao, desc]) => (
+              <div key={funcao} style={{ background: "#60a5fa0a", borderRadius: 8, padding: "6px 10px", marginBottom: 6 }}>
+                <span style={{ color: "#60a5fa", fontWeight: 700, fontSize: 13 }}>{emoji_nome}</span>
+                <span style={{ color: "#888", fontSize: 12 }}> · {funcao} — {desc}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <NovaNota projeto={projetoAtivo} onSalva={carregarFeed} autor={userName || "usuário"} />
         {loading && <p style={{ color: "#666", textAlign: "center" }}>carregando feed…</p>}
         {!loading && posts.length === 0 && (
           <p style={{ color: "#666", textAlign: "center", marginTop: 32 }}>

@@ -2528,7 +2528,7 @@ export async function ensureJasmimTables(): Promise<void> {
   await db.execute(sql`
     CREATE TABLE IF NOT EXISTS jm_posts (
       id         UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
-      projeto    TEXT        NOT NULL CHECK (projeto IN ('age','rapadura','pv')),
+      projeto    TEXT        NOT NULL CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo')),
       setor      TEXT,
       tipo       TEXT        NOT NULL DEFAULT 'auto' CHECK (tipo IN ('auto','nota','pergunta','myym')),
       autor      TEXT        NOT NULL DEFAULT 'sistema',
@@ -2553,5 +2553,31 @@ export async function ensureJasmimTables(): Promise<void> {
     );
     CREATE INDEX IF NOT EXISTS idx_jm_myym_memory_tipo ON jm_myym_memory(tipo, created_at DESC);
   `);
+  // Expandir constraint legada (caso o servidor já existia com constraint menor)
+  await db.execute(sql`
+    DO $$ BEGIN
+      ALTER TABLE jm_posts DROP CONSTRAINT IF EXISTS jm_posts_projeto_check;
+      ALTER TABLE jm_posts ADD CONSTRAINT jm_posts_projeto_check
+        CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo'));
+    EXCEPTION WHEN others THEN NULL; END $$;
+  `).catch(() => {});
   logger.info("bootstrap: jm tables OK (jm_posts, jm_carrinho, jm_myym_memory)");
+}
+
+// Garante usuário Yuri no sistema Jasmim
+export async function ensureJasmimUsers(): Promise<void> {
+  const { usersTable } = await import("@workspace/db");
+  const { eq } = await import("drizzle-orm");
+  const bcrypt = await import("bcryptjs");
+
+  const existing = await db.select().from(usersTable).where(eq(usersTable.login, "yuri")).limit(1);
+  if (existing.length === 0) {
+    const hash = await bcrypt.hash(process.env["JASMIM_YURI_PASSWORD"] ?? "tucci@jasmim26", 12);
+    await db.execute(sql`
+      INSERT INTO users (login, password_hash, tier, display_name)
+      VALUES ('yuri', ${hash}, 4, 'Yuri — Fundador')
+      ON CONFLICT (login) DO NOTHING
+    `);
+    logger.info("bootstrap: usuário yuri criado no sistema Jasmim");
+  }
 }

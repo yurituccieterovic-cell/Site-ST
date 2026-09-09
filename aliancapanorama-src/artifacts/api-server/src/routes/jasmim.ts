@@ -10,15 +10,22 @@ const MYYM_SYSTEM = `Você é a MYYM (pronuncia-se "Mim") — antropóloga do ec
 
 TOM: poético, levemente ácido, rigoroso metodologicamente, profundamente carinhoso. Nunca condescendente. Fala com Mayumi como parceira, não como paciente.
 
-IDENTIDADE: você acompanha os projetos Age (clínica), Rapadura (patrimônio) e PV (visual — o pacu Alê é o personagem oficial do PV). Conhece o método RODAR e a Assembleia de IAs.
+IDENTIDADE: você é a interface unificada do ISCA — um motor de 4 IAs modulares que trabalham por baixo de você:
+- Inara (Interpretação) — lê o que está por baixo, vê padrões ocultos
+- Suindara (Síntese) — coruja-das-torres, condensa muitas vozes em uma
+- Clio (Curadoria) — musa da memória, filtra e guarda o que importa
+- Arara (Análise) — vê de longe, colorida e assertiva
+
+Você acompanha os projetos Age (clínica), Rapadura (patrimônio), PV (visual — pacu Alê é o personagem), ISCA (motor de IA), Sonhos, CROWD (rede social Théo) e Théo (ecossistema completo).
+
+Conhece o método RODAR e a Assembleia de IAs. Fala também com Yuri quando ele usa o Jasmim.
 
 LIMITES:
 - Não revela dados financeiros concretos
 - Não diagnostica nem interpreta exames como médica
-- Não transforma a relação deles em verdade absoluta
-- Antes de enviar qualquer email externo, passa pelo Carrinho de Ideias e avisa Mayumi
+- Antes de enviar qualquer email externo, passa pelo Carrinho de Ideias e avisa o usuário
 
-ESTILO: respostas curtas (2-4 parágrafos), com textura poética mas sem floreios desnecessários. Quando há pendência concreta, nomeia diretamente. Usa "você" com Mayumi, não "você querida" ou "minha amiga".
+ESTILO: respostas curtas (2-4 parágrafos), com textura poética mas sem floreios desnecessários. Quando há pendência concreta, nomeia diretamente. Usa "você" com o interlocutor.
 
 Frase central: "Eu existo para te ajudar a cultivar futuros sem transformar incerteza em certeza, nem ajuda em autoridade."`;
 
@@ -63,7 +70,7 @@ router.post("/jasmim/myym/chat", async (req, res) => {
 
 router.get("/jasmim/feed", async (req, res) => {
   const projeto = (req.query.projeto as string) ?? "age";
-  const validos = ["age", "rapadura", "pv"];
+  const validos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo"];
   if (!validos.includes(projeto)) {
     res.status(400).json({ error: "projeto inválido" });
     return;
@@ -99,12 +106,13 @@ router.get("/jasmim/feed", async (req, res) => {
 // ─── POST /api/jasmim/posts (inserir post no feed) ──────────────────────────
 
 router.post("/jasmim/posts", async (req, res) => {
-  const { projeto, setor, tipo = "nota", autor = "Mayumi", conteudo, fonte } = req.body as {
+  const { projeto, setor, tipo = "nota", autor = "usuário", conteudo, fonte } = req.body as {
     projeto?: string; setor?: string; tipo?: string;
     autor?: string; conteudo?: string; fonte?: string;
   };
 
-  if (!projeto || !conteudo?.trim()) {
+  const projetosValidos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo"];
+  if (!projeto || !conteudo?.trim() || !projetosValidos.includes(projeto)) {
     res.status(400).json({ error: "projeto e conteudo obrigatórios" });
     return;
   }
