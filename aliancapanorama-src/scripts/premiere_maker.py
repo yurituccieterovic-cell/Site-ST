@@ -138,6 +138,53 @@ def render_slide(slide: dict, idx: int, tmp_dir: str) -> str:
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
+TTS_VOICES = {
+    "pt-BR":   "pt-BR-FranciscaNeural",
+    "pt-BR-m": "pt-BR-AntonioNeural",
+    "en-US":   "en-US-JennyNeural",
+}
+
+def gerar_audio_tts(slides: list, tmp_dir: str, voz_key: str = "pt-BR") -> str | None:
+    """Gera MP3 via CLI edge-tts e concatena com ffmpeg. Retorna path ou None."""
+    if not shutil.which("edge-tts"):
+        print("⚠️  edge-tts CLI não encontrado. Pulando narração.")
+        return None
+
+    voz = TTS_VOICES.get(voz_key, TTS_VOICES["pt-BR"])
+    partes = []
+    for i, slide in enumerate(slides):
+        texto_narrado = slide.get("naracao") or slide.get("texto") or slide.get("titulo") or ""
+        if not texto_narrado.strip():
+            continue
+        dest = os.path.join(tmp_dir, f"tts_{i:04d}.mp3")
+        r = subprocess.run(
+            ["edge-tts", "--voice", voz, "--text", texto_narrado, "--write-media", dest],
+            capture_output=True,
+        )
+        if r.returncode != 0:
+            print(f"  ⚠️  TTS slide {i} falhou: {r.stderr.decode()[:200]}")
+            continue
+        partes.append(dest)
+        print(f"  🎙 TTS [{i+1}/{len(slides)}] {texto_narrado[:55]}...")
+
+    if not partes:
+        return None
+
+    lista = os.path.join(tmp_dir, "tts_concat.txt")
+    Path(lista).write_text("\n".join(f"file '{p}'" for p in partes))
+    saida_tts = os.path.join(tmp_dir, "naracao.mp3")
+    r = subprocess.run(
+        ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", lista, "-c", "copy", saida_tts],
+        capture_output=True,
+    )
+    if r.returncode != 0:
+        print("⚠️  FFmpeg concat TTS falhou:", r.stderr[-500:].decode())
+        return None
+    size_kb = Path(saida_tts).stat().st_size // 1024
+    print(f"✅ Narração TTS gerada ({size_kb} KB): {saida_tts}")
+    return saida_tts
+
+
 def main():
     ap = argparse.ArgumentParser(description="PremiereMovieMaker — Sociedade Tucci")
     ap.add_argument("entrada", help="JSON com lista de slides")
@@ -145,6 +192,9 @@ def main():
     ap.add_argument("--fps",     type=int, default=24, help="FPS do vídeo (default 24)")
     ap.add_argument("--duracao", type=float, default=5.0, help="Duração padrão de cada slide em segundos (default 5)")
     ap.add_argument("--audio",   default=None, help="Arquivo de áudio para narração (MP3/WAV)")
+    ap.add_argument("--tts",     default=None, metavar="VOZ",
+                    help="Gerar narração automática via edge-tts. Vozes: pt-BR (default), pt-BR-m, en-US. "
+                         "Usa campo 'naracao' ou 'texto' do slide. Ex: --tts pt-BR")
     args = ap.parse_args()
 
     slides = json.loads(Path(args.entrada).read_text())
@@ -155,6 +205,15 @@ def main():
     tmp_dir = "/tmp/premiere_maker_tmp"
     shutil.rmtree(tmp_dir, ignore_errors=True)
     os.makedirs(tmp_dir)
+
+    # TTS automático (--tts) tem prioridade sobre --audio manual
+    audio_final = args.audio
+    if args.tts is not None:
+        voz_key = args.tts if args.tts else "pt-BR"
+        print(f"\n🎙 Gerando narração TTS (voz: {TTS_VOICES.get(voz_key, voz_key)})...")
+        audio_tts = gerar_audio_tts(slides, tmp_dir, voz_key)
+        if audio_tts:
+            audio_final = audio_tts
 
     print(f"Renderizando {len(slides)} slides...")
     concat_lines = []
@@ -173,17 +232,18 @@ def main():
     concat_file = os.path.join(tmp_dir, "concat.txt")
     Path(concat_file).write_text("\n".join(concat_lines))
 
-    # FFmpeg: concat → MP4
-    cmd = [
-        "ffmpeg", "-y",
-        "-f", "concat", "-safe", "0", "-i", concat_file,
+    # FFmpeg: concat → MP4 (todos os -i antes das options de output)
+    cmd = ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", concat_file]
+    if audio_final and os.path.exists(audio_final):
+        cmd += ["-i", audio_final]
+    cmd += [
         "-vf", f"scale={W}:{H}",
         "-c:v", "libx264", "-preset", "fast", "-crf", "22",
         "-pix_fmt", "yuv420p",
         "-r", str(args.fps),
     ]
-    if args.audio and os.path.exists(args.audio):
-        cmd += ["-i", args.audio, "-c:a", "aac", "-shortest"]
+    if audio_final and os.path.exists(audio_final):
+        cmd += ["-c:a", "aac", "-shortest"]
     cmd.append(args.saida)
 
     print(f"\nMontando vídeo: {args.saida}")
