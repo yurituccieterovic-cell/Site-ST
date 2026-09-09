@@ -2011,7 +2011,7 @@ export function AgePage() {
   // ─── LAYOUT ──────────────────────────────────────────────────────────────────
 
   return (
-    <div style={{ minHeight: "100vh", background: "#080c10", color: "#e2e8f0", fontFamily: "system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#080c10", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(45,212,191,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(45,212,191,0.04) 0%, transparent 45%), repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px)", color: "#e2e8f0", fontFamily: "system-ui, sans-serif" }}>
       {/* Header */}
       <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b", padding: "0 1rem" }}>
         <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>

@@ -706,10 +706,7 @@ export default function JasmimMangaPage() {
       minHeight: "100vh", color: "#e8e8e8",
       fontFamily: "system-ui, sans-serif", paddingBottom: 120,
       background: "#0f0f1a",
-      backgroundImage: `
-        repeating-linear-gradient(135deg, transparent, transparent 30px, rgba(255,255,255,0.012) 30px, rgba(255,255,255,0.012) 31px),
-        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.008) 20px, rgba(255,255,255,0.008) 21px)
-      `,
+      backgroundImage: `radial-gradient(ellipse at 15% 25%, rgba(194,112,10,0.08) 0%, transparent 45%), radial-gradient(ellipse at 85% 75%, rgba(167,139,250,0.05) 0%, transparent 45%), repeating-linear-gradient(135deg, transparent, transparent 30px, rgba(255,255,255,0.012) 30px, rgba(255,255,255,0.012) 31px), repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.008) 20px, rgba(255,255,255,0.008) 21px)`,
     }}>
       {/* Header */}
       <div style={{

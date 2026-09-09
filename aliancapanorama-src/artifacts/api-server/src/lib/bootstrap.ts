@@ -319,7 +319,18 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_documents_patient ON age_documents(patient_id, professional_id)`);
   // Opções de pagamento (Modelo C — profissional habilita as que aceita)
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS opcoes_pagamento JSONB NOT NULL DEFAULT '{"presencial_dinheiro": true}'`);
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento)");
+  // Gestoras Age (ex: Mayumi — admin de múltiplas profissionais)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_gestoras (
+      id            SERIAL      PRIMARY KEY,
+      nome          TEXT        NOT NULL,
+      email         TEXT        NOT NULL UNIQUE,
+      password_hash TEXT        NOT NULL,
+      ativa         BOOLEAN     NOT NULL DEFAULT true,
+      created_at    TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";
@@ -338,6 +349,17 @@ export async function ensureAgeTables(): Promise<void> {
     `);
     logger.info(`bootstrap: age profissional '${p.slug}' garantida`);
   }
+
+  // Seed: Mayumi como gestora padrão (AGE_GESTORA_EMAIL + AGE_GESTORA_PASSWORD)
+  const gestoraEmail = process.env.AGE_GESTORA_EMAIL ?? "mayumi@age.tucci";
+  const gestoraPass  = process.env.AGE_GESTORA_PASSWORD ?? defaultPass;
+  const gestoraHash  = await bcrypt.hash(gestoraPass, 12);
+  await db.execute(sql`
+    INSERT INTO age_gestoras (nome, email, password_hash)
+    VALUES ('Mayumi', ${gestoraEmail}, ${gestoraHash})
+    ON CONFLICT (email) DO NOTHING
+  `);
+  logger.info(`bootstrap: gestora '${gestoraEmail}' garantida`);
 }
 
 // Garante que as tabelas MEKY existem — cria se não existirem (idempotente)

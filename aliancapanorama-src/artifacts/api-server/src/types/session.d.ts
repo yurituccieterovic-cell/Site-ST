@@ -20,5 +20,8 @@ declare module "express-session" {
     agePatientId?: number;
     agePatientSlug?: string;
     agePatientNome?: string;
+    // Age — gestora
+    ageGestoraId?: number;
+    ageGestoraNome?: string;
   }
 }

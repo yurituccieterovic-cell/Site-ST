@@ -545,7 +545,7 @@
 | #271 | BNI: spec completa do departamento de forças ocultas (em segredo) | SPEC | 🔒 aguarda Yuri + Mayumi |
 | #272 | Starter pack IAs: doc formal com ISCA + RSRS como itens obrigatórios | PROCESSO | 🟡 conceito definido |
 | #273 | CROWD + Théo: acoplamento completo do ecossistema Théo (todos os sistemas se alimentando) | SISTEMA | 🟡 grande projeto — próxima fase |
-| #274 | Jasmim UX bugs ainda pendentes: #249-#252 (show/hide senha, esquilo, MYYM colapsado, carrinho loading) | CÓDIGO | 🔴 imediato |
+| #274 | Jasmim UX bugs ainda pendentes: #249-#252 (show/hide senha, esquilo, MYYM colapsado, carrinho loading) | CÓDIGO | ✅ feito (esquilo S119t; show/hide senha, MYYM colapsado e carrinho loading já estavam no código) |
 
 ### S119s — #eage Rodada 6 — Chronos, Kairós e Tempo do Cuidado (2026-09-09)
 
@@ -553,18 +553,18 @@
 |---|---|---|---|
 | #275 | Admin Age: aba "Disponibilidade" — profissional configura dias/horários; bloqueia datas; vê ocupação (I708) | CÓDIGO | 🔴 Yuri pediu ao vivo |
 | #276 | Enviar por email: senhas Suzana + Lisange + login paciente-demo (Yuri pediu) | PROCESSO | ✅ feito S119t |
-| #277 | Textura mármore: variável CSS global `--bg-texture` em todos os sistemas (I707) | CÓDIGO | 🟡 aprovado Yuri |
+| #277 | Textura mármore: variável CSS global `--bg-texture` em todos os sistemas (I707) | CÓDIGO | ✅ feito S119v — radial-gradient aplicado em Age + Jasmim |
 | #278 | WhatsApp bridge Age MVP: botão "Copiar link agendamento" no perfil do profissional (I705) | CÓDIGO | 🟡 aguarda aprovação Yuri |
 | #279 | Kairós no semáforo: adicionar contexto de histórico (não só intervalo de tempo) na cor do semáforo (I703) | CÓDIGO | 🟡 proposta |
 | #280 | Email domínio próprio `@sociedadetucci.com.br`: ativar email empresarial; pendência administrativa | INFRA | ⏳ Yuri faz (domínio próprio) |
 | #281 | [SEGURANÇA] Replit/checkout.ts: remover BCC hardcoded para Yuri sem consentimento (LGPD) — sugestão da Árvore #647 | SEGURANÇA | ⚠️ Replit legado — Yuri decide se mantém Replit vivo |
-| #282 | Textura mármore: implementar variável CSS `--bg-texture` global em Age + Jasmim (I707) — Yuri pediu ao vivo | CÓDIGO | 🟡 aprovado |
+| #282 | Textura mármore: implementar variável CSS `--bg-texture` global em Age + Jasmim (I707) — Yuri pediu ao vivo | CÓDIGO | ✅ feito S119v |
 
 ### S119t — #eage Rodada 7 + Outros Assuntos (2026-09-09)
 
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
-| #283 | Painel Mayumi (gestora Age): visão unificada de Lisange+Suzana — agenda, pacientes, aprovações, ações em nome da profissional (I719) | CÓDIGO | 🔴 próxima funcionalidade Age |
+| #283 | Painel Mayumi (gestora Age): visão unificada de Lisange+Suzana — agenda, pacientes, aprovações, ações em nome da profissional (I719) | CÓDIGO | ✅ feito S119v — /age/gestora + API gestora + tabela age_gestoras |
 | #284 | Aprovação automática de pacientes: pré-requisitos configuráveis por profissional; quando cumpridos → status APROVADO automático + email/WhatsApp (I720) | CÓDIGO | 🟡 proposta Rodada 7 |
 | #285 | PWA iOS + og:image + Twitter cards: tags apple-mobile-web-app em age/jasmim/rapadura (I721) | CÓDIGO | ✅ feito S119u (commit 98f7385) |
 | #286 | Fix Jasmim: pergunta deve aparecer ANTES da resposta da IA (hoje carrega invertido) (I722) | CÓDIGO | ✅ feito S119t (commit 111289a) |

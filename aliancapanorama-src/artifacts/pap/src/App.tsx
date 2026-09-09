@@ -23,6 +23,7 @@ import { RapaduraPage } from "@/pages/RapaduraPage";
 import { AgePage } from "@/pages/AgePage";
 import { AgePrivacidadePage } from "@/pages/AgePrivacidadePage";
 import { AgeTermosPage } from "@/pages/AgeTermosPage";
+import GestoraAgePage from "@/pages/GestoraAgePage";
 import { PvPage } from "@/pages/PvPage";
 import JasmimMangaPage, { JasmimGate } from "@/pages/JasmimMangaPage";
 import { ManuelPage } from "@/pages/ManuelPage";
@@ -304,6 +305,7 @@ const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
 const isAgePrivacidade = path.includes("/age/privacidade");
 const isAgeTermos      = path.includes("/age/termos");
+const isAgeGestora     = path.includes("/age/gestora");
 const isAge            = path.includes("/age/");
 const isCssTutorial = path.includes("/css-tutorial");
 const isCelular     = path.includes("/celular");
@@ -399,6 +401,7 @@ function App() {
 
   if (isAgePrivacidade) return <AgePrivacidadePage />;
   if (isAgeTermos)      return <AgeTermosPage />;
+  if (isAgeGestora)     return <GestoraAgePage />;
   if (isAge) {
     return <AgePage />;
   }

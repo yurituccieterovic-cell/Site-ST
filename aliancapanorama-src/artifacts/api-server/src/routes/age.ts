@@ -1164,11 +1164,10 @@ router.get("/age/:slug/feed", requireAgeAuth, async (req, res): Promise<void> =>
 // GET /api/age/:slug/payment-options (auth required)
 router.get("/age/:slug/payment-options", requireAgeAuth, async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const [prof] = await db.select({ opcoesPagamento: ageProfessionalsTable.opcoesPagamento })
-    .from(ageProfessionalsTable)
-    .where(eq(ageProfessionalsTable.slug, slug)).limit(1);
+  const result = await db.execute(sql`SELECT opcoes_pagamento FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const prof = (result as any).rows?.[0];
   if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
-  res.json({ opcoes: prof.opcoesPagamento ?? { presencial_dinheiro: true } });
+  res.json({ opcoes: prof.opcoes_pagamento ?? { presencial_dinheiro: true } });
 });
 
 // PATCH /api/age/:slug/payment-options (auth required) — atualiza opções habilitadas
@@ -1182,6 +1181,73 @@ router.patch("/age/:slug/payment-options", requireAgeAuth, async (req, res): Pro
   const filtered = Object.fromEntries(Object.entries(opcoes).filter(([k, v]) => allowed.includes(k) && typeof v === "boolean"));
   await db.execute(sql`UPDATE age_professionals SET opcoes_pagamento = ${JSON.stringify(filtered)}::jsonb WHERE slug = ${slug}`);
   res.json({ ok: true, opcoes: filtered });
+});
+
+// ─── Gestora Age (Painel Mayumi) ──────────────────────────────────────────────
+
+function requireGestoraAuth(req: any, res: any, next: any) {
+  if (!req.session?.ageGestoraId) {
+    res.status(401).json({ error: "Não autenticado como gestora" }); return;
+  }
+  next();
+}
+
+// POST /api/age/gestora/login
+router.post("/age/gestora/login", loginLimit, async (req, res): Promise<void> => {
+  const { email, senha } = req.body as { email?: string; senha?: string };
+  if (!email || !senha) { res.status(400).json({ error: "Email e senha obrigatórios" }); return; }
+  const result = await db.execute(sql`SELECT id, nome, password_hash, ativa FROM age_gestoras WHERE email = ${email} LIMIT 1`);
+  const row = (result as any).rows?.[0];
+  if (!row) { res.status(401).json({ error: "Email ou senha incorretos" }); return; }
+  if (!row.ativa) { res.status(403).json({ error: "Conta inativa" }); return; }
+  const ok = await bcrypt.compare(senha, row.password_hash);
+  if (!ok) { res.status(401).json({ error: "Email ou senha incorretos" }); return; }
+  req.session.ageGestoraId = row.id;
+  req.session.ageGestoraNome = row.nome;
+  await new Promise<void>((resolve, reject) => req.session.save((err: unknown) => (err ? reject(err) : resolve())));
+  res.json({ ok: true, nome: row.nome });
+});
+
+// GET /api/age/gestora/me
+router.get("/age/gestora/me", async (req, res): Promise<void> => {
+  if (!req.session?.ageGestoraId) { res.status(401).json({ error: "Não autenticado" }); return; }
+  res.json({ id: req.session.ageGestoraId, nome: req.session.ageGestoraNome });
+});
+
+// POST /api/age/gestora/logout
+router.post("/age/gestora/logout", async (req, res): Promise<void> => {
+  req.session.ageGestoraId = undefined;
+  req.session.ageGestoraNome = undefined;
+  req.session.save(() => res.json({ ok: true }));
+});
+
+// GET /api/age/gestora/dashboard
+router.get("/age/gestora/dashboard", requireGestoraAuth, async (req, res): Promise<void> => {
+  const profisRes = await db.execute(sql`SELECT id, slug, nome, cor, tipo FROM age_professionals WHERE ativa = true ORDER BY id`);
+  const hoje = new Date().toISOString().slice(0, 10);
+  const amanha = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+  const profissionais = [];
+  for (const prof of (profisRes as any).rows as { id: number; slug: string; nome: string; cor: string; tipo: string }[]) {
+    const pendRes   = await db.execute(sql`SELECT id, nome, email, telefone, created_at FROM age_patients WHERE professional_id = ${prof.id} AND status = 'pendente_aprovacao' ORDER BY created_at ASC LIMIT 30`);
+    const agendaRes = await db.execute(sql`SELECT id, patient_nome, data_hora, status, canal FROM age_appointments WHERE professional_id = ${prof.id} AND data_hora >= ${hoje}::timestamptz AND data_hora < ${amanha}::timestamptz AND status NOT IN ('cancelado','bloqueado') ORDER BY data_hora ASC LIMIT 20`);
+    const totRes    = await db.execute(sql`SELECT COUNT(*) AS n FROM age_patients WHERE professional_id = ${prof.id} AND status = 'aprovado'`);
+    profissionais.push({
+      ...prof,
+      pacientesPendentes: (pendRes   as any).rows,
+      agendaHoje:         (agendaRes as any).rows,
+      totalPacientes:     parseInt(((totRes as any).rows[0] as any)?.n ?? "0"),
+    });
+  }
+  res.json({ profissionais });
+});
+
+// PATCH /api/age/gestora/pacientes/:id/status
+router.patch("/age/gestora/pacientes/:id/status", requireGestoraAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id);
+  const { status } = req.body as { status?: string };
+  if (!["aprovado", "recusado"].includes(status ?? "")) { res.status(400).json({ error: "Status inválido" }); return; }
+  await db.execute(sql`UPDATE age_patients SET status = ${status}, updated_at = now() WHERE id = ${id}`);
+  res.json({ ok: true });
 });
 
 // ─── Auth do paciente ─────────────────────────────────────────────────────────
