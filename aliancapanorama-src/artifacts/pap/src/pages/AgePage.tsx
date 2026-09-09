@@ -189,7 +189,11 @@ export function AgePage() {
   // Profissional — painel do paciente selecionado
   type SelPatientDoc = { id: number; tipo: string; filename: string; tamanhoKb?: number | null; compartilhadoPaciente: boolean; descricao?: string | null; createdAt: string };
   type SelPatientFormResp = { id: number; formId: number; formTitulo?: string | null; formTipo?: string | null; assinadoAt?: string | null; createdAt: string };
-  const [selectedPatientTab, setSelectedPatientTab] = useState<"info" | "docs" | "forms">("info");
+  const [selectedPatientTab, setSelectedPatientTab] = useState<"info" | "docs" | "forms" | "ficha">("info");
+  type FichaInterna = { motivoConsulta?: string; historicoRelevante?: string; objetivosTerapeuticos?: string; estiloTerapeutico?: string; medicacoes?: string; contraindicacoes?: string; notasAdicionais?: string };
+  const [selectedPatientFicha, setSelectedPatientFicha] = useState<FichaInterna>({});
+  const [fichaLoading, setFichaLoading] = useState(false);
+  const [fichaSaving, setFichaSaving] = useState(false);
   const [selectedPatientDocs, setSelectedPatientDocs] = useState<SelPatientDoc[]>([]);
   const [selectedPatientForms, setSelectedPatientForms] = useState<SelPatientFormResp[]>([]);
   const [docUploadFile, setDocUploadFile] = useState<File | null>(null);
@@ -775,6 +779,25 @@ export function AgePage() {
     const d = await r.json() as SelPatientFormResp[];
     setSelectedPatientForms(d);
   }
+  async function loadSelectedPatientFicha(patientId: number) {
+    setFichaLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/${patientId}/ficha`, { credentials: "include" });
+      if (r.ok) setSelectedPatientFicha(await r.json() as FichaInterna);
+    } catch { /* silencia */ }
+    setFichaLoading(false);
+  }
+  async function saveFicha(patientId: number) {
+    setFichaSaving(true);
+    try {
+      await fetch(`${API}/api/age/${slug}/patients/${patientId}/ficha`, {
+        method: "PATCH", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selectedPatientFicha),
+      });
+    } catch { /* silencia */ }
+    setFichaSaving(false);
+  }
 
   async function handleDocUpload(patientId: number) {
     if (!docUploadFile) return;
@@ -1359,12 +1382,13 @@ export function AgePage() {
               <div style={{ marginTop: 12, borderTop: `1px solid ${color}22`, paddingTop: 12 }} onClick={e => e.stopPropagation()}>
                 {/* Tabs internas */}
                 <div style={{ display: "flex", borderBottom: "1px solid #1e293b", marginBottom: 12 }}>
-                  {([["info", "Info"], ["docs", "Docs"], ["forms", "Formulários"]] as const).map(([tab, label]) => (
+                  {([["info", "Info"], ["ficha", "Ficha"], ["docs", "Docs"], ["forms", "Formulários"]] as const).map(([tab, label]) => (
                     <button key={tab} onClick={e => {
                       e.stopPropagation();
-                      setSelectedPatientTab(tab);
+                      setSelectedPatientTab(tab as "info" | "docs" | "forms" | "ficha");
                       if (tab === "docs") loadSelectedPatientDocs(p.id);
                       if (tab === "forms") loadSelectedPatientForms(p.id);
+                      if (tab === "ficha") loadSelectedPatientFicha(p.id);
                     }}
                       style={{ padding: "6px 12px", background: "none", border: "none", borderBottom: selectedPatientTab === tab ? `2px solid ${color}` : "2px solid transparent", color: selectedPatientTab === tab ? color : "#64748b", cursor: "pointer", fontSize: 12, fontWeight: selectedPatientTab === tab ? 700 : 400 }}>
                       {label}
@@ -1535,6 +1559,41 @@ export function AgePage() {
                       </div>
                     ))}
                   </div>
+                )}
+
+                {selectedPatientTab === "ficha" && (
+                  fichaLoading ? (
+                    <div style={{ color: "#64748b", fontSize: 13, textAlign: "center", padding: "1rem 0" }}>Carregando…</div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      <p style={{ color: "#475569", fontSize: 11, margin: 0 }}>Ficha interna — não visível ao paciente. Salva automaticamente ao sair do campo.</p>
+                      {([
+                        ["motivoConsulta",       "Motivo da consulta",        "Por que o paciente procurou atendimento?"],
+                        ["historicoRelevante",   "Histórico relevante",       "Doenças, traumas, atendimentos anteriores…"],
+                        ["objetivosTerapeuticos","Objetivos terapêuticos",    "O que queremos alcançar juntos?"],
+                        ["estiloTerapeutico",    "Estilo / abordagem",        "Abordagem adotada, adaptações, ritmo…"],
+                        ["medicacoes",           "Medicações",                "Uso atual de psicofármacos ou outros medicamentos…"],
+                        ["contraindicacoes",     "Contraindicações / alertas","Alergias, restrições, riscos a considerar…"],
+                        ["notasAdicionais",      "Notas adicionais",          "Observações livres"],
+                      ] as [keyof FichaInterna, string, string][]).map(([field, label, placeholder]) => (
+                        <div key={field}>
+                          <div style={{ color: color, fontSize: 11, fontWeight: 600, marginBottom: 4 }}>{label}</div>
+                          <textarea
+                            rows={2}
+                            placeholder={placeholder}
+                            value={selectedPatientFicha[field] ?? ""}
+                            onChange={e => setSelectedPatientFicha(f => ({ ...f, [field]: e.target.value }))}
+                            onBlur={() => saveFicha(p.id)}
+                            style={{ width: "100%", background: "#0a0f16", border: `1px solid ${color}22`, borderRadius: 8, color: "#e2e8f0", fontSize: 12, padding: "7px 10px", boxSizing: "border-box", resize: "vertical" }}
+                          />
+                        </div>
+                      ))}
+                      <button onClick={() => saveFicha(p.id)} disabled={fichaSaving}
+                        style={{ background: colorDark, border: `1px solid ${color}44`, borderRadius: 8, color, padding: "8px 0", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                        {fichaSaving ? "Salvando…" : "💾 Salvar ficha"}
+                      </button>
+                    </div>
+                  )
                 )}
               </div>
             )}

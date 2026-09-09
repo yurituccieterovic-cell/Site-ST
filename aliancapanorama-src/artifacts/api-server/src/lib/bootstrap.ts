@@ -345,7 +345,9 @@ export async function ensureAgeTables(): Promise<void> {
     )
   `);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_invite_tokens_token ON age_invite_tokens(token) WHERE used_at IS NULL`);
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens)");
+  // Bloco 2 — Ficha interna do paciente (I229)
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS ficha_interna JSONB NOT NULL DEFAULT '{}'`);
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

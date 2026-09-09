@@ -1183,6 +1183,35 @@ Estamos à disposição.
   res.json({ ok: true, enviado_para: pat["email"] });
 });
 
+// ─── Ficha interna do paciente (Bloco 2 / I229) ──────────────────────────────
+
+// GET /api/age/:slug/patients/:id/ficha
+router.get("/age/:slug/patients/:id/ficha", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const patientId = parseInt(req.params.id);
+  const [row] = (await db.execute(sql`
+    SELECT ficha_interna FROM age_patients WHERE id = ${patientId} AND professional_id = ${profId}
+  `)).rows as { ficha_interna: Record<string, string> }[];
+  if (!row) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+  res.json(row.ficha_interna ?? {});
+});
+
+// PATCH /api/age/:slug/patients/:id/ficha
+router.patch("/age/:slug/patients/:id/ficha", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const patientId = parseInt(req.params.id);
+  const ficha = req.body as Record<string, string>;
+  const allowed = ["motivoConsulta", "historicoRelevante", "objetivosTerapeuticos", "estiloTerapeutico", "medicacoes", "contraindicacoes", "notasAdicionais"];
+  const clean: Record<string, string> = {};
+  for (const k of allowed) if (typeof ficha[k] === "string") clean[k] = ficha[k].slice(0, 2000);
+
+  await db.execute(sql`
+    UPDATE age_patients SET ficha_interna = ${JSON.stringify(clean)}::jsonb, updated_at = now()
+    WHERE id = ${patientId} AND professional_id = ${profId}
+  `);
+  res.json({ ok: true });
+});
+
 // ─── Feed operacional ─────────────────────────────────────────────────────────
 
 // GET /api/age/:slug/feed — log de eventos recentes (auth required)
