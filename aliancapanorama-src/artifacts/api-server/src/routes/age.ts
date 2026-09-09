@@ -1346,6 +1346,100 @@ router.patch("/age/gestora/pacientes/:id/status", requireGestoraAuth, async (req
   res.json({ ok: true });
 });
 
+// ─── Convites de pré-aprovação (I564) ────────────────────────────────────────
+
+// POST /api/age/:slug/invite — profissional gera link de convite (expira em 7 dias)
+router.post("/age/:slug/invite", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const email = (req.body as { email?: string }).email?.trim().toLowerCase() || null;
+  const token = randomUUID();
+  const expiraAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 dias
+
+  await db.execute(sql`
+    INSERT INTO age_invite_tokens (professional_id, token, email, expira_at)
+    VALUES (${profId}, ${token}, ${email}, ${expiraAt})
+  `);
+
+  const BASE = process.env.FRONTEND_URL ?? "https://site-st.vercel.app";
+  const slug = req.session.ageProfessionalSlug!;
+  const link = `${BASE}/age/${slug}?join=${token}`;
+  res.json({ ok: true, link, expiraAt });
+});
+
+// GET /api/age/:slug/invite-check?token=TOKEN — valida token público (exibe dados para o form)
+router.get("/age/:slug/invite-check", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const token = req.query.token as string | undefined;
+  if (!token) { res.status(400).json({ error: "Token obrigatório" }); return; }
+
+  const [prof] = (await db.execute(sql`
+    SELECT p.nome, p.cor, p.tipo, it.email AS email_sugerido, it.expira_at
+    FROM age_invite_tokens it
+    JOIN age_professionals p ON p.id = it.professional_id
+    WHERE it.token = ${token} AND it.used_at IS NULL AND p.slug = ${slug} AND p.ativa = true
+  `)).rows as { nome: string; cor: string; tipo: string; email_sugerido: string | null; expira_at: Date }[];
+
+  if (!prof) { res.status(404).json({ error: "Link inválido ou expirado." }); return; }
+  if (new Date(prof.expira_at) < new Date()) { res.status(410).json({ error: "Link expirado." }); return; }
+
+  res.json({ ok: true, profNome: prof.nome, profCor: prof.cor, profTipo: prof.tipo, emailSugerido: prof.email_sugerido });
+});
+
+// POST /api/age/:slug/join — paciente usa token de convite para criar conta já aprovada
+router.post("/age/:slug/join", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { token, nome, email, telefone } = req.body as { token?: string; nome?: string; email?: string; telefone?: string };
+  if (!token || !nome?.trim() || !email?.trim()) {
+    res.status(400).json({ error: "token, nome e email são obrigatórios" }); return;
+  }
+
+  const emailNorm = email.trim().toLowerCase();
+  const [inv] = (await db.execute(sql`
+    SELECT it.id, it.professional_id, it.expira_at, p.nome AS prof_nome
+    FROM age_invite_tokens it
+    JOIN age_professionals p ON p.id = it.professional_id
+    WHERE it.token = ${token} AND it.used_at IS NULL AND p.slug = ${slug} AND p.ativa = true
+  `)).rows as { id: number; professional_id: number; expira_at: Date; prof_nome: string }[];
+
+  if (!inv) { res.status(404).json({ error: "Link inválido ou já utilizado." }); return; }
+  if (new Date(inv.expira_at) < new Date()) { res.status(410).json({ error: "Link expirado." }); return; }
+
+  // Verificar se já existe paciente com esse email nesse profissional
+  const [existing] = (await db.execute(sql`
+    SELECT id FROM age_patients WHERE professional_id = ${inv.professional_id} AND email = ${emailNorm}
+  `)).rows as { id: number }[];
+  if (existing) { res.status(409).json({ error: "Já existe um cadastro com este email." }); return; }
+
+  // Criar paciente já aprovado (sem etapa de confirmação)
+  const setPasswordToken = randomUUID();
+  const tokenExpiry = new Date(Date.now() + 72 * 60 * 60 * 1000);
+  const [patient] = (await db.execute(sql`
+    INSERT INTO age_patients (professional_id, nome, email, telefone, status, reset_token, reset_token_expira_at, lgpd_consent, lgpd_consent_at)
+    VALUES (${inv.professional_id}, ${nome.trim()}, ${emailNorm}, ${telefone?.trim() || null}, 'aprovado', ${setPasswordToken}, ${tokenExpiry}, true, now())
+    RETURNING id
+  `)).rows as { id: number }[];
+
+  // Marcar token como usado
+  await db.execute(sql`UPDATE age_invite_tokens SET used_at = now() WHERE id = ${inv.id}`);
+
+  // Email com link para criar senha
+  const BASE = process.env.FRONTEND_URL ?? "https://site-st.vercel.app";
+  const setPasswordLink = `${BASE}/age/${slug}?set-password=${setPasswordToken}`;
+  try {
+    const transporter = createTransport({ service: "gmail", auth: { user: GMAIL, pass: GMAIL_PASS } });
+    await transporter.sendMail({
+      from: `"SABIÁ — Age" <${GMAIL}>`, to: emailNorm,
+      subject: `Bem-vinda! Crie sua senha para acessar sua área com ${inv.prof_nome}`,
+      text: `Olá ${nome.trim()},\n\n${inv.prof_nome} te convidou para acessar sua área de paciente!\n\nClique no link abaixo para criar sua senha:\n\n${setPasswordLink}\n\nO link expira em 72 horas.\n\n— SABIÁ`,
+    });
+  } catch (err) {
+    logger.error("convite: erro ao enviar email", err);
+  }
+
+  logger.info(`convite: paciente ${patient.id} criado via convite (prof ${inv.professional_id})`);
+  res.json({ ok: true, message: "Cadastro criado! Verifique seu email para criar sua senha." });
+});
+
 // ─── Auth do paciente ─────────────────────────────────────────────────────────
 
 function requirePatientAuth(req: any, res: any, next: any) {

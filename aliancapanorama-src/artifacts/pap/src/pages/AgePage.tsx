@@ -208,6 +208,19 @@ export function AgePage() {
   const [setPwStatus, setSetPwStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [setPwMsg, setSetPwMsg] = useState("");
 
+  // Convite de pré-aprovação (I564)
+  const [inviteModal, setInviteModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteLink, setInviteLink] = useState("");
+  const [inviteLoading, setInviteLoading] = useState(false);
+  // Join via ?join=TOKEN (paciente abre link de convite)
+  const [joinToken, setJoinToken] = useState("");
+  const [joinProfNome, setJoinProfNome] = useState("");
+  const [joinProfCor, setJoinProfCor] = useState("#2dd4bf");
+  const [joinForm, setJoinForm] = useState({ nome: "", email: "", telefone: "" });
+  const [joinStatus, setJoinStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [joinMsg, setJoinMsg] = useState("");
+
   // Alerta de tratamento
   const [alertandoId, setAlertandoId] = useState<number | null>(null);
   const [alertaMsg, setAlertaMsg] = useState<Record<number, string>>({});
@@ -326,6 +339,29 @@ export function AgePage() {
         window.history.replaceState({}, "", window.location.pathname);
       })
       .catch(() => { setConfirmStatus("error"); setConfirmMsg("Sem conexão."); });
+  }, [slug]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Link de convite via ?join=TOKEN na URL (I564)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tok = params.get("join");
+    if (!tok || !slug) return;
+    setJoinToken(tok);
+    window.history.replaceState({}, "", window.location.pathname);
+    fetch(`${API}/api/age/${slug}/invite-check?token=${encodeURIComponent(tok)}`)
+      .then(r => r.json())
+      .then((d: { ok?: boolean; profNome?: string; profCor?: string; emailSugerido?: string; error?: string }) => {
+        if (d.ok) {
+          setJoinProfNome(d.profNome ?? "");
+          setJoinProfCor(d.profCor ?? "#2dd4bf");
+          if (d.emailSugerido) setJoinForm(f => ({ ...f, email: d.emailSugerido! }));
+        } else {
+          setJoinToken("");
+          setJoinStatus("error");
+          setJoinMsg(d.error ?? "Link inválido.");
+        }
+      })
+      .catch(() => { setJoinToken(""); setJoinStatus("error"); setJoinMsg("Sem conexão."); });
   }, [slug]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cancelamento / reagendamento via ?cancel= ou ?reschedule= na URL
@@ -631,6 +667,37 @@ export function AgePage() {
     } catch { setForgotMsg("Sem conexão."); }
   }
 
+  async function gerarConvite(e: React.FormEvent) {
+    e.preventDefault();
+    setInviteLoading(true); setInviteLink("");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/invite`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: inviteEmail || null }),
+      });
+      const d = await r.json() as { ok?: boolean; link?: string; error?: string };
+      if (d.ok && d.link) setInviteLink(d.link);
+      else alert(d.error ?? "Erro ao gerar convite.");
+    } catch { alert("Sem conexão."); }
+    setInviteLoading(false);
+  }
+
+  async function handleJoin(e: React.FormEvent) {
+    e.preventDefault();
+    setJoinStatus("loading"); setJoinMsg("");
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: joinToken, ...joinForm }),
+      });
+      const d = await r.json() as { ok?: boolean; message?: string; error?: string };
+      if (d.ok) { setJoinStatus("done"); setJoinMsg(d.message ?? "Cadastro criado! Verifique seu email."); }
+      else { setJoinStatus("error"); setJoinMsg(d.error ?? "Erro ao criar cadastro."); }
+    } catch { setJoinStatus("error"); setJoinMsg("Sem conexão."); }
+  }
+
   async function handleSetPassword(e: React.FormEvent) {
     e.preventDefault();
     if (setPwForm.password !== setPwForm.confirm) { setSetPwMsg("As senhas não coincidem."); return; }
@@ -776,6 +843,54 @@ export function AgePage() {
       <div style={{ color: "#f87171", fontSize: 14 }}>{error || "Profissional não encontrada."}</div>
     </div>
   );
+
+  // ─── TELA DE CONVITE (paciente abre link ?join=TOKEN) ────────────────────────
+  if (joinToken && joinStatus !== "done") {
+    const jColor = joinProfCor || "#2dd4bf";
+    return (
+      <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+        <div style={{ background: "#0f1318", border: `1px solid ${jColor}44`, borderRadius: 16, padding: 28, width: 380, maxWidth: "100%" }}>
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <span style={{ fontSize: 32 }}>🐦</span>
+            <h2 style={{ color: jColor, fontSize: 18, fontWeight: 700, margin: "8px 0 4px" }}>Você foi convidado!</h2>
+            <p style={{ color: "#94a3b8", fontSize: 13 }}>{joinProfNome || "A profissional"} te convidou para acessar sua área de paciente.</p>
+          </div>
+          {joinStatus === "error" && (
+            <div style={{ background: "#2d0a0a", border: "1px solid #f8717144", borderRadius: 8, padding: "10px 14px", color: "#f87171", fontSize: 13, marginBottom: 16 }}>{joinMsg}</div>
+          )}
+          <form onSubmit={handleJoin} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <input required placeholder="Seu nome completo" value={joinForm.nome}
+              onChange={e => setJoinForm(f => ({ ...f, nome: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${jColor}33`, borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+            <input required type="email" placeholder="Seu email" value={joinForm.email}
+              onChange={e => setJoinForm(f => ({ ...f, email: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${jColor}33`, borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+            <input placeholder="Telefone (opcional)" value={joinForm.telefone}
+              onChange={e => setJoinForm(f => ({ ...f, telefone: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${jColor}33`, borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+            <p style={{ color: "#475569", fontSize: 11, margin: 0 }}>
+              Ao continuar, você concorda com o uso dos seus dados para gerenciamento de consultas. Seus dados ficam sob responsabilidade de {joinProfNome || "a profissional"}.
+            </p>
+            <button type="submit" disabled={joinStatus === "loading"}
+              style={{ background: jColor, border: "none", borderRadius: 8, color: "#080c10", padding: "12px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              {joinStatus === "loading" ? "Criando conta…" : "Criar minha conta"}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+  if (joinToken && joinStatus === "done") {
+    return (
+      <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+        <div style={{ textAlign: "center", maxWidth: 360 }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+          <h2 style={{ color: "#4ade80", fontSize: 18, fontWeight: 700 }}>Conta criada!</h2>
+          <p style={{ color: "#94a3b8", fontSize: 14 }}>{joinMsg}</p>
+        </div>
+      </div>
+    );
+  }
 
   // ─── LOGIN MODAL ─────────────────────────────────────────────────────────────
 
@@ -1130,7 +1245,50 @@ export function AgePage() {
 
     return (
       <div style={{ padding: "1rem" }}>
-        <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Pacientes</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, margin: 0 }}>Pacientes</h2>
+          <button onClick={() => { setInviteModal(true); setInviteLink(""); setInviteEmail(""); }}
+            style={{ background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "7px 14px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+            + Convidar paciente
+          </button>
+        </div>
+
+        {/* Modal gerar convite */}
+        {inviteModal && (
+          <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center" }}
+            onClick={e => { if (e.target === e.currentTarget) setInviteModal(false); }}>
+            <div style={{ background: "#0f1318", border: `1px solid ${color}44`, borderRadius: 16, padding: 24, width: 360, maxWidth: "90vw" }}>
+              <h3 style={{ color, fontSize: 15, fontWeight: 700, marginBottom: 16 }}>🔗 Link de convite</h3>
+              <p style={{ color: "#94a3b8", fontSize: 12, marginBottom: 16 }}>
+                O paciente abre o link e cria a conta já aprovada — sem esperar aprovação manual.
+              </p>
+              <form onSubmit={gerarConvite}>
+                <input
+                  type="email" placeholder="Email do paciente (opcional)" value={inviteEmail}
+                  onChange={e => setInviteEmail(e.target.value)}
+                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, marginBottom: 12, boxSizing: "border-box" }}
+                />
+                <button type="submit" disabled={inviteLoading}
+                  style={{ width: "100%", background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  {inviteLoading ? "Gerando…" : "Gerar link"}
+                </button>
+              </form>
+              {inviteLink && (
+                <div style={{ marginTop: 16 }}>
+                  <div style={{ background: "#1a2030", borderRadius: 8, padding: "10px 12px", fontSize: 11, color: "#94a3b8", wordBreak: "break-all", marginBottom: 8 }}>
+                    {inviteLink}
+                  </div>
+                  <button onClick={() => { navigator.clipboard.writeText(inviteLink); }}
+                    style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, color, padding: "8px 0", cursor: "pointer", fontWeight: 600, fontSize: 12 }}>
+                    📋 Copiar link
+                  </button>
+                  <div style={{ color: "#4ade80", fontSize: 11, marginTop: 8, textAlign: "center" }}>Válido por 7 dias. Uma vez usado, expira.</div>
+                </div>
+              )}
+              <button onClick={() => setInviteModal(false)} style={{ marginTop: 12, width: "100%", background: "none", border: "none", color: "#475569", fontSize: 12, cursor: "pointer" }}>Fechar</button>
+            </div>
+          </div>
+        )}
 
         {/* Filtro de status */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>

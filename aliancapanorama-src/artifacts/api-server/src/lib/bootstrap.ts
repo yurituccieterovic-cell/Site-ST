@@ -332,7 +332,20 @@ export async function ensureAgeTables(): Promise<void> {
       created_at    TIMESTAMPTZ DEFAULT now()
     )
   `);
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras)");
+  // Links de convite gerados pelo profissional para pré-aprovação de pacientes (I564)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_invite_tokens (
+      id              SERIAL      PRIMARY KEY,
+      professional_id INTEGER     NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      token           TEXT        NOT NULL UNIQUE,
+      email           TEXT,
+      used_at         TIMESTAMPTZ,
+      expira_at       TIMESTAMPTZ NOT NULL,
+      created_at      TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_invite_tokens_token ON age_invite_tokens(token) WHERE used_at IS NULL`);
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

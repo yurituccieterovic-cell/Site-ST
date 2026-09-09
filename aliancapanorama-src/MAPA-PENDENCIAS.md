@@ -123,7 +123,7 @@
 | 107 | Age — I552: Lembretes automáticos email (48h/24h antes da consulta) | — | ✅ commit 4b544cf |
 | 108 | Age — I553: Feed operacional (log de eventos no painel profissional) | — | ✅ commit 0ba156f |
 | 109 | Age — I554: SABIÁ popup flutuante persistente | — | ✅ commit c5ddadb |
-| 110 | Age — I558: Confirmação Sim/Não para ações irreversíveis no painel | — | ⏳ |
+| 110 | Age — I558: Confirmação Sim/Não para ações irreversíveis no painel | — | ✅ commit 8b3a6e5 (S120c) |
 | 111 | Age — I564: Link de convite para pré-aprovação de paciente | — | ⏳ |
 | 112 | Age — Compliance: Política de Privacidade + Termos de Uso + checkbox consentimento | Assembleia | ✅ commit 4b544cf |
 | 113 | Age — Landing page pública (produto comercial) + formulário de interesse | Assembleia decidir posicionamento | ⏳ |
@@ -145,7 +145,7 @@
 | 228 | Age Bloco 4 — Próxima sessão automática: após consulta sugere datas (7/14/21/30 dias); 1 clique | — | ⏳ |
 | 229 | Age Bloco 2 — Ficha interna: profissional preenche no sistema após conhecer o paciente em conversa | — | ⏳ |
 | 230 | Mayumi — conta criada (login:mayumi tier:3) + email enviado com credenciais | ✅ | ✅ 2026-09-08 |
-| 231 | Age — Painel Mayumi gestora: visão consolidada (agenda+financeiro+alertas) — próxima frente de código | — | ⏳ |
+| 231 | Age — Painel Mayumi gestora: visão consolidada (agenda+financeiro+alertas) — próxima frente de código | — | ✅ commit 193c829 (S119v) |
 | 232 | Age — Reunião Lisange+Suzana: levantar 5 perguntas de ficha por profissional + preferência de preenchimento | Yuri+Mayumi marcar | ⏳ URGENTE |
 | 233 | Age — Decisão: prazo mínimo cancelamento (24h? 48h? por profissional?) + taxa (50%? 100%?) | Mayumi | ⏳ |
 | 234 | Age — Decisão: modelo de cobrança do Age (mensalidade por profissional vs % por consulta) | Yuri | ⏳ |
