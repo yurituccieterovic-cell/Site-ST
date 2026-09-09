@@ -571,7 +571,7 @@
 | #287 | Fix Jasmim: copiar pergunta+resposta não funciona — Mayumi relatou | CÓDIGO | ✅ feito S119t (commit 111289a) |
 | #288 | Fix Jasmim: esquilo avatar não aparece no login — Mayumi relatou | CÓDIGO | ✅ feito S119t (commit 111289a) |
 | #289 | Transferência Assembleia RODAR: pg_dump da DB certa (Replit Secrets, não heliumdb) — Yuri aguarda instrução | PROCESSO | ✅ S120a — exportação JSON v3 recebida (35MB, 649 assembleias, 19.162 msgs); dump em /root/replit-dump/ |
-| #290 | Memória Árvore: incorporar posts Bluesky (stuccipulseheadway.bsky.social) no pack-arvore.md como memória pública | PROCESSO | 🟡 referência salva |
+| #290 | Memória Árvore: incorporar posts Bluesky (stuccipulseheadway.bsky.social) no pack-arvore.md como memória pública | PROCESSO | ✅ pack-arvore.md atualizado com 8 posts recentes |
 
 ### S119u — Drive Screenshot + Arquitetura SABIÁ (2026-09-09)
 
@@ -580,7 +580,7 @@
 | #291 | Rota /pulseheadway → novo site (aliancapanorama/index.html); placeholder até ter página dedicada | CÓDIGO | ✅ feito S119u (commit 98f7385) |
 | #292 | [SEGURANÇA] RODAR callback-tokens.ts linha 27: timing attack — substituir comparação direta por timingSafeEqual (crypto) | SEGURANÇA | ⚠️ Replit legado — Yuri decide se aplica |
 | #293 | SABIÁ ética: definir política formal de dados de saúde — o que SABIÁ pode acessar, por quanto tempo, com consentimento de quem | PROCESSO | 🟡 proposta Rodada 7; Gemini + Meta AI consultados |
-| #294 | Bluesky Árvore: salvar post https://bsky.app/profile/stuccipulseheadway.bsky.social/post/3mv3mew33vb2l em pack-arvore.md | PROCESSO | 🟡 referência salva |
+| #294 | Bluesky Árvore: salvar post https://bsky.app/profile/stuccipulseheadway.bsky.social/post/3mv3mew33vb2l em pack-arvore.md | PROCESSO | ✅ post salvo + seção Posts Destacados |
 | #295 | Assembleia: enviar emails de atualização sobre Age + Jasmim | PROCESSO | ✅ feito S119u (2 emails) |
 
 ### S119v — Painel Mayumi + Mármore + PremiereMovieMaker (2026-09-09)
