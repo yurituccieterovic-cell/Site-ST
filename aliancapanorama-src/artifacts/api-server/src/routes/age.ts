@@ -734,6 +734,49 @@ router.patch("/age/:slug/appointments/:id", requireAgeAuth, async (req, res): Pr
     .returning();
 
   if (!updated) { res.status(404).json({ error: "Agendamento não encontrado" }); return; }
+
+  // ─── Bloco 3: ações pós-"realizado" ──────────────────────────────────────
+  if (status === "realizado") {
+    const profId = req.session.ageProfessionalId!;
+    const profNome = req.session.ageProfessionalNome ?? "profissional";
+
+    // 1. Email de resumo para o paciente
+    if (updated.patientEmail) {
+      const dt = updated.dataHora
+        ? new Date(updated.dataHora).toLocaleString("pt-BR", { dateStyle: "full", timeStyle: "short" })
+        : "—";
+      const canal = updated.canal ?? "presencial";
+      const obs   = updated.observacoes ? `\n\nObservações: ${updated.observacoes}` : "";
+      sendEmail(
+        updated.patientEmail,
+        `Resumo da sua consulta — ${profNome}`,
+        `Olá ${updated.patientNome ?? ""},\n\nSua consulta com ${profNome} foi realizada com sucesso.\n\n📅 Data: ${dt}\n📍 Modalidade: ${canal}${obs}\n\nCaso precise de mais informações ou queira agendar outra consulta, entre em contato.\n\n— SABIÁ · Age`,
+      ).catch(e => logger.error({ err: e }, "age: email resumo realizado"));
+    }
+
+    // 2. Próxima sessão automática (se profissional configurou intervalo > 0)
+    const profRow = await db.execute(sql`SELECT intervalo_sessao_semanas, nome FROM age_professionals WHERE id = ${profId} LIMIT 1`);
+    const profData = (profRow as any).rows?.[0] as { intervalo_sessao_semanas: number; nome: string } | undefined;
+    const intervaloSemanas = profData?.intervalo_sessao_semanas ?? 0;
+    let proximaSlot: Date | null = null;
+    if (intervaloSemanas > 0 && updated.dataHora) {
+      const base = new Date(updated.dataHora);
+      proximaSlot = new Date(base.getTime() + intervaloSemanas * 7 * 24 * 3600 * 1000);
+      await db.insert(ageAppointmentsTable).values({
+        professionalId: profId,
+        dataHora: proximaSlot,
+        duracaoMin: updated.duracaoMin ?? 50,
+        status: "disponivel",
+        canal: updated.canal ?? "presencial",
+        observacoes: `Sessão automática — gerada após consulta #${id}`,
+      });
+      logger.info({ profId, proximaSlot }, "age: próxima sessão automática criada");
+    }
+
+    res.json({ ...updated, proximaSlotCriada: proximaSlot?.toISOString() ?? null });
+    return;
+  }
+
   res.json(updated);
 });
 
@@ -1181,6 +1224,29 @@ router.patch("/age/:slug/payment-options", requireAgeAuth, async (req, res): Pro
   const filtered = Object.fromEntries(Object.entries(opcoes).filter(([k, v]) => allowed.includes(k) && typeof v === "boolean"));
   await db.execute(sql`UPDATE age_professionals SET opcoes_pagamento = ${JSON.stringify(filtered)}::jsonb WHERE slug = ${slug}`);
   res.json({ ok: true, opcoes: filtered });
+});
+
+// ─── Config geral da profissional ────────────────────────────────────────────
+
+// GET /api/age/:slug/config
+router.get("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const result = await db.execute(sql`SELECT intervalo_sessao_semanas FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const row = (result as any).rows?.[0];
+  if (!row) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+  res.json({ intervaloSessaoSemanas: row.intervalo_sessao_semanas ?? 0 });
+});
+
+// PATCH /api/age/:slug/config
+router.patch("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  if (req.session.ageProfessionalSlug !== slug) { res.status(403).json({ error: "Sem permissão" }); return; }
+  const { intervaloSessaoSemanas } = req.body as { intervaloSessaoSemanas?: number };
+  if (intervaloSessaoSemanas !== undefined) {
+    const v = Math.max(0, Math.min(52, Math.floor(intervaloSessaoSemanas)));
+    await db.execute(sql`UPDATE age_professionals SET intervalo_sessao_semanas = ${v} WHERE slug = ${slug}`);
+  }
+  res.json({ ok: true });
 });
 
 // ─── Gestora Age (Painel Mayumi) ──────────────────────────────────────────────

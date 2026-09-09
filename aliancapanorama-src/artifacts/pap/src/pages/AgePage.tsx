@@ -114,6 +114,9 @@ export function AgePage() {
   const [paymentOpts, setPaymentOpts] = useState<Record<string, boolean>>({ presencial_dinheiro: true });
   const [paymentSaving, setPaymentSaving] = useState(false);
   const [paymentMsg, setPaymentMsg] = useState("");
+  const [intervaloSemanas, setIntervaloSemanas] = useState(0);
+  const [intervaloSaving, setIntervaloSaving] = useState(false);
+  const [intervaloMsg, setIntervaloMsg] = useState("");
 
   // Patient registration (public)
   const [showRegister, setShowRegister] = useState(false);
@@ -271,6 +274,8 @@ export function AgePage() {
       .then(r => r.json()).then(setRules).catch(() => {});
     fetch(`${API}/api/age/${slug}/payment-options`, { credentials: "include" })
       .then(r => r.ok ? r.json() : null).then(d => { if (d?.opcoes) setPaymentOpts(d.opcoes); }).catch(() => {});
+    fetch(`${API}/api/age/${slug}/config`, { credentials: "include" })
+      .then(r => r.ok ? r.json() : null).then(d => { if (d) setIntervaloSemanas(d.intervaloSessaoSemanas ?? 0); }).catch(() => {});
   }, [mode, slug]);
 
   const loadExceptions = useCallback(() => {
@@ -1393,6 +1398,41 @@ export function AgePage() {
             }}
           >{paymentSaving ? "Salvando…" : "Salvar"}</button>
           {paymentMsg && <span style={{ marginLeft: 12, color: paymentMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{paymentMsg}</span>}
+        </div>
+
+        {/* Próxima sessão automática */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 8 }}>🔁 Próxima sessão automática</div>
+          <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>
+            Quando uma consulta é marcada como "realizada", o sistema cria automaticamente o próximo slot disponível no intervalo definido.
+            Coloque 0 para desativar.
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <input
+              type="number" min={0} max={52} value={intervaloSemanas}
+              onChange={e => setIntervaloSemanas(Math.max(0, parseInt(e.target.value) || 0))}
+              style={{ width: 70, background: "#080c10", border: `1px solid ${color}44`, borderRadius: 8, color: "#e2e8f0", padding: "8px 12px", fontSize: 14, outline: "none" }}
+            />
+            <span style={{ color: "#94a3b8", fontSize: 13 }}>semana(s) · {intervaloSemanas === 0 ? "desativado" : intervaloSemanas === 1 ? "semanal" : intervaloSemanas === 2 ? "quinzenal" : intervaloSemanas === 4 ? "mensal" : `${intervaloSemanas} sem`}</span>
+          </div>
+          <button
+            onClick={async () => {
+              setIntervaloSaving(true); setIntervaloMsg("");
+              try {
+                const r = await fetch(`${API}/api/age/${slug}/config`, {
+                  method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include",
+                  body: JSON.stringify({ intervaloSessaoSemanas: intervaloSemanas }),
+                });
+                setIntervaloMsg(r.ok ? "✓ Salvo" : "Erro ao salvar.");
+              } catch { setIntervaloMsg("Sem conexão."); }
+              setIntervaloSaving(false);
+              setTimeout(() => setIntervaloMsg(""), 2500);
+            }}
+            disabled={intervaloSaving}
+            style={{ marginTop: 12, background: intervaloSaving ? "#333" : color, border: "none", borderRadius: 8, padding: "10px 20px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: intervaloSaving ? "default" : "pointer" }}>
+            {intervaloSaving ? "Salvando…" : "Salvar"}
+          </button>
+          {intervaloMsg && <span style={{ marginLeft: 12, color: intervaloMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{intervaloMsg}</span>}
         </div>
       </div>
     );

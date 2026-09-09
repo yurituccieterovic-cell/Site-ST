@@ -319,6 +319,8 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_documents_patient ON age_documents(patient_id, professional_id)`);
   // Opções de pagamento (Modelo C — profissional habilita as que aceita)
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS opcoes_pagamento JSONB NOT NULL DEFAULT '{"presencial_dinheiro": true}'`);
+  // Intervalo automático entre sessões (em semanas; 0 = desativado)
+  await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS intervalo_sessao_semanas INTEGER NOT NULL DEFAULT 0`);
   // Gestoras Age (ex: Mayumi — admin de múltiplas profissionais)
   await db.execute(sql`
     CREATE TABLE IF NOT EXISTS age_gestoras (
