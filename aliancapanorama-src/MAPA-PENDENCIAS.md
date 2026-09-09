@@ -143,7 +143,7 @@
 | 226 | Jasmim — Notas/perguntas entre posts: tipo=nota/pergunta, MYYM responde automaticamente | — | ⏳ |
 | 227 | Age Bloco 3 — PDF automático ao final da consulta: profissional fala → sistema gera PDF | — | ⏳ |
 | 228 | Age Bloco 4 — Próxima sessão automática: após consulta sugere datas (7/14/21/30 dias); 1 clique | — | ⏳ |
-| 229 | Age Bloco 2 — Ficha interna: profissional preenche no sistema após conhecer o paciente em conversa | — | ⏳ |
+| 229 | Age Bloco 2 — Ficha interna: profissional preenche no sistema após conhecer o paciente em conversa | — | ✅ commit fe57ee6 (S121) |
 | 230 | Mayumi — conta criada (login:mayumi tier:3) + email enviado com credenciais | ✅ | ✅ 2026-09-08 |
 | 231 | Age — Painel Mayumi gestora: visão consolidada (agenda+financeiro+alertas) — próxima frente de código | — | ✅ commit 193c829 (S119v) |
 | 232 | Age — Reunião Lisange+Suzana: levantar 5 perguntas de ficha por profissional + preferência de preenchimento | Yuri+Mayumi marcar | ⏳ URGENTE |
