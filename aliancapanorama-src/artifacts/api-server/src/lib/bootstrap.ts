@@ -363,7 +363,37 @@ export async function ensureAgeTables(): Promise<void> {
     )
   `);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_notas_prof ON age_notas(professional_id, criado_em DESC)`);
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas)");
+
+  // Painel Mayumi — mensalidades e alertas (I735-I754)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_mensalidades (
+      id              SERIAL      PRIMARY KEY,
+      professional_id INTEGER     NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      mes             TEXT        NOT NULL,
+      pago            BOOLEAN     NOT NULL DEFAULT false,
+      pago_at         TIMESTAMPTZ,
+      valor_reais     INTEGER,
+      created_at      TIMESTAMPTZ DEFAULT now(),
+      UNIQUE(professional_id, mes)
+    )
+  `);
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_alertas (
+      id              SERIAL      PRIMARY KEY,
+      professional_id INTEGER     NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      tipo            TEXT        NOT NULL DEFAULT 'info',
+      conteudo        TEXT        NOT NULL,
+      expira_em       TIMESTAMPTZ,
+      lido_em         TIMESTAMPTZ,
+      created_at      TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_alertas_prof ON age_alertas(professional_id, created_at DESC) WHERE lido_em IS NULL`);
+  await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS config_aprovacao JSONB NOT NULL DEFAULT '{"aprovacao_manual": true}'`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS bloqueio_mensalidade BOOLEAN NOT NULL DEFAULT false`);
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS bloqueio_at TIMESTAMPTZ`);
+
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

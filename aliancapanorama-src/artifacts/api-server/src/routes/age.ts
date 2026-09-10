@@ -1506,31 +1506,159 @@ router.post("/age/gestora/logout", async (req, res): Promise<void> => {
 
 // GET /api/age/gestora/dashboard
 router.get("/age/gestora/dashboard", requireGestoraAuth, async (req, res): Promise<void> => {
-  const profisRes = await db.execute(sql`SELECT id, slug, nome, cor, tipo FROM age_professionals WHERE ativa = true ORDER BY id`);
-  const hoje = new Date().toISOString().slice(0, 10);
-  const amanha = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+  const profisRes = await db.execute(sql`SELECT id, slug, nome, cor, tipo, email FROM age_professionals WHERE ativa = true ORDER BY id`);
+  const hoje    = new Date().toISOString().slice(0, 10);
+  const amanha  = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+  const mesAtual = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const h30     = new Date(Date.now() - 30 * 86_400_000).toISOString();
+
   const profissionais = [];
-  for (const prof of (profisRes as any).rows as { id: number; slug: string; nome: string; cor: string; tipo: string }[]) {
-    const pendRes   = await db.execute(sql`SELECT id, nome, email, telefone, created_at FROM age_patients WHERE professional_id = ${prof.id} AND status = 'pendente_aprovacao' ORDER BY created_at ASC LIMIT 30`);
-    const agendaRes = await db.execute(sql`SELECT id, patient_nome, data_hora, status, canal FROM age_appointments WHERE professional_id = ${prof.id} AND data_hora >= ${hoje}::timestamptz AND data_hora < ${amanha}::timestamptz AND status NOT IN ('cancelado','bloqueado') ORDER BY data_hora ASC LIMIT 20`);
-    const totRes    = await db.execute(sql`SELECT COUNT(*) AS n FROM age_patients WHERE professional_id = ${prof.id} AND status = 'aprovado'`);
+  for (const prof of (profisRes as any).rows as { id: number; slug: string; nome: string; cor: string; tipo: string; email: string | null }[]) {
+    const [pendRes, agendaRes, totRes, realizadosRes, bloqRes, mensRes, alertasRes] = await Promise.all([
+      db.execute(sql`SELECT id, nome, email, telefone, created_at FROM age_patients WHERE professional_id = ${prof.id} AND status = 'pendente_aprovacao' ORDER BY created_at ASC LIMIT 30`),
+      db.execute(sql`SELECT id, patient_nome, data_hora, status, canal FROM age_appointments WHERE professional_id = ${prof.id} AND data_hora >= ${hoje}::timestamptz AND data_hora < ${amanha}::timestamptz AND status NOT IN ('cancelado','bloqueado') ORDER BY data_hora ASC LIMIT 20`),
+      db.execute(sql`SELECT COUNT(*) AS n FROM age_patients WHERE professional_id = ${prof.id} AND status = 'aprovado' AND bloqueio_mensalidade = false`),
+      db.execute(sql`SELECT COUNT(*) AS n FROM age_appointments WHERE professional_id = ${prof.id} AND status = 'realizado' AND data_hora >= ${h30}::timestamptz`),
+      db.execute(sql`SELECT COUNT(*) AS n FROM age_patients WHERE professional_id = ${prof.id} AND bloqueio_mensalidade = true`),
+      db.execute(sql`SELECT pago, pago_at, valor_reais FROM age_mensalidades WHERE professional_id = ${prof.id} AND mes = ${mesAtual} LIMIT 1`),
+      db.execute(sql`SELECT COUNT(*) AS n FROM age_alertas WHERE professional_id = ${prof.id} AND lido_em IS NULL AND (expira_em IS NULL OR expira_em > now())`),
+    ]);
+    const mensRow = (mensRes as any).rows?.[0];
     profissionais.push({
       ...prof,
-      pacientesPendentes: (pendRes   as any).rows,
-      agendaHoje:         (agendaRes as any).rows,
-      totalPacientes:     parseInt(((totRes as any).rows[0] as any)?.n ?? "0"),
+      pacientesPendentes:    (pendRes   as any).rows,
+      agendaHoje:            (agendaRes as any).rows,
+      totalPacientes:        parseInt(((totRes as any).rows[0] as any)?.n ?? "0"),
+      agendamentosRealizados:parseInt(((realizadosRes as any).rows[0] as any)?.n ?? "0"),
+      inadimplentes:         parseInt(((bloqRes as any).rows[0] as any)?.n ?? "0"),
+      alertasAtivos:         parseInt(((alertasRes as any).rows[0] as any)?.n ?? "0"),
+      mensalidadeAtual: mensRow
+        ? { mes: mesAtual, pago: mensRow.pago, pagoAt: mensRow.pago_at, valorReais: mensRow.valor_reais }
+        : { mes: mesAtual, pago: false, pagoAt: null, valorReais: null },
     });
   }
   res.json({ profissionais });
 });
 
-// PATCH /api/age/gestora/pacientes/:id/status
+// PATCH /api/age/gestora/pacientes/:id/status — aprova/recusa com notificação 4 canais
 router.patch("/age/gestora/pacientes/:id/status", requireGestoraAuth, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id);
   const { status } = req.body as { status?: string };
   if (!["aprovado", "recusado"].includes(status ?? "")) { res.status(400).json({ error: "Status inválido" }); return; }
+
+  const pacRes = await db.execute(sql`
+    SELECT p.id, p.nome, p.email, p.professional_id,
+           pr.nome AS prof_nome, pr.email AS prof_email, pr.slug AS prof_slug
+    FROM age_patients p
+    JOIN age_professionals pr ON pr.id = p.professional_id
+    WHERE p.id = ${id} LIMIT 1
+  `);
+  const pac = (pacRes as any).rows?.[0];
+  if (!pac) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+
   await db.execute(sql`UPDATE age_patients SET status = ${status}, updated_at = now() WHERE id = ${id}`);
+
+  if (status === "aprovado" && pac.email) {
+    // Canal 1: email ao paciente com link de criação de senha
+    const resetTok = randomUUID();
+    const resetExp = new Date(Date.now() + 72 * 3600 * 1000);
+    await db.execute(sql`UPDATE age_patients SET reset_token = ${resetTok}, reset_token_expira_at = ${resetExp} WHERE id = ${id}`);
+    const setPasswordLink = `${FRONT_URL}/age/${pac.prof_slug}?set-password=${resetTok}`;
+    sendEmail(
+      pac.email,
+      `Cadastro aprovado — crie sua senha`,
+      `Olá ${pac.nome},\n\nSeu cadastro com ${pac.prof_nome} foi aprovado!\n\nClique no link para criar sua senha:\n${setPasswordLink}\n\nO link expira em 72 horas.\n\n— SABIÁ`,
+    ).catch(e => logger.error({ err: e }, "gestora: sendEmail paciente aprovado"));
+
+    // Canal 2: email ao profissional (se tiver email)
+    if (pac.prof_email) {
+      sendEmail(
+        pac.prof_email,
+        `[Age] Novo paciente aprovado: ${pac.nome}`,
+        `Olá ${pac.prof_nome},\n\n${pac.nome} (${pac.email}) foi aprovada pela gestora e já pode acessar sua área.\n\n— SABIÁ`,
+      ).catch(e => logger.error({ err: e }, "gestora: sendEmail profissional novo paciente"));
+    }
+
+    // Canal 3: feed (age_notas) — nota visível para o profissional
+    await db.execute(sql`
+      INSERT INTO age_notas (professional_id, tipo, conteudo, autor)
+      VALUES (${pac.professional_id}, 'anuncio', ${"Paciente " + pac.nome + " aprovada pela gestora e já pode acessar sua área."}, 'gestora')
+    `).catch(() => {});
+
+    // Canal 4: alerta dashboard por 7 dias
+    const expiraAlertas = new Date(Date.now() + 7 * 86_400_000);
+    await db.execute(sql`
+      INSERT INTO age_alertas (professional_id, tipo, conteudo, expira_em)
+      VALUES (${pac.professional_id}, 'novo_paciente', ${"Nova paciente aprovada: " + pac.nome}, ${expiraAlertas})
+    `).catch(() => {});
+  }
+
   res.json({ ok: true });
+});
+
+// POST /api/age/gestora/profissionais/:profId/bloquear — bloquear N pacientes por inadimplência
+router.post("/age/gestora/profissionais/:profId/bloquear", requireGestoraAuth, async (req, res): Promise<void> => {
+  const profId = parseInt(req.params.profId);
+  const { quantidade } = req.body as { quantidade?: number };
+  if (!quantidade || quantidade < 1 || quantidade > 100) {
+    res.status(400).json({ error: "quantidade deve ser entre 1 e 100" }); return;
+  }
+
+  const pacRes = await db.execute(sql`
+    SELECT id FROM age_patients
+    WHERE professional_id = ${profId} AND status = 'aprovado' AND bloqueio_mensalidade = false
+    ORDER BY created_at DESC
+    LIMIT ${quantidade}
+  `);
+  const ids = ((pacRes as any).rows as { id: number }[]).map(r => r.id);
+  if (ids.length === 0) { res.status(404).json({ error: "Nenhum paciente disponível para bloquear" }); return; }
+
+  await db.execute(sql`
+    UPDATE age_patients SET bloqueio_mensalidade = true, bloqueio_at = now()
+    WHERE id = ANY(${ids}::int[])
+  `);
+
+  // Registra no feed do profissional
+  await db.execute(sql`
+    INSERT INTO age_notas (professional_id, tipo, conteudo, autor)
+    VALUES (${profId}, 'aviso', ${`${ids.length} paciente(s) bloqueado(s) por inadimplência de mensalidade.`}, 'gestora')
+  `).catch(() => {});
+
+  res.json({ ok: true, bloqueados: ids.length });
+});
+
+// POST /api/age/gestora/profissionais/:profId/desbloquear — desbloquear todos os pacientes
+router.post("/age/gestora/profissionais/:profId/desbloquear", requireGestoraAuth, async (req, res): Promise<void> => {
+  const profId = parseInt(req.params.profId);
+  const r = await db.execute(sql`
+    UPDATE age_patients SET bloqueio_mensalidade = false, bloqueio_at = null
+    WHERE professional_id = ${profId} AND bloqueio_mensalidade = true
+    RETURNING id
+  `);
+  const n = ((r as any).rows ?? []).length;
+
+  await db.execute(sql`
+    INSERT INTO age_notas (professional_id, tipo, conteudo, autor)
+    VALUES (${profId}, 'anuncio', ${`${n} paciente(s) desbloqueado(s) — mensalidade regularizada.`}, 'gestora')
+  `).catch(() => {});
+
+  res.json({ ok: true, desbloqueados: n });
+});
+
+// PATCH /api/age/gestora/profissionais/:profId/mensalidade — registrar pagamento de mensalidade
+router.patch("/age/gestora/profissionais/:profId/mensalidade", requireGestoraAuth, async (req, res): Promise<void> => {
+  const profId = parseInt(req.params.profId);
+  const { mes, pago, valorReais } = req.body as { mes?: string; pago?: boolean; valorReais?: number };
+  const mesRef = mes ?? new Date().toISOString().slice(0, 7);
+  if (!/^\d{4}-\d{2}$/.test(mesRef)) { res.status(400).json({ error: "mes deve ser YYYY-MM" }); return; }
+
+  await db.execute(sql`
+    INSERT INTO age_mensalidades (professional_id, mes, pago, pago_at, valor_reais)
+    VALUES (${profId}, ${mesRef}, ${pago ?? true}, ${pago !== false ? new Date() : null}, ${valorReais ?? null})
+    ON CONFLICT (professional_id, mes)
+    DO UPDATE SET pago = EXCLUDED.pago, pago_at = EXCLUDED.pago_at, valor_reais = COALESCE(EXCLUDED.valor_reais, age_mensalidades.valor_reais)
+  `);
+  res.json({ ok: true, mes: mesRef, pago: pago ?? true });
 });
 
 // ─── Convites de pré-aprovação (I564) ────────────────────────────────────────
@@ -2111,6 +2239,56 @@ router.post("/age/admin/setup", async (req, res): Promise<void> => {
     .returning();
 
   res.status(201).json({ ok: true, id: prof.id, slug: prof.slug });
+});
+
+// ─── Config de aprovação automática (por profissional) ───────────────────────
+
+// GET /api/age/:slug/config/aprovacao
+router.get("/age/:slug/config/aprovacao", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const r = await db.execute(sql`SELECT config_aprovacao FROM age_professionals WHERE id = ${profId} LIMIT 1`);
+  const row = (r as any).rows?.[0];
+  res.json(row?.config_aprovacao ?? { aprovacao_manual: true });
+});
+
+// PATCH /api/age/:slug/config/aprovacao
+router.patch("/age/:slug/config/aprovacao", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const config = req.body as Record<string, unknown>;
+  const allowed = ["aprovacao_manual", "exige_email_confirmado", "exige_anamnese", "prereqs"];
+  const safe: Record<string, unknown> = {};
+  for (const k of allowed) { if (k in config) safe[k] = config[k]; }
+  await db.execute(sql`
+    UPDATE age_professionals
+    SET config_aprovacao = config_aprovacao || ${JSON.stringify(safe)}::jsonb
+    WHERE id = ${profId}
+  `);
+  res.json({ ok: true, config: safe });
+});
+
+// GET /api/age/:slug/alertas — alertas do dashboard do profissional
+router.get("/age/:slug/alertas", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const r = await db.execute(sql`
+    SELECT id, tipo, conteudo, created_at, expira_em
+    FROM age_alertas
+    WHERE professional_id = ${profId} AND lido_em IS NULL
+      AND (expira_em IS NULL OR expira_em > now())
+    ORDER BY created_at DESC
+    LIMIT 20
+  `);
+  res.json({ alertas: (r as any).rows ?? [] });
+});
+
+// POST /api/age/:slug/alertas/:id/ler — marcar alerta como lido
+router.post("/age/:slug/alertas/:id/ler", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const alertaId = parseInt(req.params.id);
+  await db.execute(sql`
+    UPDATE age_alertas SET lido_em = now()
+    WHERE id = ${alertaId} AND professional_id = ${profId}
+  `);
+  res.json({ ok: true });
 });
 
 export default router;

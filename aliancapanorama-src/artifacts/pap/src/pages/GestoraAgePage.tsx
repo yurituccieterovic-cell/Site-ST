@@ -6,11 +6,16 @@ const API = import.meta.env.VITE_API_URL ?? "";
 
 type Paciente = { id: number; nome: string; email: string; telefone?: string; created_at: string };
 type Agendamento = { id: number; patient_nome: string; data_hora: string; status: string; canal: string };
+type Mensalidade = { mes: string; pago: boolean; pagoAt: string | null; valorReais: number | null };
 type Profissional = {
-  id: number; slug: string; nome: string; cor: string; tipo: string;
+  id: number; slug: string; nome: string; cor: string; tipo: string; email: string | null;
   pacientesPendentes: Paciente[];
   agendaHoje: Agendamento[];
   totalPacientes: number;
+  agendamentosRealizados: number;
+  inadimplentes: number;
+  alertasAtivos: number;
+  mensalidadeAtual: Mensalidade;
 };
 
 // ─── Login ────────────────────────────────────────────────────────────────────
@@ -78,15 +83,112 @@ function GestoraLogin({ onSuccess }: { onSuccess: (nome: string) => void }) {
   );
 }
 
+// ─── Modal Bloquear ───────────────────────────────────────────────────────────
+
+function BloquearModal({ prof, onClose, onDone }: {
+  prof: Profissional;
+  onClose: () => void;
+  onDone: () => void;
+}) {
+  const [quantidade, setQuantidade] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState("");
+
+  const maxBloq = prof.totalPacientes;
+
+  async function confirmar() {
+    setLoading(true); setErro("");
+    try {
+      const r = await fetch(`${API}/api/age/gestora/profissionais/${prof.id}/bloquear`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ quantidade }),
+      });
+      const d = await r.json();
+      if (r.ok) { onDone(); onClose(); }
+      else setErro(d.error ?? "Erro ao bloquear.");
+    } catch { setErro("Sem conexão."); }
+    finally { setLoading(false); }
+  }
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "#000000bb", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ background: "#111827", border: "1px solid #374151", borderRadius: 16, padding: 28, width: "min(380px, 100%)", fontFamily: "system-ui, sans-serif" }}>
+        <div style={{ fontSize: 28, textAlign: "center", marginBottom: 12 }}>🔒</div>
+        <h3 style={{ color: "#f87171", textAlign: "center", margin: "0 0 8px", fontWeight: 800, fontSize: 17 }}>Bloquear pacientes</h3>
+        <p style={{ color: "#9ca3af", fontSize: 13, textAlign: "center", margin: "0 0 20px", lineHeight: 1.5 }}>
+          Bloqueia acesso de <strong style={{ color: "#e8e8e8" }}>N pacientes</strong> de <span style={{ color: prof.cor }}>{prof.nome}</span> por inadimplência de mensalidade.
+        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent: "center", marginBottom: 16 }}>
+          <button
+            onClick={() => setQuantidade(q => Math.max(1, q - 1))}
+            style={{ width: 36, height: 36, borderRadius: 8, background: "#1f2937", border: "1px solid #374151", color: "#e8e8e8", fontSize: 18, cursor: "pointer" }}>
+            −
+          </button>
+          <span style={{ fontSize: 28, fontWeight: 800, color: "#f87171", minWidth: 40, textAlign: "center" }}>{quantidade}</span>
+          <button
+            onClick={() => setQuantidade(q => Math.min(maxBloq, q + 1))}
+            style={{ width: 36, height: 36, borderRadius: 8, background: "#1f2937", border: "1px solid #374151", color: "#e8e8e8", fontSize: 18, cursor: "pointer" }}>
+            +
+          </button>
+        </div>
+        <p style={{ color: "#666", fontSize: 12, textAlign: "center", margin: "0 0 20px" }}>
+          {maxBloq} paciente{maxBloq !== 1 ? "s" : ""} ativo{maxBloq !== 1 ? "s" : ""} disponíve{maxBloq !== 1 ? "is" : "l"}
+        </p>
+        {erro && <p style={{ color: "#f87171", fontSize: 13, textAlign: "center", margin: "0 0 12px" }}>{erro}</p>}
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={onClose} style={{ flex: 1, background: "none", border: "1px solid #374151", borderRadius: 10, padding: 12, color: "#9ca3af", fontSize: 14, cursor: "pointer" }}>
+            Cancelar
+          </button>
+          <button onClick={confirmar} disabled={loading}
+            style={{ flex: 1, background: loading ? "#333" : "#991b1b", border: "none", borderRadius: 10, padding: 12, color: "#fff", fontSize: 14, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer" }}>
+            {loading ? "Bloqueando…" : `Bloquear ${quantidade}`}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Card Profissional ────────────────────────────────────────────────────────
 
-function ProfCard({ prof, onAprovar, onRecusar, aprovando }: {
+function ProfCard({ prof, onAprovar, onRecusar, aprovando, onRefresh }: {
   prof: Profissional;
   onAprovar: (pacId: number) => void;
   onRecusar: (pacId: number) => void;
   aprovando: number | null;
+  onRefresh: () => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [aba, setAba] = useState<"pacientes" | "agenda" | "financeiro">("pacientes");
+  const [showBloquear, setShowBloquear] = useState(false);
+  const [togglingMens, setTogglingMens] = useState(false);
+  const [pendExpanded, setPendExpanded] = useState(false);
+
+  async function toggleMensalidade() {
+    setTogglingMens(true);
+    const novoPago = !prof.mensalidadeAtual.pago;
+    try {
+      await fetch(`${API}/api/age/gestora/profissionais/${prof.id}/mensalidade`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ pago: novoPago }),
+      });
+      onRefresh();
+    } finally { setTogglingMens(false); }
+  }
+
+  async function desbloquear() {
+    await fetch(`${API}/api/age/gestora/profissionais/${prof.id}/desbloquear`, {
+      method: "POST", credentials: "include",
+    });
+    onRefresh();
+  }
+
+  const mesFormatado = prof.mensalidadeAtual.mes
+    ? new Date(prof.mensalidadeAtual.mes + "-01").toLocaleDateString("pt-BR", { month: "long", year: "numeric" })
+    : "-";
 
   return (
     <div style={{ background: "#111827", border: `1px solid ${prof.cor}33`, borderRadius: 16, padding: 20, marginBottom: 16 }}>
@@ -101,59 +203,83 @@ function ProfCard({ prof, onAprovar, onRecusar, aprovando }: {
             <div style={{ color: "#666", fontSize: 12, textTransform: "capitalize" }}>{prof.tipo}</div>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 16, textAlign: "center" }}>
+        {/* Stats rápidas */}
+        <div style={{ display: "flex", gap: 14, textAlign: "center" }}>
           <div>
             <div style={{ color: "#e8e8e8", fontWeight: 700, fontSize: 18 }}>{prof.totalPacientes}</div>
-            <div style={{ color: "#666", fontSize: 10 }}>pacientes</div>
+            <div style={{ color: "#666", fontSize: 10 }}>ativos</div>
           </div>
           <div>
             <div style={{ color: prof.pacientesPendentes.length > 0 ? "#f59e0b" : "#666", fontWeight: 700, fontSize: 18 }}>{prof.pacientesPendentes.length}</div>
             <div style={{ color: "#666", fontSize: 10 }}>pendentes</div>
           </div>
           <div>
-            <div style={{ color: "#60a5fa", fontWeight: 700, fontSize: 18 }}>{prof.agendaHoje.length}</div>
-            <div style={{ color: "#666", fontSize: 10 }}>hoje</div>
+            <div style={{ color: "#60a5fa", fontWeight: 700, fontSize: 18 }}>{prof.agendamentosRealizados}</div>
+            <div style={{ color: "#666", fontSize: 10 }}>realizados</div>
           </div>
+          {prof.inadimplentes > 0 && (
+            <div>
+              <div style={{ color: "#f87171", fontWeight: 700, fontSize: 18 }}>{prof.inadimplentes}</div>
+              <div style={{ color: "#666", fontSize: 10 }}>bloqueados</div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Pacientes pendentes */}
-      {prof.pacientesPendentes.length > 0 && (
-        <div style={{ marginBottom: 12 }}>
-          <button onClick={() => setExpanded(e => !e)}
-            style={{ background: "none", border: `1px solid #333`, borderRadius: 8, color: "#f59e0b", fontSize: 12, padding: "6px 12px", cursor: "pointer", marginBottom: 8, width: "100%", textAlign: "left" }}>
-            {expanded ? "▲" : "▼"} Aprovações pendentes ({prof.pacientesPendentes.length})
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 4, marginBottom: 14, background: "#0f172a", borderRadius: 10, padding: 4 }}>
+        {(["pacientes", "agenda", "financeiro"] as const).map(t => (
+          <button key={t} onClick={() => setAba(t)}
+            style={{
+              flex: 1, padding: "7px 0", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600,
+              background: aba === t ? "#1f2937" : "transparent",
+              color: aba === t ? (t === "financeiro" ? "#fbbf24" : prof.cor) : "#666",
+            }}>
+            {t === "pacientes" ? `Pacientes${prof.pacientesPendentes.length > 0 ? ` (${prof.pacientesPendentes.length})` : ""}` : t === "agenda" ? "Agenda" : "Financeiro"}
           </button>
-          {expanded && prof.pacientesPendentes.map(pac => (
-            <div key={pac.id} style={{ background: "#0f172a", borderRadius: 10, padding: "10px 14px", marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-              <div>
-                <div style={{ color: "#e8e8e8", fontWeight: 600, fontSize: 14 }}>{pac.nome}</div>
-                <div style={{ color: "#666", fontSize: 11 }}>{pac.email}{pac.telefone ? ` · ${pac.telefone}` : ""}</div>
-              </div>
-              <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                <button
-                  onClick={() => onAprovar(pac.id)}
-                  disabled={aprovando === pac.id}
-                  style={{ background: "#16a34a", border: "none", borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                  {aprovando === pac.id ? "…" : "Aprovar"}
-                </button>
-                <button
-                  onClick={() => onRecusar(pac.id)}
-                  disabled={aprovando === pac.id}
-                  style={{ background: "#991b1b", border: "none", borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                  Recusar
-                </button>
-              </div>
-            </div>
-          ))}
+        ))}
+      </div>
+
+      {/* Aba Pacientes */}
+      {aba === "pacientes" && (
+        <div>
+          {prof.pacientesPendentes.length === 0 ? (
+            <p style={{ color: "#444", fontSize: 13, textAlign: "center", margin: "8px 0" }}>Nenhuma aprovação pendente.</p>
+          ) : (
+            <>
+              <button onClick={() => setPendExpanded(e => !e)}
+                style={{ background: "none", border: "1px solid #333", borderRadius: 8, color: "#f59e0b", fontSize: 12, padding: "6px 12px", cursor: "pointer", marginBottom: 8, width: "100%", textAlign: "left" }}>
+                {pendExpanded ? "▲" : "▼"} Aprovações pendentes ({prof.pacientesPendentes.length})
+              </button>
+              {pendExpanded && prof.pacientesPendentes.map(pac => (
+                <div key={pac.id} style={{ background: "#0f172a", borderRadius: 10, padding: "10px 14px", marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                  <div>
+                    <div style={{ color: "#e8e8e8", fontWeight: 600, fontSize: 14 }}>{pac.nome}</div>
+                    <div style={{ color: "#666", fontSize: 11 }}>{pac.email}{pac.telefone ? ` · ${pac.telefone}` : ""}</div>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                    <button onClick={() => onAprovar(pac.id)} disabled={aprovando === pac.id}
+                      style={{ background: "#16a34a", border: "none", borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                      {aprovando === pac.id ? "…" : "Aprovar"}
+                    </button>
+                    <button onClick={() => onRecusar(pac.id)} disabled={aprovando === pac.id}
+                      style={{ background: "#991b1b", border: "none", borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                      Recusar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       )}
 
-      {/* Agenda hoje */}
-      {prof.agendaHoje.length > 0 && (
+      {/* Aba Agenda */}
+      {aba === "agenda" && (
         <div>
-          <div style={{ color: "#666", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>Agenda hoje</div>
-          {prof.agendaHoje.map(ag => (
+          {prof.agendaHoje.length === 0 ? (
+            <p style={{ color: "#444", fontSize: 13, textAlign: "center", margin: "8px 0" }}>Sem agenda hoje.</p>
+          ) : prof.agendaHoje.map(ag => (
             <div key={ag.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1f2937" }}>
               <span style={{ color: "#60a5fa", fontWeight: 700, fontSize: 13, fontVariantNumeric: "tabular-nums", width: 40 }}>
                 {new Date(ag.data_hora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
@@ -168,8 +294,90 @@ function ProfCard({ prof, onAprovar, onRecusar, aprovando }: {
         </div>
       )}
 
-      {prof.pacientesPendentes.length === 0 && prof.agendaHoje.length === 0 && (
-        <p style={{ color: "#444", fontSize: 13, textAlign: "center", margin: 0 }}>Sem pendências ou agenda hoje.</p>
+      {/* Aba Financeiro */}
+      {aba === "financeiro" && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {/* Mensalidade */}
+          <div style={{ background: "#0f172a", borderRadius: 12, padding: 16 }}>
+            <div style={{ color: "#666", fontSize: 11, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Mensalidade — {mesFormatado}</div>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div>
+                <div style={{
+                  fontSize: 20, fontWeight: 800,
+                  color: prof.mensalidadeAtual.pago ? "#34d399" : "#f87171",
+                }}>
+                  {prof.mensalidadeAtual.pago ? "✓ Pago" : "✗ Não pago"}
+                </div>
+                {prof.mensalidadeAtual.pagoAt && (
+                  <div style={{ color: "#666", fontSize: 11, marginTop: 2 }}>
+                    em {new Date(prof.mensalidadeAtual.pagoAt).toLocaleDateString("pt-BR")}
+                  </div>
+                )}
+              </div>
+              <button onClick={toggleMensalidade} disabled={togglingMens}
+                style={{
+                  background: prof.mensalidadeAtual.pago ? "#1f2937" : "linear-gradient(135deg, #16a34a, #15803d)",
+                  border: "none", borderRadius: 10, padding: "10px 16px",
+                  color: prof.mensalidadeAtual.pago ? "#666" : "#fff",
+                  fontSize: 13, fontWeight: 700, cursor: togglingMens ? "not-allowed" : "pointer",
+                }}>
+                {togglingMens ? "…" : prof.mensalidadeAtual.pago ? "Marcar não pago" : "Registrar pagamento"}
+              </button>
+            </div>
+          </div>
+
+          {/* Resumo pacientes */}
+          <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ flex: 1, background: "#0f172a", borderRadius: 10, padding: 14, textAlign: "center" }}>
+              <div style={{ color: "#34d399", fontWeight: 800, fontSize: 22 }}>{prof.totalPacientes}</div>
+              <div style={{ color: "#666", fontSize: 11, marginTop: 2 }}>pacientes ativos</div>
+            </div>
+            <div style={{ flex: 1, background: "#0f172a", borderRadius: 10, padding: 14, textAlign: "center" }}>
+              <div style={{ color: "#60a5fa", fontWeight: 800, fontSize: 22 }}>{prof.agendamentosRealizados}</div>
+              <div style={{ color: "#666", fontSize: 11, marginTop: 2 }}>consultas (30d)</div>
+            </div>
+            <div style={{ flex: 1, background: "#0f172a", borderRadius: 10, padding: 14, textAlign: "center" }}>
+              <div style={{ color: prof.inadimplentes > 0 ? "#f87171" : "#666", fontWeight: 800, fontSize: 22 }}>{prof.inadimplentes}</div>
+              <div style={{ color: "#666", fontSize: 11, marginTop: 2 }}>bloqueados</div>
+            </div>
+          </div>
+
+          {/* Ações de bloqueio */}
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={() => setShowBloquear(true)}
+              disabled={prof.totalPacientes === 0}
+              style={{
+                flex: 1, background: prof.totalPacientes === 0 ? "#1f2937" : "#450a0a",
+                border: `1px solid ${prof.totalPacientes === 0 ? "#374151" : "#991b1b"}`,
+                borderRadius: 10, padding: "10px 14px", color: prof.totalPacientes === 0 ? "#444" : "#f87171",
+                fontSize: 13, fontWeight: 700, cursor: prof.totalPacientes === 0 ? "not-allowed" : "pointer",
+              }}>
+              🔒 Bloquear pacientes
+            </button>
+            {prof.inadimplentes > 0 && (
+              <button onClick={desbloquear}
+                style={{ flex: 1, background: "#052e16", border: "1px solid #16a34a", borderRadius: 10, padding: "10px 14px", color: "#34d399", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                🔓 Desbloquear todos
+              </button>
+            )}
+          </div>
+
+          {!prof.mensalidadeAtual.pago && prof.totalPacientes > 0 && (
+            <div style={{ background: "#450a0a33", border: "1px solid #991b1b44", borderRadius: 10, padding: 12 }}>
+              <p style={{ color: "#f87171", fontSize: 12, margin: 0, lineHeight: 1.5 }}>
+                ⚠️ Mensalidade de {mesFormatado} não registrada. Use "Bloquear pacientes" como alavanca de cobrança se necessário.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {showBloquear && (
+        <BloquearModal
+          prof={prof}
+          onClose={() => setShowBloquear(false)}
+          onDone={onRefresh}
+        />
       )}
     </div>
   );
@@ -207,6 +415,8 @@ function GestoraDashboard({ nome, onLogout }: { nome: string; onLogout: () => vo
   }
 
   const totalPendentes = profissionais.reduce((s, p) => s + p.pacientesPendentes.length, 0);
+  const totalBloqueados = profissionais.reduce((s, p) => s + p.inadimplentes, 0);
+  const inadimplentes = profissionais.filter(p => !p.mensalidadeAtual.pago);
 
   return (
     <div style={{
@@ -221,10 +431,20 @@ function GestoraDashboard({ nome, onLogout }: { nome: string; onLogout: () => vo
             <h1 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#2dd4bf" }}>🌸 Painel Gestora</h1>
             <p style={{ margin: 0, fontSize: 12, color: "#666" }}>Age — {nome}</p>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {totalPendentes > 0 && (
               <span style={{ background: "#f59e0b", color: "#111", borderRadius: 20, padding: "2px 10px", fontWeight: 800, fontSize: 12 }}>
                 {totalPendentes} pendente{totalPendentes > 1 ? "s" : ""}
+              </span>
+            )}
+            {inadimplentes.length > 0 && (
+              <span style={{ background: "#991b1b", color: "#fca5a5", borderRadius: 20, padding: "2px 10px", fontWeight: 800, fontSize: 12 }}>
+                {inadimplentes.length} sem mensalidade
+              </span>
+            )}
+            {totalBloqueados > 0 && (
+              <span style={{ background: "#1f2937", color: "#f87171", borderRadius: 20, padding: "2px 10px", fontWeight: 700, fontSize: 12, border: "1px solid #991b1b" }}>
+                {totalBloqueados} bloq.
               </span>
             )}
             <button onClick={load} style={{ background: "#1f2937", border: "1px solid #374151", borderRadius: 8, padding: "6px 12px", color: "#9ca3af", fontSize: 12, cursor: "pointer" }}>↻</button>
@@ -243,6 +463,7 @@ function GestoraDashboard({ nome, onLogout }: { nome: string; onLogout: () => vo
               key={prof.id} prof={prof} aprovando={aprovando}
               onAprovar={id => atualizarStatus(id, "aprovado")}
               onRecusar={id => atualizarStatus(id, "recusado")}
+              onRefresh={load}
             />
           ))
         )}
