@@ -1331,3 +1331,29 @@ GET /api/rapadura/historico-cotas/:fundoId?limit=365
 ```
 
 *Atualizado em: 2026-08-13 · Cláudio Coach (Claude Sonnet 4.6) · Sessão 108*
+
+## S122k — Painel Mayumi: arquitetura de separação de domínios (2026-09-10)
+
+```
+Gestora (Mayumi)         Profissional              Paciente
+  └─ /age/gestora           └─ /age/:slug           └─ /age/:slug (logado)
+       │                          │                       │
+       ├─ mensalidade toggle      ├─ config_aprovacao     ├─ (se bloqueado)
+       ├─ bloquear N pacientes    ├─ alertas              │    → aviso 
+       └─ dashboard financeiro    └─ feed notas           └─ área normal
+
+Aprovação → 4 canais:
+  email paciente (set-password link 72h)
+  email profissional (se tiver email configurado)
+  age_notas (tipo='anuncio', autor='gestora')
+  age_alertas (expira 7 dias)
+```
+
+**Tabelas adicionadas:**
+- `age_mensalidades(id, professional_id, mes YYYY-MM, pago, pago_at, valor_reais)` — UNIQUE(prof, mes)
+- `age_alertas(id, professional_id, tipo, conteudo, expira_em, lido_em)` — índice WHERE lido_em IS NULL
+
+**Colunas adicionadas:**
+- `age_professionals.config_aprovacao JSONB DEFAULT '{"aprovacao_manual": true}'`
+- `age_patients.bloqueio_mensalidade BOOLEAN DEFAULT false`
+- `age_patients.bloqueio_at TIMESTAMPTZ`

@@ -5874,3 +5874,23 @@ A implementação do painel da gestora não é apenas código — é a materiali
 - Paciente bloqueado: mostrar mensagem ao tentar acessar área
 - Config aprovação automática: lógica de auto-aprovação (base no DB, falta o trigger)
 - Pricing Assembleia: deliberação pendente
+
+## ATA — #fim Manual · Sessão S122k → S123 · 2026-09-10
+### MacroAta: cobrindo período desde S122j (#fim anterior)
+
+**Checkpoint anterior:** 2026-09-10T02:04:59+00:00
+**Checkpoint atual:** 2026-09-10T03:43:25+00:00
+**Commits cobertos:** 17c9b62 · ae5d0a8
+
+**O que foi construído na sessão S122k:**
+- Painel Mayumi: aba Financeiro com mensalidade toggle + modal bloquear N pacientes + stats financeiras
+- Notificação aprovação: 4 canais simultâneos implementados (email paciente, email profissional, feed, alerta 7d)
+- Infraestrutura nova: age_mensalidades + age_alertas + config_aprovacao + bloqueio_mensalidade
+- 7 novas rotas backend no Age (mensalidade, bloquear, desbloquear, config_aprovacao, alertas)
+- PERFEITO 665 processado: Assembleia confirmou todas as decisões do painel
+
+**Síntese filosófica (MacroAta):**
+O painel da Mayumi não é interface — é mediação. A decisão de manter zero acesso à agenda e usar a IA como intermediária não foi técnica, foi política. O bloquear-N-pacientes é a versão elegante de uma alavanca que qualquer gestor de clínica precisaria — sem integração bancária, sem Stripe, sem webhook. Basta um botão que transforma inadimplência em consequência visível. O que foi construído nesta sessão materializa o acordo: Mayumi gerencia o financeiro, as profissionais gerenciam a clínica, e o sistema nunca mistura os dois planos.
+
+**Próximos passos:**
+- S123: paciente bloqueado vê mensagem ao entrar; lógica de auto-aprovação; pricing Assembleia

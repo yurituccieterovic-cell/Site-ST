@@ -1057,3 +1057,41 @@ J1 deployado ✅ · J2-J10 aguardando implementação das APIs
 - **/jasmim, /pv, /portal, /studio, /celular:** adicionados ao root/vercel.json, todos 200 ✅
 - **Mayumi:** confirmada gestora Age; sem conta PAP ainda (M2 pendente)
 - **RODAR dump:** rota temporária deployada em salescockpit-clube-da-ia; Yuri ainda não baixou
+
+## 20. Age — Painel Mayumi Financeiro (S122k · 2026-09-10)
+
+**Status:** Implementado ✅ · Deploy via Render (bootstrap automático)
+
+### O que entrou no ar
+- `age_mensalidades`: rastreia pagamento de mensalidade por profissional/mês (YYYY-MM)
+- `age_alertas`: alertas de dashboard — tipo, expira_em, lido_em
+- `config_aprovacao` JSONB em `age_professionals`: critérios por profissional
+- `bloqueio_mensalidade` boolean em `age_patients`: alavanca de cobrança
+
+### Rotas novas (api-server)
+| Rota | Descrição |
+|---|---|
+| `GET /api/age/gestora/dashboard` | expandido: realizados + inadimplentes + mensalidade + alertas |
+| `PATCH /api/age/gestora/pacientes/:id/status` | aprovação → 4 canais (email pac + email prof + feed + alerta 7d) |
+| `POST /api/age/gestora/profissionais/:id/bloquear` | bloqueia N pacientes por inadimplência |
+| `POST /api/age/gestora/profissionais/:id/desbloquear` | regulariza todos de uma vez |
+| `PATCH /api/age/gestora/profissionais/:id/mensalidade` | toggle pago/não pago YYYY-MM |
+| `GET/PATCH /api/age/:slug/config/aprovacao` | critérios de aprovação por profissional |
+| `GET/POST /api/age/:slug/alertas[/:id/ler]` | alertas do dashboard do profissional |
+
+### Frontend (GestoraAgePage.tsx)
+- Tabs: Pacientes / Agenda / **Financeiro**
+- Financeiro: mensalidade badge + toggle, stats (realizados/inadimplentes/ativos), modal bloquear N
+- Header: badges globais "sem mensalidade" + "bloqueados"
+
+### Estado Infraestrutura (2026-09-10)
+- **API:** https://site-st.onrender.com (Render) — OK
+- **Frontend:** https://www.sociedadetucci.com.br (Vercel) — OK
+- **DB:** Neon — 45+ tabelas (+ age_mensalidades + age_alertas)
+- **Painel gestora:** https://www.sociedadetucci.com.br/age/gestora ✅
+- **Commits S122k:** 17c9b62 (feat) + ae5d0a8 (docs)
+
+### Pendências (S123)
+#349 Paciente bloqueado: mostrar mensagem ao acessar área
+#350 Auto-aprovação: lógica de trigger quando critérios satisfeitos
+#351 Pricing final: Assembleia pendente
