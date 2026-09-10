@@ -1941,3 +1941,7 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I735 | ISCA routing implementado: MyymChat passa `setor` ao backend; /api/jasmim/myym/chat injeta sub-prompt específico por sub-IA (Inara/Suindara/Clio/Arara) — saudação já reflete o modo ativo | CÓDIGO | ✅ feito S122c |
 | I736 | Curso 3 Workflow: PremiereMovieMaker + edge-tts (grátis); revisar cursos 1 e 2 antes de avançar; Yuri cancela ElevenLabs em 18/09 | PROCESSO | 🟡 próxima etapa revisão |
 | I737 | pg_dump Replit banco completo: assembleia_sessions, arvore_memoria, clube_messages, agora_turns — Yuri faz manualmente via Shell: `pg_dump $DATABASE_URL > replit-completo.sql` e baixa | PROCESSO | 🔴 pendente ação Yuri |
+
+| I738 | Onboarding Mayumi no Age: primeiro acesso ao painel gestora (/age/admin), walkthrough das funcionalidades, glossário sem jargão técnico — "ação irreversível" em vez de "destrutivo" | PROCESSO | 🟡 S122f — montar guia onboarding |
+| I739 | UX Age — linguagem humana: trocar todos os termos técnicos por equivalentes do cotidiano: "destrutivo" → "não pode ser desfeito"; "token" → "código de acesso"; "slug" → nunca expor para usuária | CÓDIGO | 🟡 refinar com Mayumi |
+| I740 | MYYM + perguntas reais das profissionais: caso de uso concreto — Mayumi leva perguntas clínicas reais de Lisange/Suzana ao Jasmim; ISCA routing (já implementado) serve exatamente para isso | PROCESSO | ✅ base técnica pronta (ISCA routing S122c) |

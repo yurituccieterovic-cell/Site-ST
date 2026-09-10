@@ -642,3 +642,12 @@
 | #323 | ElevenLabs: cancelar em 18/09 (Yuri faz) | PROCESSO | ⏳ aguardando Yuri |
 | #324 | VEED + Replit: lembrete 30/09 — verificar se lembretes foram programados | PROCESSO | ⏳ verificar S123 |
 | #325 | pg_dump Replit banco completo (assembleia_sessions, arvore_memoria, clube_messages) — AINDA pendente | INFRA | ⏳ aguardando Yuri |
+
+### S122f — #processo PERFEITOs 654-655 + #eage Rodada 9 (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #326 | Onboarding Mayumi no painel gestora Age (/age/admin): walkthrough + glossário sem jargão | PROCESSO | ⏳ próxima sessão |
+| #327 | UX Age: trocar linguagem técnica por linguagem humana ("destrutivo" → "não pode ser desfeito") | CÓDIGO | 🟡 I739 |
+| #328 | Copy button Jasmim (I723): não copia a pergunta junto — Mayumi relatou novamente | CÓDIGO | 🔴 bug confirmado |
+| #329 | MYYM com perguntas reais das profissionais: Mayumi quer levar questões clínicas reais ao Jasmim/ISCA | PROCESSO | 🟡 base técnica pronta (ISCA routing) |
