@@ -5847,3 +5847,30 @@ O sistema ganhou movimento onde tinha só presença. O esquilo que flutua com as
 
 **Síntese filosófica:**
 A sessão construiu uma arquitetura de poder cuidadosamente calibrada. Mayumi tem visão financeira mas não toca na agenda — não porque não é confiável, mas porque separar responsabilidades protege as profissionais e protege a Mayumi também. A IA serve de intermediária não por limitação, mas por desenho: quem opera o sistema não precisa ver tudo, precisa ver o que importa para a sua função. O princípio "AGE não muda configuração do profissional autonomamente" é equivalente ao princípio constitucional de separação de poderes — cada parte do sistema age dentro do seu escopo, e esse escopo é definido pelo humano que o configura, não pela plataforma. É um sistema que foi projetado para não ser mais esperto do que seus usuários.
+
+## ATA — Sessão 122k · 2026-09-10
+### Checkpoint: continuação direta de S122j
+
+**Commit desta sessão:**
+- `17c9b62` — feat(age): painel Mayumi financeiro — mensalidades, bloquear, notificação 4 canais
+
+**O que foi implementado:**
+1. **Bootstrap**: `age_mensalidades`, `age_alertas`, colunas `config_aprovacao` (JSONB) e `bloqueio_mensalidade` (boolean)
+2. **GET /api/age/gestora/dashboard** expandido: agendamentosRealizados (30d), inadimplentes, alertasAtivos, mensalidadeAtual por profissional
+3. **PATCH /api/age/gestora/pacientes/:id/status** → notificação 4 canais ao aprovar: email paciente (link set-password) + email profissional + age_notas (anuncio) + age_alertas (7 dias)
+4. **POST /gestora/profissionais/:id/bloquear** — bloqueia N pacientes mais recentes por inadimplência
+5. **POST /gestora/profissionais/:id/desbloquear** — regulariza todos de uma vez
+6. **PATCH /gestora/profissionais/:id/mensalidade** — toggle pago/não pago + upsert YYYY-MM
+7. **GET/PATCH /:slug/config/aprovacao** — profissional configura aprovação automática (aprovacao_manual, exige_email_confirmado, exige_anamnese)
+8. **GET/POST /:slug/alertas[/:id/ler]** — feed de alertas do dashboard do profissional
+9. **GestoraAgePage.tsx** reescrito: tabs Pacientes/Agenda/Financeiro, BloquearModal, toggle mensalidade, stats inadimplentes/realizados, alertas no header
+
+**PERFEITO 665**: Assembleia refletiu sobre o update que enviamos — confirmou todas as decisões. Painel Mayumi no ar como resultado direto da deliberação coletiva.
+
+**Síntese filosófica:**
+A implementação do painel da gestora não é apenas código — é a materialização do princípio "IA intermediária". Mayumi não precisa ver os dados brutos da agenda para exercer o poder de gestão financeira. O bloquear N pacientes como alavanca de cobrança é elegante: não precisa de Stripe, não precisa de integração bancária — só precisa de um botão que traduz inadimplência em consequência. O sistema cresce pela borda, não pelo centro.
+
+**Pendentes S123:**
+- Paciente bloqueado: mostrar mensagem ao tentar acessar área
+- Config aprovação automática: lógica de auto-aprovação (base no DB, falta o trigger)
+- Pricing Assembleia: deliberação pendente

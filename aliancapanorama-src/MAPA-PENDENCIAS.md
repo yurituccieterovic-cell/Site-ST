@@ -688,5 +688,13 @@
 
 | # | Pendência | Tipo | Status |
 |---|---|---|---|
-| #347 | Notificação aprovação: 4 canais (email paciente + email profissional + feed + alerta dashboard 7 dias configurável) | CÓDIGO | ⏳ implementar S123 |
+| #347 | Notificação aprovação: 4 canais (email paciente + email profissional + feed + alerta dashboard 7 dias configurável) | CÓDIGO | ✅ implementado S122k |
 | #348 | Princípio AGE: sistema nunca altera config do profissional autonomamente | ARQUITETURA | ✅ registrado |
+
+### S122k — Painel Mayumi implementado + PERFEITO 665 (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #349 | Painel Mayumi: frontend mostrar mensagem ao paciente bloqueado quando tentar acessar área | CÓDIGO | ⏳ próxima sessão |
+| #350 | Config aprovação automática: lógica no backend para aplicar auto-aprovação quando paciente satisfaz critérios | CÓDIGO | ⏳ base criada, lógica pendente |
+| #351 | Pricing final: Broto R$49 / Raiz R$99 / Copa R$199 — deliberação Assembleia pendente | DECISÃO | ⏳ |

@@ -1963,3 +1963,7 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 
 | I753 | Notificação aprovação paciente DEFINIDA: (1) email ao paciente, (2) email à profissional, (3) consta no feed, (4) alerta dashboard 7 dias (prazo configurável pela profissional) — 4 canais simultâneos | CÓDIGO | ⏳ implementar junto ao painel aprovação S123 |
 | I754 | AGE sem autonomia sobre configurações do profissional: o sistema aplica o que foi configurado, NUNCA muda ou sobrescreve regras da profissional por conta própria | ARQUITETURA | ✅ princípio confirmado S122j |
+| I755 | age_mensalidades: tabela para rastrear pagamento mensal por profissional (YYYY-MM, pago, pago_at, valor_reais) — base do controle financeiro Mayumi | CÓDIGO | ✅ implementado S122k |
+| I756 | age_alertas: tabela para alertas do dashboard do profissional (tipo, conteudo, expira_em, lido_em) — canal 4 da notificação de aprovação | CÓDIGO | ✅ implementado S122k |
+| I757 | Bloquear N pacientes (gestora): POST /gestora/profissionais/:id/bloquear — bloqueia os N mais recentes por inadimplência de mensalidade; desbloquear POST .../desbloquear | CÓDIGO | ✅ implementado S122k |
+| I758 | config_aprovacao JSONB em age_professionals: aprovacao_manual, exige_email_confirmado, exige_anamnese — cada profissional configura via PATCH /:slug/config/aprovacao | CÓDIGO | ✅ implementado S122k (base) |
