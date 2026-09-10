@@ -663,3 +663,10 @@
 | #334 | Painel Mayumi: definir poderes (só visualizar ou também editar/cancelar) — aguarda Assembleia | DECISÃO | ⏳ aguarda deliberação |
 | #335 | Aprovação automática: pré-requisitos por profissional (anamnese? documento? consulta inicial paga?) | DECISÃO | ⏳ aguarda Mayumi/Yuri definir |
 | #336 | Notificação paciente aprovado: email + alerta painel + WhatsApp — modelo a escolher | DECISÃO | ⏳ aguarda Assembleia |
+
+### S122h — #processo PERFEITOs 659-660 + email Assembleia (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #337 | Amanda.py: baixar do filesystem Replit antes 02/10 | INFRA | 🔴 Yuri pendente |
+| #338 | Assembleia Age: email enviado com decisões Yuri + 3 perguntas abertas (painel Mayumi, aprovação auto, notificação) | PROCESSO | ✅ enviado S122h |

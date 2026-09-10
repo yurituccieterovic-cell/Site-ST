@@ -1950,3 +1950,6 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I742 | Plano Social 15 pacientes APROVADO por Yuri; Plano Estudante/ONG adiado para quando tiver ~10 profissionais no sistema | DECISÃO | ✅ S122g |
 | I743 | Cadastro progressivo Age: Visitante (nome+tel) → Conta confirmada (email+senha) → Paciente aprovado (ficha+consentimento) → Paciente ativo (histórico+pagamentos) — não pedir tudo de uma vez | CÓDIGO | 🟡 Assembleia aprovou conceito |
 | I744 | Esquilo MYYM avatar mais animado: membranas (patagium) com animação independente (scaleX+skewY), cauda com rotate amplo, float com rotação — implementado S122g | CÓDIGO | ✅ feito S122g |
+
+| I745 | Amanda.py: script Python no filesystem Replit — não acessível via HTTP; recuperar via Files do Replit antes do cancelamento 02/10 | PROCESSO | 🔴 pendente Yuri |
+| I746 | Assembleia: comunicar decisões Yuri (mensalidade fixa, Plano Social 15 pac) + solicitar deliberação pendente (painel Mayumi, aprovação automática, notificação) | PROCESSO | ✅ email enviado S122h |
