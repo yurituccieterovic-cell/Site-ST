@@ -268,7 +268,7 @@ router.post("/jasmim/post-from-email", async (req, res) => {
 
 router.get("/jasmim/assembleias", async (req, res) => {
   const page   = Math.max(1, parseInt((req.query["page"] as string) ?? "1", 10));
-  const limit  = Math.min(50, Math.max(1, parseInt((req.query["limit"] as string) ?? "20", 10)));
+  const limit  = Math.min(200, Math.max(1, parseInt((req.query["limit"] as string) ?? "50", 10)));
   const search = (req.query["q"] as string)?.trim() ?? "";
   const offset = (page - 1) * limit;
 

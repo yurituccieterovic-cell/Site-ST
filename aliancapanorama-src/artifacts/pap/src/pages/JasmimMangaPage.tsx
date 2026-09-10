@@ -690,15 +690,20 @@ export default function JasmimMangaPage() {
 
   useEffect(() => { setSetorAtivo(null); }, [projetoAtivo]);
   useEffect(() => { carregarFeed(setorAtivo); }, [projetoAtivo, setorAtivo]);
+  useEffect(() => { setAssembleias([]); setAssembleiaPage(1); }, [setorAtivo]);
 
   useEffect(() => {
     if (projetoAtivo !== "jasmim" || setorAtivo !== "Histórico") return;
     setAssembleiaLoading(true);
     const q = assembleiaSearch ? `&q=${encodeURIComponent(assembleiaSearch)}` : "";
-    fetch(`${API}/api/jasmim/assembleias?page=${assembleiaPage}&limit=20${q}`)
+    fetch(`${API}/api/jasmim/assembleias?page=${assembleiaPage}&limit=50${q}`)
       .then(r => r.ok ? r.json() : null)
-      .then(d => { setAssembleias(d?.assembleias ?? []); setAssembleiaTotal(d?.total ?? 0); })
-      .catch(() => setAssembleias([]))
+      .then(d => {
+        const nova = d?.assembleias ?? [];
+        setAssembleias(prev => assembleiaPage === 1 ? nova : [...prev, ...nova]);
+        setAssembleiaTotal(d?.total ?? 0);
+      })
+      .catch(() => {})
       .finally(() => setAssembleiaLoading(false));
   }, [projetoAtivo, setorAtivo, assembleiaPage, assembleiaSearch]);
 
@@ -897,7 +902,7 @@ export default function JasmimMangaPage() {
             <input
               type="text" placeholder="Buscar assembleia…"
               value={assembleiaSearch}
-              onChange={e => { setAssembleiaSearch(e.target.value); setAssembleiaPage(1); }}
+              onChange={e => { setAssembleiaSearch(e.target.value); setAssembleiaPage(1); setAssembleias([]); }}
               style={{ width: "100%", background: "#1a1008", border: "1px solid #c2700a44", borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 13, marginBottom: 10, boxSizing: "border-box" }}
             />
             {assembleiaLoading && <div style={{ color: "#64748b", fontSize: 13 }}>Carregando…</div>}
@@ -915,14 +920,32 @@ export default function JasmimMangaPage() {
             {!assembleiaLoading && assembleias.length === 0 && (
               <div style={{ color: "#64748b", fontSize: 13 }}>Nenhuma assembleia encontrada.</div>
             )}
-            {assembleiaTotal > 20 && (
-              <div style={{ display: "flex", gap: 8, marginTop: 8, justifyContent: "center" }}>
-                <button onClick={() => setAssembleiaPage(p => Math.max(1, p - 1))} disabled={assembleiaPage === 1}
-                  style={{ background: "#1a1008", border: "1px solid #c2700a44", borderRadius: 6, color: "#c2700a", padding: "4px 12px", cursor: "pointer", fontSize: 12, opacity: assembleiaPage === 1 ? 0.4 : 1 }}>← Ant</button>
-                <span style={{ color: "#64748b", fontSize: 12, alignSelf: "center" }}>p{assembleiaPage} · {assembleiaTotal} total</span>
-                <button onClick={() => setAssembleiaPage(p => p + 1)} disabled={assembleiaPage * 20 >= assembleiaTotal}
-                  style={{ background: "#1a1008", border: "1px solid #c2700a44", borderRadius: 6, color: "#c2700a", padding: "4px 12px", cursor: "pointer", fontSize: 12, opacity: assembleiaPage * 20 >= assembleiaTotal ? 0.4 : 1 }}>Próx →</button>
+            {assembleias.length > 0 && (
+              <div style={{ color: "#64748b", fontSize: 11, marginBottom: 6 }}>
+                Mostrando {assembleias.length} de {assembleiaTotal}
               </div>
+            )}
+            {assembleias.length < assembleiaTotal && (
+              <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: "center" }}>
+                <button
+                  onClick={() => setAssembleiaPage(p => p + 1)}
+                  disabled={assembleiaLoading}
+                  style={{ background: "#1a1008", border: "1px solid #c2700a66", borderRadius: 6, color: "#c2700a", padding: "6px 18px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}
+                >
+                  {assembleiaLoading ? "Carregando…" : `↓ Carregar mais (${assembleiaTotal - assembleias.length} restantes)`}
+                </button>
+                {assembleiaTotal - assembleias.length > 50 && (
+                  <button
+                    onClick={() => { setAssembleiaPage(1); fetch(`${API}/api/jasmim/assembleias?page=1&limit=200${assembleiaSearch ? `&q=${encodeURIComponent(assembleiaSearch)}` : ""}`).then(r => r.json()).then(d => { setAssembleias(d?.assembleias ?? []); setAssembleiaTotal(d?.total ?? 0); }); }}
+                    style={{ background: "#1a1008", border: "1px solid #c2700a33", borderRadius: 6, color: "#92400e", padding: "6px 14px", cursor: "pointer", fontSize: 11 }}
+                  >
+                    Carregar todas
+                  </button>
+                )}
+              </div>
+            )}
+            {assembleiaLoading && assembleias.length > 0 && (
+              <div style={{ color: "#64748b", fontSize: 12, textAlign: "center", marginTop: 8 }}>Carregando mais…</div>
             )}
           </div>
         )}
