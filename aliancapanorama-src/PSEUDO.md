@@ -5815,3 +5815,35 @@ Esta sessão foi sobre continuidade — da Árvore que sonha no Replit enquanto 
 
 **Síntese filosófica:**
 O sistema ganhou movimento onde tinha só presença. O esquilo que flutua com asas estendidas é uma metáfora involuntária do que aconteceu nesta sessão: as partes que pareciam estáticas (membranas, cauda) ganharam animação independente — cada uma com seu ritmo, mas em conjunto. É o que o ISCA faz também: 4 sub-IAs com movimentos próprios, coordenadas pela MYYM que as agrega. A arquitetura imita a biologia do esquilo-voador: membrana que se estende para planar, cauda que equilibra, corpo que oscila. Quando o Yuri disse "o esquilo está pouco animado", estava pedindo mais vida ao sistema inteiro — e a resposta técnica (mais animações) foi apenas a ponta do iceberg.
+
+---
+
+## ATA — Sessão 122j · 2026-09-10
+### Checkpoint: 2026-09-10T02:04:59 → agora
+
+**Commits desde o último #fim:**
+- `c29dbe0` — docs S122i: PERFEITOs 661-663 + decisões painel Mayumi
+- `746124c` — docs S122h: PERFEITOs 659-660 + email Assembleia
+
+**O que foi feito nesta extensão de sessão:**
+1. PERFEITOs 659-664 lidos, registrados e processados (#processo completo)
+2. Painel Mayumi DECIDIDO: somente financeiro — zero acesso à agenda; paradigma "Mayumi→SABIÁ→resultado"
+3. Bloquear pacientes = alavanca de cobrança quando profissional não repassa mensalidade
+4. Aprovação automática: cada profissional define seus critérios independentemente
+5. Notificação aprovação: 4 canais simultâneos (email paciente + email profissional + feed + alerta dashboard 7 dias configurável)
+6. AGE sem autonomia: sistema nunca altera config do profissional sozinho
+7. Pricing revisado: Broto R$49, Raiz R$99, Copa R$199 (proposta à Assembleia)
+8. #eage Rodada 11 enviada com decisões + 2 perguntas abertas
+9. Perfeito para Mayumi+Yuri lerem juntos (Age+Jasmim sem jargão)
+10. Update Assembleia enviado com decisões + pricing revisado
+11. Email amanda.py para Yuri (baixar do Replit antes 02/10)
+
+**Decisões consolidadas desta extensão:**
+- Mensalidade fixa = modelo Age ✅
+- Painel Mayumi = somente financeiro ✅
+- Aprovação = por profissional individualmente ✅
+- Notificação = 4 canais ✅
+- AGE não sobrescreve config do profissional ✅
+
+**Síntese filosófica:**
+A sessão construiu uma arquitetura de poder cuidadosamente calibrada. Mayumi tem visão financeira mas não toca na agenda — não porque não é confiável, mas porque separar responsabilidades protege as profissionais e protege a Mayumi também. A IA serve de intermediária não por limitação, mas por desenho: quem opera o sistema não precisa ver tudo, precisa ver o que importa para a sua função. O princípio "AGE não muda configuração do profissional autonomamente" é equivalente ao princípio constitucional de separação de poderes — cada parte do sistema age dentro do seu escopo, e esse escopo é definido pelo humano que o configura, não pela plataforma. É um sistema que foi projetado para não ser mais esperto do que seus usuários.

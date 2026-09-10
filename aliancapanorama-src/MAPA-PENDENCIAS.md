@@ -683,3 +683,10 @@
 | #344 | MYYM config relacionamento: alertar se perceber algo socialmente relevante — chamar os dois | PROCESSO | 🟡 config sensível, aguarda momento certo |
 | #345 | Perfeito para Mayumi ler com Yuri: doc resumido de Jasmim + Age sem jargão técnico | PROCESSO | ✅ email enviado S122i |
 | #346 | Assembleia: update decisões (painel só financeiro, aprovação por profissional, pricing revisar) | PROCESSO | ✅ email enviado S122i |
+
+### S122j — #fim + PERFEITO 664 (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #347 | Notificação aprovação: 4 canais (email paciente + email profissional + feed + alerta dashboard 7 dias configurável) | CÓDIGO | ⏳ implementar S123 |
+| #348 | Princípio AGE: sistema nunca altera config do profissional autonomamente | ARQUITETURA | ✅ registrado |

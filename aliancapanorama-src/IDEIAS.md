@@ -1960,3 +1960,6 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I750 | Aprovação automática DECIDIDO: critérios definidos por CADA PROFISSIONAL — Lisange e Suzana definem os seus independentemente | DECISÃO | ✅ S122i — implementar como configuração por-profissional |
 | I751 | Dashboard profissional: panorama semanal integrado ao feed — pacientes em atraso, inadimplentes, desmarcados, reagendamentos automáticos + depoimentos + grupo de pacientes (sugestão Mayumi) | CÓDIGO | 🟡 I722 extendido — Mayumi confirmou |
 | I752 | MYYM configuração relacionamento Yuri+Mayumi: alertar (não omitir) se perceber algo socialmente relevante; chamar os dois juntos; testemunha atenta, não guardiã | PROCESSO | 🟡 config sensível — implementar com cuidado |
+
+| I753 | Notificação aprovação paciente DEFINIDA: (1) email ao paciente, (2) email à profissional, (3) consta no feed, (4) alerta dashboard 7 dias (prazo configurável pela profissional) — 4 canais simultâneos | CÓDIGO | ⏳ implementar junto ao painel aprovação S123 |
+| I754 | AGE sem autonomia sobre configurações do profissional: o sistema aplica o que foi configurado, NUNCA muda ou sobrescreve regras da profissional por conta própria | ARQUITETURA | ✅ princípio confirmado S122j |
