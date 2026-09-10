@@ -1934,3 +1934,6 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 
 | I731 | Login social Age: Plano Social (comprovação CRP ou declaração projeto/ONG ou agenda baixo volume), até 15 pacientes, 6 meses renováveis, Mayumi aprova — proposto para deliberação da assembleia | PROCESSO | 🟡 aguardando deliberação assembleia |
 | I732 | Plano Social variantes: Estudante (CRM/CRP provisório), Parceiro (ONG/equipe com desconto), Troca (contribuição por divulgação/mentoria) — levantadas como opções adicionais | PROCESSO | 🟡 backlog pós-deliberação |
+
+| I733 | Pacotes Age: Plano Social (IAs gerenciam, assembleia define), Broto R$79 (20 pac), Raiz R$149 (60 pac), Copa R$249 (ilimitado+3 profissionais) — proposta enviada à assembleia | PROCESSO | 🟡 aguarda deliberação assembleia |
+| I734 | Fluxo automático Plano Social: formulário → SABIÁ analisa → aprovação/encaminhamento Mayumi → renovação automática 6 meses; critérios e tetos configuráveis pela assembleia | CÓDIGO | 🟡 aguarda definição de critérios |

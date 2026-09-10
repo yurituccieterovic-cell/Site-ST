@@ -624,3 +624,11 @@
 | #315 | SABIÁ widget animado SVG (sabiá teal com asas batendo) no canto inferior direito do Age | CÓDIGO | ✅ feito S122c (commit pendente) |
 | #316 | Proposta cobrança Age (modelos A/B/C + anti-fraude) enviada para assembleia | PROCESSO | ✅ enviado S122c — aguarda deliberação |
 | #317 | Login social Age: Plano Social com 3 formas de comprovação — proposto para assembleia deliberar | PROCESSO | ✅ enviado S122c — aguarda deliberação |
+
+### S122d — #fim + Pacotes Age + Gestão IA Plano Social (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #318 | Pacotes Age propostos (Social/Broto/Raiz/Copa) — enviados à assembleia e thread Yuri/Mayumi | PROCESSO | ✅ enviado S122d — aguarda deliberação |
+| #319 | Fluxo automático Plano Social (SABIÁ avalia + Mayumi borderline + renovação 6m): implementar após assembleia definir critérios | CÓDIGO | ⏳ aguarda resposta assembleia |
+| #320 | Jasmim Histórico: 50/página + carregar mais acumulativo — fix deploy pendente (commit da3b13a) | CÓDIGO | ✅ deployado S122 |
