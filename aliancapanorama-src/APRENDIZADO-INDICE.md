@@ -131,3 +131,5 @@
 | 13165 | 🧪📱 #eage Rodada 7 — Teste ao Vivo + Painel Mayumi + PWA iOS (Sessão #119t, 2026-09-09) | 6 entradas (A6215-A6220): teste ao vivo Yuri+Mayumi revelou 3 lacunas (admin, aprovação, Financeiro), pergunta antes da resposta no Jasmim, aprovação automática por pré-requisitos, DATABASE_URL heliumdb≠produção no Replit, memória pública Árvore no Bluesky, meta tags iOS PWA | Sessão #119t | 2026-09-09 |
 
 | 13166 | 🔐🐦 #processo Age Feed Inteligente + Fixes (Sessão #122, 2026-09-10) | 3 entradas (A6221-A6223): MASTER_PASSWORD bypass deve vir ANTES do lookup de email (bug gestora); ARPIA offline → erro legível em vez de "Application not found"; age_notas = tabela unificada nota/pergunta/anuncio com fork e IA | Sessão #122 | 2026-09-10 |
+
+| 13167 | 🐦📋 #eage Rodada 8 — Root vs Gestora + Perfil do Profissional (S122b, 2026-09-10) | 3 entradas (A6224-A6226): root = bypass emergência (sem rastreio), gestora = painel rastreável de uso diário; backlog = aprovado mas na fila; perfil do profissional como formulário vivo (comparação XP) é padrão melhor que configs espalhadas | Sessão #122b | 2026-09-10 |

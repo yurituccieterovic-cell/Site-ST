@@ -1926,3 +1926,8 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 
 | I725 | Feed inteligente Age (Notas+SABIÁ): sistema tipo Jasmim com nota/pergunta/anuncio, SABIÁ responde automaticamente perguntas usando GPT-4o-mini, fork em qualquer nota — IMPLEMENTADO commit a2de0ec | CÓDIGO | ✅ feito S122 |
 | I726 | Replit pg_dump: banco completo ainda não exportado — assembleia_sessions, arvore_memoria, clube_messages precisam de pg_dump manual via Shell do Replit; email enviado para Yuri com instruções | PROCESSO | 🟡 aguardando Yuri |
+
+| I727 | Perfil do profissional: formulário vivo de configurações (prazo cancelamento, taxa, modelo cobrança, valor consulta) — comparado ao questionário XP; aba "Perfil" no painel | CÓDIGO | 🟡 proposta Mayumi, aprovação pendente |
+| I728 | SABIÁ widget CSS animado: flutuando no canto da tela (como Corujinha/Esquilo), clique abre chat SABIÁ direto — persistente em todas as telas do Age | CÓDIGO | 🟡 Mayumi pediu no áudio |
+| I729 | Modelo de cobrança Age: 3 modelos propostos (A=mensalidade fixa, B=% por consulta, C=híbrido); aguarda deliberação da assembleia e escolha da Mayumi | PROCESSO | 🟡 aguarda Mayumi responder |
+| I730 | Configurar emails reais das profissionais no banco: lisange.usp@gmail.com e vitamind@ginsbergeye.com — FEITO via SQL direto no Neon em S122b | CÓDIGO | ✅ feito S122b |

@@ -606,3 +606,13 @@
 | #307 | Studio: ARPIA offline → retorna mensagem amigável "Artesão offline" em vez de "Application not found" | CÓDIGO | ✅ feito S122 (commit a2de0ec) |
 | #308 | Age feed inteligente: age_notas (nota/pergunta/anuncio) + SABIÁ IA auto-responde perguntas + fork | CÓDIGO | ✅ feito S122 (commit a2de0ec) |
 | #309 | Replit pg_dump: banco completo (assembleia_sessions, arvore_memoria, clube_messages) ainda não exportado — email com instruções enviado para Yuri | INFRA | ⏳ aguardando Yuri fazer pg_dump manual no Shell Replit |
+
+### S122b — #eage Rodada 8: Root vs Gestora + Perfil + Cobrança (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #310 | Emails profissionais: lisange.usp@gmail.com + vitamind@ginsbergeye.com configurados no banco | INFRA | ✅ feito S122b (SQL direto Neon) |
+| #311 | Perfil do profissional: aba com configurações (cancelamento, taxas, modelo cobrança, valor consulta) | CÓDIGO | ⏳ aguarda aprovação Yuri/Mayumi |
+| #312 | SABIÁ widget CSS animado no Age (como Corujinha/Esquilo) — posição a definir por Mayumi | CÓDIGO | ⏳ aguarda resposta Mayumi (canto vs topo) |
+| #313 | Modelo de cobrança Age: proposta 3 modelos enviada por email — aguarda escolha Mayumi + deliberação assembleia | PROCESSO | ⏳ aguarda resposta |
+| #314 | Projeto "Céu" faltando no Jasmim — mapear site e adicionar | CÓDIGO | ⏳ próxima sessão |
