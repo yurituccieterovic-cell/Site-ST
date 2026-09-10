@@ -1945,3 +1945,8 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I738 | Onboarding Mayumi no Age: primeiro acesso ao painel gestora (/age/admin), walkthrough das funcionalidades, glossário sem jargão técnico — "ação irreversível" em vez de "destrutivo" | PROCESSO | 🟡 S122f — montar guia onboarding |
 | I739 | UX Age — linguagem humana: trocar todos os termos técnicos por equivalentes do cotidiano: "destrutivo" → "não pode ser desfeito"; "token" → "código de acesso"; "slug" → nunca expor para usuária | CÓDIGO | 🟡 refinar com Mayumi |
 | I740 | MYYM + perguntas reais das profissionais: caso de uso concreto — Mayumi leva perguntas clínicas reais de Lisange/Suzana ao Jasmim; ISCA routing (já implementado) serve exatamente para isso | PROCESSO | ✅ base técnica pronta (ISCA routing S122c) |
+
+| I741 | Mensalidade fixa DECIDIDA por Yuri: percentual por consulta cria overhead de conferência (paciente pagou profissional?) — não compensa financeiramente; Stripe Connect por mensalidade fixa por profissional | DECISÃO | ✅ S122g — Yuri confirmou |
+| I742 | Plano Social 15 pacientes APROVADO por Yuri; Plano Estudante/ONG adiado para quando tiver ~10 profissionais no sistema | DECISÃO | ✅ S122g |
+| I743 | Cadastro progressivo Age: Visitante (nome+tel) → Conta confirmada (email+senha) → Paciente aprovado (ficha+consentimento) → Paciente ativo (histórico+pagamentos) — não pedir tudo de uma vez | CÓDIGO | 🟡 Assembleia aprovou conceito |
+| I744 | Esquilo MYYM avatar mais animado: membranas (patagium) com animação independente (scaleX+skewY), cauda com rotate amplo, float com rotação — implementado S122g | CÓDIGO | ✅ feito S122g |

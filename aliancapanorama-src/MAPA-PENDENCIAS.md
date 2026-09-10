@@ -651,3 +651,15 @@
 | #327 | UX Age: trocar linguagem técnica por linguagem humana ("destrutivo" → "não pode ser desfeito") | CÓDIGO | 🟡 I739 |
 | #328 | Copy button Jasmim (I723): não copia a pergunta junto — Mayumi relatou novamente | CÓDIGO | 🔴 bug confirmado |
 | #329 | MYYM com perguntas reais das profissionais: Mayumi quer levar questões clínicas reais ao Jasmim/ISCA | PROCESSO | 🟡 base técnica pronta (ISCA routing) |
+
+### S122g — #processo PERFEITOs 656-658 + resposta Yuri (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #330 | Mensalidade fixa DECIDIDA — implementar cobrança Stripe por plano mensal (não por consulta) | CÓDIGO | ⏳ aguarda depois da deliberação completa |
+| #331 | Cadastro progressivo (4 níveis) — implementar após Plano Social definido | CÓDIGO | 🟡 conceito aprovado Assembleia |
+| #332 | Plano Estudante/ONG: adiar até ~10 profissionais no sistema | PROCESSO | ⏳ congelado |
+| #333 | Esquilo MYYM avatar: membranas animadas independentes + cauda + float com rotação — IMPLEMENTADO | CÓDIGO | ✅ S122g |
+| #334 | Painel Mayumi: definir poderes (só visualizar ou também editar/cancelar) — aguarda Assembleia | DECISÃO | ⏳ aguarda deliberação |
+| #335 | Aprovação automática: pré-requisitos por profissional (anamnese? documento? consulta inicial paga?) | DECISÃO | ⏳ aguarda Mayumi/Yuri definir |
+| #336 | Notificação paciente aprovado: email + alerta painel + WhatsApp — modelo a escolher | DECISÃO | ⏳ aguarda Assembleia |

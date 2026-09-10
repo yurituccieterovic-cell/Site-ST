@@ -259,29 +259,46 @@ function MyymAvatar({ onClick }: { onClick: () => void }) {
       <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 44, height: 44 }}>
         <defs>
           <style>{`
-            @keyframes jmAvFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
+            @keyframes jmAvFloat { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-8px) rotate(2deg); } }
+            @keyframes jmAvMemL  { 0%,100% { transform:scaleX(1) skewY(0deg); } 50% { transform:scaleX(1.18) skewY(-6deg); } }
+            @keyframes jmAvMemR  { 0%,100% { transform:scaleX(1) skewY(0deg); } 50% { transform:scaleX(1.18) skewY(6deg); } }
+            @keyframes jmAvTail  { 0%,100% { transform:rotate(-6deg); } 50% { transform:rotate(14deg); } }
+            @keyframes jmAvBlink { 0%,90%,100% { scaleY:1; } 93%,97% { scaleY:0.1; } }
+            .jm-av-body { animation: jmAvFloat 2.2s ease-in-out infinite; }
+            .jm-av-ml   { animation: jmAvMemL  2.2s ease-in-out infinite; transform-origin: 38px 46px; }
+            .jm-av-mr   { animation: jmAvMemR  2.2s ease-in-out infinite; transform-origin: 58px 46px; }
+            .jm-av-tail { animation: jmAvTail  2.2s ease-in-out infinite; transform-origin: 58px 52px; }
           `}</style>
         </defs>
-        <g style={{ animation: "jmAvFloat 2.6s ease-in-out infinite" }}>
-          <path d="M18,54 Q10,42 18,30 L38,40 L42,62 Z" fill="#c2700a" opacity="0.82"/>
-          <path d="M78,54 Q86,42 78,30 L58,40 L54,62 Z" fill="#c2700a" opacity="0.82"/>
-          <ellipse cx="62" cy="58" rx="14" ry="8" fill="#92400e" transform="rotate(25 62 58)"/>
-          <ellipse cx="64" cy="55" rx="11" ry="6" fill="#d97706" transform="rotate(25 64 55)"/>
+        {/* membranas (fora do grupo principal para animação independente) */}
+        <path className="jm-av-ml" d="M18,54 Q8,40 18,28 L38,40 L42,62 Z" fill="#c2700a" opacity="0.85"/>
+        <path className="jm-av-mr" d="M78,54 Q88,40 78,28 L58,40 L54,62 Z" fill="#c2700a" opacity="0.85"/>
+        <g className="jm-av-body">
+          {/* cauda */}
+          <ellipse className="jm-av-tail" cx="63" cy="57" rx="15" ry="8" fill="#92400e" transform="rotate(25 63 57)"/>
+          <ellipse className="jm-av-tail" cx="65" cy="54" rx="11" ry="6" fill="#d97706" transform="rotate(25 65 54)"/>
+          {/* corpo */}
           <ellipse cx="48" cy="54" rx="16" ry="14" fill="#d97706"/>
+          {/* braços */}
           <ellipse cx="26" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(-35 26 40)"/>
           <ellipse cx="70" cy="40" rx="9" ry="4" fill="#d97706" transform="rotate(35 70 40)"/>
+          {/* orelhas */}
           <ellipse cx="37" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(-10 37 26)"/>
           <ellipse cx="37" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(-10 37 27)"/>
           <ellipse cx="59" cy="26" rx="5" ry="6" fill="#d97706" transform="rotate(10 59 26)"/>
           <ellipse cx="59" cy="27" rx="3" ry="4" fill="#fbbf24" transform="rotate(10 59 27)"/>
+          {/* cabeça */}
           <circle cx="48" cy="36" r="13" fill="#d97706"/>
+          {/* olhos */}
           <ellipse cx="43" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
           <ellipse cx="53" cy="35" rx="4" ry="4.5" fill="#1a1a2e"/>
           <circle cx="44" cy="33.5" r="1.5" fill="white"/>
           <circle cx="54" cy="33.5" r="1.5" fill="white"/>
+          {/* nariz */}
           <ellipse cx="48" cy="40" rx="2.5" ry="1.8" fill="#92400e"/>
-          <circle cx="38" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
-          <circle cx="58" cy="39" r="4" fill="#f59e0b" opacity="0.35"/>
+          {/* bochechas */}
+          <circle cx="38" cy="39" r="4" fill="#f59e0b" opacity="0.4"/>
+          <circle cx="58" cy="39" r="4" fill="#f59e0b" opacity="0.4"/>
         </g>
       </svg>
     </button>
