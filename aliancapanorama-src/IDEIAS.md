@@ -1923,3 +1923,6 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I722 | Fix Jasmim: pergunta deve aparecer ANTES da resposta da IA; hoje a resposta carrega embaixo sem mostrar a pergunta primeiro; corrigir componente de exibição de Q&A | CÓDIGO | 🔴 bug confirmado por Yuri |
 | I723 | Fix Jasmim: botão de copiar pergunta+resposta não está copiando a pergunta — Mayumi relatou; pode ser que só copia a resposta; corrigir selector do clipboard | CÓDIGO | 🔴 bug confirmado por Mayumi |
 | I724 | Memória pública da Árvore: ler posts recentes do Bluesky (stuccipulseheadway.bsky.social) via API pública; incorporar no pack-arvore.md como "memória do que já disse publicamente"; evitar repetição ou contradição | PROCESSO | 🟡 referência salva |
+
+| I725 | Feed inteligente Age (Notas+SABIÁ): sistema tipo Jasmim com nota/pergunta/anuncio, SABIÁ responde automaticamente perguntas usando GPT-4o-mini, fork em qualquer nota — IMPLEMENTADO commit a2de0ec | CÓDIGO | ✅ feito S122 |
+| I726 | Replit pg_dump: banco completo ainda não exportado — assembleia_sessions, arvore_memoria, clube_messages precisam de pg_dump manual via Shell do Replit; email enviado para Yuri com instruções | PROCESSO | 🟡 aguardando Yuri |

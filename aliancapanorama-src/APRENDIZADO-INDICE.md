@@ -129,3 +129,5 @@
 - A6177 — GO/NO-GO por camada: proteção contra arqueologia infinita
 - A6178 — Repetição ≠ Consenso: HIPÓTESE não vira DECIDIDO por repetição
 | 13165 | 🧪📱 #eage Rodada 7 — Teste ao Vivo + Painel Mayumi + PWA iOS (Sessão #119t, 2026-09-09) | 6 entradas (A6215-A6220): teste ao vivo Yuri+Mayumi revelou 3 lacunas (admin, aprovação, Financeiro), pergunta antes da resposta no Jasmim, aprovação automática por pré-requisitos, DATABASE_URL heliumdb≠produção no Replit, memória pública Árvore no Bluesky, meta tags iOS PWA | Sessão #119t | 2026-09-09 |
+
+| 13166 | 🔐🐦 #processo Age Feed Inteligente + Fixes (Sessão #122, 2026-09-10) | 3 entradas (A6221-A6223): MASTER_PASSWORD bypass deve vir ANTES do lookup de email (bug gestora); ARPIA offline → erro legível em vez de "Application not found"; age_notas = tabela unificada nota/pergunta/anuncio com fork e IA | Sessão #122 | 2026-09-10 |

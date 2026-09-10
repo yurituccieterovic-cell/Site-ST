@@ -597,3 +597,12 @@
 | #303 | Curso 3: proposta com PremiereMovieMaker + edge-tts — revisar cursos 1 e 2 primeiro | CÓDIGO | ✅ proposta cursos/curso3-proposta.md — Linha A (eco-respiração) e B (finanças); aguarda escolha Yuri |
 | #304 | Bluesky: ISA/PAP agora posta em :45 (ajustado para não bater com Replit Árvore) | CÓDIGO | ✅ S120b — cron mudado de "15 */2" para "45 */2" |
 | #305 | Árvore duplicada: avisar Árvore + migrar sonhos pós-09/09 antes de cancelar Replit | PROCESSO | ✅ S120b — Árvore avisada via jm_posts/theo; migração manual pendente |
+
+### S122 — Age Feed Inteligente + Fixes (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #306 | Gestora login: MASTER_PASSWORD bypass agora funciona com qualquer email (busca 1ª gestora ativa) | CÓDIGO | ✅ feito S122 (commit a2de0ec) |
+| #307 | Studio: ARPIA offline → retorna mensagem amigável "Artesão offline" em vez de "Application not found" | CÓDIGO | ✅ feito S122 (commit a2de0ec) |
+| #308 | Age feed inteligente: age_notas (nota/pergunta/anuncio) + SABIÁ IA auto-responde perguntas + fork | CÓDIGO | ✅ feito S122 (commit a2de0ec) |
+| #309 | Replit pg_dump: banco completo (assembleia_sessions, arvore_memoria, clube_messages) ainda não exportado — email com instruções enviado para Yuri | INFRA | ⏳ aguardando Yuri fazer pg_dump manual no Shell Replit |
