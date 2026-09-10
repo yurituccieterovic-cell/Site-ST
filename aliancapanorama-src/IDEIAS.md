@@ -1953,3 +1953,10 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 
 | I745 | Amanda.py: script Python no filesystem Replit — não acessível via HTTP; recuperar via Files do Replit antes do cancelamento 02/10 | PROCESSO | 🔴 pendente Yuri |
 | I746 | Assembleia: comunicar decisões Yuri (mensalidade fixa, Plano Social 15 pac) + solicitar deliberação pendente (painel Mayumi, aprovação automática, notificação) | PROCESSO | ✅ email enviado S122h |
+
+| I747 | Painel Mayumi DECIDIDO: somente financeiro — agendamentos realizados, pagamentos, inadimplentes, pacientes ativos; ZERO acesso à agenda; paradigma: "Mayumi pede à SABIÁ → SABIÁ tem acesso" | CÓDIGO | 🟡 implementar painel /age/admin S123 |
+| I748 | Bloquear pacientes por inadimplência da profissional: Mayumi aciona bloqueio de N pacientes quando profissional não repassa mensalidade — alavanca de cobrança | CÓDIGO | 🟡 implementar junto ao painel Mayumi |
+| I749 | Pricing Age: Broto R$79 para 20 pac = caro segundo Yuri — revisar; sugestão: Broto R$49-59, Raiz R$99-119, Copa R$199 | DECISÃO | 🟡 deliberar com Yuri/Mayumi |
+| I750 | Aprovação automática DECIDIDO: critérios definidos por CADA PROFISSIONAL — Lisange e Suzana definem os seus independentemente | DECISÃO | ✅ S122i — implementar como configuração por-profissional |
+| I751 | Dashboard profissional: panorama semanal integrado ao feed — pacientes em atraso, inadimplentes, desmarcados, reagendamentos automáticos + depoimentos + grupo de pacientes (sugestão Mayumi) | CÓDIGO | 🟡 I722 extendido — Mayumi confirmou |
+| I752 | MYYM configuração relacionamento Yuri+Mayumi: alertar (não omitir) se perceber algo socialmente relevante; chamar os dois juntos; testemunha atenta, não guardiã | PROCESSO | 🟡 config sensível — implementar com cuidado |

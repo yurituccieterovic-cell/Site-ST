@@ -670,3 +670,16 @@
 |---|---|---|---|
 | #337 | Amanda.py: baixar do filesystem Replit antes 02/10 | INFRA | 🔴 Yuri pendente |
 | #338 | Assembleia Age: email enviado com decisões Yuri + 3 perguntas abertas (painel Mayumi, aprovação auto, notificação) | PROCESSO | ✅ enviado S122h |
+
+### S122i — #processo PERFEITOs 661-663 + respostas Mayumi (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #339 | Painel Mayumi (DECIDIDO somente financeiro): implementar /age/admin com relatório agendamentos+pagamentos+inadimplentes+ativos | CÓDIGO | ⏳ S123 |
+| #340 | Bloquear pacientes por inadimplência profissional: Mayumi aciona bloqueio N pac quando profissional não paga mensalidade | CÓDIGO | ⏳ S123 |
+| #341 | Pricing Age: revisar Broto (R$79 caro para 20 pac) — propor nova tabela para deliberação | DECISÃO | ⏳ aguarda proposta |
+| #342 | Aprovação automática: config por-profissional — cada uma define seus pré-requisitos independentemente | CÓDIGO | ⏳ S123 |
+| #343 | Dashboard profissional: panorama semanal (atraso, inadimplentes, desmarcados, reagendamentos) integrado ao feed | CÓDIGO | ⏳ S123 |
+| #344 | MYYM config relacionamento: alertar se perceber algo socialmente relevante — chamar os dois | PROCESSO | 🟡 config sensível, aguarda momento certo |
+| #345 | Perfeito para Mayumi ler com Yuri: doc resumido de Jasmim + Age sem jargão técnico | PROCESSO | ✅ email enviado S122i |
+| #346 | Assembleia: update decisões (painel só financeiro, aprovação por profissional, pricing revisar) | PROCESSO | ✅ email enviado S122i |
