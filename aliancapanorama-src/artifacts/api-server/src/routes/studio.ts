@@ -129,8 +129,12 @@ async function _triggerAgente(mensagem: string, agente: string) {
       signal: AbortSignal.timeout(90_000),
     });
 
+    if (!r.ok) {
+      throw new Error(`ARPIA indisponível (HTTP ${r.status}). O Artesão ainda não está no ar — use o Studio quando o ARPIA estiver deployado.`);
+    }
+
     const data = await r.json() as Record<string, unknown>;
-    const resposta = (data.resultado ?? data.resultado ?? data.message ??
+    const resposta = (data.resultado ?? data.message ??
       `Proposta recebida (id: ${(data as {proposta_id?: string}).proposta_id ?? "?"}). Artesão arquitetando...`) as string;
 
     await pool.query(
@@ -140,10 +144,11 @@ async function _triggerAgente(mensagem: string, agente: string) {
     );
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
+    const friendlyMsg = msg.includes("ARPIA") ? msg : `Artesão offline: ${msg}`;
     await pool.query(
       `INSERT INTO studio_chat (remetente, agente, conteudo, status)
        VALUES ($1, $2, $3, 'erro')`,
-      [agente, agente, `[Erro ao conectar ao ARPIA: ${msg}]`]
+      [agente, agente, friendlyMsg.slice(0, 4000)]
     ).catch(() => {});
   }
 }

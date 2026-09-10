@@ -347,7 +347,23 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_invite_tokens_token ON age_invite_tokens(token) WHERE used_at IS NULL`);
   // Bloco 2 — Ficha interna do paciente (I229)
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS ficha_interna JSONB NOT NULL DEFAULT '{}'`);
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna)");
+  // Bloco 3 — Feed inteligente (notas + perguntas com resposta IA + fork)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_notas (
+      id              SERIAL      PRIMARY KEY,
+      professional_id INTEGER     NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      tipo            VARCHAR(20) NOT NULL DEFAULT 'nota',
+      conteudo        TEXT        NOT NULL,
+      autor           VARCHAR(20) NOT NULL DEFAULT 'prof',
+      parent_id       INTEGER     REFERENCES age_notas(id) ON DELETE SET NULL,
+      paciente_id     INTEGER     REFERENCES age_patients(id) ON DELETE SET NULL,
+      resposta_ia     TEXT,
+      resposta_ia_at  TIMESTAMPTZ,
+      criado_em       TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_notas_prof ON age_notas(professional_id, criado_em DESC)`);
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

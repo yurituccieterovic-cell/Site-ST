@@ -20,7 +20,7 @@ type AvailRule = {
 type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
 type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null; faltou90d?: number; realizadas90d?: number };
-type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed";
+type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed" | "notas";
 type FeedItem = {
   tipo: "appointment" | "patient";
   id: string;
@@ -162,6 +162,20 @@ export function AgePage() {
   // Feed operacional
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [feedLoading, setFeedLoading] = useState(false);
+
+  // Notas inteligentes (feed como Jasmim)
+  type Nota = {
+    id: number; tipo: string; conteudo: string; autor: string;
+    parent_id: number | null; paciente_id: number | null; paciente_nome: string | null;
+    resposta_ia: string | null; resposta_ia_at: string | null;
+    fork_count: number; criado_em: string;
+  };
+  const [notas, setNotas] = useState<Nota[]>([]);
+  const [notasLoading, setNotasLoading] = useState(false);
+  const [notaForm, setNotaForm] = useState({ tipo: "nota", conteudo: "" });
+  const [notaEnviando, setNotaEnviando] = useState(false);
+  const [forkId, setForkId] = useState<number | null>(null);
+  const [forkConteudo, setForkConteudo] = useState("");
 
   // Área do paciente
   const [patientNome, setPatientNome] = useState("");
@@ -326,11 +340,25 @@ export function AgePage() {
     setFeedLoading(false);
   }, [mode, slug]);
 
+  const loadNotas = useCallback(async () => {
+    if (mode !== "professional") return;
+    setNotasLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/notas?limit=60`, { credentials: "include" });
+      if (r.ok) setNotas(await r.json() as any[]);
+    } catch { /* silencia */ }
+    setNotasLoading(false);
+  }, [mode, slug]);
+
   useEffect(() => {
     if (mode === "professional" && authStep === "done") {
       loadAppts(); loadRules(); loadExceptions(); loadPatients(); loadFeed();
     }
   }, [mode, authStep, loadAppts, loadRules, loadExceptions, loadPatients, loadFeed]);
+
+  useEffect(() => {
+    if (view === "notas" && mode === "professional" && authStep === "done") loadNotas();
+  }, [view, mode, authStep, loadNotas]);
 
   // Confirmar email via ?confirm= na URL
   useEffect(() => {
@@ -1999,6 +2027,166 @@ export function AgePage() {
     );
   }
 
+  function NotasView() {
+    const TIPO_ICON: Record<string, string> = { nota: "📝", pergunta: "❓", anuncio: "📢" };
+    const TIPO_COLOR: Record<string, string> = { nota: "#60a5fa", pergunta: "#a78bfa", anuncio: "#fb923c" };
+    const TIPO_LABEL: Record<string, string> = { nota: "Nota", pergunta: "Pergunta", anuncio: "Anúncio" };
+
+    function timeAgo(ts: string) {
+      const diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000);
+      if (diff < 60) return "agora";
+      if (diff < 3600) return `${Math.floor(diff / 60)}min atrás`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)}h atrás`;
+      return `${Math.floor(diff / 86400)}d atrás`;
+    }
+
+    async function enviarNota(e: React.FormEvent) {
+      e.preventDefault();
+      if (!notaForm.conteudo.trim()) return;
+      setNotaEnviando(true);
+      try {
+        const r = await fetch(`${API}/api/age/${slug}/notas`, {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tipo: notaForm.tipo, conteudo: notaForm.conteudo }),
+        });
+        if (r.ok) {
+          setNotaForm({ tipo: "nota", conteudo: "" });
+          setTimeout(loadNotas, 400);
+        }
+      } catch { /* silencia */ }
+      setNotaEnviando(false);
+    }
+
+    async function enviarFork(parentId: number) {
+      if (!forkConteudo.trim()) return;
+      setNotaEnviando(true);
+      try {
+        const r = await fetch(`${API}/api/age/${slug}/notas/${parentId}/fork`, {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tipo: "nota", conteudo: forkConteudo }),
+        });
+        if (r.ok) {
+          setForkId(null);
+          setForkConteudo("");
+          setTimeout(loadNotas, 400);
+        }
+      } catch { /* silencia */ }
+      setNotaEnviando(false);
+    }
+
+    async function deletarNota(id: number) {
+      if (!confirm("Apagar esta nota?")) return;
+      await fetch(`${API}/api/age/${slug}/notas/${id}`, { method: "DELETE", credentials: "include" });
+      setNotas(prev => prev.filter(n => n.id !== id));
+    }
+
+    return (
+      <div style={{ padding: "1rem" }}>
+        {/* Formulário de nova nota */}
+        <form onSubmit={enviarNota} style={{ background: "#0a0f16", border: `1px solid ${color}33`, borderRadius: 12, padding: "1rem", marginBottom: 20 }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            {(["nota", "pergunta", "anuncio"] as const).map(t => (
+              <button key={t} type="button" onClick={() => setNotaForm(f => ({ ...f, tipo: t }))}
+                style={{ padding: "4px 12px", borderRadius: 6, border: `1px solid ${notaForm.tipo === t ? TIPO_COLOR[t] : "#1e293b"}`, background: notaForm.tipo === t ? TIPO_COLOR[t] + "22" : "none", color: notaForm.tipo === t ? TIPO_COLOR[t] : "#64748b", fontSize: 12, cursor: "pointer" }}>
+                {TIPO_ICON[t]} {TIPO_LABEL[t]}
+              </button>
+            ))}
+          </div>
+          <textarea value={notaForm.conteudo} onChange={e => setNotaForm(f => ({ ...f, conteudo: e.target.value }))}
+            placeholder={notaForm.tipo === "pergunta" ? "Faça uma pergunta à SABIÁ..." : notaForm.tipo === "anuncio" ? "Escreva um anúncio para pacientes..." : "Escreva uma nota interna..."}
+            rows={3} style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "8px 12px", fontSize: 14, resize: "vertical", boxSizing: "border-box" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
+            <button type="button" onClick={loadNotas} disabled={notasLoading}
+              style={{ background: "none", border: "none", color: "#475569", fontSize: 12, cursor: "pointer" }}>
+              {notasLoading ? "Carregando..." : "↻ Atualizar"}
+            </button>
+            <button type="submit" disabled={notaEnviando || !notaForm.conteudo.trim()}
+              style={{ padding: "6px 18px", background: color, border: "none", borderRadius: 6, color: "#0a0f16", fontWeight: 700, fontSize: 13, cursor: "pointer", opacity: notaEnviando ? 0.6 : 1 }}>
+              {notaEnviando ? "Enviando..." : "Publicar"}
+            </button>
+          </div>
+        </form>
+
+        {/* Lista de notas */}
+        {notasLoading && notas.length === 0 && (
+          <div style={{ color: "#475569", fontSize: 14 }}>Carregando notas...</div>
+        )}
+        {!notasLoading && notas.length === 0 && (
+          <div style={{ color: "#475569", fontSize: 14 }}>Nenhuma nota ainda. Crie sua primeira nota acima!</div>
+        )}
+
+        {notas.map(nota => {
+          const tc = TIPO_COLOR[nota.tipo] ?? "#64748b";
+          return (
+            <div key={nota.id} style={{ background: "#0f1318", border: `1px solid ${tc}33`, borderLeft: `3px solid ${tc}`, borderRadius: 10, padding: "12px 14px", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span>{TIPO_ICON[nota.tipo] ?? "📝"}</span>
+                  <span style={{ fontSize: 11, color: tc, fontWeight: 700, background: tc + "22", borderRadius: 4, padding: "1px 8px" }}>{TIPO_LABEL[nota.tipo] ?? nota.tipo}</span>
+                  {nota.autor === "gestora" && <span style={{ fontSize: 10, color: "#fb923c" }}>gestora</span>}
+                  {nota.paciente_nome && <span style={{ fontSize: 11, color: "#64748b" }}>📍 {nota.paciente_nome}</span>}
+                </div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ fontSize: 11, color: "#475569" }}>{timeAgo(nota.criado_em)}</span>
+                  <button onClick={() => deletarNota(nota.id)} title="Apagar"
+                    style={{ background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 13, padding: 2 }}>✕</button>
+                </div>
+              </div>
+
+              <p style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.5, margin: "0 0 8px", whiteSpace: "pre-wrap" }}>{nota.conteudo}</p>
+
+              {/* Resposta da IA */}
+              {nota.resposta_ia && (
+                <div style={{ background: "#0a1a0d", border: "1px solid #4ade8044", borderRadius: 8, padding: "10px 12px", marginTop: 6 }}>
+                  <div style={{ fontSize: 11, color: "#4ade80", fontWeight: 700, marginBottom: 4 }}>🐦 SABIÁ</div>
+                  <p style={{ color: "#a7f3c5", fontSize: 13, lineHeight: 1.6, margin: 0, whiteSpace: "pre-wrap" }}>{nota.resposta_ia}</p>
+                </div>
+              )}
+              {nota.tipo === "pergunta" && !nota.resposta_ia && (
+                <div style={{ fontSize: 12, color: "#475569", marginTop: 6, fontStyle: "italic" }}>🐦 SABIÁ respondendo...</div>
+              )}
+
+              {/* Forks */}
+              {nota.fork_count > 0 && (
+                <div style={{ fontSize: 11, color: "#64748b", marginTop: 6 }}>🔀 {nota.fork_count} fork{nota.fork_count > 1 ? "s" : ""}</div>
+              )}
+
+              {/* Ações */}
+              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                <button onClick={() => { setForkId(nota.id); setForkConteudo(""); }}
+                  style={{ background: "none", border: `1px solid #1e293b`, borderRadius: 6, color: "#64748b", fontSize: 11, padding: "3px 10px", cursor: "pointer" }}>
+                  🔀 Fork
+                </button>
+              </div>
+
+              {/* Modal de fork */}
+              {forkId === nota.id && (
+                <div style={{ marginTop: 10, background: "#0a0f16", border: `1px solid ${tc}33`, borderRadius: 8, padding: "10px 12px" }}>
+                  <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 6 }}>🔀 Fork desta nota</div>
+                  <textarea value={forkConteudo} onChange={e => setForkConteudo(e.target.value)}
+                    placeholder="Ramificação desta nota..." rows={2}
+                    style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 6, color: "#e2e8f0", padding: "6px 10px", fontSize: 13, resize: "vertical", boxSizing: "border-box" }} />
+                  <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                    <button onClick={() => enviarFork(nota.id)} disabled={notaEnviando || !forkConteudo.trim()}
+                      style={{ padding: "4px 14px", background: tc, border: "none", borderRadius: 6, color: "#0a0f16", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>
+                      Criar fork
+                    </button>
+                    <button onClick={() => setForkId(null)}
+                      style={{ background: "none", border: "1px solid #1e293b", borderRadius: 6, color: "#64748b", fontSize: 12, padding: "4px 10px", cursor: "pointer" }}>
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   function SabiaView() {
     return (
       <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 200px)" }}>
@@ -2438,7 +2626,7 @@ export function AgePage() {
       {mode === "professional" && authStep === "done" && (
         <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b" }}>
           <div style={{ maxWidth: 640, margin: "0 auto", display: "flex" }}>
-            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Disponibilidade"], ["config", "Configurações"], ["feed", "Feed 📋"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
+            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Disponibilidade"], ["config", "Config"], ["notas", "Notas 📝"], ["feed", "Feed 📋"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
               <button key={v} onClick={() => setView(v)}
                 style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: view === v ? `2px solid ${color}` : "2px solid transparent", color: view === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: view === v ? 700 : 400 }}>
                 {label}
@@ -2588,6 +2776,7 @@ export function AgePage() {
             {view === "disponibilidade" && DisponibilidadeView()}
             {view === "config"          && ConfigView()}
             {view === "feed"            && FeedView()}
+            {view === "notas"           && NotasView()}
             {view === "sabia"           && SabiaView()}
           </>
         ))}

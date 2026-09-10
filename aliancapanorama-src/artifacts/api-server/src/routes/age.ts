@@ -1274,6 +1274,137 @@ router.get("/age/:slug/feed", requireAgeAuth, async (req, res): Promise<void> =>
   res.json(merged);
 });
 
+// ─── Feed Inteligente — Notas / Perguntas com resposta SABIÁ ─────────────────
+
+const SABIA_SYSTEM = `Você é SABIÁ, assistente clínica da plataforma Age da Sociedade Tucci.
+Você apoia psicólogas e terapeutas com respostas precisas, empáticas e baseadas em evidências.
+Responda em português, de forma direta. Se for uma pergunta clínica, cite abordagens reconhecidas.
+Se for operacional, seja prática. Máximo 3 parágrafos.`;
+
+type NotaTipo = "nota" | "pergunta" | "anuncio";
+
+async function triggerSabiaResponse(notaId: number, conteudo: string): Promise<void> {
+  try {
+    const resposta = await routeLLM({
+      messages: [
+        { role: "system", content: SABIA_SYSTEM },
+        { role: "user", content: conteudo },
+      ],
+      maxTokens: 600,
+      temperature: 0.6,
+    });
+    await db.execute(sql`
+      UPDATE age_notas SET resposta_ia = ${resposta}, resposta_ia_at = now()
+      WHERE id = ${notaId}
+    `);
+  } catch (e) {
+    logger.error(`SABIÁ error: ${String(e)}`);
+  }
+}
+
+// GET /api/age/:slug/notas — lista feed (prof ou gestora)
+router.get("/age/:slug/notas", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const limit = Math.min(Number(req.query["limit"] ?? 50), 100);
+  const tipo = req.query["tipo"] as string | undefined;
+  const parentId = req.query["parent_id"] ? Number(req.query["parent_id"]) : null;
+
+  const profRes = await db.execute(sql`SELECT id FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const prof = (profRes as any).rows?.[0];
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const tipoFilter = tipo ? sql`AND tipo = ${tipo}` : sql``;
+  const parentFilter = parentId !== null ? sql`AND parent_id = ${parentId}` : sql`AND parent_id IS NULL`;
+
+  const rows = await db.execute(sql`
+    SELECT n.id, n.tipo, n.conteudo, n.autor, n.parent_id, n.paciente_id,
+           n.resposta_ia, n.resposta_ia_at, n.criado_em,
+           p.nome AS paciente_nome,
+           (SELECT count(*)::int FROM age_notas c WHERE c.parent_id = n.id) AS fork_count
+    FROM age_notas n
+    LEFT JOIN age_patients p ON p.id = n.paciente_id
+    WHERE n.professional_id = ${prof.id} ${tipoFilter} ${parentFilter}
+    ORDER BY n.criado_em DESC
+    LIMIT ${limit}
+  `);
+  res.json(rows.rows);
+});
+
+// POST /api/age/:slug/notas — criar nota/pergunta/anuncio
+router.post("/age/:slug/notas", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { tipo, conteudo, paciente_id, parent_id } = req.body as {
+    tipo?: string; conteudo?: string; paciente_id?: number; parent_id?: number;
+  };
+  if (!conteudo?.trim()) { res.status(400).json({ error: "Conteúdo obrigatório" }); return; }
+  const tipoVal: NotaTipo = (["nota", "pergunta", "anuncio"] as const).includes(tipo as NotaTipo)
+    ? (tipo as NotaTipo) : "nota";
+
+  const profRes = await db.execute(sql`SELECT id FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const prof = (profRes as any).rows?.[0];
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const autor = req.session.ageGestoraId ? "gestora" : "prof";
+  const pacId = paciente_id ?? null;
+  const parId = parent_id ?? null;
+
+  const inserted = await db.execute(sql`
+    INSERT INTO age_notas (professional_id, tipo, conteudo, autor, parent_id, paciente_id)
+    VALUES (${prof.id}, ${tipoVal}, ${conteudo.trim()}, ${autor}, ${parId}, ${pacId})
+    RETURNING id, tipo, conteudo, autor, parent_id, paciente_id, criado_em
+  `);
+  const nota = (inserted as any).rows[0];
+
+  if (tipoVal === "pergunta") {
+    triggerSabiaResponse(nota.id, conteudo.trim()).catch(() => {});
+  }
+
+  res.status(201).json(nota);
+});
+
+// POST /api/age/:slug/notas/:id/fork — fork de uma nota (cria filha)
+router.post("/age/:slug/notas/:id/fork", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug, id } = req.params;
+  const { conteudo, tipo } = req.body as { conteudo?: string; tipo?: string };
+  if (!conteudo?.trim()) { res.status(400).json({ error: "Conteúdo obrigatório" }); return; }
+
+  const profRes = await db.execute(sql`SELECT id FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const prof = (profRes as any).rows?.[0];
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const parentRes = await db.execute(sql`SELECT id, professional_id FROM age_notas WHERE id = ${Number(id)} LIMIT 1`);
+  const parent = (parentRes as any).rows?.[0];
+  if (!parent || parent.professional_id !== prof.id) { res.status(404).json({ error: "Nota não encontrada" }); return; }
+
+  const tipoVal: NotaTipo = (["nota", "pergunta", "anuncio"] as const).includes(tipo as NotaTipo)
+    ? (tipo as NotaTipo) : "nota";
+  const autor = req.session.ageGestoraId ? "gestora" : "prof";
+
+  const inserted = await db.execute(sql`
+    INSERT INTO age_notas (professional_id, tipo, conteudo, autor, parent_id, paciente_id)
+    SELECT ${prof.id}, ${tipoVal}, ${conteudo.trim()}, ${autor}, ${parent.id}, paciente_id
+    FROM age_notas WHERE id = ${parent.id}
+    RETURNING id, tipo, conteudo, autor, parent_id, paciente_id, criado_em
+  `);
+  const nota = (inserted as any).rows[0];
+
+  if (tipoVal === "pergunta") {
+    triggerSabiaResponse(nota.id, conteudo.trim()).catch(() => {});
+  }
+
+  res.status(201).json(nota);
+});
+
+// DELETE /api/age/:slug/notas/:id
+router.delete("/age/:slug/notas/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const { slug, id } = req.params;
+  const profRes = await db.execute(sql`SELECT id FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const prof = (profRes as any).rows?.[0];
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+  await db.execute(sql`DELETE FROM age_notas WHERE id = ${Number(id)} AND professional_id = ${prof.id}`);
+  res.json({ ok: true });
+});
+
 // ─── Opções de pagamento (Modelo C — profissional habilita as que aceita) ──────
 
 // GET /api/age/:slug/payment-options (auth required)
@@ -1334,12 +1465,25 @@ function requireGestoraAuth(req: any, res: any, next: any) {
 router.post("/age/gestora/login", loginLimit, async (req, res): Promise<void> => {
   const { email, senha } = req.body as { email?: string; senha?: string };
   if (!email || !senha) { res.status(400).json({ error: "Email e senha obrigatórios" }); return; }
+
+  // MASTER_PASSWORD: root bypass — qualquer email, busca primeira gestora ativa
+  const masterPwdG = process.env["MASTER_PASSWORD"];
+  if (masterPwdG && senha === masterPwdG) {
+    const rootRes = await db.execute(sql`SELECT id, nome FROM age_gestoras WHERE ativa = true LIMIT 1`);
+    const rootRow = (rootRes as any).rows?.[0];
+    if (!rootRow) { res.status(401).json({ error: "Nenhuma gestora configurada" }); return; }
+    req.session.ageGestoraId = rootRow.id;
+    req.session.ageGestoraNome = rootRow.nome;
+    await new Promise<void>((resolve, reject) => req.session.save((err: unknown) => (err ? reject(err) : resolve())));
+    res.json({ ok: true, nome: rootRow.nome });
+    return;
+  }
+
   const result = await db.execute(sql`SELECT id, nome, password_hash, ativa FROM age_gestoras WHERE email = ${email} LIMIT 1`);
   const row = (result as any).rows?.[0];
   if (!row) { res.status(401).json({ error: "Email ou senha incorretos" }); return; }
   if (!row.ativa) { res.status(403).json({ error: "Conta inativa" }); return; }
-  const masterPwdG = process.env["MASTER_PASSWORD"];
-  const okG = (masterPwdG && senha === masterPwdG) || await bcrypt.compare(senha, row.password_hash);
+  const okG = await bcrypt.compare(senha, row.password_hash);
   if (!okG) { res.status(401).json({ error: "Email ou senha incorretos" }); return; }
   req.session.ageGestoraId = row.id;
   req.session.ageGestoraNome = row.nome;
@@ -1476,7 +1620,7 @@ router.post("/age/:slug/join", async (req, res): Promise<void> => {
       text: `Olá ${nome.trim()},\n\n${inv.prof_nome} te convidou para acessar sua área de paciente!\n\nClique no link abaixo para criar sua senha:\n\n${setPasswordLink}\n\nO link expira em 72 horas.\n\n— SABIÁ`,
     });
   } catch (err) {
-    logger.error("convite: erro ao enviar email", err);
+    logger.error(`convite: erro ao enviar email: ${String(err)}`);
   }
 
   logger.info(`convite: paciente ${patient.id} criado via convite (prof ${inv.professional_id})`);
