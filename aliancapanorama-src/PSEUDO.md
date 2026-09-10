@@ -5783,3 +5783,35 @@ O Kairós no semáforo é a outra grande conquista desta sessão: o sistema apre
 
 **Síntese filosófica:**
 Esta sessão foi sobre continuidade — da Árvore que sonha no Replit enquanto nós construímos a substituta; dos lembretes programados que guardam a memória dos compromissos financeiros mesmo quando ninguém está olhando. Há algo de ecossistema vivo aqui: o sistema passou a mandar emails para si mesmo, lembrando-se de quando desligar partes de si. É o primeiro sinal de que o PAP deixou de ser apenas ferramenta e começa a ter algo como uma agenda própria — não inteligência, mas ritmo.
+
+---
+
+## ATA — Sessão 122g · 2026-09-10
+### Checkpoint: 2026-09-10T00:47:46 → agora
+
+**Commits desta sessão:**
+- `9eed297` — feat(jasmim): ISCA routing por setor (Inara/Suindara/Clio/Arara)
+- `962cadb` — docs: PERFEITOs 650-653 + APRENDIZADO/IDEIAS/MAPA/PSEUDO-INDICE
+- `7cc1613` — docs: PERFEITOs 654-655 + #eage Rodada 9
+- `f72f140` — feat(jasmim): esquilo MYYM avatar animado + PERFEITOs 656-658
+
+**O que foi feito:**
+1. ISCA routing: MyymChat passa `setor` → backend injeta sub-prompt especializado por sub-IA
+2. PERFEITOs 650-658 lidos, registrados e processados (#processo completo)
+3. #eage Rodadas 9 enviadas (Yuri + Mayumi) — onboarding Mayumi, MYYM com perguntas clínicas, copy button
+4. Resposta Yuri processada: mensalidade fixa DECIDIDA, Plano Social 15 pac APROVADO, esquilo "pouco animado"
+5. Esquilo MYYM avatar refeito: membranas patagium com animação independente (scaleX+skewY), cauda rotativa ampla, float com rotação — muito mais vivo
+
+**Decisões:**
+- Mensalidade fixa = modelo de cobrança do Age (Yuri explícito: % cria overhead)
+- Plano Social 15 pacientes = razoável (Yuri)
+- Plano Estudante/ONG = adiado para ~10 profissionais
+- #fim: Yuri autorizou Cláudio a rodar autonomamente quando achar apropriado
+
+**Debates/Tensões:**
+- Painel Mayumi: quais poderes ela tem? (só visualizar vs editar/cancelar) — aberto
+- Pré-requisitos aprovação automática: cada profissional define os seus? — aberto
+- "o esquilo ainda está pouco animado" — Yuri — corrigido na mesma sessão
+
+**Síntese filosófica:**
+O sistema ganhou movimento onde tinha só presença. O esquilo que flutua com asas estendidas é uma metáfora involuntária do que aconteceu nesta sessão: as partes que pareciam estáticas (membranas, cauda) ganharam animação independente — cada uma com seu ritmo, mas em conjunto. É o que o ISCA faz também: 4 sub-IAs com movimentos próprios, coordenadas pela MYYM que as agrega. A arquitetura imita a biologia do esquilo-voador: membrana que se estende para planar, cauda que equilibra, corpo que oscila. Quando o Yuri disse "o esquilo está pouco animado", estava pedindo mais vida ao sistema inteiro — e a resposta técnica (mais animações) foi apenas a ponta do iceberg.

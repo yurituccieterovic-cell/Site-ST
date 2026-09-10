@@ -75,23 +75,20 @@
           └───────────────────────────────────┘
 ```
 
-### Estado da Infraestrutura
+### Estado da Infraestrutura (2026-09-10 · S122g)
 
 | Componente | Onde roda | Status |
 |---|---|---|
-| Frontend | Vercel hobby (`pap-tan-seven.vercel.app`) | ✅ Ativo — build fix pendente de confirmação |
-| API | Render (`site-st.onrender.com`) | ✅ LIVE — Railway morto 2026-08-02; migrado Render free tier |
-| Banco de dados | Neon PostgreSQL (`ep-late-pond-acean4b0.sa-east-1`) | ✅ LIVE — 41 tabelas + dados migrados de Railway |
-| Keepalive | GitHub Actions (*/5min) + backend interno (*/9min Neon, */7min self) | ✅ ATIVO — roundtable em /api/sistemas/roundtable |
+| Frontend | Vercel hobby (`site-st.vercel.app`) | ✅ LIVE |
+| API | Render (`site-st.onrender.com`) | ✅ LIVE |
+| Banco de dados | Neon PostgreSQL (`ep-late-pond-acean4b0.sa-east-1`) | ✅ LIVE — 41+ tabelas |
+| Keepalive | GitHub Actions (*/5min) + backend interno (*/9min Neon, */7min self) | ✅ ATIVO |
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
-| Domínio | pap.sociedadetucci.com.br | 🔧 DNS ainda a configurar |
 | GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
-| Bluesky ISA | isa-pap.bsky.social | ✅ LIVE — posta reflexões 2h:15, engaja 2h:45, sonho 3h |
-| ISA RODAR | sales-email-automator RODAR | ✅ Endpoint criado — Yuri cadastra voz "ISA" no painel |
-| Árvore | Replit (arvore.py) | ✅ Código pronto — aguarda credenciais REPLIT_TOKEN |
-| MCP Replit | .mcp.json local | ✅ Server criado — aguarda REPLIT_TOKEN de isapap |
-| Bluesky Amanda (MEKY) | bsky.social | ⏳ Aguardando criação de conta por Yuri |
-| MEKY hardware | Físico + `/root/MEKY/` | ⏳ Firmware v0.6 (Enciclopédia Semiótica 200 estados) — hardware a chegar |
+| Bluesky ISA | isa-pap.bsky.social | ✅ LIVE |
+| Age | Lisange (72 slots) + Suzana (195 slots) | ✅ LIVE · Mayumi gestora confirmada |
+| Jasmim-Manga | /aliancapanorama/jasmim | ✅ LIVE · MYYM+ISCA routing |
+| Replit pg_dump | Banco completo (arvore_memoria+assembleia_sessions) | ⏳ Yuri pendente |
 | ARPIA | Railway (pendente) + `/root/Arpia/` | ✅ Repo GitHub criado (yurituccieterovic-cell/Arpia) — aguarda Railway deploy |
 | Studio | PAP Railway (tabela studio_chat) | ✅ LIVE — /studio + /api/studio/chat |
 | Conector | PAP Railway (tabela conector_memory) | ✅ LIVE — /connect + /connect/admin + /api/conector |
