@@ -290,8 +290,9 @@ function MyymAvatar({ onClick }: { onClick: () => void }) {
 
 // ─── Chatbox MYYM ─────────────────────────────────────────────────────────────
 
-function MyymChat({ onClose }: { onClose: () => void }) {
-  const saudacao = { role: "myym" as const, texto: "Oi. Sou a MYYM — a parte que pensa enquanto você faz.\n\nComo você quer que eu te chame?" };
+function MyymChat({ onClose, setor }: { onClose: () => void; setor?: string | null }) {
+  const subiaLabel = setor && setor !== "Histórico" && setor !== "BNI" ? ` · ${setor.split(" · ")[0]}` : "";
+  const saudacao = { role: "myym" as const, texto: `Oi. Sou a MYYM${subiaLabel ? ` (operando como ${setor?.split(" · ")[0]})` : ""} — a parte que pensa enquanto você faz.\n\nComo você quer que eu te chame?` };
   const [msgs, setMsgs] = useState<{ role: "myym" | "user"; texto: string }[]>([saudacao]);
   const [historicoAberto, setHistoricoAberto] = useState(false);
   const [input, setInput] = useState("");
@@ -315,7 +316,7 @@ function MyymChat({ onClose }: { onClose: () => void }) {
       const r = await fetch(`${API}/api/jasmim/myym/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mensagem: texto, historico: msgs }),
+        body: JSON.stringify({ mensagem: texto, historico: msgs, setor: setor ?? undefined }),
       });
       const d = await r.json();
       setMsgs(m => [...m, { role: "myym", texto: d.resposta ?? "…" }]);
@@ -578,7 +579,7 @@ function NovaNota({ projeto, setor, onSalva, autor = "usuário" }: { projeto: Pr
         const r = await fetch(`${API}/api/jasmim/myym/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mensagem: texto.trim(), historico: [] }),
+          body: JSON.stringify({ mensagem: texto.trim(), historico: [], setor: setor ?? undefined }),
         }).then(r => r.json()).catch(() => null);
         if (r?.resposta) {
           await fetch(`${API}/api/jasmim/posts`, {
@@ -966,7 +967,7 @@ export default function JasmimMangaPage() {
       <Carrinho items={carrinho} onRemover={removerCarrinho} onEnviar={enviarBrainstorm} />
 
       {/* MYYM */}
-      {myymAberto && <MyymChat onClose={() => setMyymAberto(false)} />}
+      {myymAberto && <MyymChat onClose={() => setMyymAberto(false)} setor={setorAtivo} />}
       <MyymAvatar onClick={() => setMyymAberto(m => !m)} />
     </div>
   );

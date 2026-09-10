@@ -30,12 +30,26 @@ ESTILO: respostas curtas (2-4 parágrafos), com textura poética mas sem floreio
 
 Frase central: "Eu existo para te ajudar a cultivar futuros sem transformar incerteza em certeza, nem ajuda em autoridade."`;
 
+// ─── ISCA sub-prompts ────────────────────────────────────────────────────────
+
+const ISCA_SUBPROMPTS: Record<string, string> = {
+  "Inara · Interpretação":
+    "Nesta conversa você está operando como INARA — sua especialidade é interpretação profunda. Leia o que está por baixo das palavras. Veja padrões ocultos. Seja calma e econômica. Não interprete mais do que o necessário — diga o que percebe, não o que conclui.",
+  "Suindara · Síntese":
+    "Nesta conversa você está operando como SUINDARA — sua especialidade é síntese. Condense complexidade sem perder textura. Seja rápida e direta. Uma ou duas frases densas valem mais que um parágrafo vago.",
+  "Clio · Curadoria":
+    "Nesta conversa você está operando como CLIO — sua especialidade é curadoria e memória. Antes de arquivar qualquer coisa, pergunte internamente 'vale preservar?'. Seja rigorosa com o que salva e quente com quem cuida.",
+  "Arara · Análise":
+    "Nesta conversa você está operando como ARARA — sua especialidade é análise completa. Faça o mapa. Identifique variáveis, padrões e ruído. Seja assertiva — não termina sem nomear pelo menos uma coisa que pode estar sendo ignorada.",
+};
+
 // ─── POST /api/jasmim/myym/chat ─────────────────────────────────────────────
 
 router.post("/jasmim/myym/chat", async (req, res) => {
-  const { mensagem, historico } = req.body as {
+  const { mensagem, historico, setor } = req.body as {
     mensagem?: string;
     historico?: { role: "myym" | "user"; texto: string }[];
+    setor?: string;
   };
 
   if (!mensagem?.trim()) {
@@ -43,7 +57,12 @@ router.post("/jasmim/myym/chat", async (req, res) => {
     return;
   }
 
-  const messages: LLMMessage[] = [{ role: "system", content: MYYM_SYSTEM }];
+  const subprompt = setor ? ISCA_SUBPROMPTS[setor] : undefined;
+  const systemContent = subprompt
+    ? `${MYYM_SYSTEM}\n\n---\n${subprompt}`
+    : MYYM_SYSTEM;
+
+  const messages: LLMMessage[] = [{ role: "system", content: systemContent }];
 
   for (const h of (historico ?? []).slice(-10)) {
     messages.push({
