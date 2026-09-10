@@ -2788,23 +2788,65 @@ export function AgePage() {
       {/* SABIÁ popup flutuante (profissional logada, fora da aba SABIÁ) */}
       {mode === "professional" && authStep === "done" && view !== "sabia" && (
         <>
-          {/* Botão flutuante */}
+          {/* Botão flutuante — SABIÁ animada (SVG, estilo esquilo Jasmim) */}
           <button
             onClick={() => setSabiaOpen(o => !o)}
-            title={sabiaOpen ? "Fechar SABIÁ" : "Abrir SABIÁ"}
+            title={sabiaOpen ? "Fechar SABIÁ" : "SABIÁ 🐦"}
             style={{
               position: "fixed", bottom: 20, right: 20, zIndex: 1000,
-              width: 52, height: 52, borderRadius: "50%",
-              background: sabiaOpen ? "#1e293b" : color,
-              border: `2px solid ${color}`,
-              color: sabiaOpen ? color : "#080c10",
-              fontSize: 22, cursor: "pointer",
+              width: 64, height: 64, borderRadius: "50%",
+              background: sabiaOpen ? "#1e293b" : `linear-gradient(135deg, #0a1a14, #0d2420)`,
+              border: `2px solid ${color}88`, cursor: "pointer",
               boxShadow: `0 4px 20px ${color}44`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "background 0.2s",
+              padding: 0, transition: "background 0.2s",
             }}
           >
-            {sabiaOpen ? "✕" : "🐦"}
+            {sabiaOpen ? (
+              <span style={{ color, fontSize: 20 }}>✕</span>
+            ) : (
+              <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 46, height: 46 }}>
+                <defs>
+                  <style>{`
+                    @keyframes sbFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-5px) rotate(2deg); } }
+                    @keyframes sbWing  { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(-14deg); } }
+                    @keyframes sbTail  { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(8deg); } }
+                    .sb-body { animation: sbFloat 2.4s ease-in-out infinite; }
+                    .sb-wing { animation: sbWing  2.4s ease-in-out infinite; transform-origin: 38px 54px; }
+                    .sb-tail { animation: sbTail  2.4s ease-in-out infinite; transform-origin: 48px 70px; }
+                  `}</style>
+                </defs>
+                {/* Cauda */}
+                <g className="sb-tail">
+                  <ellipse cx="48" cy="76" rx="6" ry="11" fill="#0d9488" transform="rotate(5 48 76)" opacity="0.9"/>
+                  <ellipse cx="42" cy="78" rx="4" ry="9" fill="#0f766e" transform="rotate(-10 42 78)" opacity="0.7"/>
+                  <ellipse cx="54" cy="78" rx="4" ry="9" fill="#0f766e" transform="rotate(10 54 78)" opacity="0.7"/>
+                </g>
+                {/* Asa esquerda */}
+                <g className="sb-wing">
+                  <ellipse cx="28" cy="54" rx="12" ry="6" fill="#0f766e" transform="rotate(-30 28 54)" opacity="0.85"/>
+                </g>
+                {/* Corpo */}
+                <g className="sb-body">
+                  <ellipse cx="48" cy="58" rx="16" ry="13" fill="#0d9488"/>
+                  <ellipse cx="48" cy="56" rx="12" ry="10" fill="#14b8a6"/>
+                  {/* Asa direita (sobre o corpo) */}
+                  <ellipse cx="64" cy="54" rx="10" ry="5" fill="#0f766e" transform="rotate(20 64 54)" opacity="0.9"/>
+                  {/* Peito */}
+                  <ellipse cx="48" cy="63" rx="7" ry="6" fill="#f59e0b" opacity="0.75"/>
+                  {/* Cabeça */}
+                  <circle cx="48" cy="42" r="12" fill="#0d9488"/>
+                  <circle cx="48" cy="41" r="9" fill="#14b8a6"/>
+                  {/* Olho */}
+                  <circle cx="51" cy="40" r="3.5" fill="#0a0f16"/>
+                  <circle cx="52" cy="39" r="1.2" fill="white"/>
+                  {/* Bico */}
+                  <path d="M56,43 L63,41 L56,46 Z" fill="#f59e0b"/>
+                  {/* Tufo da cabeça */}
+                  <ellipse cx="44" cy="31" rx="3" ry="5" fill="#0f766e" transform="rotate(-15 44 31)"/>
+                </g>
+              </svg>
+            )}
           </button>
 
           {/* Painel do chat */}

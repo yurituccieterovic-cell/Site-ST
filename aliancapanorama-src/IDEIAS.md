@@ -1931,3 +1931,6 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I728 | SABIÁ widget CSS animado: flutuando no canto da tela (como Corujinha/Esquilo), clique abre chat SABIÁ direto — persistente em todas as telas do Age | CÓDIGO | 🟡 Mayumi pediu no áudio |
 | I729 | Modelo de cobrança Age: 3 modelos propostos (A=mensalidade fixa, B=% por consulta, C=híbrido); aguarda deliberação da assembleia e escolha da Mayumi | PROCESSO | 🟡 aguarda Mayumi responder |
 | I730 | Configurar emails reais das profissionais no banco: lisange.usp@gmail.com e vitamind@ginsbergeye.com — FEITO via SQL direto no Neon em S122b | CÓDIGO | ✅ feito S122b |
+
+| I731 | Login social Age: Plano Social (comprovação CRP ou declaração projeto/ONG ou agenda baixo volume), até 15 pacientes, 6 meses renováveis, Mayumi aprova — proposto para deliberação da assembleia | PROCESSO | 🟡 aguardando deliberação assembleia |
+| I732 | Plano Social variantes: Estudante (CRM/CRP provisório), Parceiro (ONG/equipe com desconto), Troca (contribuição por divulgação/mentoria) — levantadas como opções adicionais | PROCESSO | 🟡 backlog pós-deliberação |

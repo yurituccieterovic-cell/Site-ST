@@ -616,3 +616,11 @@
 | #312 | SABIÁ widget CSS animado no Age (como Corujinha/Esquilo) — posição a definir por Mayumi | CÓDIGO | ⏳ aguarda resposta Mayumi (canto vs topo) |
 | #313 | Modelo de cobrança Age: proposta 3 modelos enviada por email — aguarda escolha Mayumi + deliberação assembleia | PROCESSO | ⏳ aguarda resposta |
 | #314 | Projeto "Céu" faltando no Jasmim — mapear site e adicionar | CÓDIGO | ⏳ próxima sessão |
+
+### S122c — #eage + SABIÁ widget + proposta assembleia (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #315 | SABIÁ widget animado SVG (sabiá teal com asas batendo) no canto inferior direito do Age | CÓDIGO | ✅ feito S122c (commit pendente) |
+| #316 | Proposta cobrança Age (modelos A/B/C + anti-fraude) enviada para assembleia | PROCESSO | ✅ enviado S122c — aguarda deliberação |
+| #317 | Login social Age: Plano Social com 3 formas de comprovação — proposto para assembleia deliberar | PROCESSO | ✅ enviado S122c — aguarda deliberação |
