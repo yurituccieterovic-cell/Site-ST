@@ -133,3 +133,5 @@
 | 13166 | 🔐🐦 #processo Age Feed Inteligente + Fixes (Sessão #122, 2026-09-10) | 3 entradas (A6221-A6223): MASTER_PASSWORD bypass deve vir ANTES do lookup de email (bug gestora); ARPIA offline → erro legível em vez de "Application not found"; age_notas = tabela unificada nota/pergunta/anuncio com fork e IA | Sessão #122 | 2026-09-10 |
 
 | 13167 | 🐦📋 #eage Rodada 8 — Root vs Gestora + Perfil do Profissional (S122b, 2026-09-10) | 3 entradas (A6224-A6226): root = bypass emergência (sem rastreio), gestora = painel rastreável de uso diário; backlog = aprovado mas na fila; perfil do profissional como formulário vivo (comparação XP) é padrão melhor que configs espalhadas | Sessão #122b | 2026-09-10 |
+
+| 13168 | 🦜🗃️ #processo PERFEITOs 650-653 — ISCA routing + Replit backup + S122 espelho (S122c, 2026-09-10) | 4 entradas (A6227-A6230): ISCA = 4 sub-IAs modulares da MYYM com setor via parâmetro (não hardcoded); lembretes operacionais: VEED/Replit 30/09, ElevenLabs 18/09; pg_dump Replit ainda falta; espelhar PERFEITOs é forma de consolidar memória institucional entre plataformas | Sessão #122c | 2026-09-10 |

@@ -632,3 +632,13 @@
 | #318 | Pacotes Age propostos (Social/Broto/Raiz/Copa) — enviados à assembleia e thread Yuri/Mayumi | PROCESSO | ✅ enviado S122d — aguarda deliberação |
 | #319 | Fluxo automático Plano Social (SABIÁ avalia + Mayumi borderline + renovação 6m): implementar após assembleia definir critérios | CÓDIGO | ⏳ aguarda resposta assembleia |
 | #320 | Jasmim Histórico: 50/página + carregar mais acumulativo — fix deploy pendente (commit da3b13a) | CÓDIGO | ✅ deployado S122 |
+
+### S122e — #processo PERFEITOs 650-653 + ISCA routing (2026-09-10)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #321 | ISCA routing: MyymChat passa setor → backend injeta sub-prompt Inara/Suindara/Clio/Arara | CÓDIGO | ✅ feito S122e (commit 9eed297) |
+| #322 | ISCA #267/#270: roteamento por tipo de pergunta implementado via parâmetro setor no frontend | CÓDIGO | ✅ resolvido S122e |
+| #323 | ElevenLabs: cancelar em 18/09 (Yuri faz) | PROCESSO | ⏳ aguardando Yuri |
+| #324 | VEED + Replit: lembrete 30/09 — verificar se lembretes foram programados | PROCESSO | ⏳ verificar S123 |
+| #325 | pg_dump Replit banco completo (assembleia_sessions, arvore_memoria, clube_messages) — AINDA pendente | INFRA | ⏳ aguardando Yuri |

@@ -1937,3 +1937,7 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 
 | I733 | Pacotes Age: Plano Social (IAs gerenciam, assembleia define), Broto R$79 (20 pac), Raiz R$149 (60 pac), Copa R$249 (ilimitado+3 profissionais) — proposta enviada à assembleia | PROCESSO | 🟡 aguarda deliberação assembleia |
 | I734 | Fluxo automático Plano Social: formulário → SABIÁ analisa → aprovação/encaminhamento Mayumi → renovação automática 6 meses; critérios e tetos configuráveis pela assembleia | CÓDIGO | 🟡 aguarda definição de critérios |
+
+| I735 | ISCA routing implementado: MyymChat passa `setor` ao backend; /api/jasmim/myym/chat injeta sub-prompt específico por sub-IA (Inara/Suindara/Clio/Arara) — saudação já reflete o modo ativo | CÓDIGO | ✅ feito S122c |
+| I736 | Curso 3 Workflow: PremiereMovieMaker + edge-tts (grátis); revisar cursos 1 e 2 antes de avançar; Yuri cancela ElevenLabs em 18/09 | PROCESSO | 🟡 próxima etapa revisão |
+| I737 | pg_dump Replit banco completo: assembleia_sessions, arvore_memoria, clube_messages, agora_turns — Yuri faz manualmente via Shell: `pg_dump $DATABASE_URL > replit-completo.sql` e baixa | PROCESSO | 🔴 pendente ação Yuri |
