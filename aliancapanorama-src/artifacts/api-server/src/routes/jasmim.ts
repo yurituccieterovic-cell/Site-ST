@@ -43,6 +43,77 @@ const ISCA_SUBPROMPTS: Record<string, string> = {
     "Nesta conversa você está operando como ARARA — sua especialidade é análise completa. Faça o mapa. Identifique variáveis, padrões e ruído. Seja assertiva — não termina sem nomear pelo menos uma coisa que pode estar sendo ignorada.",
 };
 
+// ─── Memória dinâmica da MYYM ────────────────────────────────────────────────
+
+async function buildMemoContext(): Promise<string> {
+  try {
+    const [decisoes, conversas, assembleias, posts] = await Promise.all([
+      db.execute(sql`
+        SELECT tipo, conteudo, created_at FROM jm_myym_memory
+        WHERE tipo IN ('contexto','decisao','assembleia')
+        ORDER BY created_at DESC LIMIT 6
+      `),
+      db.execute(sql`
+        SELECT conteudo, created_at FROM jm_myym_memory
+        WHERE tipo = 'conversa'
+        ORDER BY created_at DESC LIMIT 4
+      `),
+      db.execute(sql`
+        SELECT topic, meta_analysis, created_at FROM arvore_assembleias
+        ORDER BY created_at DESC LIMIT 3
+      `),
+      db.execute(sql`
+        SELECT DISTINCT ON (projeto) projeto, setor, autor, conteudo, created_at
+        FROM jm_posts ORDER BY projeto, created_at DESC
+      `),
+    ]);
+
+    let ctx = "\n\n## MEMÓRIA ATIVA\n";
+
+    const decRows = (decisoes as any).rows ?? [];
+    if (decRows.length > 0) {
+      ctx += "\n### Contextos e Decisões\n";
+      for (const r of decRows) {
+        const d = new Date(r.created_at).toLocaleDateString("pt-BR");
+        ctx += `- [${String(r.tipo).toUpperCase()} ${d}] ${r.conteudo}\n`;
+      }
+    }
+
+    const convRows = (conversas as any).rows ?? [];
+    if (convRows.length > 0) {
+      ctx += "\n### Conversas Recentes\n";
+      for (const r of convRows) {
+        const d = new Date(r.created_at).toLocaleDateString("pt-BR");
+        ctx += `[${d}] ${String(r.conteudo).slice(0, 220)}\n---\n`;
+      }
+    }
+
+    const assRows = (assembleias as any).rows ?? [];
+    if (assRows.length > 0) {
+      ctx += "\n### Assembleias Recentes\n";
+      for (const r of assRows) {
+        const d = r.created_at ? new Date(r.created_at).toLocaleDateString("pt-BR") : "—";
+        ctx += `- [${d}] ${String(r.topic).slice(0, 100)}`;
+        if (r.meta_analysis) ctx += ` | ${String(r.meta_analysis).slice(0, 80)}`;
+        ctx += "\n";
+      }
+    }
+
+    const postRows = (posts as any).rows ?? [];
+    if (postRows.length > 0) {
+      ctx += "\n### Feed dos Projetos (último por projeto)\n";
+      for (const r of postRows) {
+        const d = new Date(r.created_at).toLocaleDateString("pt-BR");
+        ctx += `- [${r.projeto}${r.setor ? `/${r.setor}` : ""} ${d}] ${String(r.conteudo).slice(0, 130)}\n`;
+      }
+    }
+
+    return ctx;
+  } catch {
+    return "";
+  }
+}
+
 // ─── POST /api/jasmim/myym/chat ─────────────────────────────────────────────
 
 router.post("/jasmim/myym/chat", async (req, res) => {
@@ -58,9 +129,13 @@ router.post("/jasmim/myym/chat", async (req, res) => {
   }
 
   const subprompt = setor ? ISCA_SUBPROMPTS[setor] : undefined;
-  const systemContent = subprompt
-    ? `${MYYM_SYSTEM}\n\n---\n${subprompt}`
-    : MYYM_SYSTEM;
+  const memoCtx   = await buildMemoContext();
+
+  const systemContent = [
+    MYYM_SYSTEM,
+    memoCtx,
+    subprompt ? `\n---\n${subprompt}` : "",
+  ].join("");
 
   const messages: LLMMessage[] = [{ role: "system", content: systemContent }];
 
@@ -74,7 +149,6 @@ router.post("/jasmim/myym/chat", async (req, res) => {
 
   try {
     const resposta = await routeLLM({ messages, pool: "chat-live", maxTokens: 400, temperature: 0.8 });
-    // Persiste contexto na memória MYYM
     await db.execute(sql`
       INSERT INTO jm_myym_memory (tipo, conteudo)
       VALUES ('conversa', ${`[user] ${mensagem.trim()}\n[myym] ${resposta}`})
@@ -280,6 +354,60 @@ router.post("/jasmim/post-from-email", async (req, res) => {
   } catch (err) {
     console.error("[jasmim/post-from-email]", err);
     res.status(500).json({ error: "Erro ao inserir post." });
+  }
+});
+
+// ─── GET /api/jasmim/myym/memoria ───────────────────────────────────────────
+// Retorna memórias da MYYM agrupadas por tipo (uso pela UI)
+
+router.get("/jasmim/myym/memoria", async (req, res) => {
+  const limit = Math.min(50, Math.max(1, parseInt((req.query["limit"] as string) ?? "20", 10)));
+  try {
+    const rows = await db.execute(sql`
+      SELECT id, tipo, conteudo, created_at
+      FROM jm_myym_memory
+      ORDER BY
+        CASE tipo WHEN 'decisao' THEN 1 WHEN 'contexto' THEN 2 WHEN 'assembleia' THEN 3 ELSE 4 END,
+        created_at DESC
+      LIMIT ${limit}
+    `);
+    res.json({ memorias: (rows as any).rows ?? [], total: (rows as any).rows?.length ?? 0 });
+  } catch (err) {
+    console.error("[myym/memoria]", err);
+    res.status(500).json({ error: "Erro ao buscar memória." });
+  }
+});
+
+// ─── POST /api/jasmim/myym/memoria ──────────────────────────────────────────
+// Injeta contexto/decisão importante na memória da MYYM (requer BRIDGE_SECRET)
+
+router.post("/jasmim/myym/memoria", async (req, res) => {
+  const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
+  if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
+    res.status(403).json({ error: "Não autorizado" });
+    return;
+  }
+
+  const { tipo = "contexto", conteudo } = req.body as { tipo?: string; conteudo?: string };
+
+  if (!conteudo?.trim()) {
+    res.status(400).json({ error: "conteudo obrigatório" });
+    return;
+  }
+
+  const tiposValidos = ["contexto", "decisao", "assembleia", "conversa"];
+  const tipoFinal = tiposValidos.includes(tipo) ? tipo : "contexto";
+
+  try {
+    const [row] = (await db.execute(sql`
+      INSERT INTO jm_myym_memory (tipo, conteudo)
+      VALUES (${tipoFinal}, ${conteudo.trim()})
+      RETURNING id, tipo, conteudo, created_at
+    `)).rows as any[];
+    res.status(201).json({ ok: true, memoria: row });
+  } catch (err) {
+    console.error("[myym/memoria/post]", err);
+    res.status(500).json({ error: "Erro ao salvar memória." });
   }
 });
 
