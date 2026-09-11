@@ -1636,6 +1636,60 @@ export function CeuPage() {
 
       </>}
 
+      {/* ── PROJETOS DO ECOSSISTEMA ── */}
+      <div style={{ maxWidth:900, margin:"0 auto", padding:"16px 16px 8px" }}>
+        <div style={{ fontSize:9, color:"#444", fontFamily:"monospace", letterSpacing:3,
+          textAlign:"center", marginBottom:12 }}>
+          PROJETOS DO ECOSSISTEMA
+        </div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:12, justifyContent:"center" }}>
+
+          {/* ARVR — Crypto Arvore */}
+          <a href="/aliancapanorama/arvore-token"
+            style={{ textDecoration:"none", flex:"1 1 260px", maxWidth:320 }}>
+            <div style={{
+              background:"#030d04", border:"1px solid #1a4a1a",
+              borderRadius:10, padding:"12px 14px", cursor:"pointer",
+              transition:"border-color .2s", position:"relative", overflow:"hidden",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = "#2c5f2e")}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = "#1a4a1a")}>
+              <div style={{ position:"absolute", inset:0, background:
+                "radial-gradient(ellipse at top left, #0a2a0a55 0%, transparent 60%)", pointerEvents:"none" }}/>
+              <div style={{ display:"flex", alignItems:"flex-start", gap:10, marginBottom:8 }}>
+                <span style={{ fontSize:22, lineHeight:1 }}>🌱</span>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:12, fontWeight:700, color:"#44cc88",
+                    fontFamily:"monospace", letterSpacing:1.5 }}>ARVR</div>
+                  <div style={{ fontSize:10, color:"#2c7a3a", fontFamily:"monospace", letterSpacing:1 }}>
+                    CRYPTO ARVORE TOKEN
+                  </div>
+                </div>
+                <span style={{ fontSize:8, fontFamily:"monospace", letterSpacing:1,
+                  color:"#44cc88", background:"#0a2a10", border:"1px solid #1a4a1a",
+                  borderRadius:10, padding:"2px 7px" }}>MVP</span>
+              </div>
+              <div style={{ fontSize:11, color:"#6a8a6a", lineHeight:1.6, marginBottom:8 }}>
+                Token que morre com a árvore. Ledger off-chain + ERC-20 Solidity.
+                1000 ARVR por árvore plantada · auto-burn no óbito.
+              </div>
+              <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+                {["off-chain","Neon","ERC-20","Polygon Amoy"].map(t => (
+                  <span key={t} style={{ fontSize:8, fontFamily:"monospace",
+                    background:"#0a1a0a", border:"1px solid #1a3a1a",
+                    borderRadius:4, padding:"2px 6px", color:"#3a6a3a" }}>{t}</span>
+                ))}
+              </div>
+              <div style={{ marginTop:10, fontSize:10, color:"#2c5f2e",
+                fontFamily:"monospace", letterSpacing:1, textAlign:"right" }}>
+                ABRIR →
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
       {/* Modais */}
       {modal && <CeuModal item={modal} onClose={() => setModal(null)} />}
       {showBiblioteca && <BibliotecaPanel onClose={() => setShowBiblioteca(false)} />}
