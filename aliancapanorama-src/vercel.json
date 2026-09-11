@@ -36,6 +36,10 @@
     { "source": "/arvore-token", "destination": "/index.html" },
     { "source": "/arvore-token/(.*)", "destination": "/index.html" },
     { "source": "/arvore", "destination": "/index.html" },
-    { "source": "/arvore/(.*)", "destination": "/index.html" }
+    { "source": "/arvore/(.*)", "destination": "/index.html" },
+    { "source": "/ceu", "destination": "/index.html" },
+    { "source": "/ceu/(.*)", "destination": "/index.html" },
+    { "source": "/playcenter", "destination": "/index.html" },
+    { "source": "/playcenter/(.*)", "destination": "/index.html" }
   ]
 }

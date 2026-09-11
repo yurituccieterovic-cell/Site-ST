@@ -19,7 +19,7 @@ app.set("trust proxy", 1);
 const CANONICAL_HOST = "pap.sociedadetucci.com.br";
 const REDIRECT_HOSTS = new Set([
   "projetoaliancapanoramapap.replit.app",
-  "pap-tan-seven.vercel.app",
+  // pap-tan-seven.vercel.app removido — domínio antigo que causava redirect ao acessar via Vercel
 ]);
 
 if (process.env["NODE_ENV"] === "production") {
