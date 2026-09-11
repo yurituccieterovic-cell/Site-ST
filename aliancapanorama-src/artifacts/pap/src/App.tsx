@@ -19,6 +19,7 @@ import { IsaLandingPage } from "@/pages/IsaLandingPage";
 import { CeuPage } from "@/pages/CeuPage";
 import { PlaycenterPage } from "@/pages/PlaycenterPage";
 import { ArvorePage } from "@/pages/ArvorePage";
+import { ArvoreTokenPage } from "@/pages/ArvoreTokenPage";
 import { RapaduraPage } from "@/pages/RapaduraPage";
 import { AgePage } from "@/pages/AgePage";
 import { AgePrivacidadePage } from "@/pages/AgePrivacidadePage";
@@ -300,7 +301,8 @@ const isStudio  = path.includes("/studio");
 const isConnect = path.includes("/connect");
 const isCeu        = path.includes("/ceu");
 const isPlaycenter = path.includes("/playcenter");
-const isArvore     = path.includes("/arvore");
+const isArvoreToken = path.includes("/arvore-token");
+const isArvore      = path.includes("/arvore") && !isArvoreToken;
 const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
 const isAgePrivacidade = path.includes("/age/privacidade");
@@ -393,6 +395,10 @@ function App() {
 
   if (isPlaycenter) {
     return <PlaycenterPage />;
+  }
+
+  if (isArvoreToken) {
+    return <ArvoreTokenPage />;
   }
 
   if (isArvore) {

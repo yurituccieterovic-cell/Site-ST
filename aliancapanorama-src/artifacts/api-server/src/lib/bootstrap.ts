@@ -2677,6 +2677,45 @@ export async function ensureJasmimTables(): Promise<void> {
     )
   `).catch(() => {});
   logger.info("bootstrap: jm tables OK (jm_posts, jm_carrinho, jm_myym_memory, arvore_assembleias)");
+
+  // Tabelas crypto Arvore Token
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS arvore_token_trees (
+      id           SERIAL PRIMARY KEY,
+      tree_id      TEXT UNIQUE NOT NULL,
+      planter      TEXT NOT NULL,
+      gps_lat      DECIMAL(10,8),
+      gps_lng      DECIMAL(11,8),
+      cert_hash    TEXT,
+      species      TEXT DEFAULT 'nativa',
+      status       TEXT DEFAULT 'alive',
+      tokens_minted INTEGER DEFAULT 1000,
+      planted_at   TIMESTAMPTZ DEFAULT NOW(),
+      died_at      TIMESTAMPTZ,
+      notes        TEXT
+    )
+  `).catch(() => {});
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS arvore_token_wallets (
+      wallet       TEXT PRIMARY KEY,
+      display_name TEXT,
+      balance      INTEGER DEFAULT 0,
+      created_at   TIMESTAMPTZ DEFAULT NOW()
+    )
+  `).catch(() => {});
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS arvore_token_ledger (
+      id           SERIAL PRIMARY KEY,
+      tx_type      TEXT NOT NULL,
+      from_wallet  TEXT,
+      to_wallet    TEXT,
+      amount       INTEGER NOT NULL,
+      tree_id      TEXT,
+      memo         TEXT,
+      created_at   TIMESTAMPTZ DEFAULT NOW()
+    )
+  `).catch(() => {});
+  logger.info("bootstrap: arvore_token tables OK");
 }
 
 // Garante usuário Yuri no sistema Jasmim

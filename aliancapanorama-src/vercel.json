@@ -32,6 +32,10 @@
     { "source": "/pv", "destination": "/index.html" },
     { "source": "/pv/(.*)", "destination": "/index.html" },
     { "source": "/jasmim", "destination": "/index.html" },
-    { "source": "/jasmim/(.*)", "destination": "/index.html" }
+    { "source": "/jasmim/(.*)", "destination": "/index.html" },
+    { "source": "/arvore-token", "destination": "/index.html" },
+    { "source": "/arvore-token/(.*)", "destination": "/index.html" },
+    { "source": "/arvore", "destination": "/index.html" },
+    { "source": "/arvore/(.*)", "destination": "/index.html" }
   ]
 }
