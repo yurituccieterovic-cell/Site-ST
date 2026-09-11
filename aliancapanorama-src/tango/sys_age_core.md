@@ -11,8 +11,8 @@
 
 | Slug | Nome | Tipo | Cor | Status |
 |---|---|---|---|---|
-| `lisange` | Lisange | médica | teal `#2dd4bf` | ✅ seedada · 72 slots ativos · email: lisange.usp@gmail.com |
-| `susana` | Suzana | psicóloga | lilás `#a78bfa` | ✅ seedada · 195 slots ativos (online seg-sex) · email: vitamind@ginsbergeye.com |
+| `lisange` | Lisange | psicóloga | teal `#2dd4bf` | ✅ seedada · 72 slots ativos · email: lisange.usp@gmail.com |
+| `susana` | Suzana | médica | lilás `#a78bfa` | ✅ seedada · 195 slots ativos (online seg-sex) · email: vitamind@ginsbergeye.com |
 
 - Senha padrão: `age2026` (trocar no primeiro acesso)
 - Emails configurados via SQL direto Neon em 2026-09-10 (S122b)

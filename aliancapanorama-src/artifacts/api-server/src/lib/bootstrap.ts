@@ -400,8 +400,8 @@ export async function ensureAgeTables(): Promise<void> {
   const defaultHash = await bcrypt.hash(defaultPass, 12);
 
   const professionals = [
-    { slug: "lisange", nome: "Lisange", tipo: "médica", especialidade: "Medicina Geral", cor: "#2dd4bf", bio: "Consultas médicas com cuidado e atenção." },
-    { slug: "suzana", nome: "Suzana", tipo: "psicóloga", especialidade: "Psicologia Clínica", cor: "#a78bfa", bio: "Atendimento psicológico com escuta ativa e presença." },
+    { slug: "lisange", nome: "Lisange", tipo: "psicóloga", especialidade: "Psicologia Clínica", cor: "#2dd4bf", bio: "Atendimento psicológico com escuta ativa e presença." },
+    { slug: "suzana", nome: "Suzana", tipo: "médica", especialidade: "Medicina Geral", cor: "#a78bfa", bio: "Consultas médicas com cuidado e atenção." },
   ];
 
   for (const p of professionals) {

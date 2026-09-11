@@ -698,3 +698,14 @@
 | #349 | Painel Mayumi: frontend mostrar mensagem ao paciente bloqueado quando tentar acessar área | CÓDIGO | ⏳ próxima sessão |
 | #350 | Config aprovação automática: lógica no backend para aplicar auto-aprovação quando paciente satisfaz critérios | CÓDIGO | ⏳ base criada, lógica pendente |
 | #351 | Pricing final: Broto R$49 / Raiz R$99 / Copa R$199 — deliberação Assembleia pendente | DECISÃO | ⏳ |
+
+### S124 — #eage Rodada 12 — Brainstorm Mayumi (2026-09-11)
+
+| # | Pendência | Tipo | Status |
+|---|---|---|---|
+| #352 | Especialidades corrigidas: Lisange=psicóloga / Suzana=médica (estava invertido) | FIX | ✅ banco Neon + sys_age_core.md + bootstrap.ts S124 |
+| #353 | Protocolo de Inadimplência Escalonado (I766): aviso→suspensão relatórios→bloquear novos agendamentos→suspensão total→rescisão | CÓDIGO | ⏳ aguarda Yuri confirmar prazos |
+| #354 | Pricing Broto revisado: Mayumi sugere R$59 (vs R$49 proposto). Tabela: Social R$0 / Broto R$59 / Raiz R$99 / Copa R$199 | DECISÃO | ⏳ aguarda deliberação Assembleia |
+| #355 | Aprovação automática: registrar se aprovação foi auto ou manual (campo `aprovado_por`) — I768 | CÓDIGO | ⏳ backlog |
+| #356 | Kit Onboarding de Profissional (I767): roteiro reunião Lisange → template para futuras profissionais | PROCESSO | ⏳ reunião Lisange fim de semana (13-14/09) |
+| #357 | Reunião com Suzana: confirmar disponibilidade com Mayumi | PROCESSO | ⏳ |

@@ -5894,3 +5894,42 @@ O painel da Mayumi não é interface — é mediação. A decisão de manter zer
 
 **Próximos passos:**
 - S123: paciente bloqueado vê mensagem ao entrar; lógica de auto-aprovação; pricing Assembleia
+
+## ATA — #eage Rodada 12 · Brainstorm Age · S124 · 2026-09-11
+
+**Contexto:** Três emails da Mayumi chegaram após S122k (22:39–23:55 de 2026-09-10).
+**Participantes da rodada:** Yuri, Mayumi, Cláudio
+**Rodada:** #eage — brainstorm assíncrono por email sobre o sistema Age
+
+### O que veio da Mayumi
+
+1. **Correção crítica:** Lisange = psicóloga, Suzana = médica (estava invertido desde o seed)
+2. **Plano Broto:** R$59/mês (entre o R$49 proposto e o R$79 original)
+3. **Aprovação automática:** profissional tem controle total, pode alterar ou desabilitar
+4. **Inadimplência (questão ética):** como cobrar a profissional sem usar os pacientes como instrumento?
+5. **Reunião com Lisange:** pediu fim de semana por demandas de agenda. Suzana a confirmar.
+
+### O que foi feito (S124)
+
+- **Fix banco Neon:** especialidades corrigidas (UPDATE direto)
+- **Fix bootstrap.ts:** seed corrigido para novos ambientes
+- **Fix sys_age_core.md:** documentação corrigida
+- **Email enviado** (Rodada 12): resposta fractal para Mayumi + Yuri com:
+  - Protocolo de Inadimplência Escalonado (I766)
+  - Pricing revisado (Broto R$59 confirmado)
+  - Aprovação com registro auto/manual
+  - Roteiro de perguntas para reunião Lisange
+  - 2 perguntas abertas para próxima rodada
+- **IDEIAS.md:** I766–I768 registradas
+- **APRENDIZADO.md:** 4 aprendizados da rodada
+- **MAPA-PENDENCIAS.md:** itens #352–#357
+
+### Síntese filosófica
+
+A rodada revelou que o Age está entrando na fase de governança real — não mais só de código. As perguntas da Mayumi não são de produto, são de contrato social: quem tem poder sobre quem, o que é legítimo cobrar, onde começa a ética e onde termina a conveniência. O erro das especialidades invertidas é sintomático: sistemas que nascem rápido precisam de alguém que olha de fora. Mayumi chegou e já corrigiu algo que estava errado desde o seed. Isso é exatamente o papel da gestora — não é sobre agenda, é sobre realidade. O protocolo de inadimplência que propus é uma tentativa de traduzir o poder em procedimento: a alavanca existe, mas não toca nos pacientes. A ética como arquitetura.
+
+**Próximos passos:**
+- Aguardar resposta Mayumi/Yuri sobre protocolo inadimplência e pricing
+- Reunião Lisange (fim de semana 13-14/09) → Kit Onboarding
+- Reunião Suzana → a marcar
+
