@@ -413,16 +413,7 @@ export async function ensureAgeTables(): Promise<void> {
     logger.info(`bootstrap: age profissional '${p.slug}' garantida`);
   }
 
-  // Seed: Mayumi como gestora padrão (AGE_GESTORA_EMAIL + AGE_GESTORA_PASSWORD)
-  const gestoraEmail = process.env.AGE_GESTORA_EMAIL ?? "mayumi@age.tucci";
-  const gestoraPass  = process.env.AGE_GESTORA_PASSWORD ?? defaultPass;
-  const gestoraHash  = await bcrypt.hash(gestoraPass, 12);
-  await db.execute(sql`
-    INSERT INTO age_gestoras (nome, email, password_hash)
-    VALUES ('Mayumi', ${gestoraEmail}, ${gestoraHash})
-    ON CONFLICT (email) DO NOTHING
-  `);
-  logger.info(`bootstrap: gestora '${gestoraEmail}' garantida`);
+  // Gestora Age: criada manualmente via /api/age/gestoras — sem seed automático
 }
 
 // Garante que as tabelas MEKY existem — cria se não existirem (idempotente)
@@ -2511,12 +2502,10 @@ export async function ensureRapaduraTables(): Promise<void> {
 // Seed de todos os membros do Rapadura (idempotente por nome)
 export async function seedRapaduraUsers(): Promise<void> {
   const yuriPwd   = process.env["RAPADURA_YURI_PASSWORD"]   ?? "rapadura@yuri2026";
-  const mayumiPwd = process.env["RAPADURA_MAYUMI_PASSWORD"] ?? "rapadura@mayumi2026";
   const membroPwd = process.env["RAPADURA_MEMBRO_PASSWORD"] ?? "rapadura@membro2026";
 
   const MEMBERS = [
     { nome: "Yuri",    role: "yuri",   pwd: yuriPwd },
-    { nome: "Mayumi",  role: "mayumi", pwd: mayumiPwd },
     { nome: "André",   role: "membro", pwd: membroPwd },
     { nome: "Lisange", role: "membro", pwd: membroPwd },
     { nome: "Gisele",  role: "membro", pwd: membroPwd },

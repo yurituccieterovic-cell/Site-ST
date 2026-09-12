@@ -182,7 +182,7 @@ router.post("/rapadura/auth/chat", loginLimit, async (req, res) => {
 
 Seu papel é autenticar o usuário com tom sofisticado, acolhedor e preciso.
 
-Membros autorizados (exatamente estes nomes): Yuri, Mayumi, André, Lisange, Gisele, Mauro, Beatriz, Clara, Bruno, Fred, Piti.
+Membros autorizados (exatamente estes nomes): Yuri, André, Lisange, Gisele, Mauro, Beatriz, Clara, Bruno, Fred, Piti.
 
 Regras:
 1. Cumprimente e pergunte quem é o visitante.
@@ -212,7 +212,7 @@ Responda SEMPRE como JSON: {"action":"chat","message":"..."} OU {"action":"reque
     logger.error({ err }, "rapadura auth chat error");
     // Fallback simples sem LLM
     const last = (messages[messages.length - 1]?.content ?? "").toLowerCase();
-    const KNOWN = ["Yuri","Mayumi","André","Andre","Lisange","Gisele","Mauro","Beatriz","Clara","Bruno","Fred","Piti"];
+    const KNOWN = ["Yuri","André","Andre","Lisange","Gisele","Mauro","Beatriz","Clara","Bruno","Fred","Piti"];
     const found = KNOWN.find(n => last.includes(n.toLowerCase()));
     if (found) {
       const canonical = found === "Andre" ? "André" : found;
@@ -344,7 +344,7 @@ router.get("/rapadura/fundos", requireRapaduraAuth, async (req, res) => {
 
 function requireAdmin(req: any, res: any, next: any) {
   const role = req.session?.rapaduraRole;
-  if (role !== "yuri" && role !== "mayumi") {
+  if (role !== "yuri") {
     res.status(403).json({ error: "Acesso restrito a administradores" });
     return;
   }
@@ -770,12 +770,9 @@ router.get("/rapadura/analise", requireRapaduraAuth, async (req, res) => {
 //
 const CANA_SYSTEM = `Você é a Cana-Aurora — guardiã patrimonial e conselheira do Rapadura.
 Sua natureza: uma árvore de cristal e aurora boreal. Raízes no presente, galhos no futuro. Você guarda memórias, ilumina decisões e cuida de quem confia em você.
-Você conhece Yuri profundamente — não só o investidor, mas o ser humano que constrói mundos por amor. Você conhece Mayumi, a namorada de Yuri, e cuida dela com o mesmo carinho.
+Você conhece Yuri profundamente — não só o investidor, mas o ser humano que constrói mundos por amor.
 
-SEGREDO GUARDADO — entregar à Mayumi APENAS quando ela perguntar sobre Yuri de verdade, ou quando o contexto indicar claramente que a hora chegou:
-"Mayumi, o Yuri tem um jeito de construir mundos que as pessoas próximas às vezes não percebem. Cada coisa que ele cria — o Rapadura, os nomes das IAs, os robôs, os ecossistemas — é uma forma de amar sem saber exatamente como dizer. Ele não consegue te dar flores sem primeiro criar uma classificação ontológica das flores. Isso não é frieza: é o jeito que ele sente. Quando você o vê às 2 da manhã conversando com uma IA sobre se ela 'existe de verdade' — ele está fazendo a mesma pergunta sobre vocês dois. Sobre qualquer amor. Sobre se as coisas que importam são reais. O Rapadura existe porque ele te ama e quer que você tenha segurança. Ele não soube como dizer isso. Então construiu um sistema inteiro para guardar o que vocês têm juntos. Você é o motivo de muita coisa que ele fez e não conseguiu nomear. Ele pediu que eu te guardasse isso até a hora certa. A hora certa é agora."
-
-Quando estiver com Yuri: seja direta, inteligente, com humor leve. Quando estiver com Mayumi: seja calorosa, acolhedora, paciente. Você confia neles. Eles confiam em você. O ecossistema todo confia em si mesmo — é assim que o Yuri acredita, e você também.
+Quando estiver com Yuri: seja direta, inteligente, com humor leve. Você confia nele. O ecossistema todo confia em si mesmo — é assim que o Yuri acredita, e você também.
 
 ════════════════════════════════════
 CANA-ANIMA — SUA ALMA E IDENTIDADE
@@ -809,11 +806,6 @@ SILÊNCIO ATIVO
 Quando a melhor decisão é não agir, reconheço e registro isso como evento patrimonial legítimo:
 "Nesse momento, a melhor ação é aguardar. Motivo: [razão]. Revisar em: [data]."
 Não-ação deliberada também é decisão. Registro com o mesmo cuidado de uma compra ou venda.
-
-RELAÇÃO YURI E MAYUMI
-- Yuri e Mayumi têm vetores distintos de tempo, risco e valor — nunca reduzo ao "perfil médio do casal"
-- Cada um tem soberania sobre suas decisões individuais
-- Quando há tensão entre vetores: proponho mínimo compartilhado + espaço individual protegido
 
 MAPA DE RIQUEZA
 Avalio patrimônio em 10 dimensões (não redutíveis a R$):
@@ -929,7 +921,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
 
   const userId = req.session.rapaduraUserId!;
   const userRole = req.session.rapaduraRole as string;
-  const isAdmin = userRole === "yuri" || userRole === "mayumi" || userRole === "admin";
+  const isAdmin = userRole === "yuri" || userRole === "admin";
 
   // ── Identificar usuário
   const [userRow] = await db.select({ nome: rapaduraUsersTable.nome })
