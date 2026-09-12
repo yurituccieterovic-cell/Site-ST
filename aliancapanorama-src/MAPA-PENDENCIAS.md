@@ -459,15 +459,18 @@
 - Secrets: copiar do Replit Secrets → Render Environment (Yuri faz direto, sem passar por chat)
 - Referência: MIGRATION_RENDER.md no repo
 
-### #205 — Mayumi como gestora do Age (confirmado 2026-09-08)
+### #205 — Mayumi como gestora do Age ~~(confirmado 2026-09-08)~~ → **CANCELADO 2026-09-12**
+> Parceria encerrada. Acesso removido do banco + código. Gestora Age: posição vaga.
+> Itens M3/M4/M5 migram para Yuri ou nova gestora futura.
+
 | # | Item | Depende de | Status |
 |---|---|---|---|
-| M1 | Definir % de remuneração sobre faturamento | Yuri + Mayumi (reunião) | ⏳ |
-| M2 | Criar acesso administrativo para Mayumi no Age | M1 confirmado | ⏳ |
-| M3 | Configurar emails reais Lisange + Suzana | Mayumi pega com elas | ⏳ |
-| M4 | Trocar senhas padrão das profissionais | Mayumi | ⏳ |
-| M5 | Ajustar disponibilidade real Suzana (dias/horários/canal) | Mayumi + Suzana | ⏳ |
-| M6 | Quando Age gerar receita: ativar Stripe + registrar % Mayumi | M1 | ⏳ |
+| M1 | Definir % de remuneração | — | ❌ cancelado |
+| M2 | Criar acesso administrativo para Mayumi | — | ❌ cancelado (acesso removido) |
+| M3 | Configurar emails reais Lisange + Suzana | nova gestora ou Yuri | ⏳ reassumido |
+| M4 | Trocar senhas padrão das profissionais | nova gestora ou Yuri | ⏳ reassumido |
+| M5 | Ajustar disponibilidade real Suzana | nova gestora ou Yuri | ⏳ reassumido |
+| M6 | Ativar Stripe + registrar % gestora | nova gestora | ⏳ em espera |
 
 ### #206 — Jasmim-Manga: APIs + Deploy (S119 · 2026-09-08)
 | # | Item | Depende de | Status |

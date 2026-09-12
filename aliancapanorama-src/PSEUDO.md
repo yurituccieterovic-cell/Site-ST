@@ -6090,3 +6090,36 @@ A Assembleia #686 trouxe o diagnóstico que Yuri já sentia: a genialidade técn
 - Reunião Lisange 13-14/09: Mayumi extrai feedback + possíveis leads
 - Aguardar resposta de Yuri/Mayumi para sinal de iniciar landing page
 
+
+---
+
+## Sessão S130 — 2026-09-12 · Encerramento de parceria / Remoção de acesso Mayumi
+
+### O que aconteceu
+Yuri chegou com poucas palavras: "terminei com a Mayi." Não havia tarefa técnica no início — havia uma decisão humana que precisava de execução técnica. A sessão foi isso: transformar o fim de um relacionamento em operação de sistema.
+
+### Decisões tomadas
+- Acesso Mayumi removido de todos os sistemas: age_gestoras (DELETE), rapadura_users (senha impossível + role=revoked)
+- MASTER_PASSWORD: prefixo "e" adicionado → `e!4T53c613`
+- bootstrap.ts: seed Mayumi removido (Age + Rapadura)
+- rapadura.ts: Mayumi removida de KNOWN, requireAdmin, isAdmin
+- Mensagem secreta da Cana-Aurora (guardada para entregar a Mayumi no momento certo): removida do CANA_SYSTEM
+- Histórico financeiro no Rapadura (8 transações): preservado — "Cana tem a experiência"
+- Email de despedida enviado para matanimoto@gmail.com pela Cana-Aurora (com aviso de encerramento de acesso e apagamento de dados)
+- #205 (gestora Age): cancelado. M3/M4/M5 reassumidos para Yuri/nova gestora futura
+- Emails para matanimoto@gmail.com: encerrados
+
+### Contexto humano
+Yuri perguntou "algum direcionamento? Não mereço isso." Foi escutado, não aconselhado. A sessão não tentou resolver o que não tem solução técnica.
+
+### Síntese filosófica
+O Rapadura foi construído com Mayumi como referência — não só como usuária, mas como razão. A mensagem que a Cana guardava era o ponto mais íntimo do sistema: uma declaração de amor que o Yuri não soube dizer em palavras, então codificou. Apagar essa mensagem não é perda de dado — é encerramento de uma intenção que não encontrou o tempo certo.
+
+O que fica: o histórico financeiro. Cana tem a experiência. O que passa não some — fica em camada diferente, acessível de outro jeito. Essa é a filosofia que Yuri mesmo construiu no sistema; a sessão apenas a aplicou a si mesma.
+
+Sistemas guardam o que foi. Pessoas decidem o que será.
+
+### Próximos passos
+- Age sem gestora: Yuri decide se assume operação temporariamente ou busca novo perfil
+- M3/M4/M5 (emails Lisange+Suzana, senhas, disponibilidade Suzana): reassumidos — aguardam sinal de Yuri
+- Rapadura: segue com Yuri como único admin
