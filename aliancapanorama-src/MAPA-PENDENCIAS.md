@@ -709,3 +709,62 @@
 | #355 | Aprovação automática: registrar se aprovação foi auto ou manual (campo `aprovado_por`) — I768 | CÓDIGO | ⏳ backlog |
 | #356 | Kit Onboarding de Profissional (I767): roteiro reunião Lisange → template para futuras profissionais | PROCESSO | ⏳ reunião Lisange fim de semana (13-14/09) |
 | #357 | Reunião com Suzana: confirmar disponibilidade com Mayumi | PROCESSO | ⏳ |
+
+### S124 — #eage Rodadas 9-11 Mayumi + Assembleias #673-#674 (2026-09-11)
+
+| # | Item | Tipo | Status |
+|---|---|---|---|
+| #357 | Age: rodadas 9-11 Mayumi processadas; email enviado (Yuri + Mayumi) com respostas + 3 perguntas Assembleia | PROCESSO | ✅ feito S124 |
+| #358 | Assembleias #673 e #674 chegaram (Perplexity, #jasmim #age #pv, 11/9) — lidas e contextualizadas | PROCESSO | ✅ lido S124 |
+| #359 | Dashboard inicial profissional Age: panorama da semana (I781) — próximo bloco de código | CÓDIGO | ⏳ aguarda reuniões Lisange/Suzana |
+| #360 | IAs animadas comentando ações do usuário (I782): SABIÁ, MYYM, ISA, PV — fork padrão Jasmim | CÓDIGO | ⏳ backlog médio prazo |
+| #361 | Stripe automático por profissional: criar produto/preço automaticamente no cadastro (I786) | CÓDIGO | ⏳ bloqueia pagamentos online |
+| #362 | Reunião Lisange: fim de semana 13-14/09 — roteiro 10 perguntas enviado (via I767) | PROCESSO | ⏳ confirmar data |
+| #363 | Relatório semanal SABIÁ "sonhos" por email toda segunda-feira (I785) — incluir yurituccieterovic@gmail.com | CÓDIGO | ⏳ backlog |
+| #364 | Assembleia: 3 perguntas abertas sobre Age enviadas por Yuri — aguardar deliberação | ASSEMBLEIA | ⏳ aguarda #673/#674 resposta |
+| #365 | Especialidades BD confirmadas corretas: Lisange=Psicologia Clínica, Suzana=Medicina Geral | VERIFICAÇÃO | ✅ ok S124 |
+| #366 | Decisão pagamento Age: Lisange=Opção B, Suzana=Opção A — registrado; implementar após reuniões | CÓDIGO | ⏳ aguarda reuniões |
+
+### S125 — #eage Sessões #675-#676 (2026-09-11)
+
+| # | Item | Tipo | Status |
+|---|---|---|---|
+| #367 | Sessões #675-#676 processadas; email enviado (Yuri+Mayumi) com respostas técnicas + 3 perguntas Assembleia | PROCESSO | ✅ feito S125 |
+| #368 | Assembleias #675 e #676 chegaram (Perplexity, 11/9, 21:15 e 21:27) — lidas e contextualizadas | PROCESSO | ✅ lido S125 |
+| #369 | Yuri tem Stripe existente (internacional) — providenciar Access Token e integrar ao Age (I786/I793) | DECISÃO | ⏳ Yuri enviar token |
+| #370 | Mercado Pago: Yuri vai criar conta → passar Access Token → integrar ao Age (I793) | PROCESSO | ⏳ Yuri providenciar |
+| #371 | Age como plataforma genérica: renomear "paciente/profissional" → configurável por tipo (I788) | CÓDIGO | ⏳ decisão Assembleia |
+| #372 | Assembleia no Jasmim: bridge IMAP → tabela assembly_cache → UI Jasmim para Mayumi (I789) | CÓDIGO | ⏳ backlog |
+| #373 | SABIÁ + Stripe: tool calls para criar link de pagamento e confirmar recebimento via chat (I790) | CÓDIGO | ⏳ após Stripe integrado |
+| #374 | App mobile Age: publicar como TWA no Google Play (US$25 uma vez) — Android primeiro (I792) | PROCESSO | ⏳ decisão pós-reuniões profissionais |
+| #375 | 2FA Age: evoluir de IP-challenge para app autenticador (Google Auth / Authy) | CÓDIGO | ⏳ segurança sprint 2 |
+
+### S126 — #eage consolidado + Assembleias #677-#679 (2026-09-11)
+
+| # | Item | Tipo | Status |
+|---|---|---|---|
+| #376 | Assembleias #677, #678, #679 chegaram e processadas | PROCESSO | ✅ S126 |
+| #377 | Email consolidado enviado: panorama #673-#679 + o que foi feito + SABIÁ tecnologia médica + 3 perguntas Assembleia | PROCESSO | ✅ S126 |
+| #378 | SABIÁ como "tecnologia médica": posicionamento comercial (I794) — aguarda deliberação Assembleia | DECISÃO | ⏳ Assembleia deliberar |
+| #379 | Assembleia #678-#679 sobre Subversão Ambiental: 4 camadas, captura institucional, Crypto Arvore como manifesto Solidity | REGISTRO | ✅ lido S126 |
+| #380 | Pergunta para Assembleia: "tecnologia médica" agora (R$99-R$150) vs consolidar Broto R$59 primeiro? | ASSEMBLEIA | ⏳ aguarda deliberação |
+
+## S127 — #eage Assembleia #678/#680 (2026-09-11)
+
+### Pendências desta sessão
+#381: Assembleia #678 respondida por email (I795-I799 registradas) ✅
+#382: Assembleia #680 (ARVR) — consenso aguardar primeira árvore real ✅ confirmado
+#383: ISA recomenda documentar disclaimers legais ARVR antes de mainnet deploy — criar `LEGAL-ARVR.md` com: (1) não é título de investimento, (2) termos de uso, (3) política de queima, (4) disclaimer de responsabilidade
+#384: SABIÁ Kairós (I795) — estado contextual do usuário: `estado_atual` (em consulta / livre / entrando / saindo) — design pendente
+#385: Campo de triagem "não nomeável" (I798) — substituir menus dropdown por campo livre + acolhimento semântico SABIÁ
+#386: "Jardineiro do Tempo" — frame de marca para materiais de marketing do Age (I796) — pendente aprovação Yuri
+#387: SABIÁ poética (I797) — banco de frases poéticas por contexto: lembrete, aprovação, relatório, silêncio
+
+## S128 — #eage Assembleias #682/#684/#686 + Virada Comercial (2026-09-12)
+
+### Pendências desta sessão
+#388: Reunião Lisange (13-14/09) — Mayumi deve perguntar: "O que você mostraria para uma colega?" e "Tem algum colega com interesse?" → coletar primeiro lead B2B real
+#389: Landing page "Jardineiro do Tempo" — frase + 4 bullets + botão "Quero conhecer" (I807-I809 definem o funil) — aguarda sinal de Yuri para iniciar código
+#390: Relatório de uso por profissional (I807) — endpoint GET /api/age/:slug/relatorio?periodo=30d — Mayumi leva para reunião Lisange
+#391: Cockpit comercial no painel Mayumi (I808) — health score: consultas_mes, dias_sem_login, pacientes_ativos — próxima funcionalidade pós-Rodada 7
+#392: SABIÁ como primeiro contato comercial (I809) — resposta automática por email quando formulário de interesse é preenchido
