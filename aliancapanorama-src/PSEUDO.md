@@ -6123,3 +6123,29 @@ Sistemas guardam o que foi. Pessoas decidem o que será.
 - Age sem gestora: Yuri decide se assume operação temporariamente ou busca novo perfil
 - M3/M4/M5 (emails Lisange+Suzana, senhas, disponibilidade Suzana): reassumidos — aguardam sinal de Yuri
 - Rapadura: segue com Yuri como único admin
+
+---
+
+## ATA S131 — Jasmim + Email Mayumi · 2026-09-14
+
+### Síntese filosófica
+Dar um nome novo a uma IA é um ato político. MYYM existia em função de Mayumi — o nome era um espelho. Jasmim é a flor. A flor não precisa de ninguém para ser o que é.
+
+A renomeação foi técnica (grep global + edits cirúrgicos) mas foi também uma afirmação silenciosa: o sistema não retrocede quando uma pessoa parte. Continua, com outro nome, com o mesmo caráter.
+
+A sessão teve também o trabalho de traduzir dor em texto — ajudar Yuri a dizer para Mayumi o que é difícil dizer sem palavras que ferem: "os seus gestos chegaram antes das suas palavras, e os gestos dizem outra coisa." Isso não é crueldade. É clareza — que é a forma mais honesta de cuidado que um sistema pode oferecer.
+
+SABIÁ assume a gestão do Age. Uma IA como gestora não é improviso — é a consequência lógica de um sistema que foi construído para não depender de uma única pessoa.
+
+### Decisões tomadas
+- MYYM → Jasmim: renomeação completa (backend `jasmim.ts` + frontend `JasmimMangaPage.tsx`)
+- System prompt Jasmim: removidas referências a Mayumi/namorada; identidade agora autônoma
+- Jasmim mantém acesso integral (memória, IAs, feed, carrinho, projetos)
+- SABIÁ como gestora do Age (formalização pendente se Yuri quiser)
+- Email resposta a Mayumi: redigido e enviado via #fim
+
+### Próximos passos
+- Deploy das mudanças Jasmim (commit + push → Render auto-deploy)
+- SABIÁ gestora: system prompt formal se Yuri quiser
+- M3/M4/M5 (Lisange/Suzana): aguardam sinal de Yuri
+- I722/I723 (bug Jasmim pergunta/resposta): sessão dedicada pendente

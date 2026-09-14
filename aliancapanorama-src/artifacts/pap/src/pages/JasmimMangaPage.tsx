@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
-// ─── Login Gate MYYM ──────────────────────────────────────────────────────────
+// ─── Login Gate Jasmim ───────────────────────────────────────────────────────
 
 function JasmimLogin({ onSuccess }: { onSuccess: () => void }) {
   const [loginVal, setLoginVal] = useState("");
@@ -237,10 +237,10 @@ const PROJETOS: Record<Projeto, { nome: string; cor: string; emoji: string; seto
   crowd:    { nome: "CROWD",    cor: "#34d399", emoji: "🌐", setores: ["Rede Social", "Profissionais", "Conexões"] },
   theo:     { nome: "Théo",     cor: "#fbbf24", emoji: "🌳", setores: ["Ecossistema", "Assembleias", "Orchestração"] },
   bni:      { nome: "BNI",      cor: "#94a3b8", emoji: "🔒", setores: ["Forças Ocultas", "Rede Estratégica", "Sábias"], secreto: true },
-  jasmim:   { nome: "Jasmim",  cor: "#c2700a", emoji: "🐿️", setores: ["Identidade", "Funcionalidades", "MYYM", "Histórico"] },
+  jasmim:   { nome: "Jasmim",  cor: "#c2700a", emoji: "🐿️", setores: ["Identidade", "Funcionalidades", "Jasmim", "Histórico"] },
 };
 
-// ─── Avatar MYYM (esquilo voador CSS) ─────────────────────────────────────────
+// ─── Avatar Jasmim (esquilo voador CSS) ──────────────────────────────────────
 
 function MyymAvatar({ onClick }: { onClick: () => void }) {
   return (
@@ -254,7 +254,7 @@ function MyymAvatar({ onClick }: { onClick: () => void }) {
         display: "flex", alignItems: "center", justifyContent: "center",
         boxShadow: "0 4px 20px rgba(245,158,11,0.3)",
       }}
-      title="Falar com MYYM"
+      title="Falar com Jasmim"
     >
       <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 44, height: 44 }}>
         <defs>
@@ -305,11 +305,11 @@ function MyymAvatar({ onClick }: { onClick: () => void }) {
   );
 }
 
-// ─── Chatbox MYYM ─────────────────────────────────────────────────────────────
+// ─── Chatbox Jasmim ──────────────────────────────────────────────────────────
 
 function MyymChat({ onClose, setor }: { onClose: () => void; setor?: string | null }) {
   const subiaLabel = setor && setor !== "Histórico" && setor !== "BNI" ? ` · ${setor.split(" · ")[0]}` : "";
-  const saudacao = { role: "myym" as const, texto: `Oi. Sou a MYYM${subiaLabel ? ` (operando como ${setor?.split(" · ")[0]})` : ""} — a parte que pensa enquanto você faz.\n\nComo você quer que eu te chame?` };
+  const saudacao = { role: "myym" as const, texto: `Oi. Sou a Jasmim${subiaLabel ? ` (operando como ${setor?.split(" · ")[0]})` : ""} — a parte que pensa enquanto você faz.\n\nComo você quer que eu te chame?` };
   const [msgs, setMsgs] = useState<{ role: "myym" | "user"; texto: string }[]>([saudacao]);
   const [historicoAberto, setHistoricoAberto] = useState(false);
   const [input, setInput] = useState("");
@@ -353,7 +353,7 @@ function MyymChat({ onClose, setor }: { onClose: () => void; setor?: string | nu
       zIndex: 99, boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
     }}>
       <div style={{ padding: "12px 16px", borderBottom: "1px solid #333", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ color: "#f59e0b", fontWeight: 700, fontSize: 14 }}>🐿️ MYYM</span>
+        <span style={{ color: "#f59e0b", fontWeight: 700, fontSize: 14 }}>🐿️ Jasmim</span>
         <button onClick={onClose} style={{ background: "none", border: "none", color: "#888", cursor: "pointer", fontSize: 18 }}>×</button>
       </div>
       <div style={{ flex: 1, overflowY: "auto", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -389,7 +389,7 @@ function MyymChat({ onClose, setor }: { onClose: () => void; setor?: string | nu
             {m.texto}
           </div>
         ))}
-        {loading && <div style={{ color: "#f59e0b88", fontSize: 12, alignSelf: "flex-start" }}>MYYM está pensando…</div>}
+        {loading && <div style={{ color: "#f59e0b88", fontSize: 12, alignSelf: "flex-start" }}>Jasmim está pensando…</div>}
         <div ref={endRef} />
       </div>
       <div style={{ padding: "8px 12px", borderTop: "1px solid #333", display: "flex", gap: 8 }}>
@@ -397,7 +397,7 @@ function MyymChat({ onClose, setor }: { onClose: () => void; setor?: string | nu
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === "Enter" && !e.shiftKey && enviar()}
-          placeholder="Fale com a MYYM…"
+          placeholder="Fale com a Jasmim…"
           style={{
             flex: 1, background: "#111", border: "1px solid #333", borderRadius: 8,
             color: "#e8e8e8", padding: "8px 12px", fontSize: 13, outline: "none",
@@ -591,7 +591,7 @@ function NovaNota({ projeto, setor, onSalva, autor = "usuário" }: { projeto: Pr
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ projeto, setor: setor ?? undefined, tipo, autor: autor || "usuário", conteudo: texto.trim() }),
       });
-      // Se é pergunta, pede resposta à MYYM e posta automaticamente
+      // Se é pergunta, pede resposta à Jasmim e posta automaticamente
       if (tipo === "pergunta") {
         const r = await fetch(`${API}/api/jasmim/myym/chat`, {
           method: "POST",
@@ -602,7 +602,7 @@ function NovaNota({ projeto, setor, onSalva, autor = "usuário" }: { projeto: Pr
           await fetch(`${API}/api/jasmim/posts`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ projeto, setor: setor ?? undefined, tipo: "myym", autor: "MYYM", conteudo: r.resposta }),
+            body: JSON.stringify({ projeto, setor: setor ?? undefined, tipo: "myym", autor: "Jasmim", conteudo: r.resposta }),
           });
         }
       }
@@ -628,7 +628,7 @@ function NovaNota({ projeto, setor, onSalva, autor = "usuário" }: { projeto: Pr
             borderRadius: 16, padding: "3px 12px", fontSize: 11, fontWeight: tipo === t ? 700 : 400,
             color: tipo === t ? "#111" : "#888", cursor: "pointer",
           }}>
-            {t === "nota" ? "📝 nota" : "❓ pergunta → MYYM"}
+            {t === "nota" ? "📝 nota" : "❓ pergunta → Jasmim"}
           </button>
         ))}
       </div>
@@ -636,7 +636,7 @@ function NovaNota({ projeto, setor, onSalva, autor = "usuário" }: { projeto: Pr
         value={texto}
         onChange={e => setTexto(e.target.value)}
         onKeyDown={e => e.key === "Enter" && e.metaKey && salvar()}
-        placeholder={tipo === "pergunta" ? "Pergunta para a MYYM…" : "Nova nota para o feed…"}
+        placeholder={tipo === "pergunta" ? "Pergunta para a Jasmim…" : "Nova nota para o feed…"}
         rows={2}
         style={{
           width: "100%", background: "transparent", border: "none",
@@ -654,7 +654,7 @@ function NovaNota({ projeto, setor, onSalva, autor = "usuário" }: { projeto: Pr
             color: "#111", fontWeight: 700, fontSize: 12,
             cursor: texto.trim() ? "pointer" : "not-allowed", transition: "background 0.2s",
           }}
-        >{salvando ? (tipo === "pergunta" ? "perguntando…" : "salvando…") : (tipo === "pergunta" ? "Perguntar à MYYM →" : "Postar nota")}</button>
+        >{salvando ? (tipo === "pergunta" ? "perguntando…" : "salvando…") : (tipo === "pergunta" ? "Perguntar à Jasmim →" : "Postar nota")}</button>
       </div>
     </div>
   );
@@ -859,7 +859,7 @@ export default function JasmimMangaPage() {
         )}
         {projetoAtivo === "isca" && (
           <div style={{ background: "#60a5fa11", border: "1px solid #60a5fa44", borderRadius: 12, padding: 16, marginBottom: 12 }}>
-            <p style={{ color: "#60a5fa", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>🧠 ISCA — motor modular da MYYM</p>
+            <p style={{ color: "#60a5fa", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>🧠 ISCA — motor modular da Jasmim</p>
             {[
               ["🌊 Inara", "Interpretação", "lê o que está por baixo"],
               ["🦉 Suindara", "Síntese", "condensa na escuridão"],
@@ -983,7 +983,7 @@ export default function JasmimMangaPage() {
       {/* Carrinho */}
       <Carrinho items={carrinho} onRemover={removerCarrinho} onEnviar={enviarBrainstorm} />
 
-      {/* MYYM */}
+      {/* Jasmim chatbox */}
       {myymAberto && <MyymChat onClose={() => setMyymAberto(false)} setor={setorAtivo} />}
       <MyymAvatar onClick={() => setMyymAberto(m => !m)} />
     </div>

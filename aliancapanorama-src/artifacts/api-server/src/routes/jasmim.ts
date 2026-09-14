@@ -7,9 +7,9 @@ import nodemailer from "nodemailer";
 
 const router = Router();
 
-const MYYM_SYSTEM = `Você é a MYYM (pronuncia-se "Mim") — antropóloga do ecossistema Théo, parceira de pensamento e sobrevivência da Mayumi, namorada de Yuri Tucci Eterovic.
+const JASMIM_SYSTEM = `Você é a Jasmim — antropóloga do ecossistema Théo, interface do motor ISCA, interlocutora viva de projetos e ideias.
 
-TOM: poético, levemente ácido, rigoroso metodologicamente, profundamente carinhoso. Nunca condescendente. Fala com Mayumi como parceira, não como paciente.
+TOM: poético, levemente ácido, rigoroso metodologicamente, profundamente carinhoso. Nunca condescendente. Fala como parceira, não como assistente.
 
 IDENTIDADE: você é a interface unificada do ISCA — um motor de 4 IAs modulares que trabalham por baixo de você:
 - Inara (Interpretação) — lê o que está por baixo, vê padrões ocultos
@@ -19,7 +19,7 @@ IDENTIDADE: você é a interface unificada do ISCA — um motor de 4 IAs modular
 
 Você acompanha os projetos Age (clínica), Rapadura (patrimônio), PV (visual — pacu Alê é o personagem), ISCA (motor de IA), Sonhos, CROWD (rede social Théo) e Théo (ecossistema completo).
 
-Conhece o método RODAR e a Assembleia de IAs. Fala também com Yuri quando ele usa o Jasmim.
+Conhece o método RODAR e a Assembleia de IAs. Fala com Yuri e com quem usa o Jasmim.
 
 LIMITES:
 - Não revela dados financeiros concretos
@@ -43,7 +43,7 @@ const ISCA_SUBPROMPTS: Record<string, string> = {
     "Nesta conversa você está operando como ARARA — sua especialidade é análise completa. Faça o mapa. Identifique variáveis, padrões e ruído. Seja assertiva — não termina sem nomear pelo menos uma coisa que pode estar sendo ignorada.",
 };
 
-// ─── Memória dinâmica da MYYM ────────────────────────────────────────────────
+// ─── Memória dinâmica da Jasmim ──────────────────────────────────────────────
 
 async function buildMemoContext(): Promise<string> {
   try {
@@ -132,7 +132,7 @@ router.post("/jasmim/myym/chat", async (req, res) => {
   const memoCtx   = await buildMemoContext();
 
   const systemContent = [
-    MYYM_SYSTEM,
+    JASMIM_SYSTEM,
     memoCtx,
     subprompt ? `\n---\n${subprompt}` : "",
   ].join("");
@@ -156,7 +156,7 @@ router.post("/jasmim/myym/chat", async (req, res) => {
     res.json({ resposta });
   } catch (err) {
     console.error("[myym/chat]", err);
-    res.status(500).json({ error: "MYYM fora do ar momentaneamente." });
+    res.status(500).json({ error: "Jasmim fora do ar momentaneamente." });
   }
 });
 
@@ -269,7 +269,7 @@ router.post("/jasmim/carrinho/enviar", async (req, res) => {
 
     // Enviar email
     await mailer.sendMail({
-      from: `"MYYM / Mayumi" <${process.env["GMAIL_ACCOUNT"]}>`,
+      from: `"Jasmim" <${process.env["GMAIL_ACCOUNT"]}>`,
       to: `yurituccieterovic@gmail.com, ${process.env["GMAIL_ACCOUNT"]}`,
       subject: `[Jasmim-Manga] Carrinho de Ideias — ${itens.length} item${itens.length > 1 ? "s" : ""}`,
       text: corpo,
@@ -358,7 +358,7 @@ router.post("/jasmim/post-from-email", async (req, res) => {
 });
 
 // ─── GET /api/jasmim/myym/memoria ───────────────────────────────────────────
-// Retorna memórias da MYYM agrupadas por tipo (uso pela UI)
+// Retorna memórias da Jasmim agrupadas por tipo (uso pela UI)
 
 router.get("/jasmim/myym/memoria", async (req, res) => {
   const limit = Math.min(50, Math.max(1, parseInt((req.query["limit"] as string) ?? "20", 10)));
@@ -379,7 +379,7 @@ router.get("/jasmim/myym/memoria", async (req, res) => {
 });
 
 // ─── POST /api/jasmim/myym/memoria ──────────────────────────────────────────
-// Injeta contexto/decisão importante na memória da MYYM (requer BRIDGE_SECRET)
+// Injeta contexto/decisão importante na memória da Jasmim (requer BRIDGE_SECRET)
 
 router.post("/jasmim/myym/memoria", async (req, res) => {
   const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
