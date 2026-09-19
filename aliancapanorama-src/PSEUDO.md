@@ -6180,3 +6180,56 @@ Este #processo foi de indexação: reunir o que foi feito em múltiplas sessões
 - I808 (cockpit comercial Mayumi): health score por profissional
 - Reunião Lisange: resultado pendente (era 13-14/09 — Yuri confirmar se aconteceu)
 - Replit pg_dump ainda pendente (deadline 30/09)
+
+---
+
+## S132 — Assembleia #692: MIT Framework aplicado ao Age · 2026-09-19
+
+**Contexto:** Yuri em Curitiba com Mayumi (16-25/09). Sessão iniciada após compactação de contexto da sessão anterior.
+
+### Executado nesta sessão (Bloco 1 — Age)
+
+**Bugs corrigidos:**
+- I722 — Jasmim feed ordering: query `ORDER BY created_at ASC LIMIT 80` retornava 80 posts MAIS ANTIGOS; corrigido com subquery DESC LIMIT 80 reordenada ASC para exibição → novos posts agora visíveis · commit 516c283
+- I723 — Jasmim clipboard: `navigator.clipboard.writeText()` sem `.catch()` falhava silenciosamente; corrigido com check de disponibilidade + fallback `execCommand('copy')` · mesmo commit
+
+**Documentação Age (I839 implementado):**
+- `docs/age/` criado com 11 dos 13 documentos canônicos (00-manifest até 12-recovery)
+- Boundary IA/humano formalizado: IA pesquisa/organiza/alerta; Mayumi homologa contratos/cobranças
+- Template Backward Design obrigatório antes de qualquer feature nova
+- Modelo Opportunity (I831) documentado com estado máquina completo
+- 08-experiment-model e 09-metrics ficaram como rascunho (sem dados suficientes)
+
+**Ideias registradas:** I831-I842 (MIT framework: Opportunity entity, Reality Board, Backward Design, Loop de Aprendizagem, Anti-monumento, Commercial states)
+
+**MAPA-PENDENCIAS:** #393-#406 adicionados (Replit urgente, LGPD, Stripe Age, senhas padrão)
+
+**Email segurança:** enviado para yurituccieterovic@gmail.com com relatório completo de riscos + saúde do ecossistema para encaminhar à Assembleia
+
+**Commits:** 516c283 (I722+I723), ffe52dc (docs/age + índices)
+
+### Decisões
+
+- **Replit "sem matar as IAs":** plano = pg_dump → Neon → código RODAR → Render → testar → Replit pode encerrar. O que vive nas IAs são os prompts (no Git) + histórico de sessões (no banco). Código já está seguro; banco precisa do dump antes de 30/09.
+- **Stripe:** precisa produto BRL separado do PAP (I842). Estimativa ~3h. Deferred.
+- **LGPD:** bloqueante para venda real. Mayumi precisa homologar antes de qualquer profissional pagar.
+- **Reuniões Lisange/Suzana:** ainda não aconteceram. Yuri confirmar quando voltar de Curitiba (25/09).
+- **Mayumi % remuneração:** ainda não definida. Reunião Yuri + Mayumi pendente.
+
+### Síntese filosófica
+
+O MIT Report #692 chegou com uma pergunta incômoda: o que já temos valida o que supomos que importa?
+
+O Age tem profissionais reais, agendamentos reais, uma gestora real. Mas o modelo comercial ainda é uma hipótese elegante, não uma validação. A Assembleia não pediu para construir mais — pediu para nomear o que já existe: Lisange é o case. Susana é o segundo. Mayumi é a primeira vendedora.
+
+O framework MIT (Outcome-first, Augmentation > Automation, OPPORTUNITY entity) não trouxe nenhum código novo. Trouxe um vocabulário de rastreio: cada ideia tem um estado, cada profissional é uma oportunidade, cada feature deve responder "resultado desejado antes de existir".
+
+A estrutura docs/age/ é esse vocabulário em forma de arquivo. Anti-Lost-in-Middle não é só proteção técnica — é proteção contra a tendência de reinventar o que já existe porque não estava escrito em lugar nenhum.
+
+**Próximos passos imediatos:**
+- Replit pg_dump — Yuri + Cláudio (antes de 30/09)
+- Senhas padrão — Mayumi comunicar Lisange+Susana
+- LGPD — Cláudio rascunha, revisão jurídica, publicar antes de 1ª venda
+- Reality Board painel Mayumi (I832)
+- Reunião Lisange — quando Yuri voltar (25/09)
+
