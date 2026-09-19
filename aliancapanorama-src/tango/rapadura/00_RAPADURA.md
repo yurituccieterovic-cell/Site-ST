@@ -99,3 +99,15 @@ DB:     ep-late-pond-acean4b0.sa-east-1.aws.neon.tech (5 tabelas v2)
 
 ---
 *Guardião: Yuri · Última atualização: 2026-08-13 · Sessão 100*
+
+---
+
+## ESTADO COMERCIAL (Assembleia #692 — 2026-09-19)
+
+| Campo | Estado |
+|---|---|
+| **Estado no ciclo** | RECURRING (uso privado Yuri+Mayumi) |
+| **Para quem** | Yuri e Mayumi |
+| **Evidência de valor** | Decisões patrimoniais reais tomadas com o sistema |
+| **Hipótese futura** | B2C/B2B quando validado externamente — não prioridade agora |
+| **Anti-monumento check** | Uso semanal confirmado → não é monumento, é ferramenta real |

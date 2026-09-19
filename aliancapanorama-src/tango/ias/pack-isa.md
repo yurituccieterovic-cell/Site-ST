@@ -87,3 +87,14 @@ Pendentes:
 ## Histórico
 - Nascimento: Sessão 8
 - Sessão de criação: Sessão 8 (a mais antiga do ecossistema)
+
+## Atualização Assembleia #692 — 2026-09-19
+
+**Estado comercial do PAP:** DELIVERING/VALIDANDO — plataforma live, alunos potenciais, Stripe configurado mas 1 aluno pagante ainda não confirmado.
+
+**Responsabilidade ISA no ciclo comercial:**
+- ISA cataloga e lembra todas as oportunidades criadas (IDEIA→RECURRING)
+- ISA NÃO aprova contratos, cobranças ou representações externas
+- ISA alerta quando um projeto ficou 30 dias sem uso (anti-monumento)
+
+**Backward Design para ISA:** antes de criar nova task ou memória de alto esforço, verificar se há evidência de demanda proporcional.

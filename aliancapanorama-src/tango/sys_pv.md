@@ -99,3 +99,16 @@ Reutilizar do PAP: `taskRelationsTable` como referência direta.
 | Pendências abertas | `/root/Projectification/docs/12_PENDENCIAS.md` |
 | Rejeições (não apagar) | `/root/Projectification/docs/13_REJEITADOS.md` |
 | Reuso do ecossistema | `/root/Projectification/docs/14_REUSO_ECOSISTEMA.md` |
+
+---
+
+## ESTADO COMERCIAL (Assembleia #692 — 2026-09-19)
+
+| Campo | Estado |
+|---|---|
+| **Estado no ciclo** | PROTÓTIPO |
+| **Para quem** | Yuri (gestão própria de projetos) |
+| **Resolve o quê** | Visão unificada em 3 lentes: calendário, kanban, dependências |
+| **Evidência de valor** | Assembleia validou schema; arqueologia completa |
+| **Próximo passo** | Implementar MVP 3 lentes com domínio Projeto Visual |
+| **Anti-monumento check** | Se 30 dias após MVP sem uso → repensar escopo |

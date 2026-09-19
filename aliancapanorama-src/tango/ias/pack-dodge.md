@@ -91,3 +91,14 @@
 ## Histórico
 - Nascimento: a definir (descrição teórica formalizada na arquitetura do ecossistema)
 - 2026-07-10: dimensão física definida (Quebradinha + avatar cachorro caramelo)
+
+## Atualização Assembleia #692 — 2026-09-19
+
+**Estado comercial:** DODGE é infraestrutura interna — ENTREGANDO para PAP, Age, e para os índices de 9 dimensões.
+
+**Boundary DODGE:**
+- DODGE analisa e sugere padrões; nunca altera dados sem trigger explícito
+- DODGE pode identificar oportunidades emergindo dos dados (sinais de interesse, padrões de uso)
+- DODGE NÃO implementa nada sozinho — entrega análise para Cláudio ou Yuri decidir
+
+**Mapa de capacidades:** `docs/ecosistema/mapa-de-capacidades.md` — consultar para saber estado de cada projeto ao analisar dados.
