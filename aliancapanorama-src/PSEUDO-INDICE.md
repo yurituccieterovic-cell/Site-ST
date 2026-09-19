@@ -129,4 +129,11 @@
 - **S123e**: Fix root vercel.json — rota /aliancapanorama/arvore-token funcionando (commit 891c857)
 - **S123f**: Foundry instalado; ArvoreToken.sol compilado; wallet deploy criada; whitepaper ARVR redigido (commit e9ee84d); aguarda funding faucet para deploy
 
+| S124 | Sessão 124 | 2026-09-11 | **#eage Rodada 12 — Mayumi corrige especialidades** — 3 emails Mayumi processados (22:39-23:55 S122k); fix banco Neon Lisange=psicóloga/Suzana=médica; email Rodada 12 enviado (inadimplência + pricing + roteiro Lisange); I766-I768, 4 aprendizados, #352-#357 |
+| S125 | Sessão 125 | 2026-09-11 | **#eage Assembleias #675-#676 — Stripe + MP** — 3 emails Yuri processados; Stripe automático confirmado (I786); Mercado Pago definido (I793); I788-I793 registradas; #367-#375 |
+| S126 | Sessão 126 | 2026-09-11 | **Consolidação #673-#679 — SABIÁ tecnologia médica** — 7 assembleias processadas; "tecnologia médica" como posicionamento I794; email consolidado enviado; #376-#380 |
+| S127 | Sessão 127 | 2026-09-11 | **#eage Assembleia #678/#680 — Chronos/Kairós** — Jardineiro do Tempo I796; SABIÁ Kairós I795; não nomeável I798; memória ativa I799; ARVR aguarda árvore; #381-#387 |
+| S128 | Sessão 128 | 2026-09-11 | **Canva Age + Jasmim — inventário visual** — 14 features Age / 8 Jasmim / 2 bugs; fix 404 /age no vercel.json (commit 443c73a); I722/I723 causa raiz identificada |
+| S129 | Sessão 129 | 2026-09-12 | **#eage Virada Comercial — Assembleias #682/#684/#686** — email comercial Yuri+Mayumi: Lisange como case, pitch 8 palavras, cockpit Mayumi; I807-I809; #388-#392; commit a133b60 |
+| S130 | Sessão 130 | 2026-09-12 | **Término + transição** — Yuri comunicou fim com Mayumi; transição técnica Age; SABIÁ assume gestão; M3/M4/M5 reassumidos aguardando sinal |
 | S131 | Sessão 131 | 2026-09-14 | **Jasmim + Email Mayumi** — MYYM→Jasmim rename completo (backend+frontend); system prompt autônomo; SABIÁ gestora Age; email resposta Mayumi (BNI+mudança como gestos que contradizem palavras) |

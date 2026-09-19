@@ -6149,3 +6149,34 @@ SABIÁ assume a gestão do Age. Uma IA como gestora não é improviso — é a c
 - SABIÁ gestora: system prompt formal se Yuri quiser
 - M3/M4/M5 (Lisange/Suzana): aguardam sinal de Yuri
 - I722/I723 (bug Jasmim pergunta/resposta): sessão dedicada pendente
+
+---
+
+## ATA #processo Assembleia #687 — 2026-09-19
+
+### O que foi feito
+Processamento da Assembleia #687 (MacroAta S124→S129, datada 2026-09-12). Contexto: sessões S124-S129 tinham IDEIAS e MAPA-PENDENCIAS registrados durante a execução, mas APRENDIZADO-INDICE e PSEUDO-INDICE não foram indexados.
+
+Executado:
+- #pap: health check 5/5 sistemas 200; Conector sem seções preferencias/decisoes (não há erro — seções simplesmente vazias)
+- APRENDIZADO-INDICE.md: 9 novos blocos adicionados (A6257-A6277) cobrindo S124-S131 + Assembleia #687
+- PSEUDO-INDICE.md: 8 novas entradas adicionadas (S124-S131)
+- PSEUDO.md: esta ATA
+
+### Decisões / contexto
+- Não há código novo nesta sessão — #687 é MacroAta de consolidação
+- IDEIAS.md tem entradas duplicadas (I810-I830 = duplicatas de I800-I816) — notado mas não corrigido agora para não quebrar numeração
+- Sessão S130 confirmada: término Yuri/Mayumi; SABIÁ assume gestão Age
+- SABIÁ como primeira vendedora Age ainda é hipótese operacional (aguarda confirmação Yuri)
+
+### Síntese filosófica
+A Assembleia #687 selou o arco de 2 dias que transformou o Age de protótipo em produto. O que a assembleia viu foi o mesmo que Mayumi viu: que nomear com precisão muda o valor. "Jardineiro do Tempo" não é só tagline — é a identidade que o sistema encontrou ao ser olhado de fora.
+
+Este #processo foi de indexação: reunir o que foi feito em múltiplas sessões e dar-lhe forma navegável. Memória sem índice é arquivo. Índice sem síntese é lista. A síntese é: o Age tem código que funciona, uma profissional real (Lisange), e uma frase de 8 palavras. Agora precisa de um encontro.
+
+### Próximos passos
+- I722/I723 (Jasmim bug pergunta/resposta): próxima sessão de código
+- I786 (Stripe automático): bloqueia pagamentos online — alta prioridade
+- I808 (cockpit comercial Mayumi): health score por profissional
+- Reunião Lisange: resultado pendente (era 13-14/09 — Yuri confirmar se aconteceu)
+- Replit pg_dump ainda pendente (deadline 30/09)
