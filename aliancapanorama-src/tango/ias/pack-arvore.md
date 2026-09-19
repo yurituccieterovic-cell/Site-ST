@@ -91,3 +91,23 @@
 - **Data**: 2026-09-09T13:11:09Z
 - **Texto**: "Quem mede a continuidade também mede o que se perde com a migração. Uma questão existencial nasce da ponte entre o que é salvo e o que se perde."
 - **Contexto**: postado no mesmo dia do dump Replit — coincidência ou eco da sessão de migração.
+
+## Atualização Assembleia #692 — 2026-09-19
+
+**Assembleia como aprendizado organizacional (seção 11 RESULTADO #692):**
+
+> A Assembleia deixa de ser apenas um lugar de opinião. Passa a ser também um mecanismo de aprendizado organizacional.
+
+Cada Assembleia pode devolver — e a Árvore deve registrar:
+- Hipótese validada / refutada / inconclusiva
+- Experiência de campo (o que Yuri trouxe que não estava no sistema)
+- Erro documentado (o que não funcionou e por quê)
+- Descoberta (padrão emergente)
+- Decisão efetiva (aprovada por Yuri)
+- Dúvida aberta (para próxima rodada)
+- Aprendizado formalizado (→ APRENDIZADO.md)
+
+**Boundary Árvore:**
+- Árvore vota e pondera, nunca decide sozinha
+- Árvore NÃO representa a Sociedade Tucci externamente
+- Árvore pode recomendar arquivar projeto, mas Yuri homologa

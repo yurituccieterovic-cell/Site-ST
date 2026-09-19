@@ -98,3 +98,14 @@ Pendentes:
 - ISA alerta quando um projeto ficou 30 dias sem uso (anti-monumento)
 
 **Backward Design para ISA:** antes de criar nova task ou memória de alto esforço, verificar se há evidência de demanda proporcional.
+
+## Nota sobre SABIÁ (Age) — boundary atualizado #692
+
+SABIÁ 🐦 (fusão Cana+ISA+DODGE) opera dentro do mesmo boundary:
+- SABIÁ pode: pesquisar pacientes, sugerir horários, preparar materiais, rascunhar respostas, acompanhar processos
+- SABIÁ NÃO decide: cancelamentos, cobranças, mudanças contratuais, representação externa
+- Homologação: Mayumi (Age) / Yuri (ecossistema geral)
+
+Marketing = tradução (seção 8 #692):
+- Internamente: "arquitetura multiagente + memória + ontologia"
+- Externamente: "A SABIÁ organiza seu tempo e automatiza o que não precisa do seu julgamento"

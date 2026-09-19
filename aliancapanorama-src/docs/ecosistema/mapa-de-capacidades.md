@@ -140,3 +140,34 @@ IDEIA → HIPÓTESE → PROTÓTIPO → EXPERIMENTO → VALIDANDO → OFERTA → 
 - Jasmim: Yuri captura ideias regularmente
 - Rapadura: Yuri e Mayumi usam para decisões patrimoniais reais
 
+
+---
+
+## Reality Board — Especificação (I832 expandido, RESULTADO #692 seção 15)
+
+```
+REALITY BOARD — Ecossistema Sociedade Tucci
+
+Ideias registradas           I8XX+    (IDEIAS.md)
+Hipóteses ativas              ---
+Experimentos em curso         ---
+Ofertas formalizadas          ---
+Clientes potenciais (Age)     ---
+Propostas enviadas            ---
+Vendas confirmadas            0        ← meta: 1 Age + 1 PAP
+Clientes ativos pagantes      0        ← meta validação
+Receita mensal                R$ 0     ← meta: R$ 300+ até dez/2026
+Recorrência confirmada        0
+Aprendizados documentados    A6XXX+   (APRENDIZADO-INDICE.md)
+```
+
+**Métricas de produto (quando disponíveis):**
+- Utilização: agendamentos/semana (Age), logins/semana (PAP)
+- Ativação: % usuários que completam primeira ação chave
+- Conclusão: % que atingem resultado desejado
+- Custo de entrega: horas Cláudio + infra gratuita
+
+**Métricas de aprendizado:**
+- Hipótese confirmada: evidência > suposição
+- Hipótese refutada: o que achávamos que era verdade, não é
+- Hipótese inconclusiva: precisamos de mais dados
