@@ -510,10 +510,20 @@ function PostCard({ post, prevPost, onAddCarrinho }: { post: Post; prevPost?: Po
     if (post.tipo === "myym" && prevPost?.tipo === "pergunta") {
       texto = `Pergunta: ${prevPost.conteudo}\n\nResposta: ${post.conteudo}`;
     }
-    navigator.clipboard.writeText(texto).then(() => {
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 1500);
-    });
+    const confirmar = () => { setCopiado(true); setTimeout(() => setCopiado(false), 1500); };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(texto).then(confirmar).catch(() => {
+        const el = document.createElement("textarea");
+        el.value = texto; document.body.appendChild(el); el.select();
+        document.execCommand("copy"); document.body.removeChild(el);
+        confirmar();
+      });
+    } else {
+      const el = document.createElement("textarea");
+      el.value = texto; document.body.appendChild(el); el.select();
+      document.execCommand("copy"); document.body.removeChild(el);
+      confirmar();
+    }
   }
 
   return (

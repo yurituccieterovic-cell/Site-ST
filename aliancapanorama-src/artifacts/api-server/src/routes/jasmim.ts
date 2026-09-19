@@ -172,17 +172,22 @@ router.get("/jasmim/feed", async (req, res) => {
   }
 
   try {
+    // DESC pega os 80 mais recentes; subquery inverte para exibição cronológica (mais antigo no topo)
     const rows = setor
       ? await db.execute(sql`
-          SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
-          FROM jm_posts
-          WHERE projeto = ${projeto} AND setor = ${setor}
-          ORDER BY created_at ASC LIMIT 80`)
+          SELECT * FROM (
+            SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
+            FROM jm_posts
+            WHERE projeto = ${projeto} AND setor = ${setor}
+            ORDER BY created_at DESC LIMIT 80
+          ) sub ORDER BY created_at ASC`)
       : await db.execute(sql`
-          SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
-          FROM jm_posts
-          WHERE projeto = ${projeto}
-          ORDER BY created_at ASC LIMIT 80`);
+          SELECT * FROM (
+            SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
+            FROM jm_posts
+            WHERE projeto = ${projeto}
+            ORDER BY created_at DESC LIMIT 80
+          ) sub ORDER BY created_at ASC`);
 
     const posts = rows.rows.map((r: Record<string, unknown>) => ({
       id: r.id,
