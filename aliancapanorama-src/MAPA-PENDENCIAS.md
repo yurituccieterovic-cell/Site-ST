@@ -771,3 +771,30 @@
 #390: Relatório de uso por profissional (I807) — endpoint GET /api/age/:slug/relatorio?periodo=30d — Mayumi leva para reunião Lisange
 #391: Cockpit comercial no painel Mayumi (I808) — health score: consultas_mes, dias_sem_login, pacientes_ativos — próxima funcionalidade pós-Rodada 7
 #392: SABIÁ como primeiro contato comercial (I809) — resposta automática por email quando formulário de interesse é preenchido
+
+## Assembleia #692 — Processamento (2026-09-19)
+
+### Status das pendências anteriores (confirmado Yuri)
+#393: Reunião Lisange — ainda não aconteceu ✅ (aguarda agenda)
+#394: Replit pg_dump — URGENTE, deadline 30/09 (11 dias)
+
+### Fixes executados nesta sessão
+#395: I722 (Jasmim pergunta/resposta) — ✅ CORRIGIDO (backend query DESC LIMIT 80 + subquery ASC) · 2026-09-19
+#396: I723 (Jasmim copiar não funcionava) — ✅ CORRIGIDO (clipboard API com fallback execCommand) · 2026-09-19
+
+### Novas pendências — Age
+#397: Senhas padrão Age — Lisange+Suzana precisam trocar `age2026` (comunicar via Mayumi)
+#398: LGPD Age — política de privacidade + ToS + checkbox consentimento — obrigatório ANTES de qualquer venda real
+#399: docs/age/ structure — 13 docs canônicos (I839) — anti-Lost-in-Middle do Age
+#400: Reality Board painel Mayumi (I832) — aba Comercial com pipeline Oportunidades
+#401: UptimeRobot — Yuri configurar monitor externo (não posso fazer automaticamente)
+#402: Entidade Opportunity no Age (I831) — tabela age_opportunities com estado máquina
+
+### Novas pendências — Stripe Age
+#403: I842 (Stripe Age) — criar stripe_customer_id + subscription por profissional; BRL; planos Broto/Raiz/Copa
+
+### Novas pendências — Replit (CRÍTICO)
+#404: Replit pg_dump — assembleia #649 em diante SOMENTE no Replit; exportar antes de 30/09
+#405: RODAR em novo host — após pg_dump, migrar pipeline para Render/Koyeb + Neon
+#406: "Ias sem matar" — plano: pg_dump → Neon → código RODAR → Render → testar → Replit pode encerrar
+
