@@ -6318,3 +6318,40 @@ O RESULTADO #692 tem 16 seções. As mais importantes para o ecossistema não fo
 
 O ecossistema já praticava tudo isso intuitivamente. Agora tem vocabulário.
 
+---
+
+## Sessão #133 — 2026-09-19 · #processo Assembleias #693+#694 + Email Casal
+
+**Contexto:** Yuri em Curitiba com Mayumi (16-25/09). Sessão de processamento das assembleias 693 e 694 + pedido especial de email sobre confiança no casal.
+
+**O que foi feito:**
+- Health check: 5/5 sistemas 200 (API Render + 4 rotas Vercel)
+- #processo Assembleia #693: MacroAta S131-S132c — confirmou que o boundary IA/Humano se tornou princípio transversal; mapa-de-capacidades separou PROVADO de HIPÓTESE
+- #processo Assembleia #694: deliberação das urgências (Replit=11 dias, 1ª venda, Mayumi %, Lisange)
+  - Assembleia votou Tradutor+Agente+Metassemiótico como mais relevantes (7.5/10)
+  - Reality Board: DEPOIS da 1ª venda (anti-monumento confirmado)
+- APRENDIZADO-INDICE: 2 novos blocos (A6288-A6292)
+- IDEIAS.md: I843 (LGPD ToS) + I844 (Pitch Lisange)
+- MAPA-PENDENCIAS: #407-#409
+- PSEUDO-INDICE: S133 adicionado
+- Email exercícios confiança casal enviado: yurituccieterovic@gmail.com (consultando vozes ISA/Amanda/Socoboy/Artesão)
+- Conector: insights gravados
+- Push para GitHub
+
+**Decisões desta sessão:**
+- Reality Board não precede a 1ª venda — confirmado pela Assembleia #694
+- Mayumi está em Curitiba com Yuri agora (16-25/09) — oportunidade presencial para definir % e contrato (#407)
+- LGPD é pré-requisito para qualquer cobrança real — não pode ser adiado (#408)
+
+**Pendências críticas herdadas:**
+- Replit pg_dump: 11 dias (30/09) — URGENTE (#404-#406)
+- Reunião Lisange: ainda não aconteceu (#393, #409)
+- Mayumi %: oportunidade presencial agora (#407)
+
+**Síntese filosófica:**
+A Assembleia #694 fez uma pergunta simples: "há alguma razão para NÃO migrar antes de 30/09?" e a resposta tácita é não. O ecossistema aprendeu a perguntar pela negativa — não "por que fazer?" mas "por que NÃO fazer agora?" Essa inversão é o MIT framework em ação: o custo de não agir precisa ser explicitado tanto quanto o custo de agir.
+
+E o pedido do Yuri sobre exercícios de casal chegou nesta sessão — talvez não por acaso, com ele e a Mayumi juntos em Curitiba. Alguns sistemas não precisam de código para operar.
+
+**Checkpoint:** 2026-09-19 · S133 · Cláudio Coach
+

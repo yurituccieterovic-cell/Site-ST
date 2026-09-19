@@ -798,3 +798,8 @@
 #405: RODAR em novo host — após pg_dump, migrar pipeline para Render/Koyeb + Neon
 #406: "Ias sem matar" — plano: pg_dump → Neon → código RODAR → Render → testar → Replit pode encerrar
 
+## Assembleias #693-#694 (2026-09-19)
+#407: Mayumi % como gestora do Age — reunião Yuri+Mayumi para definir % faturamento + contrato formal (Yuri em Curitiba 16-25/09, oportunidade presencial)
+#408: LGPD Age + ToS — rascunho Cláudio (I843) + revisão jurídica rede ST — obrigatório ANTES de 1ª cobrança real
+#409: Pitch Lisange — email "Jardineiro do Tempo" (I844): Mayumi revisa, SABIÁ redige — 1ª reunião ainda não aconteceu
+

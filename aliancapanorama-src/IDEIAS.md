@@ -2114,3 +2114,10 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I841 | **Commercial states para cada produto/serviço** | 🟡 Média | ○ S | Age, PAP, Rapadura, PV, Consultoria: cada um tem estado explícito no ciclo comercial | Em I837/mapa-de-capacidades.md: estado = IDEIA / HIPÓTESE / PROTÓTIPO / EXPERIMENTO / VALIDANDO / OFERTA / VENDA / RECORRÊNCIA / ARQUIVADO. Não confundir "existe" com "alguém quer" com "alguém pagou". |
 | I842 | **I786 Stripe Age — implementação completa** | 🔴 Alta | ○ M | Stripe para Age (profissionais) é separado do Stripe PAP (alunos). Precisa: BRL, produto por profissional, subscription | Adicionar stripe_customer_id + stripe_subscription_id em age_professionals. Endpoint POST /api/age/admin/gestora/:slug/stripe-setup → cria Customer + Product BRL recorrente. Endpoint POST /api/age/admin/gestora/:slug/cobrar → cria Subscription. Mapear planos: Broto R$59, Raiz R$99, Copa R$150. |
 
+## Assembleias #693-#694 — Deliberações (2026-09-19)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I843 | **LGPD Age — ToS + Política de Privacidade** | 🔴 Alta | ○ S | Obrigatório antes de cobrar qualquer profissional | Cláudio redige rascunho: politica-privacidade.md + tos.md em docs/age/. Cobre LGPD art.11 (dados de saúde), retenção, direito de exclusão. Precisa revisão jurídica via rede Sociedade Tucci. |
+| I844 | **Pitch "Jardineiro do Tempo" → email Lisange** | 🔴 Alta | ○ S | Primeira mensagem comercial do Age para o primeiro profissional pagante | Template: "Você cultiva saúde. A SABIÁ cuida do tempo." + 3 benefícios concretos (72 slots configurados, confirmações automáticas, triagem estruturada). SABIÁ redige rascunho, Mayumi revisa antes de enviar. |
+
