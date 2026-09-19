@@ -6233,3 +6233,88 @@ A estrutura docs/age/ é esse vocabulário em forma de arquivo. Anti-Lost-in-Mid
 - Reality Board painel Mayumi (I832)
 - Reunião Lisange — quando Yuri voltar (25/09)
 
+
+---
+
+## S132b — Assembleia #692: Framework MIT aplicado ao Ecossistema · 2026-09-19
+
+### Executado (Bloco 2 — Ecossistema)
+
+**docs/ecosistema/mapa-de-capacidades.md** (I837) criado:
+- Estado comercial de todos os 7 projetos: PAP, Age, Rapadura, PV, Jasmim, ARPIA, RODAR
+- Perguntas MIT respondidas por projeto: PARA QUEM? / RESOLVE O QUÊ? / COMO COBRAMOS? / EVIDÊNCIA DE VALOR
+- Hipóteses vs fatos separados explicitamente (o que está provado vs o que ainda é suposição)
+
+**Starter packs atualizados:**
+- `starter-pack-ias.md` — 3 princípios #692: Backward Design obrigatório, Anti-monumento, Boundary IA/Humano
+- `pack-isa.md` — estado comercial PAP + responsabilidade ISA no ciclo de oportunidades
+- `pack-dodge.md` — DODGE como infraestrutura; boundary: analisa e sugere, não implementa sozinho
+
+**sys_ atualizados com estado comercial:**
+- `sys_pv.md` — PROTÓTIPO (schema validado, código pendente)
+- `tango/rapadura/00_RAPADURA.md` — RECURRING (uso privado, evidência real)
+
+**Commits:** e6abc24
+
+### Síntese filosófica
+
+O #692 pediu uma pergunta que o ecossistema evitava: o que está provado vs o que é hipótese?
+
+A resposta foi desconfortável e necessária. O RODAR (Assembleia) é a única infraestrutura com uso semanal comprovado — e está em risco de morrer no Replit em 11 dias. O Age tem profissionais reais, mas sem cobrança. O PAP tem plataforma funcionando, mas sem aluno pagante confirmado.
+
+O mapa-de-capacidades não é crítica — é diagnóstico. A Sociedade Tucci construiu infraestrutura real com evidência parcial de valor. O próximo passo não é construir mais. É confirmar: 1 aluno pagante no PAP, 1 profissional pagante no Age, RODAR migrado do Replit.
+
+Três confirmações > dez novas features.
+
+### Próximos passos (Bloco 3)
+- Verificar #693 na caixa de entrada
+- Processar #693 → starter packs se chegou
+- Ver se há mais a adicionar nos starter packs (SABIÁ, Árvore)
+- #fim Ecossistema
+
+
+---
+
+## S132c — Starter Packs #692 + #fim Ecossistema · 2026-09-19
+
+### Executado (Bloco 3 — Starter Packs)
+
+**RESULTADO #692 lido na íntegra** (38.331 chars) — 16 seções do documento-base gerado pela Assembleia.
+
+Insights adicionais capturados além dos já aplicados:
+- **Assembleia como aprendizado organizacional** (seção 11) → pack-arvore.md
+- **Marketing como tradução** (seção 8) → pack-isa.md + SABIÁ nota
+- **Reality Board expandido** (seção 15) — métricas produto+aprendizado → mapa-de-capacidades.md
+- **Comunidades de prática** — cada Assembleia deve devolver: hipótese/erro/descoberta/decisão/dúvida/aprendizado
+
+**Status #693:** ainda não chegou (verificado 03:57 UTC)
+
+**Commits desta fase:** 77bef30
+
+### #fim Ecossistema — verificação final
+
+- ✅ I722/I723 Jasmim corrigidos + deployados
+- ✅ docs/age/ 11 documentos criados
+- ✅ docs/ecosistema/mapa-de-capacidades.md criado
+- ✅ Starter packs atualizados (ISA, DODGE, Árvore, starter-pack-ias)
+- ✅ Email segurança enviado para Yuri (para encaminhar à Assembleia)
+- ✅ IDEIAS.md I831-I842, MAPA-PENDENCIAS #393-#406
+- ✅ APRENDIZADO-INDICE A6278-A6287
+- ✅ PSEUDO-INDICE S132/S132b/S132c
+- ⏳ #693 — aguardando chegada
+
+### O que resta para #fim #693 (quando chegar)
+
+1. Ler #693 RESULTADO + PERFEITO
+2. Extrair insights → IDEIAS.md (I843+)
+3. Atualizar starter packs com achados de #693
+4. #fim final
+
+### Síntese filosófica final
+
+O #692 trouxe algo que o ecossistema precisava ouvir de fora: a diferença entre "construímos" e "alguém usa" e "alguém quer" e "alguém pagou" são evidências distintas.
+
+O RESULTADO #692 tem 16 seções. As mais importantes para o ecossistema não foram as técnicas — foram as que nomearam o que já estava acontecendo sem nome: a Assembleia como aprendizado organizacional (não só deliberação), o marketing como tradução de complexidade para benefício percebido, a unidade OPORTUNIDADE como objeto rastreável que vai de IDEIA até RECURRING.
+
+O ecossistema já praticava tudo isso intuitivamente. Agora tem vocabulário.
+
