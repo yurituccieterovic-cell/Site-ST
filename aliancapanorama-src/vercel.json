@@ -3,6 +3,14 @@
   "outputDirectory": "artifacts/pap/dist/public",
   "rewrites": [
     {
+      "source": "/aliancapanorama/calculus/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aliancapanorama/calculus",
+      "destination": "/index.html"
+    },
+    {
       "source": "/aliancapanorama/age",
       "destination": "/index.html"
     },

@@ -30,6 +30,7 @@ import JasmimMangaPage, { JasmimGate } from "@/pages/JasmimMangaPage";
 import { ManuelPage } from "@/pages/ManuelPage";
 import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
+import { CalcPage } from "@/pages/CalcPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
 
@@ -305,6 +306,7 @@ const isArvoreToken = path.includes("/arvore-token");
 const isArvore      = path.includes("/arvore") && !isArvoreToken;
 const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
+const isCalc           = path.includes("/calculus");
 const isAgePrivacidade = path.includes("/age/privacidade");
 const isAgeTermos      = path.includes("/age/termos");
 const isAgeGestora     = path.includes("/age/gestora");
@@ -329,6 +331,7 @@ function App() {
   }
 
   if (isIsa) return <IsaLandingPage />;
+  if (isCalc) return <CalcPage />;
   if (isCelular) return <CelularPage />;
   if (isPv) return <PvPage />;
   if (isJasmim) return <JasmimGate />;
