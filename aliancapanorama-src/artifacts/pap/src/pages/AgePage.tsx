@@ -935,26 +935,142 @@ export function AgePage() {
     </div>
   );
 
-  // Sem slug — mostrar lista de profissionais
+  // Sem slug — landing page institucional
   if (!slug && !loading) {
+    const profs = profList ?? [];
     return (
-      <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24 }}>
-        <div style={{ fontSize: 32, marginBottom: 12 }}>🐦</div>
-        <h1 style={{ color: "#e2e8f0", fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Agenda — Sociedade Tucci</h1>
-        <p style={{ color: "#64748b", fontSize: 14, marginBottom: 32 }}>Escolha a profissional para agendar sua consulta:</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 360 }}>
-          {(profList ?? []).map(p => (
-            <a key={p.id} href={`/age/${p.slug}`}
-              style={{ display: "block", background: "#0f1318", border: `1px solid ${p.cor}44`, borderRadius: 14, padding: "16px 20px", textDecoration: "none", transition: "border-color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.borderColor = p.cor)}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = `${p.cor}44`)}>
-              <div style={{ color: p.cor, fontWeight: 700, fontSize: 15 }}>{p.nome}</div>
-              <div style={{ color: "#94a3b8", fontSize: 12, marginTop: 3 }}>{p.especialidade ?? p.tipo}</div>
-              {p.bio && <div style={{ color: "#475569", fontSize: 11, marginTop: 4 }}>{p.bio}</div>}
-            </a>
+      <div style={{ minHeight: "100vh", background: "#080c10", color: "#e2e8f0", fontFamily: "inherit" }}>
+        {/* ── Header ── */}
+        <header style={{ borderBottom: "1px solid #1e293b", padding: "14px 24px", display: "flex", alignItems: "center", gap: 10, position: "sticky", top: 0, background: "#080c10", zIndex: 50 }}>
+          <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 32, height: 32 }}>
+            <ellipse cx="48" cy="52" rx="26" ry="28" fill="#4a5568" />
+            <ellipse cx="48" cy="58" rx="18" ry="14" fill="#f97316" />
+            <ellipse cx="48" cy="36" rx="16" ry="18" fill="#4a5568" />
+            <ellipse cx="48" cy="32" rx="11" ry="13" fill="#475569" />
+            <ellipse cx="43" cy="28" rx="4" ry="4.5" fill="#1e293b" />
+            <ellipse cx="53" cy="28" rx="4" ry="4.5" fill="#1e293b" />
+            <ellipse cx="43" cy="27" rx="2" ry="2" fill="white" />
+            <ellipse cx="53" cy="27" rx="2" ry="2" fill="white" />
+            <path d="M40 40 Q48 44 56 40" stroke="#fbbf24" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          </svg>
+          <span style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 17, letterSpacing: 1 }}>S.T. Age</span>
+          <span style={{ color: "#334155", fontSize: 13, marginLeft: 6 }}>Agenda de Saúde</span>
+          <div style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
+            <a href="/aliancapanorama/age/gestora" style={{ color: "#475569", fontSize: 12, textDecoration: "none" }}>Profissional</a>
+          </div>
+        </header>
+
+        {/* ── Hero ── */}
+        <section style={{ textAlign: "center", padding: "3.5rem 1.5rem 2.5rem", maxWidth: 560, margin: "0 auto" }}>
+          <div style={{ display: "inline-block", background: "#0d2420", border: "1px solid #2dd4bf33", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#2dd4bf", fontWeight: 600, marginBottom: 20, letterSpacing: 1 }}>
+            🐦 SABIÁ · Assistente de Agenda
+          </div>
+          <h1 style={{ fontSize: "clamp(22px, 5vw, 34px)", fontWeight: 800, lineHeight: 1.25, marginBottom: 16, color: "#f1f5f9" }}>
+            Sua agenda de cuidados.<br />
+            <span style={{ color: "#2dd4bf" }}>Simples, humana e inteligente.</span>
+          </h1>
+          <p style={{ color: "#94a3b8", fontSize: 15, lineHeight: 1.7, marginBottom: 28, maxWidth: 440, margin: "0 auto 28px" }}>
+            Agenda online para psicólogas, médicos e terapeutas — com confirmação automática, lembretes por email e a SABIÁ como assistente de cuidado.
+          </p>
+          <a href="#profissionais" style={{ display: "inline-block", background: "#2dd4bf", color: "#080c10", fontWeight: 700, fontSize: 15, padding: "12px 32px", borderRadius: 10, textDecoration: "none", transition: "opacity 0.2s" }}>
+            Agendar consulta
+          </a>
+        </section>
+
+        {/* ── Benefícios ── */}
+        <section style={{ display: "flex", flexWrap: "wrap", gap: 16, maxWidth: 680, margin: "0 auto", padding: "0 20px 3rem", justifyContent: "center" }}>
+          {[
+            { icon: "📅", titulo: "Agendamento 24h", desc: "Paciente agenda diretamente, sem telefone." },
+            { icon: "📧", titulo: "Confirmações automáticas", desc: "Email 48h e 24h antes da consulta." },
+            { icon: "🐦", titulo: "SABIÁ como apoio", desc: "Assistente de agenda sempre presente, sem substituir o profissional." },
+          ].map(b => (
+            <div key={b.titulo} style={{ flex: "1 1 160px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 12, padding: "18px 16px", textAlign: "center" }}>
+              <div style={{ fontSize: 26, marginBottom: 8 }}>{b.icon}</div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: "#e2e8f0", marginBottom: 5 }}>{b.titulo}</div>
+              <div style={{ color: "#64748b", fontSize: 12, lineHeight: 1.5 }}>{b.desc}</div>
+            </div>
           ))}
-          {profList?.length === 0 && <div style={{ color: "#475569", textAlign: "center" }}>Nenhuma profissional disponível no momento.</div>}
-        </div>
+        </section>
+
+        {/* ── Profissionais ── */}
+        <section id="profissionais" style={{ maxWidth: 560, margin: "0 auto", padding: "0 20px 3.5rem" }}>
+          <h2 style={{ textAlign: "center", fontWeight: 700, fontSize: 18, color: "#e2e8f0", marginBottom: 6 }}>Nossos profissionais</h2>
+          <p style={{ textAlign: "center", color: "#64748b", fontSize: 13, marginBottom: 24 }}>Escolha com quem você quer cuidar da sua saúde.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {profs.length > 0 ? profs.map(p => (
+              <a key={p.id} href={`/aliancapanorama/age/${p.slug}`}
+                style={{ display: "flex", alignItems: "center", gap: 16, background: "#0f1318", border: `1px solid ${p.cor}44`, borderRadius: 14, padding: "18px 20px", textDecoration: "none", transition: "border-color 0.2s, background 0.2s" }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = p.cor; e.currentTarget.style.background = "#111a22"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = `${p.cor}44`; e.currentTarget.style.background = "#0f1318"; }}>
+                <div style={{ width: 46, height: 46, borderRadius: "50%", background: `${p.cor}22`, border: `2px solid ${p.cor}66`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: 20 }}>{p.tipo === "médica" || p.tipo === "médico" ? "🩺" : "🧠"}</span>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: p.cor, fontWeight: 700, fontSize: 15 }}>{p.nome}</div>
+                  <div style={{ color: "#94a3b8", fontSize: 12, marginTop: 2 }}>{p.especialidade ?? p.tipo}</div>
+                  {p.bio && <div style={{ color: "#475569", fontSize: 11, marginTop: 4, lineHeight: 1.5 }}>{p.bio}</div>}
+                </div>
+                <div style={{ color: p.cor, fontSize: 20, flexShrink: 0 }}>→</div>
+              </a>
+            )) : (
+              <div style={{ textAlign: "center", color: "#475569", fontSize: 13, padding: "2rem" }}>Carregando profissionais…</div>
+            )}
+          </div>
+        </section>
+
+        {/* ── Como funciona ── */}
+        <section style={{ background: "#0a0f16", borderTop: "1px solid #1e293b", borderBottom: "1px solid #1e293b", padding: "3rem 20px", textAlign: "center" }}>
+          <h2 style={{ fontWeight: 700, fontSize: 18, color: "#e2e8f0", marginBottom: 28 }}>Como funciona</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, maxWidth: 640, margin: "0 auto", justifyContent: "center" }}>
+            {[
+              { n: "1", titulo: "Escolha o profissional", desc: "Veja a agenda disponível sem precisar de login." },
+              { n: "2", titulo: "Selecione o horário", desc: "Clique em um slot e preencha nome e email." },
+              { n: "3", titulo: "Receba a confirmação", desc: "Email de confirmação + lembrete automático." },
+            ].map(p => (
+              <div key={p.n} style={{ flex: "1 1 160px", maxWidth: 200 }}>
+                <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#0d2420", border: "1px solid #2dd4bf55", color: "#2dd4bf", fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>{p.n}</div>
+                <div style={{ fontWeight: 600, fontSize: 13, color: "#e2e8f0", marginBottom: 5 }}>{p.titulo}</div>
+                <div style={{ color: "#64748b", fontSize: 12, lineHeight: 1.5 }}>{p.desc}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Planos (para profissionais) ── */}
+        <section style={{ maxWidth: 720, margin: "0 auto", padding: "3rem 20px" }}>
+          <h2 style={{ textAlign: "center", fontWeight: 700, fontSize: 18, color: "#e2e8f0", marginBottom: 6 }}>Planos para profissionais de saúde</h2>
+          <p style={{ textAlign: "center", color: "#64748b", fontSize: 13, marginBottom: 28 }}>Comece grátis. Cresça com a sua agenda.</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center" }}>
+            {[
+              { nome: "Social", cor: "#64748b", preco: "Grátis", limite: "Até 15 pacientes", desc: "Ideal para começar e avaliar.", destaque: false },
+              { nome: "Broto", cor: "#2dd4bf", preco: "R$ 49/mês", limite: "Até 50 pacientes", desc: "Para quem está crescendo.", destaque: true },
+              { nome: "Raiz", cor: "#a78bfa", preco: "R$ 89/mês", limite: "Até 150 pacientes", desc: "Agenda cheia e gestão completa.", destaque: false },
+              { nome: "Copa", cor: "#f97316", preco: "R$ 149/mês", limite: "Ilimitado", desc: "Clínica, grupo ou multi-profissional.", destaque: false },
+            ].map(pl => (
+              <div key={pl.nome} style={{ flex: "1 1 140px", maxWidth: 180, background: pl.destaque ? "#0d2420" : "#0f1318", border: `1px solid ${pl.cor}${pl.destaque ? "88" : "44"}`, borderRadius: 14, padding: "20px 16px", textAlign: "center", position: "relative" }}>
+                {pl.destaque && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: "#2dd4bf", color: "#080c10", fontSize: 10, fontWeight: 700, padding: "2px 10px", borderRadius: 10 }}>POPULAR</div>}
+                <div style={{ color: pl.cor, fontWeight: 800, fontSize: 16, marginBottom: 4 }}>{pl.nome}</div>
+                <div style={{ color: "#e2e8f0", fontWeight: 700, fontSize: 18, marginBottom: 4 }}>{pl.preco}</div>
+                <div style={{ color: "#64748b", fontSize: 11, marginBottom: 8 }}>{pl.limite}</div>
+                <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.5 }}>{pl.desc}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 28 }}>
+            <a href="mailto:contato@sociedadetucci.com.br" style={{ display: "inline-block", background: "transparent", border: "1px solid #2dd4bf55", color: "#2dd4bf", fontWeight: 600, fontSize: 14, padding: "10px 28px", borderRadius: 10, textDecoration: "none" }}>
+              Quero usar o Age na minha clínica
+            </a>
+          </div>
+        </section>
+
+        {/* ── Footer ── */}
+        <footer style={{ borderTop: "1px solid #1e293b", padding: "20px 24px", textAlign: "center" }}>
+          <div style={{ color: "#334155", fontSize: 11, lineHeight: 1.8 }}>
+            S. T. Age · v2.0 · 2026<br />
+            <span style={{ color: "#1e293b" }}>Y.T. · M.M. · C.C.</span><br />
+            <span style={{ color: "#1e293b" }}>🐦 SABIÁ é assistente de agenda — não substituta de avaliação clínica.</span>
+          </div>
+        </footer>
       </div>
     );
   }

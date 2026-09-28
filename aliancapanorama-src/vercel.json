@@ -2,44 +2,165 @@
   "buildCommand": "pnpm install --no-frozen-lockfile && BASE_PATH=/ pnpm --filter @workspace/pap run build",
   "outputDirectory": "artifacts/pap/dist/public",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://site-st.onrender.com/api/:path*" },
-    { "source": "/rapadura/manuel", "destination": "/index.html" },
-    { "source": "/rapadura/manuel/(.*)", "destination": "/index.html" },
-    { "source": "/rapadura", "destination": "/index.html" },
-    { "source": "/rapadura/(.*)", "destination": "/index.html" },
-    { "source": "/adm/(.*)", "destination": "/index.html" },
-    { "source": "/adm", "destination": "/index.html" },
-    { "source": "/arquitetura", "destination": "/index.html" },
-    { "source": "/buscar", "destination": "/index.html" },
-    { "source": "/mapa", "destination": "/index.html" },
-    { "source": "/eco", "destination": "/index.html" },
-    { "source": "/toyota", "destination": "/index.html" },
-    { "source": "/meky", "destination": "/index.html" },
-    { "source": "/studio", "destination": "/index.html" },
-    { "source": "/studio/(.*)", "destination": "/index.html" },
-    { "source": "/connect", "destination": "/index.html" },
-    { "source": "/connect/(.*)", "destination": "/index.html" },
-    { "source": "/portal", "destination": "/index.html" },
-    { "source": "/portal/(.*)", "destination": "/index.html" },
-    { "source": "/dodge", "destination": "/index.html" },
-    { "source": "/dodge/(.*)", "destination": "/index.html" },
-    { "source": "/isa", "destination": "/index.html" },
-    { "source": "/isa/(.*)", "destination": "/index.html" },
-    { "source": "/css-tutorial", "destination": "/index.html" },
-    { "source": "/css-tutorial/(.*)", "destination": "/index.html" },
-    { "source": "/celular", "destination": "/index.html" },
-    { "source": "/celular/(.*)", "destination": "/index.html" },
-    { "source": "/pv", "destination": "/index.html" },
-    { "source": "/pv/(.*)", "destination": "/index.html" },
-    { "source": "/jasmim", "destination": "/index.html" },
-    { "source": "/jasmim/(.*)", "destination": "/index.html" },
-    { "source": "/arvore-token", "destination": "/index.html" },
-    { "source": "/arvore-token/(.*)", "destination": "/index.html" },
-    { "source": "/arvore", "destination": "/index.html" },
-    { "source": "/arvore/(.*)", "destination": "/index.html" },
-    { "source": "/ceu", "destination": "/index.html" },
-    { "source": "/ceu/(.*)", "destination": "/index.html" },
-    { "source": "/playcenter", "destination": "/index.html" },
-    { "source": "/playcenter/(.*)", "destination": "/index.html" }
+    {
+      "source": "/aliancapanorama/age",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://site-st.onrender.com/api/:path*"
+    },
+    {
+      "source": "/rapadura/manuel",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/rapadura/manuel/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/rapadura",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/rapadura/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/adm/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/adm",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/arquitetura",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/buscar",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/mapa",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/eco",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/toyota",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/meky",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/studio",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/studio/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/connect",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/connect/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/portal",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/portal/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dodge",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dodge/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/isa",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/isa/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/css-tutorial",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/css-tutorial/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/celular",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/celular/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/pv",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/pv/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/jasmim",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/jasmim/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/arvore-token",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/arvore-token/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/arvore",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/arvore/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ceu",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ceu/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/playcenter",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/playcenter/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
