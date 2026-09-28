@@ -694,18 +694,37 @@ export function AgePage() {
     const userMsg = sabiaInput.trim(); setSabiaInput("");
     setMsgs(m => [...m, { role: "user", content: userMsg }]);
     setSabiaLoading(true);
-    try {
-      const r = await fetch(`${API}/api/age/${slug}/sabia`, {
-        method: "POST", credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg, sessionId: sabiaSessionId }),
-      });
-      const d = await r.json() as { reply?: string; sessionId?: string };
-      setMsgs(m => [...m, { role: "assistant", content: d.reply ?? "Não consegui responder agora." }]);
-      if (d.sessionId) setSabiaSessionId(d.sessionId);
-    } catch {
-      setMsgs(m => [...m, { role: "assistant", content: "Sem conexão no momento." }]);
+    // Retry com timeout generoso para cold start do Render
+    const MAX_ATTEMPTS = 3; const RETRY_DELAY = 8000;
+    let lastErr = "";
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 35000);
+        let r: Response;
+        try {
+          r = await fetch(`${API}/api/age/${slug}/sabia`, {
+            method: "POST", credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: userMsg, sessionId: sabiaSessionId }),
+            signal: ctrl.signal,
+          });
+        } finally { clearTimeout(timer); }
+        const d = await r.json() as { reply?: string; sessionId?: string };
+        setMsgs(m => [...m, { role: "assistant", content: d.reply ?? "Não consegui responder agora." }]);
+        if (d.sessionId) setSabiaSessionId(d.sessionId);
+        setSabiaLoading(false);
+        return;
+      } catch (err) {
+        lastErr = err instanceof Error ? err.message : "erro";
+        if (attempt < MAX_ATTEMPTS) {
+          setMsgs(m => [...m.slice(0, -1), { role: "user", content: userMsg }, { role: "assistant", content: `🐦 Servidor acordando… tentativa ${attempt + 1}/${MAX_ATTEMPTS}` }]);
+          await new Promise(res => setTimeout(res, RETRY_DELAY));
+          setMsgs(m => m.slice(0, -1));
+        }
+      }
     }
+    setMsgs(m => [...m, { role: "assistant", content: "O servidor está demorando para responder. Aguarde 1 minuto e tente novamente. 🐦" }]);
     setSabiaLoading(false);
   }
 
