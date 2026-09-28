@@ -167,3 +167,4 @@
 - **A13179** (2026-09-11): root `vercel.json` (Site-ST/) é o real; `aliancapanorama-src/vercel.json` é auxiliar — rotas devem ser adicionadas no root com prefixo `/aliancapanorama/`
 - **A13180** (2026-09-11): Foundry funciona no Node 20 (binário Rust independente); cast/forge via `$HOME/.foundry/bin`; Polygon Amoy RPCs: drpc.org, publicnode, thirdweb
 
+| 28466 | 🎨🐦 Age v2.0 S134 — Sabiá-da-laranjeira + calendário + SABIÁ universal (2026-09-28) | 7 entradas (A18479-A18485): A18479-A18480=#casa anel rubi Yuri (prata 925, acetinado, R$5-6k); A18481=cor Sabiá real Turdus rufiventris; A18482=calendário 3 vistas; A18483=SABIÁ universal todos modos; A18484=créditos M.M. preservados; A18485=show/hide senha inconsistência | Sessão S134 | 2026-09-28 |
