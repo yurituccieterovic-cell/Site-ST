@@ -270,18 +270,40 @@ export function AgePage() {
 
   const [profList, setProfList] = useState<Prof[] | null>(null);
 
-  // Fetch profissional pública
+  const [waking, setWaking] = useState(false);
+
+  // Fetch profissional pública — com retry automático (servidor Render pode estar dormindo)
   useEffect(() => {
-    if (!slug) {
-      fetch(`${API}/api/age`).then(r => r.ok ? r.json() : [])
-        .then((list: Prof[]) => { setProfList(list); setLoading(false); })
-        .catch(() => { setProfList([]); setLoading(false); });
-      return;
+    let cancelled = false;
+    async function fetchWithRetry() {
+      const MAX = 4; const DELAY = 4000;
+      for (let attempt = 1; attempt <= MAX; attempt++) {
+        try {
+          if (!slug) {
+            const r = await fetch(`${API}/api/age`);
+            if (!cancelled) { setProfList(r.ok ? await r.json() : []); setLoading(false); setWaking(false); }
+            return;
+          }
+          const r = await fetch(`${API}/api/age/${slug}`);
+          if (r.ok) {
+            if (!cancelled) { setProf(await r.json() as Prof); setLoading(false); setWaking(false); }
+            return;
+          }
+          throw new Error(`${r.status}`);
+        } catch {
+          if (cancelled) return;
+          if (attempt < MAX) {
+            setWaking(true);
+            await new Promise(res => setTimeout(res, DELAY));
+          } else {
+            setError("Sistema indisponível. Tente recarregar a página.");
+            setLoading(false); setWaking(false);
+          }
+        }
+      }
     }
-    fetch(`${API}/api/age/${slug}`)
-      .then(r => r.ok ? r.json() : Promise.reject("not found"))
-      .then((p: Prof) => { setProf(p); setLoading(false); })
-      .catch(() => { setError("Profissional não encontrada."); setLoading(false); });
+    fetchWithRetry();
+    return () => { cancelled = true; };
   }, [slug]);
 
   // Verificar se já está logado
@@ -907,8 +929,9 @@ export function AgePage() {
   const colorDark = color + "33";
 
   if (loading) return (
-    <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ color: "#2dd4bf", fontSize: 14 }}>Carregando…</div>
+    <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
+      <div style={{ color: "#2dd4bf", fontSize: 14 }}>{waking ? "Iniciando sistema…" : "Carregando…"}</div>
+      {waking && <div style={{ color: "#475569", fontSize: 12, maxWidth: 260, textAlign: "center", lineHeight: 1.6 }}>O servidor estava em repouso e está acordando. Isso leva até 30 segundos.</div>}
     </div>
   );
 
