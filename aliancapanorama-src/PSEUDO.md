@@ -6417,3 +6417,20 @@ Yuri perguntou em voz o que proteger e o que doar do Age. Gemini respondeu com a
 **Novas ideias:** I157 (reset senha admin), I158 (Open-Core), I159 (registro INPI)
 **Aprendizados:** A18491-A18495
 
+
+---
+## ATA #fim · 2026-09-28 (pós S135)
+
+**Trabalho realizado desde último #fim (15:17):**
+- Assembleias #698/#699 processadas (identidade visual Age + Open-Core/INPI)
+- Fix: `AGE_EMAIL_TO=luddlocke@gmail.com` no Render — emails de paciente redirecionados temporariamente
+- Commit d9eedb3 (AGE_EMAIL_TO override)
+
+**Pendências críticas:**
+- Replit pg_dump: AMANHÃ 30/09
+- AGE_EMAIL_TO: remover quando email de paciente estiver ok
+
+**Síntese filosófica:**
+Duas sessões num dia: features que expandem, bugs que contraem. O sistema cresce e resiste ao mesmo tempo. Isso é sinal de que está vivo.
+
+**Checkpoint:** 2026-09-28T15:XX:XX · Cláudio Coach
