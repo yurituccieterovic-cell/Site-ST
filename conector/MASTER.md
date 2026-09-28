@@ -1052,3 +1052,9 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - SabiaView: height calc(100vh) dentro de drawer overflow:auto vaza scroll para o body — fix: height:100% no filho, overscrollBehavior:contain no container
 - Cases fictícias engraçadas > copy sério para profissionais resistentes a tech
 - CTA form + email direto em paralelo: rastreabilidade sem fricção
+
+
+### 2026-09-28 — admin
+### 2026-09-28 — ATA #fim S139
+- DECISÕES: Social OK; cases fictícias; CTA=form+email; Broto R9 mantido
+- PRÓXIMOS PASSOS: testar notas com Render online; pg_dump Replit (URGENTE 30/09)
