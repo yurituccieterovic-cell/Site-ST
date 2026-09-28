@@ -32,15 +32,17 @@ const loginLimit = rateLimit({
   message: { error: "Muitas tentativas. Tente em 15 minutos." },
 });
 
-const GMAIL      = process.env.GMAIL_ACCOUNT      ?? "luddlocke@gmail.com";
-const GMAIL_PASS = process.env.GMAIL_APP_PASSWORD  ?? "";
+const GMAIL           = process.env.GMAIL_ACCOUNT      ?? "luddlocke@gmail.com";
+const GMAIL_PASS      = process.env.GMAIL_APP_PASSWORD  ?? "";
+const AGE_EMAIL_TO    = process.env.AGE_EMAIL_TO        ?? "";   // override: redireciona todos os emails de paciente
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function sendEmail(to: string, subject: string, body: string) {
   if (!GMAIL_PASS) { logger.warn("AGE: GMAIL_APP_PASSWORD ausente, email não enviado"); return; }
+  const dest = AGE_EMAIL_TO || to;
   const transport = createTransport({ service: "gmail", auth: { user: GMAIL, pass: GMAIL_PASS } });
-  await transport.sendMail({ from: GMAIL, to, subject, text: body });
+  await transport.sendMail({ from: GMAIL, to: dest, subject, text: body });
 }
 
 function requireAgeAuth(req: any, res: any, next: any) {
