@@ -6434,3 +6434,21 @@ Yuri perguntou em voz o que proteger e o que doar do Age. Gemini respondeu com a
 Duas sessões num dia: features que expandem, bugs que contraem. O sistema cresce e resiste ao mesmo tempo. Isso é sinal de que está vivo.
 
 **Checkpoint:** 2026-09-28T15:XX:XX · Cláudio Coach
+
+---
+## #eage Rodada 13 · 2026-09-28
+
+**Contexto:** Respondendo thread "Age - Comercial" de Yuri (12/09). 16 dias depois, produto cresceu muito.
+
+**O que foi enviado:** Email para Yuri + Mayumi com 3 direções:
+1. Primeira venda com Lisange — reunião + LGPD antes de cobrar
+2. Planos tiered: Broto/Raiz/Floresta + ancoragem de preço
+3. Registro marca AGE no INPI (~R$215 MEI) antes de escala
+
+**Perguntas abertas enviadas:** agenda reunião Lisange (Mayumi) + critério de vitória (Yuri)
+
+**Ideias novas:** I160 (planos tiered), I161 (folder mensal SABIÁ)
+
+**Síntese filosófica:**
+A pergunta comercial mais difícil é "quando está lançado?" porque sem critério explícito o produto nunca lança — sempre tem mais uma feature. Colocar essa pergunta para Yuri é ato terapêutico tanto quanto estratégico. O Age já existe. A primeira venda prova que ele importa para alguém além de quem o construiu.
+

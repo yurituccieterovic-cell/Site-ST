@@ -2201,3 +2201,11 @@ Decisão estratégica: separar Age em camada aberta (MIT/AGPL — agendamento b�
 ### I159: Age — Registro de Marca "AGE" no INPI
 **Prioridade:** ALTA · **Complexidade:** Baixa (administrativa)
 Registrar marca nominativa "AGE" + visual no INPI. Classe 42 (serviços de tecnologia/software). Custo: ~R$430/classe (MEI tem desconto 50%). Urgência: quanto mais usuários, mais difícil proteger depois. Pré-requisito para Open-Core (I158).
+
+### I160: Age — Planos Tiered (Broto / Raiz / Floresta)
+**Prioridade:** ALTA · **Complexidade:** Baixa
+Três planos com ancoragem de preço: Broto R$59/mês (até 2 profissionais, básico), Raiz R$99/mês (até 5 profissionais + backup + relatórios), Floresta sob consulta (clínicas, secretária, API). Campo `tier` na tabela age_professionals. Ancoragem: plano do meio parece melhor quando há referência acima. Implementar junto com LGPD.
+
+### I161: Age — Folder Automático SABIÁ (Relatório Mensal do Profissional)
+**Prioridade:** MÉDIA · **Complexidade:** Média
+SABIÁ gera resumo mensal automático para cada profissional: total de consultas, pacientes ativos, slots mais usados, taxa de cancelamento. Formato: "folder" visual simples. Entregue por email no dia 1 de cada mês. Base: dados já existentes nas tabelas appointments + patients. Também serve como upsell gentil para plano superior.
