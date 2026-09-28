@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
@@ -245,6 +245,14 @@ export function AgePage() {
 
   // SABIÁ popup flutuante
   const [sabiaOpen, setSabiaOpen] = useState(false);
+
+  // Show/hide senha — profissional (já existia) + paciente
+  const [showPatientPassword, setShowPatientPassword] = useState(false);
+  const [showPatientPwNew, setShowPatientPwNew] = useState(false);
+
+  // Visualização calendário (público)
+  type CalView = "lista" | "semana" | "mes";
+  const [calView, setCalView] = useState<CalView>("lista");
 
   // Auth form
   const [authPassword, setAuthPassword] = useState("");
@@ -1117,30 +1125,162 @@ export function AgePage() {
       </div>
     );
 
+    // ── Calendário helpers ──────────────────────────────────────────────
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Semana: segunda a domingo da semana em que está calWeekOffset
+    const [calWeekOffset, setCalWeekOffset] = React.useState(0);
+    const [calMonthOffset, setCalMonthOffset] = React.useState(0);
+    const [calDaySelected, setCalDaySelected] = React.useState<string | null>(null);
+
+    const startOfWeek = new Date(today);
+    const dow = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0=Mon
+    startOfWeek.setDate(today.getDate() - dow + calWeekOffset * 7);
+    const weekDays = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(startOfWeek); d.setDate(startOfWeek.getDate() + i);
+      return d.toISOString().slice(0, 10);
+    });
+
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth() + calMonthOffset, 1);
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + calMonthOffset + 1, 0);
+    const firstDow = startOfMonth.getDay() === 0 ? 6 : startOfMonth.getDay() - 1;
+    const totalCells = Math.ceil((firstDow + endOfMonth.getDate()) / 7) * 7;
+    const monthCells = Array.from({ length: totalCells }, (_, i) => {
+      const d = new Date(startOfMonth); d.setDate(1 - firstDow + i);
+      return d.toISOString().slice(0, 10);
+    });
+
+    function SlotButton({ s, i }: { s: Slot; i: number }) {
+      return (
+        <button key={i} onClick={() => setSelectedSlot(s)}
+          style={{ background: colorDark, border: `1px solid ${color}55`, borderRadius: 8, color, padding: "8px 14px", cursor: "pointer", fontSize: 14, fontWeight: 600, transition: "background 0.15s" }}>
+          {fmtTime(s.dataHora)}
+        </button>
+      );
+    }
+
+    const monthName = startOfMonth.toLocaleString("pt-BR", { month: "long", year: "numeric" });
+    const weekLabel = `${startOfWeek.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })} – ${weekDays[6] ? new Date(weekDays[6] + "T12:00:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }) : ""}`;
+
     return (
       <div style={{ padding: "1rem" }}>
-        <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Horários disponíveis</h2>
-        {Object.keys(grouped).length === 0 && (
-          <div style={{ color: "#64748b", fontSize: 14, textAlign: "center", padding: "2rem", lineHeight: 1.7 }}>
-            Nenhum horário disponível no momento.<br />
-            <span style={{ fontSize: 12 }}>Entre em contato para verificar disponibilidade.</span>
-          </div>
+        {/* Toggle de visualização */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 16, alignItems: "center" }}>
+          <span style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600, flex: 1 }}>Horários disponíveis</span>
+          {(["lista", "semana", "mes"] as CalView[]).map(v => (
+            <button key={v} onClick={() => setCalView(v)}
+              style={{ background: calView === v ? colorDark : "transparent", border: `1px solid ${calView === v ? color : "#334155"}`, borderRadius: 6, color: calView === v ? color : "#475569", padding: "4px 10px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
+              {v === "lista" ? "Lista" : v === "semana" ? "Semana" : "Mês"}
+            </button>
+          ))}
+        </div>
+
+        {/* Vista: Lista */}
+        {calView === "lista" && (
+          <>
+            {Object.keys(grouped).length === 0 && (
+              <div style={{ color: "#64748b", fontSize: 14, textAlign: "center", padding: "2rem", lineHeight: 1.7 }}>
+                Nenhum horário disponível no momento.<br />
+                <span style={{ fontSize: 12 }}>Entre em contato para verificar disponibilidade.</span>
+              </div>
+            )}
+            {Object.entries(grouped).map(([day, daySlots]) => (
+              <div key={day} style={{ marginBottom: 20 }}>
+                <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
+                  {fmtDay(day + "T12:00:00")}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {daySlots.map((s, i) => <SlotButton key={i} s={s} i={i} />)}
+                </div>
+              </div>
+            ))}
+          </>
         )}
-        {Object.entries(grouped).map(([day, daySlots]) => (
-          <div key={day} style={{ marginBottom: 20 }}>
-            <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
-              {fmtDay(day + "T12:00:00")}
+
+        {/* Vista: Semana */}
+        {calView === "semana" && (
+          <>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+              <button onClick={() => setCalWeekOffset(o => o - 1)} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 18, padding: "0 6px" }}>‹</button>
+              <span style={{ color: "#94a3b8", fontSize: 12 }}>{weekLabel}</span>
+              <button onClick={() => setCalWeekOffset(o => o + 1)} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 18, padding: "0 6px" }}>›</button>
             </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {daySlots.map((s, i) => (
-                <button key={i} onClick={() => setSelectedSlot(s)}
-                  style={{ background: colorDark, border: `1px solid ${color}55`, borderRadius: 8, color, padding: "8px 14px", cursor: "pointer", fontSize: 14, fontWeight: 600, transition: "background 0.15s" }}>
-                  {fmtTime(s.dataHora)}
-                </button>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
+              {["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d => (
+                <div key={d} style={{ color: "#475569", fontSize: 10, textAlign: "center", fontWeight: 700, padding: "4px 0" }}>{d}</div>
               ))}
+              {weekDays.map(day => {
+                const ds = grouped[day] ?? [];
+                const isPast = day < today.toISOString().slice(0, 10);
+                const isToday = day === today.toISOString().slice(0, 10);
+                return (
+                  <div key={day} style={{ minHeight: 60, background: isPast ? "#0a0f16" : ds.length > 0 ? colorDark : "#0f1318", border: `1px solid ${isToday ? color + "66" : "#1e293b"}`, borderRadius: 8, padding: 4 }}>
+                    <div style={{ color: isToday ? color : "#64748b", fontSize: 10, fontWeight: 700, textAlign: "center", marginBottom: 4 }}>
+                      {new Date(day + "T12:00:00").getDate()}
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      {ds.slice(0, 3).map((s, i) => (
+                        <button key={i} onClick={() => setSelectedSlot(s)}
+                          style={{ background: color, border: "none", borderRadius: 4, color: "#080c10", padding: "2px 4px", cursor: "pointer", fontSize: 9, fontWeight: 700 }}>
+                          {fmtTime(s.dataHora)}
+                        </button>
+                      ))}
+                      {ds.length > 3 && <span style={{ color: "#64748b", fontSize: 9, textAlign: "center" }}>+{ds.length - 3}</span>}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          </div>
-        ))}
+          </>
+        )}
+
+        {/* Vista: Mês */}
+        {calView === "mes" && (
+          <>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+              <button onClick={() => { setCalMonthOffset(o => o - 1); setCalDaySelected(null); }} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 18, padding: "0 6px" }}>‹</button>
+              <span style={{ color: "#94a3b8", fontSize: 12, textTransform: "capitalize" }}>{monthName}</span>
+              <button onClick={() => { setCalMonthOffset(o => o + 1); setCalDaySelected(null); }} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 18, padding: "0 6px" }}>›</button>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
+              {["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d => (
+                <div key={d} style={{ color: "#475569", fontSize: 9, textAlign: "center", fontWeight: 700, padding: "2px 0" }}>{d}</div>
+              ))}
+              {monthCells.map(day => {
+                const ds = grouped[day] ?? [];
+                const inMonth = day.startsWith(`${startOfMonth.toISOString().slice(0, 7)}`);
+                const isToday = day === today.toISOString().slice(0, 10);
+                const isSel = day === calDaySelected;
+                return (
+                  <div key={day} onClick={() => ds.length > 0 ? setCalDaySelected(isSel ? null : day) : null}
+                    style={{ minHeight: 36, background: isSel ? colorDark : "#0a0f16", border: `1px solid ${isToday ? color + "66" : isSel ? color + "44" : "#1e293b"}`, borderRadius: 6, padding: 3, cursor: ds.length > 0 ? "pointer" : "default", opacity: inMonth ? 1 : 0.2 }}>
+                    <div style={{ color: isToday ? color : ds.length > 0 ? "#e2e8f0" : "#334155", fontSize: 10, textAlign: "center", fontWeight: 700 }}>
+                      {new Date(day + "T12:00:00").getDate()}
+                    </div>
+                    {ds.length > 0 && (
+                      <div style={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
+                        {Array.from({ length: Math.min(ds.length, 3) }).map((_, i) => (
+                          <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: color, opacity: 0.8 }} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {calDaySelected && grouped[calDaySelected] && (
+              <div style={{ marginTop: 16 }}>
+                <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
+                  {fmtDay(calDaySelected + "T12:00:00")}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {grouped[calDaySelected].map((s, i) => <SlotButton key={i} s={s} i={i} />)}
+                </div>
+              </div>
+            )}
+          </>
+        )}
 
         {/* Registro como paciente */}
         <div style={{ borderTop: "1px solid #1e293b", marginTop: 16, paddingTop: 16 }}>
@@ -2288,9 +2428,15 @@ export function AgePage() {
             <input type="email" placeholder="Seu email" value={patientLoginForm.email}
               onChange={e => setPatientLoginForm(f => ({ ...f, email: e.target.value }))}
               style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
-            <input type="password" placeholder="Senha" value={patientLoginForm.password}
-              onChange={e => setPatientLoginForm(f => ({ ...f, password: e.target.value }))}
-              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            <div style={{ position: "relative" }}>
+              <input type={showPatientPassword ? "text" : "password"} placeholder="Senha" value={patientLoginForm.password}
+                onChange={e => setPatientLoginForm(f => ({ ...f, password: e.target.value }))}
+                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 40px 10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box" }} />
+              <button type="button" onClick={() => setShowPatientPassword(v => !v)}
+                style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16, padding: 0, lineHeight: 1 }}>
+                {showPatientPassword ? "🙈" : "👁"}
+              </button>
+            </div>
             {patientLoginError && <div style={{ color: "#f87171", fontSize: 13 }}>{patientLoginError}</div>}
             <button type="submit" disabled={patientLoginLoading || !patientLoginForm.email || !patientLoginForm.password}
               style={{ background: patientLoginLoading ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
@@ -2785,8 +2931,8 @@ export function AgePage() {
       {/* Login modal */}
       {(mode as string) === "login" && authStep !== "done" && LoginModal()}
 
-      {/* SABIÁ popup flutuante (profissional logada, fora da aba SABIÁ) */}
-      {mode === "professional" && authStep === "done" && view !== "sabia" && (
+      {/* SABIÁ popup flutuante — sempre visível (público, paciente e profissional) */}
+      {!(mode === "professional" && view === "sabia") && (
         <>
           {/* Botão flutuante — SABIÁ animada (SVG, estilo esquilo Jasmim) */}
           <button
@@ -2816,34 +2962,35 @@ export function AgePage() {
                     .sb-tail { animation: sbTail  2.4s ease-in-out infinite; transform-origin: 48px 70px; }
                   `}</style>
                 </defs>
-                {/* Cauda */}
+                {/* Cauda — marrom */}
                 <g className="sb-tail">
-                  <ellipse cx="48" cy="76" rx="6" ry="11" fill="#0d9488" transform="rotate(5 48 76)" opacity="0.9"/>
-                  <ellipse cx="42" cy="78" rx="4" ry="9" fill="#0f766e" transform="rotate(-10 42 78)" opacity="0.7"/>
-                  <ellipse cx="54" cy="78" rx="4" ry="9" fill="#0f766e" transform="rotate(10 54 78)" opacity="0.7"/>
+                  <ellipse cx="48" cy="76" rx="6" ry="11" fill="#6b5242" transform="rotate(5 48 76)" opacity="0.9"/>
+                  <ellipse cx="42" cy="78" rx="4" ry="9" fill="#4f3a2a" transform="rotate(-10 42 78)" opacity="0.7"/>
+                  <ellipse cx="54" cy="78" rx="4" ry="9" fill="#4f3a2a" transform="rotate(10 54 78)" opacity="0.7"/>
                 </g>
-                {/* Asa esquerda */}
+                {/* Asa esquerda — marrom-cinza */}
                 <g className="sb-wing">
-                  <ellipse cx="28" cy="54" rx="12" ry="6" fill="#0f766e" transform="rotate(-30 28 54)" opacity="0.85"/>
+                  <ellipse cx="28" cy="54" rx="12" ry="6" fill="#5a4535" transform="rotate(-30 28 54)" opacity="0.85"/>
                 </g>
                 {/* Corpo */}
                 <g className="sb-body">
-                  <ellipse cx="48" cy="58" rx="16" ry="13" fill="#0d9488"/>
-                  <ellipse cx="48" cy="56" rx="12" ry="10" fill="#14b8a6"/>
-                  {/* Asa direita (sobre o corpo) */}
-                  <ellipse cx="64" cy="54" rx="10" ry="5" fill="#0f766e" transform="rotate(20 64 54)" opacity="0.9"/>
-                  {/* Peito */}
-                  <ellipse cx="48" cy="63" rx="7" ry="6" fill="#f59e0b" opacity="0.75"/>
-                  {/* Cabeça */}
-                  <circle cx="48" cy="42" r="12" fill="#0d9488"/>
-                  <circle cx="48" cy="41" r="9" fill="#14b8a6"/>
+                  <ellipse cx="48" cy="58" rx="16" ry="13" fill="#6b5242"/>
+                  <ellipse cx="48" cy="56" rx="12" ry="10" fill="#7d6050"/>
+                  {/* Asa direita */}
+                  <ellipse cx="64" cy="54" rx="10" ry="5" fill="#5a4535" transform="rotate(20 64 54)" opacity="0.9"/>
+                  {/* Peito laranja rufoso — característica do sabiá-da-laranjeira */}
+                  <ellipse cx="48" cy="64" rx="8" ry="7" fill="#f97316" opacity="0.92"/>
+                  <ellipse cx="48" cy="66" rx="6" ry="5" fill="#fb923c" opacity="0.7"/>
+                  {/* Cabeça cinzento-pizarro */}
+                  <circle cx="48" cy="42" r="12" fill="#4a5568"/>
+                  <circle cx="48" cy="41" r="9" fill="#5a6b80"/>
                   {/* Olho */}
                   <circle cx="51" cy="40" r="3.5" fill="#0a0f16"/>
                   <circle cx="52" cy="39" r="1.2" fill="white"/>
-                  {/* Bico */}
-                  <path d="M56,43 L63,41 L56,46 Z" fill="#f59e0b"/>
-                  {/* Tufo da cabeça */}
-                  <ellipse cx="44" cy="31" rx="3" ry="5" fill="#0f766e" transform="rotate(-15 44 31)"/>
+                  {/* Bico amarelo-alaranjado */}
+                  <path d="M56,43 L64,41 L56,46 Z" fill="#fbbf24"/>
+                  {/* Tufo */}
+                  <ellipse cx="44" cy="31" rx="3" ry="5" fill="#374151" transform="rotate(-15 44 31)"/>
                 </g>
               </svg>
             )}
@@ -2917,6 +3064,16 @@ export function AgePage() {
           )}
         </>
       )}
+
+      {/* Footer */}
+      <footer style={{ borderTop: "1px solid #1e293b22", marginTop: 48, padding: "16px 1rem", textAlign: "center" }}>
+        <div style={{ color: "#334155", fontSize: 11, letterSpacing: 0.5 }}>
+          S. T. Age · v2.0 · 2026
+        </div>
+        <div style={{ color: "#1e293b", fontSize: 10, marginTop: 4, letterSpacing: 0.3 }}>
+          Y.T. · M.M. · C.C.
+        </div>
+      </footer>
 
       <style>{`
         * { box-sizing: border-box; }
