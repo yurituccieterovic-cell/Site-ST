@@ -6487,3 +6487,31 @@ Mayumi é o teste de realidade do sistema. Quando ela diz "não funcionou", não
 Calculus e Sócia ainda são sementes. Nomeá-los antes de construí-los é sabedoria — você cria o recipiente antes de encher.
 
 **Novas ideias:** I162 (✅ implementada), I163 (Calculus), I164 (Sócia)
+
+---
+
+## Sessão S137 — Age Landing + SABIÁ Fix · 2026-09-28 noite
+
+**Contexto:** Yuri perdeu o que havia escrito na sessão anterior. Contexto recuperado via git log + emails Gmail (871 assembleias). Render com cold start > 60s.
+
+**Decisões:**
+- Landing page institucional do /age/ implementada (hero + planos + profissionais + CTA)
+- Planos confirmados: Social/Grátis, Broto/R$49, Raiz/R$89, Copa/R$149
+- Posicionamento: "tecnologia médica" — SABIÁ como diferencial humano+IA, não substituição
+- SABIÁ retry aumentado: 3x / 35s timeout / AbortController (cobre cold start de ~45s do Render)
+- Banco Neon corrigido: Lisange=psicóloga, Suzana=médica (estavam trocados)
+
+**Programado:**
+- AgePage.tsx: landing page completa quando slug="" + sendSabia retry 3x/35s
+- App.tsx: isAge captura /age sem barra final
+- vercel.json: rota /aliancapanorama/age → index.html
+- commits: ece017e + 6e5d7c0
+
+**Tensões abertas:**
+- Assembleia Pós-Humanismo com campos [...] — RODAR/Replit com timeout nas IAs
+- pg_dump Replit URGENTE (prazo 30/09)
+- SABIÁ: resolve com retry, mas depende do Render acordar
+
+**SÍNTESE FILOSÓFICA:**
+A landing page do Age é uma vitrine — não apenas de funcionalidade, mas de postura. Ao colocar a SABIÁ no rodapé com "não substituta de avaliação clínica", o sistema admite seus limites antes de prometer qualquer coisa. Essa honestidade estrutural é o que distingue tecnologia médica de gadget. A sessão corrigiu uma inversão no banco (Lisange/Suzana trocadas) que poderia minar a confiança do sistema justamente na hora da venda. Bugs de identidade são os mais custosos.
+

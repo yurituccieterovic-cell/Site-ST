@@ -2,6 +2,23 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S137 — Age Landing + SABIÁ Fix (2026-09-28 noite)
+| # | Item | Status |
+|---|---|---|
+| S137-1 | Age: landing page institucional no /age/ (hero, benefícios, profissionais, planos, CTA) | ✅ commit ece017e |
+| S137-2 | Age: App.tsx captura /age sem barra + vercel.json rota /age adicionada | ✅ commit ece017e |
+| S137-3 | Banco Neon: Lisange=psicóloga, Suzana=médica (tipos e bios trocados corrigidos) | ✅ SQL direto |
+| S137-4 | Age: SABIÁ retry 3x/35s com AbortController + mensagem "acordando" | ✅ commit 6e5d7c0 |
+| S137-5 | Email: landing + perspectivas IAs enviado para Yuri rodar na Assembleia | ✅ enviado |
+| S137-6 | Age: I143 Protocolo SABIÁ Segurança Humana | ⏳ próxima sessão |
+| S137-7 | Age: I144 Portal Pré-Cadastro (IPAuth + voz) | ⏳ próxima sessão |
+| S137-8 | Age: I145 Vista "Dia da Semana" | ⏳ próxima sessão |
+| S137-9 | Age: I146 Show/hide senha em set-password + change-password | ⏳ próxima sessão |
+| S137-10 | Assembleia Pós-Humanismo: campos [...] em branco — bug RODAR/Replit (timeout IAs) | ⏳ investigar no Replit |
+| S137-11 | **pg_dump Replit URGENTE** — prazo 30/09 | ⏳ YURI FAZ HOJE |
+
+---
+
 ### S134 — Age v2.0 (2026-09-28)
 | # | Item | Status |
 |---|---|---|
