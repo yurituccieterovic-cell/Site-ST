@@ -250,9 +250,12 @@ export function AgePage() {
   const [showPatientPassword, setShowPatientPassword] = useState(false);
   const [showPatientPwNew, setShowPatientPwNew] = useState(false);
 
-  // Visualização calendário (público)
+  // Visualização calendário (público) — todos os estados no top-level para respeitar rules of hooks
   type CalView = "lista" | "semana" | "mes";
   const [calView, setCalView] = useState<CalView>("lista");
+  const [calWeekOffset, setCalWeekOffset] = useState(0);
+  const [calMonthOffset, setCalMonthOffset] = useState(0);
+  const [calDaySelected, setCalDaySelected] = useState<string | null>(null);
 
   // Auth form
   const [authPassword, setAuthPassword] = useState("");
@@ -1128,11 +1131,6 @@ export function AgePage() {
     // ── Calendário helpers ──────────────────────────────────────────────
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    // Semana: segunda a domingo da semana em que está calWeekOffset
-    const [calWeekOffset, setCalWeekOffset] = React.useState(0);
-    const [calMonthOffset, setCalMonthOffset] = React.useState(0);
-    const [calDaySelected, setCalDaySelected] = React.useState<string | null>(null);
 
     const startOfWeek = new Date(today);
     const dow = today.getDay() === 0 ? 6 : today.getDay() - 1; // 0=Mon
