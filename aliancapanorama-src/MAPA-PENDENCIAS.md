@@ -2,6 +2,32 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S139 — Age: bugs Mayumi + landing cases + CTA form (2026-09-28)
+| # | Item | Status |
+|---|---|---|
+| S139-1 | Age: fix SabiaView height calc(100vh) → 100% (scroll vazava pro body no drawer) | ✅ commit 1c457b6 |
+| S139-2 | Age: drawer overscrollBehavior contain (scroll mobile vazava para o body) | ✅ commit 1c457b6 |
+| S139-3 | Age: cases fictícios engraçados na landing (Dra Helena, Dr Marcos, Cris) | ✅ commit 1c457b6 |
+| S139-4 | Age: CTA virou formulário inline (nome, email, espec, msg) + fallback mailto | ✅ commit 1c457b6 |
+| S139-5 | Backend: POST /api/age/interesse + tabela age_interesse + notificação email | ✅ commit 1c457b6 |
+| S139-6 | Resp #706: Social = OK; cases fictícios; CTA = form+email; Broto R$49 mantido | ✅ decisões |
+| S139-7 | I165: painel admin interessados (lista age_interesse) | ⏳ baixa prioridade |
+| S139-8 | I166: email boas-vindas automático para interessado | ⏳ baixa prioridade |
+| S139-9 | Notas: confirmar ciclo completo após Render estar up (Mayumi testou offline) | ⏳ testar |
+
+---
+
+### S138 — Calculus Index + Render Fix ENV VARS (2026-09-28 noite)
+| # | Item | Status |
+|---|---|---|
+| S138-1 | Render: DATABASE_URL + 9 outras vars essenciais restauradas via API | ✅ vars configuradas |
+| S138-2 | Render: redeploy forçado → servidor voltou ao ar (antes: exit code 1 no boot) | ✅ live |
+| S138-3 | Calculus: landing institucional /calculus (Ábaco, hero, 6 features, Sócia) | ✅ commit bb563e0 |
+| S138-4 | Sócia: conceitual (deliberada Assembleia #704) — não programada | ⏳ próxima frente |
+| S138-5 | Lista tarefas de rua enviada para Yuri (MP, Stripe, Age emails, Oracle, UptimeRobot) | ✅ no chat |
+
+---
+
 ### S137 — Age Landing + SABIÁ Fix (2026-09-28 noite)
 | # | Item | Status |
 |---|---|---|

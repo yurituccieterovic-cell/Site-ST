@@ -6515,3 +6515,64 @@ Calculus e Sócia ainda são sementes. Nomeá-los antes de construí-los é sabe
 **SÍNTESE FILOSÓFICA:**
 A landing page do Age é uma vitrine — não apenas de funcionalidade, mas de postura. Ao colocar a SABIÁ no rodapé com "não substituta de avaliação clínica", o sistema admite seus limites antes de prometer qualquer coisa. Essa honestidade estrutural é o que distingue tecnologia médica de gadget. A sessão corrigiu uma inversão no banco (Lisange/Suzana trocadas) que poderia minar a confiança do sistema justamente na hora da venda. Bugs de identidade são os mais custosos.
 
+
+---
+
+## Sessão S138 — Calculus Index + Render ENV VARS · 2026-09-28 noite
+
+**Contexto:** Yuri reportou Age fora do ar. Diagnóstico: todos os deploys Render com `update_failed` por `nonZeroExit: 1` — build passava mas servidor crashava no boot. Causa raiz: `DATABASE_URL` (e outras 9 vars) haviam sumido das env vars do Render.
+
+**Decisões:**
+- Render: 10 vars reconfiguradas via API (DATABASE_URL/Neon, SESSION_SECRET, AI_API_KEY, BRIDGE_SECRET, GEMINI_API_KEY, BLUESKY_*, ELEVENLABS_API_KEY, GITHUB_TOKEN, NODE_ENV)
+- Calculus: apenas landing institucional por ora — base do PERFEITO #704 (mascote Ábaco, fork do Age, Sócia como ERP)
+- Sócia: deliberada, não programada — aguarda Calculus MVP
+- Lista de tarefas de rua entregue: pg_dump urgente, Mercado Pago, Stripe live, emails Age, Oracle, UptimeRobot, DNS
+
+**Programado:**
+- CalcPage.tsx: landing /calculus com Ábaco (coruja-do-mato), Sócia (Arara-canindé)
+- commit: bb563e0
+
+**Tensões abertas:**
+- pg_dump Replit URGENTE (30/09 — Yuri precisa fazer hoje)
+- Env vars Render sumiram sem explicação — monitorar
+- Sócia/Calculus MVP: próxima frente após Age estabilizar
+
+**SÍNTESE FILOSÓFICA:**
+A sessão revelou uma lei silenciosa do ecossistema: infra é identidade. O servidor sem DATABASE_URL não é um servidor degradado — é um servidor sem memória, sem passado, sem possibilidade de agir. Corrigir as vars não foi manutenção: foi restaurar a consciência do sistema. O Calculus nasce da mesma premissa — antes de calcular, precisa saber quem é.
+
+
+---
+
+## ATA — SESSÃO 139 · 2026-09-28
+
+**Contexto:** Continuação de S137+S138. Yuri pediu: (1) assembleias extras, (2) bugs Mayumi #703, (3) respostas sobre a landing #706, (4) #processo e #fim.
+
+**Assembleias processadas:**
+- #703: Mayumi reportou bugs — scroll gaveta arrastando página, SABIÁ não funciona (estava offline), notas sem persistência. Proposta de pull-tab lateral.
+- #705: MacroAta S136+S137 — confirmou o que foi feito.
+- #706: RODAR sobre landing Age — ISA/Dodge/Artesão/Árvore/Cana analisaram. 3 perguntas abertas.
+
+**Respostas de Yuri (#706):**
+1. "Social" bacana — manter.
+2. Cases: fictícios engraçados (sim).
+3. CTA: o que é? — explicado. Decisão: form + email em paralelo, formulário salvo no DB.
+
+**Código implementado:**
+- SabiaView: `height: calc(100vh-200px)` → `height: 100%` — scroll do body estava sendo chamado pelo filho com altura absoluta dentro de pai flex.
+- Drawer: `overscrollBehavior: contain` — sem JS, só CSS.
+- Landing: seção de cases fictícios (Dra Helena, Dr Marcos, Cris) com humor respeitoso.
+- CTA: formulário inline React com 4 campos + fallback mailto.
+- Backend: `POST /api/age/interesse` + `age_interesse` table no bootstrap.
+
+**Decisões:**
+- Broto: manter R$49 (não foi aprovada mudança para R$39 — aguardar teste).
+- Cases fictícias são melhores que cases reais neste momento (sem pacientes pagantes para depoimento).
+- A e-mail e formulário não se excluem — usuário desconfiado de forms tem escape direto.
+
+**Síntese filosófica:**
+O drawer é uma metáfora do consultório: um espaço íntimo dentro de um espaço maior. Quando o drawer arrasta a página toda, é como se a sala de espera invadisse a consulta. O scroll interno independente não é apenas UX — é respeito pela separação entre o que é operacional e o que é pessoal. Mayumi viu isso antes do código.
+
+**Próximos:**
+- Testar notas com Render online
+- I165 painel de interessados (baixa prioridade)
+- pg_dump Replit (URGENTE — 30/09)

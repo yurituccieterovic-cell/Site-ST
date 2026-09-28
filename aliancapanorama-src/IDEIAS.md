@@ -2221,3 +2221,11 @@ Assembleia #704 (Yuri). Núcleo financeiro-contábil independente: fluxo de caix
 ### I164: Sistema Sócia — ERP Simplificado
 **Prioridade:** BAIXA · **Complexidade:** Muito Alta
 Assembleia #704. Fork do Calculus + camadas: CRM, Projetos, RH básico, Time Tracking, Assembleia interna (gestão participativa, IAs no conselho empresarial). Escalável: 1 pessoa → 50 colaboradores. Herda espinha do Age (auth, RBAC, painel modular, SABIÁ) + PAP (tarefas, workflows) + Rapadura (canvas fractal). Mascote: Raposa de Negócios 🦊 (estrategista, gravata afrouxada). MVP: Calculus básico primeiro; Sócia = Calculus + 3 perfis + Kanban. Mapa de dependências obrigatório antes de codificar.
+
+### I165: Age — Painel de Interessados (admin)
+**Prioridade:** baixa · **Complexidade:** baixa
+Lista dos formulários `age_interesse` submetidos. View em `/adm` ou `/age/admin`. Colunas: nome, email, especialidade, data, status (novo/contatado/descartado). Atualização de status por clique.
+
+### I166: Age — Email boas-vindas automático para interessado
+**Prioridade:** baixa · **Complexidade:** baixa
+Após POST `/api/age/interesse`, enviar email de confirmação para o email do interessado com próximos passos e link para agendar conversa. Template simples, tom humano.
