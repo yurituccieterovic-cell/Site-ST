@@ -246,6 +246,10 @@ export function AgePage() {
   // SABIÁ popup flutuante
   const [sabiaOpen, setSabiaOpen] = useState(false);
 
+  // Gaveta lateral (Sabiá, Notas, Config)
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerTab, setDrawerTab] = useState<"sabia" | "notas" | "config">("sabia");
+
   // Show/hide senha — profissional (já existia) + paciente
   const [showPatientPassword, setShowPatientPassword] = useState(false);
   const [showPatientPwNew, setShowPatientPwNew] = useState(false);
@@ -368,8 +372,9 @@ export function AgePage() {
   }, [mode, authStep, loadAppts, loadRules, loadExceptions, loadPatients, loadFeed]);
 
   useEffect(() => {
-    if (view === "notas" && mode === "professional" && authStep === "done") loadNotas();
-  }, [view, mode, authStep, loadNotas]);
+    const notasVisible = view === "notas" || (drawerOpen && drawerTab === "notas");
+    if (notasVisible && mode === "professional" && authStep === "done") loadNotas();
+  }, [view, mode, authStep, loadNotas, drawerOpen, drawerTab]);
 
   // Confirmar email via ?confirm= na URL
   useEffect(() => {
@@ -2768,14 +2773,18 @@ export function AgePage() {
 
       {/* Nav (professional only) */}
       {mode === "professional" && authStep === "done" && (
-        <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b" }}>
-          <div style={{ maxWidth: 640, margin: "0 auto", display: "flex" }}>
-            {([["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Disponibilidade"], ["config", "Config"], ["notas", "Notas 📝"], ["feed", "Feed 📋"], ["sabia", "SABIÁ 🐦"]] as [View, string][]).map(([v, label]) => (
+        <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b", position: "sticky", top: 0, zIndex: 50 }}>
+          <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", overflowX: "auto", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" as any }}>
+            {([ ["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Disponibilidade"], ["feed", "Feed 📋"] ] as [View, string][]).map(([v, label]) => (
               <button key={v} onClick={() => setView(v)}
-                style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: view === v ? `2px solid ${color}` : "2px solid transparent", color: view === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: view === v ? 700 : 400 }}>
+                style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: view === v ? `2px solid ${color}` : "2px solid transparent", color: view === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: view === v ? 700 : 400, flexShrink: 0, whiteSpace: "nowrap" }}>
                 {label}
               </button>
             ))}
+            <button onClick={() => setDrawerOpen(true)}
+              style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: drawerOpen ? `2px solid ${color}` : "2px solid transparent", color: drawerOpen ? color : "#475569", cursor: "pointer", fontSize: 12, flexShrink: 0, marginLeft: "auto", display: "flex", alignItems: "center", gap: 4 }}>
+              <span>🐦</span><span style={{ fontSize: 10 }}>▸</span>
+            </button>
           </div>
         </div>
       )}
@@ -2918,10 +2927,7 @@ export function AgePage() {
             {view === "agenda"          && AgendaView()}
             {view === "pacientes"       && PacientesView()}
             {view === "disponibilidade" && DisponibilidadeView()}
-            {view === "config"          && ConfigView()}
             {view === "feed"            && FeedView()}
-            {view === "notas"           && NotasView()}
-            {view === "sabia"           && SabiaView()}
           </>
         ))}
       </div>
@@ -2929,8 +2935,8 @@ export function AgePage() {
       {/* Login modal */}
       {(mode as string) === "login" && authStep !== "done" && LoginModal()}
 
-      {/* SABIÁ popup flutuante — sempre visível (público, paciente e profissional) */}
-      {!(mode === "professional" && view === "sabia") && (
+      {/* SABIÁ popup flutuante — público e paciente (profissional usa gaveta lateral) */}
+      {mode !== "professional" && (
         <>
           {/* Botão flutuante — SABIÁ animada (SVG, estilo esquilo Jasmim) */}
           <button
@@ -3063,6 +3069,84 @@ export function AgePage() {
         </>
       )}
 
+      {/* ─── Gaveta lateral — Sabiá / Notas / Config (profissional) ─────────────── */}
+      {mode === "professional" && authStep === "done" && (
+        <>
+          {/* Pull-tab: fica na lateral direita quando o drawer está fechado */}
+          {!drawerOpen && (
+            <div
+              onClick={() => setDrawerOpen(true)}
+              title="Sabiá · Notas · Config"
+              style={{
+                position: "fixed", right: 0, top: "50%", transform: "translateY(-50%)",
+                zIndex: 900,
+                background: "#0a0f16",
+                border: `1px solid ${color}33`,
+                borderRight: "none",
+                borderRadius: "10px 0 0 10px",
+                padding: "12px 7px",
+                cursor: "pointer",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 7,
+                boxShadow: `-2px 0 16px ${color}22`,
+                userSelect: "none",
+              }}
+            >
+              <span style={{ fontSize: 14 }}>🐦</span>
+              <span style={{ fontSize: 14 }}>📝</span>
+              <span style={{ fontSize: 13 }}>⚙️</span>
+            </div>
+          )}
+
+          {/* Overlay — fecha o drawer ao clicar fora */}
+          {drawerOpen && (
+            <div
+              onClick={() => setDrawerOpen(false)}
+              style={{ position: "fixed", inset: 0, background: "#00000055", zIndex: 901 }}
+            />
+          )}
+
+          {/* Drawer */}
+          <div style={{
+            position: "fixed", top: 0, right: 0, bottom: 0, zIndex: 902,
+            width: "min(360px, 92vw)",
+            background: "#0a0f16",
+            borderLeft: `1px solid ${color}33`,
+            display: "flex", flexDirection: "column",
+            transform: drawerOpen ? "translateX(0)" : "translateX(110%)",
+            transition: "transform 0.28s cubic-bezier(0.4,0,0.2,1)",
+            boxShadow: drawerOpen ? `-6px 0 32px ${color}18` : "none",
+          }}>
+            {/* Header do drawer */}
+            <div style={{ padding: "12px 14px", borderBottom: "1px solid #1e293b", display: "flex", alignItems: "center", gap: 2, flexShrink: 0 }}>
+              {([ ["sabia", "SABIÁ 🐦"], ["notas", "Notas 📝"], ["config", "Config ⚙️"] ] as const).map(([t, label]) => (
+                <button key={t} onClick={() => setDrawerTab(t)}
+                  style={{
+                    padding: "5px 10px", background: "none", border: "none",
+                    borderBottom: drawerTab === t ? `2px solid ${color}` : "2px solid transparent",
+                    color: drawerTab === t ? color : "#64748b",
+                    cursor: "pointer", fontSize: 12, fontWeight: drawerTab === t ? 700 : 400,
+                    whiteSpace: "nowrap",
+                  }}>
+                  {label}
+                </button>
+              ))}
+              <div style={{ flex: 1 }} />
+              <button onClick={() => setDrawerOpen(false)}
+                style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 18, padding: "0 4px", lineHeight: 1 }}>
+                ✕
+              </button>
+            </div>
+
+            {/* Conteúdo do drawer (scroll interno) */}
+            <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+              {drawerTab === "sabia"  && SabiaView()}
+              {drawerTab === "notas" && NotasView()}
+              {drawerTab === "config" && ConfigView()}
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Footer */}
       <footer style={{ borderTop: "1px solid #1e293b22", marginTop: 48, padding: "16px 1rem", textAlign: "center" }}>
         <div style={{ color: "#334155", fontSize: 11, letterSpacing: 0.5 }}>
@@ -3081,6 +3165,7 @@ export function AgePage() {
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0a0f16; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+        [style*="overflow-x: auto"]::-webkit-scrollbar { height: 0; width: 0; display: none; }
       `}</style>
     </div>
   );

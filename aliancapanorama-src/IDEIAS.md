@@ -2209,3 +2209,15 @@ Três planos com ancoragem de preço: Broto R$59/mês (até 2 profissionais, bá
 ### I161: Age — Folder Automático SABIÁ (Relatório Mensal do Profissional)
 **Prioridade:** MÉDIA · **Complexidade:** Média
 SABIÁ gera resumo mensal automático para cada profissional: total de consultas, pacientes ativos, slots mais usados, taxa de cancelamento. Formato: "folder" visual simples. Entregue por email no dia 1 de cada mês. Base: dados já existentes nas tabelas appointments + patients. Também serve como upsell gentil para plano superior.
+
+### I162: Age — Gaveta Lateral (Sabiá + Notas + Config)
+**Prioridade:** ALTA · **Complexidade:** Baixa ✅ IMPLEMENTADO S136
+Proposta da Mayumi e Yuri (Assembleia #703): separar navegação principal (Agenda, Pacientes, Disponibilidade, Feed) da navegação pessoal (Sabiá, Notas, Config). A gaveta lateral desliza da direita via pull-tab com ícones 🐦📝⚙️. Scroll interno independente. Nav principal com overflow-x: auto no mobile. Deploy: 2026-09-28.
+
+### I163: Sistema Calculus — Financeiro e Contabilidade
+**Prioridade:** MÉDIA · **Complexidade:** Alta
+Assembleia #704 (Yuri). Núcleo financeiro-contábil independente: fluxo de caixa, DRE, balanço, reconciliação bancária, impostos (DAS, ISS, IRPF/IRPJ), emissão NF-e, controle de estoque (PEPS, custo médio). Público: MEI, autônomo, profissional liberal, microempresa. Mascote sugerido pela assembleia: Ábaco 🧮 (biblioteório-esquilo com óculos, fala devagar, nunca erra contas). Pré-requisito para Sócia (I164). Checklist EPR2T antes de codificar: disclaimer fiscal, LGPD para dados fiscais, distinção elisão/evasão.
+
+### I164: Sistema Sócia — ERP Simplificado
+**Prioridade:** BAIXA · **Complexidade:** Muito Alta
+Assembleia #704. Fork do Calculus + camadas: CRM, Projetos, RH básico, Time Tracking, Assembleia interna (gestão participativa, IAs no conselho empresarial). Escalável: 1 pessoa → 50 colaboradores. Herda espinha do Age (auth, RBAC, painel modular, SABIÁ) + PAP (tarefas, workflows) + Rapadura (canvas fractal). Mascote: Raposa de Negócios 🦊 (estrategista, gravata afrouxada). MVP: Calculus básico primeiro; Sócia = Calculus + 3 perfis + Kanban. Mapa de dependências obrigatório antes de codificar.

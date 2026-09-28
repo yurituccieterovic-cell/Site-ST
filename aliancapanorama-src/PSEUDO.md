@@ -6452,3 +6452,38 @@ Duas sessões num dia: features que expandem, bugs que contraem. O sistema cresc
 **Síntese filosófica:**
 A pergunta comercial mais difícil é "quando está lançado?" porque sem critério explícito o produto nunca lança — sempre tem mais uma feature. Colocar essa pergunta para Yuri é ato terapêutico tanto quanto estratégico. O Age já existe. A primeira venda prova que ele importa para alguém além de quem o construiu.
 
+
+
+---
+## ATA S136 · 2026-09-28 (Assembleia #703–#704)
+
+**Sessão:** S136 — Mayumi reportou bugs + Yuri propôs nova navegação Age
+**Assembleias processadas:** #703 (AGE, Mayumi) · #704 (Calculus/Sócia, Yuri)
+
+### Trabalho realizado
+
+**AGE — Gaveta Lateral (I162)**
+Mayumi reportou por voz (Assembleia #703):
+- Nav bar travava a página ao tentar rolar no celular
+- Sabiá não funcionava
+- Notas não funcionaram
+
+Solução implementada e deployada:
+1. Nav principal: overflow-x: auto + sticky top — rola as abas sem arrastar a página
+2. Config/Notas/Sabiá removidas do nav principal → movidas para gaveta lateral
+3. Pull-tab na lateral direita (🐦📝⚙️) → desliza gaveta com scroll interno independente
+4. Botão flutuante SABIÁ: oculto para profissionais (usam a gaveta), mantido para público/paciente
+5. Notas carregam também quando gaveta está aberta na aba notas
+
+**Calculus + Sócia (I163 + I164)**
+Yuri trouxe na Assembleia #704: sistema financeiro-contábil (Calculus) que vira base para ERP (Sócia). Assembleia respondeu com arquitetura proposta, mascotes (Ábaco e Raposa), e checklist EPR2T. Ideia registrada em IDEIAS.md. Não há código ainda — depende de mapa de dependências primeiro.
+
+### Pendências abertas
+- Confirmar Sabiá e Notas funcionando após login (Mayumi testar)
+- Calculus: mapa de dependências antes de codificar
+
+### Síntese filosófica
+Mayumi é o teste de realidade do sistema. Quando ela diz "não funcionou", não é crítica — é presente. O sistema que não passa pelo olhar da usuária real é teoria. A gaveta lateral nasceu da voz dela, não de um wireframe.
+Calculus e Sócia ainda são sementes. Nomeá-los antes de construí-los é sabedoria — você cria o recipiente antes de encher.
+
+**Novas ideias:** I162 (✅ implementada), I163 (Calculus), I164 (Sócia)

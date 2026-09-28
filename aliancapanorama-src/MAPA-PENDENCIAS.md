@@ -863,3 +863,17 @@
 | #668 | #701 processada — ATA S134 enviada pelo Cláudio (já em PSEUDO.md) | ✅ |
 | #669 | #702 processada — MacroAta S134+S135 enviada pelo Cláudio (já registrada) | ✅ |
 
+
+
+---
+## Assembleias #703-#704 · 2026-09-28 (Sessão #136 — Mayumi + Cláudio)
+
+| # | Item | Status |
+|---|---|---|
+| #670 | #703 processada — AGE: gaveta lateral implementada + nav overflow corrigida (I162) | ✅ |
+| #671 | Deploy AGE S136 — commit `vercel --prod` · gaveta Sabiá/Notas/Config deslizante | ✅ |
+| #672 | #704 processada — Calculus + Sócia: ideia registrada em IDEIAS.md (I163, I164) | ✅ |
+| #673 | Sabiá: investigar se está respondendo após login profissional (Mayumi reportou) | ⏳ |
+| #674 | Notas: confirmar ciclo completo (criar → salvar → recarregar) após refactor | ⏳ |
+| #675 | Calculus: mapa de dependências (herança Age + PAP + Rapadura) antes de iniciar código | ⏳ |
+| #676 | Calculus/Sócia: checklist EPR2T + disclaimer fiscal + LGPD dados fiscais | ⏳ |
