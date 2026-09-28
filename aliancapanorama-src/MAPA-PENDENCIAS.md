@@ -853,3 +853,13 @@
 | #665 | I159: registro marca AGE no INPI — ANTES de escala comercial | ⏳ |
 | #666 | I157: endpoint admin reset-senha — implementar antes próxima reunião com profissionais | ⏳ |
 
+
+---
+## Assembleias #700-#702 · 2026-09-28
+
+| # | Item | Status |
+|---|---|---|
+| #667 | #700 processada — eco da transcrição S135 (I147-I156 já catalogadas) | ✅ |
+| #668 | #701 processada — ATA S134 enviada pelo Cláudio (já em PSEUDO.md) | ✅ |
+| #669 | #702 processada — MacroAta S134+S135 enviada pelo Cláudio (já registrada) | ✅ |
+
