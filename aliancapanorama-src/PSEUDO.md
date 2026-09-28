@@ -6355,3 +6355,22 @@ E o pedido do Yuri sobre exercícios de casal chegou nesta sessão — talvez n�
 
 **Checkpoint:** 2026-09-19 · S133 · Cláudio Coach
 
+
+---
+## S134 — Age v2.0 · Sessão 2026-09-28
+
+**Contexto:** Yuri pediu por voz (#age) várias melhorias de UX do Age simultaneamente. 
+
+**Decisões:**
+- Logo Sabiá: imagem do Drive de Yuri substituiu a gerada internamente. Formato PNG 1.1MB (OK — atual já era 1.2MB)
+- SVG do Sabiá: cores reais do Turdus rufiventris implementadas. Teal era placeholder estético sem intenção semântica.
+- SABIÁ universal: removida restrição `mode === "professional"`. Pacientes e público anônimo também merecem o assistente — é a identidade do sistema.
+- Calendário: 3 vistas (Lista/Semana/Mês). Vista "Dia da Semana" ficou para I145 (próxima sessão) pois requer lógica de filtro diferente dos outros.
+- Footer: créditos Y.T. · M.M. · C.C. — Mayumi preservada como co-criadora mesmo após saída operacional. Cor quase invisível no dark mode (intencional — homenagem discreta).
+- I143 (Segurança Humana na SABIÁ): aprovado como próximo passo crítico antes da landing page pública.
+- I144 (Portal Pré-Cadastro): feature importante mas complexa — postergada para sessão dedicada.
+
+**Assembleias processadas:** #695 (casa/anel), #696 (casa/anel v2), #697 (age features)
+**Commit:** 77286ba
+
+**Próximo:** I143 SABIÁ Segurança Humana + I144 Portal Pré-Cadastro + I145 Dia da Semana

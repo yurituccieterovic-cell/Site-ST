@@ -2121,3 +2121,31 @@ I432 — Modo Investigação: árvore expansível por fundo respondendo: Quem ad
 | I843 | **LGPD Age — ToS + Política de Privacidade** | 🔴 Alta | ○ S | Obrigatório antes de cobrar qualquer profissional | Cláudio redige rascunho: politica-privacidade.md + tos.md em docs/age/. Cobre LGPD art.11 (dados de saúde), retenção, direito de exclusão. Precisa revisão jurídica via rede Sociedade Tucci. |
 | I844 | **Pitch "Jardineiro do Tempo" → email Lisange** | 🔴 Alta | ○ S | Primeira mensagem comercial do Age para o primeiro profissional pagante | Template: "Você cultiva saúde. A SABIÁ cuida do tempo." + 3 benefícios concretos (72 slots configurados, confirmações automáticas, triagem estruturada). SABIÁ redige rascunho, Mayumi revisa antes de enviar. |
 
+
+
+## Docs PAP — Ideias Novas (2026-09-28)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I845 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I846 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I847 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I848 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I849 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I850 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I851 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+### I143: Age — Protocolo SABIÁ de Segurança Humana
+**Prioridade:** ALTA · **Complexidade:** Média
+Detector de crise no chat da SABIÁ: palavras-chave ("morrendo", "não aguento", "emergência") → SABIÁ quebra o script de agenda, exibe número de emergência (SAMU 192, CVV 188) e registra o evento. CFP 11/2018 aware. Boundary IA/humano: SABIÁ orienta, não diagnostica.
+
+### I144: Age — Portal de Acesso Pré-Cadastro (IPAuth)
+**Prioridade:** MÉDIA · **Complexidade:** Alta
+Pacientes visualizam horários disponíveis sem cadastro. Sistema registra fingerprint (IP+UserAgent) para rastreamento não-intrusivo (informado no ToS). Para agendar: exige cadastro. Opção avançada: reconhecimento de voz via Web Speech API como segunda forma de "validação humana" sem CAPTCHA. CAPTCHA como fallback.
+
+### I145: Age — Vista "Dia da Semana" no Calendário
+**Prioridade:** MÉDIA · **Complexidade:** Baixa
+Quarta vista de calendário: filtra todos os horários disponíveis por dia da semana (ex.: "todas as terças"). Útil para pacientes que têm janelas fixas semanais. Implementação: filtro `grouped` por `getDay()` + seletor de dia da semana (Segunda a Domingo).
+
+### I146: Age — Show/Hide Senha nos Formulários set-password e change-password
+**Prioridade:** MÉDIA · **Complexidade:** Baixa
+Completar UX: formulários de criação de nova senha (set-password via token) e troca de senha no painel do paciente também precisam de 👁/🙈. Já implementado no login do profissional e agora no login do paciente.

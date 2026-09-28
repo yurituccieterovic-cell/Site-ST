@@ -2,6 +2,20 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S134 — Age v2.0 (2026-09-28)
+| # | Item | Status |
+|---|---|---|
+| S134-1 | Age: logo Sabiá atualizado (cor real Turdus rufiventris) | ✅ commit 77286ba |
+| S134-2 | Age: SVG Sabiá com cores corretas (costas cinzento-pizarro, peito laranja rufoso) | ✅ commit 77286ba |
+| S134-3 | Age: Calendário público — 3 vistas: Lista/Semana/Mês | ✅ commit 77286ba |
+| S134-4 | Age: SABIÁ flutuante em todos os modos (público, paciente, profissional) | ✅ commit 77286ba |
+| S134-5 | Age: Show/hide senha na área do paciente (login) | ✅ commit 77286ba |
+| S134-6 | Age: Footer S. T. Age v2.0 · 2026 + créditos Y.T. · M.M. · C.C. | ✅ commit 77286ba |
+| S134-7 | Age: I143 Protocolo SABIÁ Segurança Humana | ⏳ próxima sessão |
+| S134-8 | Age: I144 Portal Pré-Cadastro (IPAuth + voz) | ⏳ próxima sessão |
+| S134-9 | Age: I145 Vista "Dia da Semana" | ⏳ próxima sessão |
+| S134-10 | Age: I146 Show/hide senha em set-password + change-password | ⏳ próxima sessão |
+
 ---
 
 ## Sequência de Nascimento do Ecossistema Robótico
