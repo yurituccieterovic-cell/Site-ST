@@ -2189,3 +2189,15 @@ Lembretes automáticos via WhatsApp para pacientes e confirmações para profiss
 ### I156: Age — Estrutura em Boxes Modular
 **Prioridade:** MÉDIA · **Complexidade:** Alta
 Refatoração arquitetural: painel do profissional e secretária em estrutura de boxes modulares. Cada funcionalidade (agenda, pacientes, e-mail, pagamentos, calendário, SABIÁ) é um widget independente. Layout responsivo (celular/tablet/desktop). Pré-requisito para I154 (personalização). Ativar após MVP comercial.
+
+### I157: Age — Endpoint Admin de Reset de Senha
+**Prioridade:** ALTA · **Complexidade:** Baixa
+Ausência percebida na S135 (senha Suzana divergiu silenciosamente). Endpoint POST /api/age/:slug/admin/reset-password protegido por MASTER_PASSWORD ou BRIDGE_SECRET. Retorna novo token de reset por email. Evita necessidade de acesso direto ao Neon em produção.
+
+### I158: Age — Estratégia Open-Core (Lei 9.609/98)
+**Prioridade:** MÉDIA · **Complexidade:** Alta (jurídica + técnica)
+Decisão estratégica: separar Age em camada aberta (MIT/AGPL — agendamento básico, cadastro, protocolos de acolhimento) e camada proprietária (SaaS — IAs, triagem automática, integrações pagas). Registro no INPI: código-fonte + marca "AGE". Código aberto = padrão público de saúde comunitária; código proprietário = monetização. Consultar Assembleia de IAs para definir fronteira exata.
+
+### I159: Age — Registro de Marca "AGE" no INPI
+**Prioridade:** ALTA · **Complexidade:** Baixa (administrativa)
+Registrar marca nominativa "AGE" + visual no INPI. Classe 42 (serviços de tecnologia/software). Custo: ~R$430/classe (MEI tem desconto 50%). Urgência: quanto mais usuários, mais difícil proteger depois. Pré-requisito para Open-Core (I158).

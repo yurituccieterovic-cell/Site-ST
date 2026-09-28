@@ -6404,3 +6404,16 @@ A senha da Suzana já havia sido trocada — sinal de que o sistema está vivo, 
 
 **Checkpoint:** 2026-09-28 · S135 · Cláudio Coach
 
+
+---
+## Registro — Assembleias #698 e #699 · 2026-09-28
+
+**#698 — Evolução da Identidade Visual do Age:**
+A Gemini documentou a história completa do logo: Age 1.0 (calendário + curva verde-menta = estetoscópio estilizado) → Age 2.0 (mesmo DNA, agora com volume, gradientes, frosted glass). Três caminhos propostos; o escolhido por Yuri foi a evolução com continuidade simbólica. Registro histórico para que futuras IAs não percam a intenção de design.
+
+**#699 — Patente / Copyright / Open-Core:**
+Yuri perguntou em voz o que proteger e o que doar do Age. Gemini respondeu com análise da Lei 9.609/98 e proposta Open-Core. Decisão não tomada ainda — Yuri quer consultar a Assembleia antes. O insight central: doação da camada pública não é filantropia, é estratégia de autoridade.
+
+**Novas ideias:** I157 (reset senha admin), I158 (Open-Core), I159 (registro INPI)
+**Aprendizados:** A18491-A18495
+

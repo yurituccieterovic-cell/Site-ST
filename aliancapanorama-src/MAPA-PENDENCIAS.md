@@ -841,3 +841,15 @@
 | #660 | ✅ Senha Suzana resetada (age2026) — hash no BD estava diferente do padrão | ✅ |
 | #661 | ⏳ Investigar assembleia que não chegou por e-mail | ⏳ |
 
+
+---
+## Assembleias #698 e #699 · 2026-09-28
+
+| # | Item | Status |
+|---|---|---|
+| #662 | #698 processada — identidade visual Age 1.0→2.0 (DNA preservado, evolução 3D/frosted glass) | ✅ |
+| #663 | #699 processada — estratégia Open-Core + registro INPI marca "AGE" | ✅ |
+| #664 | I158: decisão Open-Core — consultar Assembleia para definir fronteira aberto/proprietário | ⏳ |
+| #665 | I159: registro marca AGE no INPI — ANTES de escala comercial | ⏳ |
+| #666 | I157: endpoint admin reset-senha — implementar antes próxima reunião com profissionais | ⏳ |
+
