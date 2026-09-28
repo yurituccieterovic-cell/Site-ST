@@ -393,7 +393,18 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS bloqueio_mensalidade BOOLEAN NOT NULL DEFAULT false`);
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS bloqueio_at TIMESTAMPTZ`);
 
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao)");
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_interesse (
+      id          SERIAL      PRIMARY KEY,
+      nome        TEXT        NOT NULL,
+      email       TEXT        NOT NULL,
+      especialidade TEXT,
+      mensagem    TEXT,
+      criado_em   TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

@@ -2293,4 +2293,32 @@ router.post("/age/:slug/alertas/:id/ler", requireAgeAuth, async (req, res): Prom
   res.json({ ok: true });
 });
 
+// POST /api/age/interesse — formulário público de interesse (landing profissional)
+router.post("/age/interesse", async (req, res): Promise<void> => {
+  const { nome, email, especialidade, msg } = req.body ?? {};
+  if (!nome || !email) { res.status(400).json({ error: "nome e email são obrigatórios" }); return; }
+
+  await db.execute(sql`
+    INSERT INTO age_interesse (nome, email, especialidade, mensagem)
+    VALUES (${String(nome)}, ${String(email)}, ${especialidade ? String(especialidade) : null}, ${msg ? String(msg) : null})
+  `);
+
+  // Notificação interna por email
+  const transporter = createTransport({
+    service: "gmail",
+    auth: { user: process.env.GMAIL_ACCOUNT, pass: process.env.GMAIL_APP_PASSWORD },
+  });
+  const toAdmin = process.env.AGE_EMAIL_TO ?? process.env.GMAIL_ACCOUNT ?? "";
+  if (toAdmin) {
+    transporter.sendMail({
+      from: `"Age — Interesse" <${process.env.GMAIL_ACCOUNT}>`,
+      to: toAdmin,
+      subject: `🐦 Novo interesse no Age: ${nome}`,
+      text: `Nome: ${nome}\nEmail: ${email}\nEspecialidade: ${especialidade ?? "-"}\nMensagem: ${msg ?? "-"}`,
+    }).catch(() => {});
+  }
+
+  res.json({ ok: true });
+});
+
 export default router;

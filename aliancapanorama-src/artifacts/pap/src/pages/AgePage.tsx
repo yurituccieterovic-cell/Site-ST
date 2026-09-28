@@ -254,6 +254,10 @@ export function AgePage() {
   const [showPatientPassword, setShowPatientPassword] = useState(false);
   const [showPatientPwNew, setShowPatientPwNew] = useState(false);
 
+  // Formulário de interesse (landing profissional)
+  const [interForm, setInterForm] = useState({ nome: "", email: "", espec: "", msg: "" });
+  const [interStatus, setInterStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
+
   // Visualização calendário (público) — todos os estados no top-level para respeitar rules of hooks
   type CalView = "lista" | "semana" | "mes";
   const [calView, setCalView] = useState<CalView>("lista");
@@ -1055,6 +1059,38 @@ export function AgePage() {
           </div>
         </section>
 
+        {/* ── Cases (fictícios, engraçados) ── */}
+        <section style={{ maxWidth: 680, margin: "0 auto", padding: "0 20px 3rem" }}>
+          <h2 style={{ textAlign: "center", fontWeight: 700, fontSize: 18, color: "#e2e8f0", marginBottom: 6 }}>Quem já usa o Age</h2>
+          <p style={{ textAlign: "center", color: "#64748b", fontSize: 12, marginBottom: 24 }}>* Histórias compostas — qualquer semelhança com a sua vida clínica é coincidência suspeita.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {[
+              {
+                nome: "Dra. Helena", tipo: "Psicóloga — 12 anos de consultório",
+                texto: "Anotava consultas num caderninho. Perdi o caderninho. Tentei memorizar. Esqueci. Mandei mensagem pro paciente errado desejando boa recuperação. Hoje tenho o Age.",
+                emoji: "📓", cor: "#2dd4bf"
+              },
+              {
+                nome: "Dr. Marcos", tipo: "Clínico geral — consultório próprio",
+                texto: "Enviava lembrete de consulta às 23h porque era quando lembrava. Os pacientes achavam que eu trabalhava à noite. Não, eu só era desorganizado. O Age resolveu isso às 9h da manhã automaticamente.",
+                emoji: "📱", cor: "#a78bfa"
+              },
+              {
+                nome: "Cris", tipo: "Terapeuta holística — atendimento online e presencial",
+                texto: "Cheguei 40 minutos atrasada na minha própria demonstração do sistema de agendamento que eu tinha prometido para os colegas. Usei o Age para agendar a próxima no mesmo dia.",
+                emoji: "🌀", cor: "#f97316"
+              },
+            ].map(c => (
+              <div key={c.nome} style={{ background: "#0f1318", border: `1px solid ${c.cor}33`, borderLeft: `3px solid ${c.cor}`, borderRadius: 12, padding: "18px 20px" }}>
+                <div style={{ fontSize: 22, marginBottom: 10 }}>{c.emoji}</div>
+                <p style={{ color: "#e2e8f0", fontSize: 14, lineHeight: 1.7, marginBottom: 12, fontStyle: "italic" }}>"{c.texto}"</p>
+                <div style={{ color: c.cor, fontWeight: 700, fontSize: 13 }}>{c.nome}</div>
+                <div style={{ color: "#475569", fontSize: 11 }}>{c.tipo}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* ── Planos (para profissionais) ── */}
         <section style={{ maxWidth: 720, margin: "0 auto", padding: "3rem 20px" }}>
           <h2 style={{ textAlign: "center", fontWeight: 700, fontSize: 18, color: "#e2e8f0", marginBottom: 6 }}>Planos para profissionais de saúde</h2>
@@ -1075,10 +1111,52 @@ export function AgePage() {
               </div>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginTop: 28 }}>
-            <a href="mailto:contato@sociedadetucci.com.br" style={{ display: "inline-block", background: "transparent", border: "1px solid #2dd4bf55", color: "#2dd4bf", fontWeight: 600, fontSize: 14, padding: "10px 28px", borderRadius: 10, textDecoration: "none" }}>
-              Quero usar o Age na minha clínica
-            </a>
+
+          {/* CTA — formulário de interesse */}
+          <div style={{ marginTop: 36, background: "#0a0f16", border: "1px solid #2dd4bf33", borderRadius: 16, padding: "24px" }}>
+            <h3 style={{ color: "#e2e8f0", fontWeight: 700, fontSize: 16, marginBottom: 6, textAlign: "center" }}>Quero usar o Age na minha clínica</h3>
+            <p style={{ color: "#64748b", fontSize: 13, textAlign: "center", marginBottom: 20 }}>Preencha abaixo — te avisamos quando seu acesso estiver pronto.</p>
+            {interStatus === "ok" ? (
+              <div style={{ textAlign: "center", padding: "1rem 0" }}>
+                <div style={{ fontSize: 36, marginBottom: 10 }}>🐦</div>
+                <div style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 15, marginBottom: 6 }}>Recebemos seu interesse!</div>
+                <div style={{ color: "#64748b", fontSize: 13 }}>Entraremos em contato pelo email informado.</div>
+              </div>
+            ) : (
+              <form onSubmit={async e => {
+                e.preventDefault();
+                if (!interForm.nome || !interForm.email) return;
+                setInterStatus("sending");
+                try {
+                  const r = await fetch(`${API_BASE}/api/age/interesse`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(interForm),
+                  });
+                  setInterStatus(r.ok ? "ok" : "err");
+                } catch { setInterStatus("err"); }
+              }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
+                  <input required value={interForm.nome} onChange={e => setInterForm(f => ({ ...f, nome: e.target.value }))}
+                    placeholder="Seu nome *" style={{ flex: "1 1 160px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+                  <input required type="email" value={interForm.email} onChange={e => setInterForm(f => ({ ...f, email: e.target.value }))}
+                    placeholder="Email profissional *" style={{ flex: "1 1 200px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+                </div>
+                <input value={interForm.espec} onChange={e => setInterForm(f => ({ ...f, espec: e.target.value }))}
+                  placeholder="Especialidade (psicologia, medicina, terapia…)" style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14, marginBottom: 10, boxSizing: "border-box" }} />
+                <textarea value={interForm.msg} onChange={e => setInterForm(f => ({ ...f, msg: e.target.value }))}
+                  placeholder="Alguma dúvida ou detalhe? (opcional)" rows={2}
+                  style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14, resize: "vertical", boxSizing: "border-box", marginBottom: 14 }} />
+                {interStatus === "err" && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 10 }}>Erro ao enviar. Tente novamente ou escreva para contato@sociedadetucci.com.br</div>}
+                <div style={{ display: "flex", gap: 12, alignItems: "center", justifyContent: "flex-end" }}>
+                  <a href="mailto:contato@sociedadetucci.com.br" style={{ color: "#475569", fontSize: 12, textDecoration: "none" }}>ou email direto</a>
+                  <button type="submit" disabled={interStatus === "sending" || !interForm.nome || !interForm.email}
+                    style={{ background: "#2dd4bf", border: "none", borderRadius: 8, color: "#080c10", fontWeight: 700, fontSize: 14, padding: "10px 24px", cursor: "pointer", opacity: interStatus === "sending" ? 0.7 : 1 }}>
+                    {interStatus === "sending" ? "Enviando…" : "Enviar interesse"}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </section>
 
@@ -2490,7 +2568,7 @@ export function AgePage() {
 
   function SabiaView() {
     return (
-      <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 200px)" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         {/* Disclaimer CFP/LGPD — obrigatório */}
         <div style={{ background: "#0c1a12", border: "1px solid #4ade8033", borderRadius: 8, margin: "0.75rem 1rem 0", padding: "8px 12px", fontSize: 11, color: "#6b8f6b", lineHeight: 1.5 }}>
           🐦 <strong>SABIÁ é assistente de agenda</strong>, não substituta de avaliação clínica. Não emite laudos nem toma decisões sobre pacientes. Conforme CFP Resolução 11/2018.
@@ -3296,7 +3374,7 @@ export function AgePage() {
             </div>
 
             {/* Conteúdo do drawer (scroll interno) */}
-            <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+            <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden", overscrollBehavior: "contain" }}>
               {drawerTab === "sabia"  && SabiaView()}
               {drawerTab === "notas" && NotasView()}
               {drawerTab === "config" && ConfigView()}
