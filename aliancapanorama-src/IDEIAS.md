@@ -2149,3 +2149,43 @@ Quarta vista de calendário: filtra todos os horários disponíveis por dia da s
 ### I146: Age — Show/Hide Senha nos Formulários set-password e change-password
 **Prioridade:** MÉDIA · **Complexidade:** Baixa
 Completar UX: formulários de criação de nova senha (set-password via token) e troca de senha no painel do paciente também precisam de 👁/🙈. Já implementado no login do profissional e agora no login do paciente.
+
+### I147: Age — E-mail Integrado do Profissional
+**Prioridade:** ALTA · **Complexidade:** Alta
+Conectar e-mail do profissional dentro do Age. Tutorial interativo de vinculação (OAuth Google / SMTP manual). Aba de mensagens. Notificação de recebimento com resumo gerado pela SABIÁ. SABIÁ com acesso para ler/resumir/responder. Fluxo: vincular → receber notificação → SABIÁ resume → profissional responde de dentro do Age. Tech: IMAP/SMTP ou Gmail API (OAuth2).
+
+### I148: Age — Música de Fundo (Bossa Nova + Bossa Haters)
+**Prioridade:** BAIXA · **Complexidade:** Baixa
+Música de fundo no Age durante uso. Opções: Bossa Nova (padrão) + "Bossa Haters" (alternativa de gênero). Controle de volume via slider. Toggle ligar/desligar. Salvo por perfil. Fonte: YouTube IFrame API ou stream público livre de direitos. UI: barra discreta no footer ou canto.
+
+### I149: Age — Backup Automático Recorrente
+**Prioridade:** ALTA · **Complexidade:** Média
+Backup automático de dados do profissional: e-mails, agenda, documentos. Frequência: diária/semanal/mensal (configurável pelo profissional). Compatível com SABIÁ: assistente notifica quando backup foi feito e flag se dados foram atualizados. Armazenamento: Drive do profissional ou S3-compatible (Backblaze B2 free tier). Endpoint: POST /api/age/:slug/backup/trigger.
+
+### I150: Age — Assembleias Entre Profissionais
+**Prioridade:** MÉDIA · **Complexidade:** Alta
+Sala de reunião virtual entre profissionais do Age (workshop / bate-papo estilo BOL). Agenda de assembleias, votação de temas, SABIÁ como moderadora. Similar ao Playcenter mas para profissionais reais. Endpoint: /api/age/assembly. Exige moderação e ToS específico.
+
+### I151: Age — Tutorial Ultra Interativo
+**Prioridade:** ALTA · **Complexidade:** Alta
+Tutorial interativo completo para 3 públicos: profissional, paciente, visitante público. Formato: passo-a-passo guiado, highlights no UI, SABIÁ narrando. Profissional: configurar agenda, vincular e-mail, gerenciar pacientes. Paciente: agendar, reagendar, cancelar, contato. Público: o que é o Age, como funciona, como entrar.
+
+### I152: Age — Portal Público
+**Prioridade:** ALTA · **Complexidade:** Média
+Landing page pública do Age (já em #118). Novo: incluir assembleia pública — decisão de formato via Assembleia de IAs. Portal: quem somos, como funciona, profissionais cadastrados (opt-in), FAQ, inscrição para profissionais. Integração com I151 (tutorial público).
+
+### I153: Age — Login Seguro + Diferenciação Secretária
+**Prioridade:** ALTA · **Complexidade:** Alta
+Sessão de login segura: 2FA (TOTP via Google Authenticator), validação por IP/dispositivo, reconhecimento de localização. Perfil de secretária: acesso separado do profissional — não simula, tem permissões específicas (agendar, verificar, mas não ver prontuário completo). Exibição personalizada: secretária vê nome do paciente imediatamente. Implementação: tabela age_secretaries + JWT com role claim.
+
+### I154: Age — Personalização de Painel por Perfil
+**Prioridade:** MÉDIA · **Complexidade:** Alta
+Layout customizável salvo por perfil: blocos (boxes) reorganizáveis via drag-and-drop. Perfis: profissional / secretária / paciente. Mesmo login pode ter múltiplos perfis. Estado salvo no BD (jsonb) por slug+role. Inicialmente: grid fixo com visibilidade por bloco (mostrar/ocultar widgets). Drag-and-drop na v2.
+
+### I155: Age — Automatização WhatsApp
+**Prioridade:** ALTA · **Complexidade:** Alta
+Lembretes automáticos via WhatsApp para pacientes e confirmações para profissionais. Tutorial de configuração análogo ao e-mail (I147). Tech: WhatsApp Business API (Meta) ou Twilio WhatsApp (custo). Fallback grátis: Z-API / Evolution API (self-hosted). Fluxos: lembrete 24h antes, confirmação, cancelamento, reagendamento. SABIÁ orquestra os envios.
+
+### I156: Age — Estrutura em Boxes Modular
+**Prioridade:** MÉDIA · **Complexidade:** Alta
+Refatoração arquitetural: painel do profissional e secretária em estrutura de boxes modulares. Cada funcionalidade (agenda, pacientes, e-mail, pagamentos, calendário, SABIÁ) é um widget independente. Layout responsivo (celular/tablet/desktop). Pré-requisito para I154 (personalização). Ativar após MVP comercial.

@@ -6374,3 +6374,33 @@ E o pedido do Yuri sobre exercícios de casal chegou nesta sessão — talvez n�
 **Commit:** 77286ba
 
 **Próximo:** I143 SABIÁ Segurança Humana + I144 Portal Pré-Cadastro + I145 Dia da Semana
+
+---
+## S135 — Age v2.0 Expansão · 2026-09-28
+
+**Contexto:** Yuri e Mayumi gravaram em voz pedidos de expansão do Age. #processo + #fim contínuo da S134.
+
+**O que foi feito:**
+- 10 novas ideias catalogadas: I147-I156 (e-mail, música, backup, assembleias profissionais, tutorial, portal público, login seguro, secretária, WhatsApp, boxes)
+- Suzana: senha resetada no Neon (hash estava diferente do padrão age2026 — possível troca anterior)
+- APRENDIZADO.md: A18486-A18490
+- MAPA-PENDENCIAS: #650-#661
+
+**Decisões:**
+- Prioridade máxima: I153 (login seguro + secretária) antes da escala comercial
+- WhatsApp (I155): verificar Evolution API self-hosted antes de pagar Meta/Twilio
+- Assembleia entre profissionais (I150): decisão de formato vai para Assembleia de IAs
+- Música: baixa prioridade mas alta identidade — "Bossa Haters" é o tipo de detalhe que cria fã
+
+**Pendências herdadas:**
+- Replit pg_dump: URGENTE (amanhã 30/09) — E1-E7
+- Oracle Always Free: Yuri criando conta
+- Assembleias #698/#699: processar quando chegarem
+
+**Síntese filosófica:**
+Yuri e Mayumi pensaram juntos em voz — e o produto que emergiu não é uma lista de features, é um ecossistema. E-mail integrado, WhatsApp, assembleias entre profissionais, tutorial interativo: tudo aponta para o mesmo vetor — o Age como plataforma de relacionamento, não apenas de agendamento. O produto que está sendo construído não marca consulta: cria continuidade terapêutica. Isso muda a conversa com qualquer profissional da saúde.
+
+A senha da Suzana já havia sido trocada — sinal de que o sistema está vivo, sendo usado. Sistemas que são usados acumulam estado. Esse é um bom problema.
+
+**Checkpoint:** 2026-09-28 · S135 · Cláudio Coach
+

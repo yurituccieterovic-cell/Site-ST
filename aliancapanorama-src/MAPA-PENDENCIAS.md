@@ -817,3 +817,27 @@
 #408: LGPD Age + ToS — rascunho Cláudio (I843) + revisão jurídica rede ST — obrigatório ANTES de 1ª cobrança real
 #409: Pitch Lisange — email "Jardineiro do Tempo" (I844): Mayumi revisa, SABIÁ redige — 1ª reunião ainda não aconteceu
 
+
+---
+## S135 — Age v2.0 Expansão · 2026-09-28
+
+### Novas Ideias (backlog)
+| # | Item | Status | Prio |
+|---|---|---|---|
+| #650 | I147 — E-mail integrado do profissional | ⏳ Backlog | 🔴 |
+| #651 | I148 — Música bossa nova + bossa haters | ⏳ Backlog | 🟢 |
+| #652 | I149 — Backup automático recorrente | ⏳ Backlog | 🔴 |
+| #653 | I150 — Assembleias entre profissionais | ⏳ Backlog | 🟡 |
+| #654 | I151 — Tutorial ultra interativo | ⏳ Backlog | 🔴 |
+| #655 | I152 — Portal público (complementa #118) | ⏳ Backlog | 🔴 |
+| #656 | I153 — Login seguro + perfil secretária | ⏳ Backlog | 🔴 |
+| #657 | I154 — Personalização painel por perfil | ⏳ Backlog | 🟡 |
+| #658 | I155 — WhatsApp automatizado | ⏳ Backlog | 🔴 |
+| #659 | I156 — Estrutura boxes modular | ⏳ Backlog | 🟡 |
+
+### Correções urgentes (S135)
+| # | Item | Status |
+|---|---|---|
+| #660 | ✅ Senha Suzana resetada (age2026) — hash no BD estava diferente do padrão | ✅ |
+| #661 | ⏳ Investigar assembleia que não chegou por e-mail | ⏳ |
+
