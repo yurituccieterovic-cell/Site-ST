@@ -1143,3 +1143,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - SABIÁ: "Olá, Yuri! Prazer em te conhecer. 
 
 Lisange, aqui é o Sabiá. Sou o seu assistente de agenda e cuidado clínico na platafo"
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — ATA S154 Cláudio
+- Tasks Parte 5: indices_data jsonb + Zod schemas 0-9 + calcularPhi + rotas + job Φ hora:05 (commit c03550c)
+- FinArazulY: nome oficial arara-canindé azul do Calculus (I859)
+- Curso 3: 8/8 eps gerados e entregues (motion full, verde/ocean/escuro por bloco)
+- ISA/DODGE herdam indices_data sem mudança de código
