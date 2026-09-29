@@ -1831,6 +1831,38 @@ router.patch("/age/gestora/profissionais/:profId/mensalidade", requireGestoraAut
 
 // ─── Convites de pré-aprovação (I564) ────────────────────────────────────────
 
+// POST /api/age/:slug/patients/:id/portal-invite — profissional convida paciente já cadastrado para criar conta
+router.post("/age/:slug/patients/:id/portal-invite", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const patId = Number(req.params.id);
+
+  const [pat] = await db.select().from(agePatientsTable)
+    .where(and(eq(agePatientsTable.id, patId), eq(agePatientsTable.professionalId, profId))).limit(1);
+  if (!pat) { res.status(404).json({ error: "Paciente não encontrado" }); return; }
+  if (!pat.email) { res.status(400).json({ error: "Paciente não tem email cadastrado" }); return; }
+
+  const [prof] = await db.select({ nome: ageProfessionalsTable.nome, slug: ageProfessionalsTable.slug })
+    .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1);
+
+  const tok = randomUUID();
+  const exp = new Date(Date.now() + 72 * 3600 * 1000); // 72h
+  await db.update(agePatientsTable)
+    .set({ resetToken: tok, resetTokenExpiraAt: exp, updatedAt: new Date() } as any)
+    .where(eq(agePatientsTable.id, patId));
+
+  const link = `${FRONT_URL}/age/${prof!.slug}?set-password=${tok}`;
+  const hasPassword = !!(pat as any).passwordHash;
+  sendEmail(
+    pat.email,
+    hasPassword ? `Age — Redefinir senha` : `Age — Crie sua senha e acesse sua área`,
+    hasPassword
+      ? `Olá ${pat.nome},\n\n${prof!.nome} solicitou redefinição de senha.\n\nNovo link: ${link}\n\nVálido 72h.\n\n— SABIÁ`
+      : `Olá ${pat.nome}!\n\n${prof!.nome} criou uma área especial para você no Age.\n\nClique abaixo para criar sua senha e acessar suas consultas, cancelar ou remarcar quando quiser:\n\n${link}\n\nLink válido por 72 horas.\n\n— SABIÁ`,
+  ).catch(() => {});
+
+  res.json({ ok: true, message: `Email enviado para ${pat.email}` });
+});
+
 // POST /api/age/:slug/invite — profissional gera link de convite (expira em 7 dias)
 router.post("/age/:slug/invite", requireAgeAuth, async (req, res): Promise<void> => {
   const profId = req.session.ageProfessionalId!;

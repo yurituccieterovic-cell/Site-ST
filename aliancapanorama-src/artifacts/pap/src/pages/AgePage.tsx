@@ -88,6 +88,7 @@ export function AgePage() {
   const [bookLgpd, setBookLgpd] = useState(false);
   const [bookDone, setBookDone] = useState(false);
   const [bookError, setBookError] = useState("");
+  const [modoSimples, setModoSimples] = useState(false);
 
   // Professional state
   const [view, setView] = useState<View>("agenda");
@@ -256,6 +257,8 @@ export function AgePage() {
   // Alerta de tratamento
   const [alertandoId, setAlertandoId] = useState<number | null>(null);
   const [alertaMsg, setAlertaMsg] = useState<Record<number, string>>({});
+  const [portalInviteId, setPortalInviteId] = useState<number | null>(null);
+  const [portalInviteMsg, setPortalInviteMsg] = useState<Record<number, string>>({});
 
   // SABIÁ popup flutuante
   const [sabiaOpen, setSabiaOpen] = useState(false);
@@ -1461,13 +1464,14 @@ export function AgePage() {
 
     if (selectedSlot) return (
       <div style={{ maxWidth: 420, margin: "0 auto", padding: "1.5rem 1rem" }}>
-        <button onClick={() => setSelectedSlot(null)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", marginBottom: 16, fontSize: 13 }}>
+        <button onClick={() => setSelectedSlot(null)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", marginBottom: 16, fontSize: modoSimples ? 16 : 13 }}>
           ← Voltar
         </button>
-        <div style={{ background: colorDark, border: `1px solid ${color}44`, borderRadius: 12, padding: "1rem", marginBottom: 20 }}>
-          <div style={{ color, fontWeight: 700 }}>{fmtDate(selectedSlot.dataHora, { weekday: "long", day: "2-digit", month: "long" })}</div>
-          <div style={{ color: "#e2e8f0", fontSize: 20, fontWeight: 700 }}>{fmtTime(selectedSlot.dataHora)}</div>
-          <div style={{ color: "#94a3b8", fontSize: 12 }}>{selectedSlot.duracaoMin} minutos · {selectedSlot.canal}</div>
+        {modoSimples && <div style={{ color: "#94a3b8", fontSize: 14, marginBottom: 8, fontWeight: 600 }}>Passo 2 de 3 — Seus dados</div>}
+        <div style={{ background: colorDark, border: `2px solid ${color}`, borderRadius: 12, padding: "1rem", marginBottom: 20 }}>
+          <div style={{ color, fontWeight: 700, fontSize: modoSimples ? 16 : 14 }}>{fmtDate(selectedSlot.dataHora, { weekday: "long", day: "2-digit", month: "long" })}</div>
+          <div style={{ color: "#e2e8f0", fontSize: modoSimples ? 28 : 20, fontWeight: 700 }}>{fmtTime(selectedSlot.dataHora)}</div>
+          <div style={{ color: "#94a3b8", fontSize: modoSimples ? 14 : 12 }}>{selectedSlot.duracaoMin} minutos · {selectedSlot.canal}</div>
         </div>
         <form onSubmit={handleBook}>
           {[
@@ -1475,11 +1479,11 @@ export function AgePage() {
             { label: "Telefone / WhatsApp", key: "telefone", type: "tel", placeholder: "(11) 99999-9999" },
             { label: "Email", key: "email", type: "email", placeholder: "seu@email.com" },
           ].map(f => (
-            <div key={f.key} style={{ marginBottom: 14 }}>
-              <label style={{ color: "#94a3b8", fontSize: 12, display: "block", marginBottom: 4 }}>{f.label}</label>
+            <div key={f.key} style={{ marginBottom: modoSimples ? 18 : 14 }}>
+              <label style={{ color: "#94a3b8", fontSize: modoSimples ? 15 : 12, display: "block", marginBottom: 6, fontWeight: modoSimples ? 600 : 400 }}>{f.label}</label>
               <input type={f.type} placeholder={f.placeholder} required={f.key === "nome"}
                 value={(bookForm as any)[f.key]} onChange={e => setBookForm(bf => ({ ...bf, [f.key]: e.target.value }))}
-                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box" }}
+                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: modoSimples ? "14px 16px" : "10px 14px", color: "#e2e8f0", fontSize: modoSimples ? 18 : 14, boxSizing: "border-box" }}
               />
             </div>
           ))}
@@ -1506,9 +1510,10 @@ export function AgePage() {
             </span>
           </label>
           {bookError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 12 }}>{bookError}</div>}
+          {modoSimples && <div style={{ color: "#94a3b8", fontSize: 14, marginBottom: 12, fontWeight: 600 }}>Passo 3 de 3 — Confirmar</div>}
           <button type="submit" disabled={!bookForm.nome || !bookLgpd}
-            style={{ width: "100%", background: bookLgpd ? color : "#334155", color: bookLgpd ? "#080c10" : "#64748b", border: "none", borderRadius: 8, padding: "12px 0", fontWeight: 700, fontSize: 15, cursor: (bookForm.nome && bookLgpd) ? "pointer" : "not-allowed", transition: "background 0.2s" }}>
-            Confirmar agendamento
+            style={{ width: "100%", background: bookLgpd ? color : "#334155", color: bookLgpd ? "#080c10" : "#64748b", border: "none", borderRadius: 8, padding: modoSimples ? "18px 0" : "12px 0", fontWeight: 700, fontSize: modoSimples ? 20 : 15, cursor: (bookForm.nome && bookLgpd) ? "pointer" : "not-allowed", transition: "background 0.2s" }}>
+            ✓ Confirmar agendamento
           </button>
         </form>
       </div>
@@ -1547,10 +1552,46 @@ export function AgePage() {
     const monthName = startOfMonth.toLocaleString("pt-BR", { month: "long", year: "numeric" });
     const weekLabel = `${startOfWeek.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })} – ${weekDays[6] ? new Date(weekDays[6] + "T12:00:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }) : ""}`;
 
+    const fs = modoSimples ? 18 : 14;
+    const btnPad = modoSimples ? "14px 20px" : "8px 14px";
+
     return (
       <div style={{ padding: "1rem" }}>
-        {/* Toggle de visualização */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 16, alignItems: "center" }}>
+        {/* Modo Simples toggle */}
+        <div style={{ marginBottom: 12, textAlign: "right" }}>
+          <button onClick={() => setModoSimples(m => !m)}
+            style={{ background: modoSimples ? color + "22" : "none", border: `1px solid ${modoSimples ? color : "#334155"}`, borderRadius: 20, color: modoSimples ? color : "#475569", padding: "5px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+            {modoSimples ? "🔡 Modo Simples ✓" : "🔡 Modo Simples (letra maior)"}
+          </button>
+        </div>
+
+        {/* Modo Simples: lista direta sem calendário */}
+        {modoSimples && (
+          <div>
+            <div style={{ color: "#e2e8f0", fontSize: 20, fontWeight: 700, marginBottom: 16 }}>📅 Escolha um dia e horário</div>
+            {Object.keys(grouped).length === 0 && (
+              <div style={{ color: "#64748b", fontSize: fs, textAlign: "center", padding: "2rem" }}>Nenhum horário disponível no momento.</div>
+            )}
+            {Object.entries(grouped).slice(0, 10).map(([day, daySlots]) => (
+              <div key={day} style={{ marginBottom: 20 }}>
+                <div style={{ color: "#94a3b8", fontSize: 16, fontWeight: 700, marginBottom: 10, padding: "8px 12px", background: "#0f1318", borderRadius: 8 }}>
+                  📅 {fmtDay(day + "T12:00:00")}
+                </div>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  {daySlots.map((s, i) => (
+                    <button key={i} onClick={() => setSelectedSlot(s)}
+                      style={{ background: colorDark, border: `2px solid ${color}`, borderRadius: 12, color, padding: btnPad, cursor: "pointer", fontSize: fs, fontWeight: 700, minWidth: 90, textAlign: "center" }}>
+                      {fmtTime(s.dataHora)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Toggle de visualização (modo normal) */}
+        {!modoSimples && <div style={{ display: "flex", gap: 6, marginBottom: 16, alignItems: "center" }}>
           <span style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600, flex: 1 }}>Horários disponíveis</span>
           {(["lista", "semana", "mes"] as CalView[]).map(v => (
             <button key={v} onClick={() => setCalView(v)}
@@ -1558,10 +1599,10 @@ export function AgePage() {
               {v === "lista" ? "Lista" : v === "semana" ? "Semana" : "Mês"}
             </button>
           ))}
-        </div>
+        </div>}
 
-        {/* Vista: Lista */}
-        {calView === "lista" && (
+        {/* Vistas calendário (modo normal) */}
+        {!modoSimples && calView === "lista" && (
           <>
             {Object.keys(grouped).length === 0 && (
               <div style={{ color: "#64748b", fontSize: 14, textAlign: "center", padding: "2rem", lineHeight: 1.7 }}>
@@ -1583,7 +1624,7 @@ export function AgePage() {
         )}
 
         {/* Vista: Semana */}
-        {calView === "semana" && (
+        {!modoSimples && calView === "semana" && (
           <>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
               <button onClick={() => setCalWeekOffset(o => o - 1)} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 18, padding: "0 6px" }}>‹</button>
@@ -1620,7 +1661,7 @@ export function AgePage() {
         )}
 
         {/* Vista: Mês */}
-        {calView === "mes" && (
+        {!modoSimples && calView === "mes" && (
           <>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
               <button onClick={() => { setCalMonthOffset(o => o - 1); setCalDaySelected(null); }} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 18, padding: "0 6px" }}>‹</button>
@@ -2178,6 +2219,25 @@ export function AgePage() {
                           style={{ background: "#0c1a2e", border: "1px solid #38bdf855", borderRadius: 8, color: "#38bdf8", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
                           {alertandoId === p.id ? "…" : "📧 Enviar alerta"}
                         </button>
+                      )}
+                      {p.email && p.status === "aprovado" && (
+                        <button disabled={portalInviteId === p.id}
+                          onClick={async e => {
+                            e.stopPropagation();
+                            setPortalInviteId(p.id);
+                            try {
+                              const r = await fetch(`${API}/api/age/${slug}/patients/${p.id}/portal-invite`, { method: "POST", credentials: "include" });
+                              const d = await r.json() as { ok?: boolean; message?: string; error?: string };
+                              setPortalInviteMsg(m => ({ ...m, [p.id]: d.ok ? "✓ Convite enviado!" : (d.error ?? "Erro") }));
+                            } catch { setPortalInviteMsg(m => ({ ...m, [p.id]: "Sem conexão" })); }
+                            finally { setPortalInviteId(null); }
+                          }}
+                          style={{ background: "#0f0a1a", border: "1px solid #a78bfa55", borderRadius: 8, color: "#a78bfa", padding: "7px 16px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+                          {portalInviteId === p.id ? "…" : "🔑 Convidar para portal"}
+                        </button>
+                      )}
+                      {portalInviteMsg[p.id] && (
+                        <div style={{ fontSize: 11, color: portalInviteMsg[p.id].includes("✓") ? "#a78bfa" : "#f87171", width: "100%", marginTop: 2 }}>{portalInviteMsg[p.id]}</div>
                       )}
                     </div>
                   </>
