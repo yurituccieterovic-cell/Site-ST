@@ -682,12 +682,21 @@ export function AgePage() {
 
   async function addRule(e: React.FormEvent) {
     e.preventDefault();
-    await fetch(`${API}/api/age/${slug}/availability`, {
-      method: "POST", credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(ruleForm),
-    });
-    loadRules();
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/availability`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ruleForm),
+      });
+      if (r.ok) {
+        addToast("Regra semanal salva! Slots atualizados.", "ok");
+        loadRules();
+        loadSlots();
+      } else {
+        const d = await r.json().catch(() => ({})) as { error?: string };
+        addToast(d.error ?? "Erro ao salvar regra.", "err");
+      }
+    } catch { addToast("Sem conexão. Tente novamente.", "err"); }
   }
 
   async function removeRule(id: number, label: string) {
@@ -711,20 +720,35 @@ export function AgePage() {
   async function addException(e: React.FormEvent) {
     e.preventDefault();
     if (!excForm.data) return;
-    await fetch(`${API}/api/age/${slug}/exceptions`, {
-      method: "POST", credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        data: excForm.data,
-        tipo: excForm.tipo,
-        horaInicio: excForm.horaInicio || null,
-        horaFim: excForm.horaFim || null,
-        descricao: excForm.descricao || null,
-      }),
-    });
-    setExcForm({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
-    loadExceptions();
-    loadSlots();
+    if ((excForm.horaInicio && !excForm.horaFim) || (!excForm.horaInicio && excForm.horaFim)) {
+      addToast("Preencha início E fim do horário, ou deixe ambos em branco (dia inteiro).", "err");
+      return;
+    }
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/exceptions`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: excForm.data,
+          tipo: excForm.tipo,
+          horaInicio: excForm.horaInicio || null,
+          horaFim: excForm.horaFim || null,
+          descricao: excForm.descricao || null,
+        }),
+      });
+      if (r.ok) {
+        const msg = excForm.horaInicio
+          ? `Exceção salva: ${excForm.data} ${excForm.horaInicio}–${excForm.horaFim} bloqueado.`
+          : `Exceção salva: ${excForm.data} (dia inteiro) bloqueado.`;
+        addToast(msg, "ok");
+        setExcForm({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
+        loadExceptions();
+        loadSlots();
+      } else {
+        const d = await r.json().catch(() => ({})) as { error?: string };
+        addToast(d.error ?? "Erro ao salvar exceção.", "err");
+      }
+    } catch { addToast("Sem conexão. Tente novamente.", "err"); }
   }
 
   async function handleRegister(e: React.FormEvent) {
@@ -784,7 +808,10 @@ export function AgePage() {
     sabiaAbortRef.current = ctrl;
     const timer = setTimeout(() => ctrl.abort(), 30000);
     try {
-      const r = await fetch(`${API}/api/age/${slug}/sabia`, {
+      const endpoint = mode === "professional"
+        ? `${API}/api/age/${slug}/sabia`
+        : `${API}/api/age/${slug}/sabia-public`;
+      const r = await fetch(endpoint, {
         method: "POST", credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMsg, sessionId: sabiaSessionId }),
@@ -3028,13 +3055,18 @@ export function AgePage() {
           setTimeout(loadNotas, 300);
           if (isPergunta) {
             setPerguntaEnviada(true);
-            setTimeout(() => setPerguntaEnviada(false), 20000);
-            // poll for SABIÁ response up to 30s
+            // poll for SABIÁ response up to 90s (30 attempts × 3s)
             let attempts = 0;
             const poll = setInterval(async () => {
               attempts++;
               await loadNotas();
-              if (attempts >= 10) clearInterval(poll);
+              // clear banner when response arrives or after max attempts
+              setNotas(prev => {
+                const hasReply = prev.some(n => n.tipo === "pergunta" && n.resposta_ia);
+                if (hasReply || attempts >= 30) setPerguntaEnviada(false);
+                return prev;
+              });
+              if (attempts >= 30) clearInterval(poll);
             }, 3000);
           }
         }
@@ -3093,14 +3125,16 @@ export function AgePage() {
           </div>
         </form>
 
-        {/* Banner pergunta enviada */}
+        {/* Banner pergunta enviada — persiste até resposta chegar */}
         {perguntaEnviada && (
           <div style={{ background: "#0a1220", border: "1px solid #a78bfa55", borderRadius: 10, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ fontSize: 20 }}>🐦</span>
-            <div>
-              <div style={{ color: "#a78bfa", fontWeight: 700, fontSize: 13 }}>IA trabalhando em segundo plano</div>
-              <div style={{ color: "#64748b", fontSize: 12 }}>Pode sair da página se quiser — a resposta vai aparecer aqui quando voltar.</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ color: "#a78bfa", fontWeight: 700, fontSize: 13 }}>SABIÁ trabalhando em segundo plano…</div>
+              <div style={{ color: "#64748b", fontSize: 12 }}>Pode sair da página e voltar depois — a resposta aparece aqui automaticamente.</div>
             </div>
+            <button onClick={() => setPerguntaEnviada(false)} title="Fechar"
+              style={{ background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 16, padding: 4, lineHeight: 1, flexShrink: 0 }}>✕</button>
           </div>
         )}
 

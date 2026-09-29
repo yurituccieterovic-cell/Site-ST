@@ -487,6 +487,33 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
     ...(buscaTratar?.trim() ? { buscaTratar: buscaTratar.trim() } : {}),
   } as any).returning();
 
+  // Criar/atualizar registro de paciente (upsert por email ou criar sem email)
+  try {
+    if (patientEmail) {
+      const [existingPat] = await db.select({ id: agePatientsTable.id })
+        .from(agePatientsTable)
+        .where(and(eq(agePatientsTable.professionalId, prof.id), eq(agePatientsTable.email, patientEmail.toLowerCase())))
+        .limit(1);
+      if (!existingPat) {
+        await db.insert(agePatientsTable).values({
+          professionalId: prof.id,
+          nome: patientNome!, email: patientEmail.toLowerCase(),
+          telefone: patientTelefone ?? null,
+          status: "pendente_aprovacao",
+          lgpdConsent: true, lgpdConsentAt: new Date(),
+        } as any);
+      }
+    } else {
+      // Sem email: criar paciente anonimizado (não duplicar — sem como verificar)
+      await db.insert(agePatientsTable).values({
+        professionalId: prof.id,
+        nome: patientNome!, telefone: patientTelefone ?? null,
+        status: "pendente_aprovacao",
+        lgpdConsent: true, lgpdConsentAt: new Date(),
+      } as any);
+    }
+  } catch { /* não bloquear o booking se o paciente falhar */ }
+
   const dt = new Date(dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
   const cancelLink     = `${FRONT_URL}/age/${slug}?cancel=${cancelToken}`;
   const rescheduleLink = `${FRONT_URL}/age/${slug}?reschedule=${cancelToken}`;
@@ -885,6 +912,36 @@ router.get("/age/:slug/sabia/history", requireAgeAuth, async (req, res): Promise
     .orderBy(desc(ageSabiaMemoryTable.createdAt))
     .limit(limit);
   res.json({ history: rows.reverse().map(r => ({ role: r.role, content: r.content, createdAt: r.createdAt, sessionId: r.sessionId })) });
+});
+
+// POST /api/age/:slug/sabia-public — versão pública (sem auth, contexto mínimo)
+router.post("/age/:slug/sabia-public", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { message, sessionId } = req.body as { message?: string; sessionId?: string };
+  if (!message?.trim()) { res.status(400).json({ error: "message obrigatório" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, tipo: ageProfessionalsTable.tipo, bio: ageProfessionalsTable.bio })
+    .from(ageProfessionalsTable).where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true))).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const systemPrompt = `Você é SABIÁ 🐦, assistente de agenda da plataforma Age (Sociedade Tucci).
+Está no perfil público de ${prof.nome} (${prof.tipo}).
+Bio: ${prof.bio ?? "—"}
+
+Você pode ajudar com: horários disponíveis, como marcar consulta, dúvidas sobre o processo de agendamento.
+NÃO compartilhe dados de pacientes. NÃO faça diagnósticos.
+Respostas curtas, claras, em português. Kairós: saiba quando encaminhar para o profissional.
+Se não souber, diga: "Não tenho essa informação — entre em contato diretamente com ${prof.nome}."`;
+
+  let reply = "Desculpe, não consegui processar agora. Tente em instantes.";
+  try {
+    reply = await routeLLM({
+      messages: [{ role: "system", content: systemPrompt }, { role: "user", content: message }],
+      maxTokens: 300, temperature: 0.5,
+    });
+  } catch { /* usa fallback */ }
+
+  res.json({ reply, sessionId: sessionId ?? randomUUID() });
 });
 
 // POST /api/age/:slug/sabia (auth required)
@@ -2501,10 +2558,16 @@ router.post("/age/interesse", async (req, res): Promise<void> => {
     VALUES (${String(nome)}, ${String(email)}, ${especialidade ? String(especialidade) : null}, ${msg ? String(msg) : null})
   `);
 
-  const toAdmin = process.env.AGE_EMAIL_TO ?? process.env.GMAIL_ACCOUNT ?? "";
-  if (toAdmin) {
-    sendEmail(toAdmin, `🐦 Novo interesse no Age: ${nome}`,
-      `Nome: ${nome}\nEmail: ${email}\nEspecialidade: ${especialidade ?? "-"}\nPacientes/mês: ${pacientes ?? "-"}\nMensagem: ${msg ?? "-"}`,
+  // Email para admin (luddlocke)
+  sendEmail("luddlocke@gmail.com", `🐦 Novo interesse no Age: ${nome}`,
+    `Nome: ${nome}\nEmail: ${email}\nEspecialidade: ${especialidade ?? "-"}\nPacientes/semana: ${pacientes ?? "-"}\nMensagem: ${msg ?? "-"}`,
+    { force: true }
+  ).catch(() => {});
+
+  // Email de confirmação para quem preencheu
+  if (email) {
+    sendEmail(email, "Age — Recebemos seu interesse! 🐦",
+      `Olá ${nome}!\n\nRecebemos seu interesse no Age — plataforma de agenda inteligente para profissionais de saúde.\n\nEm breve entraremos em contato pelo email ${email} para dar continuidade.\n\nSe tiver dúvidas, pode responder este email.\n\nAté logo,\nEquipe Age · Sociedade Tucci`,
       { force: true }
     ).catch(() => {});
   }
