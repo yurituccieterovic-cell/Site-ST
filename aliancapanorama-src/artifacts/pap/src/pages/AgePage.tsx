@@ -984,7 +984,7 @@ export function AgePage() {
         </header>
 
         {/* ── Hero ── */}
-        <section style={{ textAlign: "center", padding: "3.5rem 1.5rem 2.5rem", maxWidth: 560, margin: "0 auto" }}>
+        <section style={{ textAlign: "center", padding: "3.5rem 1.5rem 2.5rem", maxWidth: 600, margin: "0 auto" }}>
           <div style={{ display: "inline-block", background: "#0d2420", border: "1px solid #2dd4bf33", borderRadius: 20, padding: "4px 14px", fontSize: 11, color: "#2dd4bf", fontWeight: 600, marginBottom: 20, letterSpacing: 1 }}>
             🐦 SABIÁ · Assistente de Agenda
           </div>
@@ -995,6 +995,36 @@ export function AgePage() {
           <p style={{ color: "#94a3b8", fontSize: 15, lineHeight: 1.7, marginBottom: 28, maxWidth: 440, margin: "0 auto 28px" }}>
             Agenda online para psicólogas, médicos e terapeutas — com confirmação automática, lembretes por email e a SABIÁ como assistente de cuidado.
           </p>
+          {/* Visual: SABIÁ pássaro SVG + cena de cuidado */}
+          <div style={{ margin: "0 auto 28px", maxWidth: 380, position: "relative" }}>
+            <div style={{ background: "linear-gradient(135deg, #0d2420 0%, #080c10 100%)", border: "1px solid #2dd4bf22", borderRadius: 20, padding: "28px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 24 }}>
+              {/* Sabiá SVG */}
+              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style={{ width: 80, height: 80, flexShrink: 0 }}>
+                {/* corpo */}
+                <ellipse cx="40" cy="48" rx="18" ry="14" fill="#1a3a2e" />
+                {/* peito claro */}
+                <ellipse cx="40" cy="52" rx="12" ry="9" fill="#2dd4bf22" />
+                {/* cabeça */}
+                <ellipse cx="40" cy="32" rx="13" ry="12" fill="#1a3a2e" />
+                {/* bico */}
+                <path d="M28 32 L22 30 L28 34 Z" fill="#d4a847" />
+                {/* olho */}
+                <ellipse cx="34" cy="30" rx="2.5" ry="2.5" fill="#2dd4bf" />
+                <ellipse cx="34" cy="30" rx="1" ry="1" fill="#080c10" />
+                {/* asa */}
+                <path d="M52 44 Q62 36 58 52 Q52 58 44 54 Z" fill="#0d2420" stroke="#2dd4bf33" strokeWidth="1" />
+                {/* cauda */}
+                <path d="M38 60 Q40 70 42 60" stroke="#2dd4bf66" strokeWidth="2" fill="none" strokeLinecap="round" />
+                {/* reflexo brilho */}
+                <ellipse cx="36" cy="29" rx="0.8" ry="0.8" fill="white" opacity="0.7" />
+              </svg>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>Você cultiva saúde.</div>
+                <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.6 }}>A SABIÁ cuida do tempo.</div>
+                <div style={{ color: "#1e3a30", fontSize: 11, marginTop: 10, fontStyle: "italic" }}>— Age · Tecnologia Médica</div>
+              </div>
+            </div>
+          </div>
           <a href="#profissionais" style={{ display: "inline-block", background: "#2dd4bf", color: "#080c10", fontWeight: 700, fontSize: 15, padding: "12px 32px", borderRadius: 10, textDecoration: "none", transition: "opacity 0.2s" }}>
             Agendar consulta
           </a>
@@ -1128,7 +1158,7 @@ export function AgePage() {
                 if (!interForm.nome || !interForm.email) return;
                 setInterStatus("sending");
                 try {
-                  const r = await fetch(`${API_BASE}/api/age/interesse`, {
+                  const r = await fetch(`${API}/api/age/interesse`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(interForm),
