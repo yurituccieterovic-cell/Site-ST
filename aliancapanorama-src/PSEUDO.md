@@ -6843,3 +6843,47 @@ Consulta sobre hospedagem Locaweb para o ecossistema (substituindo Oracle/Railwa
 - Confirmar preço de renovação no checkout antes de fechar
 - Após contratar: configurar domínio + emails profissionais
 
+
+---
+
+## Sessão S149 — 2026-09-29
+
+### Contexto
+
+#processo dos 5 emails PERFEITO do dia (Assembleias #706–#715, Sessões S135–S146). Yuri perguntou sobre hospedagem Locaweb como alternativa ao Oracle/Replit.
+
+### O que foi discutido
+
+**Emails processados (Assembleias #706–#715):**
+- S136: Gaveta lateral (Mayumi reportou por voz — drawer nasceu da usuária, não do wireframe)
+- S137: Landing /age/ + SABIÁ retry AbortController + banco Neon (Lisange/Suzana trocados)
+- S138: Render ENV VARS sumiram (10 variáveis; reconfiguradas via Render API)
+- S139–S140: Cases fictícias, CTA, header "age", SABIÁ ✕ cancela imediato
+- S141: SABIÁ v2 com histórico GET /sabia/history (memória é condição de identidade)
+- S142: Feed colorido + cadastrar direto + banner "IA trabalhando"
+- S143–S146: Bug booking profissional, portal paciente invite, Modo Simples, calendário modal, 6 bugs, SABIÁ pública
+- Assembleia #715: Curso 3 "Respirar com o Planeta" — roteiros eps 1–3 gerados
+
+**Consultas de hospedagem:**
+- "Locaweb substitui Replit e Oracle?" → Não. Oracle Always Free (VM ARM) ainda é melhor free tier. Locaweb hospedagem compartilhada é PHP/WordPress, não roda Node.js.
+- "Não to conseguindo Oracle. Replit mais caro. Contratar hospedagem para não dormir?" → UptimeRobot 5min já deveria prevenir Render spin-down. Antes de pagar: esperar 2-3 dias monitorando. Se não resolver: Koyeb free tier → Render Starter $7/mês → Locaweb VPS.
+
+### Decisões
+
+- Oracle blocked: Yuri não conseguiu criar conta Oracle Always Free
+- UptimeRobot é a solução atual para Render spin-down (sem custo)
+- Próxima opção paga: Koyeb (antes de Render Starter ou Locaweb VPS)
+- Conector ficou sem atualizar: Render retornou 502 durante toda a sessão
+
+### Síntese filosófica
+
+*Onze sessões registradas em um único #processo — o ecossistema Age amadureceu mais em 24 horas do que em algumas semanas. A gaveta lateral nasceu da voz de Mayumi. A SABIÁ ganhou memória. O Curso 3 ganhou roteiros que falam de ecologia como código. O que conecta tudo isso? A recusa em separar o que é técnico do que é humano. A hospedagem que não roda é a mesma lição: não é onde o código vive que importa primeiro — é se o projeto tem endereço no mundo.*
+
+### Próximos passos
+
+- Yuri: pg_dump Replit URGENTE (prazo 30/09 já passou — #749)
+- Yuri: criar conta gestora Mayumi no Age (#748)
+- Yuri: testar "+ Nova consulta" com Suzana/Lisange (#727)
+- Cláudio: I171 onboarding self-service (alta prioridade — #694)
+- Cláudio: I184 retry automático booking cold start (#737)
+- Cláudio: gravar eps 1–3 Curso 3 (premiere_maker.py --tts pt-BR)
