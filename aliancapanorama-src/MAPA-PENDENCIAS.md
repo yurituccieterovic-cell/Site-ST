@@ -1096,3 +1096,14 @@
 | #779 | WORKFLOW-CURSOS.md reescrito — mapa canônico de produção | ✅ |
 | #780 | Ep9 "A Adoção Tecnológica" — avaliar com Yuri | ⏳ |
 | #781 | Enviar eps 4-8 por email quando job terminar | ⏳ Cláudio |
+
+## S154 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #782 | Tasks Parte 5: indices_data + Zod schemas 0-9 + calcularPhi + rotas + job Φ | ✅ commit c03550c |
+| #783 | FinArazulY nome oficial arara Calculus registrado (I859) | ✅ |
+| #784 | Curso 3 eps 4-8 enviados por email (todos --motion full) | ✅ |
+| #785 | Calculus CalcPage.tsx: mostrar FinArazulY | ⏳ Cláudio |
+| #786 | ISA/DODGE: popular índices ao criar tasks | ⏳ futuro |
+| #787 | Poster Curso 2 para Instagram (1080×1080) | ⏳ Cláudio |

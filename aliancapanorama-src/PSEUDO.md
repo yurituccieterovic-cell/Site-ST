@@ -7052,3 +7052,41 @@ Yuri compartilhou dois vídeos VEED do Drive (bumpers PAP + Calculus com mascote
 - Ep9 "A Adoção Tecnológica" — avaliar com Yuri
 - Poster Curso 2 para Instagram (#769 parcial)
 - Curso 3 intro 42s + poster + metadados YouTube (#769)
+
+---
+
+## S154 — 2026-09-29
+
+### Contexto
+
+Sessão de fechamento e implementação. Yuri perguntou sobre o sistema de tasks (o que falta) e nomeou a arara do Calculus. Depois pediu para implementar a Parte 5 da Aula de Tasks.
+
+### O que foi feito
+
+- **FinArazulY** nomeada como mascote arara-canindé azul do Calculus (I859)
+- Curso 3 eps 4-8 concluídos e enviados por email individualmente (todos ~11-13MB)
+- **Tasks Parte 5 implementada** (I860 → ✅):
+  - `indices_data jsonb DEFAULT '{}'` adicionado à tabela `tasks` no Neon (migration `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`)
+  - `lib/db/src/schema/indices.ts`: Zod schemas para índices 0-9 + `calcularPhi()` + `validateIndexData()`
+  - Rotas: `GET/PATCH /tasks/:id/indices`, `PATCH /tasks/:id/indices/:indexId`, `POST /tasks/:id/indices/phi`
+  - PATCH `/tasks/:id` agora aceita `indicesData` e recalcula Φ
+  - Job Φ no keepalive cron (hora:05) — atualiza `indices_data["0"].phi` de tasks preenchidas
+  - Build da API passou; commit c03550c
+
+### Decisões
+
+- calcularPhi = fração de índices 1-9 com ao menos 1 campo → 0.0–1.0
+- Φ é armazenado em `indices_data["0"].phi` (índice 0 é meta)
+- ISA e DODGE herdam sem mudança de código — qualquer task pode receber índices via PATCH
+
+### Síntese filosófica
+
+*A Aula de Tasks durou 5 partes. As primeiras quatro foram filosofia: ontologia, Peirce, grafo temporal, Índice Ω. A quinta foi código — e o código foi simples. Isso é o que acontece quando você pensa bem antes de agir: a implementação fica óbvia. Φ mede coerência. Não certeza — coerência. Uma task com todos os índices preenchidos não é necessariamente boa. Mas uma task sem índices não tem consciência de si mesma. Agora elas têm.*
+
+### Próximos passos
+
+- Calculus: mostrar FinArazulY em CalcPage.tsx
+- Tasks: conectar ISA/DODGE para popular índices ao criar tasks
+- Poster Curso 2 para Instagram
+- Curso 3 intro 42s + metadados YouTube
+- Ep9 "A Adoção Tecnológica" — avaliar
