@@ -1,0 +1,67 @@
+[
+  {
+    "titulo": "Episódio 5",
+    "subtitulo": "Escuta Ativa da Terra",
+    "texto": "Bioacústica, sensoriamento e IA: quando a tecnologia aprende a ouvir",
+    "naracao": "Curso 3: Respirar com o Planeta. Episódio 5: Escuta Ativa da Terra. Bioacústica, sensoriamento e IA: quando a tecnologia aprende a ouvir",
+    "duracao": 12.2,
+    "layout": "centralizado",
+    "logo": true
+  },
+  {
+    "titulo": "A TERRA FAZ BARULHO",
+    "subtitulo": "Ep 5 · Cena 1",
+    "texto": "E ela está se tornando uma das ferramentas mais poderosas da ecologia.",
+    "naracao": "Floresta tropical saudável: 200 espécies cantando ao mesmo tempo. Floresta degradada: silêncio. Um ecólogo experiente consegue detectar o estado de conservação de uma floresta só pelo som. Isso é bioacústica. E ela está se tornando uma das ferramentas mais poderosas da ecologia.",
+    "duracao": 18.9,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "OUVIR É MONITORAR",
+    "subtitulo": "Ep 5 · Cena 2",
+    "texto": "Você ouve antes de ver o problema.",
+    "naracao": "Sensores de áudio espalhados por florestas capturam o \"som do ecossistema\" 24h por dia. IA analisa e detecta: mudanças na biodiversidade, presença de espécies-chave, sinais de desmatamento (motosserras), alertas de queimadas. É como ter um estetoscópio no planeta. Você ouve antes de ver o problema.",
+    "duracao": 22.2,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "IA QUE RECONHECE PÁSSAROS",
+    "subtitulo": "Ep 5 · Cena 3",
+    "texto": "A floresta ganha voz e ouvidos ao mesmo tempo.",
+    "naracao": "O BirdNET é um modelo de IA que identifica espécies de pássaros pelo canto com mais de 90% de precisão. Qualquer pessoa com celular pode contribuir com dados para pesquisas de biodiversidade. Ciência cidadã + IA + bioacústica = monitoramento planetário distribuído. A floresta ganha voz e ouvidos ao mesmo tempo.",
+    "duracao": 23.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "ALÉM DOS PÁSSAROS",
+    "subtitulo": "Ep 5 · Cena 4",
+    "texto": "Faltava quem soubesse ouvir.",
+    "naracao": "Baleias. Elefantes. Grilos. Abelhas. Cada espécie tem assinatura sonora. Quando essa assinatura some ou muda, algo aconteceu. Pesquisadores usam machine learning para mapear saúde de recifes de coral pelo som dos camarões. Silêncio anormal = alerta. O planeta está em constante diálogo. Faltava quem soubesse ouvir.",
+    "duracao": 22.8,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "SENSORIAMENTO ALÉM DO SOM",
+    "subtitulo": "Ep 5 · Cena 5",
+    "texto": "Cada sensor é um neurônio numa rede nervosa planetária que está, finalmente, sendo construída.",
+    "naracao": "Não é só áudio. Satélites medem temperatura de superfície, desmatamento, salinidade dos oceanos. Sensores de solo detectam pH, umidade, microbioma. Boias oceânicas registram acidificação da água em tempo real. A Terra emite dados em todas as frequências. Cada sensor é um neurônio numa rede nervosa planetária que está, finalmente, sendo construída.",
+    "duracao": 24.2,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O PARADOXO DO MONITORAMENTO",
+    "subtitulo": "Ep 5 · Cena 6",
+    "texto": "A Terra agora tem testemunhas técnicas.",
+    "naracao": "Mais dados, mais clareza. Mas clareza sobre o quê? Que estamos degradando mais rápido do que recuperando. Saber não resolve — mas saber com precisão muda a conversa política, científica e econômica. Dados de sensoriamento ambiental já foram usados em tribunais internacionais. A Terra agora tem testemunhas técnicas.",
+    "duracao": 20.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "SÍNTESE",
+    "subtitulo": "Ep 5 · Cena 7",
+    "texto": "Como ecossistemas de pessoas funcionam — ou falham?",
+    "naracao": "Neste episódio, vimos: bioacústica como diagnóstico ecológico. IA para reconhecimento de espécies em larga escala. Sensoriamento distribuído como sistema nervoso planetário. Dados ambientais como evidência científica e jurídica. No próximo episódio: e dentro das comunidades humanas? Como ecossistemas de pessoas funcionam — ou falham?",
+    "duracao": 23.9,
+    "layout": "centralizado"
+  }
+]

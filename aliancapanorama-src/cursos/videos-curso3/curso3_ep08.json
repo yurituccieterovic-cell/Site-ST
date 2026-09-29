@@ -1,0 +1,67 @@
+[
+  {
+    "titulo": "Episódio 8",
+    "subtitulo": "Respirar Junto",
+    "texto": "Síntese: tecnologia como parceira ecológica — e o que você pode fazer agora",
+    "naracao": "Curso 3: Respirar com o Planeta. Episódio 8: Respirar Junto. Síntese: tecnologia como parceira ecológica — e o que você pode fazer agora",
+    "duracao": 11.3,
+    "layout": "centralizado",
+    "logo": true
+  },
+  {
+    "titulo": "O QUE APRENDEMOS",
+    "subtitulo": "Ep 8 · Cena 1",
+    "texto": "Cada episódio foi uma tradução.",
+    "naracao": "Oito episódios. Uma ideia central: ecologia e tecnologia falam a mesma língua — a linguagem dos sistemas. Fotossíntese é input/output. Cidade é metabolismo. IA tem pegada de carbono. Ciclos substituem linhas. Florestas ouvem e podem ser ouvidas. Comunidades são ecossistemas. IA pode plantar o futuro. Cada episódio foi uma tradução. Agora vamos integrar.",
+    "duracao": 28.4,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "TECNOLOGIA COMO ESPÉCIE",
+    "subtitulo": "Ep 8 · Cena 2",
+    "texto": "A pergunta para tecnologia hoje: ela é invasora ou nativa?",
+    "naracao": "Imagine tecnologia como uma nova espécie que entrou num ecossistema. Espécies invasoras que ignoram as regras do sistema tendem a destruir o ecossistema — e eventualmente colapsam junto. Espécies que encontram seu nicho, que criam valor para o sistema, que fecham loops — essas prosperam. A pergunta para tecnologia hoje: ela é invasora ou nativa? E essa escolha é nossa.",
+    "duracao": 24.0,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O PAPEL DO DESENVOLVEDOR",
+    "subtitulo": "Ep 8 · Cena 3",
+    "texto": "Cada linha de código é uma escolha sobre como esse sistema se relaciona com o planeta.",
+    "naracao": "Se você cria software, você toma decisões ecológicas todos os dias. Qual servidor roda seu código. Se ele dorme quando não é usado. Se os dados que você coleta são necessários. Se o algoritmo que você treina tem custo proporcional ao benefício. Cada linha de código é uma escolha sobre como esse sistema se relaciona com o planeta.",
+    "duracao": 21.8,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O PAPEL DO USUÁRIO",
+    "subtitulo": "Ep 8 · Cena 4",
+    "texto": "Cada decisão é um voto para o tipo de ecossistema tecnológico que queremos construir.",
+    "naracao": "Se você usa tecnologia — e você usa —, você também faz escolhas. Apps que você escolhe. Aparelhos que você descarta. Plataformas que você financia com atenção. Não existe consumo neutro. Cada decisão é um voto para o tipo de ecossistema tecnológico que queremos construir.",
+    "duracao": 18.3,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "RESPIRO COMO PRÁTICA",
+    "subtitulo": "Ep 8 · Cena 5",
+    "texto": "Tecnologia que o respeita tem mais chance de durar.",
+    "naracao": "Respirar junto não é metáfora. É literalmente o que acontece quando você inspira o oxigênio que uma árvore expirou. Você está acoplado ao planeta de forma fisiológica, não apenas filosófica. Tecnologia que ignora esse acoplamento é tecnologia frágil. Tecnologia que o respeita tem mais chance de durar.",
+    "duracao": 19.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O QUE FAZER AGORA",
+    "subtitulo": "Ep 8 · Cena 6",
+    "texto": "Um passo de cada vez, fechando um loop de cada vez.",
+    "naracao": "Três práticas concretas: primeira, meça a pegada do que você cria — há ferramentas gratuitas para isso. Segunda, escolha infraestrutura que usa energia renovável quando possível. Terceira, apoie e use tecnologias que monitoram, regeneram ou conectam ecossistemas. Não precisa ser tudo de uma vez. Um passo de cada vez, fechando um loop de cada vez.",
+    "duracao": 23.1,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "SÍNTESE FINAL",
+    "subtitulo": "Ep 8 · Cena 7",
+    "texto": "Você acabou de fazer parte do sistema.",
+    "naracao": "Oito episódios. Uma respiração só. Fotossíntese como sistema. Cidade como metabolismo. Dados com pegada. Ciclos que regeneram. Sons que monitoram. Diversidade que sustenta. IA que planta. E você — parte de tudo isso. A tecnologia que queremos construir é aquela que, daqui a cem anos, o planeta reconhece como parceira. Não invasora. Não parasita. Parceira. Respire fundo. Agora expire. Você acabou de fazer parte do sistema.",
+    "duracao": 32.2,
+    "layout": "centralizado"
+  }
+]

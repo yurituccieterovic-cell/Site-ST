@@ -2325,3 +2325,6 @@ Curso 3 da série Sociedade Tucci. Tema: eco-respiração — ecologia como ling
 ### I186: Protocolo segurança — vídeos com presença humana
 **Prioridade:** baixa · **Complexidade:** baixa (documentação)
 Quando for necessário vídeo com rosto real: (1) rosto real com consentimento expresso + versionado; (2) marca d'água ostensiva sobre o rosto, semi-transparente, com URL de verificação; (3) hash criptográfico do vídeo no próprio vídeo (QR code final apontando para registro público); (4) licença explícita em overlays CC BY-NC-SA. Referência: Assembleia #717 (2026-09-29) — resposta ao abandono dos talking heads por risco deepfake.
+
+| I859 | **FinArazulY — nome oficial da arara do Calculus** | 🟢 Baixa | ○ S | Mascote arara-canindé do Calculus precisava de nome próprio | Nome aprovado por Yuri: **FinArazulY** (arara-canindé azul). Usar em: CalcPage.tsx, landing Calculus, materiais de divulgação. Ábaco (mascote complementar, biblioteório-esquilo) ainda sem nome próprio. |
+| I860 | **Parte 5 Aula de Tasks — indices_data no schema** | 🔴 Alta | ○ M | tasksTable tem catalogTags mas não tem indices_data — 9 índices ontológicos existem só na teoria | ALTER TABLE tasks ADD COLUMN indices_data jsonb DEFAULT '{}'; Drizzle schema update; Zod schemas por índice 0-9; GET/PATCH indices_data nas rotas; Job Φ (coerência) 1x/hora. Ver aula-tasks-parte1-4.md. |

@@ -1,0 +1,67 @@
+[
+  {
+    "titulo": "Episódio 7",
+    "subtitulo": "A IA que Planta",
+    "texto": "Aplicações concretas de inteligência artificial em conservação, reflorestamento e ecologia",
+    "naracao": "Curso 3: Respirar com o Planeta. Episódio 7: A IA que Planta. Aplicações concretas de inteligência artificial em conservação, reflorestamento e ecologia",
+    "duracao": 13.0,
+    "layout": "centralizado",
+    "logo": true
+  },
+  {
+    "titulo": "IA NO CAMPO",
+    "subtitulo": "Ep 7 · Cena 1",
+    "texto": "Florestas que crescem 3x mais rápido que reflorestamentos tradicionais.",
+    "naracao": "Esqueça os robôs de ficção científica. A IA que está salvando ecossistemas hoje não parece impressionante: é um algoritmo rodando em servidor, analisando imagens de satélite, otimizando onde plantar cada espécie nativa. Mas o resultado? Florestas que crescem 3x mais rápido que reflorestamentos tradicionais.",
+    "duracao": 21.9,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "ONDE PLANTAR",
+    "subtitulo": "Ep 7 · Cena 2",
+    "texto": "O maior erro do reflorestamento clássico: plantar a espécie errada no lugar errado.",
+    "naracao": "O maior erro do reflorestamento clássico: plantar a espécie errada no lugar errado. IA analisa solo, clima, biodiversidade local, conectividade com outros fragmentos florestais e decide: essa espécie, nesse ponto, nessa sequência de plantio. Empresas como Land Life Company e Terraformation usam modelos de machine learning para maximizar a taxa de sobrevivência e a velocidade de formação de dossel.",
+    "duracao": 27.0,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "VIGILÂNCIA CONTRA DESMATAMENTO",
+    "subtitulo": "Ep 7 · Cena 3",
+    "texto": "IA como sentinela ecológica permanente.",
+    "naracao": "Global Forest Watch usa IA para detectar desmatamento em tempo quase real via satélite. Alertas chegam a órgãos ambientais em horas, não semanas. Em regiões com fiscalização ativa, o desmatamento reduziu significativamente onde alertas automáticos foram implementados. Ver para proteger. IA como sentinela ecológica permanente.",
+    "duracao": 24.8,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "PESCA SUSTENTÁVEL COM IA",
+    "subtitulo": "Ep 7 · Cena 4",
+    "texto": "Tecnologia que não substitui o pescador — amplia sua capacidade de agir com responsabilidade.",
+    "naracao": "Navios de pesca com sensores e IA que identificam espécies antes de içar a rede. Liberam espécies ameaçadas antes de subi-las a bordo. Reduzem bycatch — a pesca acidental de espécies não-alvo — em até 70% em projetos piloto. Tecnologia que não substitui o pescador — amplia sua capacidade de agir com responsabilidade.",
+    "duracao": 23.0,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "MODELOS DE CLIMA EM ESCALA FINA",
+    "subtitulo": "Ep 7 · Cena 5",
+    "texto": "Isso muda radicalmente o planejamento agrícola, hídrico e de conservação em nível municipal.",
+    "naracao": "Previsões climáticas globais existem. Mas os efeitos locais — qual córrego vai secar, qual área vai virar deserto — ainda dependem de modelos muito granulares. IA + dados de sensoriamento + física do clima = previsões em resolução de kilômetros, não continentes. Isso muda radicalmente o planejamento agrícola, hídrico e de conservação em nível municipal.",
+    "duracao": 24.8,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O LIMITE DA IA NO CAMPO",
+    "subtitulo": "Ep 7 · Cena 6",
+    "texto": "Quando IA e conhecimento local se combinam, os resultados superam qualquer uma das abordagens isoladas.",
+    "naracao": "IA não substitui ecólogos de campo, povos indígenas com conhecimento ancestral de território, ou comunidades locais que dependem do ecossistema para viver. O melhor uso da IA em conservação é como ferramenta de amplificação — não de substituição. Quando IA e conhecimento local se combinam, os resultados superam qualquer uma das abordagens isoladas.",
+    "duracao": 25.3,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "SÍNTESE",
+    "subtitulo": "Ep 7 · Cena 7",
+    "texto": "No próximo e último episódio: como tudo isso se conecta — e como você faz parte disso.",
+    "naracao": "Neste episódio, vimos: IA para otimização de reflorestamento. Vigilância de desmatamento em tempo real. Pesca seletiva por reconhecimento de espécies. Modelos climáticos de alta resolução. IA como ferramenta de amplificação — não de substituição — do conhecimento humano. No próximo e último episódio: como tudo isso se conecta — e como você faz parte disso.",
+    "duracao": 25.8,
+    "layout": "centralizado"
+  }
+]

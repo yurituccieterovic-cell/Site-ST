@@ -1,0 +1,67 @@
+[
+  {
+    "titulo": "Episódio 6",
+    "subtitulo": "Comunidade como Ecossistema",
+    "texto": "Diversidade, resiliência e colapso: o que florestas ensinam sobre grupos humanos",
+    "naracao": "Curso 3: Respirar com o Planeta. Episódio 6: Comunidade como Ecossistema. Diversidade, resiliência e colapso: o que florestas ensinam sobre grupos humanos",
+    "duracao": 12.2,
+    "layout": "centralizado",
+    "logo": true
+  },
+  {
+    "titulo": "A MONOCULTURA É FRÁGIL",
+    "subtitulo": "Ep 6 · Cena 1",
+    "texto": "Comunidades humanas funcionam igual.",
+    "naracao": "Plantação de soja: milhares de hectares, uma única espécie. Eficiente. Vulnerável. Uma praga certa, uma seca específica, um fungo especializado — e tudo vai junto. Floresta tropical: milhares de espécies, tudo interconectado. Menos eficiente por metro quadrado. Quase impossível de destruir completamente. Comunidades humanas funcionam igual.",
+    "duracao": 24.2,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "DIVERSIDADE É REDUNDÂNCIA",
+    "subtitulo": "Ep 6 · Cena 2",
+    "texto": "O sistema sobrevive à ausência de qualquer indivíduo.",
+    "naracao": "Em ecossistemas, quando uma espécie some, outra assume sua função. Isso se chama redundância funcional. É o que impede colapso sistêmico. Em equipes e comunidades: quando só uma pessoa sabe fazer algo crítico, você tem single point of failure. Diversidade de habilidades, perspectivas e experiências cria redundância. O sistema sobrevive à ausência de qualquer indivíduo.",
+    "duracao": 23.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "NICHO É CONTRIBUIÇÃO",
+    "subtitulo": "Ep 6 · Cena 3",
+    "texto": "Não competição por recursos escassos — colaboração onde cada um resolve o que ninguém mais resolve tão bem.",
+    "naracao": "Cada espécie ocupa um nicho ecológico — uma função única que nenhuma outra desempenha exatamente igual. O besouro que só come aquele fungo. O pássaro que dispersa aquela semente específica. Em comunidades saudáveis, cada pessoa encontra seu nicho. Não competição por recursos escassos — colaboração onde cada um resolve o que ninguém mais resolve tão bem.",
+    "duracao": 22.2,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "PERTURBAÇÃO E RESILIÊNCIA",
+    "subtitulo": "Ep 6 · Cena 4",
+    "texto": "Diferença fundamental: uma tenta evitar mudança; a outra aprende a navegar por ela.",
+    "naracao": "Florestas não evitam perturbações — elas se adaptam. Incêndio regeneração de espécies pioneiras diversificação floresta mais rica. A perturbação faz parte do ciclo. Comunidades resilientes não buscam estabilidade estática. Buscam capacidade de resposta. Diferença fundamental: uma tenta evitar mudança; a outra aprende a navegar por ela.",
+    "duracao": 22.8,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "COLAPSO ECOSSISTÊMICO",
+    "subtitulo": "Ep 6 · Cena 5",
+    "texto": "A ecologia previu isso muito antes da sociologia.",
+    "naracao": "O que causa colapso num ecossistema? Perda de diversidade além de um limiar crítico. Remoção de espécies-chave. Excesso de estresse por tempo demais. Comunidades humanas colapsam pelos mesmos motivos: homogeneização forçada, exclusão de vozes centrais, pressão contínua sem espaço de recuperação. A ecologia previu isso muito antes da sociologia.",
+    "duracao": 23.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "CULTIVAR BORDA",
+    "subtitulo": "Ep 6 · Cena 6",
+    "texto": "A borda é onde as trocas acontecem.",
+    "naracao": "Em ecossistemas, as zonas de fronteira entre biomas — chamadas de ecótonos — têm maior biodiversidade que qualquer um dos dois biomas isolados. A borda é onde as trocas acontecem. Comunidades que cultivam suas \"bordas\" — espaços de encontro entre perspectivas diferentes — são mais criativas, mais adaptativas, mais vivas.",
+    "duracao": 20.8,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "SÍNTESE",
+    "subtitulo": "Ep 6 · Cena 7",
+    "texto": "No próximo episódio: e se a IA puder plantar — literalmente — o futuro que precisamos?",
+    "naracao": "Neste episódio, vimos: monocultura como fragilidade sistêmica. Diversidade como redundância funcional. Nicho como contribuição única. Resiliência como capacidade de resposta, não rigidez. Colapso quando diversidade cai abaixo do limiar crítico. No próximo episódio: e se a IA puder plantar — literalmente — o futuro que precisamos?",
+    "duracao": 24.3,
+    "layout": "centralizado"
+  }
+]

@@ -1,0 +1,67 @@
+[
+  {
+    "titulo": "Episódio 4",
+    "subtitulo": "Ciclos, não Linhas",
+    "texto": "Do crescimento infinito ao ciclo regenerativo — a maior virada de perspectiva do século",
+    "naracao": "Curso 3: Respirar com o Planeta. Episódio 4: Ciclos, não Linhas. Do crescimento infinito ao ciclo regenerativo — a maior virada de perspectiva do século",
+    "duracao": 12.0,
+    "layout": "centralizado",
+    "logo": true
+  },
+  {
+    "titulo": "A MENTIRA DO INFINITO",
+    "subtitulo": "Ep 4 · Cena 1",
+    "texto": "E ela tem 3,8 bilhões de anos de experiência para argumentar.",
+    "naracao": "Crescimento infinito em planeta finito. Soa absurdo assim, né? Mas é exatamente o que o modelo econômico dominante promete. Mais. Sempre mais. Mais produção, mais consumo, mais descarte. A natureza discorda. E ela tem 3,8 bilhões de anos de experiência para argumentar.",
+    "duracao": 19.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "COMO A NATUREZA CRESCE",
+    "subtitulo": "Ep 4 · Cena 2",
+    "texto": "Cada \"fim\" é o começo de outra coisa.",
+    "naracao": "Nenhum sistema vivo cresce para sempre em linha reta. O que a natureza faz? Ciclos. Carbono sai de uma planta, entra num animal, vira decomposição, vira solo, alimenta outra planta. Água evapora, forma nuvem, vira chuva, infiltra solo, alimenta raiz. Não tem lixo no modelo natural — tem insumo esperando o próximo ciclo. Cada \"fim\" é o começo de outra coisa.",
+    "duracao": 24.5,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "ECONOMIA CIRCULAR É BIOMIMÉTICA",
+    "subtitulo": "Ep 4 · Cena 3",
+    "texto": "Não é utopia — é engenharia inspirada em biologia.",
+    "naracao": "Quando engenheiros perceberam isso, criaram a economia circular. A ideia: projetar sistemas onde o resíduo de um processo é matéria-prima de outro. Igual a natureza faz há bilhões de anos. Celular velho componentes reaproveitados. Sobra de fábrica energia. Casca de fruta adubo. Não é utopia — é engenharia inspirada em biologia.",
+    "duracao": 22.2,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "CÓDIGO QUE NÃO VAZA",
+    "subtitulo": "Ep 4 · Cena 4",
+    "texto": "Assim como o ciclo do carbono fecha o dele.",
+    "naracao": "Tem uma versão disso em software também. Memória que não é liberada leak. Dados que não são deletados débito técnico. Processos que rodam sem parar custo invisível. Código sustentável fecha seus loops. Assim como o ciclo do carbono fecha o dele.",
+    "duracao": 16.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O CICLO DE VIDA DAS COISAS",
+    "subtitulo": "Ep 4 · Cena 5",
+    "texto": "O planeta agradece — e você paga menos pelo próximo aparelho.",
+    "naracao": "Você já pensou que seu smartphone tem um ciclo de vida? Mineração fabricação uso descarte. Na maioria dos casos, o ciclo termina aí — em lixo eletrônico. Mas alguns fabricantes agora oferecem buy-back, remanufatura, reciclagem de componentes. O ciclo se fecha. O planeta agradece — e você paga menos pelo próximo aparelho.",
+    "duracao": 21.7,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "A PERGUNTA QUE MUDA TUDO",
+    "subtitulo": "Ep 4 · Cena 6",
+    "texto": "Se não tem, você está criando um problema para o futuro.",
+    "naracao": "Antes de criar qualquer coisa — produto, código, empresa, hábito — existe uma pergunta que transforma o projeto: o que acontece quando isso acaba? Se você tem a resposta, você está pensando em ciclos. Se não tem, você está criando um problema para o futuro.",
+    "duracao": 16.4,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "SÍNTESE",
+    "subtitulo": "Ep 4 · Cena 7",
+    "texto": "Ela já está tentando — pelo som.",
+    "naracao": "Neste episódio, vimos: crescimento linear é exceção na natureza, não regra. Ciclos como modelo de design para tecnologia e economia. Economia circular como biomimética aplicada. Cada sistema fechado cria valor para o próximo. No próximo episódio: e se a Terra pudesse nos falar diretamente? Ela já está tentando — pelo som.",
+    "duracao": 22.2,
+    "layout": "centralizado"
+  }
+]
