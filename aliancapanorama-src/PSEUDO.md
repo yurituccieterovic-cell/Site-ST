@@ -6635,3 +6635,36 @@ A SABIÁ sem histórico era uma pássaro sem memória — chegava cantando como 
 - I171 onboarding self-service (alta prioridade)
 - I172 CTA demo sandbox
 - Prova social real (#697)
+
+---
+## ATA Sessão #142 — Feed+Pacientes direto+Pergunta background · 2026-09-29
+
+**Contexto:** Retomada após compactação S141. Pedidos: MacroATA não chegou (via #a, sem email), verificar #s nos MDs, pergunta SABIÁ em segundo plano, #fim com MacroATA.
+
+**Verificações:**
+- # nos MDs: sequenciais sem gaps. APRENDIZADO até A18513, IDEIAS até I172, MAPA até #698. OK.
+- Email: nenhuma MacroATA no inbox — confirmado que #fim anterior era via #a (sem email).
+
+**Código implementado:**
+- FeedView: notas/perguntas/anúncios com cor roxa/azul/laranja, ícone, indicador "🐦 respondida"
+- PacientesView: botão "Cadastrar direto" + modal (nome+email obrigatórios, telefone opcional)
+- POST /api/age/:slug/patients/direct: insere com status=aprovado, lgpd_consent=true (sem convite)
+- Pergunta em segundo plano: banner roxo "IA trabalhando — pode sair da página" após envio
+- Card de pergunta pendente: box com botão ↻ Checar + texto explicativo
+- Poll 10×3s após envio de pergunta (30s total, em background)
+- Commits: 69616fc (feed+direto+polling) e 6702757 (banner fundo)
+
+**Decisões:**
+- Pergunta SABIÁ é fire-and-forget por design — a resposta pode demorar até 10s de cold start
+- Cadastro direto não envia email (profissional já conhece o paciente)
+- Banner desaparece em 20s sozinho; botão ↻ Checar permanece no card
+
+**SÍNTESE FILOSÓFICA:**
+O botão "Cadastrar direto" é uma declaração ontológica: nem todo paciente precisa provar que existe antes de existir no sistema. O convite pressupõe um vazio que precisa ser preenchido; o cadastro direto reconhece que a relação já existe antes do software. A IA respondendo em segundo plano é a mesma lógica: você não precisa ficar olhando o relógio esperando a resposta — o cuidado acontece mesmo quando você não está observando.
+
+**Próximos:**
+- UptimeRobot (#698) — previne cold start do Render
+- pg_dump Replit URGENTE (#689 — já passou do prazo 30/09)
+- I171 onboarding self-service
+- Testar cadastro direto + feed com Lisange/Suzana
+
