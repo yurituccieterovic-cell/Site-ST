@@ -2257,3 +2257,43 @@ Assembleia #709. Fluxo: profissional clica "Criar conta" → preenche perfil + e
 ### I172: Age — CTA "Testar agora como paciente"
 **Prioridade:** média · **Complexidade:** baixa
 Assembleia #709. Botão na landing que abre diretamente a agenda de um profissional demo (sandbox), permite agendar consulta fictícia e receber email de confirmação real. Prova o fluxo completo sem precisar cadastrar.
+
+### I173: Age — Agendamento pelo profissional (Nova consulta)
+**Prioridade:** alta · **Complexidade:** baixa · **Status:** ✅ implementada S143
+Botão "+ Nova consulta" no portal profissional → modal com seletor de paciente aprovado (ou nome livre), picker de data/hora (slots reais), canal presencial/online. POST /book-by-prof, status=confirmado.
+
+### I174: Age — Contratos com logo antigo (v1.0)
+**Prioridade:** média · **Complexidade:** baixa
+Yuri S143: usar o primeiro logo (calendário teal, versão v1.0) nos contratos de adesão dos profissionais. PDF template com LGPD, termos de uso, direitos/deveres.
+
+### I175: Age — SABIÁ análise de sistema (SRE fragmentado)
+**Prioridade:** alta · **Complexidade:** alta
+SABIÁ como agente de recuperação: worker daemon isolado que pinga /api/healthz, detecta falha, tenta restart do serviço, notifica Yuri/Mayumi. Hospedagem em diretório separado (resiliência). Fase 4+.
+
+### I176: Age — Perfis múltiplos Netflix-style
+**Prioridade:** média · **Complexidade:** média
+Conta master (clínica/consultório) + perfis por papel: secretária, profissional, administrador. Cada perfil com configurações salvas + PIN de acesso. Pré-requisito: I719 (painel Mayumi).
+
+### I177: Age — Rede social de profissionais (comunidade)
+**Prioridade:** baixa · **Complexidade:** alta · **Fase:** 3+
+Feed entre profissionais do Age: posts, workshops, dicas, adicionar colegas. SABIÁ publica "sorte do dia" com curadoria por especialidade. Fase 3.
+
+### I178: Age — Descontos cross-professional
+**Prioridade:** baixa · **Complexidade:** média
+Profissional 1 indica Profissional 2. Paciente ganha desconto no 2º profissional. Quem paga: 2º profissional (configura % no painel). Age não subsidia. Pré-requisito: pagamentos (Fase 5).
+
+### I179: Age — Tarefas integradas (Google Agenda)
+**Prioridade:** média · **Complexidade:** média
+Aba "Tarefas" no portal profissional (e Mayumi). Integração bidirecional Google Agenda. Compartilhamento de tarefas na equipe. Linkar com Jasmim e Rapadura.
+
+### I180: SP&C — Sistema de Publicidade Própria
+**Prioridade:** baixa · **Complexidade:** alta
+SP&C #spec: rede de anúncios contextuais nos produtos da Sociedade Tucci. Anúncios de livros, workshops, parceiros. Segmentação por perfil. Sem Big Tech. Fase 5+.
+
+### I181: Ecossistema — Cabeçalho Comum (Global Bar)
+**Prioridade:** média · **Complexidade:** média
+Topbar unificado em AGE, Jasmim, Rapadura, Calculus. Estilo Google Apps. Login único (SSO). Notificações unificadas entre sistemas. Pré-requisito: SSO implementado.
+
+### I182: Calculus — Landing + MVP financeiro
+**Prioridade:** média · **Complexidade:** alta
+Calculus: sistema financeiro-contábil (mascote Ábaco). Sócia: ERP simplificado (Arara-canindé, herda Calculus). Calculus é base. Aguardar mapa de dependências.

@@ -970,3 +970,25 @@
 | #703 | pg_dump Replit — prazo 30/09 PASSOU — executar urgente | ⚠️ |
 | #704 | UptimeRobot: monitor /api/healthz a cada 5min | ✅ |
 | #705 | I171: onboarding self-service (do zero ao primeiro agendamento) | ⏳ |
+
+
+---
+## Sessão S143 · 2026-09-29 (Booking profissional + #processo voz Yuri)
+
+| # | Item | Status |
+|---|---|---|
+| #706 | Suzana: agendar do próprio portal → "+ Nova consulta" + modal + /book-by-prof | ✅ |
+| #707 | I173: booking pelo profissional implementado | ✅ |
+| #708 | I174: contratos Age com logo v1.0 (PDF template) | ⏳ |
+| #709 | I175: SABIÁ SRE fragmentado (auto-recuperação) | ⏳ Fase4+ |
+| #710 | I176: perfis múltiplos Netflix-style | ⏳ |
+| #711 | I177: rede social profissionais / comunidade | ⏳ Fase3+ |
+| #712 | I178: descontos cross-professional | ⏳ Fase5+ |
+| #713 | I179: tarefas + Google Agenda | ⏳ |
+| #714 | I181: cabeçalho comum (Global Bar / SSO) | ⏳ |
+| #715 | I182: Calculus MVP (mapa de dependências primeiro) | ⏳ |
+| #716 | Plano financeiro Age: Assembleia deve apresentar proposta | ⏳ |
+| #717 | Governança oficial: Mayumi = Governadora de Operações · Yuri = Criador/Arquiteto | ⏳ |
+| #718 | Adicionar Mayumi Tanimoto e Yuri Tucci como profissionais no Age | ⏳ |
+| #719 | Mercado Pago: criar conta + access_token | ⏳ Yuri |
+| #720 | pg_dump Replit URGENTE (prazo passou 30/09) | ⚠️ Yuri |
