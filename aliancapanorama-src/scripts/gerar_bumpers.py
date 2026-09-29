@@ -14,58 +14,59 @@ SCRIPT = f"{SRC}/scripts/premiere_maker.py"
 PYTHON = "/tmp/venv-video/bin/python3"
 
 # ── Bumpers (atualizar com RESULTADO da Assembleia #718) ────────────────────
+# Textos aprovados pela Assembleia #719 (RESULTADO Sessão #719)
 BUMPERS = {
     "st": {
-        "tema": "escuro",
+        "tema": "ocean",
         "tts":  "pt-BR",
         "slides": [
             {
-                "titulo":    "Sociedade Tucci",
-                "subtitulo": "Inteligência cultivada",
-                "texto":     "Um ecossistema de IAs construído para aprender, criar e crescer junto.",
-                "naracao":   "Inteligência não nasce pronta. Ela se cultiva.",
+                "titulo":    "Inteligência não nasce pronta.",
+                "subtitulo": "Ela se cultiva. · Sociedade Tucci",
+                "texto":     "Um ecossistema de IAs pedagógicas construído para aprender, criar e crescer.",
+                "naracao":   "Inteligência não nasce pronta. Ela se cultiva. Conheça a Sociedade Tucci.",
                 "duracao":   5.0,
                 "logo":      True
             }
         ]
     },
     "pap": {
-        "tema": "ocean",
+        "tema": "sunset",
         "tts":  "pt-BR",
         "slides": [
             {
-                "titulo":    "PAP",
-                "subtitulo": "O vestibular virou jogo",
+                "titulo":    "Vestibular virou jogo. Você topa?",
+                "subtitulo": "PAP — Aliança Panorama",
                 "texto":     "Plataforma FUVEST gamificada. Estude diferente.",
-                "naracao":   "E se o vestibular fosse um jogo? Agora é.",
+                "naracao":   "E se o vestibular virasse um jogo? PAP: sua Fuvest gamificada.",
                 "duracao":   5.0,
                 "logo":      True
             }
         ]
     },
     "calculus": {
-        "tema": "sunset",
+        "tema": "claro",
         "tts":  "pt-BR",
         "slides": [
             {
-                "titulo":    "Calculus",
-                "subtitulo": "Matemática que faz sentido",
-                "texto":     "Com o Ábaco e a Sócia, a matemática deixa de assustar.",
-                "naracao":   "Matemática não é bicho de sete cabeças. É conversa.",
+                "titulo":    "Matemática com alma. E penas.",
+                "subtitulo": "Calculus + Sócia",
+                "texto":     "Onde o Ábaco encontra a Arara. Matemática que não assusta.",
+                "naracao":   "Matemática com alma. E penas. Conheça o Calculus — onde o Ábaco encontra a Arara.",
                 "duracao":   5.0,
                 "logo":      True
             }
         ]
     },
     "age": {
-        "tema": "claro",
+        "tema": "escuro",
         "tts":  "pt-BR",
         "slides": [
             {
-                "titulo":    "Age",
-                "subtitulo": "Agenda que cuida de quem cuida",
-                "texto":     "Psicólogos e médicos. Menos burocracia, mais presença.",
-                "naracao":   "Sua agenda inteligente. Para quem cuida de pessoas.",
+                "titulo":    "Agendar consultas pode ser humano.",
+                "subtitulo": "Age · Sabiá IA",
+                "texto":     "Agenda médica e psicológica com inteligência. Para quem cuida de pessoas.",
+                "naracao":   "Agendar consultas pode ser humano. Age: sua agenda médica com Sabiá, a IA que cuida de você.",
                 "duracao":   5.0,
                 "logo":      True
             }
