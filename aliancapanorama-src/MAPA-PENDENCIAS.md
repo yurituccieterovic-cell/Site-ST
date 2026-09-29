@@ -940,7 +940,7 @@
 | #687 | I168: frases SABIÁ poéticas para lembretes de email — implementar futuro | ⏳ |
 | #688 | I169: seção "Jardineiro do Tempo" — avaliar após primeiros profissionais | ⏳ |
 | #689 | pg_dump Replit URGENTE antes de 30/09 | ⚠️ |
-| #690 | UptimeRobot: monitor /api/healthz a cada 5min (previne cold start SABIÁ) | ⏳ |
+| #690 | UptimeRobot: monitor /api/healthz a cada 5min (previne cold start SABIÁ) | ✅ |
 
 
 ---
@@ -955,7 +955,7 @@
 | #695 | I172: CTA "Testar como paciente" — agenda demo sandbox | ⏳ |
 | #696 | "Tecnologia Médica" como posicionamento: testar com 3-5 profissionais reais antes de mudar | ⏳ |
 | #697 | Prova social real: conseguir 1 depoimento autêntico de beta tester usando SABIÁ em produção | ⏳ |
-| #698 | UptimeRobot: configurar ping /api/healthz a cada 5min (resolve cold start SABIÁ) | ⏳ |
+| #698 | UptimeRobot: configurar ping /api/healthz a cada 5min (resolve cold start SABIÁ) | ✅ |
 
 
 ---
@@ -968,5 +968,5 @@
 | #701 | Pergunta: banner "IA em segundo plano — pode sair da página" + poll 10×3s | ✅ |
 | #702 | MacroATA: ausente no inbox (foi via #a) — enviada agora via #fim manual | ✅ |
 | #703 | pg_dump Replit — prazo 30/09 PASSOU — executar urgente | ⚠️ |
-| #704 | UptimeRobot: monitor /api/healthz a cada 5min | ⏳ |
+| #704 | UptimeRobot: monitor /api/healthz a cada 5min | ✅ |
 | #705 | I171: onboarding self-service (do zero ao primeiro agendamento) | ⏳ |
