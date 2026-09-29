@@ -1040,3 +1040,15 @@
 | #749 | pg_dump Replit URGENTE | ⚠️ Yuri |
 | #750 | Oracle Always Free VM ARM — Render free tier spin-down | ⏳ Yuri |
 
+
+## Assembleias #716-#717 · 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #751 | VEED: cancelar ANTES de 02/10 (Yuri manual em veed.io) — economia R$44,04/mês | ⚠️ Yuri |
+| #752 | ElevenLabs: manter até Curso 3 eco-respiração concluído, depois cancelar | ⏳ |
+| #753 | Talking heads ABANDONADOS — pipeline confirmado: edge-tts + PremiereMovieMaker (sem rosto) | ✅ decidido |
+| #754 | Curso 3 eps 1-3: rodar premiere_maker.py --tts pt-BR (roteiros prontos em cursos/curso3-ecorrespiracao.md) | ⏳ Cláudio |
+| #755 | Curso 3 eps 4-8: aguardar validação dos eps 1-3 primeiro | ⏳ |
+| #756 | I171: onboarding self-service Age (do zero ao 1º agendamento em ≤10min) | ⏳ Cláudio |
+| #757 | I184: retry automático booking cold start Render | ⏳ Cláudio |
