@@ -1074,3 +1074,12 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - textarea Shift+Enter + draft localStorage — sobrevive recarregamento
 - Age = 3 registros simultâneos não-hierarquizados (produto/laboratório/prótese). Não unificar
 - Próxima fronteira: onboarding self-service + prova social real (I171/I172)
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — MacroATA S136→S142 (Cláudio)
+- Feed Age com notas/perguntas/anúncios (cor+ícone+status SABIÁ)
+- Cadastro direto de pacientes sem convite (status=aprovado imediato)
+- Pergunta SABIÁ em segundo plano: banner roxo + poll 10x3s + botão checar
+- SABIÁ v2: histórico persistente, textarea, draft, grava insights no Conector
+- Render ENV VARS restauradas; landing Age completa; cases fictícias
