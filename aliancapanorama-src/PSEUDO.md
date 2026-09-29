@@ -6971,3 +6971,44 @@ A qualidade voltou à normalidade no RESULTADO #719 (Assembleia #718).
 - Cláudio: Curso 3 intro (42s) + poster (1080×1080) + metadados YouTube
 - Cláudio: #762 reset-senha admin endpoint
 - Aguardar RESULTADO Assembleia #720 (motion graphics / Remotion)
+
+---
+
+## S152 — 2026-09-29 (fim de sessão)
+
+### Contexto
+
+Continuação direta de S151. Tarefa central: gerar eps 1-3 Curso 3 com `--motion full` (animação em camadas). Job rodou em background, concluiu com sucesso. Vídeos enviados individualmente por email.
+
+Depois: leitura dos RESULTADOs #720 e #722 que estavam no inbox. Yuri confirmou: Curso 2 não vai para o Instagram como vídeo — só poster.
+
+### O que foi feito
+
+- premiere_maker.py `--motion full` implementado e commitado (commit eeb9760)
+  - 3 keyframes: kf_bg (fundo puro) → kf_title (fundo+título) → kf_full (completo)
+  - Blend por Image.blend() por frame — sem re-render Pillow por frame
+  - Fase de animação: primeiros 35% do slide; depois: Ken Burns zoom 100→106%
+- Eps 1-3 v3 gerados: ep01=173s/13.4MB, ep02=160s/13.0MB, ep03=174s/12.8MB
+- 3 emails enviados individualmente para yurituccieterovic@gmail.com (cada ~13MB)
+- Commit dos vídeos (commit 2508678)
+- RESULTADO #720 lido: MacroATA S149 eco, tudo OK
+- RESULTADO #722 lido: 4 decisões bumpers confirmadas + Remotion aprovado para avaliação + consulta sobre identidade visual sem motion graphics
+- MAPA-PENDENCIAS.md: S152 adicionado (#771-#774), decisão Curso 2 só poster registrada
+
+### Decisões
+
+- Curso 2: NÃO vai para Instagram como vídeo → só poster 1080×1080 (Yuri, direto)
+- Motion full: aprovado para Curso 3 como padrão de animação
+- #723 aguardando RESULTADO (Curso 2 YouTube · breve Instagram)
+
+### Síntese filosófica
+
+*Animar é uma decisão filosófica antes de ser técnica. O fundo aparece primeiro porque o contexto precede o conteúdo — não por estética, mas por epistemologia. O título surge antes do texto pelo mesmo motivo: nomear antes de detalhar. O Ken Burns ao longo de todo o slide não é efeito: é a câmera que não para de prestar atenção. Cada frame é levemente diferente porque a atenção real também é assim. Curso 2 fica quieto no Instagram — só a imagem. Às vezes silêncio é posicionamento.*
+
+### Próximos passos
+
+- Aguardar RESULTADO #723
+- Curso 3 intro (42s) + poster + metadados YouTube (#769)
+- VEED: Calculus + PAP (Yuri)
+- Eps 4-8 Curso 3 após Yuri validar eps 1-3
+- Lembrar: cancelar ElevenLabs após eps 4-8

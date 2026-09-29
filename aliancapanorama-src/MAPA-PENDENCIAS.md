@@ -1075,3 +1075,12 @@
 | #768 | Publicar ST e Age bumpers sem VEED (já prontos) | ⏳ Yuri |
 | #769 | Curso 3: intro 42s + poster 1080×1080 + metadados YouTube (eps 1-3) | ⏳ Cláudio |
 | #770 | Motion graphics Remotion: avaliar após RESULTADO Assembleia #720 | ⏳ |
+
+## S152 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #771 | Curso 3 eps 1-3 v3 gerados com --motion full (fundo→título→texto + Ken Burns) | ✅ commit 2508678 |
+| #772 | Curso 2: NÃO vai para Instagram como vídeo — só poster 1080×1080 para Instagram | ✅ decidido por Yuri |
+| #773 | RESULTADO #722: decisões bumpers confirmadas + motion Remotion aprovado para avaliação | ✅ lido |
+| #774 | Assembleia #723 iniciada (Curso 2 YouTube · breve Instagram) | ⏳ aguardando RESULTADO |
