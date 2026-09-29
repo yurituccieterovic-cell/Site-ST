@@ -2305,3 +2305,20 @@ AgendaView do profissional poderia ter uma view de calendário completo (não s�
 ### I184: Age — Retry automático no booking público (cold start Render)
 **Prioridade:** alta · **Complexidade:** pequena  
 Quando booking falha com erro de rede, tentar automaticamente 1x após 5s com toast "Tentando novamente…". Se falhar de novo, mostrar botão manual. Reduz fricção no cold start do Render free tier.
+
+### I185: Curso 3 — "Respirar com o Planeta" (eco-respiração)
+**Prioridade:** alta · **Complexidade:** média  
+Curso 3 da série Sociedade Tucci. Tema: eco-respiração — ecologia como linguagem de sistemas vivos. 8 episódios (5-7 cenas, ~5min cada). Pipeline: edge-tts pt-BR-FranciscaNeural + scripts/premiere_maker.py (gratuito). Eps 1-3 gerados pela Assembleia #715 (2026-09-29). Eps 4-8 pendentes. VEED cancelar após primeiros eps. Arquivos em: cursos/curso3-ecorrespiracao.md.
+
+
+## Docs PAP — Ideias Novas (2026-09-29)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I852 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I853 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I854 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I855 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I856 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I857 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I858 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
