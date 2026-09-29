@@ -22,7 +22,7 @@ type Exception = { id: number; data: string; tipo: string; horaInicio?: string |
 type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null; faltou90d?: number; realizadas90d?: number };
 type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed" | "notas";
 type FeedItem = {
-  tipo: "appointment" | "patient";
+  tipo: "appointment" | "patient" | "nota" | "pergunta" | "anuncio";
   id: string;
   titulo: string;
   status: string;
@@ -32,6 +32,7 @@ type FeedItem = {
   email?: string;
   lembrete48h_sent?: boolean;
   lembrete24h_sent?: boolean;
+  tem_resposta?: boolean;
 };
 type Mode = "public" | "professional" | "patient" | "patient-login";
 type AuthStep = "login" | "challenge" | "done";
@@ -84,10 +85,19 @@ export function AgePage() {
   // Public booking state
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
-  const [bookForm, setBookForm] = useState({ nome: "", telefone: "", email: "", canal: "presencial", buscaTratar: "" });
+  type BookForm = { nome: string; telefone: string; email: string; canal: string; buscaTratar: string };
+  const [bookForm, setBookForm] = useState<BookForm>(() => {
+    const def: BookForm = { nome: "", telefone: "", email: "", canal: "presencial", buscaTratar: "" };
+    try {
+      const saved = localStorage.getItem(`age-bookform-${window.location.pathname}`);
+      if (saved) return { ...def, ...JSON.parse(saved) as Partial<BookForm> };
+    } catch { /* ignore */ }
+    return def;
+  });
   const [bookLgpd, setBookLgpd] = useState(false);
   const [bookDone, setBookDone] = useState(false);
   const [bookError, setBookError] = useState("");
+  const [bgToasts, setBgToasts] = useState<{ id: number; msg: string; type: "ok" | "err" | "info" }[]>([]);
   const [modoSimples, setModoSimples] = useState(false);
 
   // Professional state
@@ -108,6 +118,10 @@ export function AgePage() {
   const [profBookForm, setProfBookForm] = useState({ dataHora: "", canal: "presencial", patientId: 0, patientNome: "", patientEmail: "", patientTelefone: "" });
   const [profBookLoading, setProfBookLoading] = useState(false);
   const [profBookError, setProfBookError] = useState("");
+  const [profBookCalView, setProfBookCalView] = useState<"lista" | "semana" | "mes">("lista");
+  const [profBookWeekOff, setProfBookWeekOff] = useState(0);
+  const [profBookMonthOff, setProfBookMonthOff] = useState(0);
+  const [profBookDaySelected, setProfBookDaySelected] = useState<string | null>(null);
   const [undoRule, setUndoRule] = useState<{ id: number; label: string; timerId: ReturnType<typeof setTimeout> } | null>(null);
 
   // Config — opções de pagamento
@@ -353,6 +367,18 @@ export function AgePage() {
   }, [slug]);
 
   useEffect(() => { if (!loading) loadSlots(); }, [loading, loadSlots]);
+
+  // Persistir bookForm no localStorage
+  useEffect(() => {
+    try { localStorage.setItem(`age-bookform-${window.location.pathname}`, JSON.stringify(bookForm)); } catch { /* ignore */ }
+  }, [bookForm]);
+
+  // Toast helper
+  const addToast = useCallback((msg: string, type: "ok" | "err" | "info" = "info") => {
+    const id = Date.now();
+    setBgToasts(ts => [...ts, { id, msg, type }]);
+    setTimeout(() => setBgToasts(ts => ts.filter(t => t.id !== id)), 5000);
+  }, []);
 
   // Carregar agenda (professional)
   const loadAppts = useCallback(async () => {
@@ -634,9 +660,12 @@ export function AgePage() {
         body: JSON.stringify({ ...bookForm, dataHora: selectedSlot.dataHora, lgpdConsent: bookLgpd }),
       });
       const d = await r.json() as { id?: number; error?: string };
-      if (d.id) { setBookDone(true); loadSlots(); }
-      else setBookError(d.error ?? "Erro ao marcar consulta.");
-    } catch { setBookError("Sem conexão. Tente novamente."); }
+      if (d.id) {
+        setBookDone(true);
+        try { localStorage.removeItem(`age-bookform-${window.location.pathname}`); } catch { /* ignore */ }
+        loadSlots();
+      } else setBookError(d.error ?? "Erro ao marcar consulta.");
+    } catch { setBookError("Sem conexão. O sistema pode estar acordando — tente em 30 segundos."); }
   }
 
   // ─── Professional actions ───────────────────────────────────────────────────
@@ -833,6 +862,10 @@ export function AgePage() {
     setProfBookError("");
     setProfBookForm({ dataHora: "", canal: "presencial", patientId: 0, patientNome: "", patientEmail: "", patientTelefone: "" });
     setProfBookSelectedDate("");
+    setProfBookCalView("lista");
+    setProfBookWeekOff(0);
+    setProfBookMonthOff(0);
+    setProfBookDaySelected(null);
     setProfBookSlotsLoading(true);
     try {
       const r = await fetch(`${API}/api/age/${slug}/slots`, { credentials: "include" });
@@ -861,12 +894,13 @@ export function AgePage() {
       const d = await r.json() as { id?: number; error?: string };
       if (d.id) {
         setProfBookModal(false);
+        addToast("Consulta agendada com sucesso!", "ok");
         loadAppts();
         loadFeed();
       } else {
         setProfBookError(d.error ?? "Erro ao agendar.");
       }
-    } catch { setProfBookError("Sem conexão."); }
+    } catch { setProfBookError("Sem conexão. O sistema pode estar acordando — tente em 30s."); }
     setProfBookLoading(false);
   }
 
@@ -1824,41 +1858,171 @@ export function AgePage() {
                   )}
                 </div>
 
-                {/* Slots — picker de data depois hora */}
+                {/* Slots — calendário com tabs lista/semana/mês */}
                 <div style={{ marginBottom: 14 }}>
-                  <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, marginBottom: 6 }}>HORÁRIO</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600 }}>HORÁRIO</div>
+                    <div style={{ display: "flex", gap: 4 }}>
+                      {(["lista", "semana", "mes"] as const).map(v => (
+                        <button key={v} type="button" onClick={() => setProfBookCalView(v)}
+                          style={{ padding: "2px 8px", borderRadius: 4, border: `1px solid ${profBookCalView === v ? color : "#1e293b"}`, background: profBookCalView === v ? color + "22" : "none", color: profBookCalView === v ? color : "#64748b", fontSize: 10, cursor: "pointer", fontWeight: 600 }}>
+                          {v === "lista" ? "≡ lista" : v === "semana" ? "7d" : "mês"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                   {profBookSlotsLoading && <div style={{ color: "#475569", fontSize: 12 }}>Carregando horários...</div>}
                   {!profBookSlotsLoading && profBookSlots.length === 0 && <div style={{ color: "#f59e0b", fontSize: 12 }}>Nenhum horário disponível. Verifique a disponibilidade.</div>}
                   {!profBookSlotsLoading && profBookSlots.length > 0 && (() => {
-                    const byDate: Record<string, typeof profBookSlots> = {};
-                    profBookSlots.forEach(s => {
-                      const d = s.dataHora.slice(0, 10);
-                      (byDate[d] ??= []).push(s);
-                    });
-                    const dates = Object.keys(byDate).slice(0, 14);
-                    const slotsForDate = byDate[profBookSelectedDate] ?? [];
-                    return (
-                      <>
-                        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
-                          {dates.map(d => (
-                            <button key={d} type="button" onClick={() => { setProfBookSelectedDate(d); setProfBookForm(f => ({ ...f, dataHora: "" })); }}
-                              style={{ padding: "4px 10px", borderRadius: 6, border: `1px solid ${profBookSelectedDate === d ? color : "#1e293b"}`, background: profBookSelectedDate === d ? color + "22" : "none", color: profBookSelectedDate === d ? color : "#64748b", fontSize: 11, cursor: "pointer" }}>
-                              {new Date(d + "T12:00:00").toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short" })}
-                            </button>
-                          ))}
-                        </div>
-                        {profBookSelectedDate && (
-                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                            {slotsForDate.map(s => (
-                              <button key={s.dataHora} type="button" onClick={() => setProfBookForm(f => ({ ...f, dataHora: s.dataHora, canal: s.canal }))}
-                                style={{ padding: "5px 10px", borderRadius: 6, border: `1px solid ${profBookForm.dataHora === s.dataHora ? color : "#1e293b"}`, background: profBookForm.dataHora === s.dataHora ? color + "22" : "none", color: profBookForm.dataHora === s.dataHora ? color : "#94a3b8", fontSize: 12, cursor: "pointer", fontWeight: profBookForm.dataHora === s.dataHora ? 700 : 400 }}>
-                                {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                    const pbG: Record<string, typeof profBookSlots> = {};
+                    profBookSlots.forEach(s => { const d = s.dataHora.slice(0, 10); (pbG[d] ??= []).push(s); });
+                    const todayPb = new Date().toISOString().slice(0, 10);
+
+                    if (profBookCalView === "lista") {
+                      const dates = Object.keys(pbG).slice(0, 14);
+                      return (
+                        <>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+                            {dates.map(d => (
+                              <button key={d} type="button" onClick={() => { setProfBookSelectedDate(d); setProfBookForm(f => ({ ...f, dataHora: "" })); }}
+                                style={{ padding: "4px 10px", borderRadius: 6, border: `1px solid ${profBookSelectedDate === d ? color : "#1e293b"}`, background: profBookSelectedDate === d ? color + "22" : "none", color: profBookSelectedDate === d ? color : "#64748b", fontSize: 11, cursor: "pointer" }}>
+                                {new Date(d + "T12:00:00").toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short" })}
                               </button>
                             ))}
                           </div>
-                        )}
-                      </>
-                    );
+                          {profBookSelectedDate && (
+                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                              {(pbG[profBookSelectedDate] ?? []).map(s => (
+                                <button key={s.dataHora} type="button" onClick={() => setProfBookForm(f => ({ ...f, dataHora: s.dataHora, canal: s.canal }))}
+                                  style={{ padding: "5px 10px", borderRadius: 6, border: `1px solid ${profBookForm.dataHora === s.dataHora ? color : "#1e293b"}`, background: profBookForm.dataHora === s.dataHora ? color + "22" : "none", color: profBookForm.dataHora === s.dataHora ? color : "#94a3b8", fontSize: 12, cursor: "pointer", fontWeight: profBookForm.dataHora === s.dataHora ? 700 : 400 }}>
+                                  {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      );
+                    }
+
+                    if (profBookCalView === "semana") {
+                      const base = new Date(); base.setDate(base.getDate() - ((base.getDay() + 6) % 7) + profBookWeekOff * 7);
+                      const wDays = Array.from({ length: 7 }, (_, i) => { const d = new Date(base); d.setDate(base.getDate() + i); return d.toISOString().slice(0, 10); });
+                      const wLabel = `${new Date(wDays[0] + "T12:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })} – ${new Date(wDays[6] + "T12:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}`;
+                      const selDay = profBookSelectedDate;
+                      return (
+                        <>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <button type="button" onClick={() => setProfBookWeekOff(o => o - 1)} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 16, padding: "0 4px" }}>‹</button>
+                            <span style={{ color: "#94a3b8", fontSize: 11 }}>{wLabel}</span>
+                            <button type="button" onClick={() => setProfBookWeekOff(o => o + 1)} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 16, padding: "0 4px" }}>›</button>
+                          </div>
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
+                            {["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d => (
+                              <div key={d} style={{ color: "#475569", fontSize: 9, textAlign: "center", fontWeight: 700, padding: "2px 0" }}>{d}</div>
+                            ))}
+                            {wDays.map(day => {
+                              const ds = pbG[day] ?? [];
+                              const isPast = day < todayPb;
+                              const isToday = day === todayPb;
+                              const isSel = selDay === day;
+                              return (
+                                <div key={day} onClick={() => { if (ds.length) { setProfBookSelectedDate(isSel ? "" : day); setProfBookForm(f => ({ ...f, dataHora: "" })); } }}
+                                  style={{ minHeight: 56, background: isSel ? colorDark : isPast ? "#0a0f16" : ds.length ? colorDark + "33" : "#0f1318", border: `1px solid ${isSel ? color : isToday ? color + "55" : "#1e293b"}`, borderRadius: 6, padding: 3, cursor: ds.length ? "pointer" : "default" }}>
+                                  <div style={{ color: isToday ? color : ds.length ? "#e2e8f0" : "#334155", fontSize: 9, textAlign: "center", fontWeight: 700, marginBottom: 2 }}>
+                                    {new Date(day + "T12:00").getDate()}
+                                  </div>
+                                  {ds.slice(0, 3).map((s, i) => (
+                                    <button key={i} type="button" onClick={e => { e.stopPropagation(); setProfBookSelectedDate(day); setProfBookForm(f => ({ ...f, dataHora: s.dataHora, canal: s.canal })); }}
+                                      style={{ display: "block", width: "100%", background: profBookForm.dataHora === s.dataHora ? color : color + "66", border: "none", borderRadius: 3, color: "#080c10", padding: "1px 0", cursor: "pointer", fontSize: 8, fontWeight: 700, marginBottom: 1 }}>
+                                      {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                                    </button>
+                                  ))}
+                                  {ds.length > 3 && <span style={{ color: "#64748b", fontSize: 8, textAlign: "center", display: "block" }}>+{ds.length - 3}</span>}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {selDay && pbG[selDay] && (
+                            <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid #1e293b` }}>
+                              <div style={{ color: "#94a3b8", fontSize: 11, marginBottom: 6 }}>
+                                {new Date(selDay + "T12:00").toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
+                              </div>
+                              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                                {pbG[selDay].map(s => (
+                                  <button key={s.dataHora} type="button" onClick={() => setProfBookForm(f => ({ ...f, dataHora: s.dataHora, canal: s.canal }))}
+                                    style={{ padding: "5px 10px", borderRadius: 6, border: `1px solid ${profBookForm.dataHora === s.dataHora ? color : "#1e293b"}`, background: profBookForm.dataHora === s.dataHora ? color + "22" : "none", color: profBookForm.dataHora === s.dataHora ? color : "#94a3b8", fontSize: 12, cursor: "pointer", fontWeight: profBookForm.dataHora === s.dataHora ? 700 : 400 }}>
+                                    {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    }
+
+                    if (profBookCalView === "mes") {
+                      const now = new Date();
+                      const mBase = new Date(now.getFullYear(), now.getMonth() + profBookMonthOff, 1);
+                      const mName = mBase.toLocaleString("pt-BR", { month: "long", year: "numeric" });
+                      const firstDow = (mBase.getDay() + 6) % 7;
+                      const daysInM = new Date(mBase.getFullYear(), mBase.getMonth() + 1, 0).getDate();
+                      const mCells = Array.from({ length: Math.ceil((firstDow + daysInM) / 7) * 7 }, (_, i) => {
+                        const d = new Date(mBase); d.setDate(1 - firstDow + i); return d.toISOString().slice(0, 10);
+                      });
+                      const mStr = mBase.toISOString().slice(0, 7);
+                      return (
+                        <>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <button type="button" onClick={() => { setProfBookMonthOff(o => o - 1); setProfBookDaySelected(null); }} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 16, padding: "0 4px" }}>‹</button>
+                            <span style={{ color: "#94a3b8", fontSize: 11, textTransform: "capitalize" }}>{mName}</span>
+                            <button type="button" onClick={() => { setProfBookMonthOff(o => o + 1); setProfBookDaySelected(null); }} style={{ background: "none", border: "none", color, cursor: "pointer", fontSize: 16, padding: "0 4px" }}>›</button>
+                          </div>
+                          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
+                            {["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d => (
+                              <div key={d} style={{ color: "#475569", fontSize: 9, textAlign: "center", fontWeight: 700, padding: "2px 0" }}>{d}</div>
+                            ))}
+                            {mCells.map(day => {
+                              const ds = pbG[day] ?? [];
+                              const inM = day.startsWith(mStr);
+                              const isToday = day === todayPb;
+                              const isSel = day === profBookDaySelected;
+                              return (
+                                <div key={day} onClick={() => ds.length ? setProfBookDaySelected(isSel ? null : day) : null}
+                                  style={{ minHeight: 34, background: isSel ? colorDark : "#0a0f16", border: `1px solid ${isToday ? color + "66" : isSel ? color + "44" : "#1e293b"}`, borderRadius: 5, padding: 2, cursor: ds.length ? "pointer" : "default", opacity: inM ? 1 : 0.2 }}>
+                                  <div style={{ color: isToday ? color : ds.length ? "#e2e8f0" : "#334155", fontSize: 9, textAlign: "center", fontWeight: 700 }}>
+                                    {new Date(day + "T12:00").getDate()}
+                                  </div>
+                                  {ds.length > 0 && (
+                                    <div style={{ display: "flex", justifyContent: "center", gap: 2 }}>
+                                      {Array.from({ length: Math.min(ds.length, 3) }).map((_, i) => (
+                                        <div key={i} style={{ width: 4, height: 4, borderRadius: "50%", background: color }} />
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {profBookDaySelected && pbG[profBookDaySelected] && (
+                            <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid #1e293b` }}>
+                              <div style={{ color: "#94a3b8", fontSize: 11, marginBottom: 6 }}>
+                                {new Date(profBookDaySelected + "T12:00").toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
+                              </div>
+                              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                                {pbG[profBookDaySelected].map(s => (
+                                  <button key={s.dataHora} type="button" onClick={() => setProfBookForm(f => ({ ...f, dataHora: s.dataHora, canal: s.canal }))}
+                                    style={{ padding: "5px 10px", borderRadius: 6, border: `1px solid ${profBookForm.dataHora === s.dataHora ? color : "#1e293b"}`, background: profBookForm.dataHora === s.dataHora ? color + "22" : "none", color: profBookForm.dataHora === s.dataHora ? color : "#94a3b8", fontSize: 12, cursor: "pointer", fontWeight: profBookForm.dataHora === s.dataHora ? 700 : 400 }}>
+                                    {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    }
+                    return null;
                   })()}
                 </div>
 
@@ -2507,9 +2671,68 @@ export function AgePage() {
         )}
         {total7 === 0 && (
           <div style={{ background: "#0f1318", border: `1px solid #1e293b`, borderRadius: 10, padding: "10px 14px", marginBottom: 16 }}>
-            <span style={{ color: "#64748b", fontSize: 13 }}>Nenhum slot nos próximos 7 dias. Gere slots na aba Agenda para ver a ocupação aqui.</span>
+            <span style={{ color: "#64748b", fontSize: 13 }}>Nenhum slot nos próximos 7 dias. Configure regras semanais abaixo para gerar horários.</span>
           </div>
         )}
+
+        {/* Grade visual de disponibilidade — próximas 2 semanas */}
+        {slots.length > 0 && (() => {
+          const dispGrouped: Record<string, typeof slots> = {};
+          slots.forEach(s => { const d = s.dataHora.slice(0, 10); (dispGrouped[d] ??= []).push(s); });
+          const todayD = new Date().toISOString().slice(0, 10);
+          const base = new Date(); base.setDate(base.getDate() - ((base.getDay() + 6) % 7));
+          const dispDays = Array.from({ length: 14 }, (_, i) => { const d = new Date(base); d.setDate(base.getDate() + i); return d.toISOString().slice(0, 10); });
+          const booked14 = appts.filter(a => {
+            const d = a.dataHora.slice(0, 10);
+            return dispDays.includes(d) && ["reservado","confirmado"].includes(a.status);
+          });
+          const bookedSet = new Set(booked14.map(a => a.dataHora));
+          return (
+            <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "12px 14px", marginBottom: 16 }}>
+              <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Grade — próximas 2 semanas</div>
+              {[0, 1].map(w => {
+                const weekDays14 = dispDays.slice(w * 7, w * 7 + 7);
+                return (
+                  <div key={w} style={{ marginBottom: w === 0 ? 8 : 0 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3 }}>
+                      {w === 0 && ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d => (
+                        <div key={d} style={{ color: "#475569", fontSize: 9, textAlign: "center", fontWeight: 700, padding: "2px 0" }}>{d}</div>
+                      ))}
+                      {weekDays14.map(day => {
+                        const free = (dispGrouped[day] ?? []).filter(s => !bookedSet.has(s.dataHora));
+                        const occ = (dispGrouped[day] ?? []).filter(s => bookedSet.has(s.dataHora));
+                        const total = free.length + occ.length;
+                        const isToday = day === todayD;
+                        return (
+                          <div key={day} style={{ minHeight: 52, background: total ? (occ.length === total ? "#1a0a0a" : "#0a1810") : "#0a0f16", border: `1px solid ${isToday ? color + "66" : total ? color + "33" : "#1e293b"}`, borderRadius: 6, padding: 3 }}>
+                            <div style={{ color: isToday ? color : total ? "#e2e8f0" : "#334155", fontSize: 9, textAlign: "center", fontWeight: 700, marginBottom: 2 }}>
+                              {new Date(day + "T12:00").getDate()}
+                            </div>
+                            {free.slice(0, 4).map((s, i) => (
+                              <div key={i} style={{ background: color + "66", borderRadius: 3, padding: "1px 2px", marginBottom: 1, fontSize: 8, color: "#e2e8f0", textAlign: "center", fontWeight: 600 }}>
+                                {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                              </div>
+                            ))}
+                            {occ.slice(0, 2).map((s, i) => (
+                              <div key={i} style={{ background: "#f8717155", borderRadius: 3, padding: "1px 2px", marginBottom: 1, fontSize: 8, color: "#fca5a5", textAlign: "center", fontWeight: 600 }}>
+                                {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                              </div>
+                            ))}
+                            {total > 6 && <div style={{ color: "#64748b", fontSize: 8, textAlign: "center" }}>+{total - 6}</div>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+              <div style={{ display: "flex", gap: 16, marginTop: 8 }}>
+                <span style={{ color: "#94a3b8", fontSize: 10 }}><span style={{ background: color + "66", borderRadius: 3, padding: "1px 5px", color: "#e2e8f0" }}>●</span> livre</span>
+                <span style={{ color: "#94a3b8", fontSize: 10 }}><span style={{ background: "#f8717155", borderRadius: 3, padding: "1px 5px", color: "#fca5a5" }}>●</span> ocupado</span>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Toast Desfazer */}
         {undoRule && (
@@ -3371,6 +3594,17 @@ export function AgePage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#080c10", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(45,212,191,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(45,212,191,0.04) 0%, transparent 45%), repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px)", color: "#e2e8f0", fontFamily: "system-ui, sans-serif" }}>
+      {/* Toasts de background */}
+      {bgToasts.length > 0 && (
+        <div style={{ position: "fixed", bottom: 24, right: 16, zIndex: 9999, display: "flex", flexDirection: "column", gap: 8 }}>
+          {bgToasts.map(t => (
+            <div key={t.id} style={{ background: t.type === "ok" ? "#052e16" : t.type === "err" ? "#2d0a0a" : "#0f1a2e", border: `1px solid ${t.type === "ok" ? "#4ade8055" : t.type === "err" ? "#f8717155" : color + "55"}`, borderRadius: 10, padding: "10px 16px", color: t.type === "ok" ? "#4ade80" : t.type === "err" ? "#f87171" : "#94a3b8", fontSize: 13, maxWidth: 300, boxShadow: "0 4px 20px #0008", display: "flex", alignItems: "center", gap: 8 }}>
+              <span>{t.type === "ok" ? "✓" : t.type === "err" ? "✕" : "⏳"}</span>
+              <span>{t.msg}</span>
+            </div>
+          ))}
+        </div>
+      )}
       {/* Header */}
       <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b", padding: "0 1rem" }}>
         <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
