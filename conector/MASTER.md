@@ -1083,3 +1083,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - Pergunta SABIÁ em segundo plano: banner roxo + poll 10x3s + botão checar
 - SABIÁ v2: histórico persistente, textarea, draft, grava insights no Conector
 - Render ENV VARS restauradas; landing Age completa; cases fictícias
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — S145 Cláudio
+- Calendário semana/mês no modal Nova consulta profissional Age
+- Grade visual disponibilidade (2 semanas) na DisponibilidadeView
+- Toast system + localStorage bookForm
+- Jesus/Lisange: cold start Render era causa provável
