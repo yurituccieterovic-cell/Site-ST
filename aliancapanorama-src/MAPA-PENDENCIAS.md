@@ -1107,3 +1107,10 @@
 | #785 | Calculus CalcPage.tsx: mostrar FinArazulY | ⏳ Cláudio |
 | #786 | ISA/DODGE: popular índices ao criar tasks | ⏳ futuro |
 | #787 | Poster Curso 2 para Instagram (1080×1080) | ⏳ Cláudio |
+
+## S155 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #788 | Ep9 A Adoção Tecnológica gerado e enviado (rosa, 12MB) | ✅ commit 9e610dc |
+| #789 | Curso 3 completo: 9 episódios (escuro/verde/ocean/rosa) | ✅ |

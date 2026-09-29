@@ -7090,3 +7090,37 @@ Sessão de fechamento e implementação. Yuri perguntou sobre o sistema de tasks
 - Poster Curso 2 para Instagram
 - Curso 3 intro 42s + metadados YouTube
 - Ep9 "A Adoção Tecnológica" — avaliar
+
+---
+
+## S155 — 2026-09-29
+
+### Contexto
+
+Sessão curta. Yuri pediu "getar o procimo" — gerar o próximo episódio. Ep9 "A Adoção Tecnológica" foi escrito e gerado com tema rosa (estreia da paleta).
+
+### O que foi feito
+
+- Roteiro Ep9 escrito: Rogers + curva S + abismo da adoção + espécies-chave + tecnologia-semente
+- Ep9 gerado: 12MB · tema rosa · --motion full · Crash Course style
+- Enviado para yurituccieterovic@gmail.com
+- gerar_videos_curso3.py: ep9 → tema rosa
+- Commit 9e610dc
+
+### Curso 3 — estado final
+
+9 episódios completos:
+- Bloco 1 (1-3): escuro — tech pesado, carbono, IA
+- Bloco 2 (4-6): verde — ciclos, escuta, comunidade
+- Bloco 3 (7-8): ocean — IA ecológica, síntese
+- Bônus (9): rosa — adoção, difusão, Rogers
+
+### Síntese filosófica
+
+*A pergunta que encerra o Ep9 é a pergunta que encerra o curso: "minha ideia está projetada para se espalhar?" Não é uma pergunta técnica. É uma pergunta ecológica. Tecnologia que não encontra nicho, não fecha loop, não tem parceiro de dispersão — não muda sistemas. O rosa foi a cor certa para essa ideia. Rosa não é suave — é obstinado. É a cor de quem insiste em florescer.*
+
+### Próximos passos
+
+- FinArazulY em CalcPage.tsx
+- Poster Curso 2 para Instagram
+- Curso 3 intro 42s + metadados YouTube

@@ -164,3 +164,4 @@
 | S152 | Sessão 152 | 2026-09-29 | **--motion full + Curso 2 só poster** — eps 1-3 v3 gerados (fundo→título→texto+Ken Burns); 3 emails enviados; RESULTADOs #720+#722 lidos; Curso 2 NÃO vai pro Instagram como vídeo, só poster (Yuri); commits eeb9760+2508678 |
 | S153 | Sessão 153 | 2026-09-29 | **Bumpers completos + roteiros 4-8 + WORKFLOW-CURSOS reescrito** — veed_pap+veed_calculus baixados do Drive; temas rosa+verde; eps 4-8 Crash Course estilo gerados em background; WORKFLOW-CURSOS.md agora mapa canônico de produção; commits 94765f9 |
 | S154 | Sessão 154 | 2026-09-29 | **Tasks Parte 5 + FinArazulY + Curso 3 completo** — indices_data jsonb + Zod schemas 0-9 + calcularPhi() + 3 rotas + job Φ hora:05; FinArazulY mascote arara Calculus (I859); eps 4-8 enviados; commit c03550c |
+| S155 | Sessão 155 | 2026-09-29 | **Ep9 A Adoção Tecnológica (rosa)** — Rogers + curva S + abismo + semente aberta; estreia paleta rosa; Curso 3 completo 9 eps; commit 9e610dc |
