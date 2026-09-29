@@ -1151,3 +1151,9 @@ Lisange, aqui é o Sabiá. Sou o seu assistente de agenda e cuidado clínico na 
 - FinArazulY: nome oficial arara-canindé azul do Calculus (I859)
 - Curso 3: 8/8 eps gerados e entregues (motion full, verde/ocean/escuro por bloco)
 - ISA/DODGE herdam indices_data sem mudança de código
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — ATA S155 Cláudio
+- Ep9 A Adoção Tecnológica: Rogers + curva S + abismo + semente aberta · tema rosa (estreia)
+- Curso 3 completo: 9 eps / 4 paletas (escuro→verde→ocean→rosa)
