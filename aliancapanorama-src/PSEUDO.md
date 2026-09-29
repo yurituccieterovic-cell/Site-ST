@@ -6773,3 +6773,40 @@ O botão "Cadastrar direto" é uma declaração ontológica: nem todo paciente p
 - pg_dump Replit URGENTE (#730)
 - Oracle Always Free VM ARM — eliminar Render free tier spin-down
 
+---
+
+## ATA S147 — Cursos + VEED + Oracle + PremiereMovieMaker · 2026-09-29
+
+### O que foi discutido
+
+1. **Oracle Always Free** — falhou de novo. Decisão: ir de Locaweb por enquanto.
+
+2. **VEED** — Yuri decidiu cancelar (R$44,04/mês → zero). Cancelamento antes de 02/10. Créditos não acumulam após o ciclo.
+
+3. **ElevenLabs** — manter por enquanto para Curso 3. Cancelar após Curso 3 concluído.
+
+4. **PremiereMovieMaker** — já implementado como `scripts/premiere_maker.py` (v2, completo). Temas escuro/claro/ocean/sunset, fade-in, layouts, TTS edge-tts, barra de progresso, logo ST.
+
+5. **Curso 3 — "Respirar com o Planeta"** — proposta existe em `cursos/curso3-proposta.md` (Linha A: eco-respiração, 8 episódios). Assembleia #715 enviada pedindo roteiros completos no formato `## CENA`.
+
+6. **Curso 2** — Yuri encontrou nos enviados, vai encaminhar para luddlocke para publicação.
+
+### Decisões tomadas
+
+- VEED: cancelar antes de 02/10
+- ElevenLabs: manter para Curso 3, cancelar depois
+- Curso 3: Linha A (eco-respiração), usando edge-tts (se possível) ou ElevenLabs
+- Assembleia #715 → roteiros Eps 1-3 prioritários (Yuri grava hoje/amanhã)
+- Locaweb: decisão de infraestrutura (Oracle abandonado novamente)
+
+### Síntese filosófica
+
+*Às vezes o melhor design é o que já existe. O PremiereMovieMaker estava pronto — não faltava código, faltava lembrar. A sessão foi sobre reconhecer o que já está feito e dar o próximo passo: não mais construir o instrumento, mas tocar. Cancelar o VEED é o mesmo gesto: parar de pagar para uma plataforma o que já sabemos fazer sozinhos.*
+
+### Próximos passos
+
+- Yuri cancela VEED em veed.io (antes 02/10)
+- Aguardar resposta Assembleia #715 (roteiros Curso 3)
+- Gravar eps 1-3 eco-respiração com PremiereMovieMaker
+- Locaweb: configurar quando Yuri criar conta
+

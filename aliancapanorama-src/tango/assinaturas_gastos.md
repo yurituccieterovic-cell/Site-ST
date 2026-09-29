@@ -7,19 +7,20 @@
 - **Cobrança:** dia 2 de cada mês
 - **Valor:** R$ 44,04
 - **Uso:** projeto eco-respiração — vídeos talking heads sobre ecologia
-- **Status:** ativo
-- **Ação:** manter até próximo dia 2 (outubro). Avaliar cancelar depois que eco-respiração estiver pronto com PremiereMovieMaker.
+- **Status:** CANCELAR — Yuri decidiu em 2026-09-29
+- **Créditos após cancelamento:** acesso até 02/10 (fim do ciclo); créditos mensais NÃO acumulam para depois
+- **Ação:** Yuri cancela manualmente em veed.io antes de 02/10
+- **Migração:** PremiereMovieMaker (scripts/premiere_maker.py --tts pt-BR) — já implementado
 - **Lembrete programado:** 2026-09-30 (email automático)
 
 ## ElevenLabs
 - **Cobrança:** dia 20 de cada mês
 - **Valor:** US$ 33,49 (~R$ 180–200)
-- **Uso:** narração de cursos (Curso 1, Curso 2)
-- **Status:** ativo — **CANCELAR ANTES DE 20/09/2026**
-- **Migração:** PremiereMovieMaker (edge-tts grátis)
-- **Ação:** Yuri cancela manualmente no site ElevenLabs
-- **Lembrete programado:** 2026-09-18 (email automático para Yuri)
-- **Nota:** Curso 3 vai com PremiereMovieMaker + edge-tts, não ElevenLabs
+- **Uso:** narração de cursos (Curso 1, Curso 2) + **Curso 3 (eco-respiração)**
+- **Status:** ativo — MANTER por enquanto (Yuri decidiu 2026-09-29, precisa para Curso 3)
+- **Próxima avaliação:** após Curso 3 concluído → migrar para edge-tts grátis
+- **Ação:** cancelar após Curso 3 finalizado
+- **Nota:** Curso 3 vai usar ElevenLabs; Curso 4+ com edge-tts (PremiereMovieMaker)
 
 ## Replit
 - **Cobrança:** dia 2 de cada mês
