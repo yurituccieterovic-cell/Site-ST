@@ -28,7 +28,8 @@ O curso opera em duplo registro: **pedagógico-técnico** (ecologia em vocabulá
 | 5 | Escuta Ativa da Terra | Bioacústica e sensoriamento ambiental com IA | ⏳ Pendente |
 | 6 | Comunidade como Ecossistema | Dinâmicas de grupo, diversidade e resiliência | ⏳ Pendente |
 | 7 | A IA que Planta | Aplicações concretas de IA em conservação | ⏳ Pendente |
-| 8 | Respirar Junto | Síntese: tecnologia como parceira ecológica | ⏳ Pendente |
+| 8 | Respirar Junto | Síntese: tecnologia como parceira ecológica | ✅ Pronto |
+| 9 | A Adoção Tecnológica | Como práticas regenerativas se espalham — Rogers + ecologia | ⏳ Pendente |
 
 ---
 
@@ -574,4 +575,56 @@ Respire fundo. Agora expire. Você acabou de fazer parte do sistema.
 **Tema visual sugerido:** `verde` (eps 4-6) → `ocean` (eps 7-8) para diferenciar do bloco 1-3 (escuro).
 **Adoção:** considerar ep adicional "A Adoção Tecnológica" — como práticas regenerativas são adotadas por comunidades e empresas (Rogers Diffusion of Innovations aplicado a ecologia).
 
-**Status:** Eps 4-8 roteiros prontos · Pipeline: `python scripts/gerar_videos_curso3.py 4 5 6 7 8`
+**Status:** Eps 4-8 roteiros prontos · Ep9 adicionado (rosa) · Pipeline: `python scripts/gerar_videos_curso3.py 9`
+
+---
+
+## EPISÓDIO 9 — A Adoção Tecnológica
+
+*Como práticas regenerativas se espalham — Rogers, ecossistemas e o problema do inovador solitário*
+
+### CENA 1 — O PARADOXO DO PIONEIRO
+
+Você já teve uma ideia incrível que ninguém adotou? Você plantou uma horta comunitária. Instalou painel solar. Propôs compostagem no trabalho. E ficou sozinho.
+
+Não é porque a ideia era ruim. É porque adoção funciona de formas que a maioria das pessoas ignora — e que a ecologia explica muito bem.
+
+### CENA 2 — ROGERS E A CURVA S
+
+Em 1962, Everett Rogers publicou "Difusão de Inovações". A descoberta central: toda inovação segue uma curva S — começa devagar com os inovadores, acelera quando a maioria adota, desacelera quando satura.
+
+Mas Rogers também descobriu algo mais perturbador: a maioria das boas ideias morre no abismo entre os inovadores e a maioria. Não por falta de qualidade. Por falta de tradução.
+
+### CENA 3 — O ABISMO É ECOLÓGICO
+
+Florestas fazem isso o tempo todo. Uma espécie pioneira chega num terreno degradado. Sobrevive. Mas não se espalha até que as condições certas apareçam — solo preparado, umidade, outras espécies parceiras.
+
+O inovador solitário é como aquela primeira árvore. Sobrevive. Mas não muda o sistema. Para mudar o sistema, precisa de condições. E condições se criam — não se esperam.
+
+### CENA 4 — O QUE CRIA CONDIÇÕES
+
+Três fatores que aceleram adoção, tanto em ecossistemas quanto em comunidades humanas:
+
+Primeiro: observabilidade. Se as pessoas não conseguem VER o resultado, não adotam. Primeiro: mostre o antes e depois.
+
+Segundo: compatibilidade. A inovação precisa caber na vida real das pessoas — não na vida ideal. Segundo: adapte, não imponha.
+
+Terceiro: testabilidade. Ninguém adota o que não pode testar primeiro. Terceiro: reduza o custo de experimentar.
+
+### CENA 5 — AGENTES DE MUDANÇA COMO ESPÉCIES-CHAVE
+
+Lembra das espécies-chave dos ecossistemas? Aquelas que têm impacto desproporcional ao seu tamanho? Nas comunidades humanas existem equivalentes: as pessoas que têm confiança de múltiplos grupos ao mesmo tempo.
+
+Elas não precisam ser as maiores especialistas. Precisam ser as mais conectadas. São elas que cruzam o abismo — traduzindo a ideia do inovador para a linguagem da maioria.
+
+### CENA 6 — TECNOLOGIA QUE SE ESPALHA COMO SEMENTE
+
+As melhores tecnologias verdes têm algo em comum com sementes eficientes: são leves, viajam longe, germinam em condições variadas. Software open source. Protocolos abertos. Tutoriais em vídeo gratuitos.
+
+O oposto? Tecnologia que requer certificação cara, hardware proprietário e consultoria especializada. Pode ser ótima — mas não se espalha. E o que não se espalha não muda sistemas.
+
+### CENA 7 — SÍNTESE
+
+Neste episódio, vimos: adoção segue curva S com abismo crítico entre inovadores e maioria. Condições para adoção: observabilidade, compatibilidade, testabilidade. Agentes de mudança como espécies-chave nas redes humanas. Tecnologia que se espalha como semente — leve, aberta, adaptável.
+
+A pergunta final não é "minha ideia é boa?". É "ela está projetada para se espalhar?"

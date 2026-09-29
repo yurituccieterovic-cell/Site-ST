@@ -1,0 +1,67 @@
+[
+  {
+    "titulo": "Episódio 9",
+    "subtitulo": "A Adoção Tecnológica",
+    "texto": "Como práticas regenerativas se espalham — Rogers, ecossistemas e o problema do inovador solitário",
+    "naracao": "Curso 3: Respirar com o Planeta. Episódio 9: A Adoção Tecnológica. Como práticas regenerativas se espalham — Rogers, ecossistemas e o problema do inovador solitário",
+    "duracao": 12.4,
+    "layout": "centralizado",
+    "logo": true
+  },
+  {
+    "titulo": "O PARADOXO DO PIONEIRO",
+    "subtitulo": "Ep 9 · Cena 1",
+    "texto": "É porque adoção funciona de formas que a maioria das pessoas ignora — e que a ecologia explica muito bem.",
+    "naracao": "Você já teve uma ideia incrível que ninguém adotou? Você plantou uma horta comunitária. Instalou painel solar. Propôs compostagem no trabalho. E ficou sozinho. Não é porque a ideia era ruim. É porque adoção funciona de formas que a maioria das pessoas ignora — e que a ecologia explica muito bem.",
+    "duracao": 19.1,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "ROGERS E A CURVA S",
+    "subtitulo": "Ep 9 · Cena 2",
+    "texto": "Não por falta de qualidade.",
+    "naracao": "Em 1962, Everett Rogers publicou \"Difusão de Inovações\". A descoberta central: toda inovação segue uma curva S — começa devagar com os inovadores, acelera quando a maioria adota, desacelera quando satura. Mas Rogers também descobriu algo mais perturbador: a maioria das boas ideias morre no abismo entre os inovadores e a maioria. Não por falta de qualidade. Por falta de tradução.",
+    "duracao": 26.7,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O ABISMO É ECOLÓGICO",
+    "subtitulo": "Ep 9 · Cena 3",
+    "texto": "E condições se criam — não se esperam.",
+    "naracao": "Florestas fazem isso o tempo todo. Uma espécie pioneira chega num terreno degradado. Sobrevive. Mas não se espalha até que as condições certas apareçam — solo preparado, umidade, outras espécies parceiras. O inovador solitário é como aquela primeira árvore. Sobrevive. Mas não muda o sistema. Para mudar o sistema, precisa de condições. E condições se criam — não se esperam.",
+    "duracao": 25.5,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "O QUE CRIA CONDIÇÕES",
+    "subtitulo": "Ep 9 · Cena 4",
+    "texto": "Terceiro: reduza o custo de experimentar.",
+    "naracao": "Três fatores que aceleram adoção, tanto em ecossistemas quanto em comunidades humanas: Primeiro: observabilidade. Se as pessoas não conseguem VER o resultado, não adotam. Primeiro: mostre o antes e depois. Segundo: compatibilidade. A inovação precisa caber na vida real das pessoas — não na vida ideal. Segundo: adapte, não imponha. Terceiro: testabilidade. Ninguém adota o que não pode testar primeiro. Terceiro: reduza o custo de experimentar.",
+    "duracao": 30.9,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "AGENTES DE MUDANÇA COMO ESPÉCIES-CHAVE",
+    "subtitulo": "Ep 9 · Cena 5",
+    "texto": "São elas que cruzam o abismo — traduzindo a ideia do inovador para a linguagem da maioria.",
+    "naracao": "Lembra das espécies-chave dos ecossistemas? Aquelas que têm impacto desproporcional ao seu tamanho? Nas comunidades humanas existem equivalentes: as pessoas que têm confiança de múltiplos grupos ao mesmo tempo. Elas não precisam ser as maiores especialistas. Precisam ser as mais conectadas. São elas que cruzam o abismo — traduzindo a ideia do inovador para a linguagem da maioria.",
+    "duracao": 24.8,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "TECNOLOGIA QUE SE ESPALHA COMO SEMENTE",
+    "subtitulo": "Ep 9 · Cena 6",
+    "texto": "E o que não se espalha não muda sistemas.",
+    "naracao": "As melhores tecnologias verdes têm algo em comum com sementes eficientes: são leves, viajam longe, germinam em condições variadas. Software open source. Protocolos abertos. Tutoriais em vídeo gratuitos. O oposto? Tecnologia que requer certificação cara, hardware proprietário e consultoria especializada. Pode ser ótima — mas não se espalha. E o que não se espalha não muda sistemas.",
+    "duracao": 26.6,
+    "layout": "centralizado"
+  },
+  {
+    "titulo": "SÍNTESE",
+    "subtitulo": "Ep 9 · Cena 7",
+    "texto": "É \"ela está projetada para se espalhar?\"",
+    "naracao": "Neste episódio, vimos: adoção segue curva S com abismo crítico entre inovadores e maioria. Condições para adoção: observabilidade, compatibilidade, testabilidade. Agentes de mudança como espécies-chave nas redes humanas. Tecnologia que se espalha como semente — leve, aberta, adaptável. A pergunta final não é \"minha ideia é boa?\". É \"ela está projetada para se espalhar?\"",
+    "duracao": 25.2,
+    "layout": "centralizado"
+  }
+]
