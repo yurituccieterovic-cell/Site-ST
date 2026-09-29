@@ -1084,3 +1084,15 @@
 | #772 | Curso 2: NÃO vai para Instagram como vídeo — só poster 1080×1080 para Instagram | ✅ decidido por Yuri |
 | #773 | RESULTADO #722: decisões bumpers confirmadas + motion Remotion aprovado para avaliação | ✅ lido |
 | #774 | Assembleia #723 iniciada (Curso 2 YouTube · breve Instagram) | ⏳ aguardando RESULTADO |
+
+## S153 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #775 | Bumpers VEED baixados do Drive: veed_pap.mp4 + veed_calculus.mp4 | ✅ commit 94765f9 |
+| #776 | Temas rosa + verde adicionados ao premiere_maker.py | ✅ |
+| #777 | Roteiros eps 4-8 escritos (Crash Course style) e commitados | ✅ |
+| #778 | Eps 4-8 sendo gerados em background (job bf4hwo79h) | ⏳ rodando |
+| #779 | WORKFLOW-CURSOS.md reescrito — mapa canônico de produção | ✅ |
+| #780 | Ep9 "A Adoção Tecnológica" — avaliar com Yuri | ⏳ |
+| #781 | Enviar eps 4-8 por email quando job terminar | ⏳ Cláudio |

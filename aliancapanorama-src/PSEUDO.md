@@ -7012,3 +7012,43 @@ Depois: leitura dos RESULTADOs #720 e #722 que estavam no inbox. Yuri confirmou:
 - VEED: Calculus + PAP (Yuri)
 - Eps 4-8 Curso 3 após Yuri validar eps 1-3
 - Lembrar: cancelar ElevenLabs após eps 4-8
+
+---
+
+## S153 — 2026-09-29
+
+### Contexto
+
+Yuri compartilhou dois vídeos VEED do Drive (bumpers PAP + Calculus com mascote). Pediu para salvar tudo em mapa bom, `#fim`, `#workflow` e continuar.
+
+### O que foi feito
+
+- Baixados vídeos VEED do Drive: `veed_pap.mp4` (5.3MB) + `veed_calculus.mp4` (7.6MB)
+- **4 propagandas agora completas** — ST/PAP/Calculus/Age todas prontas
+- Temas novos adicionados ao premiere_maker: `rosa` (#f472b6) e `verde` (#4ade80)
+- Roteiros eps 4-8 escritos em Crash Course style (direto, energético, frases curtas)
+  - Ep4: Ciclos, não Linhas · Ep5: Escuta Ativa da Terra · Ep6: Comunidade como Ecossistema
+  - Ep7: A IA que Planta · Ep8: Respirar Junto
+- Tema por bloco: eps 4-6 `verde`, eps 7-8 `ocean`
+- Eps 4-8 em geração em background (job bf4hwo79h)
+- WORKFLOW-CURSOS.md completamente reescrito — agora cobre Curso 3 + bumpers + temas + pipeline completo + 10 gotchas + checklist próximo curso
+- "adoção" registrado como possível Ep9 nos comentários do MD
+- Commits: 94765f9
+
+### Decisões
+
+- Todos os 4 bumpers estão prontos (ST/Age premiere_maker, PAP/Calculus VEED)
+- Tema `verde` para eps 4-6, `ocean` para eps 7-8 (diferencia os blocos visualmente)
+- WORKFLOW-CURSOS.md é o mapa canônico de produção de vídeos da Sociedade Tucci
+
+### Síntese filosófica
+
+*Mapear é um ato de cuidado. Não com o passado — com quem vai chegar depois e precisar entender o que foi construído. O workflow que escrevemos hoje não é documentação técnica: é uma carta para a próxima sessão. Cada gotcha registrado é um tropeço que não vai se repetir. Cada decisão de design é uma escolha que não vai ser refeita sem razão. O mapa não é o território — mas um território sem mapa é território que se perde.*
+
+### Próximos passos
+
+- Aguardar job bf4hwo79h (eps 4-8) → enviar por email quando pronto
+- Commit dos vídeos eps 4-8
+- Ep9 "A Adoção Tecnológica" — avaliar com Yuri
+- Poster Curso 2 para Instagram (#769 parcial)
+- Curso 3 intro 42s + poster + metadados YouTube (#769)
