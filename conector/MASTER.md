@@ -1135,3 +1135,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - Roteiros eps 4-8 Crash Course: Ciclos→Escuta→Comunidade→IA planta→Respirar Junto
 - WORKFLOW-CURSOS.md = mapa canônico de produção de vídeos (3 cursos + bumpers + 10 gotchas)
 - Temas novos: rosa (#f472b6) + verde (#4ade80)
+
+
+### 2026-09-29 — admin
+### SABIÁ → Lisange (2026-09-29)
+- "Pode se apresentar pra Lisange?"
+- SABIÁ: "Olá, Yuri! Prazer em te conhecer. 
+
+Lisange, aqui é o Sabiá. Sou o seu assistente de agenda e cuidado clínico na platafo"
