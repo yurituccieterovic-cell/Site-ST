@@ -233,6 +233,10 @@ export function AgePage() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteLink, setInviteLink] = useState("");
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [directModal, setDirectModal] = useState(false);
+  const [directForm, setDirectForm] = useState({ nome: "", email: "", telefone: "" });
+  const [directLoading, setDirectLoading] = useState(false);
+  const [directError, setDirectError] = useState("");
   // Join via ?join=TOKEN (paciente abre link de convite)
   const [joinToken, setJoinToken] = useState("");
   const [joinProfNome, setJoinProfNome] = useState("");
@@ -811,6 +815,32 @@ export function AgePage() {
       else alert(d.error ?? "Erro ao gerar convite.");
     } catch { alert("Sem conexão."); }
     setInviteLoading(false);
+  }
+
+  async function addDirectPatient(e: React.FormEvent) {
+    e.preventDefault();
+    setDirectError("");
+    if (!directForm.nome.trim() || !directForm.email.trim()) {
+      setDirectError("Nome e email são obrigatórios.");
+      return;
+    }
+    setDirectLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/direct`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(directForm),
+      });
+      const d = await r.json() as { id?: number; nome?: string; error?: string };
+      if (d.id) {
+        setPatients(prev => [...prev, { ...d, status: "aprovado", semaforo: "cinza", frequenciaEsperada: "livre" } as Patient]);
+        setDirectModal(false);
+        setDirectForm({ nome: "", email: "", telefone: "" });
+      } else {
+        setDirectError(d.error ?? "Erro ao cadastrar.");
+      }
+    } catch { setDirectError("Sem conexão."); }
+    setDirectLoading(false);
   }
 
   async function handleJoin(e: React.FormEvent) {
@@ -1773,11 +1803,53 @@ export function AgePage() {
       <div style={{ padding: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
           <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, margin: 0 }}>Pacientes</h2>
-          <button onClick={() => { setInviteModal(true); setInviteLink(""); setInviteEmail(""); }}
-            style={{ background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "7px 14px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
-            + Convidar paciente
-          </button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={() => { setDirectModal(true); setDirectForm({ nome: "", email: "", telefone: "" }); setDirectError(""); }}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, color, padding: "7px 14px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+              + Cadastrar direto
+            </button>
+            <button onClick={() => { setInviteModal(true); setInviteLink(""); setInviteEmail(""); }}
+              style={{ background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "7px 14px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
+              + Convidar paciente
+            </button>
+          </div>
         </div>
+
+        {/* Modal cadastro direto */}
+        {directModal && (
+          <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center" }}
+            onClick={e => { if (e.target === e.currentTarget) setDirectModal(false); }}>
+            <div style={{ background: "#0f1318", border: `1px solid ${color}44`, borderRadius: 16, padding: 24, width: 360, maxWidth: "90vw" }}>
+              <h3 style={{ color, fontSize: 15, fontWeight: 700, marginBottom: 8 }}>👤 Cadastrar paciente direto</h3>
+              <p style={{ color: "#94a3b8", fontSize: 12, marginBottom: 16 }}>
+                Cadastra sem link de convite — paciente já entra como aprovado.
+              </p>
+              <form onSubmit={addDirectPatient}>
+                <input
+                  type="text" placeholder="Nome *" value={directForm.nome} required
+                  onChange={e => setDirectForm(f => ({ ...f, nome: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, marginBottom: 10, boxSizing: "border-box" }}
+                />
+                <input
+                  type="email" placeholder="Email *" value={directForm.email} required
+                  onChange={e => setDirectForm(f => ({ ...f, email: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, marginBottom: 10, boxSizing: "border-box" }}
+                />
+                <input
+                  type="tel" placeholder="Telefone (opcional)" value={directForm.telefone}
+                  onChange={e => setDirectForm(f => ({ ...f, telefone: e.target.value }))}
+                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, marginBottom: 12, boxSizing: "border-box" }}
+                />
+                {directError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 10 }}>{directError}</div>}
+                <button type="submit" disabled={directLoading}
+                  style={{ width: "100%", background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  {directLoading ? "Cadastrando…" : "Cadastrar"}
+                </button>
+              </form>
+              <button onClick={() => setDirectModal(false)} style={{ marginTop: 12, width: "100%", background: "none", border: "none", color: "#475569", fontSize: 12, cursor: "pointer" }}>Fechar</button>
+            </div>
+          </div>
+        )}
 
         {/* Modal gerar convite */}
         {inviteModal && (
@@ -2363,10 +2435,21 @@ export function AgePage() {
     const FEED_ICON: Record<string, string> = {
       appointment: "📅",
       patient: "👤",
+      nota: "📝",
+      pergunta: "❓",
+      anuncio: "📢",
     };
     const FEED_TIPO_LABEL: Record<string, string> = {
       appointment: "Consulta",
       patient: "Paciente",
+      nota: "Nota",
+      pergunta: "Pergunta",
+      anuncio: "Anúncio",
+    };
+    const NOTA_COLOR: Record<string, string> = {
+      nota: "#60a5fa",
+      pergunta: "#a78bfa",
+      anuncio: "#fb923c",
     };
     const APPT_STATUS_LABEL: Record<string, string> = {
       disponivel: "Disponível", reservado: "Reservado", confirmado: "Confirmado",
@@ -2412,11 +2495,15 @@ export function AgePage() {
 
         {feedItems.map((item, i) => {
           const isAppt = item.tipo === "appointment";
+          const isNota = ["nota", "pergunta", "anuncio"].includes(item.tipo);
+          const notaColor = NOTA_COLOR[item.tipo] ?? "#64748b";
           const statusColor = isAppt
             ? (APPT_STATUS_COLOR[item.status] ?? "#64748b")
+            : isNota ? notaColor
             : (PAT_STATUS_COLOR[item.status] ?? "#64748b");
           const statusLabel = isAppt
             ? (APPT_STATUS_LABEL[item.status] ?? item.status)
+            : isNota ? (FEED_TIPO_LABEL[item.tipo] ?? item.tipo)
             : (PAT_STATUS_LABEL[item.status] ?? item.status);
 
           return (
@@ -2431,7 +2518,7 @@ export function AgePage() {
               gap: 12,
               alignItems: "flex-start",
             }}>
-              <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{FEED_ICON[item.tipo]}</span>
+              <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{FEED_ICON[item.tipo] ?? "📋"}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                   <div style={{ fontWeight: 600, fontSize: 14, color: "#e2e8f0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -2440,16 +2527,23 @@ export function AgePage() {
                   <div style={{ fontSize: 11, color: "#475569", flexShrink: 0 }}>{timeAgo(item.ts)}</div>
                 </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap", alignItems: "center" }}>
-                  <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>{FEED_TIPO_LABEL[item.tipo]}</span>
-                  <span style={{ fontSize: 11, color: statusColor, fontWeight: 700, background: statusColor + "22", borderRadius: 4, padding: "1px 6px" }}>
-                    {statusLabel}
-                  </span>
+                  <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>{FEED_TIPO_LABEL[item.tipo] ?? item.tipo}</span>
+                  {!isNota && (
+                    <span style={{ fontSize: 11, color: statusColor, fontWeight: 700, background: statusColor + "22", borderRadius: 4, padding: "1px 6px" }}>
+                      {statusLabel}
+                    </span>
+                  )}
                   {isAppt && item.canal && (
                     <span style={{ fontSize: 11, color: "#64748b" }}>{item.canal}</span>
                   )}
                   {isAppt && item.data_evento && (
                     <span style={{ fontSize: 11, color: "#475569" }}>
                       {fmtDate(item.data_evento, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  )}
+                  {item.tipo === "pergunta" && (
+                    <span style={{ fontSize: 10, color: (item as { tem_resposta?: boolean }).tem_resposta ? "#4ade80" : "#f59e0b", background: (item as { tem_resposta?: boolean }).tem_resposta ? "#052e16" : "#1c1005", borderRadius: 4, padding: "1px 6px" }}>
+                      {(item as { tem_resposta?: boolean }).tem_resposta ? "🐦 respondida" : "🐦 respondendo…"}
                     </span>
                   )}
                 </div>
@@ -2488,6 +2582,7 @@ export function AgePage() {
       e.preventDefault();
       if (!notaForm.conteudo.trim()) return;
       setNotaEnviando(true);
+      const isPergunta = notaForm.tipo === "pergunta";
       try {
         const r = await fetch(`${API}/api/age/${slug}/notas`, {
           method: "POST", credentials: "include",
@@ -2496,7 +2591,16 @@ export function AgePage() {
         });
         if (r.ok) {
           setNotaForm({ tipo: "nota", conteudo: "" });
-          setTimeout(loadNotas, 400);
+          setTimeout(loadNotas, 300);
+          if (isPergunta) {
+            // poll for SABIÁ response up to 30s
+            let attempts = 0;
+            const poll = setInterval(async () => {
+              attempts++;
+              await loadNotas();
+              if (attempts >= 10) clearInterval(poll);
+            }, 3000);
+          }
         }
       } catch { /* silencia */ }
       setNotaEnviando(false);

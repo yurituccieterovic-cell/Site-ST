@@ -1203,6 +1203,27 @@ router.patch("/age/:slug/patients/:id/frequencia", requireAgeAuth, async (req, r
   res.json(updated);
 });
 
+// POST /api/age/:slug/patients/direct — profissional cadastra paciente diretamente (sem convite, já aprovado)
+router.post("/age/:slug/patients/direct", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { nome, email, telefone } = req.body as { nome?: string; email?: string; telefone?: string };
+  if (!nome?.trim() || !email?.trim()) { res.status(400).json({ error: "nome e email são obrigatórios" }); return; }
+
+  const emailLower = email.trim().toLowerCase();
+  const [existing] = await db.select({ id: agePatientsTable.id })
+    .from(agePatientsTable)
+    .where(and(eq(agePatientsTable.professionalId, profId), eq(agePatientsTable.email, emailLower)))
+    .limit(1);
+  if (existing) { res.status(409).json({ error: "Paciente com este email já cadastrado" }); return; }
+
+  const result = await db.execute(sql`
+    INSERT INTO age_patients (professional_id, nome, email, telefone, status, lgpd_consent, lgpd_at)
+    VALUES (${profId}, ${nome.trim()}, ${emailLower}, ${telefone?.trim() ?? null}, 'aprovado', true, now())
+    RETURNING id, nome, email, telefone, status, created_at, updated_at
+  `);
+  res.status(201).json((result as any).rows[0]);
+});
+
 // POST /api/age/:slug/patients/:id/alerta — envia email de alerta de tratamento
 router.post("/age/:slug/patients/:id/alerta", requireAgeAuth, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id ?? "0", 10);
@@ -1341,8 +1362,28 @@ router.get("/age/:slug/feed", requireAgeAuth, async (req, res): Promise<void> =>
     LIMIT 20
   `);
 
+  // Notas e perguntas recentes
+  const notas = await db.execute(sql`
+    SELECT
+      tipo AS tipo,
+      id::text,
+      SUBSTRING(conteudo, 1, 80) AS titulo,
+      tipo AS status,
+      NULL AS canal,
+      criado_em AS data_evento,
+      criado_em AS ts,
+      '' AS email,
+      FALSE AS lembrete48h_sent,
+      FALSE AS lembrete24h_sent,
+      resposta_ia IS NOT NULL AS tem_resposta
+    FROM age_notas
+    WHERE professional_id = ${prof.id} AND parent_id IS NULL
+    ORDER BY criado_em DESC
+    LIMIT 20
+  `);
+
   // Merge cronológico
-  const merged = [...appts.rows, ...pats.rows].sort(
+  const merged = [...appts.rows, ...pats.rows, ...notas.rows].sort(
     (a, b) => new Date((b as Record<string, unknown>).ts as string).getTime()
             - new Date((a as Record<string, unknown>).ts as string).getTime()
   ).slice(0, limit);
