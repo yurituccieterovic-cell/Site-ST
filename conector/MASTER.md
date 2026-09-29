@@ -1091,3 +1091,9 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - Grade visual disponibilidade (2 semanas) na DisponibilidadeView
 - Toast system + localStorage bookForm
 - Jesus/Lisange: cold start Render era causa provável
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — ATA #fim S143–S146
+- DECISÕES: SABIÁ pública separada da profissional; upsert paciente no booking; exceção com validação; banner pergunta persistente 90s
+- PRÓXIMOS PASSOS: Oracle VM ARM, pg_dump Replit URGENTE, conta gestora Mayumi, onboarding self-service I171
