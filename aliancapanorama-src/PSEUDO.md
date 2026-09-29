@@ -6887,3 +6887,35 @@ Consulta sobre hospedagem Locaweb para o ecossistema (substituindo Oracle/Railwa
 - Cláudio: I171 onboarding self-service (alta prioridade — #694)
 - Cláudio: I184 retry automático booking cold start (#737)
 - Cláudio: gravar eps 1–3 Curso 3 (premiere_maker.py --tts pt-BR)
+
+---
+
+## Sessão 150 — 2026-09-29
+**Tema:** Curso 3 eps 1-3 gerados · gerar_videos_curso3.py
+
+### O que foi feito
+
+- `scripts/gerar_videos_curso3.py` criado: parseia `cursos/curso3-ecorrespiracao.md` por blocos `### CENA`, pré-gera TTS via edge-tts para medir duração, monta JSON de slides e chama `premiere_maker.py --tts pt-BR --layout escuro`
+- **Ep 01 "O Pulmão da Floresta":** 8 slides, 173s, 4.1 MB
+- **Ep 02 "A Respiração das Cidades":** 8 slides, 160s, 3.9 MB
+- **Ep 03 "O Carbono que Pensamos":** 8 slides, 174s, 4.1 MB
+- Fix: corte em `## Notas` no parser para evitar metadados na narração (Ep 3 Cena 7 estava 84s → 30s após fix)
+- Voz: `pt-BR-FranciscaNeural` (gratuita, feminina)
+- Vídeos em `cursos/videos-curso3/` · commit 7118241
+
+### Decisões
+
+- Cada CENA = 1 slide, duração pré-medida pelo TTS antes de chamar premiere_maker
+- Eps 4-8 aguardam validação de Yuri dos eps 1-3
+- #762 reset-senha admin: pendente para próxima sessão
+
+### Síntese filosófica
+
+*A floresta é um servidor. O carbono é memória. A cidade tem metabolismo. Três episódios que ensinam ecologia como linguagem de sistemas — e que, para existirem, precisaram de um script que aprendeu a não confundir notas de rodapé com narração. Toda boa síntese exige saber onde parar.*
+
+### Próximos passos
+
+- Yuri: assistir eps 1-3 e validar (qualidade TTS, ritmo, visual escuro)
+- Yuri: cancelar VEED antes 02/10 (#751 — URGENTE)
+- Cláudio: #762 reset-senha admin endpoint
+- Cláudio: eps 4-8 Curso 3 após validação

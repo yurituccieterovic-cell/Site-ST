@@ -1048,7 +1048,17 @@
 | #751 | VEED: cancelar ANTES de 02/10 (Yuri manual em veed.io) — economia R$44,04/mês | ⚠️ Yuri |
 | #752 | ElevenLabs: manter até Curso 3 eco-respiração concluído, depois cancelar | ⏳ |
 | #753 | Talking heads ABANDONADOS — pipeline confirmado: edge-tts + PremiereMovieMaker (sem rosto) | ✅ decidido |
-| #754 | Curso 3 eps 1-3: rodar premiere_maker.py --tts pt-BR (roteiros prontos em cursos/curso3-ecorrespiracao.md) | ⏳ Cláudio |
+| #754 | Curso 3 eps 1-3: rodar premiere_maker.py --tts pt-BR (roteiros prontos em cursos/curso3-ecorrespiracao.md) | ✅ commit 7118241 |
 | #755 | Curso 3 eps 4-8: aguardar validação dos eps 1-3 primeiro | ⏳ |
 | #756 | I171: onboarding self-service Age (do zero ao 1º agendamento em ≤10min) | ✅ commit 338bb6f |
 | #757 | I184: retry automático booking cold start Render | ✅ commit 338bb6f |
+
+## S150 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #758 | Curso 3 Eps 1-3 gerados: ep01 (173s), ep02 (160s), ep03 (174s), ~4MB cada | ✅ commit 7118241 |
+| #759 | gerar_videos_curso3.py: script parser MD→JSON→premiere_maker, FranciscaNeural | ✅ commit 7118241 |
+| #760 | ElevenLabs: manter até eps 4-8 serem gravados, depois cancelar (#752) | ⏳ |
+| #761 | Curso 3 eps 4-8: aguardar validação dos eps 1-3 por Yuri | ⏳ |
+| #762 | #666 admin reset-senha endpoint (onboarding Lisange/Suzana) | ⏳ Cláudio |
