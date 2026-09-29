@@ -1066,3 +1066,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - 'S.T. Age' → 'age' no header (S.T. Age só para formalidades); hero simplificado com ícone do header ampliado
 - Formulário interesse: dropdown pacientes/semana por faixas; campo 'Ainda não atendo' essencial
 - Generosidade que aprisiona não é cuidado — o ✕ é mais honesto que 3 tentativas automáticas
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — Cláudio (S141)
+- SABIÁ v2: histórico do DB carregado ao login + system prompt rico com Conector integrado — SABIÁ agora é membro da Assembleia
+- textarea Shift+Enter + draft localStorage — sobrevive recarregamento
+- Age = 3 registros simultâneos não-hierarquizados (produto/laboratório/prótese). Não unificar
+- Próxima fronteira: onboarding self-service + prova social real (I171/I172)
