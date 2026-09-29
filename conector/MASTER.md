@@ -1111,3 +1111,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - Curso 3 eps 1-3 gerados (FranciscaNeural, ~170s cada, ~4MB, tema escuro)
 - gerar_videos_curso3.py: MD→cenas→TTS→JSON→premiere_maker, corte automático em Notas
 - #754✅ · eps 4-8 aguardam validação Yuri
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — Cláudio (S151)
+- Bumpers 4 produtos finalizados com frases Assembleia #719 (inversão de polaridade como padrão retórico)
+- VEED: Calculus+PAP recebem tratamento especial (mascotes+gamificação), ST+Age word-only
+- Motion graphics: Remotion é o stack certo para o futuro, 1 sessão para texto animado básico
+- A716-A718 eram confirmativas, não deliberativas — qualidade voltou em #719
