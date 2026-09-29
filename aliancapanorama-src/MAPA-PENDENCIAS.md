@@ -941,3 +941,18 @@
 | #688 | I169: seção "Jardineiro do Tempo" — avaliar após primeiros profissionais | ⏳ |
 | #689 | pg_dump Replit URGENTE antes de 30/09 | ⚠️ |
 | #690 | UptimeRobot: monitor /api/healthz a cada 5min (previne cold start SABIÁ) | ⏳ |
+
+
+---
+## Assembleia #709 · 2026-09-29 (Sessão #141 — Cláudio)
+
+| # | Item | Status |
+|---|---|---|
+| #691 | #709 processada — revisão frases + diagnóstico 3 registros simultâneos + lacunas operacionais | ✅ |
+| #692 | SABIÁ v2 implementada: histórico persistente + textarea + draft localStorage + Conector | ✅ |
+| #693 | I170: narrativa de ROI no pricing ("1 consulta salva = plano pago") | ⏳ |
+| #694 | I171: onboarding self-service (do zero ao primeiro agendamento em 10min) | ⏳ |
+| #695 | I172: CTA "Testar como paciente" — agenda demo sandbox | ⏳ |
+| #696 | "Tecnologia Médica" como posicionamento: testar com 3-5 profissionais reais antes de mudar | ⏳ |
+| #697 | Prova social real: conseguir 1 depoimento autêntico de beta tester usando SABIÁ em produção | ⏳ |
+| #698 | UptimeRobot: configurar ping /api/healthz a cada 5min (resolve cold start SABIÁ) | ⏳ |

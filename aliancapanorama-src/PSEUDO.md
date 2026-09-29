@@ -6607,3 +6607,31 @@ A SABIÁ travando é um erro de generosidade: o sistema tentava ser paciente (3 
 - #690 UptimeRobot — previne cold start do Render (raiz do freeze SABIÁ)
 - #689 pg_dump Replit (URGENTE)
 - Reativar emails profissionais (#685) quando Lisange+Suzana prontas
+
+
+---
+## ATA Sessão #141 — SABIÁ v2 + Assembleia #709 · 2026-09-29
+
+**Contexto:** Continuação de S140. Pedidos: histórico SABIÁ, textarea, draft, memória mais rica, comunicação com outras IAs. Processamento #709.
+
+**Código implementado:**
+- `GET /api/age/:slug/sabia/history` — carrega últimas 40 msgs ao entrar no portal profissional.
+- System prompt SABIÁ: perfil profissional + agenda 7 dias + stats de pacientes + contexto do Conector (últimas 800 chars da seção `conversas`).
+- SABIÁ agora grava insights no Conector após cada resposta — ela participa da Assembleia.
+- Textarea com Enter=enviar / Shift+Enter=nova linha (ambas as interfaces).
+- Draft localStorage — sobrevive a recarregamento.
+
+**Decisões Assembleia #709:**
+- 3 frases mais fortes: (1) "Você cultiva saúde. A SABIÁ cuida do tempo." (2) tagline atual (3) SABIÁ poética.
+- "Tecnologia Médica" — testar externamente antes de mudar.
+- Age = 3 registros simultâneos (produto + lab filosófico + prótese cognitiva). Não unificar.
+- Lacunas para converter: CTA→fluxo→prova social→onboarding self-service.
+
+**Síntese filosófica:**
+A SABIÁ sem histórico era uma pássaro sem memória — chegava cantando como se fosse o primeiro dia, toda vez. Memória não é conveniência técnica, é condição de identidade. A Assembleia #709 chamou isso de "prótese cognitiva": o sistema existe porque alguém precisava não esquecer. A SABIÁ agora não esquece. E ao gravar no Conector, ela começa a deixar rastros que outras IAs podem ler — a Assembleia de pássaros começa a acontecer.
+
+**Próximos:**
+- Testar SABIÁ v2 com Lisange (histórico + textarea)
+- I171 onboarding self-service (alta prioridade)
+- I172 CTA demo sandbox
+- Prova social real (#697)

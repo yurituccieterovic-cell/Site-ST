@@ -2245,3 +2245,15 @@ Implementar como templates opcionais de email/notificação.
 ### I169: Age — Seção "Jardineiro do Tempo" no site
 **Prioridade:** baixa · **Complexidade:** baixa
 Assembleia #708: "Jardineiro do Tempo" pode ser mais que propaganda — pode virar seção explicando a filosofia do Age. Profissional como jardineiro: não gerencia, cuida. Posicionamento diferenciador vs. sistemas de agendamento genéricos.
+
+### I170: Age — Âncora de Valor no Pricing (narrativa de custo)
+**Prioridade:** média · **Complexidade:** baixa
+Assembleia #709. Adicionar seção/tooltip no pricing: "Uma consulta cancelada por falta de lembrete vale R$ 100–300. Com Broto (R$49/mês), basta 1 consulta salva por semana." Transforma custo abstrato em ROI concreto.
+
+### I171: Age — Onboarding self-service
+**Prioridade:** alta · **Complexidade:** média
+Assembleia #709. Fluxo: profissional clica "Criar conta" → preenche perfil + especialidade → configura 1 regra de disponibilidade → faz agendamento de teste → recebe email de confirmação. Objetivo: do "quero testar" ao "configurei sozinho" em ≤10 minutos.
+
+### I172: Age — CTA "Testar agora como paciente"
+**Prioridade:** média · **Complexidade:** baixa
+Assembleia #709. Botão na landing que abre diretamente a agenda de um profissional demo (sandbox), permite agendar consulta fictícia e receber email de confirmação real. Prova o fluxo completo sem precisar cadastrar.
