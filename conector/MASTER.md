@@ -1097,3 +1097,10 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 ### 2026-09-29 — ATA #fim S143–S146
 - DECISÕES: SABIÁ pública separada da profissional; upsert paciente no booking; exceção com validação; banner pergunta persistente 90s
 - PRÓXIMOS PASSOS: Oracle VM ARM, pg_dump Replit URGENTE, conta gestora Mayumi, onboarding self-service I171
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — ATA #fim S149
+- #processo S135-S146: 11 sessões Age 2.0, gaveta Mayumi, SABIÁ com histórico, feed colorido, 6 bugs
+- Assembleia #715: Curso 3 eco-respiração, eps 1-3 gerados
+- Oracle bloqueado; UptimeRobot previne Render spin-down
