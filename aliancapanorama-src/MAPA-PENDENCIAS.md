@@ -1022,3 +1022,21 @@
 | #736 | I183: Calendário completo AgendaView (drag/drop) | ⏳ Fase2+ |
 | #737 | I184: Retry automático booking cold start Render | ⏳ |
 | #738 | Jesus em Lisange: Render estava em cold start na tentativa — slots OK, booking OK em condições normais | 🔍 Monitorar |
+
+## S146 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #739 | SABIÁ pública: sendSabia usa /sabia-public para não-profissionais | ✅ |
+| #740 | Jesus como paciente: upsert no /book após criar consulta | ✅ |
+| #741 | addException: validação hora início+fim juntos + toast | ✅ |
+| #742 | addRule: toast confirmação + reload slots | ✅ |
+| #743 | Banner pergunta persistente até resposta (poll 90s, botão fechar) | ✅ |
+| #744 | /interesse: email admin (force:true) + confirmação remetente | ✅ |
+| #745 | /sabia-public: endpoint público sem requireAgeAuth | ✅ |
+| #746 | MacroATA final enviada para Assembleia (S143–S146) | ✅ |
+| #747 | Logins Lisange/Suzana enviados para Yuri e Mayumi | ✅ |
+| #748 | Mayumi: criar conta gestora no Age | ⏳ Yuri |
+| #749 | pg_dump Replit URGENTE | ⚠️ Yuri |
+| #750 | Oracle Always Free VM ARM — Render free tier spin-down | ⏳ Yuri |
+

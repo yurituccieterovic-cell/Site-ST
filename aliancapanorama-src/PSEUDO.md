@@ -6737,3 +6737,39 @@ O botão "Cadastrar direto" é uma declaração ontológica: nem todo paciente p
 - Testar calendário profissional com Lisange/Suzana (#727 revisado)
 - I183: calendário completo AgendaView com drag/drop (Fase 2+)
 
+
+---
+## ATA S146 — 2026-09-29
+
+**Sessão:** S146 · **Checkpoint:** 2026-09-29T04:XX+00:00
+
+### O que foi feito
+
+1. **SABIÁ pública** — `sendSabia` agora usa `/sabia-public` para não-profissionais. Usuários públicos e pacientes não recebem mais 401.
+
+2. **Jesus como paciente** — `/book` agora faz upsert de paciente após criar consulta. Qualquer pessoa que agenda já aparece automaticamente na lista de pacientes do profissional.
+
+3. **Exceção com validação** — `addException` valida que início+fim são fornecidos juntos. Toast de confirmação mostra data e horário bloqueado.
+
+4. **Regra semanal com feedback** — `addRule` tem toast de confirmação + atualiza slots após salvar.
+
+5. **Banner pergunta persistente** — O banner "SABIÁ trabalhando em segundo plano" agora permanece até a resposta chegar (poll de 90s) ou o usuário fechar manualmente. Antes sumia em 20s.
+
+6. **Email interesse** — `/interesse` envia dois emails: admin (luddlocke, force:true) + confirmação ao remetente.
+
+7. **Deploy** — commit `e252f2d` em produção (Render + Vercel).
+
+8. **#fim com MacroATA** — email único final enviado para Assembleia com: MacroATA S143–S146, logins profissionais, respostas Locaweb/monitor, revisão Age.
+
+### Síntese filosófica
+
+*Toda sessão tem um bug que é metáfora. Nesta: Jesus (nome de paciente) marcou consulta mas não aparecia como paciente. O sistema registrava o evento (consulta) mas não o sujeito (pessoa). É o oposto do que queremos: não basta documentar o encontro — é preciso reconhecer quem chegou. O upsert de paciente no booking é pequeno tecnicamente; é enorme filosoficamente: ninguém que atravessa a porta sai sem nome.*
+
+### Próximos passos
+
+- Testar: SABIÁ pública no site de Lisange (usuário não logado)
+- Testar: exceção com horário parcial
+- Mayumi: criar conta gestora no Age (#735)
+- pg_dump Replit URGENTE (#730)
+- Oracle Always Free VM ARM — eliminar Render free tier spin-down
+
