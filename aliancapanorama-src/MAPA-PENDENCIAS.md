@@ -1062,3 +1062,16 @@
 | #760 | ElevenLabs: manter até eps 4-8 serem gravados, depois cancelar (#752) | ⏳ |
 | #761 | Curso 3 eps 4-8: aguardar validação dos eps 1-3 por Yuri | ⏳ |
 | #762 | #666 admin reset-senha endpoint (onboarding Lisange/Suzana) | ⏳ Cláudio |
+
+## S151 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #763 | Bumpers v2 regravados com textos #719: ST/PAP/Calculus/Age | ✅ commit 7b8bfbd |
+| #764 | Email guia VEED passo a passo enviado para Yuri | ✅ enviado |
+| #765 | Assembleia #720 enviada: decisões finalizadas + motion graphics | ✅ enviado |
+| #766 | VEED Calculus: B-roll arara/ábaco + 9:16 (~80-100 créditos) | ⏳ Yuri |
+| #767 | VEED PAP: overlay gamificação + 9:16 (~40-60 créditos) | ⏳ Yuri |
+| #768 | Publicar ST e Age bumpers sem VEED (já prontos) | ⏳ Yuri |
+| #769 | Curso 3: intro 42s + poster 1080×1080 + metadados YouTube (eps 1-3) | ⏳ Cláudio |
+| #770 | Motion graphics Remotion: avaliar após RESULTADO Assembleia #720 | ⏳ |

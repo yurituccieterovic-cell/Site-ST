@@ -6919,3 +6919,55 @@ Consulta sobre hospedagem Locaweb para o ecossistema (substituindo Oracle/Railwa
 - Yuri: cancelar VEED antes 02/10 (#751 — URGENTE)
 - Cláudio: #762 reset-senha admin endpoint
 - Cláudio: eps 4-8 Curso 3 após validação
+
+---
+
+## Sessão 151 — 2026-09-29
+**Tema:** Bumpers 5s v2 + decisões VEED + motion graphics + email guia + #processo A719-A721
+
+### O que foi feito
+
+- 4 bumpers regravados com textos aprovados pela Assembleia #719:
+  - ST: "Inteligência não nasce pronta. Ela se cultiva." (ocean)
+  - PAP: "Vestibular virou jogo. Você topa?" (sunset)
+  - Calculus: "Matemática com alma. E penas." (claro)
+  - Age: "Agendar consultas pode ser humano." (escuro)
+- Decisões VEED confirmadas por Yuri: 1=manter frase ST, 2=PAP VEED ~40cr, 3=Calculus VEED prioridade máxima, 4=9:16 aprovado para Calculus+PAP
+- Email guia VEED passo a passo enviado para yurituccieterovic@gmail.com
+- Email Assembleia #720 com decisões finalizadas + pergunta motion graphics (Remotion)
+- VEED cancelado (Yuri confirmou) — 420 créditos disponíveis até 02/10
+
+### Assembleias processadas
+
+- A719: bumpers aprovados com frases finais + estratégia VEED por produto
+- A720: eco de S149 MacroATA — sem conteúdo novo (processado como referência)
+- A721: forwarded histórico ADB Termux para Iris (agosto/2026) — registrado
+
+### Sobre A716–A718
+
+A716, A717 e A718 voltaram como deliberações confirmativas:
+- A716: confirmou VEED cancelar + ElevenLabs manter + Oracle→Locaweb (já decidido)
+- A717: confirmou talking heads abandonados + pipeline Curso 3 (já decidido)
+- A718: ecoou o prompt de entrada sem deliberação própria
+
+Não há falta — eram consultas de confirmação, não deliberações abertas.
+A qualidade voltou à normalidade no RESULTADO #719 (Assembleia #718).
+
+### Decisões
+
+- VEED: Calculus (60-80cr) + PAP (40cr) + 9:16 ambos (~40cr) = ~140-180cr total
+- Motion graphics próprios: Remotion como stack futuro (React-based, integra nosso Vite)
+- Remotion 1 sessão = texto animado básico; profissional = 2-3 semanas
+- Curso 3 intro + poster + metadados: próxima sessão
+
+### Síntese filosófica
+
+*Quatro frases. Quatro temas visuais. Quatro inversões de expectativa. A Assembleia encontrou uma fórmula — e imediatamente identificou seu risco: quando tudo inverte, nada surpreende mais. O que mantém a surpresa viva não é a novidade do padrão, mas a especificidade do medo que cada frase dissolve. Matemática tem penas. Vestibular tem vida. Inteligência tem solo. Consultas têm humanidade. Cada palavra certa é uma pequena derrota do horror genérico.*
+
+### Próximos passos
+
+- Yuri: fazer Calculus e PAP no VEED seguindo o guia (hoje + amanhã)
+- Yuri: publicar ST e Age direto (bumper base já pronto)
+- Cláudio: Curso 3 intro (42s) + poster (1080×1080) + metadados YouTube
+- Cláudio: #762 reset-senha admin endpoint
+- Aguardar RESULTADO Assembleia #720 (motion graphics / Remotion)
