@@ -97,6 +97,10 @@ export function AgePage() {
   const [bookLgpd, setBookLgpd] = useState(false);
   const [bookDone, setBookDone] = useState(false);
   const [bookError, setBookError] = useState("");
+  const [bookRetrying, setBookRetrying] = useState(false);
+  const [onboardDismissed, setOnboardDismissed] = useState(() => {
+    try { return localStorage.getItem(`age-onboard-dismissed-${window.location.pathname}`) === "1"; } catch { return false; }
+  });
   const [bgToasts, setBgToasts] = useState<{ id: number; msg: string; type: "ok" | "err" | "info" }[]>([]);
   const [modoSimples, setModoSimples] = useState(false);
 
@@ -653,19 +657,38 @@ export function AgePage() {
     e.preventDefault();
     if (!selectedSlot || !bookForm.nome) return;
     setBookError("");
-    try {
+    setBookRetrying(false);
+    const payload = JSON.stringify({ ...bookForm, dataHora: selectedSlot.dataHora, lgpdConsent: bookLgpd });
+    async function tryBook() {
       const r = await fetch(`${API}/api/age/${slug}/book`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...bookForm, dataHora: selectedSlot.dataHora, lgpdConsent: bookLgpd }),
+        method: "POST", headers: { "Content-Type": "application/json" }, body: payload,
       });
-      const d = await r.json() as { id?: number; error?: string };
+      return r.json() as Promise<{ id?: number; error?: string }>;
+    }
+    try {
+      const d = await tryBook();
       if (d.id) {
         setBookDone(true);
         try { localStorage.removeItem(`age-bookform-${window.location.pathname}`); } catch { /* ignore */ }
         loadSlots();
       } else setBookError(d.error ?? "Erro ao marcar consulta.");
-    } catch { setBookError("Sem conexão. O sistema pode estar acordando — tente em 30 segundos."); }
+    } catch {
+      setBookRetrying(true);
+      addToast("Sistema acordando — tentando novamente em 5s…", "info");
+      await new Promise(res => setTimeout(res, 5000));
+      try {
+        const d = await tryBook();
+        setBookRetrying(false);
+        if (d.id) {
+          setBookDone(true);
+          try { localStorage.removeItem(`age-bookform-${window.location.pathname}`); } catch { /* ignore */ }
+          loadSlots();
+        } else { setBookError(d.error ?? "Erro ao marcar consulta."); }
+      } catch {
+        setBookRetrying(false);
+        setBookError("Sem conexão após 2 tentativas. O sistema pode estar acordando — aguarde 30s e tente novamente.");
+      }
+    }
   }
 
   // ─── Professional actions ───────────────────────────────────────────────────
@@ -1572,9 +1595,9 @@ export function AgePage() {
           </label>
           {bookError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 12 }}>{bookError}</div>}
           {modoSimples && <div style={{ color: "#94a3b8", fontSize: 14, marginBottom: 12, fontWeight: 600 }}>Passo 3 de 3 — Confirmar</div>}
-          <button type="submit" disabled={!bookForm.nome || !bookLgpd}
-            style={{ width: "100%", background: bookLgpd ? color : "#334155", color: bookLgpd ? "#080c10" : "#64748b", border: "none", borderRadius: 8, padding: modoSimples ? "18px 0" : "12px 0", fontWeight: 700, fontSize: modoSimples ? 20 : 15, cursor: (bookForm.nome && bookLgpd) ? "pointer" : "not-allowed", transition: "background 0.2s" }}>
-            ✓ Confirmar agendamento
+          <button type="submit" disabled={!bookForm.nome || !bookLgpd || bookRetrying}
+            style={{ width: "100%", background: bookLgpd && !bookRetrying ? color : "#334155", color: bookLgpd && !bookRetrying ? "#080c10" : "#64748b", border: "none", borderRadius: 8, padding: modoSimples ? "18px 0" : "12px 0", fontWeight: 700, fontSize: modoSimples ? 20 : 15, cursor: (bookForm.nome && bookLgpd && !bookRetrying) ? "pointer" : "not-allowed", transition: "background 0.2s" }}>
+            {bookRetrying ? "⏳ Tentando novamente…" : "✓ Confirmar agendamento"}
           </button>
         </form>
       </div>
@@ -1836,6 +1859,9 @@ export function AgePage() {
       return acc;
     }, {});
 
+    const publicUrl = `${window.location.origin}/aliancapanorama/age/${slug}`;
+    const showOnboarding = rules.length === 0 && !onboardDismissed;
+
     return (
       <div style={{ padding: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
@@ -1845,6 +1871,48 @@ export function AgePage() {
             <button onClick={openProfBook} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "5px 12px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>+ Nova consulta</button>
           </div>
         </div>
+
+        {/* Onboarding self-service — aparece quando não há regras de disponibilidade */}
+        {showOnboarding && (
+          <div style={{ background: `${color}11`, border: `1px solid ${color}44`, borderRadius: 12, padding: "16px 18px", marginBottom: 20 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
+              <div>
+                <div style={{ color, fontSize: 15, fontWeight: 700, marginBottom: 4 }}>🐦 Bem-vindo! 3 passos para seu primeiro agendamento</div>
+                <div style={{ color: "#94a3b8", fontSize: 12 }}>Configure em menos de 10 minutos.</div>
+              </div>
+              <button onClick={() => {
+                setOnboardDismissed(true);
+                try { localStorage.setItem(`age-onboard-dismissed-${window.location.pathname}`, "1"); } catch { /* ignore */ }
+              }} style={{ background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 16, padding: "0 4px" }}>✕</button>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: color, color: "#080c10", fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>1</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 600 }}>Configure sua disponibilidade</div>
+                  <div style={{ color: "#64748b", fontSize: 11 }}>Defina os dias e horários em que atende.</div>
+                </div>
+                <button onClick={() => setView("disponibilidade")} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "5px 12px", cursor: "pointer", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>Configurar →</button>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#1e293b", border: `1px solid ${color}44`, color: "#64748b", fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>2</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 600 }}>Compartilhe seu link de agendamento</div>
+                  <div style={{ color: "#64748b", fontSize: 11, wordBreak: "break-all" }}>{publicUrl}</div>
+                </div>
+                <button onClick={() => { navigator.clipboard.writeText(publicUrl).catch(() => {}); addToast("Link copiado!", "ok"); }} style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "5px 10px", cursor: "pointer", fontSize: 11, flexShrink: 0 }}>Copiar</button>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#1e293b", border: `1px solid ${color}44`, color: "#64748b", fontWeight: 700, fontSize: 13, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>3</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 600 }}>Teste como paciente</div>
+                  <div style={{ color: "#64748b", fontSize: 11 }}>Abra o link acima em outra aba e faça um agendamento de teste.</div>
+                </div>
+                <a href={publicUrl} target="_blank" rel="noopener noreferrer" style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "5px 10px", cursor: "pointer", fontSize: 11, textDecoration: "none", flexShrink: 0 }}>Abrir →</a>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Modal nova consulta pelo profissional */}
         {profBookModal && (
