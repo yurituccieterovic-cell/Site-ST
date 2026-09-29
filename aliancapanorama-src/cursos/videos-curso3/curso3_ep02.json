@@ -1,0 +1,59 @@
+[
+  {
+    "titulo": "Episódio 2",
+    "subtitulo": "A Respiração das Cidades",
+    "texto": "Metabolismo urbano — energia, resíduos, fluxos",
+    "naracao": "Curso 3: Respirar com o Planeta. Episódio 2: A Respiração das Cidades. Metabolismo urbano — energia, resíduos, fluxos",
+    "duracao": 10.1,
+    "logo": true
+  },
+  {
+    "titulo": "A CIDADE TAMBÉM RESPIRA",
+    "subtitulo": "Episódio 2 · Cena 1",
+    "texto": "Uma cidade consome. Água, energia, alimentos, dados. Ela processa — fabrica, transporta, vende, descarta.",
+    "naracao": "Uma cidade consome. Água, energia, alimentos, dados. Ela processa — fabrica, transporta, vende, descarta. E ela excreta: esgoto, lixo, calor, C O 2. Esse ciclo tem nome: metabolismo urbano. E ele está sufocando.",
+    "duracao": 16.7
+  },
+  {
+    "titulo": "O FLUXO QUEBRADO",
+    "subtitulo": "Episódio 2 · Cena 2",
+    "texto": "Antigamente, cidades pequenas eram quase circulares: o que entrava como recurso saía como adubo ou voltava para a terra. Hoje, São Paulo consome 200 mil toneladas de alimentos por dia. E exporta quase o mesmo volume d...",
+    "naracao": "Antigamente, cidades pequenas eram quase circulares: o que entrava como recurso saía como adubo ou voltava para a terra. Hoje, São Paulo consome 200 mil toneladas de alimentos por dia. E exporta quase o mesmo volume de resíduos — para aterros distantes, rios poluídos, atmosfera. O loop não fecha. É como rodar um programa com vazamento de memória: cresce, cresce, até travar.",
+    "duracao": 24.6
+  },
+  {
+    "titulo": "ENERGIA, O COMBUSTÍVEL INVISÍVEL",
+    "subtitulo": "Episódio 2 · Cena 3",
+    "texto": "Cada like, cada streaming, cada reunião no Zoom consome energia. A maior parte vem de termoelétricas — que queimam gás, carvão, óleo. A pegada de carbono da internet global já supera a da aviação.",
+    "naracao": "Cada like, cada streaming, cada reunião no Zoom consome energia. A maior parte vem de termoelétricas — que queimam gás, carvão, óleo. A pegada de carbono da internet global já supera a da aviação. Cidades digitais ainda respiram carbono fóssil. E isso não aparece na tela.",
+    "duracao": 18.4
+  },
+  {
+    "titulo": "RESÍDUOS COMO BUGS NO SISTEMA",
+    "subtitulo": "Episódio 2 · Cena 4",
+    "texto": "Um programa bem escrito não deixa lixo na memória. Uma cidade bem projetada não deveria gerar \"resíduo final\". Tudo que sai de um processo deveria ser entrada de outro.",
+    "naracao": "Um programa bem escrito não deixa lixo na memória. Uma cidade bem projetada não deveria gerar \"resíduo final\". Tudo que sai de um processo deveria ser entrada de outro. Plástico vira matéria-prima. Esgoto vira biogás. Calor residual aquece estufas. Isso existe. Chama-se economia circular. Mas ainda é exceção, não regra.",
+    "duracao": 22.0
+  },
+  {
+    "titulo": "MOBILIDADE: O GARGALO DO FLUXO",
+    "subtitulo": "Episódio 2 · Cena 5",
+    "texto": "O trânsito de uma cidade é o gargalo de I/O de um sistema operacional antigo. Muitos carros, poucas vias, latência alta. O custo?",
+    "naracao": "O trânsito de uma cidade é o gargalo de I/O de um sistema operacional antigo. Muitos carros, poucas vias, latência alta. O custo? Tempo humano, combustível, estresse, poluição. A solução não é só mais vias — é mudar o protocolo. Transporte coletivo eficiente, bicicletas, algoritmos de roteamento inteligente. Redesenhar o fluxo, não alargar o tubo.",
+    "duracao": 23.7
+  },
+  {
+    "titulo": "A CIDADE QUE ESCUTA",
+    "subtitulo": "Episódio 2 · Cena 6",
+    "texto": "Algumas cidades já usam sensores de qualidade do ar, consumo de água, temperatura, ruído. Dados em tempo real permitem ajustes: reduzir irrigação onde choveu, otimizar semáforos, alertar sobre enchentes. Isso é respir...",
+    "naracao": "Algumas cidades já usam sensores de qualidade do ar, consumo de água, temperatura, ruído. Dados em tempo real permitem ajustes: reduzir irrigação onde choveu, otimizar semáforos, alertar sobre enchentes. Isso é respiração assistida por IA. A cidade se torna um organismo que sente — e responde.",
+    "duracao": 21.2
+  },
+  {
+    "titulo": "SÍNTESE",
+    "subtitulo": "Episódio 2 · Cena 7",
+    "texto": "Neste episódio, vimos: Metabolismo urbano como sistema de fluxos O custo oculto da energia digital Economia circular como design sem desperdício Sensoriamento urbano como \"sistema nervoso\" da cidade No próximo episódi...",
+    "naracao": "Neste episódio, vimos: Metabolismo urbano como sistema de fluxos O custo oculto da energia digital Economia circular como design sem desperdício Sensoriamento urbano como \"sistema nervoso\" da cidade No próximo episódio: o custo invisível de pensar — a pegada de carbono da inteligência artificial. Até lá: olhe sua cidade. Ela está respirando?",
+    "duracao": 23.2
+  }
+]
