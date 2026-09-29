@@ -104,189 +104,200 @@ def rounded_rect(draw, xy, radius: int, fill):
 
 # ─── Renderizar slide base ────────────────────────────────────────────────────
 
-def render_slide(slide: dict, idx: int, total: int, tmp_dir: str, tema: dict) -> str:
-    # Cores: slide pode sobrescrever tema
-    bg_hex      = slide.get("cor_fundo",     tema["bg"])
-    titulo_hex  = slide.get("cor_titulo",    tema["titulo"])
-    texto_hex   = slide.get("cor_texto",     tema["texto"])
-    sub_hex     = slide.get("cor_subtitulo", tema["sub"])
-    acento_rgb  = cor(titulo_hex)
-    bg_rgb      = cor(bg_hex)
+def _build_slide_image(slide: dict, idx: int, total: int, tema: dict,
+                       skip_titulo: bool = False, skip_texto: bool = False) -> Image.Image:
+    """Renderiza slide como PIL Image. skip_* para gerar keyframes de animação."""
+    bg_hex     = slide.get("cor_fundo",     tema["bg"])
+    titulo_hex = slide.get("cor_titulo",    tema["titulo"])
+    texto_hex  = slide.get("cor_texto",     tema["texto"])
+    sub_hex    = slide.get("cor_subtitulo", tema["sub"])
+    acento_rgb = cor(titulo_hex)
+    bg_rgb     = cor(bg_hex)
 
-    titulo    = slide.get("titulo", "")
-    texto     = slide.get("texto", "")
-    subtitulo = slide.get("subtitulo", "")
+    titulo    = "" if skip_titulo else slide.get("titulo", "")
+    texto     = "" if (skip_texto or skip_titulo) else slide.get("texto", "")
+    subtitulo = "" if skip_titulo else slide.get("subtitulo", "")
     tem_logo  = slide.get("logo", True)
     layout    = slide.get("layout", "default")
 
-    img = Image.new("RGB", (W, H), color=bg_rgb)
+    img  = Image.new("RGB", (W, H), color=bg_rgb)
     gradient_bg(img, bg_rgb, acento_rgb)
     draw = ImageDraw.ImageDraw(img)
 
-    # ── Decoração de fundo: pontos sutis ──
     for xi in range(0, W, 60):
         for yi in range(0, H, 60):
             r_val = int(bg_rgb[0] * 1.4)
             g_val = int(bg_rgb[1] * 1.4)
             b_val = int(bg_rgb[2] * 1.4)
-            draw.ellipse([(xi - 1, yi - 1), (xi + 1, yi + 1)],
-                         fill=(min(255, r_val), min(255, g_val), min(255, b_val)))
+            draw.ellipse([(xi-1,yi-1),(xi+1,yi+1)],
+                         fill=(min(255,r_val),min(255,g_val),min(255,b_val)))
 
-    # ── Layout centralizado ──
     if layout == "centralizado":
-        area_x = 80
-        area_w = W - 160
+        area_x, area_w = 80, W - 160
         y = H // 4
-
         if subtitulo:
             f_sub = load_font(FONT_NORMAL, 20)
             draw_multiline(draw, subtitulo.upper(), area_x, y, f_sub, cor(sub_hex), area_w, align="center")
             y += 36
-
         if titulo:
             f_sz = 64 if len(titulo) < 30 else 52 if len(titulo) < 50 else 40
             f_titulo = load_font(FONT_BOLD, f_sz)
             y = draw_multiline(draw, titulo, area_x, y, f_titulo, cor(titulo_hex), area_w, 8, "center")
             y += 16
-
-        # Linha horizontal centrada
         if titulo and texto:
-            line_w = 100
             mid = W // 2
-            draw.line([(mid - line_w // 2, y), (mid + line_w // 2, y)], fill=acento_rgb, width=3)
+            draw.line([(mid-50, y),(mid+50, y)], fill=acento_rgb, width=3)
             y += 20
-
         if texto:
             f_texto = load_font(FONT_NORMAL, 26)
             draw_multiline(draw, texto, area_x, y, f_texto, cor(texto_hex), area_w, 10, "center")
 
-    # ── Layout split (imagem à esquerda) ──
     elif layout == "splitdir" and slide.get("imagem") and os.path.exists(slide["imagem"]):
         try:
             thumb = Image.open(slide["imagem"]).convert("RGBA")
-            img_w = W // 2 - 40
-            img_h = H - 80
+            img_w, img_h = W//2-40, H-80
             thumb.thumbnail((img_w, img_h))
-            ix = 20
-            iy = (H - thumb.height) // 2
-            img.paste(thumb, (ix, iy), thumb if thumb.mode == "RGBA" else None)
+            img.paste(thumb, (20, (H-thumb.height)//2), thumb if thumb.mode=="RGBA" else None)
         except Exception:
             pass
-
-        area_x = W // 2 + 20
-        area_w = W // 2 - 60
+        area_x, area_w = W//2+20, W//2-60
         y = 100
         if subtitulo:
             f_sub = load_font(FONT_NORMAL, 18)
-            draw.text((area_x, y), subtitulo.upper(), font=f_sub, fill=cor(sub_hex))
-            y += 32
+            draw.text((area_x, y), subtitulo.upper(), font=f_sub, fill=cor(sub_hex)); y += 32
         if titulo:
             f_sz = 44 if len(titulo) < 40 else 34
             f_titulo = load_font(FONT_BOLD, f_sz)
-            y = draw_multiline(draw, titulo, area_x, y, f_titulo, cor(titulo_hex), area_w, 6)
-            y += 16
+            y = draw_multiline(draw, titulo, area_x, y, f_titulo, cor(titulo_hex), area_w, 6); y += 16
         if titulo and texto:
-            draw.line([(area_x, y), (area_x + 60, y)], fill=acento_rgb, width=3)
-            y += 16
+            draw.line([(area_x,y),(area_x+60,y)], fill=acento_rgb, width=3); y += 16
         if texto:
             f_texto = load_font(FONT_NORMAL, 24)
             draw_multiline(draw, texto, area_x, y, f_texto, cor(texto_hex), area_w, 9)
 
-    # ── Layout padrão (barra lateral) ──
-    else:
-        # Barra lateral esquerda com gradiente
+    else:  # default
         for xi in range(10):
-            opacity = int(200 * (1 - xi / 10))
-            draw.line([(55 + xi, 70), (55 + xi, H - 70)], fill=(*acento_rgb, opacity))
-
-        area_x = 90
-        area_w = W - 140
+            opacity = int(200 * (1 - xi/10))
+            draw.line([(55+xi,70),(55+xi,H-70)], fill=(*acento_rgb, opacity))
+        area_x, area_w = 90, W - 140
         y = 90
-
         if subtitulo:
             f_sub = load_font(FONT_NORMAL, 20)
-            draw.text((area_x, y), subtitulo.upper(), font=f_sub, fill=cor(sub_hex))
-            y += 34
-
+            draw.text((area_x, y), subtitulo.upper(), font=f_sub, fill=cor(sub_hex)); y += 34
         if titulo:
-            f_sz = 58 if len(titulo) < 35 else 46 if len(titulo) < 55 else 36
+            f_sz = 58 if len(titulo)<35 else 46 if len(titulo)<55 else 36
             f_titulo = load_font(FONT_BOLD, f_sz)
-            # Sombra sutil
-            draw_multiline(draw, titulo, area_x + 2, y + 2, f_titulo,
-                          (0, 0, 0), area_w, 8)
-            y = draw_multiline(draw, titulo, area_x, y, f_titulo, cor(titulo_hex), area_w, 8)
-            y += 20
-
+            draw_multiline(draw, titulo, area_x+2, y+2, f_titulo, (0,0,0), area_w, 8)
+            y = draw_multiline(draw, titulo, area_x, y, f_titulo, cor(titulo_hex), area_w, 8); y += 20
         if titulo and texto:
-            draw.line([(area_x, y), (area_x + 90, y)], fill=acento_rgb, width=3)
-            y += 18
-
+            draw.line([(area_x,y),(area_x+90,y)], fill=acento_rgb, width=3); y += 18
         if texto:
             f_texto = load_font(FONT_NORMAL, 28)
             draw_multiline(draw, texto, area_x, y, f_texto, cor(texto_hex), area_w, 11)
-
-        # Imagem no canto direito (layout default com imagem)
         imagem_path = slide.get("imagem")
         if layout != "splitdir" and imagem_path and os.path.exists(imagem_path):
             try:
                 thumb = Image.open(imagem_path).convert("RGBA")
                 thumb.thumbnail((340, 280))
-                img.paste(thumb, (W - thumb.width - 30, (H - thumb.height) // 2),
-                          thumb if thumb.mode == "RGBA" else None)
+                img.paste(thumb, (W-thumb.width-30,(H-thumb.height)//2),
+                          thumb if thumb.mode=="RGBA" else None)
             except Exception:
                 pass
 
-    # Logo ST
     if tem_logo:
         f_logo = load_font(FONT_MONO, 16)
-        draw.text((W - 210, H - 30), LOGO_TEXT, font=f_logo, fill=(*cor(sub_hex), 140))
-
-    # Barra de progresso no rodapé
+        draw.text((W-210, H-30), LOGO_TEXT, font=f_logo, fill=(*cor(sub_hex),140))
     draw_progress_bar(draw, idx, total, acento_rgb)
-
-    # Número do slide (canto inferior esquerdo)
     f_num = load_font(FONT_MONO, 14)
-    draw.text((10, H - 26), f"{idx + 1}/{total}", font=f_num, fill=(*acento_rgb, 120))
+    draw.text((10, H-26), f"{idx+1}/{total}", font=f_num, fill=(*acento_rgb,120))
+    return img
 
+
+def render_slide(slide: dict, idx: int, total: int, tmp_dir: str, tema: dict) -> str:
+    img  = _build_slide_image(slide, idx, total, tema)
     path = os.path.join(tmp_dir, f"slide_{idx:04d}.png")
     img.save(path, quality=95)
     return path
 
 # ─── Fade-in frame por frame ─────────────────────────────────────────────────
 
+def _apply_zoom(img: Image.Image, t: float, zoom_range: float = 0.06) -> Image.Image:
+    """Ken Burns: zoom suave de 100% → 100+zoom_range%."""
+    scale = 1.0 + t * zoom_range
+    sw, sh = int(W * scale), int(H * scale)
+    zoomed = img.resize((sw, sh), Image.LANCZOS)
+    left, top = (sw - W) // 2, (sh - H) // 2
+    return zoomed.crop((left, top, left + W, top + H))
+
+
 def gerar_frames_slide(slide_img: Image.Image, fps: int, duracao: float,
                        tmp_dir: str, slide_idx: int, fade_sec: float = FADE_SEC,
-                       motion: str = "none") -> list[str]:
+                       motion: str = "none",
+                       slide: dict = None, tema: dict = None,
+                       slide_idx_total: int = 1) -> list[str]:
     """
-    Gera frames com fade-in inicial e motion opcional.
-    motion: "none" | "zoom" (Ken Burns, zoom-in suave 100→106%)
+    Gera frames de um slide com efeitos de motion opcionais.
+    motion: "none" | "zoom" (Ken Burns) | "full" (camadas animadas + zoom)
+
+    Para motion="full" é necessário passar slide= e tema= para pre-renderizar keyframes.
     """
     total_frames = max(4, int(duracao * fps))
     fade_frames  = min(int(fade_sec * fps), total_frames // 2)
-    black = Image.new("RGB", slide_img.size, (0, 0, 0))
+    black = Image.new("RGB", (W, H), (0, 0, 0))
 
+    # ── motion="full": pré-renderiza 3 keyframes em camadas ──────────────────
+    if motion == "full" and slide is not None and tema is not None:
+        # Keyframe A: só fundo (sem título, sem texto)
+        kf_bg    = _build_slide_image(slide, slide_idx, slide_idx_total, tema,
+                                      skip_titulo=True, skip_texto=True)
+        # Keyframe B: fundo + título (sem texto)
+        kf_title = _build_slide_image(slide, slide_idx, slide_idx_total, tema,
+                                      skip_texto=True)
+        # Keyframe C: completo
+        kf_full  = slide_img
+
+        # Fases de animação: primeiros 35% do slide
+        ANIM_FRAC   = 0.35
+        anim_frames = max(6, int(total_frames * ANIM_FRAC))
+        title_end   = anim_frames // 2   # metade da animação: fundo → título
+        texto_end   = anim_frames        # segunda metade: título → completo
+
+        frames = []
+        for f in range(total_frames):
+            t_zoom = f / max(1, total_frames - 1)
+
+            if f < title_end:
+                # Fase 1: fundo → título aparece
+                alpha = f / max(1, title_end)
+                base  = Image.blend(kf_bg, kf_title, alpha)
+            elif f < texto_end:
+                # Fase 2: título → texto aparece
+                alpha = (f - title_end) / max(1, texto_end - title_end)
+                base  = Image.blend(kf_title, kf_full, alpha)
+            else:
+                base = kf_full
+
+            # Ken Burns sobre o base (fase estática continua a crescer)
+            frame = _apply_zoom(base, t_zoom, zoom_range=0.05)
+
+            # Fade-in global nos primeiros frames
+            if f < fade_frames:
+                frame = Image.blend(black, frame, f / fade_frames)
+
+            fpath = os.path.join(tmp_dir, f"f_{slide_idx:04d}_{f:06d}.jpg")
+            frame.save(fpath, "JPEG", quality=88)
+            frames.append(fpath)
+        return frames
+
+    # ── motion="zoom": Ken Burns simples ────────────────────────────────────
     frames = []
     for f in range(total_frames):
-        t = f / max(1, total_frames - 1)   # 0.0 → 1.0
-
-        if motion == "zoom":
-            # Ken Burns: zoom suave de 100% → 106%
-            scale = 1.0 + t * 0.06
-            sw = int(W * scale)
-            sh = int(H * scale)
-            zoomed = slide_img.resize((sw, sh), Image.LANCZOS)
-            left = (sw - W) // 2
-            top  = (sh - H) // 2
-            base = zoomed.crop((left, top, left + W, top + H))
-        else:
-            base = slide_img
-
+        t = f / max(1, total_frames - 1)
+        base = _apply_zoom(slide_img, t) if motion == "zoom" else slide_img
         if f < fade_frames:
-            alpha = f / fade_frames
-            frame = Image.blend(black, base, alpha)
+            frame = Image.blend(black, base, f / fade_frames)
         else:
             frame = base
-
         fpath = os.path.join(tmp_dir, f"f_{slide_idx:04d}_{f:06d}.jpg")
         frame.save(fpath, "JPEG", quality=88)
         frames.append(fpath)
@@ -353,8 +364,8 @@ def main():
                     help="Transição entre slides: fade (default) | none")
     ap.add_argument("--layout",   default="escuro",choices=list(TEMAS.keys()),
                     help="Tema visual: escuro | claro | ocean | sunset")
-    ap.add_argument("--motion",   default="none", choices=["none","zoom"],
-                    help="Motion: none (default) | zoom (Ken Burns 100→106%%)")
+    ap.add_argument("--motion",   default="none", choices=["none","zoom","full"],
+                    help="Motion: none | zoom (Ken Burns) | full (camadas: fundo→título→texto + zoom)")
     args = ap.parse_args()
 
     slides = json.loads(Path(args.entrada).read_text())
@@ -392,6 +403,9 @@ def main():
             slide_img, args.fps, dur, tmp_dir, i,
             fade_sec=FADE_SEC if fade_on else 0,
             motion=args.motion,
+            slide=slide if args.motion == "full" else None,
+            tema=tema  if args.motion == "full" else None,
+            slide_idx_total=len(slides),
         )
         all_frames.extend(frames)
         print(f"  [{i+1}/{len(slides)}] {slide.get('titulo','slide')[:40]} "
