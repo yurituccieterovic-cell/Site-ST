@@ -992,3 +992,20 @@
 | #718 | Adicionar Mayumi Tanimoto e Yuri Tucci como profissionais no Age | ⏳ |
 | #719 | Mercado Pago: criar conta + access_token | ⏳ Yuri |
 | #720 | pg_dump Replit URGENTE (prazo passou 30/09) | ⚠️ Yuri |
+
+
+---
+## Sessão S144 · 2026-09-29 (Portal paciente + Modo Simples + Assembleias #710–#711)
+
+| # | Item | Status |
+|---|---|---|
+| #721 | POST /patients/:id/portal-invite + botão "Convidar para portal" | ✅ |
+| #722 | Modo Simples no booking público (idosos, letra grande, passos explícitos) | ✅ |
+| #723 | PERFEITO #710 processado (MacroATA confirmada) | ✅ |
+| #724 | PERFEITO #711 processado (AGE 2.0 voz Yuri confirmada) | ✅ |
+| #725 | Render downtime às 01:16 UTC — UptimeRobot alertou, voltou rápido | ✅ monitorado |
+| #726 | Aguardar Assembleia #712 | ⏳ |
+| #727 | Testar "+ Nova consulta" com Suzana no portal | ⏳ Yuri |
+| #728 | Testar Modo Simples com usuário real | ⏳ Yuri |
+| #729 | I171: onboarding self-service — alta prioridade | ⏳ |
+| #730 | pg_dump Replit URGENTE | ⚠️ Yuri |

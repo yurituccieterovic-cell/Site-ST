@@ -6668,3 +6668,38 @@ O botão "Cadastrar direto" é uma declaração ontológica: nem todo paciente p
 - I171 onboarding self-service
 - Testar cadastro direto + feed com Lisange/Suzana
 
+
+---
+## ATA Sessão #143 — Booking profissional + AGE 2.0 voz Yuri
+**2026-09-29**
+
+**Bug corrigido:** Suzana (e qualquer profissional) não conseguia agendar pelo próprio portal. Causa: AgendaView só listava consultas sem criar. Fix: botão "+ Nova consulta" + modal com seletor de paciente (aprovados ou nome livre), picker de slots reais, canal presencial/online. Rota POST /book-by-prof (requireAgeAuth, status=confirmado).
+
+**#processo executado:** Voz de Yuri sobre AGE 2.0 (contratos logo antigo, SABIÁ SRE, Netflix-style, descontos, tarefas, ecossistema, SP&C) processada com análise Perplexity + Gemini. I173–I182 registradas. Assembleia #710 enviada.
+
+**Síntese filosófica:** O profissional que não consegue agendar pelo próprio portal é como um jardineiro que não consegue regar sua própria horta. O sistema estava otimizado para o paciente (fluxo público) mas esqueceu quem planta. A voz de Yuri sobre AGE 2.0 chegou como um jorramento — 9 direções novas num único monólogo. Todas registradas; nenhuma abandonada.
+
+---
+## ATA Sessão #144 — Portal paciente + Modo Simples + Assembleias #710–#711
+**2026-09-29**
+
+**Código implementado:**
+- POST /patients/:id/portal-invite: profissional envia email para paciente criado direto criar senha (link set-password 72h, msg diferente para "sem senha" vs "redefinir")
+- Botão "🔑 Convidar para portal" no card de paciente aprovado com email
+- Modo Simples toggle no booking público: fonte 18-20px, botões grandes, lista de slots direta (sem calendário semana/mês), passos 1-2-3 explícitos
+- Commits: 4795c58
+
+**Assembleias processadas:**
+- PERFEITO #710: confirmação da MacroATA S136-S142. Tudo validado.
+- PERFEITO #711: confirma a mesma voz Yuri AGE 2.0 (processado como #710). Sem ação adicional.
+
+**UptimeRobot:** Alertou downtime Render às 01:16 UTC. Render voltou em ~0.6s quando verificado às 01:27. Render free tier tem micro-downtime esporádico — UptimeRobot funcionando perfeitamente.
+
+**Síntese filosófica:** "Paciente sem login pode se tornar usuário" — essa frase contém um paradoxo ontológico. Antes do login, o paciente existe no banco de dados mas não existe no sistema como sujeito ativo. O convite de portal é o ato de reconhecimento: "você não precisa mais ser gerenciado, você pode se gerenciar." O Modo Simples é a mesma lógica na direção contrária: não simplificar a dignidade do usuário idoso — simplificar as camadas que o sistema colocou entre ele e o que precisa fazer.
+
+**Próximos:**
+- Aguardar #712
+- Testar modo simples com Mayumi ou familiar de paciente
+- Testar "+ Nova consulta" com Suzana
+- I171 onboarding self-service (alta prioridade)
+- pg_dump Replit URGENTE
