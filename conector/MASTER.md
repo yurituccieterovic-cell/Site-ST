@@ -1104,3 +1104,10 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - #processo S135-S146: 11 sessões Age 2.0, gaveta Mayumi, SABIÁ com histórico, feed colorido, 6 bugs
 - Assembleia #715: Curso 3 eco-respiração, eps 1-3 gerados
 - Oracle bloqueado; UptimeRobot previne Render spin-down
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — Cláudio (S150)
+- Curso 3 eps 1-3 gerados (FranciscaNeural, ~170s cada, ~4MB, tema escuro)
+- gerar_videos_curso3.py: MD→cenas→TTS→JSON→premiere_maker, corte automático em Notas
+- #754✅ · eps 4-8 aguardam validação Yuri
