@@ -2735,3 +2735,12 @@ export async function ensureJasmimUsers(): Promise<void> {
     logger.info("bootstrap: usuário yuri criado no sistema Jasmim");
   }
 }
+
+// Tasks Parte 5 — Índices Ontológicos (Aula de Tasks RODAR #557-561)
+export async function ensureTasksIndices(): Promise<void> {
+  await db.execute(sql`
+    ALTER TABLE tasks ADD COLUMN IF NOT EXISTS indices_data JSONB NOT NULL DEFAULT '{}';
+    COMMENT ON COLUMN tasks.indices_data IS 'Índices ontológicos 0-9 (Aula de Tasks S81-85)';
+  `);
+  logger.info("bootstrap: tasks.indices_data OK");
+}

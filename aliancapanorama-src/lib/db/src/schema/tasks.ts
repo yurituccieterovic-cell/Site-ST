@@ -18,6 +18,7 @@ export const tasksTable = pgTable("tasks", {
   dependencies: jsonb("dependencies").$type<number[]>().default([]),
   origemSessao: text("origem_sessao"), // '#366'
   catalogTags: jsonb("catalog_tags").$type<Record<string, unknown>>().default({}),
+  indicesData: jsonb("indices_data").$type<Record<string, unknown>>().default({}),
   createdBy: text("created_by").default("admin"), // 'isa' | 'admin' | userId
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),

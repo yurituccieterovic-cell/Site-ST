@@ -8,8 +8,10 @@ import {
   insertTaskSchema,
   insertEventTypeSchema,
   insertCatalogoCentralSchema,
+  validateIndexData,
+  calcularPhi,
 } from "@workspace/db";
-import { eq, desc, sql, and, inArray } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 
 const router = Router();
 
@@ -73,9 +75,10 @@ router.patch("/tasks/:id", async (req, res) => {
   const id = parseInt(req.params["id"] ?? "");
   if (isNaN(id)) { res.status(400).json({ error: "id inválido" }); return; }
 
-  const { status, priority, title, description, assignedToAgent, catalogTags } = req.body as {
+  const { status, priority, title, description, assignedToAgent, catalogTags, indicesData } = req.body as {
     status?: string; priority?: number; title?: string; description?: string;
     assignedToAgent?: string; catalogTags?: Record<string, unknown>;
+    indicesData?: Record<string, unknown>;
   };
 
   const updates: Record<string, unknown> = { updatedAt: new Date() };
@@ -88,6 +91,10 @@ router.patch("/tasks/:id", async (req, res) => {
   if (description !== undefined) updates["description"] = description;
   if (assignedToAgent !== undefined) updates["assignedToAgent"] = assignedToAgent;
   if (catalogTags !== undefined) updates["catalogTags"] = catalogTags;
+  if (indicesData !== undefined) {
+    const phi = calcularPhi(indicesData);
+    updates["indicesData"] = { ...indicesData, "0": { ...(indicesData["0"] as object ?? {}), phi } };
+  }
 
   const [updated] = await db
     .update(tasksTable)
@@ -97,6 +104,72 @@ router.patch("/tasks/:id", async (req, res) => {
 
   if (!updated) { res.status(404).json({ error: "Task não encontrada" }); return; }
   res.json(updated);
+});
+
+// ─── ÍNDICES ONTOLÓGICOS ──────────────────────────────────────────────────────
+
+// GET /tasks/:id/indices — retorna todos os indices_data + Φ atual
+router.get("/tasks/:id/indices", async (req, res) => {
+  const id = parseInt(req.params["id"] ?? "");
+  if (isNaN(id)) { res.status(400).json({ error: "id inválido" }); return; }
+
+  const [task] = await db.select({ indicesData: tasksTable.indicesData })
+    .from(tasksTable).where(eq(tasksTable.id, id)).limit(1);
+  if (!task) { res.status(404).json({ error: "Task não encontrada" }); return; }
+
+  const data = (task.indicesData ?? {}) as Record<string, unknown>;
+  const phi = calcularPhi(data);
+  res.json({ taskId: id, phi, indices: data });
+});
+
+// PATCH /tasks/:id/indices/:indexId — merge parcial de um índice específico
+router.patch("/tasks/:id/indices/:indexId", async (req, res) => {
+  const id = parseInt(req.params["id"] ?? "");
+  const indexId = parseInt(req.params["indexId"] ?? "");
+  if (isNaN(id) || isNaN(indexId)) { res.status(400).json({ error: "IDs inválidos" }); return; }
+
+  const validation = validateIndexData(indexId, req.body);
+  if (!validation.success) { res.status(400).json({ error: validation.error }); return; }
+
+  // Merge: lê atual, mescla no índice específico, recalcula Φ
+  const [task] = await db.select({ indicesData: tasksTable.indicesData })
+    .from(tasksTable).where(eq(tasksTable.id, id)).limit(1);
+  if (!task) { res.status(404).json({ error: "Task não encontrada" }); return; }
+
+  const current = (task.indicesData ?? {}) as Record<string, unknown>;
+  const merged = {
+    ...current,
+    [String(indexId)]: { ...(current[String(indexId)] as object ?? {}), ...validation.data },
+  };
+  const phi = calcularPhi(merged);
+  merged["0"] = { ...(merged["0"] as object ?? {}), phi };
+
+  const [updated] = await db.update(tasksTable)
+    .set({ indicesData: merged, updatedAt: new Date() } as Parameters<typeof db.update>[0] extends { set: infer S } ? S : never)
+    .where(eq(tasksTable.id, id))
+    .returning({ id: tasksTable.id, indicesData: tasksTable.indicesData });
+
+  res.json({ taskId: id, indexId, phi, indices: updated?.indicesData });
+});
+
+// POST /tasks/:id/indices/phi — recalcula Φ e persiste
+router.post("/tasks/:id/indices/phi", async (req, res) => {
+  const id = parseInt(req.params["id"] ?? "");
+  if (isNaN(id)) { res.status(400).json({ error: "id inválido" }); return; }
+
+  const [task] = await db.select({ indicesData: tasksTable.indicesData })
+    .from(tasksTable).where(eq(tasksTable.id, id)).limit(1);
+  if (!task) { res.status(404).json({ error: "Task não encontrada" }); return; }
+
+  const current = (task.indicesData ?? {}) as Record<string, unknown>;
+  const phi = calcularPhi(current);
+  current["0"] = { ...(current["0"] as object ?? {}), phi };
+
+  await db.update(tasksTable)
+    .set({ indicesData: current, updatedAt: new Date() } as Parameters<typeof db.update>[0] extends { set: infer S } ? S : never)
+    .where(eq(tasksTable.id, id));
+
+  res.json({ taskId: id, phi });
 });
 
 // ─── TASK RELATIONS ───────────────────────────────────────────────────────────

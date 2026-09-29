@@ -110,5 +110,39 @@ export function startKeepaliveCron(): void {
     }
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h)");
+  // Job Φ: recalcula coerência (phi) de tasks com indices_data preenchidos, 1x/hora
+  cron.schedule("5 * * * *", async () => {
+    try {
+      const { calcularPhi } = await import("@workspace/db");
+      const rows = await db.execute(sql`
+        SELECT id, indices_data FROM tasks
+        WHERE indices_data IS NOT NULL AND indices_data != '{}'::jsonb
+        LIMIT 500
+      `);
+      const tasks = (rows as any).rows ?? [];
+      let atualizadas = 0;
+      for (const t of tasks) {
+        const data = t.indices_data as Record<string, unknown>;
+        const phi = calcularPhi(data);
+        const idx0 = data["0"] as Record<string, unknown> ?? {};
+        if (idx0["phi"] !== phi) {
+          data["0"] = { ...idx0, phi };
+          await db.execute(sql`
+            UPDATE tasks SET indices_data = ${JSON.stringify(data)}::jsonb, updated_at = now()
+            WHERE id = ${t.id}
+          `);
+          atualizadas++;
+        }
+      }
+      if (atualizadas > 0) {
+        registrarPulso("phi-job", "ok", `${atualizadas}/${tasks.length} tasks`);
+        logger.info({ atualizadas }, "Job Φ: coerência recalculada");
+      }
+    } catch (err) {
+      registrarPulso("phi-job", "erro", String(err));
+      logger.error({ err }, "Job Φ: erro");
+    }
+  });
+
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05)");
 }
