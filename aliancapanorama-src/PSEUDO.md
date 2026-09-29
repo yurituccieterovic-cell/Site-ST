@@ -6810,3 +6810,36 @@ O botão "Cadastrar direto" é uma declaração ontológica: nem todo paciente p
 - Gravar eps 1-3 eco-respiração com PremiereMovieMaker
 - Locaweb: configurar quando Yuri criar conta
 
+---
+
+## ATA S148 — Locaweb: análise de planos e domínios · 2026-09-29
+
+### O que foi discutido
+
+Consulta sobre hospedagem Locaweb para o ecossistema (substituindo Oracle/Railway).
+
+**Planos analisados:**
+- Go R$9,90 → Renovação ~R$24,90 · 1 site, 15GB
+- I R$10,90 → Renovação ~R$37,90 · sites ilimitados, 35GB (melhor custo-benefício)
+- II R$16,90 → Renovação ~R$59,90 · 60GB, 30 emails
+- Dedicada 4GB R$49,90 → Renovação ~R$89,90
+
+**Decisões:**
+- Hospedagem compartilhada Locaweb NÃO roda Node.js/Express (é PHP/WordPress)
+- Uso recomendado: domínio grátis 1º ano + emails profissionais @sociedadetucci.com.br
+- Backend continua no Render; frontend no Vercel
+- Domínio grátis: aliancapanorama.com.br (ou .com) por 1 ano
+- Vinculação sociedadetucci.com.br: trocar nameservers para ns1/ns2.locaweb.com.br
+
+**Recomendação:** Hospedagem I (R$10,90 promo) — confirmar preço de renovação antes de fechar.
+
+### Síntese filosófica
+
+*Às vezes a solução mais barata cobre exatamente o que falta: não mais um servidor, mas um endereço. Locaweb não vai rodar o PAP — mas vai dar ao ecossistema um nome próprio (.com.br) e uma caixa de entrada profissional. Infraestrutura não é só onde o código roda; é também onde o projeto aparece para o mundo.*
+
+### Próximos passos
+
+- Yuri decide: contratar Locaweb I ou aguardar
+- Confirmar preço de renovação no checkout antes de fechar
+- Após contratar: configurar domínio + emails profissionais
+
