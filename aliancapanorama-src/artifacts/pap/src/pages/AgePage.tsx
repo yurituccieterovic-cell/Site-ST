@@ -176,6 +176,7 @@ export function AgePage() {
   const [notasLoading, setNotasLoading] = useState(false);
   const [notaForm, setNotaForm] = useState({ tipo: "nota", conteudo: "" });
   const [notaEnviando, setNotaEnviando] = useState(false);
+  const [perguntaEnviada, setPerguntaEnviada] = useState(false);
   const [forkId, setForkId] = useState<number | null>(null);
   const [forkConteudo, setForkConteudo] = useState("");
 
@@ -2593,6 +2594,8 @@ export function AgePage() {
           setNotaForm({ tipo: "nota", conteudo: "" });
           setTimeout(loadNotas, 300);
           if (isPergunta) {
+            setPerguntaEnviada(true);
+            setTimeout(() => setPerguntaEnviada(false), 20000);
             // poll for SABIÁ response up to 30s
             let attempts = 0;
             const poll = setInterval(async () => {
@@ -2657,6 +2660,17 @@ export function AgePage() {
           </div>
         </form>
 
+        {/* Banner pergunta enviada */}
+        {perguntaEnviada && (
+          <div style={{ background: "#0a1220", border: "1px solid #a78bfa55", borderRadius: 10, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 20 }}>🐦</span>
+            <div>
+              <div style={{ color: "#a78bfa", fontWeight: 700, fontSize: 13 }}>IA trabalhando em segundo plano</div>
+              <div style={{ color: "#64748b", fontSize: 12 }}>Pode sair da página se quiser — a resposta vai aparecer aqui quando voltar.</div>
+            </div>
+          </div>
+        )}
+
         {/* Lista de notas */}
         {notasLoading && notas.length === 0 && (
           <div style={{ color: "#475569", fontSize: 14 }}>Carregando notas...</div>
@@ -2693,7 +2707,13 @@ export function AgePage() {
                 </div>
               )}
               {nota.tipo === "pergunta" && !nota.resposta_ia && (
-                <div style={{ fontSize: 12, color: "#475569", marginTop: 6, fontStyle: "italic" }}>🐦 SABIÁ respondendo...</div>
+                <div style={{ background: "#0a1220", border: "1px solid #a78bfa33", borderRadius: 8, padding: "8px 12px", marginTop: 6, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                  <div>
+                    <div style={{ fontSize: 12, color: "#a78bfa", fontWeight: 700, marginBottom: 2 }}>🐦 IA trabalhando em segundo plano</div>
+                    <div style={{ fontSize: 11, color: "#475569" }}>Pode sair da página e voltar depois para ver a resposta.</div>
+                  </div>
+                  <button onClick={loadNotas} style={{ background: "none", border: "1px solid #a78bfa44", borderRadius: 6, color: "#a78bfa", fontSize: 11, padding: "4px 8px", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>↻ Checar</button>
+                </div>
               )}
 
               {/* Forks */}
