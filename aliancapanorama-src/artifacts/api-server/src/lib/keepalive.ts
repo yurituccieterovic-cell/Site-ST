@@ -46,8 +46,31 @@ export function startKeepaliveCron(): void {
     logger.debug("Keepalive: backend acordado");
   });
 
-  // Jasmim keepalive: conta posts para manter jm_posts aquecido no cache Neon
+  // Self-ping: servidor pinga a própria URL externa a cada 13 min
+  // Garante que o Render receba requisição HTTP de entrada mesmo quando GitHub Actions atrasa
+  cron.schedule("*/13 * * * *", async () => {
+    const base = process.env["RENDER_EXTERNAL_URL"] ?? "https://site-st.onrender.com";
+    try {
+      const r = await fetch(`${base}/api/healthz`, { signal: AbortSignal.timeout(20000) });
+      registrarPulso("self-ping", "ok", `${r.status}`);
+    } catch (err) {
+      registrarPulso("self-ping", "erro", String(err));
+    }
+  });
+
+  // Age warm-up: mantém queries Age aquecidas no pool Neon a cada 11 min
   cron.schedule("*/11 * * * *", async () => {
+    try {
+      await db.execute(sql`SELECT COUNT(*) FROM age_professionals WHERE ativa = true`);
+      await db.execute(sql`SELECT COUNT(*) FROM age_gestoras WHERE ativa = true`);
+      registrarPulso("age-warm", "ok");
+    } catch (err) {
+      registrarPulso("age-warm", "erro", String(err));
+    }
+  });
+
+  // Jasmim keepalive: conta posts para manter jm_posts aquecido no cache Neon
+  cron.schedule("*/17 * * * *", async () => {
     try {
       const r = await db.execute(sql`SELECT COUNT(*) FROM jm_posts WHERE projeto = 'age'`);
       const total = (r as any).rows?.[0]?.count ?? 0;
@@ -144,5 +167,5 @@ export function startKeepaliveCron(): void {
     }
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self:*/7min · Jasmim:*/11min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05)");
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05)");
 }
