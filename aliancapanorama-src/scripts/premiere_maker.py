@@ -255,10 +255,11 @@ def render_slide(slide: dict, idx: int, total: int, tmp_dir: str, tema: dict) ->
 # ─── Fade-in frame por frame ─────────────────────────────────────────────────
 
 def gerar_frames_slide(slide_img: Image.Image, fps: int, duracao: float,
-                       tmp_dir: str, slide_idx: int, fade_sec: float = FADE_SEC) -> list[str]:
+                       tmp_dir: str, slide_idx: int, fade_sec: float = FADE_SEC,
+                       motion: str = "none") -> list[str]:
     """
-    Gera frames com fade-in inicial.
-    Retorna lista de caminhos de frames.
+    Gera frames com fade-in inicial e motion opcional.
+    motion: "none" | "zoom" (Ken Burns, zoom-in suave 100→106%)
     """
     total_frames = max(4, int(duracao * fps))
     fade_frames  = min(int(fade_sec * fps), total_frames // 2)
@@ -266,11 +267,25 @@ def gerar_frames_slide(slide_img: Image.Image, fps: int, duracao: float,
 
     frames = []
     for f in range(total_frames):
-        if f < fade_frames:
-            alpha = f / fade_frames           # 0.0 → 1.0
-            frame = Image.blend(black, slide_img, alpha)
+        t = f / max(1, total_frames - 1)   # 0.0 → 1.0
+
+        if motion == "zoom":
+            # Ken Burns: zoom suave de 100% → 106%
+            scale = 1.0 + t * 0.06
+            sw = int(W * scale)
+            sh = int(H * scale)
+            zoomed = slide_img.resize((sw, sh), Image.LANCZOS)
+            left = (sw - W) // 2
+            top  = (sh - H) // 2
+            base = zoomed.crop((left, top, left + W, top + H))
         else:
-            frame = slide_img
+            base = slide_img
+
+        if f < fade_frames:
+            alpha = f / fade_frames
+            frame = Image.blend(black, base, alpha)
+        else:
+            frame = base
 
         fpath = os.path.join(tmp_dir, f"f_{slide_idx:04d}_{f:06d}.jpg")
         frame.save(fpath, "JPEG", quality=88)
@@ -338,6 +353,8 @@ def main():
                     help="Transição entre slides: fade (default) | none")
     ap.add_argument("--layout",   default="escuro",choices=list(TEMAS.keys()),
                     help="Tema visual: escuro | claro | ocean | sunset")
+    ap.add_argument("--motion",   default="none", choices=["none","zoom"],
+                    help="Motion: none (default) | zoom (Ken Burns 100→106%%)")
     args = ap.parse_args()
 
     slides = json.loads(Path(args.entrada).read_text())
@@ -373,7 +390,8 @@ def main():
         dur = slide.get("duracao", args.duracao)
         frames = gerar_frames_slide(
             slide_img, args.fps, dur, tmp_dir, i,
-            fade_sec=FADE_SEC if fade_on else 0
+            fade_sec=FADE_SEC if fade_on else 0,
+            motion=args.motion,
         )
         all_frames.extend(frames)
         print(f"  [{i+1}/{len(slides)}] {slide.get('titulo','slide')[:40]} "

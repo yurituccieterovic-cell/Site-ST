@@ -100,6 +100,18 @@ def parse_episodios(md_path: str) -> list:
     return episodios
 
 
+def punch_line(texto: str) -> str:
+    """Extrai a frase mais impactante do texto (curta, forte, normalmente no final)."""
+    sentences = re.split(r'(?<=[.!?])\s+', texto)
+    # Filtra: não-lista, 25-110 chars, preferencialmente final
+    candidates = [s for s in sentences
+                  if not s.startswith('-') and 25 <= len(s) <= 110]
+    if not candidates:
+        return sentences[0][:100] if sentences else texto[:100]
+    # Prefere a última frase candidata (tende a ser o "mic drop")
+    return candidates[-1]
+
+
 def build_slides(ep: dict, tts_dir: str) -> list:
     slides = []
 
@@ -114,12 +126,13 @@ def build_slides(ep: dict, tts_dir: str) -> list:
     print(f"  🎙 Abertura ({intro_dur:.1f}s)")
 
     slides.append({
-        "titulo": f"Episódio {ep['num']}",
+        "titulo":    f"Episódio {ep['num']}",
         "subtitulo": ep["title"],
-        "texto": ep.get("subtitle", ""),
-        "naracao": intro_narr,
-        "duracao": round(intro_dur + 0.3, 1),
-        "logo": True
+        "texto":     ep.get("subtitle", ""),
+        "naracao":   intro_narr,
+        "duracao":   round(intro_dur + 0.3, 1),
+        "layout":    "centralizado",
+        "logo":      True
     })
 
     for cena in ep["cenas"]:
@@ -129,18 +142,15 @@ def build_slides(ep: dict, tts_dir: str) -> list:
         dur     = gerar_tts(naracao, tts_mp3)
         print(f"  🎙 Cena {cena['num']}: {cena['title']} ({dur:.1f}s)")
 
-        # Display: primeiras 2-3 frases
-        sentences = re.split(r'(?<=[.!?])\s+', naracao)
-        display   = ' '.join(sentences[:3])
-        if len(display) > 220:
-            display = display[:217] + "..."
+        display = punch_line(naracao)
 
         slides.append({
             "titulo":    cena["title"],
-            "subtitulo": f"Episódio {ep['num']} · Cena {cena['num']}",
+            "subtitulo": f"Ep {ep['num']} · Cena {cena['num']}",
             "texto":     display,
             "naracao":   naracao,
-            "duracao":   round(dur + 0.3, 1)
+            "duracao":   round(dur + 0.3, 1),
+            "layout":    "centralizado",
         })
 
     return slides
@@ -167,7 +177,7 @@ def gerar_episodio(ep: dict, out_dir: str) -> bool:
     total_s = sum(s["duracao"] for s in slides)
     print(f"  ⏱  Duração prevista: {total_s:.0f}s ({total_s/60:.1f}min)")
 
-    cmd = [PYTHON, SCRIPT, out_json, out_mp4, "--tts", "pt-BR", "--layout", "escuro"]
+    cmd = [PYTHON, SCRIPT, out_json, out_mp4, "--tts", "pt-BR", "--layout", "escuro", "--motion", "zoom"]
     print(f"\n  ▶ premiere_maker...")
     r = subprocess.run(cmd)
 

@@ -5,55 +5,63 @@
     "texto": "Pegada cognitiva — custo ambiental de IA e dados",
     "naracao": "Curso 3: Respirar com o Planeta. Episódio 3: O Carbono que Pensamos. Pegada cognitiva — custo ambiental de IA e dados",
     "duracao": 11.1,
+    "layout": "centralizado",
     "logo": true
   },
   {
     "titulo": "PENSAR TEM PESO",
-    "subtitulo": "Episódio 3 · Cena 1",
-    "texto": "Toda vez que você faz uma pergunta ao ChatGPT, servidores em algum lugar do mundo ligam centenas de GPUs. Elas processam bilhões de parâmetros, acessam memória distribuída, calculam probabilidades. E tudo isso consome...",
+    "subtitulo": "Ep 3 · Cena 1",
+    "texto": "Pensar, hoje, emite carbono.",
     "naracao": "Toda vez que você faz uma pergunta ao ChatGPT, servidores em algum lugar do mundo ligam centenas de GPUs. Elas processam bilhões de parâmetros, acessam memória distribuída, calculam probabilidades. E tudo isso consome energia. Energia que, na maior parte do mundo, ainda vem de combustíveis fósseis. Pensar, hoje, emite carbono.",
-    "duracao": 22.8
+    "duracao": 22.8,
+    "layout": "centralizado"
   },
   {
     "titulo": "A PEGADA COGNITIVA",
-    "subtitulo": "Episódio 3 · Cena 2",
-    "texto": "Treinar modelos grandes de IA pode gerar emissões significativas de C O 2 — comparáveis, em alguns casos, ao impacto de múltiplos veículos ao longo de anos. Isso não significa que IA é vilã. Significa que ela precisa ...",
+    "subtitulo": "Ep 3 · Cena 2",
+    "texto": "Assim como código eficiente economiza processamento, modelo bem treinado economiza planeta.",
     "naracao": "Treinar modelos grandes de IA pode gerar emissões significativas de C O 2 — comparáveis, em alguns casos, ao impacto de múltiplos veículos ao longo de anos. Isso não significa que IA é vilã. Significa que ela precisa de design consciente. Assim como código eficiente economiza processamento, modelo bem treinado economiza planeta.",
-    "duracao": 23.9
+    "duracao": 23.9,
+    "layout": "centralizado"
   },
   {
     "titulo": "O DATA CENTER INVISÍVEL",
-    "subtitulo": "Episódio 3 · Cena 3",
-    "texto": "Você abre o Instagram. Rola o feed. Assiste um Reel.",
+    "subtitulo": "Ep 3 · Cena 3",
+    "texto": "E está crescendo 25% ao ano.",
     "naracao": "Você abre o Instagram. Rola o feed. Assiste um Reel. Por trás: dezenas de data centers distribuídos globalmente, resfriados a ar-condicionado, alimentados 24/7. A nuvem não é leve. Ela é pesada, quente e muito real. E está crescendo 25% ao ano.",
-    "duracao": 19.4
+    "duracao": 19.4,
+    "layout": "centralizado"
   },
   {
     "titulo": "IA VERDE: EXISTE?",
-    "subtitulo": "Episódio 3 · Cena 4",
-    "texto": "Sim. Algumas empresas já treinam modelos em horários de energia renovável (solar, eólica). Outras comprimem modelos — técnicas como quantização e poda reduzem o tamanho sem perder precisão.",
+    "subtitulo": "Ep 3 · Cena 4",
+    "texto": "Falta escala — e vontade política.",
     "naracao": "Sim. Algumas empresas já treinam modelos em horários de energia renovável (solar, eólica). Outras comprimem modelos — técnicas como quantização e poda reduzem o tamanho sem perder precisão. E há data centers resfriados por água do mar, ou que reutilizam calor residual para aquecer prédios. A tecnologia existe. Falta escala — e vontade política.",
-    "duracao": 23.4
+    "duracao": 23.4,
+    "layout": "centralizado"
   },
   {
     "titulo": "O PARADOXO DA OTIMIZAÇÃO",
-    "subtitulo": "Episódio 3 · Cena 5",
-    "texto": "IA pode ser parte do problema — ou da solução. Ela pode: Otimizar rotas de entrega e reduzir emissões de frotas inteiras Prever safras e reduzir desperdício de alimentos Monitorar desmatamento em tempo real Projetar m...",
+    "subtitulo": "Ep 3 · Cena 5",
+    "texto": "IA pode ser parte do problema — ou da solução.",
     "naracao": "IA pode ser parte do problema — ou da solução. Ela pode: Otimizar rotas de entrega e reduzir emissões de frotas inteiras Prever safras e reduzir desperdício de alimentos Monitorar desmatamento em tempo real Projetar moléculas para captura de carbono O carbono que gastamos treinando IA pode ser compensado — se a usarmos bem.",
-    "duracao": 23.4
+    "duracao": 23.4,
+    "layout": "centralizado"
   },
   {
     "titulo": "A ESCOLHA ESTÁ NO CÓDIGO",
-    "subtitulo": "Episódio 3 · Cena 6",
-    "texto": "Cada vez que você escreve código, você faz escolhas arquiteturais. Será que esse loop precisa rodar mil vezes? Será que essa requisição precisa ser síncrona?",
+    "subtitulo": "Ep 3 · Cena 6",
+    "texto": "Escrever código eficiente não é só boas práticas.",
     "naracao": "Cada vez que você escreve código, você faz escolhas arquiteturais. Será que esse loop precisa rodar mil vezes? Será que essa requisição precisa ser síncrona? Será que esse modelo precisa de 100 bilhões de parâmetros? Escrever código eficiente não é só boas práticas. É ética ambiental.",
-    "duracao": 19.3
+    "duracao": 19.3,
+    "layout": "centralizado"
   },
   {
     "titulo": "SÍNTESE",
-    "subtitulo": "Episódio 3 · Cena 7",
-    "texto": "Neste episódio, vimos: Pegada de carbono do treinamento e operação de IA Data centers como infraestrutura física pesada Estratégias de IA verde: energia renovável, compressão de modelos, reuso de calor O paradoxo: IA ...",
+    "subtitulo": "Ep 3 · Cena 7",
+    "texto": "Até lá: pergunte-se: o que eu crio hoje alimenta ou esgota o amanhã?",
     "naracao": "Neste episódio, vimos: Pegada de carbono do treinamento e operação de IA Data centers como infraestrutura física pesada Estratégias de IA verde: energia renovável, compressão de modelos, reuso de calor O paradoxo: IA pode agravar ou resolver a crise climática No próximo episódio: sair da linha reta — entender ciclos, não crescimento infinito. Até lá: pergunte-se: o que eu crio hoje alimenta ou esgota o amanhã?",
-    "duracao": 30.4
+    "duracao": 30.4,
+    "layout": "centralizado"
   }
 ]

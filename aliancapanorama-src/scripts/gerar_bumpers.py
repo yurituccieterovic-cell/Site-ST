@@ -86,6 +86,7 @@ def gerar(key: str):
         "--tts",      cfg["tts"],
         "--layout",   cfg["tema"],
         "--transicao","none",
+        "--motion",   "zoom",
         "--duracao",  "5",
     ]
     print(f"\n▶ bumper_{key} (tema: {cfg['tema']})...")

@@ -5,55 +5,63 @@
     "texto": "Fotossíntese como metáfora de input/output em sistemas",
     "naracao": "Curso 3: Respirar com o Planeta. Episódio 1: O Pulmão da Floresta. Fotossíntese como metáfora de input/output em sistemas",
     "duracao": 10.0,
+    "layout": "centralizado",
     "logo": true
   },
   {
     "titulo": "A PRIMEIRA RESPIRAÇÃO",
-    "subtitulo": "Episódio 1 · Cena 1",
-    "texto": "Inspire fundo. Agora expire. Você acabou de executar o mesmo algoritmo que move a Terra há três bilhões de anos: absorver, transformar, liberar.",
+    "subtitulo": "Ep 1 · Cena 1",
+    "texto": "E tudo começa com a respiração.",
     "naracao": "Inspire fundo. Agora expire. Você acabou de executar o mesmo algoritmo que move a Terra há três bilhões de anos: absorver, transformar, liberar. Neste curso, vamos olhar para a ecologia não como ciência \"da natureza\" — mas como a linguagem de sistemas vivos em rede. E tudo começa com a respiração.",
-    "duracao": 19.9
+    "duracao": 19.9,
+    "layout": "centralizado"
   },
   {
     "titulo": "O CARBONO VIAJA",
-    "subtitulo": "Episódio 1 · Cena 2",
-    "texto": "Uma árvore na Amazônia absorve dióxido de carbono. Dentro de suas células, cloroplastos executam a fotossíntese — um processo que converte luz solar, água e C O 2 em açúcar e oxigênio. Parece química, mas é também arq...",
+    "subtitulo": "Ep 1 · Cena 2",
+    "texto": "Cada folha é um pequeno servidor verde rodando código solar.",
     "naracao": "Uma árvore na Amazônia absorve dióxido de carbono. Dentro de suas células, cloroplastos executam a fotossíntese — um processo que converte luz solar, água e C O 2 em açúcar e oxigênio. Parece química, mas é também arquitetura de informação. A floresta não apenas sequestra carbono — ela o indexa, armazena e redistribui. Cria memória viva. Cada folha é um pequeno servidor verde rodando código solar.",
-    "duracao": 26.9
+    "duracao": 26.9,
+    "layout": "centralizado"
   },
   {
     "titulo": "INPUT, PROCESSAMENTO, OUTPUT",
-    "subtitulo": "Episódio 1 · Cena 3",
-    "texto": "A fotossíntese segue três etapas clássicas de qualquer sistema: Input: luz, C O 2, H 2 O Processamento: reações químicas nas membranas dos cloroplastos Output: glicose (energia) e O 2 (resíduo útil) Esse loop sustenta...",
+    "subtitulo": "Ep 1 · Cena 3",
+    "texto": "Devolve respostas respiráveis.",
     "naracao": "A fotossíntese segue três etapas clássicas de qualquer sistema: Input: luz, C O 2, H 2 O Processamento: reações químicas nas membranas dos cloroplastos Output: glicose (energia) e O 2 (resíduo útil) Esse loop sustenta quase toda a vida terrestre. Se você já programou uma API REST, já entendeu a Amazônia. Ela recebe requisições do sol. Devolve respostas respiráveis.",
-    "duracao": 26.4
+    "duracao": 26.4,
+    "layout": "centralizado"
   },
   {
     "titulo": "O CUSTO DE MANTER O PULMÃO LIGADO",
-    "subtitulo": "Episódio 1 · Cena 4",
-    "texto": "Toda computação tem custo energético. A floresta também. Cada árvore precisa de água, nutrientes, temperatura adequada.",
+    "subtitulo": "Ep 1 · Cena 4",
+    "texto": "O carbono que deveria estar indexado nas árvores volta livre para a atmosfera.",
     "naracao": "Toda computação tem custo energético. A floresta também. Cada árvore precisa de água, nutrientes, temperatura adequada. Quando falta um desses recursos, o sistema falha — não instantaneamente, mas em cascata. Desmatamento é como desligar servidores sem aviso. A latência atmosférica aumenta. O planeta aquece. O carbono que deveria estar indexado nas árvores volta livre para a atmosfera.",
-    "duracao": 25.4
+    "duracao": 25.4,
+    "layout": "centralizado"
   },
   {
     "titulo": "ECOLOGIA COMO LINGUAGEM DE REDE",
-    "subtitulo": "Episódio 1 · Cena 5",
-    "texto": "A floresta não é um conjunto de árvores isoladas. É uma rede de trocas contínuas: fungos conectam raízes subterrâneas, compartilham nutrientes, alertam sobre ameaças. Cientistas chamam isso de \"internet da floresta\" —...",
+    "subtitulo": "Ep 1 · Cena 5",
+    "texto": "Exatamente como a internet humana — só que três bilhões de anos mais antiga.",
     "naracao": "A floresta não é um conjunto de árvores isoladas. É uma rede de trocas contínuas: fungos conectam raízes subterrâneas, compartilham nutrientes, alertam sobre ameaças. Cientistas chamam isso de \"internet da floresta\" — e não é metáfora. É literalmente um sistema distribuído, resiliente, auto-organizado. Exatamente como a internet humana — só que três bilhões de anos mais antiga.",
-    "duracao": 24.7
+    "duracao": 24.7,
+    "layout": "centralizado"
   },
   {
     "titulo": "RESPIRAR É PERTENCER",
-    "subtitulo": "Episódio 1 · Cena 6",
-    "texto": "Quando você inspira, está recebendo o oxigênio que uma árvore produziu. Quando expira, devolve o C O 2 que ela precisa. Você é parte do loop.",
+    "subtitulo": "Ep 1 · Cena 6",
+    "texto": "É \"o ser humano na rede planetária\".",
     "naracao": "Quando você inspira, está recebendo o oxigênio que uma árvore produziu. Quando expira, devolve o C O 2 que ela precisa. Você é parte do loop. Não é \"o ser humano e a natureza\". É \"o ser humano na rede planetária\".",
-    "duracao": 13.9
+    "duracao": 13.9,
+    "layout": "centralizado"
   },
   {
     "titulo": "SÍNTESE",
-    "subtitulo": "Episódio 1 · Cena 7",
-    "texto": "Neste episódio, vimos: Fotossíntese como sistema input/processamento/output A floresta como rede distribuída de armazenamento de carbono Respiração como protocolo compartilhado entre espécies No próximo episódio, vamo...",
+    "subtitulo": "Ep 1 · Cena 7",
+    "texto": "Você está executando código antigo.",
     "naracao": "Neste episódio, vimos: Fotossíntese como sistema input/processamento/output A floresta como rede distribuída de armazenamento de carbono Respiração como protocolo compartilhado entre espécies No próximo episódio, vamos entrar na cidade — e ver o que acontece quando o metabolismo urbano respira sem pulmões. Até lá: respire devagar. Conscientemente. Você está executando código antigo.",
-    "duracao": 25.4
+    "duracao": 25.4,
+    "layout": "centralizado"
   }
 ]
