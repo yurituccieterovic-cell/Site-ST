@@ -6703,3 +6703,37 @@ O botão "Cadastrar direto" é uma declaração ontológica: nem todo paciente p
 - Testar "+ Nova consulta" com Suzana
 - I171 onboarding self-service (alta prioridade)
 - pg_dump Replit URGENTE
+
+---
+## ATA S145 — 2026-09-29
+
+**Sessão:** S145 · **Checkpoint:** 2026-09-29T03:XX+00:00
+
+### O que foi feito
+
+1. **#712 Assembleia confirmada** — email PERFEITO #712 lido; sessão S143 (#age #calculus #socia) foi homologada pela Assembleia.
+
+2. **Calendário no modal profissional** — Modal "Nova consulta" ganhou tabs lista/semana/mês idênticas ao público. O profissional agora vê os horários disponíveis em grade visual, não apenas pills de data.
+
+3. **Grade de disponibilidade** — DisponibilidadeView mostra as próximas 2 semanas com horários livres (teal) e ocupados (vermelho). Zero requests adicionais — usa dados já carregados.
+
+4. **localStorage bookForm** — form de booking público persiste entre visitas. Se Jesus sair da página e voltar, o nome/email já estão preenchidos.
+
+5. **Toast system** — notificações de fundo (`addToast`) aparecem no canto inferior direito. "Consulta agendada com sucesso ✓", erros com instruções claras de cold start.
+
+6. **Jesus em Lisange** — investigado: slots OK (71 disponíveis). Booking flow funciona corretamente. Hipótese: Render estava em cold start no momento da tentativa. Mensagem de erro melhorada para orientar o usuário a aguardar 30s.
+
+7. **FeedItem type** — corrigido para incluir nota/pergunta/anuncio + campo `tem_resposta`.
+
+### Síntese filosófica
+
+*O calendário é uma promessa de tempo. Quando o profissional e o paciente veem a mesma grade de disponibilidade, algo se nivela: a assimetria de informação desaparece. Antes, o paciente via os horários e escolhia; o profissional tinha que "confiar" no sistema. Agora ambos habitam o mesmo mapa temporal. O sistema se torna espelho.*
+
+*O toast system é sobre silêncio qualificado. Em vez de congelar a interface esperando uma resposta, o sistema diz "fiz o meu trabalho, te aviso quando souber mais" — e libera o usuário para seguir em frente. Presença sem dominação.*
+
+### Próximos passos
+
+- Render recovery: monitorar; I184 (retry automático) para reduzir fricção cold start
+- Testar calendário profissional com Lisange/Suzana (#727 revisado)
+- I183: calendário completo AgendaView com drag/drop (Fase 2+)
+

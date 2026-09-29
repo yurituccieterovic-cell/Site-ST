@@ -1009,3 +1009,16 @@
 | #728 | Testar Modo Simples com usuário real | ⏳ Yuri |
 | #729 | I171: onboarding self-service — alta prioridade | ⏳ |
 | #730 | pg_dump Replit URGENTE | ⚠️ Yuri |
+
+## S145 — 2026-09-29
+
+| # | Pendência | Status |
+|---|---|---|
+| #731 | #712 Assembleia confirmada (PERFEITO recebido) | ✅ |
+| #732 | Calendário semana/mês no modal "Nova consulta" profissional | ✅ |
+| #733 | Grade visual de disponibilidade (DisponibilidadeView) | ✅ |
+| #734 | localStorage bookForm público | ✅ |
+| #735 | Toast system para operações async | ✅ |
+| #736 | I183: Calendário completo AgendaView (drag/drop) | ⏳ Fase2+ |
+| #737 | I184: Retry automático booking cold start Render | ⏳ |
+| #738 | Jesus em Lisange: Render estava em cold start na tentativa — slots OK, booking OK em condições normais | 🔍 Monitorar |

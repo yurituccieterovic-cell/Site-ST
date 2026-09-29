@@ -2297,3 +2297,11 @@ Topbar unificado em AGE, Jasmim, Rapadura, Calculus. Estilo Google Apps. Login �
 ### I182: Calculus — Landing + MVP financeiro
 **Prioridade:** média · **Complexidade:** alta
 Calculus: sistema financeiro-contábil (mascote Ábaco). Sócia: ERP simplificado (Arara-canindé, herda Calculus). Calculus é base. Aguardar mapa de dependências.
+
+### I183: Age — Calendário unificado profissional (leitura + escrita)
+**Prioridade:** média · **Complexidade:** média
+AgendaView do profissional poderia ter uma view de calendário completo (não só lista por dia) — igual ao Google Calendar. Ver semana/mês de consultas marcadas, arrastar para remarcar. Fase 2+.
+
+### I184: Age — Retry automático no booking público (cold start Render)
+**Prioridade:** alta · **Complexidade:** pequena  
+Quando booking falha com erro de rede, tentar automaticamente 1x após 5s com toast "Tentando novamente…". Se falhar de novo, mostrar botão manual. Reduz fricção no cold start do Render free tier.
