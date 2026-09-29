@@ -1119,3 +1119,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - VEED: Calculus+PAP recebem tratamento especial (mascotes+gamificação), ST+Age word-only
 - Motion graphics: Remotion é o stack certo para o futuro, 1 sessão para texto animado básico
 - A716-A718 eram confirmativas, não deliberativas — qualidade voltou em #719
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — ATA S152 Cláudio
+- premiere_maker --motion full: fundo→título→texto + Ken Burns por blend() de 3 keyframes
+- Curso 3 eps 1-3 v3 gerados e enviados (13MB cada, individually)
+- Curso 2: só poster para Instagram, não vídeo (decisão Yuri)
+- RESULTADOs #720+#722 lidos e processados
