@@ -692,44 +692,44 @@ export function AgePage() {
 
   // ─── SABIÁ ──────────────────────────────────────────────────────────────────
 
+  const sabiaAbortRef = useRef<AbortController | null>(null);
+
+  function cancelSabia() {
+    sabiaAbortRef.current?.abort();
+    setSabiaLoading(false);
+    setMsgs(m => [...m, { role: "assistant", content: "🐦 Cancelado. Pode tentar novamente." }]);
+  }
+
   async function sendSabia(e: React.FormEvent) {
     e.preventDefault();
     if (!sabiaInput.trim() || sabiaLoading) return;
     const userMsg = sabiaInput.trim(); setSabiaInput("");
     setMsgs(m => [...m, { role: "user", content: userMsg }]);
     setSabiaLoading(true);
-    // Retry com timeout generoso para cold start do Render
-    const MAX_ATTEMPTS = 3; const RETRY_DELAY = 8000;
-    let lastErr = "";
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-      try {
-        const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 35000);
-        let r: Response;
-        try {
-          r = await fetch(`${API}/api/age/${slug}/sabia`, {
-            method: "POST", credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: userMsg, sessionId: sabiaSessionId }),
-            signal: ctrl.signal,
-          });
-        } finally { clearTimeout(timer); }
-        const d = await r.json() as { reply?: string; sessionId?: string };
-        setMsgs(m => [...m, { role: "assistant", content: d.reply ?? "Não consegui responder agora." }]);
-        if (d.sessionId) setSabiaSessionId(d.sessionId);
-        setSabiaLoading(false);
-        return;
-      } catch (err) {
-        lastErr = err instanceof Error ? err.message : "erro";
-        if (attempt < MAX_ATTEMPTS) {
-          setMsgs(m => [...m.slice(0, -1), { role: "user", content: userMsg }, { role: "assistant", content: `🐦 Servidor acordando… tentativa ${attempt + 1}/${MAX_ATTEMPTS}` }]);
-          await new Promise(res => setTimeout(res, RETRY_DELAY));
-          setMsgs(m => m.slice(0, -1));
-        }
+    const ctrl = new AbortController();
+    sabiaAbortRef.current = ctrl;
+    const timer = setTimeout(() => ctrl.abort(), 30000);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/sabia`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMsg, sessionId: sabiaSessionId }),
+        signal: ctrl.signal,
+      });
+      clearTimeout(timer);
+      const d = await r.json() as { reply?: string; sessionId?: string };
+      setMsgs(m => [...m, { role: "assistant", content: d.reply ?? "Não consegui responder agora. Tente novamente. 🐦" }]);
+      if (d.sessionId) setSabiaSessionId(d.sessionId);
+    } catch (err) {
+      clearTimeout(timer);
+      const isAbort = err instanceof DOMException && err.name === "AbortError";
+      if (!isAbort) {
+        setMsgs(m => [...m, { role: "assistant", content: "🐦 Servidor sem resposta. Se for a primeira vez hoje, aguarde 1 min (cold start) e tente novamente." }]);
       }
+    } finally {
+      setSabiaLoading(false);
+      sabiaAbortRef.current = null;
     }
-    setMsgs(m => [...m, { role: "assistant", content: "O servidor está demorando para responder. Aguarde 1 minuto e tente novamente. 🐦" }]);
-    setSabiaLoading(false);
   }
 
   async function handlePatientLogin(e: React.FormEvent) {
@@ -1172,11 +1172,11 @@ export function AgePage() {
                     placeholder="Especialidade (psicologia, medicina, terapia…)" style={{ flex: "1 1 200px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
                   <select value={interForm.pacientes} onChange={e => setInterForm(f => ({ ...f, pacientes: e.target.value }))}
                     style={{ flex: "0 1 180px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: interForm.pacientes ? "#e2e8f0" : "#475569", padding: "10px 14px", fontSize: 14 }}>
-                    <option value="">Quantos pacientes/mês?</option>
-                    <option value="1-20">Até 20</option>
-                    <option value="21-60">21 – 60</option>
-                    <option value="61-150">61 – 150</option>
-                    <option value="150+">Mais de 150</option>
+                    <option value="">Pacientes por semana (opcional)</option>
+                    <option value="preparando">Ainda não atendo, estou me preparando</option>
+                    <option value="menos-10">Menos de 10</option>
+                    <option value="10-30">10 a 30</option>
+                    <option value="mais-30">Mais de 30</option>
                   </select>
                 </div>
                 <textarea value={interForm.msg} onChange={e => setInterForm(f => ({ ...f, msg: e.target.value }))}
@@ -2634,11 +2634,12 @@ export function AgePage() {
         </div>
         <form onSubmit={sendSabia} style={{ padding: "0.75rem 1rem", borderTop: "1px solid #1e293b", display: "flex", gap: 8 }}>
           <input value={sabiaInput} onChange={e => setSabiaInput(e.target.value)} placeholder="Pergunte à SABIÁ…"
+            disabled={sabiaLoading}
             style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
-          <button type="submit" disabled={!sabiaInput.trim() || sabiaLoading}
-            style={{ background: color, border: "none", borderRadius: 8, padding: "0 16px", color: "#080c10", fontWeight: 700, cursor: "pointer", fontSize: 18 }}>
-            ↑
-          </button>
+          {sabiaLoading
+            ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: `1px solid #f8717155`, borderRadius: 8, padding: "0 14px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>✕</button>
+            : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 8, padding: "0 16px", color: "#080c10", fontWeight: 700, cursor: "pointer", fontSize: 18 }}>↑</button>
+          }
         </form>
       </div>
     );
@@ -3330,10 +3331,10 @@ export function AgePage() {
                   disabled={sabiaLoading}
                   style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 12 }}
                 />
-                <button type="submit" disabled={sabiaLoading || !sabiaInput.trim()}
-                  style={{ background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "7px 12px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>
-                  →
-                </button>
+                {sabiaLoading
+                  ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 8, padding: "7px 10px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 12 }}>✕</button>
+                  : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "7px 12px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>→</button>
+                }
               </form>
             </div>
           )}
