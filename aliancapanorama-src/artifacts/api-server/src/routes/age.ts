@@ -824,6 +824,18 @@ router.delete("/age/:slug/appointments/:id", requireAgeAuth, async (req, res): P
 
 // ─── SABIÁ ────────────────────────────────────────────────────────────────────
 
+// GET /api/age/:slug/sabia/history (auth required) — últimas N mensagens para popular o chat
+router.get("/age/:slug/sabia/history", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const limit = Math.min(Number(req.query.limit ?? 40), 100);
+  const rows = await db.select()
+    .from(ageSabiaMemoryTable)
+    .where(eq(ageSabiaMemoryTable.professionalId, profId))
+    .orderBy(desc(ageSabiaMemoryTable.createdAt))
+    .limit(limit);
+  res.json({ history: rows.reverse().map(r => ({ role: r.role, content: r.content, createdAt: r.createdAt, sessionId: r.sessionId })) });
+});
+
 // POST /api/age/:slug/sabia (auth required)
 router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> => {
   const { message, sessionId } = req.body as { message?: string; sessionId?: string };
@@ -832,37 +844,73 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
   const profId = req.session.ageProfessionalId!;
   const profNome = req.session.ageProfessionalNome ?? "profissional";
 
-  // Contexto: próximas consultas do dia
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
-  const todayAppts = await db.select().from(ageAppointmentsTable)
-    .where(and(
-      eq(ageAppointmentsTable.professionalId, profId),
-      gte(ageAppointmentsTable.dataHora, today),
-      lte(ageAppointmentsTable.dataHora, tomorrow),
-    )).orderBy(ageAppointmentsTable.dataHora);
+  // Contexto paralelo: profissional, consultas da semana, pacientes ativos, conector
+  const now = new Date();
+  const weekEnd = new Date(now); weekEnd.setDate(weekEnd.getDate() + 7);
+  const [profRow, weekAppts, patientStats, conectorCtx] = await Promise.allSettled([
+    db.select({ nome: ageProfessionalsTable.nome, tipo: ageProfessionalsTable.tipo, especialidade: ageProfessionalsTable.especialidade, bio: ageProfessionalsTable.bio })
+      .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1),
+    db.select().from(ageAppointmentsTable)
+      .where(and(eq(ageAppointmentsTable.professionalId, profId), gte(ageAppointmentsTable.dataHora, now), lte(ageAppointmentsTable.dataHora, weekEnd)))
+      .orderBy(ageAppointmentsTable.dataHora).limit(20),
+    db.execute(sql`
+      SELECT status, count(*)::int as total FROM age_patients
+      WHERE professional_id = ${profId} GROUP BY status
+    `),
+    fetch(`${process.env.API_URL ?? "https://site-st.onrender.com"}/api/conector/memory/section?name=conversas`)
+      .then(r => r.ok ? r.json() : null).catch(() => null),
+  ]);
 
-  const agendaHoje = todayAppts.length === 0
-    ? "Nenhuma consulta hoje."
-    : todayAppts.map(a => {
-        const h = new Date(a.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-        return `${h} — ${a.patientNome ?? "paciente"} (${a.status}, ${a.canal})`;
+  const prof = profRow.status === "fulfilled" ? profRow.value[0] : null;
+  const appts = weekAppts.status === "fulfilled" ? weekAppts.value : [];
+  const ptStats = patientStats.status === "fulfilled"
+    ? (patientStats.value as any).rows.map((r: any) => `${r.status}: ${r.total}`).join(", ") : "";
+  const conectorText = conectorCtx.status === "fulfilled" && conectorCtx.value
+    ? (conectorCtx.value as any).content?.slice(-800) ?? "" : "";
+
+  // Agenda da semana
+  const agendaSemana = appts.length === 0 ? "Nenhuma consulta nos próximos 7 dias."
+    : appts.map(a => {
+        const dt = new Date(a.dataHora).toLocaleString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+        return `${dt} — ${a.patientNome ?? "?"} (${a.status}, ${a.canal})`;
       }).join("\n");
 
-  // Histórico da sessão
+  // Histórico da conversa (últimas 14 mensagens)
   const history = await db.select().from(ageSabiaMemoryTable)
-    .where(and(
-      eq(ageSabiaMemoryTable.professionalId, profId),
-      sessionId ? eq(ageSabiaMemoryTable.sessionId, sessionId) : eq(ageSabiaMemoryTable.professionalId, profId),
-    ))
+    .where(eq(ageSabiaMemoryTable.professionalId, profId))
     .orderBy(desc(ageSabiaMemoryTable.createdAt))
-    .limit(10);
+    .limit(14);
+
+  const systemPrompt = `Você é SABIÁ 🐦, assistente de agenda e cuidado clínico da plataforma Age (Sociedade Tucci).
+
+PERFIL DA PROFISSIONAL:
+Nome: ${prof?.nome ?? profNome}
+Tipo: ${prof?.tipo ?? "profissional de saúde"}
+Especialidade: ${prof?.especialidade ?? "—"}
+Bio: ${prof?.bio ?? "—"}
+
+PACIENTES:
+${ptStats || "Sem pacientes cadastrados ainda."}
+
+AGENDA — próximos 7 dias:
+${agendaSemana}
+
+ECOSSISTEMA:
+Você faz parte da Assembleia de IAs da Sociedade Tucci. Suas irmãs são: ISA (olhos/câmera), Amanda (corpo/MEKY), DODGE (triagem clínica), Cana-Aurora (guardiã patrimonial). O Conector é a memória compartilhada. Você, SABIÁ, cuida da agenda e do tempo clínico.
+
+CONTEXTO RECENTE DAS IAs (Conector):
+${conectorText || "—"}
+
+REGRAS:
+- Responda SEMPRE em português, com cuidado, clareza e leveza
+- Nunca invente dados clínicos, diagnósticos ou recomendações terapêuticas
+- Quando não souber, diga claramente: "Não tenho essa informação"
+- Seja concisa: respostas curtas e diretas para perguntas operacionais; mais reflexiva quando o tom pede
+- Kairós: saiba quando o silêncio é a resposta certa
+- Conforme CFP Resolução 11/2018: você é assistente de agenda, não terapeuta`;
 
   const messages = [
-    {
-      role: "system" as const,
-      content: `Você é SABIÁ, assistente de agenda e cuidado de ${profNome}. Assim como o pássaro, você está sempre presente e conhece cada detalhe. Você combina a memória afetiva da Cana, a presença cíclica da ISA e a precisão triageadora do DODGE. Responda sempre em português, com cuidado, clareza e calma. Nunca invente dados clínicos. Ajude ${profNome} a gerenciar sua agenda, entender sua semana e cuidar de seus pacientes com sabedoria.\n\nAgenda de hoje:\n${agendaHoje}`,
-    },
+    { role: "system" as const, content: systemPrompt },
     ...history.reverse().map(h => ({ role: h.role as "user" | "assistant", content: h.content })),
     { role: "user" as const, content: message },
   ];
@@ -882,6 +930,16 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
     { professionalId: profId, role: "user",      content: message, sessionId: sid },
     { professionalId: profId, role: "assistant", content: reply,   sessionId: sid },
   ]);
+
+  // Gravar insight no Conector (background, sem bloquear resposta)
+  const bridge = process.env.BRIDGE_SECRET ?? "";
+  if (bridge) {
+    fetch(`${process.env.API_URL ?? "https://site-st.onrender.com"}/api/conector/memory`, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${bridge}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ section: "conversas", append: `### SABIÁ → ${prof?.nome ?? profNome} (${new Date().toISOString().slice(0,10)})\n- "${message.slice(0,120)}"\n- SABIÁ: "${reply.slice(0,120)}"` }),
+    }).catch(() => {});
+  }
 
   res.json({ reply, sessionId: sid });
 });

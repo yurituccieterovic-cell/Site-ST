@@ -146,12 +146,14 @@ export function AgePage() {
   const [rescheduleSelected, setRescheduleSelected] = useState<Slot | null>(null);
 
   // SABIÁ chat
-  const [msgs, setMsgs] = useState<ChatMsg[]>([
-    { role: "assistant", content: "Olá! Sou a SABIÁ, sua assistente de agenda. Pode perguntar sobre sua semana, seus pacientes ou pedir sugestões. 🐦" }
-  ]);
-  const [sabiaInput, setSabiaInput] = useState("");
+  const SABIA_GREETING = "Olá! Sou a SABIÁ, sua assistente de agenda. 🐦 Pode perguntar sobre sua semana, seus pacientes ou pedir sugestões.";
+  const [msgs, setMsgs] = useState<ChatMsg[]>([{ role: "assistant", content: SABIA_GREETING }]);
+  const [sabiaInput, setSabiaInput] = useState(() => {
+    try { return localStorage.getItem(`sabia-draft-${window.location.pathname}`) ?? ""; } catch { return ""; }
+  });
   const [sabiaLoading, setSabiaLoading] = useState(false);
   const [sabiaSessionId, setSabiaSessionId] = useState("");
+  const [sabiaHistoryLoaded, setSabiaHistoryLoaded] = useState(false);
   const msgBottomRef = useRef<HTMLDivElement>(null);
 
   // New rule form
@@ -401,6 +403,32 @@ export function AgePage() {
     const notasVisible = view === "notas" || (drawerOpen && drawerTab === "notas");
     if (notasVisible && mode === "professional" && authStep === "done") loadNotas();
   }, [view, mode, authStep, loadNotas, drawerOpen, drawerTab]);
+
+  // Carregar histórico SABIÁ ao entrar no portal
+  useEffect(() => {
+    if (mode !== "professional" || authStep !== "done" || sabiaHistoryLoaded || !slug) return;
+    setSabiaHistoryLoaded(true);
+    fetch(`${API}/api/age/${slug}/sabia/history?limit=40`, { credentials: "include" })
+      .then(r => r.ok ? r.json() : null)
+      .then((d: { history?: { role: string; content: string }[] } | null) => {
+        if (d?.history && d.history.length > 0) {
+          setMsgs([
+            { role: "assistant", content: SABIA_GREETING },
+            ...d.history.map(h => ({ role: h.role as "user" | "assistant", content: h.content })),
+          ]);
+          // restaurar sessionId da última mensagem (se disponível)
+        }
+      })
+      .catch(() => {});
+  }, [mode, authStep, slug, sabiaHistoryLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Persistir draft no localStorage
+  useEffect(() => {
+    try {
+      if (sabiaInput) localStorage.setItem(`sabia-draft-${window.location.pathname}`, sabiaInput);
+      else localStorage.removeItem(`sabia-draft-${window.location.pathname}`);
+    } catch { /* ignore */ }
+  }, [sabiaInput]);
 
   // Confirmar email via ?confirm= na URL
   useEffect(() => {
@@ -703,7 +731,9 @@ export function AgePage() {
   async function sendSabia(e: React.FormEvent) {
     e.preventDefault();
     if (!sabiaInput.trim() || sabiaLoading) return;
-    const userMsg = sabiaInput.trim(); setSabiaInput("");
+    const userMsg = sabiaInput.trim();
+    setSabiaInput("");
+    try { localStorage.removeItem(`sabia-draft-${window.location.pathname}`); } catch { /* ignore */ }
     setMsgs(m => [...m, { role: "user", content: userMsg }]);
     setSabiaLoading(true);
     const ctrl = new AbortController();
@@ -2632,14 +2662,19 @@ export function AgePage() {
           )}
           <div ref={msgBottomRef} />
         </div>
-        <form onSubmit={sendSabia} style={{ padding: "0.75rem 1rem", borderTop: "1px solid #1e293b", display: "flex", gap: 8 }}>
-          <input value={sabiaInput} onChange={e => setSabiaInput(e.target.value)} placeholder="Pergunte à SABIÁ…"
-            disabled={sabiaLoading}
-            style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
-          {sabiaLoading
-            ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: `1px solid #f8717155`, borderRadius: 8, padding: "0 14px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>✕</button>
-            : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 8, padding: "0 16px", color: "#080c10", fontWeight: 700, cursor: "pointer", fontSize: 18 }}>↑</button>
-          }
+        <form onSubmit={sendSabia} style={{ padding: "0.75rem 1rem", borderTop: "1px solid #1e293b", display: "flex", flexDirection: "column", gap: 6 }}>
+          <textarea value={sabiaInput}
+            onChange={e => setSabiaInput(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendSabia(e as unknown as React.FormEvent); } }}
+            placeholder="Pergunte à SABIÁ… (Enter envia, Shift+Enter nova linha)"
+            disabled={sabiaLoading} rows={2}
+            style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, resize: "none", lineHeight: 1.5 }} />
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            {sabiaLoading
+              ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 8, padding: "6px 14px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 13 }}>✕ cancelar</button>
+              : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 8, padding: "6px 18px", color: "#080c10", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>Enviar ↑</button>
+            }
+          </div>
         </form>
       </div>
     );
@@ -3323,18 +3358,21 @@ export function AgePage() {
               </div>
 
               {/* Input */}
-              <form onSubmit={sendSabia} style={{ padding: "8px 12px", borderTop: "1px solid #1e293b", display: "flex", gap: 6 }}>
-                <input
+              <form onSubmit={sendSabia} style={{ padding: "8px 12px", borderTop: "1px solid #1e293b", display: "flex", flexDirection: "column", gap: 4 }}>
+                <textarea
                   value={sabiaInput}
                   onChange={e => setSabiaInput(e.target.value)}
-                  placeholder="Pergunte à SABIÁ…"
-                  disabled={sabiaLoading}
-                  style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 12 }}
+                  onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendSabia(e as unknown as React.FormEvent); } }}
+                  placeholder="Pergunte… (Enter envia)"
+                  disabled={sabiaLoading} rows={2}
+                  style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 12, resize: "none" }}
                 />
-                {sabiaLoading
-                  ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 8, padding: "7px 10px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 12 }}>✕</button>
-                  : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 8, color: "#080c10", padding: "7px 12px", cursor: "pointer", fontWeight: 700, fontSize: 12 }}>→</button>
-                }
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  {sabiaLoading
+                    ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 6, padding: "4px 10px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 11 }}>✕ cancelar</button>
+                    : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "4px 12px", cursor: "pointer", fontWeight: 700, fontSize: 11 }}>Enviar →</button>
+                  }
+                </div>
               </form>
             </div>
           )}
