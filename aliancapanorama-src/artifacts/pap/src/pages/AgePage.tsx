@@ -255,7 +255,7 @@ export function AgePage() {
   const [showPatientPwNew, setShowPatientPwNew] = useState(false);
 
   // Formulário de interesse (landing profissional)
-  const [interForm, setInterForm] = useState({ nome: "", email: "", espec: "", msg: "" });
+  const [interForm, setInterForm] = useState({ nome: "", email: "", espec: "", pacientes: "", msg: "" });
   const [interStatus, setInterStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
 
   // Visualização calendário (público) — todos os estados no top-level para respeitar rules of hooks
@@ -976,7 +976,7 @@ export function AgePage() {
             <ellipse cx="53" cy="27" rx="2" ry="2" fill="white" />
             <path d="M40 40 Q48 44 56 40" stroke="#fbbf24" strokeWidth="2.5" fill="none" strokeLinecap="round" />
           </svg>
-          <span style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 17, letterSpacing: 1 }}>S.T. Age</span>
+          <span style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 17, letterSpacing: 1 }}>age</span>
           <span style={{ color: "#334155", fontSize: 13, marginLeft: 6 }}>Agenda de Saúde</span>
           <div style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
             <a href="/aliancapanorama/age/gestora" style={{ color: "#475569", fontSize: 12, textDecoration: "none" }}>Profissional</a>
@@ -995,33 +995,28 @@ export function AgePage() {
           <p style={{ color: "#94a3b8", fontSize: 15, lineHeight: 1.7, marginBottom: 28, maxWidth: 440, margin: "0 auto 28px" }}>
             Agenda online para psicólogas, médicos e terapeutas — com confirmação automática, lembretes por email e a SABIÁ como assistente de cuidado.
           </p>
-          {/* Visual: SABIÁ pássaro SVG + cena de cuidado */}
-          <div style={{ margin: "0 auto 28px", maxWidth: 380, position: "relative" }}>
-            <div style={{ background: "linear-gradient(135deg, #0d2420 0%, #080c10 100%)", border: "1px solid #2dd4bf22", borderRadius: 20, padding: "28px 20px", display: "flex", alignItems: "center", justifyContent: "center", gap: 24 }}>
-              {/* Sabiá SVG */}
-              <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style={{ width: 80, height: 80, flexShrink: 0 }}>
-                {/* corpo */}
-                <ellipse cx="40" cy="48" rx="18" ry="14" fill="#1a3a2e" />
-                {/* peito claro */}
-                <ellipse cx="40" cy="52" rx="12" ry="9" fill="#2dd4bf22" />
-                {/* cabeça */}
-                <ellipse cx="40" cy="32" rx="13" ry="12" fill="#1a3a2e" />
-                {/* bico */}
-                <path d="M28 32 L22 30 L28 34 Z" fill="#d4a847" />
-                {/* olho */}
-                <ellipse cx="34" cy="30" rx="2.5" ry="2.5" fill="#2dd4bf" />
-                <ellipse cx="34" cy="30" rx="1" ry="1" fill="#080c10" />
-                {/* asa */}
-                <path d="M52 44 Q62 36 58 52 Q52 58 44 54 Z" fill="#0d2420" stroke="#2dd4bf33" strokeWidth="1" />
-                {/* cauda */}
-                <path d="M38 60 Q40 70 42 60" stroke="#2dd4bf66" strokeWidth="2" fill="none" strokeLinecap="round" />
-                {/* reflexo brilho */}
-                <ellipse cx="36" cy="29" rx="0.8" ry="0.8" fill="white" opacity="0.7" />
-              </svg>
-              <div style={{ textAlign: "left" }}>
-                <div style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>Você cultiva saúde.</div>
-                <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.6 }}>A SABIÁ cuida do tempo.</div>
-                <div style={{ color: "#1e3a30", fontSize: 11, marginTop: 10, fontStyle: "italic" }}>— Age · Tecnologia Médica</div>
+          {/* Visual: logo age ampliado + frase */}
+          <div style={{ margin: "0 auto 28px", maxWidth: 340 }}>
+            <div style={{ background: "#0d2420", border: "1px solid #2dd4bf22", borderRadius: 18, padding: "22px 28px", display: "flex", alignItems: "center", gap: 20 }}>
+              {/* mesmo ícone do header, ampliado */}
+              <div style={{ flexShrink: 0 }}>
+                <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 56, height: 56 }}>
+                  <ellipse cx="48" cy="52" rx="26" ry="28" fill="#4a5568" />
+                  <ellipse cx="48" cy="58" rx="18" ry="14" fill="#f97316" />
+                  <ellipse cx="48" cy="36" rx="16" ry="18" fill="#4a5568" />
+                  <ellipse cx="48" cy="32" rx="11" ry="13" fill="#475569" />
+                  <ellipse cx="43" cy="28" rx="4" ry="4.5" fill="#1e293b" />
+                  <ellipse cx="53" cy="28" rx="4" ry="4.5" fill="#1e293b" />
+                  <ellipse cx="43" cy="27" rx="2" ry="2" fill="white" />
+                  <ellipse cx="53" cy="27" rx="2" ry="2" fill="white" />
+                  <path d="M40 40 Q48 44 56 40" stroke="#fbbf24" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                </svg>
+                <div style={{ color: "#2dd4bf", fontWeight: 900, fontSize: 14, letterSpacing: 3, textAlign: "center", marginTop: 4 }}>age</div>
+              </div>
+              <div style={{ textAlign: "left", borderLeft: "1px solid #2dd4bf22", paddingLeft: 20 }}>
+                <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 13, marginBottom: 4 }}>Você cultiva saúde.</div>
+                <div style={{ color: "#64748b", fontSize: 12, lineHeight: 1.6 }}>A SABIÁ cuida do tempo.</div>
+                <div style={{ color: "#2dd4bf44", fontSize: 10, marginTop: 8, fontStyle: "italic", letterSpacing: 1 }}>Tecnologia Médica</div>
               </div>
             </div>
           </div>
@@ -1172,8 +1167,18 @@ export function AgePage() {
                   <input required type="email" value={interForm.email} onChange={e => setInterForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Email profissional *" style={{ flex: "1 1 200px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
                 </div>
-                <input value={interForm.espec} onChange={e => setInterForm(f => ({ ...f, espec: e.target.value }))}
-                  placeholder="Especialidade (psicologia, medicina, terapia…)" style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14, marginBottom: 10, boxSizing: "border-box" }} />
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
+                  <input value={interForm.espec} onChange={e => setInterForm(f => ({ ...f, espec: e.target.value }))}
+                    placeholder="Especialidade (psicologia, medicina, terapia…)" style={{ flex: "1 1 200px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+                  <select value={interForm.pacientes} onChange={e => setInterForm(f => ({ ...f, pacientes: e.target.value }))}
+                    style={{ flex: "0 1 180px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: interForm.pacientes ? "#e2e8f0" : "#475569", padding: "10px 14px", fontSize: 14 }}>
+                    <option value="">Quantos pacientes/mês?</option>
+                    <option value="1-20">Até 20</option>
+                    <option value="21-60">21 – 60</option>
+                    <option value="61-150">61 – 150</option>
+                    <option value="150+">Mais de 150</option>
+                  </select>
+                </div>
                 <textarea value={interForm.msg} onChange={e => setInterForm(f => ({ ...f, msg: e.target.value }))}
                   placeholder="Alguma dúvida ou detalhe? (opcional)" rows={2}
                   style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14, resize: "vertical", boxSizing: "border-box", marginBottom: 14 }} />

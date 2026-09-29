@@ -38,11 +38,27 @@ const AGE_EMAIL_TO    = process.env.AGE_EMAIL_TO        ?? "";   // override: re
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-async function sendEmail(to: string, subject: string, body: string) {
+const AGE_FORWARD       = process.env.AGE_EMAIL_FORWARD ?? "";       // sempre BCC neste email
+const AGE_DISABLE_PROF  = process.env.AGE_DISABLE_PROF_EMAILS === "true"; // desativa envio ao profissional/paciente
+
+async function sendEmail(to: string, subject: string, body: string, opts?: { force?: boolean }) {
   if (!GMAIL_PASS) { logger.warn("AGE: GMAIL_APP_PASSWORD ausente, email não enviado"); return; }
-  const dest = AGE_EMAIL_TO || to;
   const transport = createTransport({ service: "gmail", auth: { user: GMAIL, pass: GMAIL_PASS } });
-  await transport.sendMail({ from: GMAIL, to: dest, subject, text: body });
+
+  // Quando disabled: envia só para o forward (luddlocke), não para o destinatário real
+  const skipTo = AGE_DISABLE_PROF && !opts?.force;
+  const dest   = AGE_EMAIL_TO || (skipTo ? null : to);
+  const bcc    = AGE_FORWARD && AGE_FORWARD !== dest ? AGE_FORWARD : undefined;
+
+  if (!dest && !bcc) { logger.info({ to, subject }, "age: email ignorado (AGE_DISABLE_PROF_EMAILS=true, sem forward)"); return; }
+
+  await transport.sendMail({
+    from: GMAIL,
+    to: dest ?? AGE_FORWARD,
+    bcc,
+    subject: skipTo ? `[para: ${to}] ${subject}` : subject,
+    text: body,
+  });
 }
 
 function requireAgeAuth(req: any, res: any, next: any) {
@@ -2295,7 +2311,7 @@ router.post("/age/:slug/alertas/:id/ler", requireAgeAuth, async (req, res): Prom
 
 // POST /api/age/interesse — formulário público de interesse (landing profissional)
 router.post("/age/interesse", async (req, res): Promise<void> => {
-  const { nome, email, especialidade, msg } = req.body ?? {};
+  const { nome, email, especialidade, pacientes, msg } = req.body ?? {};
   if (!nome || !email) { res.status(400).json({ error: "nome e email são obrigatórios" }); return; }
 
   await db.execute(sql`
@@ -2303,19 +2319,12 @@ router.post("/age/interesse", async (req, res): Promise<void> => {
     VALUES (${String(nome)}, ${String(email)}, ${especialidade ? String(especialidade) : null}, ${msg ? String(msg) : null})
   `);
 
-  // Notificação interna por email
-  const transporter = createTransport({
-    service: "gmail",
-    auth: { user: process.env.GMAIL_ACCOUNT, pass: process.env.GMAIL_APP_PASSWORD },
-  });
   const toAdmin = process.env.AGE_EMAIL_TO ?? process.env.GMAIL_ACCOUNT ?? "";
   if (toAdmin) {
-    transporter.sendMail({
-      from: `"Age — Interesse" <${process.env.GMAIL_ACCOUNT}>`,
-      to: toAdmin,
-      subject: `🐦 Novo interesse no Age: ${nome}`,
-      text: `Nome: ${nome}\nEmail: ${email}\nEspecialidade: ${especialidade ?? "-"}\nMensagem: ${msg ?? "-"}`,
-    }).catch(() => {});
+    sendEmail(toAdmin, `🐦 Novo interesse no Age: ${nome}`,
+      `Nome: ${nome}\nEmail: ${email}\nEspecialidade: ${especialidade ?? "-"}\nPacientes/mês: ${pacientes ?? "-"}\nMensagem: ${msg ?? "-"}`,
+      { force: true }
+    ).catch(() => {});
   }
 
   res.json({ ok: true });
