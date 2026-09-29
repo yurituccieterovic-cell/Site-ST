@@ -100,6 +100,13 @@ export function AgePage() {
   const [selectedAppt, setSelectedAppt] = useState<Appt | null>(null);
   const [apptNotes, setApptNotes] = useState("");
   const [confirmApptAction, setConfirmApptAction] = useState<{ id: number; status: string } | null>(null);
+  const [profBookModal, setProfBookModal] = useState(false);
+  const [profBookSlots, setProfBookSlots] = useState<{ dataHora: string; duracaoMin: number; canal: string }[]>([]);
+  const [profBookSlotsLoading, setProfBookSlotsLoading] = useState(false);
+  const [profBookSelectedDate, setProfBookSelectedDate] = useState("");
+  const [profBookForm, setProfBookForm] = useState({ dataHora: "", canal: "presencial", patientId: 0, patientNome: "", patientEmail: "", patientTelefone: "" });
+  const [profBookLoading, setProfBookLoading] = useState(false);
+  const [profBookError, setProfBookError] = useState("");
   const [undoRule, setUndoRule] = useState<{ id: number; label: string; timerId: ReturnType<typeof setTimeout> } | null>(null);
 
   // Config — opções de pagamento
@@ -816,6 +823,48 @@ export function AgePage() {
       else alert(d.error ?? "Erro ao gerar convite.");
     } catch { alert("Sem conexão."); }
     setInviteLoading(false);
+  }
+
+  async function openProfBook() {
+    setProfBookModal(true);
+    setProfBookError("");
+    setProfBookForm({ dataHora: "", canal: "presencial", patientId: 0, patientNome: "", patientEmail: "", patientTelefone: "" });
+    setProfBookSelectedDate("");
+    setProfBookSlotsLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/slots`, { credentials: "include" });
+      const data = await r.json() as { dataHora: string; duracaoMin: number; canal: string }[];
+      setProfBookSlots(data);
+      if (data.length > 0) {
+        const firstDate = data[0].dataHora.slice(0, 10);
+        setProfBookSelectedDate(firstDate);
+      }
+    } catch { /* silencia */ }
+    setProfBookSlotsLoading(false);
+  }
+
+  async function submitProfBook(e: React.FormEvent) {
+    e.preventDefault();
+    setProfBookError("");
+    if (!profBookForm.dataHora) { setProfBookError("Selecione um horário."); return; }
+    if (!profBookForm.patientId && !profBookForm.patientNome.trim()) { setProfBookError("Selecione ou informe um paciente."); return; }
+    setProfBookLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/appointments/book-by-prof`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profBookForm),
+      });
+      const d = await r.json() as { id?: number; error?: string };
+      if (d.id) {
+        setProfBookModal(false);
+        loadAppts();
+        loadFeed();
+      } else {
+        setProfBookError(d.error ?? "Erro ao agendar.");
+      }
+    } catch { setProfBookError("Sem conexão."); }
+    setProfBookLoading(false);
   }
 
   async function addDirectPatient(e: React.FormEvent) {
@@ -1689,10 +1738,111 @@ export function AgePage() {
       <div style={{ padding: "1rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
           <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600 }}>Agenda — próximos 30 dias</h2>
-          <button onClick={loadAppts} style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
-            Atualizar
-          </button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={loadAppts} style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>↻</button>
+            <button onClick={openProfBook} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "5px 12px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>+ Nova consulta</button>
+          </div>
         </div>
+
+        {/* Modal nova consulta pelo profissional */}
+        {profBookModal && (
+          <div style={{ position: "fixed", inset: 0, background: "#000a", zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
+            onClick={e => { if (e.target === e.currentTarget) setProfBookModal(false); }}>
+            <div style={{ background: "#0f1318", border: `1px solid ${color}44`, borderRadius: 16, padding: 24, width: 420, maxWidth: "95vw", maxHeight: "85vh", overflowY: "auto" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <h3 style={{ color, fontSize: 15, fontWeight: 700, margin: 0 }}>📅 Nova consulta</h3>
+                <button onClick={() => setProfBookModal(false)} style={{ background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 18 }}>✕</button>
+              </div>
+              <form onSubmit={submitProfBook}>
+                {/* Paciente */}
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, marginBottom: 6 }}>PACIENTE</div>
+                  <select
+                    value={profBookForm.patientId}
+                    onChange={e => {
+                      const id = Number(e.target.value);
+                      const pat = patients.find(p => p.id === id);
+                      setProfBookForm(f => ({
+                        ...f, patientId: id,
+                        patientNome: pat?.nome ?? f.patientNome,
+                        patientEmail: pat?.email ?? f.patientEmail,
+                        patientTelefone: pat?.telefone ?? f.patientTelefone,
+                      }));
+                    }}
+                    style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, marginBottom: 6 }}>
+                    <option value={0}>— Novo paciente —</option>
+                    {patients.filter(p => p.status === "aprovado").map(p => (
+                      <option key={p.id} value={p.id}>{p.nome}</option>
+                    ))}
+                  </select>
+                  {!profBookForm.patientId && (
+                    <input type="text" placeholder="Nome do paciente *" value={profBookForm.patientNome} required
+                      onChange={e => setProfBookForm(f => ({ ...f, patientNome: e.target.value }))}
+                      style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "8px 12px", fontSize: 13, marginBottom: 6, boxSizing: "border-box" }}
+                    />
+                  )}
+                </div>
+
+                {/* Slots — picker de data depois hora */}
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, marginBottom: 6 }}>HORÁRIO</div>
+                  {profBookSlotsLoading && <div style={{ color: "#475569", fontSize: 12 }}>Carregando horários...</div>}
+                  {!profBookSlotsLoading && profBookSlots.length === 0 && <div style={{ color: "#f59e0b", fontSize: 12 }}>Nenhum horário disponível. Verifique a disponibilidade.</div>}
+                  {!profBookSlotsLoading && profBookSlots.length > 0 && (() => {
+                    const byDate: Record<string, typeof profBookSlots> = {};
+                    profBookSlots.forEach(s => {
+                      const d = s.dataHora.slice(0, 10);
+                      (byDate[d] ??= []).push(s);
+                    });
+                    const dates = Object.keys(byDate).slice(0, 14);
+                    const slotsForDate = byDate[profBookSelectedDate] ?? [];
+                    return (
+                      <>
+                        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+                          {dates.map(d => (
+                            <button key={d} type="button" onClick={() => { setProfBookSelectedDate(d); setProfBookForm(f => ({ ...f, dataHora: "" })); }}
+                              style={{ padding: "4px 10px", borderRadius: 6, border: `1px solid ${profBookSelectedDate === d ? color : "#1e293b"}`, background: profBookSelectedDate === d ? color + "22" : "none", color: profBookSelectedDate === d ? color : "#64748b", fontSize: 11, cursor: "pointer" }}>
+                              {new Date(d + "T12:00:00").toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short" })}
+                            </button>
+                          ))}
+                        </div>
+                        {profBookSelectedDate && (
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                            {slotsForDate.map(s => (
+                              <button key={s.dataHora} type="button" onClick={() => setProfBookForm(f => ({ ...f, dataHora: s.dataHora, canal: s.canal }))}
+                                style={{ padding: "5px 10px", borderRadius: 6, border: `1px solid ${profBookForm.dataHora === s.dataHora ? color : "#1e293b"}`, background: profBookForm.dataHora === s.dataHora ? color + "22" : "none", color: profBookForm.dataHora === s.dataHora ? color : "#94a3b8", fontSize: 12, cursor: "pointer", fontWeight: profBookForm.dataHora === s.dataHora ? 700 : 400 }}>
+                                {new Date(s.dataHora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+
+                {/* Canal */}
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, marginBottom: 6 }}>CANAL</div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    {["presencial", "online"].map(c => (
+                      <button key={c} type="button" onClick={() => setProfBookForm(f => ({ ...f, canal: c }))}
+                        style={{ flex: 1, padding: "7px 0", borderRadius: 6, border: `1px solid ${profBookForm.canal === c ? color : "#1e293b"}`, background: profBookForm.canal === c ? color + "22" : "none", color: profBookForm.canal === c ? color : "#64748b", fontSize: 12, cursor: "pointer", fontWeight: 600 }}>
+                        {c === "presencial" ? "🏥 Presencial" : "💻 Online"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {profBookError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 10 }}>{profBookError}</div>}
+                <button type="submit" disabled={profBookLoading || !profBookForm.dataHora}
+                  style={{ width: "100%", background: profBookForm.dataHora ? color : "#334155", border: "none", borderRadius: 8, color: profBookForm.dataHora ? "#080c10" : "#64748b", padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: profBookForm.dataHora ? "pointer" : "not-allowed" }}>
+                  {profBookLoading ? "Agendando..." : "Confirmar consulta"}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
         {appts.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>Nenhum agendamento.</div>}
         {Object.entries(grouped).map(([day, dayAppts]) => (
           <div key={day} style={{ marginBottom: 20 }}>

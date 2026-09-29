@@ -512,6 +512,57 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
   res.status(201).json(appt);
 });
 
+// POST /api/age/:slug/appointments/book-by-prof — profissional agenda direto pelo portal
+router.post("/age/:slug/appointments/book-by-prof", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { dataHora, canal = "presencial", patientId, patientNome, patientEmail, patientTelefone } = req.body as {
+    dataHora?: string; canal?: string;
+    patientId?: number; patientNome?: string; patientEmail?: string; patientTelefone?: string;
+  };
+
+  if (!dataHora) { res.status(400).json({ error: "dataHora obrigatório" }); return; }
+
+  let nome = patientNome?.trim();
+  let email = patientEmail?.trim().toLowerCase() || null;
+  let telefone = patientTelefone?.trim() || null;
+
+  if (patientId) {
+    const [pat] = await db.select().from(agePatientsTable).where(and(eq(agePatientsTable.id, patientId), eq(agePatientsTable.professionalId, profId))).limit(1);
+    if (pat) { nome = pat.nome; email = pat.email ?? email; telefone = pat.telefone ?? telefone; }
+  }
+  if (!nome) { res.status(400).json({ error: "patientNome obrigatório" }); return; }
+
+  const [prof] = await db.select().from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const [existing] = await db.select({ id: ageAppointmentsTable.id }).from(ageAppointmentsTable)
+    .where(and(eq(ageAppointmentsTable.professionalId, profId), eq(ageAppointmentsTable.dataHora, new Date(dataHora)))).limit(1);
+  if (existing) { res.status(409).json({ error: "Horário já reservado. Escolha outro." }); return; }
+
+  const cancelToken = randomUUID();
+  const [appt] = await db.insert(ageAppointmentsTable).values({
+    professionalId: profId,
+    patientNome: nome!, patientEmail: email, patientTelefone: telefone,
+    dataHora: new Date(dataHora),
+    duracaoMin: 50,
+    status: "confirmado",
+    canal,
+    lgpdConsent: true,
+    lgpdConsentAt: new Date(),
+    cancelToken,
+  } as any).returning();
+
+  if (email) {
+    const dt = new Date(dataHora).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+    const cancelLink = `${FRONT_URL}/age/${prof.slug}?cancel=${cancelToken}`;
+    sendEmail(email, `Consulta agendada — ${prof.nome}`,
+      `Olá ${nome},\n\nSua consulta foi agendada por ${prof.nome}.\n\n📅 ${dt}\n📍 Canal: ${canal}\n\nCancelar: ${cancelLink}\n\n— SABIÁ`,
+    ).catch(() => {});
+  }
+
+  res.status(201).json(appt);
+});
+
 // ─── Cancelamento e reagendamento por token (sem login) ───────────────────────
 
 // GET /api/age/:slug/appointments/by-token/:token — info pública do agendamento
