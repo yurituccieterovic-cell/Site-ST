@@ -39,6 +39,8 @@ TEMAS = {
     "claro":   {"bg": "#f8fafc", "titulo": "#1e293b", "texto": "#334155", "sub": "#64748b", "acento": "#3b82f6"},
     "ocean":   {"bg": "#0c1a2e", "titulo": "#38bdf8", "texto": "#e0f2fe", "sub": "#7dd3fc", "acento": "#0ea5e9"},
     "sunset":  {"bg": "#1a0a14", "titulo": "#fb923c", "texto": "#fde8d0", "sub": "#fdba74", "acento": "#f97316"},
+    "rosa":    {"bg": "#1a0a14", "titulo": "#f472b6", "texto": "#fce7f3", "sub": "#f9a8d4", "acento": "#ec4899"},
+    "verde":   {"bg": "#071a0e", "titulo": "#4ade80", "texto": "#dcfce7", "sub": "#86efac", "acento": "#22c55e"},
 }
 
 # ─── Helpers ─────────────────────────────────────────────────────────────────

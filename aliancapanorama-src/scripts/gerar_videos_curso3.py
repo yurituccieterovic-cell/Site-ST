@@ -177,7 +177,8 @@ def gerar_episodio(ep: dict, out_dir: str) -> bool:
     total_s = sum(s["duracao"] for s in slides)
     print(f"  ⏱  Duração prevista: {total_s:.0f}s ({total_s/60:.1f}min)")
 
-    cmd = [PYTHON, SCRIPT, out_json, out_mp4, "--tts", "pt-BR", "--layout", "escuro", "--motion", "full"]
+    tema = "verde" if ep_num in (4, 5, 6) else ("ocean" if ep_num in (7, 8) else "escuro")
+    cmd = [PYTHON, SCRIPT, out_json, out_mp4, "--tts", "pt-BR", "--layout", tema, "--motion", "full"]
     print(f"\n  ▶ premiere_maker...")
     r = subprocess.run(cmd)
 

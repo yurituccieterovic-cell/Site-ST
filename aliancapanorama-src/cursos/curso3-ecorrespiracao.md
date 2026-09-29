@@ -312,6 +312,266 @@ Até lá: pergunte-se: o que eu crio hoje alimenta ou esgota o amanhã?
 
 ---
 
-**Status:** Eps 1-3 prontos para gravação · Eps 4-8 pendentes  
-**Pipeline:** `python scripts/premiere_maker.py --tts pt-BR`  
+**Status:** Eps 1-3 gerados (v3 motion full) · Eps 4-8 roteiros prontos (Crash Course style)  
+**Pipeline:** `python scripts/gerar_videos_curso3.py 4 5 6 7 8`  
 **Gerado por:** Assembleia #715 · Cláudio Coach · 2026-09-29
+
+---
+
+## EPISÓDIO 4 — Ciclos, não Linhas
+
+*Do crescimento infinito ao ciclo regenerativo — a maior virada de perspectiva do século*
+
+### CENA 1 — A MENTIRA DO INFINITO
+
+Crescimento infinito em planeta finito. Soa absurdo assim, né? Mas é exatamente o que o modelo econômico dominante promete. Mais. Sempre mais. Mais produção, mais consumo, mais descarte.
+
+A natureza discorda. E ela tem 3,8 bilhões de anos de experiência para argumentar.
+
+### CENA 2 — COMO A NATUREZA CRESCE
+
+Nenhum sistema vivo cresce para sempre em linha reta. O que a natureza faz? Ciclos.
+
+Carbono sai de uma planta, entra num animal, vira decomposição, vira solo, alimenta outra planta. Água evapora, forma nuvem, vira chuva, infiltra solo, alimenta raiz. Não tem lixo no modelo natural — tem insumo esperando o próximo ciclo.
+
+Cada "fim" é o começo de outra coisa.
+
+### CENA 3 — ECONOMIA CIRCULAR É BIOMIMÉTICA
+
+Quando engenheiros perceberam isso, criaram a economia circular. A ideia: projetar sistemas onde o resíduo de um processo é matéria-prima de outro. Igual a natureza faz há bilhões de anos.
+
+Celular velho → componentes reaproveitados. Sobra de fábrica → energia. Casca de fruta → adubo. Não é utopia — é engenharia inspirada em biologia.
+
+### CENA 4 — CÓDIGO QUE NÃO VAZA
+
+Tem uma versão disso em software também. Memória que não é liberada → leak. Dados que não são deletados → débito técnico. Processos que rodam sem parar → custo invisível.
+
+Código sustentável fecha seus loops. Assim como o ciclo do carbono fecha o dele.
+
+### CENA 5 — O CICLO DE VIDA DAS COISAS
+
+Você já pensou que seu smartphone tem um ciclo de vida? Mineração → fabricação → uso → descarte. Na maioria dos casos, o ciclo termina aí — em lixo eletrônico.
+
+Mas alguns fabricantes agora oferecem buy-back, remanufatura, reciclagem de componentes. O ciclo se fecha. O planeta agradece — e você paga menos pelo próximo aparelho.
+
+### CENA 6 — A PERGUNTA QUE MUDA TUDO
+
+Antes de criar qualquer coisa — produto, código, empresa, hábito — existe uma pergunta que transforma o projeto: o que acontece quando isso acaba?
+
+Se você tem a resposta, você está pensando em ciclos. Se não tem, você está criando um problema para o futuro.
+
+### CENA 7 — SÍNTESE
+
+Neste episódio, vimos: crescimento linear é exceção na natureza, não regra. Ciclos como modelo de design para tecnologia e economia. Economia circular como biomimética aplicada. Cada sistema fechado cria valor para o próximo.
+
+No próximo episódio: e se a Terra pudesse nos falar diretamente? Ela já está tentando — pelo som.
+
+---
+
+## EPISÓDIO 5 — Escuta Ativa da Terra
+
+*Bioacústica, sensoriamento e IA: quando a tecnologia aprende a ouvir*
+
+### CENA 1 — A TERRA FAZ BARULHO
+
+Floresta tropical saudável: 200 espécies cantando ao mesmo tempo. Floresta degradada: silêncio. Um ecólogo experiente consegue detectar o estado de conservação de uma floresta só pelo som.
+
+Isso é bioacústica. E ela está se tornando uma das ferramentas mais poderosas da ecologia.
+
+### CENA 2 — OUVIR É MONITORAR
+
+Sensores de áudio espalhados por florestas capturam o "som do ecossistema" 24h por dia. IA analisa e detecta: mudanças na biodiversidade, presença de espécies-chave, sinais de desmatamento (motosserras), alertas de queimadas.
+
+É como ter um estetoscópio no planeta. Você ouve antes de ver o problema.
+
+### CENA 3 — IA QUE RECONHECE PÁSSAROS
+
+O BirdNET é um modelo de IA que identifica espécies de pássaros pelo canto com mais de 90% de precisão. Qualquer pessoa com celular pode contribuir com dados para pesquisas de biodiversidade.
+
+Ciência cidadã + IA + bioacústica = monitoramento planetário distribuído. A floresta ganha voz e ouvidos ao mesmo tempo.
+
+### CENA 4 — ALÉM DOS PÁSSAROS
+
+Baleias. Elefantes. Grilos. Abelhas. Cada espécie tem assinatura sonora. Quando essa assinatura some ou muda, algo aconteceu. Pesquisadores usam machine learning para mapear saúde de recifes de coral pelo som dos camarões. Silêncio anormal = alerta.
+
+O planeta está em constante diálogo. Faltava quem soubesse ouvir.
+
+### CENA 5 — SENSORIAMENTO ALÉM DO SOM
+
+Não é só áudio. Satélites medem temperatura de superfície, desmatamento, salinidade dos oceanos. Sensores de solo detectam pH, umidade, microbioma. Boias oceânicas registram acidificação da água em tempo real.
+
+A Terra emite dados em todas as frequências. Cada sensor é um neurônio numa rede nervosa planetária que está, finalmente, sendo construída.
+
+### CENA 6 — O PARADOXO DO MONITORAMENTO
+
+Mais dados, mais clareza. Mas clareza sobre o quê? Que estamos degradando mais rápido do que recuperando. Saber não resolve — mas saber com precisão muda a conversa política, científica e econômica.
+
+Dados de sensoriamento ambiental já foram usados em tribunais internacionais. A Terra agora tem testemunhas técnicas.
+
+### CENA 7 — SÍNTESE
+
+Neste episódio, vimos: bioacústica como diagnóstico ecológico. IA para reconhecimento de espécies em larga escala. Sensoriamento distribuído como sistema nervoso planetário. Dados ambientais como evidência científica e jurídica.
+
+No próximo episódio: e dentro das comunidades humanas? Como ecossistemas de pessoas funcionam — ou falham?
+
+---
+
+## EPISÓDIO 6 — Comunidade como Ecossistema
+
+*Diversidade, resiliência e colapso: o que florestas ensinam sobre grupos humanos*
+
+### CENA 1 — A MONOCULTURA É FRÁGIL
+
+Plantação de soja: milhares de hectares, uma única espécie. Eficiente. Vulnerável. Uma praga certa, uma seca específica, um fungo especializado — e tudo vai junto.
+
+Floresta tropical: milhares de espécies, tudo interconectado. Menos eficiente por metro quadrado. Quase impossível de destruir completamente.
+
+Comunidades humanas funcionam igual.
+
+### CENA 2 — DIVERSIDADE É REDUNDÂNCIA
+
+Em ecossistemas, quando uma espécie some, outra assume sua função. Isso se chama redundância funcional. É o que impede colapso sistêmico.
+
+Em equipes e comunidades: quando só uma pessoa sabe fazer algo crítico, você tem single point of failure. Diversidade de habilidades, perspectivas e experiências cria redundância. O sistema sobrevive à ausência de qualquer indivíduo.
+
+### CENA 3 — NICHO É CONTRIBUIÇÃO
+
+Cada espécie ocupa um nicho ecológico — uma função única que nenhuma outra desempenha exatamente igual. O besouro que só come aquele fungo. O pássaro que dispersa aquela semente específica.
+
+Em comunidades saudáveis, cada pessoa encontra seu nicho. Não competição por recursos escassos — colaboração onde cada um resolve o que ninguém mais resolve tão bem.
+
+### CENA 4 — PERTURBAÇÃO E RESILIÊNCIA
+
+Florestas não evitam perturbações — elas se adaptam. Incêndio → regeneração de espécies pioneiras → diversificação → floresta mais rica. A perturbação faz parte do ciclo.
+
+Comunidades resilientes não buscam estabilidade estática. Buscam capacidade de resposta. Diferença fundamental: uma tenta evitar mudança; a outra aprende a navegar por ela.
+
+### CENA 5 — COLAPSO ECOSSISTÊMICO
+
+O que causa colapso num ecossistema? Perda de diversidade além de um limiar crítico. Remoção de espécies-chave. Excesso de estresse por tempo demais.
+
+Comunidades humanas colapsam pelos mesmos motivos: homogeneização forçada, exclusão de vozes centrais, pressão contínua sem espaço de recuperação. A ecologia previu isso muito antes da sociologia.
+
+### CENA 6 — CULTIVAR BORDA
+
+Em ecossistemas, as zonas de fronteira entre biomas — chamadas de ecótonos — têm maior biodiversidade que qualquer um dos dois biomas isolados. A borda é onde as trocas acontecem.
+
+Comunidades que cultivam suas "bordas" — espaços de encontro entre perspectivas diferentes — são mais criativas, mais adaptativas, mais vivas.
+
+### CENA 7 — SÍNTESE
+
+Neste episódio, vimos: monocultura como fragilidade sistêmica. Diversidade como redundância funcional. Nicho como contribuição única. Resiliência como capacidade de resposta, não rigidez. Colapso quando diversidade cai abaixo do limiar crítico.
+
+No próximo episódio: e se a IA puder plantar — literalmente — o futuro que precisamos?
+
+---
+
+## EPISÓDIO 7 — A IA que Planta
+
+*Aplicações concretas de inteligência artificial em conservação, reflorestamento e ecologia*
+
+### CENA 1 — IA NO CAMPO
+
+Esqueça os robôs de ficção científica. A IA que está salvando ecossistemas hoje não parece impressionante: é um algoritmo rodando em servidor, analisando imagens de satélite, otimizando onde plantar cada espécie nativa.
+
+Mas o resultado? Florestas que crescem 3x mais rápido que reflorestamentos tradicionais.
+
+### CENA 2 — ONDE PLANTAR
+
+O maior erro do reflorestamento clássico: plantar a espécie errada no lugar errado. IA analisa solo, clima, biodiversidade local, conectividade com outros fragmentos florestais e decide: essa espécie, nesse ponto, nessa sequência de plantio.
+
+Empresas como Land Life Company e Terraformation usam modelos de machine learning para maximizar a taxa de sobrevivência e a velocidade de formação de dossel.
+
+### CENA 3 — VIGILÂNCIA CONTRA DESMATAMENTO
+
+Global Forest Watch usa IA para detectar desmatamento em tempo quase real via satélite. Alertas chegam a órgãos ambientais em horas, não semanas. Em regiões com fiscalização ativa, o desmatamento reduziu significativamente onde alertas automáticos foram implementados.
+
+Ver para proteger. IA como sentinela ecológica permanente.
+
+### CENA 4 — PESCA SUSTENTÁVEL COM IA
+
+Navios de pesca com sensores e IA que identificam espécies antes de içar a rede. Liberam espécies ameaçadas antes de subi-las a bordo. Reduzem bycatch — a pesca acidental de espécies não-alvo — em até 70% em projetos piloto.
+
+Tecnologia que não substitui o pescador — amplia sua capacidade de agir com responsabilidade.
+
+### CENA 5 — MODELOS DE CLIMA EM ESCALA FINA
+
+Previsões climáticas globais existem. Mas os efeitos locais — qual córrego vai secar, qual área vai virar deserto — ainda dependem de modelos muito granulares. IA + dados de sensoriamento + física do clima = previsões em resolução de kilômetros, não continentes.
+
+Isso muda radicalmente o planejamento agrícola, hídrico e de conservação em nível municipal.
+
+### CENA 6 — O LIMITE DA IA NO CAMPO
+
+IA não substitui ecólogos de campo, povos indígenas com conhecimento ancestral de território, ou comunidades locais que dependem do ecossistema para viver. O melhor uso da IA em conservação é como ferramenta de amplificação — não de substituição.
+
+Quando IA e conhecimento local se combinam, os resultados superam qualquer uma das abordagens isoladas.
+
+### CENA 7 — SÍNTESE
+
+Neste episódio, vimos: IA para otimização de reflorestamento. Vigilância de desmatamento em tempo real. Pesca seletiva por reconhecimento de espécies. Modelos climáticos de alta resolução. IA como ferramenta de amplificação — não de substituição — do conhecimento humano.
+
+No próximo e último episódio: como tudo isso se conecta — e como você faz parte disso.
+
+---
+
+## EPISÓDIO 8 — Respirar Junto
+
+*Síntese: tecnologia como parceira ecológica — e o que você pode fazer agora*
+
+### CENA 1 — O QUE APRENDEMOS
+
+Oito episódios. Uma ideia central: ecologia e tecnologia falam a mesma língua — a linguagem dos sistemas.
+
+Fotossíntese é input/output. Cidade é metabolismo. IA tem pegada de carbono. Ciclos substituem linhas. Florestas ouvem e podem ser ouvidas. Comunidades são ecossistemas. IA pode plantar o futuro.
+
+Cada episódio foi uma tradução. Agora vamos integrar.
+
+### CENA 2 — TECNOLOGIA COMO ESPÉCIE
+
+Imagine tecnologia como uma nova espécie que entrou num ecossistema. Espécies invasoras que ignoram as regras do sistema tendem a destruir o ecossistema — e eventualmente colapsam junto. Espécies que encontram seu nicho, que criam valor para o sistema, que fecham loops — essas prosperam.
+
+A pergunta para tecnologia hoje: ela é invasora ou nativa? E essa escolha é nossa.
+
+### CENA 3 — O PAPEL DO DESENVOLVEDOR
+
+Se você cria software, você toma decisões ecológicas todos os dias. Qual servidor roda seu código. Se ele dorme quando não é usado. Se os dados que você coleta são necessários. Se o algoritmo que você treina tem custo proporcional ao benefício.
+
+Cada linha de código é uma escolha sobre como esse sistema se relaciona com o planeta.
+
+### CENA 4 — O PAPEL DO USUÁRIO
+
+Se você usa tecnologia — e você usa —, você também faz escolhas. Apps que você escolhe. Aparelhos que você descarta. Plataformas que você financia com atenção.
+
+Não existe consumo neutro. Cada decisão é um voto para o tipo de ecossistema tecnológico que queremos construir.
+
+### CENA 5 — RESPIRO COMO PRÁTICA
+
+Respirar junto não é metáfora. É literalmente o que acontece quando você inspira o oxigênio que uma árvore expirou. Você está acoplado ao planeta de forma fisiológica, não apenas filosófica.
+
+Tecnologia que ignora esse acoplamento é tecnologia frágil. Tecnologia que o respeita tem mais chance de durar.
+
+### CENA 6 — O QUE FAZER AGORA
+
+Três práticas concretas: primeira, meça a pegada do que você cria — há ferramentas gratuitas para isso. Segunda, escolha infraestrutura que usa energia renovável quando possível. Terceira, apoie e use tecnologias que monitoram, regeneram ou conectam ecossistemas.
+
+Não precisa ser tudo de uma vez. Um passo de cada vez, fechando um loop de cada vez.
+
+### CENA 7 — SÍNTESE FINAL
+
+Oito episódios. Uma respiração só.
+
+Fotossíntese como sistema. Cidade como metabolismo. Dados com pegada. Ciclos que regeneram. Sons que monitoram. Diversidade que sustenta. IA que planta. E você — parte de tudo isso.
+
+A tecnologia que queremos construir é aquela que, daqui a cem anos, o planeta reconhece como parceira. Não invasora. Não parasita. Parceira.
+
+Respire fundo. Agora expire. Você acabou de fazer parte do sistema.
+
+---
+
+## Notas de Produção (Eps 4-8)
+
+**Estilo:** Crash Course — narração direta, energia alta, frases curtas, pop culture ocasional.
+**Tema visual sugerido:** `verde` (eps 4-6) → `ocean` (eps 7-8) para diferenciar do bloco 1-3 (escuro).
+**Adoção:** considerar ep adicional "A Adoção Tecnológica" — como práticas regenerativas são adotadas por comunidades e empresas (Rogers Diffusion of Innovations aplicado a ecologia).
+
+**Status:** Eps 4-8 roteiros prontos · Pipeline: `python scripts/gerar_videos_curso3.py 4 5 6 7 8`
