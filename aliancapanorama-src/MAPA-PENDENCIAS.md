@@ -920,3 +920,24 @@
 | #674 | Notas: confirmar ciclo completo (criar → salvar → recarregar) após refactor | ⏳ |
 | #675 | Calculus: mapa de dependências (herança Age + PAP + Rapadura) antes de iniciar código | ⏳ |
 | #676 | Calculus/Sócia: checklist EPR2T + disclaimer fiscal + LGPD dados fiscais | ⏳ |
+
+
+---
+## Assembleias #707–#708 · 2026-09-29 (Sessão #140 — Cláudio)
+
+| # | Item | Status |
+|---|---|---|
+| #677 | #707 processada — Cases fictícias Helena/Marcos/Cris + CTA formulário inline ✅ | ✅ |
+| #678 | #708 processada — revisão completa + frases recuperadas I168/I169 | ✅ |
+| #679 | Header: "S.T. Age" → "age" (formalidades preservam nome completo) | ✅ |
+| #680 | Hero: SVG pássaro complexo → ícone do header ampliado + frase SABIÁ | ✅ |
+| #681 | Formulário interesse: dropdown pacientes/semana (opcional, faixas amplas) | ✅ |
+| #682 | sendEmail: AGE_FORWARD + AGE_DISABLE_PROF_EMAILS implementados | ✅ |
+| #683 | SABIÁ freeze: loop 3×35s → 1×30s + botão ✕ cancelar | ✅ |
+| #684 | Aguardar RESULTADO+PERFEITO Assembleia #708 (site review) | ⏳ |
+| #685 | Reativar emails profissionais quando Lisange+Suzana estiverem prontas (AGE_DISABLE_PROF_EMAILS=false) | ⏳ |
+| #686 | I167: A/B test das cases (Helena vs Marcos) — medir conversão futura | ⏳ |
+| #687 | I168: frases SABIÁ poéticas para lembretes de email — implementar futuro | ⏳ |
+| #688 | I169: seção "Jardineiro do Tempo" — avaliar após primeiros profissionais | ⏳ |
+| #689 | pg_dump Replit URGENTE antes de 30/09 | ⚠️ |
+| #690 | UptimeRobot: monitor /api/healthz a cada 5min (previne cold start SABIÁ) | ⏳ |

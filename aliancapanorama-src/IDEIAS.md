@@ -2229,3 +2229,19 @@ Lista dos formulários `age_interesse` submetidos. View em `/adm` ou `/age/admin
 ### I166: Age — Email boas-vindas automático para interessado
 **Prioridade:** baixa · **Complexidade:** baixa
 Após POST `/api/age/interesse`, enviar email de confirmação para o email do interessado com próximos passos e link para agendar conversa. Template simples, tom humano.
+
+### I167: Age — A/B Test das Cases (Helena vs Marcos)
+**Prioridade:** baixa · **Complexidade:** baixa
+Assembleia #708: Dr. Marcos (lembrete às 23h) pode ser mais eficaz que Helena para profissionais que não se identificam com "perder caderninho". Implementar rotação aleatória das cases e medir qual converte mais interesse. Backend simples: cookie + contagem no DB.
+
+### I168: Age — Frases SABIÁ poéticas para lembretes
+**Prioridade:** média · **Complexidade:** baixa
+Recuperadas das Assembleias #445–#684 e confirmadas em S140:
+"Sua consulta se aproxima — há espaço para um respirar." (lembrete 2h antes)
+"João Silva entrou. A jornada começa." (confirmação de chegada)
+"Esta semana, 8 pacientes. 2 deles chegaram mais leves do que foram." (relatório semanal)
+Implementar como templates opcionais de email/notificação.
+
+### I169: Age — Seção "Jardineiro do Tempo" no site
+**Prioridade:** baixa · **Complexidade:** baixa
+Assembleia #708: "Jardineiro do Tempo" pode ser mais que propaganda — pode virar seção explicando a filosofia do Age. Profissional como jardineiro: não gerencia, cuida. Posicionamento diferenciador vs. sistemas de agendamento genéricos.

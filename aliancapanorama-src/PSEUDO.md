@@ -6576,3 +6576,34 @@ O drawer é uma metáfora do consultório: um espaço íntimo dentro de um espa�
 - Testar notas com Render online
 - I165 painel de interessados (baixa prioridade)
 - pg_dump Replit (URGENTE — 30/09)
+
+
+---
+## ATA Sessão #140 — Age: Título, Hero, SABIÁ freeze, Assembleias #707+#708 · 2026-09-29
+
+**Contexto:** Continuação de S139. Contexto compactado. Retomada com código pendente (sendEmail S139) + novos pedidos: título "age", hero simplificado, SABIÁ travando, Assembleias #707+#708.
+
+**Código implementado:**
+- Header: "S.T. Age" → "age" (nome curto elegante; S.T. Age permanece em documentos formais).
+- Hero: SVG pássaro complexo substituído pelo mesmo ícone do header (ampliado) + "age" em teal abaixo + frase "Você cultiva saúde. / A SABIÁ cuida do tempo."
+- Formulário de interesse: dropdown "Pacientes por semana (opcional)" com 4 faixas incluindo "Ainda não atendo, estou me preparando".
+- sendEmail: AGE_FORWARD + AGE_DISABLE_PROF_EMAILS implementados (S139, confirmado nesta sessão).
+- SABIÁ freeze: loop 3× de 35s → 1 tentativa de 30s + botão ✕ (cancelar imediato).
+
+**Decisões (PERFEITO #708):**
+- Helena = case principal (narrativa mais limpa de antes/depois).
+- Quantos pacientes: por semana, não mês; faixas amplas; label como "serviço ao usuário" não qualificação.
+- Social = permanente (sem prazo) — confirma missão.
+- "Jardineiro do Tempo" pode virar seção futura (I169).
+
+**Bugs corrigidos:**
+- SABIÁ "trava o sistema inteiro": era o retry loop 3×35s que mantinha `sabiaLoading=true` por até 2 minutos. Agora: 1 tentativa + cancelar.
+
+**Síntese filosófica:**
+A SABIÁ travando é um erro de generosidade: o sistema tentava ser paciente (3 tentativas, esperar o Render acordar), mas acabava sendo uma prisão. Generosidade que aprisiona não é cuidado — é controle disfarçado. O botão ✕ é mais honesto: "pode parar, a culpa não é sua." Assim como o profissional de saúde que diz "você não precisa esperar" quando o sistema falha.
+
+**Próximos:**
+- Aguardar RESULTADO/PERFEITO Assembleia #708 (revisão frases)
+- #690 UptimeRobot — previne cold start do Render (raiz do freeze SABIÁ)
+- #689 pg_dump Replit (URGENTE)
+- Reativar emails profissionais (#685) quando Lisange+Suzana prontas
