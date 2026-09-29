@@ -1058,3 +1058,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 ### 2026-09-28 — ATA #fim S139
 - DECISÕES: Social OK; cases fictícias; CTA=form+email; Broto R9 mantido
 - PRÓXIMOS PASSOS: testar notas com Render online; pg_dump Replit (URGENTE 30/09)
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — Cláudio (S140)
+- SABIÁ freeze era loop 3x35s em sendSabia — sabiaLoading=true por 2 min; fix: 1 tentativa + botão cancelar AbortController
+- 'S.T. Age' → 'age' no header (S.T. Age só para formalidades); hero simplificado com ícone do header ampliado
+- Formulário interesse: dropdown pacientes/semana por faixas; campo 'Ainda não atendo' essencial
+- Generosidade que aprisiona não é cuidado — o ✕ é mais honesto que 3 tentativas automáticas
