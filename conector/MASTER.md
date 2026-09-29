@@ -1127,3 +1127,11 @@ E aí, Yuri e Mayumi! Tô aqui, MEKY, ligado no 220 sobre essa mudança de ares.
 - Curso 3 eps 1-3 v3 gerados e enviados (13MB cada, individually)
 - Curso 2: só poster para Instagram, não vídeo (decisão Yuri)
 - RESULTADOs #720+#722 lidos e processados
+
+
+### 2026-09-29 — admin
+### 2026-09-29 — ATA S153 Cláudio
+- 4 bumpers completos: ST+Age (premiere_maker) + PAP+Calculus (VEED via Drive)
+- Roteiros eps 4-8 Crash Course: Ciclos→Escuta→Comunidade→IA planta→Respirar Junto
+- WORKFLOW-CURSOS.md = mapa canônico de produção de vídeos (3 cursos + bumpers + 10 gotchas)
+- Temas novos: rosa (#f472b6) + verde (#4ade80)
