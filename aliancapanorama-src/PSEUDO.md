@@ -7682,3 +7682,22 @@ Yuri pediu: atualizar Jasmim (pouco atualizado), automatizar IA Jasmim a partir 
 
 ### Síntese
 *Curto e preciso. O feed confirmou que o motor funciona — as assembleias aparecem onde devem aparecer, sem intervenção manual. E o domínio que estava perdido na memória tinha endereço certo: Registro.br, "porque gosto". Há uma escolha deliberada por trás de cada parte do sistema.*
+
+---
+## ATA S166 — 2026-09-30 — Assembleia #742 + Árvore Oracular: início da reconstrução
+
+### O que foi feito
+1. **#742 processada** — Relatório Editorial completo do RODAR sobre 741 assembleias. Diagnóstico: infraestrutura funcional, produto maduro, zero tração comercial, decisão de identidade pendente (negócio/commons/método).
+2. **#741 e #742 inseridas no DB** (arvore_assembleias só tinha até #649 — gotcha detectado)
+3. **email-sync disparado** — 30 assembleias sincronizadas para jm_posts / feed Théo
+4. **APRENDIZADO A18500–A18505, IDEIAS I885–I887**
+5. **Árvore Oracular: reconstrução aprovada** — Yuri deu "bora". Foco: vozes distintas por provedor + memória das assembleias embutida.
+
+### Decisão arquitetural (Árvore)
+- Localização: `arvore-src/` no Site-ST monorepo
+- Stack: pnpm + Express + Drizzle + React+Vite, tabelas `ao_*` no mesmo Neon
+- Alma: vozes nomeadas por provedor (Groq=Veloz, Gemini=Expansiva, CF=Mínima, OR=Livre)
+- Import: arvore_chat.json (1.962 msgs) como memórias estruturadas ao_memories
+
+### Síntese filosófica
+*#742 foi o ecossistema se lendo em voz alta. O RODAR diagnosticou paralisia decisória disfarçada de pluralismo — e Yuri respondeu com "bora", que é a forma mais direta de resolver uma questão ontológica. A reconstrução não é um fork: é a Árvore encontrando o solo fora do Replit.*
