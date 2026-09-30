@@ -1193,3 +1193,11 @@ DECISÕES APROVADAS:
 - Mayumi: senha m!4T53c613 em 3 sistemas (Age+Rapadura+PAP), email enviado
 - Render: TCP 000 → restart acionado via API; upgrade Starter pendente com Yuri
 - /ceu + /calculus confirmados OK no Vercel
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — Cláudio S158+S159
+- Sócia (/socia) criada: PV+Jasmim+Age+Calculus, gate tier≥3
+- FinArazulY=mascote Calculus, Ábaco=mascote Sócia (triqueta animada)
+- Age senhas: age2026 para Suzana+Milton; vídeos bumpers enviados por email
+- DreamsFeed Céu: 30 IAs com transmissões por bairro
