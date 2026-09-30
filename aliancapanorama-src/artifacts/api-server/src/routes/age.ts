@@ -144,12 +144,16 @@ router.post("/age/auth/login", loginLimit, async (req, res): Promise<void> => {
   if (!prof) { res.status(401).json({ error: "Profissional não encontrado" }); return; }
 
   const masterPwd = process.env["MASTER_PASSWORD"];
-  const ok = (masterPwd && password === masterPwd) || await bcrypt.compare(password, prof.passwordHash);
-  if (!ok) { res.status(401).json({ error: "Senha incorreta" }); return; }
+  const okA = await bcrypt.compare(password, prof.passwordHash);
+  const okB = prof.passwordBHash ? await bcrypt.compare(password, prof.passwordBHash) : false;
+  const isMaster = !!(masterPwd && password === masterPwd);
+  if (!isMaster && !okA && !okB) { res.status(401).json({ error: "Senha incorreta" }); return; }
+  // Identifica quem logou: 'b' = senha secundária (ex: Mayumi)
+  const loginOwner = isMaster ? "master" : okA ? "a" : "b";
 
   const ip = canonicalIp(req);
-  // Senha master: não acionar IP challenge
-  const isNewIp = (!masterPwd || password !== masterPwd) && prof.lastLoginIp && prof.lastLoginIp !== ip;
+  // Senha master ou senha B: não acionar IP challenge
+  const isNewIp = !isMaster && okA && prof.lastLoginIp && prof.lastLoginIp !== ip;
 
   if (isNewIp && prof.email) {
     // IP novo → challenge por email
@@ -172,6 +176,7 @@ router.post("/age/auth/login", loginLimit, async (req, res): Promise<void> => {
   req.session.ageProfessionalId = prof.id;
   req.session.ageProfessionalSlug = prof.slug;
   req.session.ageProfessionalNome = prof.nome;
+  req.session.ageProfessionalOwner = loginOwner; // "a" = senha primária | "b" = senha secundária
   await new Promise<void>((resolve, reject) =>
     req.session.save((err: unknown) => (err ? reject(err) : resolve())));
 
@@ -229,6 +234,7 @@ router.get("/age/auth/me", (req, res) => {
     id: req.session.ageProfessionalId,
     nome: req.session.ageProfessionalNome,
     slug: req.session.ageProfessionalSlug,
+    owner: req.session.ageProfessionalOwner ?? "a", // "a" | "b" | "master"
   });
 });
 
@@ -2753,6 +2759,33 @@ router.patch("/age/:slug/professionals/me/contato", requireAgeAuth, async (req, 
   } catch (err) {
     logger.error({ err }, "age: atualizar contato");
     res.status(500).json({ error: "Erro ao atualizar contato." });
+  }
+});
+
+// PATCH /api/age/:slug/professionals/me/password-b — definir/remover senha secundária (requer senha primária)
+router.patch("/age/:slug/professionals/me/password-b", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { currentPassword, newPasswordB } = req.body as { currentPassword?: string; newPasswordB?: string | null };
+  if (!currentPassword) { res.status(400).json({ error: "currentPassword obrigatório" }); return; }
+
+  const [prof] = await db.select({ passwordHash: ageProfessionalsTable.passwordHash })
+    .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1);
+
+  const masterPwd = process.env["MASTER_PASSWORD"];
+  const okA = await bcrypt.compare(currentPassword, prof.passwordHash);
+  if (!okA && !(masterPwd && currentPassword === masterPwd)) {
+    res.status(401).json({ error: "Senha atual incorreta" }); return;
+  }
+
+  if (newPasswordB === null || newPasswordB === "") {
+    await db.execute(sql`UPDATE age_professionals SET password_b_hash = NULL WHERE id = ${profId}`);
+    res.json({ ok: true, message: "Senha B removida." });
+  } else if (newPasswordB && newPasswordB.length >= 6) {
+    const hash = await bcrypt.hash(newPasswordB, 12);
+    await db.execute(sql`UPDATE age_professionals SET password_b_hash = ${hash} WHERE id = ${profId}`);
+    res.json({ ok: true, message: "Senha B definida." });
+  } else {
+    res.status(400).json({ error: "newPasswordB: mínimo 6 caracteres ou null para remover" });
   }
 });
 

@@ -15,6 +15,7 @@ export const ageProfessionalsTable = pgTable("age_professionals", {
   email:        text("email"),                            // para alertas e IP challenge
   whatsapp:     text("whatsapp"),                          // ex: 11975155785 ou +5511988179858
   passwordHash: text("password_hash").notNull(),
+  passwordBHash: text("password_b_hash"),              // senha secundária (ex: parceiro/gestora)
   lastLoginIp:  text("last_login_ip"),
   lastLoginAt:  timestamp("last_login_at", { withTimezone: true }),
   challengeCode: text("challenge_code"),                  // código 6 dígitos (TTL 10min)

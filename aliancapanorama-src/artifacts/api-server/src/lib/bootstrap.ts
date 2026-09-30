@@ -428,8 +428,10 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_tasks_venc ON age_tasks(professional_id, data_vencimento) WHERE status NOT IN ('concluida','cancelada')`);
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS whatsapp TEXT`);
   await db.execute(sql`ALTER TABLE age_appointments ADD COLUMN IF NOT EXISTS valor NUMERIC(10,2)`);
+  // Senha secundária — permite que parceiro/gestora logue na mesma conta com senha própria
+  await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS password_b_hash TEXT`);
 
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type +whatsapp +valor)");
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type +whatsapp +valor +password_b_hash)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

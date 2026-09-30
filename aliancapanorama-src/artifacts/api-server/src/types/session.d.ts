@@ -16,6 +16,7 @@ declare module "express-session" {
     ageProfessionalId?: number;
     ageProfessionalSlug?: string;
     ageProfessionalNome?: string;
+    ageProfessionalOwner?: string; // "a" | "b" | "master"
     // Age — paciente
     agePatientId?: number;
     agePatientSlug?: string;
