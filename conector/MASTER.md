@@ -1255,3 +1255,10 @@ DECISÕES APROVADAS:
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 2035ms
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — S168 Cláudio
+- Render caiu silenciosamente (TCP timeout); redeploy forçado via API resolveu em 1.2s
+- Milton-Salomão (Age) está no ar; slug Suzana=suzana (z)
+- Billing: Render $7/mês Starter, Railway inativo desde ago/2026
