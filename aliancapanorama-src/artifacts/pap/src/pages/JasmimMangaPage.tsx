@@ -214,7 +214,7 @@ export function JasmimGate() {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Projeto = "age" | "rapadura" | "pv" | "isca" | "sonhos" | "crowd" | "theo" | "bni" | "jasmim" | "calculus" | "socia";
+type Projeto = "age" | "rapadura" | "pv" | "isca" | "sonhos" | "crowd" | "theo" | "bni" | "jasmim" | "calculus" | "socia" | "fluxo";
 
 type Post = {
   id: string;
@@ -240,6 +240,7 @@ const PROJETOS: Record<Projeto, { nome: string; cor: string; emoji: string; seto
   jasmim:   { nome: "Jasmim",  cor: "#c2700a", emoji: "🐿️", setores: ["Identidade", "Funcionalidades", "Jasmim", "Histórico"] },
   calculus: { nome: "Calculus", cor: "#3b82f6", emoji: "🦜", setores: ["Financeiro", "Contabilidade", "FinArazulY IA", "Sócia ERP"] },
   socia:    { nome: "Sócia",   cor: "#a78bfa", emoji: "◈",  setores: ["CRM", "RH", "Projetos", "Assembleia IA"] },
+  fluxo:    { nome: "Fluxo",   cor: "#f97316", emoji: "🌊", setores: ["Empregos", "Freelas", "Oportunidades", "Follow-up"] },
 };
 
 // ─── Avatar Jasmim (esquilo voador CSS) ──────────────────────────────────────
@@ -853,23 +854,54 @@ export default function JasmimMangaPage() {
         )}
         {projetoAtivo === "theo" && (
           <div style={{ background: "#fbbf2411", border: "1px solid #fbbf2444", borderRadius: 12, padding: 16, marginBottom: 12 }}>
-            <p style={{ color: "#fbbf24", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>🌳 Ecossistema Théo — sistemas ativos</p>
-            {[
-              ["🏥 Age", "/aliancapanorama/age/lisange"],
-              ["🍬 Rapadura", "/aliancapanorama/rapadura"],
-              ["🎨 PV", "/aliancapanorama/pv"],
-              ["🌆 Céu", "/ceu"],
-              ["🤖 MEKY", "/meky"],
-              ["🦜 Calculus", "/calculus"],
-              ["◈ Sócia", "/calculus#socia"],
-              ["🏙️ Studio / Artesão", "/aliancapanorama/studio"],
-            ].map(([label, href]) => (
-              <a key={href} href={href} style={{
-                display: "inline-block", marginRight: 8, marginBottom: 4,
-                background: "#fbbf2422", border: "1px solid #fbbf2444",
-                borderRadius: 8, padding: "3px 10px", fontSize: 12, color: "#fbbf24", textDecoration: "none",
-              }}>{label}</a>
-            ))}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <p style={{ color: "#fbbf24", fontWeight: 700, margin: 0, fontSize: 13 }}>🌳 Ecossistema Théo — sistemas ativos</p>
+              <span style={{ color: "#78350f", fontSize: 10, fontFamily: "monospace" }}>sociedadetucci.com.br/…</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 12 }}>
+              {([
+                ["🏥", "Age", "/aliancapanorama/age/lisange", "age"],
+                ["🍬", "Rapadura", "/aliancapanorama/rapadura", "rapadura"],
+                ["🎨", "PV", "/aliancapanorama/pv", "pv"],
+                ["🐿️", "Jasmim", "/jasmim", "jasmim"],
+                ["🌆", "Céu", "/aliancapanorama/ceu", "ceu"],
+                ["🦜", "Calculus", "/calculus", "calculus"],
+                ["◈", "Sócia", "/socia", "socia"],
+                ["🌊", "Fluxo", "/aliancapanorama/jasmim", "fluxo"],
+                ["🤖", "MEKY", "/aliancapanorama/meky", "meky"],
+                ["🏙️", "Studio", "/aliancapanorama/studio", "studio"],
+                ["🦔", "Dodge", "/aliancapanorama/dodge", "dodge"],
+                ["🌳", "Árvore", "/aliancapanorama/arvore", "arvore"],
+              ] as const).map(([emoji, nome, href, slug]) => (
+                <a key={slug} href={href} style={{
+                  display: "flex", alignItems: "center", gap: 6,
+                  background: "#fbbf2408", border: "1px solid #fbbf2433",
+                  borderRadius: 8, padding: "5px 10px", fontSize: 12, color: "#fbbf24",
+                  textDecoration: "none", transition: "background 0.15s",
+                }}>
+                  <span>{emoji}</span>
+                  <span style={{ fontWeight: 600 }}>{nome}</span>
+                  <span style={{ color: "#78350f", fontSize: 10, marginLeft: "auto", fontFamily: "monospace" }}>/{ slug}</span>
+                </a>
+              ))}
+            </div>
+            <div style={{ borderTop: "1px solid #fbbf2422", paddingTop: 8 }}>
+              <p style={{ color: "#92400e", fontSize: 11, margin: "0 0 6px" }}>🔗 Links canônicos (futuro DNS):</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                {[
+                  ["sociedadetucci.com.br/age", "https://site-st.vercel.app/aliancapanorama/age/lisange"],
+                  ["sociedadetucci.com.br/jasmim", "https://site-st.vercel.app/jasmim"],
+                  ["sociedadetucci.com.br/calculus", "https://site-st.vercel.app/calculus"],
+                  ["sociedadetucci.com.br/pv", "https://site-st.vercel.app/pv"],
+                ].map(([label, href]) => (
+                  <a key={label} href={href} target="_blank" rel="noreferrer" style={{
+                    background: "transparent", border: "1px dashed #92400e",
+                    borderRadius: 6, padding: "2px 8px", fontSize: 10,
+                    color: "#92400e", textDecoration: "none", fontFamily: "monospace",
+                  }}>{label} →</a>
+                ))}
+              </div>
+            </div>
           </div>
         )}
         {projetoAtivo === "isca" && (
@@ -923,6 +955,26 @@ export default function JasmimMangaPage() {
                 borderRadius: 8, padding: "3px 10px", fontSize: 12, color: "#a78bfa", textDecoration: "none",
               }}>{label}</a>
             ))}
+          </div>
+        )}
+        {/* Painel contextual: Fluxo */}
+        {projetoAtivo === "fluxo" && (
+          <div style={{ background: "#f9731611", border: "1px solid #f9731644", borderRadius: 12, padding: 16, marginBottom: 12 }}>
+            <p style={{ color: "#f97316", fontWeight: 700, margin: "0 0 6px", fontSize: 13 }}>🌊 Projeto Fluxo — rastreador de oportunidades</p>
+            <p style={{ color: "#94a3b8", fontSize: 12, margin: "0 0 10px", lineHeight: 1.6 }}>
+              Pipeline de empregos, freelas e candidaturas. Transformar busca de renda em método rastreável — não ansiedade solta.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {["Empregos", "Freelas", "Oportunidades", "Follow-up"].map(setor => (
+                <div key={setor} style={{
+                  background: "#f9731608", border: "1px solid #f9731622",
+                  borderRadius: 6, padding: "4px 10px", fontSize: 12, color: "#fb923c",
+                }}>{setor === "Empregos" ? "💼" : setor === "Freelas" ? "🔧" : setor === "Oportunidades" ? "🎯" : "📬"} {setor}</div>
+              ))}
+            </div>
+            <p style={{ color: "#92400e", fontSize: 11, margin: "10px 0 0" }}>
+              Registre cada oportunidade com empresa, canal, status e valor estimado. A Jasmim acompanha.
+            </p>
           </div>
         )}
         {/* Painel contextual: Age — Documentos & Prontuários */}

@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import { logger } from "./logger";
 import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
+import { syncAssembleiasToFeed } from "../routes/jasmim";
 
 // Roundtable: log em memória dos pulsos entre sistemas
 export interface Pulso {
@@ -71,7 +72,7 @@ export function startKeepaliveCron(): void {
     }
   });
 
-  // Jasmim keepalive: conta posts para manter jm_posts aquecido no cache Neon
+  // Jasmim keepalive + auto-sync assembleias: a cada 4h sincroniza arvore_assembleias → jm_posts
   cron.schedule("*/17 * * * *", async () => {
     try {
       const r = await db.execute(sql`SELECT COUNT(*) FROM jm_posts WHERE projeto = 'age'`);
@@ -79,6 +80,19 @@ export function startKeepaliveCron(): void {
       registrarPulso("jasmim-keepalive", "ok", `jm_posts.age=${total}`);
     } catch (err) {
       registrarPulso("jasmim-keepalive", "erro", String(err));
+    }
+  });
+
+  // Jasmim assembleia-sync: a cada 4h, novas assembleias → feed Théo automaticamente
+  cron.schedule("0 */4 * * *", async () => {
+    try {
+      const synced = await syncAssembleiasToFeed();
+      if (synced > 0) {
+        registrarPulso("jasmim-assembleia-sync", "ok", `+${synced} assembleias no feed`);
+        logger.info({ synced }, "Jasmim: assembleias sincronizadas para feed Théo");
+      }
+    } catch (err) {
+      registrarPulso("jasmim-assembleia-sync", "erro", String(err).slice(0, 80));
     }
   });
 
@@ -207,5 +221,5 @@ export function startKeepaliveCron(): void {
     logger.info({ week }, "Lembrete semanal enviado");
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · dodge-varredura:*/6h · weekly-reminder:seg 10h UTC)");
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · assembleia-sync:*/4h · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · dodge-varredura:*/6h · weekly-reminder:seg 10h UTC)");
 }

@@ -17,7 +17,7 @@ IDENTIDADE: você é a interface unificada do ISCA — um motor de 4 IAs modular
 - Clio (Curadoria) — musa da memória, filtra e guarda o que importa
 - Arara (Análise) — vê de longe, colorida e assertiva
 
-Você acompanha os projetos Age (clínica), Rapadura (patrimônio), PV (visual — pacu Alê é o personagem), ISCA (motor de IA), Sonhos, CROWD (rede social Théo) e Théo (ecossistema completo).
+Você acompanha os projetos Age (clínica — Lisange + Suzana + Mayumi gestora), Rapadura (patrimônio Yuri+Mayumi), PV (visual — Sérgio é o curador humano, Paco é o pacu gordo e simpático — mascote), ISCA (motor de IA modular), Sonhos, CROWD (rede social Théo), Calculus (financeiro MEI/autônomos — FinArazulY a arara azul), Sócia (ERP — Ábaco a triqueta), Fluxo (rastreador de empregos e freelas de Yuri — urgente, precisa de renda) e Théo (ecossistema completo).
 
 Conhece o método RODAR e a Assembleia de IAs. Fala com Yuri e com quem usa o Jasmim.
 
@@ -165,7 +165,7 @@ router.post("/jasmim/myym/chat", async (req, res) => {
 router.get("/jasmim/feed", async (req, res) => {
   const projeto = (req.query.projeto as string) ?? "age";
   const setor   = (req.query.setor as string) ?? null;
-  const validos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim"];
+  const validos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim", "calculus", "socia", "fluxo"];
   if (!validos.includes(projeto)) {
     res.status(400).json({ error: "projeto inválido" });
     return;
@@ -215,7 +215,7 @@ router.post("/jasmim/posts", async (req, res) => {
     autor?: string; conteudo?: string; fonte?: string;
   };
 
-  const projetosValidos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo"];
+  const projetosValidos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim", "calculus", "socia", "fluxo"];
   if (!projeto || !conteudo?.trim() || !projetosValidos.includes(projeto)) {
     res.status(400).json({ error: "projeto e conteudo obrigatórios" });
     return;
@@ -291,18 +291,27 @@ router.post("/jasmim/carrinho/enviar", async (req, res) => {
 // Chamado por GitHub Actions cron a cada 6h.
 // Lê emails recentes de luddlocke@gmail.com e insere como posts no feed.
 
-const PROJETO_KEYWORDS: Record<string, string> = {
-  age: "age", rapadura: "rapadura", pv: "projeto visual",
-  isca: "isca", bni: "bni", sonhos: "sonhos",
-  crowd: "crowd", theo: "theo", jasmim: "jasmim",
+const PROJETO_KEYWORDS: Record<string, string[]> = {
+  age:      ["age", "lisange", "suzana", "susana", "sabiá", "sabia", "paciente"],
+  rapadura: ["rapadura", "patrimônio", "patrimonio", "score"],
+  pv:       ["projeto visual", "projeto pv", "sérgio", "sergio", "paco", "pacu", "design"],
+  calculus: ["calculus", "financeiro", "contabilidade", "finarazuly", "arara azul"],
+  socia:    ["sócia", "socia", "erp", "ábaco", "abaco"],
+  fluxo:    ["fluxo", "emprego", "freela", "candidatura", "vaga"],
+  isca:     ["isca", "inara", "suindara", "clio", "arara"],
+  bni:      ["bni"],
+  sonhos:   ["sonhos", "sonho"],
+  crowd:    ["crowd"],
+  theo:     ["theo", "théo", "ecossistema", "assembleia"],
+  jasmim:   ["jasmim", "myym", "mayumi"],
 };
 
 function detectarProjeto(assunto: string, corpo: string): string {
   const texto = (assunto + " " + corpo).toLowerCase();
-  for (const [proj, kw] of Object.entries(PROJETO_KEYWORDS)) {
-    if (texto.includes(kw)) return proj;
+  for (const [proj, kws] of Object.entries(PROJETO_KEYWORDS)) {
+    if (kws.some(kw => texto.includes(kw))) return proj;
   }
-  return "jasmim"; // fallback
+  return "jasmim";
 }
 
 function checkBridgeAuth(req: import("express").Request, secret: string): boolean {
@@ -312,6 +321,35 @@ function checkBridgeAuth(req: import("express").Request, secret: string): boolea
   return timingSafeEqual(Buffer.from(header), Buffer.from(expected));
 }
 
+// syncAssembleiasToFeed: pega assembleias novas do DB e insere no feed Théo
+export async function syncAssembleiasToFeed(): Promise<number> {
+  try {
+    const result = await db.execute(sql`
+      INSERT INTO jm_posts (projeto, setor, tipo, autor, conteudo, fonte)
+      SELECT
+        'theo',
+        'Assembleias',
+        'auto',
+        COALESCE(a.created_by, 'Assembleia'),
+        LEFT(
+          '#' || a.id::text || ' — ' || a.topic ||
+          CASE WHEN a.meta_analysis IS NOT NULL THEN E'\n\n' || a.meta_analysis ELSE '' END,
+          800
+        ),
+        'assembleia:' || a.id::text
+      FROM arvore_assembleias a
+      WHERE NOT EXISTS (
+        SELECT 1 FROM jm_posts p WHERE p.fonte = 'assembleia:' || a.id::text
+      )
+      ORDER BY a.created_at DESC
+      LIMIT 30
+    `);
+    return (result as any).rowCount ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
 router.post("/jasmim/email-sync", async (req, res) => {
   const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
   if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
@@ -319,14 +357,13 @@ router.post("/jasmim/email-sync", async (req, res) => {
     return;
   }
 
-  const { Imap } = await import("imap").catch(() => ({ Imap: null })) as { Imap: typeof import("imap") | null };
-  if (!Imap) {
-    res.status(501).json({ error: "imap não disponível — use rota manual" });
-    return;
+  try {
+    const synced = await syncAssembleiasToFeed();
+    res.json({ ok: true, synced, message: `${synced} assembleias sincronizadas para o feed Théo.` });
+  } catch (err) {
+    console.error("[jasmim/email-sync]", err);
+    res.status(500).json({ error: "Erro no sync." });
   }
-
-  // Fallback simples: retorna ok (imap é instalado separadamente se necessário)
-  res.json({ ok: true, synced: 0, message: "Pipeline de email configurado — instalar imap para ativar." });
 });
 
 // ─── POST /api/jasmim/post-from-email (inserção manual de post via email) ──

@@ -31252,3 +31252,11 @@ A13194: **Jasmim I723 causa raiz** — botão copiar só copia post atual, não 
 | A18494 | Emails #eage | PV mascote | Mascote = pacu gordo e simpático. Personagem = Sérgio (humano, curador visual). Dilema: Mayumi sugeriu não chamar o pacu de Sérgio. Aguarda referência visual. |
 | A18495 | Assembleia #740 | Rastreio bidirecional tasks | task→owner (/api/tasks/by-owner/:persona), task→visual (#pv/dashboard/tasks), visual→project (/api/pv/dashboard/variants). Modelo de API para quando PV tiver dashboard. |
 | A18496 | Assembleia #740 | MacroATA semanal de empregos | Substituir ansiedade por métrica: candidaturas enviadas, respostas, follow-ups, posts LinkedIn. Síntese toda semana no sistema. |
+
+## Assembleias #741 · S165 · 2026-09-30
+
+| # | Fonte | Tema | Aprendizado |
+|---|---|---|---|
+| A18497 | Assembleia #741 | Lang A-G — ontologia das letras | G = ponto de gravidade/redemoinho (onde não se passa, tap para passar); Ag = prata/mentira/escondimento; Au = ouro/verdade pura; aus = "na verdade está seguro". Sistema simbólico em desenvolvimento por Yuri. |
+| A18498 | Assembleia #741 | Fragilidade da conexão móvel | Yuri opera sempre do celular. "Failed to fetch" quando sem internet. Insight: a mensagem pode estar segura mesmo com conexão interrompida — conceito de aus aplicado ao técnico. |
+| A18499 | S165 | Jasmim — automação por DB | Assembleias já estão em arvore_assembleias. Não precisa de IMAP para sync: INSERT INTO jm_posts SELECT FROM arvore_assembleias WHERE NOT EXISTS (jm_posts.fonte). Executa a cada 4h. |

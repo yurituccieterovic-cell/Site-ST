@@ -7599,3 +7599,40 @@ MacroATA enviada por email. Deploy Render acionado (project_type). Conector atua
 Esta sessão cruzou dois tipos de criação: os projetos privados (Mothership, SP&C, Nébula) onde Yuri abre espaços de exploração sem agenda imediata, e o projeto urgente (#fluxo) onde o sistema precisa resolver um problema humano concreto — renda. A Assembleia foi direta: a busca de emprego não pode ser ansiedade paralela. Ela precisa se tornar projeto com métrica, checklist, síntese semanal. O mesmo sistema que organiza assembleias de IAs pode organizar candidaturas de emprego. Isso é o ecossistema cumprindo sua promessa.
 
 E o pacu finalmente apareceu. Sérgio é o humano, o curador. O pacu é o mascote — gordo, simpático, sem nome próprio ainda. Duas identidades, uma para cada camada do PV.
+
+---
+## ATA S165 — 2026-09-30 — Jasmim: projetos, processos e automação
+
+### Contexto
+Yuri pediu: atualizar Jasmim (pouco atualizado), automatizar IA Jasmim a partir de emails, links para sistemas em sociedadetucci.com.br, processar novas assembleias, #fim com MacroATA detalhada.
+
+### O que foi feito
+1. **Assembleia #741 processada** — Lang A-G: ontologia pessoal de Yuri onde G=redemoinho/falsidade, Au=ouro/verdade, aus=na verdade seguro. Conversa filosófica AO/Yuri sobre fragilidade da conexão móvel e resiliência da mensagem.
+2. **Mascote PV confirmado**: Paco = pacu gordo e simpático (nome aprovado por Yuri em chat).
+3. **Jasmim.ts atualizado**:
+   - System prompt: Paco no lugar de Alê; Fluxo, Calculus, Sócia, Mayumi (gestora Age) adicionados ao conhecimento
+   - projetosValidos expandido: calculus, socia, jasmim, fluxo
+   - PROJETO_KEYWORDS expandido com sinonímia completa
+   - `syncAssembleiasToFeed()` — função exportada que sincroniza arvore_assembleias → jm_posts via SQL (sem IMAP necessário)
+   - `/api/jasmim/email-sync` agora usa syncAssembleiasToFeed real
+4. **keepalive.ts**: cron `0 */4 * * *` para sync automático (a cada 4h, novas assembleias aparecem no feed Théo da Jasmim)
+5. **JasmimMangaPage.tsx**:
+   - Tipo `Projeto` agora inclui "fluxo"
+   - `PROJETOS` map: fluxo adicionado (laranja, 🌊, setores Empregos/Freelas/Oportunidades/Follow-up)
+   - Painel Théo redesenhado: grid 2 colunas, 12 sistemas (Age, Rapadura, PV, Jasmim, Céu, Calculus, Sócia, Fluxo, MEKY, Studio, Dodge, Árvore), seção "Links canônicos (futuro DNS)" com sociedadetucci.com.br
+   - Painel Fluxo novo: rastreador de oportunidades com descrição e setores
+6. **Docs**: APRENDIZADO A18497-A18499, IDEIAS I882-I884, MAPA-PENDENCIAS S165
+
+### Confirmações do Yuri nesta sessão
+- "Paco é bom" — nome do mascote pacu PV confirmado
+- "chegou a mandar o email pra mim e Mayumi do que tinha antes sobre o Age?" — sim, S163 confirmado
+- "continuar" — sessão ativa
+
+### Síntese filosófica
+*Lang A-G é um sistema onde a linguagem carrega gravidade ontológica. G marca onde a verdade apodrece, Au onde ela floresce. A Jasmim não precisava de email para se atualizar — as assembleias já estavam em casa, na própria base de dados. A automação mais elegante é a que usa o que já existe.*
+
+### Próximos passos abertos
+- Paco avatar SVG (aguarda ref visual)
+- Projeto Fluxo código (rastreador candidaturas)
+- Stella Onisko acesso (email chegará WhatsApp)
+- pg_dump Replit (urgente, Yuri faz manualmente)

@@ -1272,3 +1272,21 @@
 - [ ] Mothership Árvore (I877), SP&C (I878): privados, aguardando Yuri
 - [ ] Render Starter upgrade $7/mês (Yuri manual)
 - [ ] pg_dump Replit — URGENTE (#738 confirma)
+
+## S165 — 2026-09-30 — Jasmim updates + #741
+
+### Implementado
+- [x] Jasmim system prompt: "pacu Alê" → "Paco"; adicionados Calculus, Sócia, Fluxo ao conhecimento da IA
+- [x] projetosValidos: calculus, socia, jasmim, fluxo agora aceitos no POST /api/jasmim/posts e GET /api/jasmim/feed
+- [x] syncAssembleiasToFeed(): INSERT arvore_assembleias → jm_posts, fonte='assembleia:ID'
+- [x] keepalive.ts: cron 0 */4 * * * para assembly-sync automático
+- [x] JasmimMangaPage.tsx: PROJETOS map agora inclui "fluxo"; painel Théo atualizado com 12 sistemas em grid 2col + links canônicos sociedadetucci.com.br; painel Fluxo novo
+- [x] PROJETO_KEYWORDS expandido: age, rapadura, pv, calculus, socia, fluxo, isca, bni, sonhos, crowd, theo, jasmim
+
+### Pendências carregadas
+- [ ] Paco avatar SVG (I883): aguarda foto/referência visual do pacu
+- [ ] Lang A-G dicionário (I882): baixa prioridade, conceitual
+- [ ] Stella Onisko acesso Calculus (I870): email da Stella chegará via WhatsApp
+- [ ] pg_dump Replit URGENTE (I875): Yuri manual no terminal Replit
+- [ ] Projeto Fluxo código (I876): rastreador de candidaturas, aprovação Yuri
+- [ ] MacroATA semanal de empregos (I880): implementar após Projeto Fluxo

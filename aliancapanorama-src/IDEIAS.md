@@ -2364,3 +2364,11 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 | I879 | **PV avatar animado (Sérgio/Pacu)** — personagem PV: Sérgio=humano curador + pacu gordo e simpático; aguarda referência visual | 🟡 Média | ○ S | Emails #eage — mascote definido parcialmente | Yuri/Mayumi enviam foto ou desenho → Cláudio cria SVG animado + nome final do pacu |
 | I880 | **MacroATA semanal de empregos** — síntese toda semana: candidaturas, respostas, follow-ups, posts, contatos | 🟡 Média | ○ S | Assembleia #740 — substituir ansiedade por métrica | Cron toda sexta 18h → email luddlocke + yurituccieterovic com resumo da semana de buscas |
 | I881 | **PV como portfólio vendável** — documentar Cláudio Coach + Stella + Tanimoto no Behance/sociedadetucci.com.br | 🟡 Média | ○ S | Assembleia #740 — usar PV como case para candidaturas design/branding | Página /pv/portfolio (pública) com cases visuais dos projetos existentes |
+
+## Novas ideias — S165 · 2026-09-30
+
+| # | Ideia | Prioridade | Tamanho | Contexto | Implementação |
+|---|---|---|---|---|---|
+| I882 | **Lang A-G — dicionário vivo** — registrar no sistema o glossário simbólico de Yuri (G=redemoinho, Au=ouro, Ag=mentira, aus=seguro) | 🔵 Baixa | ○ S | Assembleia #741 — ontologia pessoal em desenvolvimento | jm_posts projeto='theo' setor='Ecossistema' ou tabela lang_a_g (id, simbolo, significado, contexto) |
+| I883 | **Paco — avatar SVG animado** — pacu gordo/simpático como mascote do PV; nome confirmado por Yuri | 🟡 Média | ○ S | S165 — confirmação via chat | Aguarda foto/referência visual; SVG animado similar ao esquilo-voador da Jasmim. Sérgio=humano curador, Paco=pacu mascote |
+| I884 | **Jasmim hub de sistemas** — painel Théo com grid 2 colunas + links canônicos sociedadetucci.com.br | ✅ Feito | ○ S | S165 — implementado | JasmimMangaPage.tsx atualizado: grid 2col, 12 sistemas, seção "Links canônicos (futuro DNS)" |
