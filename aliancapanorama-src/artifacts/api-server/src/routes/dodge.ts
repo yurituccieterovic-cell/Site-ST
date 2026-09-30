@@ -393,9 +393,9 @@ router.get("/dodge/varredura", async (req, res) => {
     check("age_patients",       () => db.execute(sql`SELECT COUNT(*)::int FROM age_patients WHERE status='aprovado'`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
     check("age_tasks",          () => db.execute(sql`SELECT COUNT(*)::int FROM age_tasks WHERE status='pendente'`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
     check("pv_projects",        () => db.execute(sql`SELECT COUNT(*)::int FROM pv_projects WHERE deleted_at IS NULL`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
-    check("assembly_playcenter",() => db.execute(sql`SELECT COUNT(*)::int FROM assembly_playcenter`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("assembly_playcenter",() => db.execute(sql`SELECT COUNT(*)::int FROM assembly_messages WHERE type='playcenter'`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
     check("jm_posts",           () => db.execute(sql`SELECT COUNT(*)::int FROM jm_posts`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
-    check("rapadura_fundos",    () => db.execute(sql`SELECT COUNT(*)::int FROM rapadura_fundos WHERE deleted_at IS NULL`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("rapadura_fundos",    () => db.execute(sql`SELECT COUNT(*)::int FROM rapadura_fundos`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
     check("isa_memory",         () => db.execute(sql`SELECT COUNT(*)::int FROM isa_memory`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
     check("scheduled_emails",   () => db.execute(sql`SELECT COUNT(*)::int FROM scheduled_emails WHERE sent=false`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
   ]);
