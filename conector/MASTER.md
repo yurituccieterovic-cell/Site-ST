@@ -1185,3 +1185,11 @@ DECISÕES APROVADAS:
 - Céu: ISA/DODGE/Artesão/Assembleia atualizados + FinArazulY nova IA
 - vercel.json: +/aliancapanorama/{isa,meky,dodge,ceu,age}/(.*)
 - Assembleias #724+#725 registradas como synthesis
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — ATA S157 Cláudio
+- Koyeb→Mistral: descartado, RODAR_MISTRAL_API_KEY salvo
+- Mayumi: senha m!4T53c613 em 3 sistemas (Age+Rapadura+PAP), email enviado
+- Render: TCP 000 → restart acionado via API; upgrade Starter pendente com Yuri
+- /ceu + /calculus confirmados OK no Vercel
