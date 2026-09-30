@@ -1303,4 +1303,4 @@
 - [ ] Google Agenda OAuth — sessão futura (alta complexidade)
 - [ ] Stripe integrado no fluxo de booking — depende de página pública de agendamento
 - [ ] pg_dump Replit (URGENTE) — Replit NÃO cancelado, Yuri pode fazer manualmente
-- [ ] DNS sociedadetucci.com.br — Yuri não sabe onde está, precisa verificar Registro.br
+- [ ] DNS sociedadetucci.com.br — domínio no **Registro.br** (confirmado S165b). Apontar quando quiser ativar os subdomínios.

@@ -7672,3 +7672,13 @@ Yuri pediu: atualizar Jasmim (pouco atualizado), automatizar IA Jasmim a partir 
 
 ### Síntese filosófica
 *A vitamina D da Suzana já estava no sistema — o email era um índice do que ela trata. O plano original não era uma lista de tarefas, era uma promessa de completude. Hoje fechamos 3 das 4 janelas abertas: o relatório financeiro que cria memória de valor, o PWA que apaga a distância entre web e bolso, e o campo de valor que transforma consulta em registro. A Google Agenda fica para quando houver espaço para a complexidade que ela exige.*
+
+---
+## ATA S165b-fim — 2026-09-30 — Confirmação final + #fim
+
+### Confirmações novas de Yuri nesta virada:
+- "novas assembleias-perfeito" — sincronização automática arvore_assembleias → jm_posts funcionando como esperado
+- "era registro br porque gosto" — domínio `sociedadetucci.com.br` está no **Registro.br**. Não esqueceu, só não tinha em mãos. Quando quiser ativar os subdomínios, é lá.
+
+### Síntese
+*Curto e preciso. O feed confirmou que o motor funciona — as assembleias aparecem onde devem aparecer, sem intervenção manual. E o domínio que estava perdido na memória tinha endereço certo: Registro.br, "porque gosto". Há uma escolha deliberada por trás de cada parte do sistema.*
