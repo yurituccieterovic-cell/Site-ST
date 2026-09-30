@@ -1290,3 +1290,17 @@
 - [ ] pg_dump Replit URGENTE (I875): Yuri manual no terminal Replit
 - [ ] Projeto Fluxo código (I876): rastreador de candidaturas, aprovação Yuri
 - [ ] MacroATA semanal de empregos (I880): implementar após Projeto Fluxo
+
+## S165b — 2026-09-30 — Age plano original
+
+### Implementado ✅
+- [x] Relatório mensal financeiro (I869) — GET /api/age/:slug/relatorio-mensal
+- [x] PWA instalável — age-manifest.json + beforeinstallprompt + botão Config
+- [x] Campo valor em agendamentos — R$ salvo por consulta via PATCH
+- [x] WhatsApp Lisange (11975155785) + Suzana (+5511988179858) — no DB + schema
+
+### Pendente
+- [ ] Google Agenda OAuth — sessão futura (alta complexidade)
+- [ ] Stripe integrado no fluxo de booking — depende de página pública de agendamento
+- [ ] pg_dump Replit (URGENTE) — Replit NÃO cancelado, Yuri pode fazer manualmente
+- [ ] DNS sociedadetucci.com.br — Yuri não sabe onde está, precisa verificar Registro.br

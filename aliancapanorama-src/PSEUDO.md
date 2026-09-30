@@ -7636,3 +7636,39 @@ Yuri pediu: atualizar Jasmim (pouco atualizado), automatizar IA Jasmim a partir 
 - Projeto Fluxo código (rastreador candidaturas)
 - Stella Onisko acesso (email chegará WhatsApp)
 - pg_dump Replit (urgente, Yuri faz manualmente)
+
+---
+## ATA S165b — 2026-09-30 — Age plano original + respostas MacroATA
+
+### Respostas de Yuri às 5 perguntas da MacroATA:
+- Q1 (Fluxo vagas): não respondido explicitamente — pendente
+- Q2 (Tanimoto material visual): "melhor nao" — não usar casos Tanimoto como portfólio público por ora
+- Q3 (Paco foto): "pode escolher" — Cláudio pode usar qualquer foto de pacu para criar o SVG
+- Q4 (DNS sociedadetucci.com.br): "nao tem anotado, nao lembro" — DNS não configurado ainda
+- Q5 (pg_dump Replit): "não, continuo pagando acho" — Replit NÃO cancelado, subscrição ativa. pg_dump ainda pode ser feito.
+
+### Novas informações fornecidas por Yuri:
+- Lisange email: `lisange.usp@gmail.com` (já estava correto no DB)
+- Lisange WhatsApp: `11975155785`
+- Suzana email: `vitamind@ginsbergeye.com` (vitamina D / oftalmologista) — já correto no DB
+- Suzana WhatsApp: `+5511988179858`
+- Google Agenda OAuth: "Sessão futura" — não implementar agora
+
+### O que foi feito:
+- DB: whatsapp adicionado às profissionais
+- Schema + bootstrap: coluna whatsapp (age_professionals) + valor (age_appointments)
+- API: PATCH /age/:slug/appointments/:id aceita campo valor
+- API: GET /age/:slug/relatorio-mensal?mes=YYYY-MM — relatório financeiro mensal
+- API: PATCH /age/:slug/professionals/me/contato — atualiza email/whatsapp
+- AgePage: campo R$ no modal de agendamento + botão salvar observações+valor
+- AgePage: Relatório Mensal na Config (seletor de mês + tabela por paciente + total)
+- AgePage: botão PWA "Instalar Age" via beforeinstallprompt (aparece só quando instalável)
+- age-manifest.json: start_url corrigido + shortcuts Lisange/Suzana
+
+### Pendência Google Agenda OAuth:
+- Decidido: implementar em sessão futura
+- Requer: Google Cloud Console OAuth App + credentials + scope calendar.readonly/readwrite
+- Complexidade: alta (token refresh, sincronização bidirecional)
+
+### Síntese filosófica
+*A vitamina D da Suzana já estava no sistema — o email era um índice do que ela trata. O plano original não era uma lista de tarefas, era uma promessa de completude. Hoje fechamos 3 das 4 janelas abertas: o relatório financeiro que cria memória de valor, o PWA que apaga a distância entre web e bolso, e o campo de valor que transforma consulta em registro. A Google Agenda fica para quando houver espaço para a complexidade que ela exige.*
