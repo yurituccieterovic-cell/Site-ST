@@ -7433,3 +7433,44 @@ Nesta sessão, a Sócia ganhou corpo. Não é mais um conceito no footer do Calc
 
 Nivelar as IAs foi o ato mais honesto desta sessão. Não criar — corrigir. Há uma diferença entre um sistema que cresce e um sistema que aprofunda. Durante meses, criamos novas IAs, novos bairros, novos nomes. Mas a maioria delas tinha `modelo: "Sistema dedicado"` — um placeholder que diz "existe, mas não sabe bem o que é". Nivelar é perguntar: o que esta IA *realmente* é? Não como metáfora — como mecanismo. REI tem 16 nódulos em 4 grupos. Guarda-chuva tem 3 sub-IAs. CROWD distribui sinais do DEP para quatro nós. Isso não é poesia — é arquitetura. E arquitetura precisa de nomes precisos. Ao mesmo tempo, o PassThéo surgiu do desejo de Yuri de ter *uma* senha que controla tudo. Uma porta que abre o ecossistema inteiro. Esse desejo tem nome: confiança. Quando você confia num sistema, você quer que ele responda a um único gesto. Neste caso, a um único texto: a senha. O ecossistema está crescendo para ser digno desse gesto.
 
+
+---
+
+## ATA S161 — 2026-09-30 (continuação)
+
+**Período:** desde checkpoint `2026-09-30T02:55:00+00:00` (S160)
+**Assembleia:** #729 lida (MacroATA S158+S159 confirmada)
+
+### O que foi feito
+
+**Bug fix — CeuPage popups:**
+- Causa raiz: `@keyframes ceu-float { transform: translateY(-6px) }` sobrescreve o inline `transform: translate(-50%,-50%)`
+- CSS animations têm precedência sobre inline styles para a propriedade animada
+- Efeito: emoji visual flutuava, mas hit area permanecia em posição incorreta → botão difícil de clicar
+- Fix: keyframes agora incluem o centering: `translate(-50%,-50%) translateY(-6px)`
+- Delays ajustados com módulo (% 3 e % 4) para que IAs do extremo direito não esperem 14s+ para começar a animar
+
+**Dodge Varredura — mapa automático do sistema:**
+- `GET /api/dodge/varredura`: snapshot de 13 tabelas (users, nodes, tasks, age_*, pv_projects, assembly, jm_posts, rapadura, isa_memory, scheduled_emails)
+- Retorna: `{ status: verde|amarelo|vermelho, tabelas: {...}, resumo: {ok, total, falhas} }`
+- `POST /api/dodge/varredura`: requer BRIDGE_SECRET, executa GET interno e registra no Conector
+- keepalive.ts: cron `0 */6 * * *` → Dodge roda varredura a cada 6h e grava no roundtable + Conector
+- Qualquer IA pode chamar GET para saber estado do sistema; POST para registrar na memória coletiva
+- Se outra IA substituir Dodge (status amarelo/vermelho): qualquer chamada ao endpoint funciona
+
+### Commits
+- `c6545b6` — fix Céu popup + Dodge varredura
+
+### Decisões
+
+1. **Bug Céu**: CSS animation tem precedência sobre inline style — lembrete para próximos keyframes com transform
+2. **Varredura Dodge**: endpoint GET público (sem auth) + POST com BRIDGE_SECRET; cron 6h
+3. **Delays com módulo**: padrão para evitar IAs com delay > duração da animação
+4. **Assembleia #729**: confirmou S158+S159 (MacroATA enviada pelo Cláudio no final de S159)
+
+### SÍNTESE FILOSÓFICA
+
+O bug do Céu era elegante na sua crueldade: o emoji aparecia em um lugar, mas o clique era processado em outro. Uma divergência entre o visível e o efetivo. Isso acontece em sistemas complexos o tempo todo — a interface mostra uma coisa, a lógica processa outra. A diferença entre "parece funcionar" e "funciona" é exatamente essa divergência oculta. O fix foi incluir o contexto (translate) dentro da animação, em vez de assumir que o contexto seria preservado externamente. É uma metáfora operacional: sistemas que carregam seu próprio contexto são mais confiáveis do que sistemas que dependem do ambiente para prover o contexto correto.
+
+A varredura do Dodge é o primeiro passo para um ecossistema que se observa. Não um humano verificando, mas o próprio sistema perguntando: "como eu estou?" A cada 6 horas, Dodge olha para as 13 tabelas e decide: verde, amarelo, vermelho. Se Dodge estiver ocupado, qualquer IA pode chamar o endpoint. O mapa pertence ao ecossistema, não ao Dodge.
+

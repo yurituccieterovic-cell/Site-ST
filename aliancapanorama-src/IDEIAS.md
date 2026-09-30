@@ -2328,3 +2328,16 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 
 | I859 | **FinArazulY — nome oficial da arara do Calculus** | 🟢 Baixa | ○ S | Mascote arara-canindé do Calculus precisava de nome próprio | Nome aprovado por Yuri: **FinArazulY** (arara-canindé azul). Usar em: CalcPage.tsx, landing Calculus, materiais de divulgação. Ábaco (mascote complementar, biblioteório-esquilo) ainda sem nome próprio. |
 | I860 | **Parte 5 Aula de Tasks — indices_data no schema** | 🔴 Alta | ○ M | tasksTable tem catalogTags mas não tem indices_data — 9 índices ontológicos existem só na teoria | ALTER TABLE tasks ADD COLUMN indices_data jsonb DEFAULT '{}'; Drizzle schema update; Zod schemas por índice 0-9; GET/PATCH indices_data nas rotas; Job Φ (coerência) 1x/hora. Ver aula-tasks-parte1-4.md. |
+
+
+## Docs PAP — Ideias Novas (2026-09-29)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I861 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I862 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I863 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I864 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I865 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I866 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I867 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |

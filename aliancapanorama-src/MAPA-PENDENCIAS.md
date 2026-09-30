@@ -1207,3 +1207,25 @@
 - [ ] Tasks Φ: criar primeiras tasks de teste
 - [ ] Assembleia #729 (em breve)
 
+---
+
+## S161 — 2026-09-30
+
+### Concluído nesta sessão
+| # | Item | Status |
+|---|---|---|
+| S161-1 | Assembleia #729 lida (MacroATA S158+S159, UIDs 2611-2613) | ✅ |
+| S161-2 | CeuPage: bug popup corrigido — @keyframes ceu-float incluiu translate(-50%,-50%) | ✅ commit c6545b6 |
+| S161-3 | CeuPage: delays com módulo % (3 e % 4) — IAs longe não esperam 14s | ✅ commit c6545b6 |
+| S161-4 | Dodge varredura: GET /api/dodge/varredura (público, 13 tabelas) + POST (BRIDGE_SECRET + Conector) | ✅ commit c6545b6 |
+| S161-5 | keepalive: cron Dodge varredura a cada 6h (0h/6h/12h/18h UTC) | ✅ commit c6545b6 |
+| S161-6 | Assembleia #729 processada: nivelamento IAs + CROWD explicado + varredura Dodge | ✅ |
+
+### Pendências
+- [ ] Render Starter upgrade $7/mês (Yuri manual)
+- [ ] pg_dump Replit (Yuri manual — urgente)
+- [ ] Mascote PV: ainda não definido
+- [ ] PassThéo frontend: página /passtheo para troca unificada de senha
+- [ ] Tasks Φ: criar primeiras tasks de teste
+- [ ] Dodge varredura: verificar deploy Render (rota /api/dodge/varredura)
+
