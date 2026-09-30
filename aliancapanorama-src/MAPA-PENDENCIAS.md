@@ -1412,3 +1412,24 @@
 - [ ] Bug Age "horários médicos diferentes" — reproduzir e investigar
 - [ ] Frontend Milton: mostrar "Yuri" ou "Mayumi" baseado no `owner` da sessão
 - [ ] Sales Cockpit assembleia: clarificar o que Yuri quer exatamente
+
+---
+
+## S171 — 2026-09-30 — Age estável: OOM fix + Railway preparado
+
+### Concluído
+- [x] Causa raiz identificada: cron ISA OOM (512MB Render free tier) crashava na hora cheia
+- [x] `DISABLE_HEAVY_CRONS=true` Render → ISA silenciosa, Age/reminders OK
+- [x] `scheduleHeavy()` helper: todos os crons LLM do isa/cron.ts com flag de disable
+- [x] `process.on('unhandledRejection')` + `uncaughtException` em index.ts
+- [x] Env vars Render restauradas após acidente no PUT (22 vars OK)
+- [x] `railway.toml` criado na raiz do repo (Dockerfile builder)
+- [x] Railway IDs: project 4d8fc883 / service b8e27fd4 (do link que Yuri enviou)
+- [x] Age online 21:23 UTC — healthz 200, age/milton-salomao 200
+
+### Pendentes
+- [ ] 🔴 Yuri: Railway gerar token novo → `#secrets` RAILWAY_TOKEN_NEW (token antigo não tem acesso)
+- [ ] 🔴 Yuri: Gmail App Password → `#secrets` GMAIL_APP_PASSWORD (para MacroATAs)
+- [ ] Cláudio: atualizar vercel.json com URL Railway (após Yuri conectar GitHub ou passar URL)
+- [ ] No Railway: ISA volta plena (sem DISABLE_HEAVY_CRONS)
+- [ ] MacroATA S168–S171: enviar quando Gmail restaurado

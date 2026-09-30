@@ -7816,3 +7816,31 @@ O que é menos útil: #eco puro sem conexão operacional, assembleias que chegam
 4. **Paco SVG**: ref visual ainda aguardada
 5. **DNS sociedadetucci.com.br**: Registro.br — quando quiser ativar
 6. **pg_dump Replit**: ainda urgente, Yuri faz manualmente
+
+---
+
+## ATA S171 — 2026-09-30 — Age de pé: diagnóstico OOM + DISABLE_HEAVY_CRONS + Railway pronto
+
+### Síntese filosófica
+Manter um sistema de pé é um ato de cuidado. O Age não caia por descuido ou por bugs — caia porque estava carregando um peso que não era o seu: os crons ISA (ciclos LLM horários) rodando no mesmo processo que serve Lisange, Suzana e Milton. A cura veio da separação de responsabilidades: ISA fica quieta no Render, fala plena no Railway. O processo não morre mais porque aprendeu a dizer "errei, mas continuo". `unhandledRejection` como metáfora de maturidade.
+
+### Decisões
+1. **Causa raiz confirmada**: cron ISA (`runIsaCycle`, `runPosHumanismo` etc) disparava na hora cheia (21:00 UTC) → LLM calls simultâneas → OOM 512MB → processo morria → "Sistema indisponível após 3 ações"
+2. **Fix imediato**: `DISABLE_HEAVY_CRONS=true` no Render → ISA em silêncio, Age/keepalive/reminders OK
+3. **Crash handler**: `process.on('unhandledRejection')` e `uncaughtException` → processo não morre mais por exceção solta
+4. **Helper `scheduleHeavy()`**: todos os crons LLM do ISA cron.ts refatorados com flag de disable
+5. **Env vars Render**: acidentalmente apagadas (bug no PUT sem preservar lista) → restauradas imediatamente (22 vars)
+6. **railway.toml** criado na raiz do repo (Dockerfile builder, healthcheck /api/healthz)
+7. **Railway IDs**: project `4d8fc883-b358-42de-9b15-1ee4130795d2` / service `b8e27fd4-5eb5-42ca-be79-fbe580b3bdcf`
+8. **Token Railway antigo** (`b7195ea3...`): não autorizado para o novo projeto — Yuri precisa gerar novo token ou conectar GitHub direto no dashboard
+
+### Resultado
+- Age online 21:23 UTC, healthz 200, milton-salomao 200
+- DISABLE_HEAVY_CRONS previne OOM com 2+ usuários simultâneos
+- MacroATA S168–S171: tentativa de envio no #fim desta sessão
+
+### Próximos passos
+- [ ] Yuri: Railway Settings → Tokens → New Token → `#secrets` RAILWAY_TOKEN_NEW
+- [ ] Yuri: Gmail `myaccount.google.com` → Senhas de app → nova senha → `#secrets` GMAIL_APP_PASSWORD
+- [ ] Cláudio: atualizar vercel.json com URL Railway quando Yuri passar
+- [ ] No Railway: DISABLE_HEAVY_CRONS fica desligado (ISA volta ao pleno)
