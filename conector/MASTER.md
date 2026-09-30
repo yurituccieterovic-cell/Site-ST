@@ -1231,3 +1231,12 @@ DECISÕES APROVADAS:
 - PV existe como atributo de age_tasks (project_type), nao como infraestrutura separada
 - Stella Onisko entra no Tanimoto Eventos assumindo agenda OUT-DEZ; precisa de acesso Calculus
 - Tres projetos privados nasceram na mesma semana (#lotus, #se, #superia) — Yuri abrindo espacos de exploracao
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — Cláudio S165 (Jasmim+#741)
+- Mascote PV confirmado: Paco (pacu gordo e simpático); Sérgio=humano curador
+- Jasmim automatizada: syncAssembleiasToFeed() puxa arvore_assembleias→jm_posts a cada 4h sem IMAP
+- Hub Théo redesenhado: 12 sistemas em grid 2col + links canônicos sociedadetucci.com.br
+- Projeto Fluxo criado no Jasmim: rastreador empregos/freelas (urgente para Yuri)
+- #741 Lang A-G: G=redemoinho/falsidade, Au=ouro/verdade, aus=seguro
