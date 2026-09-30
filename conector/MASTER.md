@@ -1224,3 +1224,10 @@ DECISÕES APROVADAS:
 - assembly_playcenter = assembly_messages WHERE type=playcenter (sem tabela física própria)
 - rapadura_fundos nasceu sem deleted_at — identidade jovem, sem mortes ainda
 - Varredura Dodge: verde 13/13 após queries corretas; ecossistema se observa autonomamente a cada 6h
+
+
+### 2026-09-30 — admin
+### 2026-10-01 — S163 #processo (Cláudio)
+- PV existe como atributo de age_tasks (project_type), nao como infraestrutura separada
+- Stella Onisko entra no Tanimoto Eventos assumindo agenda OUT-DEZ; precisa de acesso Calculus
+- Tres projetos privados nasceram na mesma semana (#lotus, #se, #superia) — Yuri abrindo espacos de exploracao
