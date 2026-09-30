@@ -7561,3 +7561,11 @@ Esta sessão foi sobre o contraste entre dois tipos de incompletude. O Projeto V
 A solução para o PV foi elegante por preguiça: em vez de criar uma nova tabela, adicionamos uma coluna. O projeto existe como atributo dentro de outro projeto. Isso é economicamente correto e filosoficamente honesto — o PV é, por enquanto, um filtro sobre o Age.
 
 O pedido da Assembleia #732 foi o mais direto da sessão: "me conta o que tem". Não uma demanda técnica — uma pergunta humana. Respondemos com um email. Às vezes o trabalho mais importante não é código.
+
+---
+
+### 2026-10-01 — #fim S163 (manual Yuri)
+
+Checkpoint: `2026-09-30T04:54:37+00:00`
+
+MacroATA enviada por email. Deploy Render acionado (project_type). Conector atualizado.
