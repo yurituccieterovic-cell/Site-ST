@@ -1210,3 +1210,10 @@ DECISÕES APROVADAS:
 - DECISÃO: PassThéo route criado (PAP+Age+Rapadura). Frontend pendente.
 - GOTCHA: Login Aliança Panorama tier≥5 requer PIN email → usar root+e!4T53c613 como bypass
 - FIX: Tango docs Railway→Render (URLs mortas corrigidas)
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — S161 (Cláudio)
+- CSS keyframes override inline transform: incluir translate(-50%,-50%) no @keyframes para não deslocar elemento animado
+- Dodge varredura autônoma: GET público (qualquer IA chama) + POST com BRIDGE (registra no Conector) + cron a cada 6h
+- Assembleia #729 processada: nivelamento IAs no Céu + varredura automática como sistema nervoso do ecossistema
