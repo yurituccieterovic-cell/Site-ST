@@ -7723,6 +7723,37 @@ Yuri pediu: atualizar Jasmim (pouco atualizado), automatizar IA Jasmim a partir 
 *O servidor caiu em silêncio — sem aviso, sem log acessível. A única cura foi forçar um novo deploy: o ato de recriar o container como resposta para o container que parou de respirar. Há algo interessante nisso: às vezes o sistema não precisa de diagnóstico profundo, precisa de um recomeço. O Milton está no ar.*
 
 ---
+## ATA S169 — 2026-09-30 — Milton duas senhas + Railway novo
+
+### O que foi feito
+- `age_professionals.password_b_hash TEXT` adicionado ao schema + bootstrap (ALTER TABLE IF NOT EXISTS)
+- Login Age: aceita senha A (primária) OU senha B (secundária); grava `ageProfessionalOwner` na sessão
+- GET /age/auth/me: expõe `owner` ("a"|"b"|"master") para o frontend diferenciar sessões
+- PATCH /age/:slug/professionals/me/password-b: endpoint para definir/remover senha B (requer senha A)
+- IP challenge só para senha A — senha B (Mayumi) entra sem challenge
+- Neon: password_hash = y!4T53c613 (Yuri) ✅ · password_b_hash = m!4T53c613 (Mayumi) ✅
+- Deploy Render: `dep-daun0crm8hqs` (build_in_progress → live)
+- MacroATA S168: NÃO enviada — GMAIL_APP_PASSWORD expirou/inválido (535 auth error)
+- Railway $5/mês: Yuri contratou — uso ainda indefinido (pergunta em aberto)
+
+### Senha casal Milton
+| Quem | Senha | Owner na sessão |
+|---|---|---|
+| Yuri (Milton Salomão) | `y!4T53c613` | `"a"` |
+| Mayumi | `m!4T53c613` | `"b"` |
+
+### Pendências abertas
+- [ ] Gmail App Password expirou → Yuri regenerar em myaccount.google.com → Security → App Passwords
+- [ ] Atualizar GMAIL_APP_PASSWORD em /root/.pap-secrets e no Render env vars
+- [ ] Railway $5/mês: decidir o que roda lá (Árvore? Migrar api-server do Render?)
+- [ ] Bug "horários com marcações de médicos diferentes" — aguardando reprodução
+- [ ] Frontend: mostrar nome do owner logado no painel Milton (Yuri/Mayumi)
+- [ ] Diferenciação de tarefas por responsável (criadoPor yuri/mayumi via owner da sessão)
+
+### Síntese filosófica
+*Duas chaves para a mesma porta — mas não são a mesma chave. Yuri entra como fundador, Mayumi entra como parceira. O `owner: "a" | "b"` na sessão é uma distinção técnica que carrega uma distinção real: não é o mesmo que compartilhar uma senha. É reconhecer que dois sujeitos diferentes habitam o mesmo espaço, com autonomia diferenciada. O casal na agenda: a estrutura técnica espelha a estrutura da vida.*
+
+---
 ## ATA S167 — 2026-09-30 — Assembleias #744–#745 + diagnóstico ecossistema + #fim
 
 ### O que foi feito
