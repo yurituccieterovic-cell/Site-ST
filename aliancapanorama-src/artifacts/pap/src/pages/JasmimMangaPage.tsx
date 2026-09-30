@@ -214,7 +214,7 @@ export function JasmimGate() {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Projeto = "age" | "rapadura" | "pv" | "isca" | "sonhos" | "crowd" | "theo" | "bni" | "jasmim";
+type Projeto = "age" | "rapadura" | "pv" | "isca" | "sonhos" | "crowd" | "theo" | "bni" | "jasmim" | "calculus" | "socia";
 
 type Post = {
   id: string;
@@ -238,6 +238,8 @@ const PROJETOS: Record<Projeto, { nome: string; cor: string; emoji: string; seto
   theo:     { nome: "Théo",     cor: "#fbbf24", emoji: "🌳", setores: ["Ecossistema", "Assembleias", "Orchestração"] },
   bni:      { nome: "BNI",      cor: "#94a3b8", emoji: "🔒", setores: ["Forças Ocultas", "Rede Estratégica", "Sábias"], secreto: true },
   jasmim:   { nome: "Jasmim",  cor: "#c2700a", emoji: "🐿️", setores: ["Identidade", "Funcionalidades", "Jasmim", "Histórico"] },
+  calculus: { nome: "Calculus", cor: "#3b82f6", emoji: "🦜", setores: ["Financeiro", "Contabilidade", "FinArazulY IA", "Sócia ERP"] },
+  socia:    { nome: "Sócia",   cor: "#a78bfa", emoji: "◈",  setores: ["CRM", "RH", "Projetos", "Assembleia IA"] },
 };
 
 // ─── Avatar Jasmim (esquilo voador CSS) ──────────────────────────────────────
@@ -856,8 +858,11 @@ export default function JasmimMangaPage() {
               ["🏥 Age", "/aliancapanorama/age/lisange"],
               ["🍬 Rapadura", "/aliancapanorama/rapadura"],
               ["🎨 PV", "/aliancapanorama/pv"],
-              ["🏙️ CEU / CROWD", "/aliancapanorama/ceu"],
-              ["🤖 Studio / Artesão", "/aliancapanorama/studio"],
+              ["🌆 Céu", "/ceu"],
+              ["🤖 MEKY", "/meky"],
+              ["🦜 Calculus", "/calculus"],
+              ["◈ Sócia", "/calculus#socia"],
+              ["🏙️ Studio / Artesão", "/aliancapanorama/studio"],
             ].map(([label, href]) => (
               <a key={href} href={href} style={{
                 display: "inline-block", marginRight: 8, marginBottom: 4,
@@ -880,6 +885,43 @@ export default function JasmimMangaPage() {
                 <span style={{ color: "#60a5fa", fontWeight: 700, fontSize: 13 }}>{emoji_nome}</span>
                 <span style={{ color: "#888", fontSize: 12 }}> · {funcao} — {desc}</span>
               </div>
+            ))}
+          </div>
+        )}
+        {/* Painel contextual: Calculus */}
+        {projetoAtivo === "calculus" && (
+          <div style={{ background: "#3b82f611", border: "1px solid #3b82f644", borderRadius: 12, padding: 16, marginBottom: 12 }}>
+            <p style={{ color: "#60a5fa", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>🦜 Calculus — motor financeiro da Sociedade Tucci</p>
+            <p style={{ color: "#94a3b8", fontSize: 12, margin: "0 0 10px", lineHeight: 1.6 }}>
+              Plano de contas, fluxo de caixa, DRE, impostos e conciliação bancária para MEI, autônomos e pequenas empresas. Mascote: <strong style={{ color: "#60a5fa" }}>FinArazulY</strong> — a arara-canindé azul que traduz números em linguagem viva.
+            </p>
+            <a href="/calculus" style={{
+              display: "inline-block", background: "#3b82f622", border: "1px solid #3b82f644",
+              borderRadius: 8, padding: "4px 12px", fontSize: 12, color: "#60a5fa", textDecoration: "none", fontWeight: 600,
+            }}>🦜 Acessar Calculus →</a>
+            <a href="/calculus#socia" style={{
+              display: "inline-block", marginLeft: 8, background: "#a78bfa22", border: "1px solid #a78bfa44",
+              borderRadius: 8, padding: "4px 12px", fontSize: 12, color: "#a78bfa", textDecoration: "none", fontWeight: 600,
+            }}>◈ Ver Sócia →</a>
+          </div>
+        )}
+        {/* Painel contextual: Sócia */}
+        {projetoAtivo === "socia" && (
+          <div style={{ background: "#a78bfa11", border: "1px solid #a78bfa44", borderRadius: 12, padding: 16, marginBottom: 12 }}>
+            <p style={{ color: "#a78bfa", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>◈ Sistema Sócia — ERP simplificado</p>
+            <p style={{ color: "#94a3b8", fontSize: 12, margin: "0 0 10px", lineHeight: 1.6 }}>
+              A sua <em>sócia digital</em> — CRM, RH, Projetos, Calculus (financeiro), Age (agenda/clínicas) e Assembleia Interna de IAs integrados. Mascote: <strong style={{ color: "#a78bfa" }}>Ábaco</strong> — triqueta animada que pensa, sente e resolve.
+            </p>
+            {[
+              ["◈ Ábaco / Sócia", "/calculus#socia"],
+              ["🦜 Calculus (financeiro)", "/calculus"],
+              ["🏥 Age (agenda)", "/aliancapanorama/age/lisange"],
+            ].map(([label, href]) => (
+              <a key={href} href={href} style={{
+                display: "inline-block", marginRight: 8, marginBottom: 4,
+                background: "#a78bfa22", border: "1px solid #a78bfa44",
+                borderRadius: 8, padding: "3px 10px", fontSize: 12, color: "#a78bfa", textDecoration: "none",
+              }}>{label}</a>
             ))}
           </div>
         )}
@@ -923,10 +965,36 @@ export default function JasmimMangaPage() {
             </p>
           </div>
         )}
-        {/* Painel: Jasmim — Histórico (Assembleias Replit) */}
+        {/* Painel: Jasmim — Histórico (Linha do Tempo + Assembleias Replit) */}
         {projetoAtivo === "jasmim" && setorAtivo === "Histórico" && (
           <div style={{ background: "#c2700a11", border: "1px solid #c2700a44", borderRadius: 12, padding: 14, marginBottom: 12 }}>
-            <p style={{ color: "#c2700a", fontWeight: 700, margin: "0 0 10px", fontSize: 13 }}>📜 Histórico — Assembleias Replit ({assembleiaTotal} no total)</p>
+            {/* Linha do tempo do PAP */}
+            <p style={{ color: "#c2700a", fontWeight: 700, margin: "0 0 10px", fontSize: 13 }}>🗺️ Linha do Tempo — Ecossistema Tucci</p>
+            <div style={{ marginBottom: 16 }}>
+              {[
+                { ano: "2015", marco: "Fundação da Sociedade Tucci", desc: "Design gráfico, música e produção multimídia." },
+                { ano: "2023", marco: "Início do PAP no Replit", desc: "414 commits, 6 fases, plataforma FUVEST gamificada." },
+                { ano: "Jul 2026", marco: "Migração Replit → Neon + Render", desc: "41 tabelas restauradas. Stack: React+Vite / Express 5 / Neon." },
+                { ano: "Jul 2026", marco: "Age lançado", desc: "Agenda médica inteligente com SABIÁ. Lisange + Suzana." },
+                { ano: "Ago 2026", marco: "ARPIA — Artesão + ADK", desc: "Conselho do Artesão; Studio; protocolo current_blueprint.md." },
+                { ano: "Ago 2026", marco: "Rapadura v2", desc: "Score 6 dimensões + Calmar + FatorVerde. Yuri & Mayumi." },
+                { ano: "Set 2026", marco: "Céu — Cidade das IAs", desc: "30+ IAs em 7 bairros. Gate tier≥3. Feed de sonhos." },
+                { ano: "Set 2026", marco: "Calculus + Sócia", desc: "FinArazulY (arara azul) = Calculus; Ábaco (triqueta) = Sócia ERP." },
+                { ano: "Set 2026", marco: "MEKY — Robô Urbano", desc: "Amanda pilotando. Sensores + câmera + autonomia." },
+                { ano: "Set 2026", marco: "Koyeb → Mistral", desc: "Koyeb adquirida pela Mistral AI. RODAR_MISTRAL_API_KEY salva." },
+                { ano: "Set 2026", marco: "Mayumi entra como gestora", desc: "Age administrativa + financeira. Senha m!4T53c613." },
+              ].map((item, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                  <span style={{ color: "#c2700a", fontSize: 11, minWidth: 72, paddingTop: 1, fontFamily: "monospace" }}>{item.ano}</span>
+                  <div>
+                    <div style={{ color: "#e2e8f0", fontSize: 12, fontWeight: 600 }}>{item.marco}</div>
+                    <div style={{ color: "#64748b", fontSize: 11 }}>{item.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <hr style={{ border: "none", borderTop: "1px solid #c2700a33", margin: "12px 0" }} />
+            <p style={{ color: "#c2700a", fontWeight: 700, margin: "0 0 10px", fontSize: 13 }}>📜 Assembleias Replit ({assembleiaTotal} no total)</p>
             <input
               type="text" placeholder="Buscar assembleia…"
               value={assembleiaSearch}

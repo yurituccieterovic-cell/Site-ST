@@ -21,7 +21,7 @@ export const index1Schema = z.object({
   precisao_perc: z.number().min(0).max(100).optional(),
   verificabilidade: z.enum(["alta","media","baixa","nao_verificavel"]).optional(),
   formato_signo: z.string().optional(),     // texto | código | diagrama | áudio
-  metadados_tecnicos: z.record(z.unknown()).optional(),
+  metadados_tecnicos: z.record(z.string(), z.unknown()).optional(),
 }).passthrough();
 
 // ── Índice 2 — Orientação ────────────────────────────────────────────────────

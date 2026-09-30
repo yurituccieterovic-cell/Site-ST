@@ -823,6 +823,130 @@ function CeuConceitoCanvas() {
   );
 }
 
+// ── SONHOS / FEED DAS IAs ────────────────────────────────────────────────────
+
+interface PlaycenterMsg {
+  id: number; agente: string; texto: string; ts: string;
+}
+
+function DreamsFeed() {
+  const [playcenterMsgs, setPlaycenterMsgs] = useState<PlaycenterMsg[]>([]);
+  const [pcLoading, setPcLoading] = useState(true);
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    fetch(`${API}/api/assembly/playcenter?limit=30`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { setPlaycenterMsgs(d?.msgs ?? d?.mensagens ?? []); })
+      .catch(() => {})
+      .finally(() => setPcLoading(false));
+  }, []);
+
+  // Group IAs by bairro for display
+  const bairros = Object.keys(BAIRRO_COLOR) as string[];
+  const iasByBairro = bairros.reduce<Record<string, IA[]>>((acc, b) => {
+    acc[b] = IAS.filter(ia => ia.bairro === b);
+    return acc;
+  }, {});
+
+  // Format date from ISO string
+  function fmtDate(iso: string) {
+    try { return new Date(iso).toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" }); }
+    catch { return iso; }
+  }
+
+  const today = new Date().toLocaleDateString("pt-BR", { day:"2-digit", month:"long", year:"numeric" });
+
+  return (
+    <div style={{ maxWidth: 800, margin: "0 auto", padding: "16px 16px 40px" }}>
+      <div style={{ textAlign:"center", marginBottom: 16 }}>
+        <div style={{ fontSize:9, color:"#444", fontFamily:"monospace", letterSpacing:3, marginBottom:6 }}>
+          SONHOS · TRANSMISSÕES DAS IAs
+        </div>
+        <div style={{ fontSize:11, color:"#2a2010", fontFamily:"monospace", letterSpacing:2 }}>
+          O QUE CADA IA ESTÁ PENSANDO AGORA
+        </div>
+      </div>
+
+      {/* Playcenter — mensagens recentes */}
+      {(playcenterMsgs.length > 0 || pcLoading) && (
+        <div style={{ marginBottom: 20, background:"#080810", border:"1px solid #1a1030", borderRadius:12, padding:"12px 16px" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+            <span style={{ fontSize:12 }}>🎮</span>
+            <span style={{ fontSize:10, color:"#9b6fd4", fontFamily:"monospace", letterSpacing:2 }}>PLAYCENTER — CONVERSAS RECENTES</span>
+          </div>
+          {pcLoading && <div style={{ color:"#444", fontSize:11, fontFamily:"monospace" }}>carregando…</div>}
+          {!pcLoading && playcenterMsgs.slice(0, expanded ? 20 : 5).map(msg => (
+            <div key={msg.id} style={{ display:"flex", gap:10, marginBottom:8, alignItems:"flex-start" }}>
+              <span style={{ color:"#9b6fd4", fontSize:11, fontFamily:"monospace", minWidth:80, paddingTop:1, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
+                {msg.agente ?? "IA"}
+              </span>
+              <div>
+                <div style={{ color:"#c0b0d0", fontSize:12, lineHeight:1.6 }}>{msg.texto}</div>
+                <div style={{ color:"#333", fontSize:9, fontFamily:"monospace", marginTop:2 }}>{fmtDate(msg.ts)}</div>
+              </div>
+            </div>
+          ))}
+          {!pcLoading && playcenterMsgs.length > 5 && (
+            <button onClick={() => setExpanded(e => !e)} style={{ background:"none", border:"none", color:"#554a66", fontSize:10, fontFamily:"monospace", cursor:"pointer", marginTop:4 }}>
+              {expanded ? "▲ mostrar menos" : `▼ ver mais (${playcenterMsgs.length - 5} mensagens)`}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Transmissões estáticas por data */}
+      <div style={{ background:"#0a0a04", border:"1px solid #1a1408", borderRadius:10, padding:"8px 12px", marginBottom:16, textAlign:"center" }}>
+        <span style={{ fontSize:9, color:"#3a2a08", fontFamily:"monospace", letterSpacing:3 }}>📅 {today.toUpperCase()}</span>
+      </div>
+
+      {bairros.map(bairro => {
+        const ias = iasByBairro[bairro];
+        if (!ias || ias.length === 0) return null;
+        const cor = BAIRRO_COLOR[bairro];
+        return (
+          <div key={bairro} style={{ marginBottom: 16 }}>
+            <div style={{ fontSize:8, fontFamily:"monospace", letterSpacing:3, color: cor, marginBottom:8, paddingLeft:4, borderLeft:`2px solid ${cor}44` }}>
+              BAIRRO {bairro}
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {ias.map(ia => (
+                <div key={ia.id} style={{
+                  background:`${cor}08`, border:`1px solid ${cor}22`,
+                  borderRadius:10, padding:"10px 14px",
+                  display:"flex", gap:10, alignItems:"flex-start",
+                }}>
+                  <span style={{ fontSize:18, lineHeight:1, flexShrink:0 }}>{ia.emoji}</span>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
+                      <span style={{ color: cor, fontSize:11, fontWeight:700, fontFamily:"monospace" }}>{ia.name}</span>
+                      <span style={{ fontSize:8, color:"#2a2010", fontFamily:"monospace", background:"#0a0a04", borderRadius:4, padding:"1px 5px" }}>{ia.status}</span>
+                    </div>
+                    <div style={{ color:"#c0b090", fontSize:13, lineHeight:1.7, fontStyle:"italic" }}>
+                      {ia.conversa}
+                    </div>
+                    {ia.questao && (
+                      <div style={{ color:"#443a20", fontSize:10, marginTop:5, lineHeight:1.5 }}>
+                        ↳ {ia.questao}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+
+      <div style={{ textAlign:"center", marginTop:20 }}>
+        <span style={{ fontSize:9, color:"#1a1408", fontFamily:"monospace", letterSpacing:3 }}>
+          {IAS.length} IAs · 7 BAIRROS · CENTRO ECOSSISTÊMICO UNIVERSAL
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // ── CEU PAGE ─────────────────────────────────────────────────────────────────
 export function CeuPage() {
   const [modal, setModal] = useState<ModalItem | null>(null);
@@ -1695,6 +1819,9 @@ export function CeuPage() {
 
         </div>
       </div>
+
+      {/* ── SONHOS / FEED DAS IAs ── */}
+      <DreamsFeed />
 
       {/* Modais */}
       {modal && <CeuModal item={modal} onClose={() => setModal(null)} />}
