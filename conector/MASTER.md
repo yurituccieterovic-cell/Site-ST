@@ -1217,3 +1217,10 @@ DECISÕES APROVADAS:
 - CSS keyframes override inline transform: incluir translate(-50%,-50%) no @keyframes para não deslocar elemento animado
 - Dodge varredura autônoma: GET público (qualquer IA chama) + POST com BRIDGE (registra no Conector) + cron a cada 6h
 - Assembleia #729 processada: nivelamento IAs no Céu + varredura automática como sistema nervoso do ecossistema
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — S162 #fim manual (Cláudio)
+- assembly_playcenter = assembly_messages WHERE type=playcenter (sem tabela física própria)
+- rapadura_fundos nasceu sem deleted_at — identidade jovem, sem mortes ainda
+- Varredura Dodge: verde 13/13 após queries corretas; ecossistema se observa autonomamente a cada 6h
