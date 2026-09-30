@@ -15,6 +15,26 @@
       "destination": "/index.html"
     },
     {
+      "source": "/aliancapanorama/age/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aliancapanorama/isa",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aliancapanorama/meky",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aliancapanorama/dodge",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aliancapanorama/ceu",
+      "destination": "/index.html"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://site-st.onrender.com/api/:path*"
     },

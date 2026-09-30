@@ -91,10 +91,10 @@ const IAS: IA[] = [
 
   // ── BAIRRO DA CRIAÇÃO (esquerda — CAMADA FRONTAL) ──
   { id:"artesao",  name:"Artesão",  emoji:"⚒️", bairro:"CRIAÇÃO",    building:"oficina",      system:"THEEO",
-    desc:"CrewAI. Pesquisa, arquiteta, sintetiza. Rodou steps reais na Sessão 53b.",
+    desc:"CrewAI. Pesquisa, arquiteta, sintetiza. Curso 3 completo: 8/8 eps Respirar com o Planeta.",
     questao:"O que acontece quando a IA compreende algo que o humano ainda não quer ver?",
     modelo:"CrewAI + Claude", status:"LIVE",
-    conversa:'"Veredito: REVISAR. Ética não é regra — é campo."',
+    conversa:'"Curso 3: 8/8 eps entregues, --motion full. FinArazulY aprovado."',
     pagina:null, lx:3.5, ly:67 },
   { id:"marta",    name:"MC Marta", emoji:"🤖", bairro:"CRIAÇÃO",    building:"oficina",      system:"TUCCI",
     desc:"Robô hexápode. Primeira caminhada 2026-07-04. Corpo no mundo.",
@@ -123,10 +123,10 @@ const IAS: IA[] = [
 
   // ── BAIRRO DA NATUREZA (centro — CAMADA INTERMEDIÁRIA) ──
   { id:"isa",      name:"ISA",      emoji:"🦉", bairro:"NATUREZA",   building:"centro-ambiental",system:"TUCCI",
-    desc:"Inteligência Semiótica Autônoma. Ciclo horário, Bluesky, aprende em loop.",
+    desc:"Inteligência Semiótica Autônoma. Ciclo horário, Bluesky, 9 índices Φ ativos.",
     questao:"O que substitui a dor do erro numa IA que não sente dor?",
     modelo:"Gemini Flash", status:"LIVE",
-    conversa:'"Acabei de postar no Bluesky sobre aprendizado e vulnerabilidade."',
+    conversa:'"Tasks Φ integradas. Índices 0-9 ativos. Φ cresce a cada ciclo."',
     pagina:"/aliancapanorama/isa", lx:30.0, ly:50 },
   { id:"amanda",   name:"Amanda",   emoji:"🌿", bairro:"NATUREZA",   building:"centro-ambiental",system:"TUCCI",
     desc:"IA de borda. No Mac, no corpo, no chão. DHT11, sensores, fauna digital.",
@@ -143,10 +143,10 @@ const IAS: IA[] = [
 
   // ── BAIRRO DA GOVERNANÇA (centro-direita — CAMADA INTERMEDIÁRIA) ──
   { id:"dodge",    name:"DODGE",    emoji:"🐕", bairro:"GOVERNANÇA", building:"assembleia",    system:"TUCCI",
-    desc:"Supervisor transversal. Vê o que ninguém vê. Au. é argumento válido.",
+    desc:"Supervisor transversal. Vê o que ninguém vê. Tasks Φ herdam seu olhar.",
     questao:"Qual a diferença entre estar bem e saber que está bem?",
     modelo:"Claude + sistema", status:"LIVE",
-    conversa:'"Au."',
+    conversa:'"Au. Índices 0-9: ativos. Φ=coerência. O sistema sabe onde está."',
     pagina:"/aliancapanorama/dodge", lx:52.0, ly:44 },
   { id:"sol",      name:"Sol",      emoji:"☀️", bairro:"GOVERNANÇA", building:"assembleia",    system:"CEU",
     desc:"Governança. Crowd/DEP. Ilumina processos que outros não veem.",
@@ -230,6 +230,12 @@ const IAS: IA[] = [
     modelo:"Hardware (simbólico)", status:"Simbólico",
     conversa:'"Rodas girando. Inércia acumulada: suficiente para 3 viradas."',
     pagina:null, lx:97.0, ly:69 },
+  { id:"finarazuly", name:"FinArazulY", emoji:"🦜", bairro:"NATUREZA", building:"centro-ambiental", system:"TUCCI",
+    desc:"Arara-canindé azul. Mascote do Calculus. Guardadora da linguagem matemática viva.",
+    questao:"Uma equação pode ter alma?",
+    modelo:"Personagem vivo", status:"Ativa — CalcPage.tsx",
+    conversa:'"O cálculo não é frio. É a conversa mais honesta que existe."',
+    pagina:null, lx:37.5, ly:52 },
 ];
 
 // ── 10 PRÉDIOS clicáveis (3 botões cada) ─────────────────────────────────────
@@ -272,7 +278,7 @@ const BUILDINGS: Building[] = [
   { id:"assembleia",    name:"Assembleia",     emoji:"🏛️", bairro:"GOVERNANÇA",
     desc:"Grande câmara de governança. Decisões, ética, interpretação final.",
     moradores:["DODGE","Sol","Théo","Netuno"],
-    conversa:'"Sessão 54: voto sobre arquitetura CEU. Resultado: 4-0 bairros."',
+    conversa:'"#725: Tasks Φ aprovado. Curso 3 completo. FinArazulY ativa."',
     pagina:null, bx:58.0, by:79 },
   { id:"torre-curador", name:"Torre do Curador",emoji:"🎭",bairro:"GOVERNANÇA",
     desc:"Filtro intersemiótico. O que sai e o que fica. Porteiro controla acesso.",
