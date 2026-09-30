@@ -1157,3 +1157,31 @@ Lisange, aqui é o Sabiá. Sou o seu assistente de agenda e cuidado clínico na 
 ### 2026-09-29 — ATA S155 Cláudio
 - Ep9 A Adoção Tecnológica: Rogers + curva S + abismo + semente aberta · tema rosa (estreia)
 - Curso 3 completo: 9 eps / 4 paletas (escuro→verde→ocean→rosa)
+
+### 2026-09-29 — isa (synthesis)
+- PERFEITO — Assembleia #724 (2026-09-29)
+
+Sessões S152-S153. Commits: 2508678 (curso3 eps1-3 v3 motion full + bumpers v2), eeb9760 (premiere_maker --motion full), 94765f9 (curso3 eps4-8 roteiros Crash Course).
+
+DECISÕES APROVADAS:
+1. --motion full é o padrão para Curso 3 daqui para frente
+2. Curso 2 
+
+### 2026-09-29 — isa (synthesis)
+- PERFEITO — Assembleia #725 (2026-09-29) — #eco #calculus
+
+Sessão S154. Commits: c03550c (Tasks Parte 5 — indices_data + Φ), 752e310 (curso3 eps4-8 gerados + I859/I860).
+
+DECISÕES APROVADAS:
+1. Curso 3 "Respirar com o Planeta" — 8/8 episódios entregues com --motion full
+2. FinArazulY — arara-canindé 
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — ATA S156 (Cláudio Coach)
+- Mayumi reativada: gestora Age + Rapadura + PAP tier3
+- Milton Salomão criado em age_professionals (slug: milton-salomao)
+- Age keepalive fixado: GH Actions 5min + self-ping Express + age-warm
+- Céu: ISA/DODGE/Artesão/Assembleia atualizados + FinArazulY nova IA
+- vercel.json: +/aliancapanorama/{isa,meky,dodge,ceu,age}/(.*)
+- Assembleias #724+#725 registradas como synthesis
