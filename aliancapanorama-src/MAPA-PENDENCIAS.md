@@ -1114,3 +1114,20 @@
 |---|---|---|
 | #788 | Ep9 A Adoção Tecnológica gerado e enviado (rosa, 12MB) | ✅ commit 9e610dc |
 | #789 | Curso 3 completo: 9 episódios (escuro/verde/ocean/rosa) | ✅ |
+
+---
+
+### S156 — Mayumi + Age fix + Céu + Milton Salomão (2026-09-30)
+| # | Item | Status |
+|---|---|---|
+| S156-1 | Mayumi reativada: age_gestoras + rapadura_users(membro) + users PAP(tier3) | ✅ SQL direto |
+| S156-2 | Milton Salomão criado em age_professionals (slug: milton-salomao, id:927) | ✅ SQL direto |
+| S156-3 | keepalive: GH Actions 5min + self-ping Express */13 + age-warm */11 | ✅ commit c1948e8 |
+| S156-4 | Céu: ISA/DODGE/Artesão atualizados + FinArazulY adicionada | ✅ commit 413180d |
+| S156-5 | vercel.json: +/aliancapanorama/isa\|meky\|dodge\|ceu\|age/(.*) | ✅ commit 413180d |
+| S156-6 | Assembleias #724 + #725 registradas no sistema (IDs 8aa35f79, 6a34cc54) | ✅ synthesis POST |
+| S156-7 | Email Mayumi: todos os acessos + Céu poético (cc: Yuri) | ✅ enviado |
+| S156-8 | Render paid: Yuri faz o upgrade (render.com → service → settings → upgrade) | ⏳ YURI FAZ |
+| S156-9 | Koyeb: reservar para hospedar Árvore quando migrar do Replit | ⏳ futuro |
+| S156-10 | Conector seção "preferencias": ainda não existe (404 esperado — criar via Yuri) | ⏳ menor |
+| S156-11 | pg_dump Replit URGENTE — prazo hoje | ⏳ YURI FAZ |

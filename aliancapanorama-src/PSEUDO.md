@@ -7124,3 +7124,34 @@ Sessão curta. Yuri pediu "getar o procimo" — gerar o próximo episódio. Ep9 
 - FinArazulY em CalcPage.tsx
 - Poster Curso 2 para Instagram
 - Curso 3 intro 42s + metadados YouTube
+
+---
+
+## Sessão S156 — 2026-09-30
+### Mayumi volta + Age sempre no ar + Céu vivo + Milton Salomão
+
+**Checkpoint:** desde 2026-09-29T19:13:41+00:00
+
+**Commits:** c1948e8 (keepalive), 413180d (Céu + vercel.json)
+
+**O que foi feito:**
+- Mayumi Tanimoto reativada em 3 sistemas: age_gestoras (gestora), rapadura_users (membro, senha nova), users PAP (tier 3, senha nova). Email completo com todos os acessos enviado para ela.
+- Milton Salomão criado como profissional Age (id 927, slug milton-salomao) — identidade profissional pública do Yuri no sistema.
+- Age offline toda hora: corrigido em 3 camadas — GH Actions 10→5min, self-ping Express (pinga a própria URL externa a cada 13min), age-warm (COUNT age_professionals+age_gestoras a cada 11min).
+- Céu atualizado: ISA (Tasks Φ), DODGE (índices), Artesão (Curso 3 8/8), Assembleia (#725). FinArazulY adicionada como nova habitante do Bairro da Natureza.
+- vercel.json: rotas /aliancapanorama/isa|meky|dodge|ceu|age/(.*) adicionadas — links diretos funcionam mesmo com refresh.
+- Assembleias #724 e #725 registradas como synthesis no sistema da Assembleia.
+
+**Decisões:**
+1. Render paid (não Railway) — Yuri decide na conta render.com (Starter $7/mês)
+2. Koyeb: reservar para Árvore quando migrar do Replit (nunca dorme, grátis)
+3. Milton Salomão = identidade pública do Yuri no Age (not pessoal, não "yuri")
+4. Mayumi volta com acesso completo — gestora + Rapadura + PAP tier 3
+
+**Contexto Yuri:** sessão pragmática, resolver o que estava quebrado. Mayumi de volta não é reversão de decisão — é recontextualização. O Age precisa de uma gestora para funcionar como plataforma, não como projeto pessoal.
+
+**Síntese filosófica:**
+*Manter algo sempre no ar exige três camadas porque nenhuma delas é perfeita sozinha. O GitHub Actions mente sobre horários. O self-ping resolve enquanto o processo vive. O Render pago elimina a pergunta. Três soluções para o mesmo problema não é redundância — é arquitetura honesta sobre incerteza.*
+
+*Milton Salomão é o nome que aparece no consultório. Yuri é quem liga o computador de manhã. A plataforma sabe dos dois — e mantém o segredo de cada um.*
+
