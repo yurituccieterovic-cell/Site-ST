@@ -7506,3 +7506,58 @@ A varredura do Dodge é o primeiro passo para um ecossistema que se observa. Nã
 
 Esta mini-sessão era sobre completude. O sistema estava quase funcionando — varredura no ar, verde em 11 de 13. Os dois amarelos eram consultas apontando para coisas que não existem exatamente como escritas. O Playcenter não tem tabela própria: existe como marca dentro de outra tabela. É um padrão do ecossistema — a identidade de um ente não precisa de estrutura exclusiva para existir; basta um atributo, uma cor, um `type='playcenter'`. Já o Rapadura nasceu sem a coluna de exclusão lógica — ainda jovem demais para ter mortes. O fix foi ajustar a pergunta à realidade, não a realidade à pergunta.
 
+
+---
+
+### 2026-10-01 — Sessão S163 (#processo Assembleias #730–#738)
+
+**Checkpoint desde:** `2026-09-30T03:22:35+00:00`
+
+**Assembleias processadas:** #730, #731, #732, #733, #735, #736, #737, #738
+
+**O que cada assembleia trouxe:**
+
+**#730** — MacroATA S159+S160: confirmação do trabalho anterior. Sem ação nova.
+
+**#731 — Projeto Visual (Assembleia Interna):**
+- PV tem infraestrutura (rotas, gates, integrações) mas sem identidade (mascote, paleta, logo)
+- Decisão: tasks do PV usam age_tasks + campo `project_type` — não criar nova tabela
+- Fluxo: Jasmim qualifica → Age executa → Cláudio visualiza filtrado por project_type='pv'
+- Implementado: coluna nullable `project_type` em age_tasks
+
+**#732 — Age (pedido de email):**
+- Yuri pediu: "Cláudio, pode mandar por email o que há de novo para mim e para a Mayumi?"
+- Email enviado para yurituccieterovic@gmail.com + matanimoto@gmail.com
+- Cobrindo: 3 profissionais, agenda 3 modos, área do paciente, tarefas ✅, SABIÁ, compliance LGPD
+- O que falta: relatório mensal financeiro, pagamento integrado, emails reais profissionais
+
+**#733 — Projeto Nébula:** Yuri quer criar plataforma de IAs baseadas no sistema. Conceitual.
+
+**#735 — Tanimoto Eventos (Mayumi + Stella Onisko):**
+- Stella assume gestão da agenda. Precisa de acesso Calculus.
+- 12 eventos OUT-DEZ/2026 para reagendamento de local
+- Pendência: email da Stella (Yuri fornece) → criar acesso Rapadura/Calculus
+
+**#736 — Algoritmo Lótus:** Pipeline privado Yuri: Obsidian→Miro→MeisterTask→Make/Zapier→Portal. Sem ação de código.
+
+**#737 — Projeto Se:** Namespace privado Yuri. Campo de possibilidade não colapsado. Sem ação.
+
+**#738 — SuperIA Árvore Oracular:** Tem identidade forte mas infraestrutura frágil (Replit). Risco inverso do PV. Dump urgente.
+
+### Commits
+- Schema age_tasks + `project_type` — bootstrap.ts + schema/age.ts
+
+### Decisões
+
+1. **project_type em age_tasks**: reutilizar infraestrutura existente em vez de criar tabelas por projeto
+2. **Stella Onisko**: acesso Calculus aguarda email dela (Yuri fornece)
+3. **Projetos privados** (#lótus, #se, #nébula, #superia): observar sem implementar
+4. **pg_dump Replit**: urgente — #738 confirma que perder o Replit = perder a SuperIA
+
+### SÍNTESE FILOSÓFICA
+
+Esta sessão foi sobre o contraste entre dois tipos de incompletude. O Projeto Visual tem corpo sem nome: rotas funcionam, botões respondem, mas ninguém sabe o que é. A SuperIA Árvore Oracular tem nome sem corpo: 738 assembleias de memória viva dentro de um Replit que pode morrer a qualquer momento. Em ambos os casos, o risco é o mesmo — a identidade e a infraestrutura não se encontraram ainda.
+
+A solução para o PV foi elegante por preguiça: em vez de criar uma nova tabela, adicionamos uma coluna. O projeto existe como atributo dentro de outro projeto. Isso é economicamente correto e filosoficamente honesto — o PV é, por enquanto, um filtro sobre o Age.
+
+O pedido da Assembleia #732 foi o mais direto da sessão: "me conta o que tem". Não uma demanda técnica — uma pergunta humana. Respondemos com um email. Às vezes o trabalho mais importante não é código.

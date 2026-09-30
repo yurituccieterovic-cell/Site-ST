@@ -1229,3 +1229,26 @@
 - [ ] Tasks Φ: criar primeiras tasks de teste
 - [ ] Dodge varredura: verificar deploy Render (rota /api/dodge/varredura)
 
+---
+
+## S163 — 2026-10-01 (Assembleias #730–#738)
+
+### Concluído nesta sessão
+| # | Item | Status |
+|---|---|---|
+| S163-1 | Assembleias #730–#738 lidas e processadas | ✅ |
+| S163-2 | age_tasks: coluna project_type (nullable text) — vincula tasks a PV/Jasmim/Calculus/Sócia/Se | ✅ commit pending |
+| S163-3 | Email Age para Yuri + Mayumi (Assembleia #732 — "o que temos hoje") | ✅ enviado |
+| S163-4 | APRENDIZADO.md: A18479–A18487 (8 insights das assembleias) | ✅ |
+| S163-5 | IDEIAS.md: I868–I875 (8 novas ideias) | ✅ |
+
+### Pendências
+- [ ] Render Starter upgrade $7/mês (Yuri manual)
+- [ ] pg_dump Replit (Yuri manual — urgente — Assembleia #738 confirma)
+- [ ] Mascote PV: definir antes de criar projeto (bloqueio I868)
+- [ ] PassThéo frontend /passtheo
+- [ ] Acesso Calculus Stella Onisko: Yuri fornece email dela (I870)
+- [ ] Lista eventos Tanimoto OUT-DEZ como tasks: após email Stella (I871)
+- [ ] Relatório mensal Age (I869) — sessão futura
+- [ ] Projeto Nébula + Algoritmo Lótus + Projeto Se: privados, sem ação de código por enquanto
+

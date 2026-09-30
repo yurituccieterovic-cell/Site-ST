@@ -418,14 +418,16 @@ export async function ensureAgeTables(): Promise<void> {
       data_vencimento TIMESTAMPTZ,
       concluida_at    TIMESTAMPTZ,
       criado_por      TEXT        NOT NULL DEFAULT 'professional',
+      project_type    TEXT,
       created_at      TIMESTAMPTZ DEFAULT now(),
       updated_at      TIMESTAMPTZ DEFAULT now()
     )
   `);
+  await db.execute(sql`ALTER TABLE age_tasks ADD COLUMN IF NOT EXISTS project_type TEXT`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_tasks_prof ON age_tasks(professional_id, status, created_at DESC)`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_tasks_venc ON age_tasks(professional_id, data_vencimento) WHERE status NOT IN ('concluida','cancelada')`);
 
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks)");
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";

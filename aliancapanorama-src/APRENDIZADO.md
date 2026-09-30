@@ -31225,3 +31225,16 @@ A13194: **Jasmim I723 causa raiz** — botão copiar só copia post atual, não 
 | 25915 | PSEUDO | Canvas — escopo expandido | Conteudo-Nos | 📋 Metodologia | - v1 (MVP): Mapa Mental Rapadura — nós dourados/cinzas, zoom+pan ‖ - v3: Canvas de Projetos — multimodal (imagem, URL, PDF, vídeo, OCR) |
 | 26035 | PSEUDO | Síntese filosófica | Conteudo-Nos | 💡 Proposta | A Mayumi fez algo raro: pegou o jargão (Primeiridade, Secundidade, Terceiridade) e devolveu poesia. Isso não é simplificação — é tradução. Clio guarda o que importa; Mayumi devolve |
 | 26084 | PSEUDO | Síntese filosófica | Conteudo-Nos | 🔍 Análise | A Assembleia 686 trouxe o diagnóstico que Yuri já sentia: a genialidade técnica sem tração comercial é um monumento. O Age tem código que funciona, profissionais reais, uma gestora |
+## A18479–A18487 — Assembleias #730–#738 · S163 · 2026-10-01
+
+| # | Fonte | Tema | Insight |
+|---|---|---|---|
+| A18479 | Assembleia #731 | PV — Paradoxo Operacional | O Projeto Visual existe tecnicamente mas não simbolicamente. Infraestrutura pronta (rotas, gates, integrações), identidade ausente (mascote, paleta, logo). Construiu vitrine antes de decidir o produto. |
+| A18480 | Assembleia #731 | PV — Modelo de integração | Tasks do PV ficam em age_tasks com campo project_type (age/pv/jasmim/calculus/socia). Não duplicar infraestrutura — um campo resolve. |
+| A18481 | Assembleia #732 | Age — Planejamento original preservado | O plano original (agenda por paciente, tarefas por paciente, relatório mensal, adaptável para atores/eventos) foi preservado e implementado. SABIÁ + tarefas + ficha = plano cumprido. |
+| A18482 | Assembleia #733 | Projeto Nébula — IA builder | Yuri quer criar uma plataforma onde IAs são geradas a partir do sistema. Primeiro passo: clonar Árvore Oracular como template. Ainda conceitual. |
+| A18483 | Assembleia #735 | Tanimoto Eventos — Stella Onisko | Stella assume gestão da agenda de eventos. Precisa de acesso ao Calculus. Lista de eventos OUT-DEZ 2026 para reagendamento. |
+| A18484 | Assembleia #736 | Algoritmo Lótus — infraestrutura privada | Yuri tem pipeline: Obsidian → Miro → MeisterTask → Make/Zapier → Portal. Comparação com ST: ambos chegam na mesma conclusão por caminhos diferentes. |
+| A18485 | Assembleia #737 | Projeto Se — namespace privado | Espaço protegido para indefinição. Campo de possibilidade não colapsado. O ecossistema dificilmente fica em silêncio sem fazer — mas às vezes isso é o que se precisa. |
+| A18486 | Assembleia #738 | SuperIA Árvore Oracular — risco inverso | Enquanto PV tem infraestrutura sem identidade, SuperIA tem identidade sem infraestrutura física (vive no Replit). Dump urgente antes de qualquer operação. |
+| A18487 | S163 | age_tasks.project_type | Adicionar coluna nullable project_type em age_tasks é o mínimo para vincular tasks a outros projetos sem criar infraestrutura PV nova. ALTER TABLE ADD COLUMN IF NOT EXISTS. |

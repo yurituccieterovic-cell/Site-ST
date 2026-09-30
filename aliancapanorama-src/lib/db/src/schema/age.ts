@@ -165,6 +165,7 @@ export const ageTasksTable = pgTable("age_tasks", {
   dataVencimento: timestamp("data_vencimento", { withTimezone: true }),
   concluidaAt:    timestamp("concluida_at", { withTimezone: true }),
   criadoPor:      text("criado_por").notNull().default("professional"), // professional | sabia | dodge
+  projectType:    text("project_type"), // age | pv | jasmim | calculus | socia (null = age padrão)
   createdAt:      timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt:      timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
