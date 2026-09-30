@@ -1774,6 +1774,52 @@ export function CeuPage() {
         </div>
         <div style={{ display:"flex", flexWrap:"wrap", gap:12, justifyContent:"center" }}>
 
+          {/* PV — Projeto Visual */}
+          <a href="/pv" style={{ textDecoration:"none", flex:"1 1 260px", maxWidth:320 }}>
+            <div style={{
+              background:"#0d0a1a", border:"1px solid #2a1a4a", borderRadius:10,
+              padding:"12px 14px", cursor:"pointer", transition:"border-color .2s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = "#5a3a9a")}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = "#2a1a4a")}>
+              <div style={{ display:"flex", alignItems:"flex-start", gap:10, marginBottom:8 }}>
+                <span style={{ fontSize:22, lineHeight:1 }}>🎨</span>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:12, fontWeight:700, color:"#a78bfa", fontFamily:"monospace", letterSpacing:1.5 }}>PV</div>
+                  <div style={{ fontSize:10, color:"#5a3a9a", fontFamily:"monospace", letterSpacing:1 }}>PROJETO VISUAL</div>
+                </div>
+                <span style={{ fontSize:8, fontFamily:"monospace", letterSpacing:1, color:"#a78bfa", background:"#1a1030", border:"1px solid #2a1a4a", borderRadius:10, padding:"2px 7px" }}>MEMBRO</span>
+              </div>
+              <div style={{ fontSize:11, color:"#6a5a8a", lineHeight:1.6, marginBottom:8 }}>
+                Gestão de projetos, tasks, milestones e recursos. O cérebro operacional da Sócia.
+              </div>
+              <div style={{ marginTop:10, fontSize:10, color:"#5a3a9a", fontFamily:"monospace", letterSpacing:1, textAlign:"right" }}>ABRIR →</div>
+            </div>
+          </a>
+
+          {/* Sócia — ERP integrado */}
+          <a href="/socia" style={{ textDecoration:"none", flex:"1 1 260px", maxWidth:320 }}>
+            <div style={{
+              background:"#0d0a1a", border:"1px solid #3a2a5e", borderRadius:10,
+              padding:"12px 14px", cursor:"pointer", transition:"border-color .2s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = "#6a4aae")}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = "#3a2a5e")}>
+              <div style={{ display:"flex", alignItems:"flex-start", gap:10, marginBottom:8 }}>
+                <span style={{ fontSize:22, lineHeight:1 }}>◈</span>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:12, fontWeight:700, color:"#c4b5fd", fontFamily:"monospace", letterSpacing:1.5 }}>SÓCIA</div>
+                  <div style={{ fontSize:10, color:"#6a4aae", fontFamily:"monospace", letterSpacing:1 }}>ERP INTEGRADO</div>
+                </div>
+                <span style={{ fontSize:8, fontFamily:"monospace", letterSpacing:1, color:"#c4b5fd", background:"#1a1030", border:"1px solid #3a2a5e", borderRadius:10, padding:"2px 7px" }}>MEMBRO</span>
+              </div>
+              <div style={{ fontSize:11, color:"#6a5a8a", lineHeight:1.6, marginBottom:8 }}>
+                PV + Jasmim + Age + Calculus em uma plataforma. Ábaco, a triqueta, é sua mascote.
+              </div>
+              <div style={{ marginTop:10, fontSize:10, color:"#6a4aae", fontFamily:"monospace", letterSpacing:1, textAlign:"right" }}>ABRIR →</div>
+            </div>
+          </a>
+
           {/* ARVR — Crypto Arvore */}
           <a href="/aliancapanorama/arvore-token"
             style={{ textDecoration:"none", flex:"1 1 260px", maxWidth:320 }}>

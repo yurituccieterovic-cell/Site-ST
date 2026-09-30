@@ -272,6 +272,11 @@ export function PvPage() {
             <span style={{ fontSize: 22 }}>🗂️</span>
             <span style={{ fontWeight: 700, fontSize: 16, color: "#2dd4bf" }}>Projectification</span>
           </div>
+          <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
+            {[["◈", "/socia","#a78bfa"], ["🐿️", "/aliancapanorama/jasmim","#f59e0b"], ["🌿", "/age","#2dd4bf"]].map(([e, h, c]) => (
+              <a key={h} href={h} style={{ fontSize: 14, textDecoration: "none", color: c, opacity: 0.7 }} title={h}>{e}</a>
+            ))}
+          </div>
           {/* Stats */}
           {stats.total_projects !== undefined && (
             <div style={{ fontSize: 11, color: "#475569", marginTop: 8 }}>

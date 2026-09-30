@@ -31,6 +31,7 @@ import { ManuelPage } from "@/pages/ManuelPage";
 import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
 import { CalcPage } from "@/pages/CalcPage";
+import { SociaPage } from "@/pages/SociaPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
 
@@ -282,38 +283,67 @@ function DodgeGate() {
   return <DodgePage superAdm={state.tier >= 9}/>;
 }
 
-// Gate para /ceu — acesso restrito a membros (tier >= 3)
-function CeuGate() {
+// Gate genérico reutilizável (tier >= 3)
+function TierGate({ emoji, titulo, desc, children }: {
+  emoji: string; titulo: string; desc: string; children: React.ReactNode;
+}) {
   const [state, setState] = useState<"loading" | "denied" | { tier: number }>("loading");
   useEffect(() => {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 8000);
     fetch(`${API_BASE}/api/auth/me`, { credentials: "include", signal: ctrl.signal })
       .then(r => r.json() as Promise<{ user: { tier: number } | null }>)
-      .then(d => {
-        if (d.user && d.user.tier >= 3) setState({ tier: d.user.tier });
-        else setState("denied");
-      })
+      .then(d => { setState(d.user && d.user.tier >= 3 ? { tier: d.user.tier } : "denied"); })
       .catch(() => setState("denied"))
       .finally(() => clearTimeout(timer));
   }, []);
   if (state === "loading") return (
     <div className="min-h-screen bg-black flex items-center justify-center text-purple-400 font-mono text-sm">
-      Verificando acesso ao Céu…
+      Verificando acesso…
     </div>
   );
   if (state === "denied") return (
     <div className="min-h-screen bg-black text-gray-100 font-mono flex flex-col items-center justify-center gap-6 px-6 text-center">
-      <div className="text-5xl">🌆</div>
-      <h1 className="text-2xl font-bold text-purple-300">Cidade das IAs</h1>
-      <p className="text-gray-400 max-w-xs text-sm">O Céu é um espaço privado da Sociedade Tucci. Faça login para entrar.</p>
+      <div className="text-5xl">{emoji}</div>
+      <h1 className="text-2xl font-bold text-purple-300">{titulo}</h1>
+      <p className="text-gray-400 max-w-xs text-sm">{desc}</p>
       <a href="/portal" className="px-6 py-3 bg-purple-700 hover:bg-purple-600 text-white rounded-lg font-semibold text-sm transition-colors">
         Entrar com sua conta
       </a>
       <p className="text-gray-600 text-xs">Acesso: membros da Sociedade Tucci</p>
     </div>
   );
-  return <CeuPage />;
+  return <>{children}</>;
+}
+
+// Gate para /ceu — acesso restrito a membros (tier >= 3)
+function CeuGate() {
+  return (
+    <TierGate emoji="🌆" titulo="Cidade das IAs"
+      desc="O Céu é um espaço privado da Sociedade Tucci. Faça login para entrar.">
+      <CeuPage />
+    </TierGate>
+  );
+}
+
+// Gate para /pv
+function PvGate() {
+  return (
+    <TierGate emoji="🎨" titulo="Projeto Visual"
+      desc="PV é o sistema de gestão de projetos da Sociedade Tucci. Faça login para acessar.">
+      <PvPage />
+    </TierGate>
+  );
+}
+
+// Gate para /socia
+function SociaGate() {
+  return (
+    <TierGate emoji="◈" titulo="Sistema Sócia"
+      desc="Sócia é a plataforma integrada da Sociedade Tucci — PV + Jasmim + Age + Calculus.">
+      <SociaPage />
+    </TierGate>
+  );
 }
 
 // Singleton fora do componente — evita re-criação a cada render
@@ -349,6 +379,7 @@ const isCssTutorial = path.includes("/css-tutorial");
 const isCelular     = path.includes("/celular");
 const isPv          = path.includes("/pv");
 const isJasmim      = path.includes("/jasmim");
+const isSocia       = path.includes("/socia");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -365,9 +396,10 @@ function App() {
   }
 
   if (isIsa) return <IsaLandingPage />;
+  if (isSocia) return <SociaGate />;
   if (isCalc) return <CalcPage />;
   if (isCelular) return <CelularPage />;
-  if (isPv) return <PvPage />;
+  if (isPv) return <PvGate />;
   if (isJasmim) return <JasmimGate />;
 
   if (isArquitetura) {

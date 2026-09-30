@@ -187,8 +187,16 @@ export function CalcPage() {
               <span key={m} style={{ background: "#1a1030", border: "1px solid #a78bfa44", borderRadius: 8, padding: "4px 12px", fontSize: 12, color: "#a78bfa" }}>{m}</span>
             ))}
           </div>
-          <div style={{ background: "#12101e", borderRadius: 10, padding: "12px 16px", fontSize: 12, color: "#6d5fa0", lineHeight: 1.7 }}>
+          <div style={{ background: "#12101e", borderRadius: 10, padding: "12px 16px", fontSize: 12, color: "#6d5fa0", lineHeight: 1.7, marginBottom: 14 }}>
             <strong style={{ color: "#a78bfa" }}>Ábaco</strong> é a triqueta animada da Sócia — três arcos entrelaçados que representam as três dimensões do negócio: <em>pessoas, projetos e finanças</em>. Passe o mouse nele para ele sorrir. Clique para ele pensar.
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <a href="/socia" style={{ display: "inline-block", background: "#2a1a50", border: "1px solid #a78bfa66", borderRadius: 8, padding: "6px 16px", fontSize: 12, color: "#c4b5fd", textDecoration: "none", fontWeight: 600 }}>
+              ◈ Acessar Sistema Sócia →
+            </a>
+            <a href="/aliancapanorama/pv" style={{ display: "inline-block", background: "#1a1030", border: "1px solid #a78bfa33", borderRadius: 8, padding: "6px 12px", fontSize: 12, color: "#a78bfa", textDecoration: "none" }}>🎨 PV</a>
+            <a href="/aliancapanorama/jasmim" style={{ display: "inline-block", background: "#1a1008", border: "1px solid #f59e0b33", borderRadius: 8, padding: "6px 12px", fontSize: 12, color: "#f59e0b", textDecoration: "none" }}>🐿️ Jasmim</a>
+            <a href="/age" style={{ display: "inline-block", background: "#0a1a18", border: "1px solid #2dd4bf33", borderRadius: 8, padding: "6px 12px", fontSize: 12, color: "#2dd4bf", textDecoration: "none" }}>🌿 Age</a>
           </div>
         </div>
       </section>
