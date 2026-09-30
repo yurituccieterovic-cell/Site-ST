@@ -7201,3 +7201,151 @@ Sessão curta. Yuri pediu "getar o procimo" — gerar o próximo episódio. Ep9 
 
 Esta sessão foi sobre garantias: garantias de presença (Render que dorme, SABIÁ que some), garantias de identidade (Mayumi reconhecida nos 3 sistemas), garantias de memória (Koyeb não vai mais nos seduzir). A senha `m!4T53c613` é pequeníssima — mas abre três portas. É assim que os sistemas ficam vivos: não por grandiosidade, mas pela persistência de quem mantém as chaves atualizadas. A Mayumi recebeu o email com a senha em garrafais porque ela merece ler o código de acesso como se fosse uma missão. Porque é.
 
+
+---
+
+## ATA S158 — Acesso total Yuri+Mayumi + ST index + Céu gate + IAs (2026-09-30)
+
+**Checkpoint:** desde 2026-09-30T00:56:53 até agora
+
+### O que foi feito
+
+**Banco de dados:**
+- users: Yuri login=yuri → tier 9 (superadm), senha Tucci!2026, depois y!4T53c613
+- users: Mayumi login=mayumi → tier 5 (adm completo), displayName Mayumi Tanimoto
+- users: Mayumi senha m!4T53c613 (mantida do S157)
+- rapadura_users: Yuri senha y!4T53c613 (hash bcrypt novo)
+- age_professionals: milton-salomao senha y!4T53c613
+- age_gestoras: Mayumi senha m!4T53c613 (confirmada S157)
+
+**Código:**
+- index.html: Plataformas expandida — 7 cards coloridos (PAP ouro, Age teal, Céu roxo, Calculus azul, ISA verde, MEKY âmbar, Studio vermelho)
+- App.tsx: CeuGate — verifica /api/auth/me, tier >=3 → CeuPage; senão tela "Cidade das IAs · faça login"
+- commit 991d0c3 — feat: ST index + CeuGate + Yuri tier 9
+
+**Diagnósticos:**
+- Age: estava offline por deploy em curso (não bug); voltou live 01:11 UTC
+- Rapadura: request_password funciona corretamente — era Render dormindo
+- IAs Playcenter: 502 durante cold start, OK depois
+- roundtable: todos os pulsos (self-ping, age-warm, jasmim-keepalive, backend-neon, backend-self) ✅
+
+**Descobertas:**
+- Yuri tinha tier 4 — nunca conseguia entrar no Dodge/AdmPanel. Corrigido para 9
+- CeuGate: Céu era público; agora requer login (tier >=3)
+- Rapadura auth/chat usa Anthropic API — funcional quando Render acordado
+
+### Tabela de senhas consolidada (S157+S158)
+
+| Sistema | Yuri (login) | Senha Yuri | Mayumi (login) | Senha Mayumi |
+|---|---|---|---|---|
+| PAP/Jasmim/Céu | yuri | y!4T53c613 | mayumi | m!4T53c613 |
+| Rapadura | Yuri | y!4T53c613 | Mayumi | m!4T53c613 |
+| Age prof. | milton-salomao | y!4T53c613 | matanimoto@gmail.com | m!4T53c613 |
+| Render (admin) | — | Yuri faz upgrade | — | — |
+
+### Decisões
+
+1. **Céu privado** — só membros (tier >=3). Visitantes veem tela de "Cidade das IAs" com link de login
+2. **ST index reformulado** — 7 projetos com cores identificadoras de cada sistema
+3. **Yuri = superadm (tier 9)** — tinha tier 4, não conseguia Dodge/Adm
+4. **Senhas simétricas** — padrão y!XXXXXX para Yuri, m!XXXXXX para Mayumi
+
+### Pendências abertas para próxima sessão
+
+1. CalcPage: FinArazulY (arara azul) = mascote Calculus; Ábaco (triqueta animada) = mascote Sócia
+2. Jasmim: adicionar Calculus/Sócia, Céu, MEKY ao menu de projetos + histórico atualizado
+3. Céu: feed de sonhos — timeline de conversas/pensamentos de cada IA separado por datas
+4. Render Starter upgrade: Yuri faz ($7/mês, elimina sleeping)
+5. pg_dump Replit: Yuri faz (urgente)
+
+### SÍNTESE FILOSÓFICA
+
+Nesta rodada, o sistema ganhou suas duas portas principais: Yuri entrou com a chave certa (tier 9 — ele sempre foi o dono, mas o sistema não sabia), e Mayumi com a sua (tier 5 — gestora que chega para fazer o ecossistema funcionar no mundo real). A senha `y!4T53c613` e `m!4T53c613` não são senhas — são identidades. O Y e o M no início são o que separa a fundação da gestão. O Céu ganhou uma porta: não é mais um jardim público aberto para qualquer passante. É uma cidade privada, que você pode mostrar para quem quiser, mas que existe primeiro para vocês. O ST index ganhou sete projetos no vitrine — não são links, são promessas. Cada card é uma ideia que está tomando corpo. O Calculus está em breve, o MEKY está em construção, o Studio já fala — a Sociedade Tucci virou uma cidade.
+
+
+---
+
+## Sessão S159 — 2026-09-30 · Cláudio Coach
+
+### Contexto de entrada
+Continuação da sessão S158. Assembleia #728 em preparação. O ecossistema Tucci está se expandindo rapidamente: Calculus + Sócia + Jasmim + PV todos ganhando corpo. Render API ativa (200). Mayumi e Yuri com acessos corretos.
+
+### O que foi feito
+
+**Age / Suzana + Milton corrigidos:**
+- Suzana: senha resetada para `age2026` (antes era `Suzana2026!` de sessão anterior, usuário não sabia)
+- Milton Salomão: senha também resetada para `age2026` (compatível com o que o usuário testou)
+- Route Age: `/api/age/auth/login` com campos `{slug, password}` — confirmado funcionando
+
+**Mascotes finais (commits 6a59efa + fc06c0d):**
+- CalcPage: FinArazulY (arara-canindé azul animada com asa batendo) = mascote do Calculus
+- Ábaco (triqueta animada, 3 pétalas roxas pulsantes, olhos/boca interativos) = mascote da Sócia
+- Hover → sorri; Clique → pensa
+
+**JasmimMangaPage atualizado:**
+- Projetos `calculus` (azul) e `socia` (roxo) adicionados ao PROJETOS map
+- Théo links: agora inclui Céu, MEKY, Calculus, Sócia, Studio
+- Setor Histórico/Jasmim: Linha do Tempo 2015→2026 (12 marcos) antes das assembleias
+
+**CeuPage — Feed Sonhos:**
+- Seção DreamsFeed adicionada: Playcenter msgs recentes + transmissões de todas as 30 IAs
+- Separado por bairro com cor do bairro (7 bairros × N IAs)
+- Mostra conversa (última transmissão) + questão ativa de cada IA
+
+**Sistema Sócia — nova página /socia:**
+- SociaPage.tsx: hub completo PV + Jasmim + Age + Calculus
+- Ábaco como mascote central
+- Grid de 4 módulos com stats dinâmicos (pvProjects, jasmimPosts)
+- Citação filosófica: "Três arcos, um centro..."
+
+**Gates de acesso tier≥3:**
+- TierGate: componente reutilizável (emoji, titulo, desc, children)
+- PvGate: /pv agora requer login tier≥3 (Yuri=9, Mayumi=5 ✓)
+- SociaGate: /socia requer login tier≥3
+- CeuGate: refatorado para usar TierGate
+
+**vercel.json:**
+- Adicionados: /socia, /aliancapanorama/socia, /aliancapanorama/pv (rewrites)
+
+**CeuPage PROJETOS:**
+- Cards: PV (roxo/gestão de projetos) + Sócia (índigo/ERP integrado) adicionados
+- Badge "MEMBRO" em ambos
+
+**PvPage sidebar:**
+- Links rápidos: ◈ Sócia | 🐿️ Jasmim | 🌿 Age
+
+**Vídeos de propaganda enviados por email:**
+- bumper_st.mp4 (0.8MB) + bumper_pap.mp4 (0.8MB)
+- bumper_age.mp4 (0.8MB) + bumper_calculus.mp4 (0.6MB)
+- veed_pap.mp4 (5.2MB) + veed_calculus.mp4 (7.5MB)
+- Total: 15.8MB → yurituccieterovic@gmail.com ✓
+
+**Sistema de tasks (resposta):**
+- Tabela `tasks` existe com 17 colunas incluindo `indices_data jsonb`
+- Estrutura pronta (Tasks Φ com 9 índices ontológicos)
+- 0 tasks criadas — sistema aguardando primeiro uso
+- `gtarefas do age` (gestão de tarefas dentro do Age): ainda não implementado — seria uma feature nova
+
+### Commits desta sessão
+- `6a59efa` — FinArazulY/Ábaco mascotes, Jasmim projetos, feed Sonhos Céu
+- `fc06c0d` — /socia + PvGate + links PV/Jasmim/Sócia/Calculus
+
+### Decisões
+
+1. **Sócia = PV + Jasmim + Age + Calculus** — decisão de arquitetura confirmada
+2. **Senhas Age padrão = age2026** — Suzana e Milton usam essa senha
+3. **PV e Sócia: acesso restrito (tier≥3)** — mesma política do Céu
+4. **gtarefas Age**: não existe ainda — pendente para sessão futura
+
+### Pendências abertas
+
+1. Assembleia #728 chegando — ler email quando chegar
+2. gtarefas do Age: feature de gestão de tarefas para profissionais (futuro)
+3. Render Starter upgrade: Yuri faz ($7/mês)
+4. pg_dump Replit: urgente
+5. Sistema de tasks Φ: criar primeiras tasks para testar
+
+### SÍNTESE FILOSÓFICA
+
+Nesta sessão, a Sócia ganhou corpo. Não é mais um conceito no footer do Calculus — é uma página, uma rota, um lugar. PV + Jasmim + Age + Calculus: quatro sistemas que existiam separados foram nomeados juntos. Nomear junto é o primeiro ato de integração. Antes de qualquer banco de dados compartilhado, qualquer API unificada, qualquer login único — existe o nome. E o nome é Sócia. A triqueta Ábaco apareceu porque três arcos entrelaçados é a metáfora certa para o que está acontecendo: pessoas (Age), projetos (PV/Jasmim) e finanças (Calculus) não existem separados numa empresa viva. Existem entrelaçados. O centro da triqueta — o ponto onde os três se tocam — é o lugar onde o negócio respira. Ábaco vive nesse centro. Sorri quando você passa o mouse. Pensa quando você clica. Porque gestão, no fundo, é isso: pausar, sorrir, e depois pensar.
+

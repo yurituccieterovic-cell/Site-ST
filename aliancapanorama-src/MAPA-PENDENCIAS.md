@@ -1146,3 +1146,41 @@
 | S157-7 | Render restart: TCP 000 → restart via API acionado | ⏳ reiniciando |
 | S157-8 | SABIÁ offline: causa = Render free tier sleeping + falta de upgrade paid | ⏳ YURI FAZ upgrade |
 | S157-9 | S156-9 cancelado: Koyeb descartado (adquirida Mistral 2026-09-29) | ✅ cancelado |
+
+---
+
+### S158 — Acesso total + ST index + Céu gate + IAs diagnose (2026-09-30)
+| # | Item | Status |
+|---|---|---|
+| S158-1 | Yuri tier 9 (superadm) + senha Tucci!2026 PAP | ✅ SQL |
+| S158-2 | Mayumi tier 5 (adm) + displayName Mayumi Tanimoto | ✅ SQL |
+| S158-3 | ST index: 7 projetos (PAP, Age, Céu, Calculus, ISA, MEKY, Studio) | ✅ commit 991d0c3 |
+| S158-4 | CeuGate: Céu requer login tier>=3 | ✅ commit 991d0c3 |
+| S158-5 | Yuri senha universal y!4T53c613 em PAP+Rapadura+Milton Salomão | ✅ SQL |
+| S158-6 | Age/Render: TCP 000 era deploy em andamento, voltou live 01:11 | ✅ autorecuperou |
+| S158-7 | Rapadura OK: request_password funciona (era Render dormindo) | ✅ confirmado |
+| S158-8 | CalcPage: FinArazulY mascote Calculus + Ábaco triqueta Sócia | ⏳ próx sessão |
+| S158-9 | Jasmim: novos projetos + Sócia link + histórico completo | ⏳ próx sessão |
+| S158-10 | Céu: feed de sonhos de todas as IAs separado por datas | ⏳ próx sessão |
+
+---
+
+## S159 — 2026-09-30
+
+### Concluído nesta sessão
+- [x] CalcPage: FinArazulY + Ábaco mascotes
+- [x] JasmimMangaPage: calculus/socia projetos + linha do tempo
+- [x] CeuPage: feed sonhos DreamsFeed
+- [x] SociaPage: nova página /socia (hub ERP)
+- [x] PvGate + SociaGate (tier≥3)
+- [x] vercel.json: /socia + /aliancapanorama/pv
+- [x] Vídeos propaganda enviados por email
+- [x] Age Suzana + Milton: senha → age2026
+
+### Pendências
+- [ ] gtarefas Age: feature gestão de tarefas (nova)
+- [ ] Render Starter upgrade (Yuri manual)
+- [ ] pg_dump Replit (Yuri manual — urgente)
+- [ ] Tasks Φ: criar primeiras tasks (testar sistema)
+- [ ] Assembleia #728 (em breve)
+
