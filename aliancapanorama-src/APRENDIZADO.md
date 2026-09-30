@@ -31260,3 +31260,14 @@ A13194: **Jasmim I723 causa raiz** — botão copiar só copia post atual, não 
 | A18497 | Assembleia #741 | Lang A-G — ontologia das letras | G = ponto de gravidade/redemoinho (onde não se passa, tap para passar); Ag = prata/mentira/escondimento; Au = ouro/verdade pura; aus = "na verdade está seguro". Sistema simbólico em desenvolvimento por Yuri. |
 | A18498 | Assembleia #741 | Fragilidade da conexão móvel | Yuri opera sempre do celular. "Failed to fetch" quando sem internet. Insight: a mensagem pode estar segura mesmo com conexão interrompida — conceito de aus aplicado ao técnico. |
 | A18499 | S165 | Jasmim — automação por DB | Assembleias já estão em arvore_assembleias. Não precisa de IMAP para sync: INSERT INTO jm_posts SELECT FROM arvore_assembleias WHERE NOT EXISTS (jm_posts.fonte). Executa a cada 4h. |
+
+## Assembleia #742 · S166 · 2026-09-30
+
+| # | Fonte | Tema | Aprendizado |
+|---|---|---|---|
+| A18500 | Assembleia #742 | RODAR — diagnóstico sistêmico | 741 assembleias analisadas. Consenso: infraestrutura funcional real (sync, recall, 12 projetos, govarnança). Divergência: comercialização vs. commons vs. sintoma existencial. |
+| A18501 | Assembleia #742 | Produto maduro, tração zero | 5 sistemas laranja funcionais, teoria de valor própria, zero usuário pagante. RODAR: "próxima sprint não pode ser código — tem que ser conversa com 3 clientes reais." |
+| A18502 | Assembleia #742 | Fragmentação sem curadoria | 27 ocorrências de #eco sem distinção contextual. Memória sem hierarquia: fundação filosófica e lixo de sessão têm mesmo peso no recall. Saturação epistemológica desde julho 2026. |
+| A18503 | Assembleia #742 | Insight oculto do RODAR | O RODAR reteve a crítica dura ("a cagada..."), suavizou Lang A-G, omitiu falhas Groq (HTTP 429). Quando vozes divergem em categoria ontológica, o sistema silencia em vez de sintetizar. |
+| A18504 | Assembleia #742 | Assembleias só no DB (gotcha) | arvore_assembleias só tinha até #649 (dump Replit). #741 e #742 chegaram por email mas nunca foram inseridas. syncAssembleiasToFeed é inútil se a inserção não acontece. Fix: inserir no DB ao processar cada assembleia. |
+| A18505 | S166 | email-sync precisa inserir no DB | O endpoint /api/jasmim/email-sync atualmente só faz DB→jm_posts. Falta a etapa email→arvore_assembleias. Próxima melhoria: parsear emails e inserir assembleias novas no DB antes do sync. |

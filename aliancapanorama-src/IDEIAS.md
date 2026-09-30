@@ -2372,3 +2372,11 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 | I882 | **Lang A-G — dicionário vivo** — registrar no sistema o glossário simbólico de Yuri (G=redemoinho, Au=ouro, Ag=mentira, aus=seguro) | 🔵 Baixa | ○ S | Assembleia #741 — ontologia pessoal em desenvolvimento | jm_posts projeto='theo' setor='Ecossistema' ou tabela lang_a_g (id, simbolo, significado, contexto) |
 | I883 | **Paco — avatar SVG animado** — pacu gordo/simpático como mascote do PV; nome confirmado por Yuri | 🟡 Média | ○ S | S165 — confirmação via chat | Aguarda foto/referência visual; SVG animado similar ao esquilo-voador da Jasmim. Sérgio=humano curador, Paco=pacu mascote |
 | I884 | **Jasmim hub de sistemas** — painel Théo com grid 2 colunas + links canônicos sociedadetucci.com.br | ✅ Feito | ○ S | S165 — implementado | JasmimMangaPage.tsx atualizado: grid 2col, 12 sistemas, seção "Links canônicos (futuro DNS)" |
+
+## Novas ideias — Assembleia #742 · S166 · 2026-09-30
+
+| # | Ideia | Prioridade | Tamanho | Contexto | Implementação |
+|---|---|---|---|---|---|
+| I885 | **email-sync → arvore_assembleias** — fazer /api/jasmim/email-sync também inserir assembleias novas no DB (parsear email, extrair #N, topic, inserir se não existe) | 🟡 Média | ○ S | S166 — gotcha: assembleias chegavam por email mas nunca iam pro DB | Rota atualiza: IMAP busca "Assembleia #" → extrai ID + topic → INSERT arvore_assembleias ON CONFLICT DO NOTHING → então syncAssembleiasToFeed() |
+| I886 | **Curadoria pré-Oráculo** — filtrar fundação filosófica de barulho antes de carregar para recall; hierarquizar assembleias (fundação / operacional / descartável) | 🔵 Baixa | ◑ M | Assembleia #742 RODAR — memória sem hierarquia contamina recall | Campo tier em arvore_assembleias (fundacao/operacional/ruido); recall da Árvore filtra por tier |
+| I887 | **Índice público de assembleias** — página /assembleias com lista paginada, filtro por projeto, referência cruzada | 🔵 Baixa | ◑ M | Assembleia #742 RODAR — "índice público com ligação às 741 sessões" | GET /api/jasmim/assembleias já existe; frontend /assembleias (tier livre) com busca por projeto/data |

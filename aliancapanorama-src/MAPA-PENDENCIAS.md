@@ -1304,3 +1304,18 @@
 - [ ] Stripe integrado no fluxo de booking — depende de página pública de agendamento
 - [ ] pg_dump Replit (URGENTE) — Replit NÃO cancelado, Yuri pode fazer manualmente
 - [ ] DNS sociedadetucci.com.br — domínio no **Registro.br** (confirmado S165b). Apontar quando quiser ativar os subdomínios.
+
+## S166 — 2026-09-30 — Assembleia #742 (RODAR MacroATA S164+S165)
+
+### Processado
+- [x] #742 lida e inserida no DB (arvore_assembleias)
+- [x] #741 inserida no DB (estava faltando)
+- [x] 30 assembleias sincronizadas para jm_posts via email-sync manual
+- [x] APRENDIZADO: A18500–A18505
+- [x] IDEIAS: I885–I887
+
+### Pendências identificadas
+- [ ] email-sync → inserir no DB (I885) — endpoint atual só faz DB→jm_posts, falta email→arvore_assembleias
+- [ ] Curadoria pré-Oráculo / hierarquia tier (I886) — baixa prioridade
+- [ ] Índice público de assembleias /assembleias (I887) — baixa prioridade
+- [ ] Decisão identidade: negócio / commons / método? — RODAR levantou, sem resposta ainda
