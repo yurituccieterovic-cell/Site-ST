@@ -169,5 +169,22 @@ export function startKeepaliveCron(): void {
     }
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05)");
+  // Lembrete semanal (segunda-feira às 10h UTC = 7h BRT): atualizar IAs, Céu, Jasmim
+  cron.schedule("0 10 * * 1", async () => {
+    const mailer = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: process.env["GMAIL_ACCOUNT"], pass: process.env["GMAIL_APP_PASSWORD"] },
+    });
+    const week = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit" });
+    await mailer.sendMail({
+      from: process.env["GMAIL_ACCOUNT"],
+      to: "luddlocke@gmail.com",
+      subject: `🔔 Lembrete semanal PAP — ${week}`,
+      text: `Olá Yuri!\n\nLembrete automático de atualização semanal:\n\n📋 Itens para revisar:\n- IAs do sistema (CeuPage) — status, modelo, conversa, questao\n- Feed de sonhos do Céu — novos posts das IAs\n- Jasmim — projetos, setores, timeline\n- Tasks pendentes no Age\n- Pendências do MAPA\n\n🔗 Links rápidos:\n- Céu: https://site-st.vercel.app/aliancapanorama/ceu\n- Jasmim: https://site-st.vercel.app/aliancapanorama/jasmim\n- Age Lisange: https://site-st.onrender.com/age/lisange\n- Tasks: via Dodge (#2)\n\n— Sistema PAP · Dodge 🦔`,
+    }).catch(() => {});
+    registrarPulso("weekly-reminder", "ok", `enviado ${week}`);
+    logger.info({ week }, "Lembrete semanal enviado");
+  });
+
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · weekly-reminder:seg 10h UTC)");
 }

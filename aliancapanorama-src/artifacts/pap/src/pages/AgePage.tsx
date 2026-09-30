@@ -20,7 +20,8 @@ type AvailRule = {
 type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
 type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null; faltou90d?: number; realizadas90d?: number };
-type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed" | "notas";
+type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed" | "notas" | "tarefas";
+type AgeTask = { id: number; titulo: string; descricao?: string | null; tipo: string; status: string; prioridade: number; dataVencimento?: string | null; concluidaAt?: string | null; patientId?: number | null; patient_nome?: string | null; criadoPor: string; createdAt: string };
 type FeedItem = {
   tipo: "appointment" | "patient" | "nota" | "pergunta" | "anuncio";
   id: string;
@@ -289,6 +290,13 @@ export function AgePage() {
   const [showPatientPassword, setShowPatientPassword] = useState(false);
   const [showPatientPwNew, setShowPatientPwNew] = useState(false);
 
+  // Tarefas
+  const [tasks, setTasks] = useState<AgeTask[]>([]);
+  const [tasksLoading, setTasksLoading] = useState(false);
+  const [taskFilter, setTaskFilter] = useState<"" | "pendente" | "em_andamento" | "concluida">("");
+  const [newTask, setNewTask] = useState({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "" });
+  const [taskSaving, setTaskSaving] = useState(false);
+
   // Formulário de interesse (landing profissional)
   const [interForm, setInterForm] = useState({ nome: "", email: "", espec: "", pacientes: "", msg: "" });
   const [interStatus, setInterStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
@@ -448,6 +456,21 @@ export function AgePage() {
     const notasVisible = view === "notas" || (drawerOpen && drawerTab === "notas");
     if (notasVisible && mode === "professional" && authStep === "done") loadNotas();
   }, [view, mode, authStep, loadNotas, drawerOpen, drawerTab]);
+
+  const loadTasks = useCallback(async (status?: string) => {
+    if (mode !== "professional") return;
+    setTasksLoading(true);
+    try {
+      const qs = status ? `?status=${status}` : "";
+      const r = await fetch(`${API}/api/age/${slug}/tasks${qs}`, { credentials: "include" });
+      if (r.ok) setTasks(await r.json() as AgeTask[]);
+    } catch { /* silencia */ }
+    setTasksLoading(false);
+  }, [mode, slug]);
+
+  useEffect(() => {
+    if (view === "tarefas" && mode === "professional" && authStep === "done") loadTasks(taskFilter || undefined);
+  }, [view, mode, authStep, loadTasks, taskFilter]);
 
   // Carregar histórico SABIÁ ao entrar no portal
   useEffect(() => {
@@ -2960,6 +2983,124 @@ export function AgePage() {
     );
   }
 
+  function TarefasView() {
+    const TIPO_ICON: Record<string, string> = { lembrete: "🔔", enviar_doc: "📄", ligar: "📞", preparar: "📋", anamnese: "📝", outro: "📌" };
+    const STATUS_COLOR_T: Record<string, string> = { pendente: "#facc15", em_andamento: "#38bdf8", concluida: "#4ade80", cancelada: "#64748b" };
+    const PRIO_COLOR = (p: number) => p >= 5 ? "#f87171" : p >= 4 ? "#fb923c" : p >= 3 ? "#facc15" : "#94a3b8";
+
+    const saveTask = async () => {
+      if (!newTask.titulo.trim()) return;
+      setTaskSaving(true);
+      try {
+        const r = await fetch(`${API}/api/age/${slug}/tasks`, {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...newTask, dataVencimento: newTask.dataVencimento || undefined }),
+        });
+        if (r.ok) {
+          setNewTask({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "" });
+          await loadTasks(taskFilter || undefined);
+        }
+      } catch { /* silencia */ }
+      setTaskSaving(false);
+    };
+
+    const toggleStatus = async (task: AgeTask) => {
+      const next = task.status === "pendente" ? "em_andamento" : task.status === "em_andamento" ? "concluida" : "pendente";
+      await fetch(`${API}/api/age/${slug}/tasks/${task.id}`, {
+        method: "PATCH", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: next }),
+      });
+      await loadTasks(taskFilter || undefined);
+    };
+
+    const deleteTask = async (id: number) => {
+      if (!confirm("Excluir tarefa?")) return;
+      await fetch(`${API}/api/age/${slug}/tasks/${id}`, { method: "DELETE", credentials: "include" });
+      await loadTasks(taskFilter || undefined);
+    };
+
+    const pendentes = tasks.filter(t => t.status !== "concluida" && t.status !== "cancelada").length;
+
+    return (
+      <div style={{ padding: "1rem", maxWidth: 640, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+          <h2 style={{ color: "#e2e8f0", fontSize: 18, margin: 0 }}>✅ Tarefas <span style={{ fontSize: 13, color: "#64748b" }}>{pendentes > 0 ? `(${pendentes} pendentes)` : ""}</span></h2>
+          <div style={{ display: "flex", gap: 6 }}>
+            {(["", "pendente", "em_andamento", "concluida"] as const).map(f => (
+              <button key={f} onClick={() => setTaskFilter(f)}
+                style={{ padding: "4px 10px", borderRadius: 6, border: "none", fontSize: 11, cursor: "pointer",
+                  background: taskFilter === f ? color : "#1e293b", color: taskFilter === f ? "#000" : "#94a3b8" }}>
+                {f === "" ? "Todas" : f === "pendente" ? "Pendentes" : f === "em_andamento" ? "Em andamento" : "Concluídas"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Nova tarefa */}
+        <div style={{ background: "#0f172a", borderRadius: 10, padding: "1rem", marginBottom: "1rem", border: "1px solid #1e293b" }}>
+          <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 8 }}>Nova tarefa</div>
+          <input value={newTask.titulo} onChange={e => setNewTask(p => ({ ...p, titulo: e.target.value }))}
+            placeholder="Título da tarefa..."
+            style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "8px 10px", color: "#e2e8f0", fontSize: 13, marginBottom: 8, boxSizing: "border-box" }} />
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+            <select value={newTask.tipo} onChange={e => setNewTask(p => ({ ...p, tipo: e.target.value }))}
+              style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: "#e2e8f0", fontSize: 12, cursor: "pointer" }}>
+              {["lembrete","enviar_doc","ligar","preparar","anamnese","outro"].map(t => (
+                <option key={t} value={t}>{TIPO_ICON[t]} {t}</option>
+              ))}
+            </select>
+            <select value={newTask.prioridade} onChange={e => setNewTask(p => ({ ...p, prioridade: parseInt(e.target.value) }))}
+              style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: PRIO_COLOR(newTask.prioridade), fontSize: 12, cursor: "pointer" }}>
+              {[1,2,3,4,5].map(p => <option key={p} value={p}>Prioridade {p}</option>)}
+            </select>
+            <input type="date" value={newTask.dataVencimento} onChange={e => setNewTask(p => ({ ...p, dataVencimento: e.target.value }))}
+              style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: "#94a3b8", fontSize: 12 }} />
+          </div>
+          <button onClick={saveTask} disabled={taskSaving || !newTask.titulo.trim()}
+            style={{ background: color, color: "#000", border: "none", borderRadius: 6, padding: "7px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer", opacity: taskSaving ? 0.6 : 1 }}>
+            {taskSaving ? "Salvando..." : "+ Criar tarefa"}
+          </button>
+        </div>
+
+        {/* Lista */}
+        {tasksLoading ? (
+          <div style={{ textAlign: "center", color: "#64748b", padding: "2rem" }}>Carregando...</div>
+        ) : tasks.length === 0 ? (
+          <div style={{ textAlign: "center", color: "#475569", padding: "2rem" }}>Nenhuma tarefa encontrada.</div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {tasks.map(task => (
+              <div key={task.id} style={{ background: "#0f172a", borderRadius: 10, padding: "12px 14px", border: `1px solid ${task.status === "concluida" ? "#1e293b" : "#334155"}`, opacity: task.status === "concluida" ? 0.55 : 1 }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                  <button onClick={() => toggleStatus(task)}
+                    style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${STATUS_COLOR_T[task.status]}`, background: task.status === "concluida" ? STATUS_COLOR_T["concluida"] : "transparent", cursor: "pointer", flexShrink: 0, marginTop: 1 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <span style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600, textDecoration: task.status === "concluida" ? "line-through" : "none" }}>{task.titulo}</span>
+                      <span style={{ fontSize: 11 }}>{TIPO_ICON[task.tipo] ?? "📌"}</span>
+                      <span style={{ fontSize: 11, color: PRIO_COLOR(task.prioridade) }}>P{task.prioridade}</span>
+                      {task.criadoPor === "sabia" && <span style={{ fontSize: 10, background: "#1e3a5f", color: "#38bdf8", borderRadius: 4, padding: "1px 6px" }}>SABIÁ</span>}
+                    </div>
+                    {task.descricao && <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{task.descricao}</div>}
+                    <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
+                      {task.patient_nome && <span style={{ fontSize: 11, color: "#94a3b8" }}>👤 {task.patient_nome}</span>}
+                      {task.dataVencimento && <span style={{ fontSize: 11, color: new Date(task.dataVencimento) < new Date() && task.status !== "concluida" ? "#f87171" : "#94a3b8" }}>⏰ {new Date(task.dataVencimento).toLocaleDateString("pt-BR")}</span>}
+                      {task.concluidaAt && <span style={{ fontSize: 11, color: "#4ade80" }}>✓ {new Date(task.concluidaAt).toLocaleDateString("pt-BR")}</span>}
+                    </div>
+                  </div>
+                  <button onClick={() => deleteTask(task.id)}
+                    style={{ background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 15, padding: "0 4px", flexShrink: 0 }}>×</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   function FeedView() {
     const FEED_ICON: Record<string, string> = {
       appointment: "📅",
@@ -3752,7 +3893,7 @@ export function AgePage() {
       {mode === "professional" && authStep === "done" && (
         <div style={{ background: "#0a0f16", borderBottom: "1px solid #1e293b", position: "sticky", top: 0, zIndex: 50 }}>
           <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", overflowX: "auto", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" as any }}>
-            {([ ["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Disponibilidade"], ["feed", "Feed 📋"] ] as [View, string][]).map(([v, label]) => (
+            {([ ["agenda", "Agenda"], ["pacientes", "Pacientes"], ["disponibilidade", "Disponibilidade"], ["tarefas", "Tarefas ✅"], ["feed", "Feed 📋"] ] as [View, string][]).map(([v, label]) => (
               <button key={v} onClick={() => setView(v)}
                 style={{ padding: "10px 16px", background: "none", border: "none", borderBottom: view === v ? `2px solid ${color}` : "2px solid transparent", color: view === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: view === v ? 700 : 400, flexShrink: 0, whiteSpace: "nowrap" }}>
                 {label}
@@ -3904,6 +4045,7 @@ export function AgePage() {
             {view === "agenda"          && AgendaView()}
             {view === "pacientes"       && PacientesView()}
             {view === "disponibilidade" && DisponibilidadeView()}
+            {view === "tarefas"         && TarefasView()}
             {view === "feed"            && FeedView()}
           </>
         ))}

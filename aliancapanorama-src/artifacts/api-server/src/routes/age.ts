@@ -6,7 +6,7 @@ import { db } from "@workspace/db";
 import {
   ageProfessionalsTable, ageAvailabilityRulesTable,
   ageAppointmentsTable, ageSabiaMemoryTable, ageExceptionsTable, agePatientsTable,
-  ageFormsTable, ageFormResponsesTable, ageDocumentsTable,
+  ageFormsTable, ageFormResponsesTable, ageDocumentsTable, ageTasksTable,
 } from "@workspace/db";
 import { randomUUID } from "crypto";
 import { eq, and, gte, lte, desc, not, inArray, sql, isNull } from "drizzle-orm";
@@ -2572,6 +2572,90 @@ router.post("/age/interesse", async (req, res): Promise<void> => {
     ).catch(() => {});
   }
 
+  res.json({ ok: true });
+});
+
+// ─── Tarefas ──────────────────────────────────────────────────────────────────
+
+// GET /api/age/:slug/tasks — lista tarefas do profissional (auth required)
+router.get("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { status, limit = "50" } = req.query as { status?: string; limit?: string };
+  const lim = Math.min(parseInt(limit, 10) || 50, 200);
+
+  const rows = await db.execute(sql`
+    SELECT t.*, p.nome AS patient_nome
+    FROM age_tasks t
+    LEFT JOIN age_patients p ON p.id = t.patient_id
+    WHERE t.professional_id = ${profId}
+    ${status ? sql`AND t.status = ${status}` : sql``}
+    ORDER BY
+      CASE t.status WHEN 'pendente' THEN 0 WHEN 'em_andamento' THEN 1 ELSE 2 END,
+      t.data_vencimento ASC NULLS LAST,
+      t.prioridade DESC,
+      t.created_at DESC
+    LIMIT ${lim}
+  `);
+  res.json((rows as any).rows ?? []);
+});
+
+// POST /api/age/:slug/tasks — cria tarefa (auth required)
+router.post("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { titulo, descricao, tipo = "lembrete", prioridade = 3, dataVencimento, patientId, appointmentId } =
+    req.body as { titulo?: string; descricao?: string; tipo?: string; prioridade?: number;
+                  dataVencimento?: string; patientId?: number; appointmentId?: number };
+
+  if (!titulo?.trim()) { res.status(400).json({ error: "titulo obrigatório" }); return; }
+
+  const [task] = await db.insert(ageTasksTable).values({
+    professionalId: profId,
+    titulo: titulo.trim(),
+    descricao: descricao ?? null,
+    tipo,
+    prioridade,
+    dataVencimento: dataVencimento ? new Date(dataVencimento) : null,
+    patientId: patientId ?? null,
+    appointmentId: appointmentId ?? null,
+    criadoPor: "professional",
+  }).returning();
+  res.status(201).json(task);
+});
+
+// PATCH /api/age/:slug/tasks/:id — atualiza tarefa (auth required)
+router.patch("/age/:slug/tasks/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const id = parseInt(req.params.id ?? "0", 10);
+  const { titulo, descricao, tipo, prioridade, dataVencimento, status } =
+    req.body as { titulo?: string; descricao?: string; tipo?: string; prioridade?: number;
+                  dataVencimento?: string; status?: string };
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (titulo !== undefined)         updates["titulo"] = titulo;
+  if (descricao !== undefined)      updates["descricao"] = descricao;
+  if (tipo !== undefined)           updates["tipo"] = tipo;
+  if (prioridade !== undefined)     updates["prioridade"] = prioridade;
+  if (dataVencimento !== undefined) updates["dataVencimento"] = dataVencimento ? new Date(dataVencimento) : null;
+  if (status !== undefined) {
+    updates["status"] = status;
+    if (status === "concluida")     updates["concluidaAt"] = new Date();
+  }
+
+  const [updated] = await db.update(ageTasksTable)
+    .set(updates as any)
+    .where(and(eq(ageTasksTable.id, id), eq(ageTasksTable.professionalId, profId)))
+    .returning();
+
+  if (!updated) { res.status(404).json({ error: "Tarefa não encontrada" }); return; }
+  res.json(updated);
+});
+
+// DELETE /api/age/:slug/tasks/:id — deleta tarefa (auth required)
+router.delete("/age/:slug/tasks/:id", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const id = parseInt(req.params.id ?? "0", 10);
+  await db.delete(ageTasksTable)
+    .where(and(eq(ageTasksTable.id, id), eq(ageTasksTable.professionalId, profId)));
   res.json({ ok: true });
 });
 

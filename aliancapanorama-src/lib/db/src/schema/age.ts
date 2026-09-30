@@ -149,6 +149,26 @@ export const ageDocumentsTable = pgTable("age_documents", {
   createdAt:            timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
+// ─── Tarefas do profissional ──────────────────────────────────────────────────
+export const ageTasksTable = pgTable("age_tasks", {
+  id:             serial("id").primaryKey(),
+  professionalId: integer("professional_id").notNull().references(() => ageProfessionalsTable.id, { onDelete: "cascade" }),
+  patientId:      integer("patient_id").references(() => agePatientsTable.id, { onDelete: "set null" }),
+  appointmentId:  integer("appointment_id").references(() => ageAppointmentsTable.id, { onDelete: "set null" }),
+  titulo:         text("titulo").notNull(),
+  descricao:      text("descricao"),
+  tipo:           text("tipo").notNull().default("lembrete"),
+  // lembrete | enviar_doc | ligar | preparar | anamnese | outro
+  status:         text("status").notNull().default("pendente"),
+  // pendente | em_andamento | concluida | cancelada
+  prioridade:     integer("prioridade").notNull().default(3), // 1-5
+  dataVencimento: timestamp("data_vencimento", { withTimezone: true }),
+  concluidaAt:    timestamp("concluida_at", { withTimezone: true }),
+  criadoPor:      text("criado_por").notNull().default("professional"), // professional | sabia | dodge
+  createdAt:      timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt:      timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 // ─── Zod ──────────────────────────────────────────────────────────────────────
 export const insertAgeProfessionalSchema = createInsertSchema(ageProfessionalsTable).omit({ id: true, createdAt: true });
 export type InsertAgeProfessional = z.infer<typeof insertAgeProfessionalSchema>;
@@ -163,3 +183,7 @@ export type AgeAppointment = typeof ageAppointmentsTable.$inferSelect;
 
 export const insertAgeSabiaMemorySchema = createInsertSchema(ageSabiaMemoryTable).omit({ id: true, createdAt: true });
 export type InsertAgeSabiaMemory = z.infer<typeof insertAgeSabiaMemorySchema>;
+
+export const insertAgeTaskSchema = createInsertSchema(ageTasksTable).omit({ id: true, createdAt: true, updatedAt: true, concluidaAt: true });
+export type InsertAgeTask = z.infer<typeof insertAgeTaskSchema>;
+export type AgeTask = typeof ageTasksTable.$inferSelect;
