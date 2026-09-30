@@ -6,6 +6,14 @@ import { startIsaCron } from "./isa/cron";
 import { startKeepaliveCron } from "./lib/keepalive";
 import { startAgeRemindersCron } from "./age/reminders";
 
+// Impede que promessas não tratadas matem o processo inteiro
+process.on("unhandledRejection", (reason) => {
+  logger.error({ reason }, "unhandledRejection — processo continua");
+});
+process.on("uncaughtException", (err) => {
+  logger.error({ err }, "uncaughtException — processo continua");
+});
+
 const rawPort = process.env["PORT"];
 
 if (!rawPort) {

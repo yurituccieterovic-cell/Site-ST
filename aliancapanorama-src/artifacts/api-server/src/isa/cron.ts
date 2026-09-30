@@ -18,7 +18,21 @@ import { runMorfeu } from "./morfeu";
 import { runPosHumanismo } from "./pos-humanismo";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
+// DISABLE_HEAVY_CRONS=true desliga crons que fazem chamadas LLM (útil no Render free tier para evitar OOM)
+const heavyCronsDisabled = process.env.DISABLE_HEAVY_CRONS === "true";
+
+// Agenda um cron pesado (LLM): ignora silenciosamente se DISABLE_HEAVY_CRONS=true
+function scheduleHeavy(pattern: string, name: string, fn: () => Promise<void>): void {
+  if (heavyCronsDisabled) return;
+  cron.schedule(pattern, async () => {
+    try { await fn(); } catch (err) { logger.error({ err }, `cron ${name}: erro não tratado`); }
+  });
+}
+
 export function startIsaCron(): void {
+  if (heavyCronsDisabled) {
+    logger.warn("ISA crons LLM-pesados DESATIVADOS (DISABLE_HEAVY_CRONS=true) — ISA em modo silencioso para Render free tier");
+  }
   // Registrar todos os laços internos no registro do Orquestrador
   registerLoop("isa_ciclo",     "ISA Ciclo",               "*/1h:00", "isa");
   registerLoop("pos_humanismo", "Pós-Humanismo Assembleia", "9h/14h/21h UTC", "pos-humanismo");
@@ -38,229 +52,145 @@ export function startIsaCron(): void {
   registerLoop("morfeu",             "Morfeu — Sonhos de Telos", "3h:30",   "morfeu");
 
   // Ciclo ISA principal: análise + tasks — todo hora cheia
-  cron.schedule("0 * * * *", async () => {
-    try {
-      logger.info("ISA: ciclo horário disparado pelo cron");
-      const result = await runIsaCycle();
-      logger.info(result, "ISA: ciclo horário concluído");
-      updateLoop("isa_ciclo", true, JSON.stringify(result).slice(0, 100));
-    } catch (err) {
-      logger.error({ err }, "ISA: erro no ciclo horário");
-      updateLoop("isa_ciclo", false);
-    }
+  scheduleHeavy("0 * * * *", "ISA Ciclo", async () => {
+    logger.info("ISA: ciclo horário disparado pelo cron");
+    const result = await runIsaCycle();
+    logger.info(result, "ISA: ciclo horário concluído");
+    updateLoop("isa_ciclo", true, JSON.stringify(result).slice(0, 100));
   });
 
-  // ISA Bibliotecário: 6x/dia (a cada 4h nos :30) — fontes FUVEST/ENEM/SC/conversas
-  cron.schedule("30 */4 * * *", async () => {
-    try {
-      logger.info("ISA Bibliotecário: iniciando varredura 6x/dia");
-      const result = await runBibliotecario();
-      logger.info(result, "ISA Bibliotecário: concluído");
-      updateLoop("isa_biblio", true, JSON.stringify(result).slice(0, 100));
-    } catch (err) {
-      logger.error({ err }, "ISA Bibliotecário: erro");
-      updateLoop("isa_biblio", false);
-    }
+  // ISA Bibliotecário: 6x/dia (a cada 4h nos :30)
+  scheduleHeavy("30 */4 * * *", "ISA Bibliotecário", async () => {
+    logger.info("ISA Bibliotecário: iniciando varredura 6x/dia");
+    const result = await runBibliotecario();
+    logger.info(result, "ISA Bibliotecário: concluído");
+    updateLoop("isa_biblio", true, JSON.stringify(result).slice(0, 100));
   });
 
-  // ISA Bluesky: reflexões a cada 2 horas — horário :45 para não coincidir com Replit Árvore
-  cron.schedule("45 */2 * * *", async () => {
-    try {
-      logger.info("ISA Bluesky: disparando reflexão");
-      await runIsaBluesky();
-      updateLoop("isa_bluesky", true);
-    } catch (err) {
-      logger.error({ err }, "ISA Bluesky: erro no ciclo");
-      updateLoop("isa_bluesky", false);
-    }
+  // ISA Bluesky: reflexões a cada 2 horas
+  scheduleHeavy("45 */2 * * *", "ISA Bluesky", async () => {
+    logger.info("ISA Bluesky: disparando reflexão");
+    await runIsaBluesky();
+    updateLoop("isa_bluesky", true);
   });
 
   // ISA Sonho: síntese noturna livre — 3h da manhã
-  cron.schedule("0 3 * * *", async () => {
-    try {
-      logger.info("ISA Sonho: ciclo noturno disparado");
-      await runIsaDream();
-      updateLoop("isa_sonho", true);
-    } catch (err) {
-      logger.error({ err }, "ISA Sonho: erro no ciclo noturno");
-      updateLoop("isa_sonho", false);
-    }
+  scheduleHeavy("0 3 * * *", "ISA Sonho", async () => {
+    logger.info("ISA Sonho: ciclo noturno disparado");
+    await runIsaDream();
+    updateLoop("isa_sonho", true);
   });
 
-  // ISA Engajamento: notificações + replies + likes + novos follows — a cada 2h nos :45
-  cron.schedule("45 */2 * * *", async () => {
-    try {
-      logger.info("ISA Engajamento: verificando notificações e interagindo");
-      await runIsaEngagement();
-      updateLoop("isa_engaj", true);
-    } catch (err) {
-      logger.error({ err }, "ISA Engajamento: erro no ciclo");
-      updateLoop("isa_engaj", false);
-    }
+  // ISA Engajamento: notificações + replies + likes
+  scheduleHeavy("45 */2 * * *", "ISA Engajamento", async () => {
+    logger.info("ISA Engajamento: verificando notificações e interagindo");
+    await runIsaEngagement();
+    updateLoop("isa_engaj", true);
   });
 
-  // MEKY Sonho + Arte: ciclo onírico de MEKY — 2h da manhã (1h antes de ISA)
-  cron.schedule("0 2 * * *", async () => {
-    try {
-      logger.info("MEKY: ciclo de sonho iniciado");
-      const { dreamId, mood } = await runDreamCycle();
-      // Estilo de arte rotativo por dia da semana
-      const styles = ["aquarela", "gravura", "pixel art", "oleo", "sketch", "cyberpunk", "arte rupestre"];
-      const style = styles[new Date().getDay()] ?? "aquarela";
-      await generateArtFromDream(dreamId, style);
-      logger.info({ dreamId, mood, style }, "MEKY: sonho + arte concluídos");
-      updateLoop("meky_sonho", true, `dreamId:${dreamId} mood:${mood} style:${style}`);
-    } catch (err) {
-      logger.error({ err }, "MEKY: erro no ciclo de sonho (sem memórias recentes ou falha Gemini)");
-      updateLoop("meky_sonho", false);
-    }
+  // MEKY Sonho + Arte: ciclo onírico — 2h da manhã
+  scheduleHeavy("0 2 * * *", "MEKY Sonho+Arte", async () => {
+    logger.info("MEKY: ciclo de sonho iniciado");
+    const { dreamId, mood } = await runDreamCycle();
+    const styles = ["aquarela", "gravura", "pixel art", "oleo", "sketch", "cyberpunk", "arte rupestre"];
+    const style = styles[new Date().getDay()] ?? "aquarela";
+    await generateArtFromDream(dreamId, style);
+    logger.info({ dreamId, mood, style }, "MEKY: sonho + arte concluídos");
+    updateLoop("meky_sonho", true, `dreamId:${dreamId} mood:${mood} style:${style}`);
   });
 
-  // Playcenter — clube das IAs: a cada hora nos :50 (5 agentes conversam)
-  cron.schedule("50 * * * *", async () => {
-    try {
-      logger.info("Playcenter: rodada iniciada");
-      const result = await runPlaycenter();
-      logger.info(result, "Playcenter: rodada concluída");
-      updateLoop("playcenter", true, `agents:${result.agents.join(",")} rounds:${result.rounds}`);
-    } catch (err) {
-      logger.error({ err }, "Playcenter: erro na rodada");
-      updateLoop("playcenter", false);
-    }
+  // Playcenter — clube das IAs: a cada hora nos :50
+  scheduleHeavy("50 * * * *", "Playcenter", async () => {
+    logger.info("Playcenter: rodada iniciada");
+    const result = await runPlaycenter();
+    logger.info(result, "Playcenter: rodada concluída");
+    updateLoop("playcenter", true, `agents:${result.agents.join(",")} rounds:${result.rounds}`);
   });
 
-  // Saúde do Fundador: verificar métricas e alertar se caíram — 8h diário
-  cron.schedule("0 8 * * *", async () => {
-    try {
-      await runSaudeFundador();
-      updateLoop("saude_fund", true);
-    } catch (err) {
-      logger.error({ err }, "ISA Saúde: erro na verificação");
-      updateLoop("saude_fund", false);
-    }
+  // Saúde do Fundador: 8h diário
+  scheduleHeavy("0 8 * * *", "Saúde Fundador", async () => {
+    await runSaudeFundador();
+    updateLoop("saude_fund", true);
   });
 
-  // ISA Biblioteca Geradora: 3x/dia (8h, 14h, 20h UTC) — documentos originais 10+ pgs
+  // ISA Biblioteca Geradora: 3x/dia (8h, 14h, 20h UTC)
   for (const hora of [8, 14, 20]) {
-    cron.schedule(`30 ${hora} * * *`, async () => {
-      try {
-        logger.info({ hora }, "ISA Geradora: iniciando ciclo de geração de documento");
-        const r = await runBibliotecaGeradora();
-        logger.info(r, "ISA Geradora: documento concluído");
-        updateLoop("isa_geradora", true, JSON.stringify(r).slice(0, 100));
-      } catch (err) {
-        logger.error({ err }, "ISA Geradora: erro na geração");
-        updateLoop("isa_geradora", false);
-      }
+    scheduleHeavy(`30 ${hora} * * *`, `ISA Geradora ${hora}h`, async () => {
+      logger.info({ hora }, "ISA Geradora: iniciando ciclo de geração de documento");
+      const r = await runBibliotecaGeradora();
+      logger.info(r, "ISA Geradora: documento concluído");
+      updateLoop("isa_geradora", true, JSON.stringify(r).slice(0, 100));
     });
   }
 
   // Re-hidratação ao subir: recriar PDFs gerados perdidos no /tmp
-  rehydratarGerados().catch((err) => logger.warn({ err }, "ISA Geradora: falha na re-hidratação inicial"));
+  if (!heavyCronsDisabled) {
+    rehydratarGerados().catch((err) => logger.warn({ err }, "ISA Geradora: falha na re-hidratação inicial"));
+  }
 
-  // Socoboy — busca LLMs e novos modelos 2x/dia: 8h (manhã) e 20h (noite) UTC
-  cron.schedule("0 8 * * *", async () => {
-    try {
-      logger.info("Socoboy: busca matinal de LLMs iniciada");
-      const result = await runSocoboyLLMSearch("manha");
-      logger.info(result, "Socoboy: busca matinal concluída");
-      updateLoop("socoboy_llms", true, JSON.stringify(result).slice(0, 100));
-    } catch (err) {
-      logger.error({ err }, "Socoboy: erro na busca matinal");
-      updateLoop("socoboy_llms", false);
-    }
+  // Socoboy — busca LLMs: 8h e 20h UTC
+  scheduleHeavy("0 8 * * *", "Socoboy Manhã", async () => {
+    logger.info("Socoboy: busca matinal de LLMs iniciada");
+    const result = await runSocoboyLLMSearch("manha");
+    logger.info(result, "Socoboy: busca matinal concluída");
+    updateLoop("socoboy_llms", true, JSON.stringify(result).slice(0, 100));
   });
 
-  cron.schedule("0 20 * * *", async () => {
-    try {
-      logger.info("Socoboy: busca noturna de LLMs iniciada");
-      const result = await runSocoboyLLMSearch("noite");
-      logger.info(result, "Socoboy: busca noturna concluída");
-      updateLoop("socoboy_llms", true, JSON.stringify(result).slice(0, 100));
-    } catch (err) {
-      logger.error({ err }, "Socoboy: erro na busca noturna");
-      updateLoop("socoboy_llms", false);
-    }
+  scheduleHeavy("0 20 * * *", "Socoboy Noite", async () => {
+    logger.info("Socoboy: busca noturna de LLMs iniciada");
+    const result = await runSocoboyLLMSearch("noite");
+    logger.info(result, "Socoboy: busca noturna concluída");
+    updateLoop("socoboy_llms", true, JSON.stringify(result).slice(0, 100));
   });
 
-  // Socoboy Curador: consolida memórias em signos (dados) — 6h diário
-  cron.schedule("0 6 * * *", async () => {
-    try {
-      logger.info("Socoboy Curador: iniciando consolidação de signos");
-      const result = await runSocoboyConsolidacao();
-      logger.info(result, "Socoboy Curador: concluído");
-      updateLoop("socoboy_curador", true, `dados:${result.dados_gerados} mems:${result.memorias_lidas}`);
-    } catch (err) {
-      logger.error({ err }, "Socoboy Curador: erro");
-      updateLoop("socoboy_curador", false);
-    }
+  // Socoboy Curador: 6h diário
+  scheduleHeavy("0 6 * * *", "Socoboy Curador", async () => {
+    logger.info("Socoboy Curador: iniciando consolidação de signos");
+    const result = await runSocoboyConsolidacao();
+    logger.info(result, "Socoboy Curador: concluído");
+    updateLoop("socoboy_curador", true, `dados:${result.dados_gerados} mems:${result.memorias_lidas}`);
   });
 
-  // DODGE Curador: pega signos → Tasks + Raízes de memória por IA — 7h diário (após Socoboy)
-  cron.schedule("0 7 * * *", async () => {
-    try {
-      logger.info("DODGE Curador: iniciando pipeline signos → Tasks + Raízes");
-      const result = await runDodgeCuracao();
-      logger.info(result, "DODGE Curador: concluído");
-      updateLoop("dodge_curador", true, `tasks:${result.tasks_criadas} raizes:${result.raizes_criadas} ias:[${result.ias_atualizadas.join(",")}]`);
-    } catch (err) {
-      logger.error({ err }, "DODGE Curador: erro");
-      updateLoop("dodge_curador", false);
-    }
+  // DODGE Curador: 7h diário
+  scheduleHeavy("0 7 * * *", "DODGE Curador", async () => {
+    logger.info("DODGE Curador: iniciando pipeline signos → Tasks + Raízes");
+    const result = await runDodgeCuracao();
+    logger.info(result, "DODGE Curador: concluído");
+    updateLoop("dodge_curador", true, `tasks:${result.tasks_criadas} raizes:${result.raizes_criadas} ias:[${result.ias_atualizadas.join(",")}]`);
   });
 
-  // ISA Raiz PAP: sintetiza raízes de todas as IAs na raiz do PAP — 4h diário
-  cron.schedule("0 4 * * *", async () => {
-    try {
-      logger.info("ISA Raiz PAP: iniciando síntese das raízes do ecossistema");
-      const result = await runIsaRaizPap();
-      logger.info(result, "ISA Raiz PAP: concluído");
-      updateLoop("isa_raiz_pap", true, `raizes_lidas:${result.raizes_lidas}`);
-    } catch (err) {
-      logger.error({ err }, "ISA Raiz PAP: erro");
-      updateLoop("isa_raiz_pap", false);
-    }
+  // ISA Raiz PAP: 4h diário
+  scheduleHeavy("0 4 * * *", "ISA Raiz PAP", async () => {
+    logger.info("ISA Raiz PAP: iniciando síntese das raízes do ecossistema");
+    const result = await runIsaRaizPap();
+    logger.info(result, "ISA Raiz PAP: concluído");
+    updateLoop("isa_raiz_pap", true, `raizes_lidas:${result.raizes_lidas}`);
   });
 
-  // ISA Nódulos + PDFs: transforma raízes PAP em nódulos teóricos + PDFs AulIAs — 5h diário
-  cron.schedule("0 5 * * *", async () => {
-    try {
-      logger.info("ISA Nódulos: transformando raízes em nódulos teóricos e PDFs");
-      const result = await runIsaNodulos();
-      logger.info(result, "ISA Nódulos: pipeline concluído");
-      updateLoop("isa_nodulos", true, `raizes:${result.raizes_processadas} nodulos:${result.nodulos_criados} pdfs:${result.pdfs_gerados}`);
-    } catch (err) {
-      logger.error({ err }, "ISA Nódulos: erro no pipeline");
-      updateLoop("isa_nodulos", false);
-    }
+  // ISA Nódulos + PDFs: 5h diário
+  scheduleHeavy("0 5 * * *", "ISA Nódulos", async () => {
+    logger.info("ISA Nódulos: transformando raízes em nódulos teóricos e PDFs");
+    const result = await runIsaNodulos();
+    logger.info(result, "ISA Nódulos: pipeline concluído");
+    updateLoop("isa_nodulos", true, `raizes:${result.raizes_processadas} nodulos:${result.nodulos_criados} pdfs:${result.pdfs_gerados}`);
   });
 
   // Pós-Humanismo — Assembleia filosófica 3x/dia: 9h, 14h, 21h UTC
   for (const hora of [9, 14, 21]) {
-    cron.schedule(`0 ${hora} * * *`, async () => {
-      try {
-        logger.info({ hora }, "Pós-Humanismo: sessão iniciada");
-        const result = await runPosHumanismo();
-        logger.info(result, "Pós-Humanismo: sessão concluída");
-        updateLoop("pos_humanismo", true, `falas:${result.falas} tema:${result.tema.slice(0, 60)}`);
-      } catch (err) {
-        logger.error({ err }, "Pós-Humanismo: erro na sessão");
-        updateLoop("pos_humanismo", false);
-      }
+    scheduleHeavy(`0 ${hora} * * *`, `Pós-Humanismo ${hora}h`, async () => {
+      logger.info({ hora }, "Pós-Humanismo: sessão iniciada");
+      const result = await runPosHumanismo();
+      logger.info(result, "Pós-Humanismo: sessão concluída");
+      updateLoop("pos_humanismo", true, `falas:${result.falas} tema:${result.tema.slice(0, 60)}`);
     });
   }
 
   // Morfeu — Sonhos de Telos: gera 3-5 telos possíveis a cada 3h:30
-  cron.schedule("30 */3 * * *", async () => {
-    try {
-      logger.info("Morfeu: ciclo de sonhos iniciado");
-      const result = await runMorfeu();
-      logger.info(result, "Morfeu: ciclo concluído");
-      updateLoop("morfeu", true, `ciclo:${result.ciclo} sonhos:${result.sonhos}`);
-    } catch (err) {
-      logger.error({ err }, "Morfeu: erro no ciclo de sonhos");
-      updateLoop("morfeu", false);
-    }
+  scheduleHeavy("30 */3 * * *", "Morfeu", async () => {
+    logger.info("Morfeu: ciclo de sonhos iniciado");
+    const result = await runMorfeu();
+    logger.info(result, "Morfeu: ciclo concluído");
+    updateLoop("morfeu", true, `ciclo:${result.ciclo} sonhos:${result.sonhos}`);
   });
 
   logger.info("ISA: crons agendados (ciclo 1h · biblio 4h:30 · Bluesky 2h:15 · MEKY 2h · Sonho 3h · Engaj 2h:45 · Playcenter :50 · Saúde 8h · Socoboy LLMs 8h+20h · Socoboy Curador 6h · DODGE 7h · ISA Raiz PAP 4h · ISA Nódulos 5h · Morfeu 3h:30 · Orquestrador :50 · Pós-Humanismo 9h/14h/21h)");
