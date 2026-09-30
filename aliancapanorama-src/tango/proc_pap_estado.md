@@ -5,7 +5,7 @@
 | Serviço | URL |
 |---|---|
 | Frontend | `site-st.vercel.app/aliancapanorama` |
-| API Railway | `site-st-production.up.railway.app` |
+| API (Render) | `site-st.onrender.com` |
 | Domínio desejado | `pap.sociedadetucci.com.br` (DNS pendente) |
 | Bluesky ISA | `@isa-pap.bsky.social` |
 | Repo | `github.com/yurituccieterovic-cell/Site-ST` |
@@ -14,7 +14,7 @@
 ## IAs do PAP (status)
 | IA | Função | Status |
 |---|---|---|
-| ISA | Coruja guardiã. Ciclo 1h + sonho 3h + Bluesky 2h:15 + engajamento 2h:45 | LIVE Railway |
+| ISA | Coruja guardiã. Ciclo 1h + sonho 3h + Bluesky 2h:15 + engajamento 2h:45 | LIVE (Render) |
 | MEKY | Hexápode físico. Dream cycle no cron às 2h | Aguardando hardware |
 | Amanda | IA que habita o MC (Marta Centaurus). TTS, Gemini, personalidade completa | Sem Bluesky ainda |
 | MC (Marta Centaurus) | Robô físico hexápode. Amanda é sua IA. Leucócito digital ARPIA. Primeira caminhada 2026-07-04 | LIVE local |
@@ -38,8 +38,8 @@ AMANDA.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFID
 
 ## Stack
 - Frontend: React + Vite → Vercel
-- API: Express 5 + Drizzle → Railway
-- DB: PostgreSQL Railway (incluso)
+- API: Express 5 + Drizzle → **Render** (free tier, `site-st.onrender.com`)
+- DB: PostgreSQL → **Neon** (`ep-late-pond-acean4b0.sa-east-1.aws.neon.tech`)
 - Pagamentos: Stripe + PayPal (conectados)
 - Autenticação: bcrypt cost 12 + express-session + connect-pg-simple (7 dias TTL)
 - Auth tiers 1-5

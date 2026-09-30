@@ -53,7 +53,7 @@ curl -s -X POST https://site-st.onrender.com/api/conector/memory \
 
 ```python
 import requests, os
-API = "https://pap-api-production.up.railway.app"
+API = "https://site-st.onrender.com"
 tok = os.popen("grep PAP_INTERNAL_TOKEN /root/.pap-secrets | cut -d= -f2").read().strip()
 insights = ["DECISÃO: ...", "GOTCHA: ...", "APRENDIZADO: ..."]
 for c in insights:

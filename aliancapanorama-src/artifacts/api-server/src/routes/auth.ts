@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
 import { db } from "@workspace/db";
-import { usersTable } from "@workspace/db";
+import { usersTable, ageProfessionalsTable, rapaduraUsersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { LoginBody } from "@workspace/api-zod";
 import bcrypt from "bcryptjs";
@@ -237,6 +237,60 @@ router.post("/auth/dismiss-downgrade-notice", async (req, res) => {
     .set({ subscriptionStatus: null, lastDowngradeAt: null })
     .where(eq(usersTable.id, req.session.userId));
   res.json({ ok: true });
+});
+
+// POST /api/auth/passtheo — troca de senha unificada para todos os sistemas
+// Aceita: { currentPassword, newPassword, systems?: ["pap","age","rapadura"] }
+router.post("/auth/passtheo", loginRateLimit, async (req, res): Promise<void> => {
+  if (!req.session.userId) { res.status(401).json({ error: "Autenticação PAP necessária" }); return; }
+  const { currentPassword, newPassword, systems = ["pap"] } =
+    req.body as { currentPassword?: string; newPassword?: string; systems?: string[] };
+
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: "currentPassword e newPassword obrigatórios" }); return;
+  }
+  if (newPassword.length < 8) {
+    res.status(400).json({ error: "Nova senha deve ter ao menos 8 caracteres" }); return;
+  }
+
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, req.session.userId)).limit(1);
+  if (!user) { res.status(404).json({ error: "Usuário não encontrado" }); return; }
+
+  const ok = await bcrypt.compare(currentPassword, user.passwordHash);
+  if (!ok) { res.status(401).json({ error: "Senha atual incorreta" }); return; }
+
+  const newHash = await bcrypt.hash(newPassword, 12);
+  const changed: string[] = [];
+
+  // PAP
+  if (systems.includes("pap")) {
+    await db.update(usersTable).set({ passwordHash: newHash }).where(eq(usersTable.id, user.id));
+    changed.push("pap");
+  }
+
+  // Age — procura profissional com email igual ao do usuário PAP ou pelo login
+  if (systems.includes("age") && user.email) {
+    const [prof] = await db.select({ id: ageProfessionalsTable.id })
+      .from(ageProfessionalsTable)
+      .where(eq(ageProfessionalsTable.email, user.email))
+      .limit(1);
+    if (prof) {
+      await db.update(ageProfessionalsTable).set({ passwordHash: newHash }).where(eq(ageProfessionalsTable.id, prof.id));
+      changed.push("age");
+    }
+  }
+
+  // Rapadura — mapeamento PAP login → rapadura role
+  if (systems.includes("rapadura")) {
+    const roleMap: Record<string, string> = { yuri: "yuri", mayumi: "mayumi" };
+    const role = roleMap[user.login];
+    if (role) {
+      await db.update(rapaduraUsersTable).set({ passwordHash: newHash }).where(eq(rapaduraUsersTable.role, role));
+      changed.push("rapadura");
+    }
+  }
+
+  res.json({ ok: true, changed, message: `Senha alterada em: ${changed.join(", ")}` });
 });
 
 export default router;

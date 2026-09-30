@@ -63,8 +63,8 @@
 
 | Sistema | Conexão | Status |
 |---|---|---|
-| API Railway | Express 5, porta 8080, `site-st-production.up.railway.app` | LIVE |
-| PostgreSQL Railway | Drizzle ORM, schema completo | LIVE |
+| API (Render) | Express 5, porta 8080, `site-st.onrender.com` | LIVE |
+| PostgreSQL (Neon) | Drizzle ORM, schema completo | LIVE |
 | ISA (software/PWA) | Ciclo horário + sonho 3h + Bluesky 2h:15 | LIVE |
 | Amanda (IA de Meky) | DHT11, protoboards, árvores LED — folha: `sys_amanda_core.md` | Documentada |
 | Meky / Marta Centaurus (MC) | Hardware aguardando; dream cycle no cron; `/root/Arpia/` — 1ª caminhada 2026-07-04 | Aguardando hardware |

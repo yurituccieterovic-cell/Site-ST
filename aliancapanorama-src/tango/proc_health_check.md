@@ -19,7 +19,7 @@ curl -s -o /dev/null -w "%{http_code}" https://site-st.vercel.app/aliancapanoram
 
 ### 2. Railway (API Express)
 ```bash
-curl -s https://site-st-production.up.railway.app/api/healthz | python3 -m json.tool
+curl -s https://site-st.onrender.com/api/healthz | python3 -m json.tool
 # Esperado: {"status":"ok"} — nota: rota é /healthz (não /health)
 ```
 **Pontos de falha comuns:**
@@ -83,7 +83,7 @@ bash /root/Site-ST/scripts/build-pap.sh
 
 ## Script de Smoke Test Rápido
 ```bash
-API="https://site-st-production.up.railway.app"
+API="https://site-st.onrender.com"
 FRONT="https://site-st.vercel.app/aliancapanorama"
 
 echo "=== HEALTH CHECK PAP ==="
