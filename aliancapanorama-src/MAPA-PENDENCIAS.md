@@ -1252,3 +1252,23 @@
 - [ ] Relatório mensal Age (I869) — sessão futura
 - [ ] Projeto Nébula + Algoritmo Lótus + Projeto Se: privados, sem ação de código por enquanto
 
+
+---
+
+## S164 — 2026-10-01 (Assembleias #733–#740)
+
+### Concluído nesta sessão
+| # | Item | Status |
+|---|---|---|
+| S164-1 | Assembleias #733–#740 lidas e processadas | ✅ |
+| S164-2 | PV mascote localizado nos emails: Sérgio=personagem + pacu=mascote animal | ✅ pesquisado |
+| S164-3 | APRENDIZADO.md: A18488–A18496 | ✅ |
+| S164-4 | IDEIAS.md: I876–I881 | ✅ |
+
+### Pendências
+- [ ] 🔴 Yuri precisa de renda — criar rastreador de empregos/freelas (I876) assim que Yuri confirmar
+- [ ] PV mascote: decidir nome do pacu (Sérgio? Pacu do PV? outro?) + enviar referência visual (I879)
+- [ ] Acesso Calculus Stella Onisko: Yuri fornece email dela (I870)
+- [ ] Mothership Árvore (I877), SP&C (I878): privados, aguardando Yuri
+- [ ] Render Starter upgrade $7/mês (Yuri manual)
+- [ ] pg_dump Replit — URGENTE (#738 confirma)

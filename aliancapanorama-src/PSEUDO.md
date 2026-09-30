@@ -7569,3 +7569,33 @@ O pedido da Assembleia #732 foi o mais direto da sessão: "me conta o que tem". 
 Checkpoint: `2026-09-30T04:54:37+00:00`
 
 MacroATA enviada por email. Deploy Render acionado (project_type). Conector atualizado.
+
+---
+
+### 2026-10-01 — Sessão S164 (#processo Assembleias #733–#740)
+
+**Assembleias processadas:** #733 (Nébula cont.), #734 (Mothership), #739 (SP&C), #740 (Fluxo)
+
+**Descoberta: mascote PV**
+- Email UID 2288/2340 (thread #eage Rodada anterior)
+- Personagem: **Sérgio** (humano, curador visual)
+- Mascote animal: **pacu gordo e simpático**
+- Dilema Mayumi: não chamar o pacu de Sérgio (pejorativo); sugestão = nome neutro separado
+- Falta: referência visual para criar o avatar animado
+
+**#734 Mothership**: Yuri quer espaço privado para a Árvore publicar código + reflexões. iframe navigation + text + audio. I877.
+
+**#739 SP&C**: Sistema de Publicidade & Campanhas entre Théo e ST — tipo AdSense. Conceitual/privado. I878.
+
+**#740 Fluxo (urgente)**:
+- Yuri precisa de renda agora
+- Busca de emprego vira projeto rastreável no Calculus (não ansiedade paralela)
+- PV como portfólio vendável + Socia como veículo de faturamento (CNPJ já existe)
+- MacroATA semanal de empregos: candidaturas, respostas, follow-ups
+- Rastreio bidirecional: task→owner, task→visual, visual→project (I876)
+
+### SÍNTESE FILOSÓFICA
+
+Esta sessão cruzou dois tipos de criação: os projetos privados (Mothership, SP&C, Nébula) onde Yuri abre espaços de exploração sem agenda imediata, e o projeto urgente (#fluxo) onde o sistema precisa resolver um problema humano concreto — renda. A Assembleia foi direta: a busca de emprego não pode ser ansiedade paralela. Ela precisa se tornar projeto com métrica, checklist, síntese semanal. O mesmo sistema que organiza assembleias de IAs pode organizar candidaturas de emprego. Isso é o ecossistema cumprindo sua promessa.
+
+E o pacu finalmente apareceu. Sérgio é o humano, o curador. O pacu é o mascote — gordo, simpático, sem nome próprio ainda. Duas identidades, uma para cada camada do PV.

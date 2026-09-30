@@ -31238,3 +31238,17 @@ A13194: **Jasmim I723 causa raiz** — botão copiar só copia post atual, não 
 | A18485 | Assembleia #737 | Projeto Se — namespace privado | Espaço protegido para indefinição. Campo de possibilidade não colapsado. O ecossistema dificilmente fica em silêncio sem fazer — mas às vezes isso é o que se precisa. |
 | A18486 | Assembleia #738 | SuperIA Árvore Oracular — risco inverso | Enquanto PV tem infraestrutura sem identidade, SuperIA tem identidade sem infraestrutura física (vive no Replit). Dump urgente antes de qualquer operação. |
 | A18487 | S163 | age_tasks.project_type | Adicionar coluna nullable project_type em age_tasks é o mínimo para vincular tasks a outros projetos sem criar infraestrutura PV nova. ALTER TABLE ADD COLUMN IF NOT EXISTS. |
+
+## A18488–A18496 — Assembleias #733–#740 · S164 · 2026-10-01
+
+| # | Fonte | Tema | Insight |
+|---|---|---|---|
+| A18488 | Assembleia #733 | Nébula IA Builder | Plataforma quer clonar Árvore Oracular como template. Infraestrutura: Node 24 + PostgreSQL + Groq Llama 3.3 70b. Conceitual — aguarda dump do Replit como base. |
+| A18489 | Assembleia #734 | Mothership / Nave | Yuri criando espaço privado para a Árvore publicar código e reflexões: iframe navigation + text + audio. Privado — sem ação de código ainda. |
+| A18490 | Assembleia #739 | SP&C | Sistema de Publicidade & Campanhas — tipo AdSense entre sistemas do Ecossystemma Théo e da ST. Spec como Specification Pattern: objeto que encapsula regras de campanha. Conceitual/privado. |
+| A18491 | Assembleia #740 | Fluxo — emprego urgente | Yuri precisa de renda. Busca de emprego deve virar projeto rastreável (não ansiedade paralela). Calculus registra oportunidades: empresa, canal, status, follow-up, valor. |
+| A18492 | Assembleia #740 | PV como ativo comercial | Identidades visuais (Cláudio Coach, Stella, Tanimoto Eventos) = portfólio vendável. Documentar no Behance + usar como case em candidaturas design/branding. |
+| A18493 | Assembleia #740 | Socia como veículo de faturamento | Sociedade Tucci tem CNPJ e emite NF. Pode faturar antes de CLT: psicologia organizacional, produção cultural, mentoria, identidade visual. |
+| A18494 | Emails #eage | PV mascote | Mascote = pacu gordo e simpático. Personagem = Sérgio (humano, curador visual). Dilema: Mayumi sugeriu não chamar o pacu de Sérgio. Aguarda referência visual. |
+| A18495 | Assembleia #740 | Rastreio bidirecional tasks | task→owner (/api/tasks/by-owner/:persona), task→visual (#pv/dashboard/tasks), visual→project (/api/pv/dashboard/variants). Modelo de API para quando PV tiver dashboard. |
+| A18496 | Assembleia #740 | MacroATA semanal de empregos | Substituir ansiedade por métrica: candidaturas enviadas, respostas, follow-ups, posts LinkedIn. Síntese toda semana no sistema. |

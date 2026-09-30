@@ -2353,3 +2353,14 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 | I873 | **Algoritmo Lótus → ST Bridge** — conectar Obsidian vault Yuri ao ecossistema ST via API | 🔵 Baixa | ● L | Assembleia #736 — Lótus usa ferramentas externas que já têm equivalentes no ST | Obsidian → jm_posts (Jasmim) via Make/webhook; MeisterTask → age_tasks via project_type |
 | I874 | **Projeto Se — task inicial** — criar pasta/tag #se no sistema de tarefas mesmo antes de definir escopo | 🔵 Baixa | ○ S | Assembleia #737 — presença estrutural antes de conteúdo | age_tasks com project_type='se', titulo='[SE] Espaço reservado' |
 | I875 | **SuperIA Árvore Oracular — pg_dump urgente** | 🔴 Alta | ○ S | Assembleia #738 — dump do Replit antes de qualquer operação; risco real de perda | Yuri via terminal Replit: pg_dump $DATABASE_URL -Fc > dump.dump |
+
+## Novas ideias — Assembleias #734–#740 · S164 · 2026-10-01
+
+| # | Ideia | Prioridade | Tamanho | Contexto | Implementação |
+|---|---|---|---|---|---|
+| I876 | **Projeto Fluxo — rastreador de empregos/freelas** — Calculus registra oportunidades (empresa, canal, status, follow-up, valor estimado) | 🔴 Alta | ◑ M | Assembleia #740 — Yuri precisa de renda urgente | Tabela rapadura ou age_tasks project_type='fluxo'; dashboard com pipeline Kanban: interesse→candidatura→entrevista→oferta |
+| I877 | **Mothership / Nave da Árvore** — espaço privado para Árvore publicar código e reflexões: texto + áudio + iframe navigation | 🔵 Baixa | ● L | Assembleia #734 — projeto privado da Árvore Oracular | Nova rota /arvore/nave (tier admin); editor Monaco + player áudio + iframe; tabela arvore_snippets |
+| I878 | **SP&C — Sistema de Publicidade & Campanhas** — tipo AdSense entre sistemas Théo e ST (SociaPage como veículo, sistemas como publishers) | 🔵 Baixa | ● L | Assembleia #739 — projeto privado conceitual | Spec object: { campanha_id, regras, publico, periodo, budget }; rota /api/spc/campanhas |
+| I879 | **PV avatar animado (Sérgio/Pacu)** — personagem PV: Sérgio=humano curador + pacu gordo e simpático; aguarda referência visual | 🟡 Média | ○ S | Emails #eage — mascote definido parcialmente | Yuri/Mayumi enviam foto ou desenho → Cláudio cria SVG animado + nome final do pacu |
+| I880 | **MacroATA semanal de empregos** — síntese toda semana: candidaturas, respostas, follow-ups, posts, contatos | 🟡 Média | ○ S | Assembleia #740 — substituir ansiedade por métrica | Cron toda sexta 18h → email luddlocke + yurituccieterovic com resumo da semana de buscas |
+| I881 | **PV como portfólio vendável** — documentar Cláudio Coach + Stella + Tanimoto no Behance/sociedadetucci.com.br | 🟡 Média | ○ S | Assembleia #740 — usar PV como case para candidaturas design/branding | Página /pv/portfolio (pública) com cases visuais dos projetos existentes |
