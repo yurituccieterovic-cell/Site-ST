@@ -12,6 +12,7 @@ type Slot = { dataHora: string; duracaoMin: number; canal: string };
 type Appt = {
   id: number; patientNome?: string; patientTelefone?: string; patientEmail?: string;
   dataHora: string; duracaoMin: number; status: string; canal: string; observacoes?: string;
+  valor?: string | null;
 };
 type AvailRule = {
   id: number; diaSemana: number; horaInicio: string; horaFim: string;
@@ -115,6 +116,14 @@ export function AgePage() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedAppt, setSelectedAppt] = useState<Appt | null>(null);
   const [apptNotes, setApptNotes] = useState("");
+  const [apptValor, setApptValor] = useState("");
+  // Relatório mensal
+  const [relatMes, setRelatMes] = useState(() => new Date().toISOString().slice(0, 7));
+  type RelatData = { mes: string; totalSessoes: number; totalGeral: number | null; porPaciente: { paciente: string; sessoes: number; total: number | null }[] } | null;
+  const [relatData, setRelatData] = useState<RelatData>(null);
+  const [relatLoading, setRelatLoading] = useState(false);
+  // PWA install
+  const [pwaPrompt, setPwaPrompt] = useState<any>(null);
   const [confirmApptAction, setConfirmApptAction] = useState<{ id: number; status: string } | null>(null);
   const [profBookModal, setProfBookModal] = useState(false);
   const [profBookSlots, setProfBookSlots] = useState<{ dataHora: string; duracaoMin: number; canal: string }[]>([]);
@@ -716,7 +725,7 @@ export function AgePage() {
 
   // ─── Professional actions ───────────────────────────────────────────────────
 
-  async function updateAppt(id: number, patch: Record<string, string>) {
+  async function updateAppt(id: number, patch: Record<string, string | null>) {
     await fetch(`${API}/api/age/${slug}/appointments/${id}`, {
       method: "PATCH", credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -725,6 +734,23 @@ export function AgePage() {
     if (selectedAppt?.id === id) setSelectedAppt(null);
     await loadAppts();
   }
+
+  async function loadRelatorio() {
+    setRelatLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/relatorio-mensal?mes=${relatMes}`, { credentials: "include" });
+      if (r.ok) setRelatData(await r.json());
+    } finally { setRelatLoading(false); }
+  }
+
+  // PWA: captura o prompt de instalação e troca o manifest para o do Age
+  useEffect(() => {
+    const link = document.querySelector('link[rel="manifest"]') as HTMLLinkElement | null;
+    if (link) link.href = "/aliancapanorama/age-manifest.json";
+    const handler = (e: Event) => { e.preventDefault(); setPwaPrompt(e); };
+    window.addEventListener("beforeinstallprompt", handler as EventListener);
+    return () => window.removeEventListener("beforeinstallprompt", handler as EventListener);
+  }, []);
 
   async function addRule(e: React.FormEvent) {
     e.preventDefault();
@@ -2173,7 +2199,7 @@ export function AgePage() {
               {fmtDay(day + "T12:00:00")}
             </div>
             {dayAppts.map(a => (
-              <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); }}
+              <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); setApptValor(a.valor ?? ""); }}
                 style={{ background: "#0f1318", border: `1px solid ${(STATUS_COLOR[a.status] ?? color) + "55"}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: STATUS_COLOR[a.status] ?? color, flexShrink: 0 }} />
                 <div style={{ flex: 1 }}>
@@ -2239,11 +2265,21 @@ export function AgePage() {
               )}
 
               <textarea value={apptNotes} onChange={e => setApptNotes(e.target.value)} placeholder="Observações…" rows={3}
-                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", fontSize: 13, padding: "8px 12px", boxSizing: "border-box", resize: "vertical", marginBottom: 10 }}
+                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", fontSize: 13, padding: "8px 12px", boxSizing: "border-box", resize: "vertical", marginBottom: 8 }}
               />
-              <button onClick={() => updateAppt(selectedAppt.id, { observacoes: apptNotes })}
+              <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10 }}>
+                <label style={{ color: "#94a3b8", fontSize: 12, whiteSpace: "nowrap" }}>💰 Valor R$</label>
+                <input
+                  type="number" min="0" step="0.01"
+                  value={apptValor}
+                  onChange={e => setApptValor(e.target.value)}
+                  placeholder="0,00"
+                  style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", fontSize: 13, padding: "6px 10px", outline: "none" }}
+                />
+              </div>
+              <button onClick={() => updateAppt(selectedAppt.id, { observacoes: apptNotes, valor: apptValor || null })}
                 style={{ width: "100%", background: colorDark, border: `1px solid ${color}44`, borderRadius: 8, color, padding: "8px 0", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
-                Salvar observações
+                Salvar observações + valor
               </button>
             </div>
           </div>
@@ -2751,6 +2787,78 @@ export function AgePage() {
           </button>
           {intervaloMsg && <span style={{ marginLeft: 12, color: intervaloMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{intervaloMsg}</span>}
         </div>
+
+        {/* Relatório Mensal Financeiro */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 8 }}>📊 Relatório Mensal Financeiro</div>
+          <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>Sessões realizadas, confirmadas e reservadas no mês — total por paciente.</p>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 12 }}>
+            <input type="month" value={relatMes} onChange={e => setRelatMes(e.target.value)}
+              style={{ background: "#080c10", border: `1px solid ${color}44`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 13, outline: "none" }} />
+            <button onClick={loadRelatorio} disabled={relatLoading}
+              style={{ background: relatLoading ? "#333" : color, border: "none", borderRadius: 8, padding: "8px 16px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: relatLoading ? "default" : "pointer" }}>
+              {relatLoading ? "Gerando…" : "Gerar"}
+            </button>
+          </div>
+          {relatData && (
+            <div>
+              <div style={{ display: "flex", gap: 16, marginBottom: 12, flexWrap: "wrap" }}>
+                <div style={{ background: "#0a1810", borderRadius: 8, padding: "8px 14px" }}>
+                  <div style={{ color: "#94a3b8", fontSize: 11 }}>Total de sessões</div>
+                  <div style={{ color, fontSize: 20, fontWeight: 700 }}>{relatData.totalSessoes}</div>
+                </div>
+                {relatData.totalGeral != null && (
+                  <div style={{ background: "#0a1810", borderRadius: 8, padding: "8px 14px" }}>
+                    <div style={{ color: "#94a3b8", fontSize: 11 }}>Total faturado</div>
+                    <div style={{ color: "#34d399", fontSize: 20, fontWeight: 700 }}>
+                      {relatData.totalGeral.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {relatData.porPaciente.length > 0 && (
+                <div>
+                  <div style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, marginBottom: 6, textTransform: "uppercase" }}>Por paciente</div>
+                  {relatData.porPaciente.map((p, i) => (
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: "1px solid #1e293b" }}>
+                      <div style={{ color: "#e2e8f0", fontSize: 13 }}>{p.paciente}</div>
+                      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                        <span style={{ color: "#94a3b8", fontSize: 12 }}>{p.sessoes} sess.</span>
+                        {p.total != null && (
+                          <span style={{ color: "#34d399", fontSize: 13, fontWeight: 600 }}>
+                            {p.total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {relatData.totalGeral == null && relatData.totalSessoes > 0 && (
+                <p style={{ color: "#64748b", fontSize: 12, marginTop: 8 }}>
+                  💡 Adicione valores às consultas (clique no agendamento → campo R$) para ver o total financeiro.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* PWA — Instalar no celular */}
+        {pwaPrompt && (
+          <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+            <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 6 }}>📱 Instalar no celular</div>
+            <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>Use o Age como app — acesso rápido direto da tela inicial.</p>
+            <button
+              onClick={async () => {
+                pwaPrompt.prompt();
+                await pwaPrompt.userChoice;
+                setPwaPrompt(null);
+              }}
+              style={{ background: color, border: "none", borderRadius: 8, padding: "10px 20px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+              📲 Instalar Age
+            </button>
+          </div>
+        )}
       </div>
     );
   }

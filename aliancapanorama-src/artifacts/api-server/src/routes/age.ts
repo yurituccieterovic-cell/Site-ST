@@ -831,7 +831,7 @@ router.post("/age/:slug/appointments/by-token/:token/reschedule", async (req, re
 // PATCH /api/age/:slug/appointments/:id (auth required)
 router.patch("/age/:slug/appointments/:id", requireAgeAuth, async (req, res): Promise<void> => {
   const id = parseInt(req.params.id ?? "0", 10);
-  const { status, observacoes, patientNome, patientTelefone, patientEmail } = req.body as Record<string, string | undefined>;
+  const { status, observacoes, patientNome, patientTelefone, patientEmail, valor } = req.body as Record<string, string | undefined>;
 
   const updates: Record<string, unknown> = { updatedAt: new Date() };
   if (status)           updates["status"]           = status;
@@ -839,6 +839,7 @@ router.patch("/age/:slug/appointments/:id", requireAgeAuth, async (req, res): Pr
   if (patientNome)      updates["patientNome"]      = patientNome;
   if (patientTelefone)  updates["patientTelefone"]  = patientTelefone;
   if (patientEmail)     updates["patientEmail"]     = patientEmail;
+  if (valor !== undefined) updates["valor"]         = valor === "" ? null : valor;
 
   const [updated] = await db.update(ageAppointmentsTable)
     .set(updates as any)
@@ -2657,6 +2658,102 @@ router.delete("/age/:slug/tasks/:id", requireAgeAuth, async (req, res): Promise<
   await db.delete(ageTasksTable)
     .where(and(eq(ageTasksTable.id, id), eq(ageTasksTable.professionalId, profId)));
   res.json({ ok: true });
+});
+
+// ─── Relatório Mensal Financeiro ──────────────────────────────────────────────
+// GET /api/age/:slug/relatorio-mensal?mes=YYYY-MM  (auth required)
+// Retorna: sessões realizadas/confirmadas + total por paciente + soma geral
+
+router.get("/age/:slug/relatorio-mensal", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const mesParam = (req.query.mes as string)?.slice(0, 7) ?? new Date().toISOString().slice(0, 7);
+
+  // Validar formato YYYY-MM
+  if (!/^\d{4}-\d{2}$/.test(mesParam)) {
+    res.status(400).json({ error: "mes deve ser YYYY-MM" }); return;
+  }
+
+  const inicio = `${mesParam}-01`;
+  const [ano, mm] = mesParam.split("-").map(Number);
+  const fimDate  = new Date(ano, mm, 1); // 1º do mês seguinte
+  const fim      = fimDate.toISOString().slice(0, 10);
+
+  try {
+    const rows = await db.execute(sql`
+      SELECT
+        a.id,
+        a.patient_nome       AS paciente,
+        a.patient_telefone   AS telefone,
+        a.patient_email      AS email,
+        a.data_hora,
+        a.duracao_min,
+        a.status,
+        a.canal,
+        a.observacoes,
+        a.valor::FLOAT       AS valor
+      FROM age_appointments a
+      WHERE a.professional_id = ${profId}
+        AND a.data_hora >= ${inicio}::date
+        AND a.data_hora <  ${fim}::date
+        AND a.status IN ('realizado','confirmado','reservado')
+      ORDER BY a.data_hora ASC
+    `);
+
+    const sessoes = (rows as any).rows ?? [];
+
+    // Agrupar por paciente
+    type PacienteRow = { paciente: string; sessoes: number; total: number | null; temValor: boolean };
+    const porPaciente: Record<string, PacienteRow> = {};
+    let totalGeral = 0;
+    let totalSessoes = 0;
+
+    for (const s of sessoes) {
+      const key = (s.paciente as string) ?? "Desconhecido";
+      if (!porPaciente[key]) {
+        porPaciente[key] = { paciente: key, sessoes: 0, total: null, temValor: false };
+      }
+      porPaciente[key].sessoes++;
+      totalSessoes++;
+      if (s.valor != null) {
+        const v = parseFloat(String(s.valor));
+        porPaciente[key].total = (porPaciente[key].total ?? 0) + v;
+        porPaciente[key].temValor = true;
+        totalGeral += v;
+      }
+    }
+
+    res.json({
+      mes: mesParam,
+      totalSessoes,
+      totalGeral: totalGeral > 0 ? totalGeral : null,
+      porPaciente: Object.values(porPaciente),
+      sessoes,
+    });
+  } catch (err) {
+    logger.error({ err }, "age: relatório mensal");
+    res.status(500).json({ error: "Erro ao gerar relatório." });
+  }
+});
+
+// PATCH /api/age/:slug/professionals/me/contato — atualizar email/whatsapp do profissional
+router.patch("/age/:slug/professionals/me/contato", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { email, whatsapp } = req.body as { email?: string; whatsapp?: string };
+  if (email === undefined && whatsapp === undefined) {
+    res.status(400).json({ error: "email ou whatsapp necessário" }); return;
+  }
+  try {
+    if (email !== undefined) {
+      await db.execute(sql`UPDATE age_professionals SET email = ${email.trim()} WHERE id = ${profId}`);
+    }
+    if (whatsapp !== undefined) {
+      await db.execute(sql`UPDATE age_professionals SET whatsapp = ${whatsapp.trim() || null} WHERE id = ${profId}`);
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    logger.error({ err }, "age: atualizar contato");
+    res.status(500).json({ error: "Erro ao atualizar contato." });
+  }
 });
 
 export default router;

@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, boolean, timestamp, jsonb, numeric } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -13,6 +13,7 @@ export const ageProfessionalsTable = pgTable("age_professionals", {
   bio:          text("bio"),
   cor:          text("cor").notNull().default("#2dd4bf"), // teal padrão
   email:        text("email"),                            // para alertas e IP challenge
+  whatsapp:     text("whatsapp"),                          // ex: 11975155785 ou +5511988179858
   passwordHash: text("password_hash").notNull(),
   lastLoginIp:  text("last_login_ip"),
   lastLoginAt:  timestamp("last_login_at", { withTimezone: true }),
@@ -52,6 +53,7 @@ export const ageAppointmentsTable = pgTable("age_appointments", {
   status:          text("status").notNull().default("disponivel"),
   canal:           text("canal").notNull().default("presencial"),
   observacoes:     text("observacoes"),
+  valor:           numeric("valor", { precision: 10, scale: 2 }), // valor da consulta em R$
   taskId:          integer("task_id"),
   lgpdConsent:     boolean("lgpd_consent").default(false),
   lgpdConsentAt:   timestamp("lgpd_consent_at", { withTimezone: true }),

@@ -1,9 +1,9 @@
 {
-  "name": "Age — Saúde",
+  "name": "Age — Agenda de Saúde",
   "short_name": "Age",
-  "description": "Agende consultas com sua equipe de saúde.",
-  "start_url": "/age/",
-  "scope": "/age/",
+  "description": "Agenda inteligente para profissionais de saúde — Lisange e Suzana.",
+  "start_url": "/aliancapanorama/age/lisange",
+  "scope": "/aliancapanorama/age/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0d1a26",
@@ -13,6 +13,18 @@
     { "src": "/aliancapanorama/age-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/aliancapanorama/age-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
-  "categories": ["health", "lifestyle"],
-  "prefer_related_applications": false
+  "categories": ["health", "medical", "lifestyle"],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Agenda Lisange",
+      "url": "/aliancapanorama/age/lisange",
+      "icons": [{ "src": "/aliancapanorama/age-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Agenda Suzana",
+      "url": "/aliancapanorama/age/suzana",
+      "icons": [{ "src": "/aliancapanorama/age-icon-192.png", "sizes": "192x192" }]
+    }
+  ]
 }
