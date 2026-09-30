@@ -1262,3 +1262,10 @@ DECISÕES APROVADAS:
 - Render caiu silenciosamente (TCP timeout); redeploy forçado via API resolveu em 1.2s
 - Milton-Salomão (Age) está no ar; slug Suzana=suzana (z)
 - Billing: Render $7/mês Starter, Railway inativo desde ago/2026
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — S172 Cláudio
+- Railway estável: fix node:24-slim + startup listen-first (bootstrap async)
+- AGE 2.0: SABIÁ wizard 3 passos + multi-day rules + toast desktop
+- MacroATA S172 enviada para luddlocke
