@@ -368,4 +368,81 @@ router.get("/dodge/mds", async (req, res) => {
   res.json({ mds });
 });
 
+// GET /api/dodge/varredura — mapa completo do sistema + health de todas as tabelas
+// Dodge e qualquer IA podem chamar para saber o estado do ecossistema
+router.get("/dodge/varredura", async (req, res) => {
+  const t0 = Date.now();
+  const checks: Record<string, { ok: boolean; count?: number; latency?: number; error?: string }> = {};
+
+  async function check(name: string, fn: () => Promise<number | null>) {
+    const t = Date.now();
+    try {
+      const count = await fn();
+      checks[name] = { ok: true, count: count ?? undefined, latency: Date.now() - t };
+    } catch (e) {
+      checks[name] = { ok: false, error: String(e).slice(0, 80), latency: Date.now() - t };
+    }
+  }
+
+  await Promise.all([
+    check("pap_users",          () => db.execute(sql`SELECT COUNT(*)::int FROM users`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("nodes",              () => db.execute(sql`SELECT COUNT(*)::int FROM nodes`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("tasks",              () => db.execute(sql`SELECT COUNT(*)::int FROM tasks`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("age_professionals",  () => db.execute(sql`SELECT COUNT(*)::int FROM age_professionals WHERE ativa=true`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("age_appointments",   () => db.execute(sql`SELECT COUNT(*)::int FROM age_appointments WHERE status NOT IN ('disponivel','cancelado')`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("age_patients",       () => db.execute(sql`SELECT COUNT(*)::int FROM age_patients WHERE status='aprovado'`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("age_tasks",          () => db.execute(sql`SELECT COUNT(*)::int FROM age_tasks WHERE status='pendente'`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("pv_projects",        () => db.execute(sql`SELECT COUNT(*)::int FROM pv_projects WHERE deleted_at IS NULL`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("assembly_playcenter",() => db.execute(sql`SELECT COUNT(*)::int FROM assembly_playcenter`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("jm_posts",           () => db.execute(sql`SELECT COUNT(*)::int FROM jm_posts`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("rapadura_fundos",    () => db.execute(sql`SELECT COUNT(*)::int FROM rapadura_fundos WHERE deleted_at IS NULL`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("isa_memory",         () => db.execute(sql`SELECT COUNT(*)::int FROM isa_memory`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+    check("scheduled_emails",   () => db.execute(sql`SELECT COUNT(*)::int FROM scheduled_emails WHERE sent=false`).then((r:any) => +(r.rows?.[0]?.count ?? 0))),
+  ]);
+
+  const totalTables = Object.keys(checks).length;
+  const okTables = Object.values(checks).filter(c => c.ok).length;
+
+  res.json({
+    ts: new Date().toISOString(),
+    latency_total_ms: Date.now() - t0,
+    status: okTables === totalTables ? "verde" : okTables >= totalTables * 0.7 ? "amarelo" : "vermelho",
+    tabelas: checks,
+    resumo: {
+      total: totalTables,
+      ok: okTables,
+      falhas: Object.entries(checks).filter(([,v]) => !v.ok).map(([k]) => k),
+    },
+  });
+});
+
+// POST /api/dodge/varredura — Dodge executa varredura e registra no roundtable + Conector
+// Pode ser chamado por qualquer IA com BRIDGE_SECRET
+router.post("/dodge/varredura", async (req, res) => {
+  const { auth } = req.body as { auth?: string };
+  const BRIDGE = process.env["BRIDGE_SECRET"];
+  if (!BRIDGE || auth !== BRIDGE) { res.status(403).json({ error: "Sem autorização" }); return; }
+
+  // Chama a própria varredura GET internamente
+  const resp = await fetch(`http://localhost:${process.env["PORT"] ?? 3001}/api/dodge/varredura`).catch(() => null);
+  const data = resp?.ok ? await resp.json() : null;
+
+  if (!data) { res.status(500).json({ error: "Falha na varredura interna" }); return; }
+
+  // Registra no Conector
+  try {
+    const falhas = data.resumo?.falhas?.join(", ") || "nenhuma";
+    await fetch(`http://localhost:${process.env["PORT"] ?? 3001}/api/conector/memory`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${BRIDGE}` },
+      body: JSON.stringify({
+        section: "conversas",
+        append: `### ${new Date().toISOString().slice(0,10)} — DODGE Varredura\n- Status: ${data.status} · ${data.resumo.ok}/${data.resumo.total} tabelas OK\n- Falhas: ${falhas}\n- Latência: ${data.latency_total_ms}ms`,
+      }),
+    }).catch(() => {});
+  } catch { /* silencia */ }
+
+  res.json({ ok: true, varredura: data });
+});
+
 export default router;

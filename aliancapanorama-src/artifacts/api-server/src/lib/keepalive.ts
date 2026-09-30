@@ -169,6 +169,27 @@ export function startKeepaliveCron(): void {
     }
   });
 
+  // Varredura automática Dodge: a cada 6 horas (0h, 6h, 12h, 18h UTC)
+  cron.schedule("0 */6 * * *", async () => {
+    const bridge = process.env["BRIDGE_SECRET"];
+    if (!bridge) return;
+    const base = process.env["RENDER_EXTERNAL_URL"] ?? "https://site-st.onrender.com";
+    try {
+      const r = await fetch(`${base}/api/dodge/varredura`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ auth: bridge }),
+        signal: AbortSignal.timeout(30000),
+      });
+      const d = await r.json() as any;
+      const status = d?.varredura?.status ?? "?";
+      registrarPulso("dodge-varredura", status === "vermelho" ? "erro" : "ok", `${status} · ${d?.varredura?.resumo?.ok}/${d?.varredura?.resumo?.total} tabelas`);
+      logger.info({ status }, "Dodge: varredura automática concluída");
+    } catch (err) {
+      registrarPulso("dodge-varredura", "erro", String(err).slice(0, 80));
+    }
+  });
+
   // Lembrete semanal (segunda-feira às 10h UTC = 7h BRT): atualizar IAs, Céu, Jasmim
   cron.schedule("0 10 * * 1", async () => {
     const mailer = nodemailer.createTransport({
@@ -186,5 +207,5 @@ export function startKeepaliveCron(): void {
     logger.info({ week }, "Lembrete semanal enviado");
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · weekly-reminder:seg 10h UTC)");
+  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · dodge-varredura:*/6h · weekly-reminder:seg 10h UTC)");
 }

@@ -303,13 +303,13 @@ const STARS = Array.from({ length: 250 }, (_, i) => ({
 
 const STYLES = `
 @keyframes twinkle { 0%,100% { opacity: var(--op,0.5); } 50% { opacity: calc(var(--op,0.5) * 0.15); } }
-@keyframes ceu-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+@keyframes ceu-float { 0%,100% { transform:translate(-50%,-50%) translateY(0); } 50% { transform:translate(-50%,-50%) translateY(-6px); } }
 @keyframes ia-glow { 0%,100% { box-shadow:0 0 8px 3px currentColor; } 50% { box-shadow:0 0 22px 8px currentColor; } }
 @keyframes leaf-sway { 0%,100% { transform:rotate(-4deg) scaleX(1); } 50% { transform:rotate(4deg) scaleX(1.05); } }
 @keyframes smoke-rise { 0% { transform:translateY(0) scale(.8); opacity:.5; } 100% { transform:translateY(-40px) scale(2); opacity:0; } }
 @keyframes blink-slow { 0%,100% { opacity:0.6; } 50% { opacity:1; } }
 @keyframes crowd-pulse { 0%,100% { opacity:0.4; transform:scale(1); } 50% { opacity:0.8; transform:scale(1.15); } }
-.ia-btn { transition: transform .15s ease, z-index 0s; }
+.ia-btn { transition: z-index 0s; }
 .ia-btn:hover { transform: translate(-50%,-50%) scale(1.18) !important; z-index: 30 !important; }
 .ia-btn:active { transform: translate(-50%,-50%) scale(.92) !important; }
 .bld-btn { transition: all .2s ease; }
@@ -1663,7 +1663,7 @@ export function CeuPage() {
                 cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
                 fontSize:`clamp(${ia.scale ? "16px" : "18px"},${ia.scale ? "2.8vw" : "3.2vw"},${ia.scale ? "28px" : "34px"})`,
                 color, zIndex:10, overflow:"hidden",
-                animation:`ia-glow 3s ${(ia.lx * 0.2).toFixed(1)}s ease-in-out infinite, ceu-float 4s ${(ia.lx * 0.15).toFixed(1)}s ease-in-out infinite`,
+                animation:`ia-glow 3s ${((ia.lx * 0.2) % 3).toFixed(1)}s ease-in-out infinite, ceu-float 4s ${((ia.lx * 0.15) % 4).toFixed(1)}s ease-in-out infinite`,
               }}>
               {ia.id === "dodge" ? (
                 <img src="/aliancapanorama/dodge-avatar.png"
