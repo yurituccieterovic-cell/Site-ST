@@ -51,7 +51,9 @@ export function startKeepaliveCron(): void {
   cron.schedule("*/13 * * * *", async () => {
     const base = process.env["RENDER_EXTERNAL_URL"] ?? "https://site-st.onrender.com";
     try {
-      const r = await fetch(`${base}/api/healthz`, { signal: AbortSignal.timeout(20000) });
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 20000);
+      const r = await fetch(`${base}/api/healthz`, { signal: ctrl.signal }).finally(() => clearTimeout(tid));
       registrarPulso("self-ping", "ok", `${r.status}`);
     } catch (err) {
       registrarPulso("self-ping", "erro", String(err));
