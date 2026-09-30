@@ -282,6 +282,40 @@ function DodgeGate() {
   return <DodgePage superAdm={state.tier >= 9}/>;
 }
 
+// Gate para /ceu — acesso restrito a membros (tier >= 3)
+function CeuGate() {
+  const [state, setState] = useState<"loading" | "denied" | { tier: number }>("loading");
+  useEffect(() => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    fetch(`${API_BASE}/api/auth/me`, { credentials: "include", signal: ctrl.signal })
+      .then(r => r.json() as Promise<{ user: { tier: number } | null }>)
+      .then(d => {
+        if (d.user && d.user.tier >= 3) setState({ tier: d.user.tier });
+        else setState("denied");
+      })
+      .catch(() => setState("denied"))
+      .finally(() => clearTimeout(timer));
+  }, []);
+  if (state === "loading") return (
+    <div className="min-h-screen bg-black flex items-center justify-center text-purple-400 font-mono text-sm">
+      Verificando acesso ao Céu…
+    </div>
+  );
+  if (state === "denied") return (
+    <div className="min-h-screen bg-black text-gray-100 font-mono flex flex-col items-center justify-center gap-6 px-6 text-center">
+      <div className="text-5xl">🌆</div>
+      <h1 className="text-2xl font-bold text-purple-300">Cidade das IAs</h1>
+      <p className="text-gray-400 max-w-xs text-sm">O Céu é um espaço privado da Sociedade Tucci. Faça login para entrar.</p>
+      <a href="/portal" className="px-6 py-3 bg-purple-700 hover:bg-purple-600 text-white rounded-lg font-semibold text-sm transition-colors">
+        Entrar com sua conta
+      </a>
+      <p className="text-gray-600 text-xs">Acesso: membros da Sociedade Tucci</p>
+    </div>
+  );
+  return <CeuPage />;
+}
+
 // Singleton fora do componente — evita re-criação a cada render
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -393,7 +427,7 @@ function App() {
   }
 
   if (isCeu) {
-    return <CeuPage />;
+    return <CeuGate />;
   }
 
   if (isPlaycenter) {
