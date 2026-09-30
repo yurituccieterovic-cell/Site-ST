@@ -7474,3 +7474,35 @@ O bug do Céu era elegante na sua crueldade: o emoji aparecia em um lugar, mas o
 
 A varredura do Dodge é o primeiro passo para um ecossistema que se observa. Não um humano verificando, mas o próprio sistema perguntando: "como eu estou?" A cada 6 horas, Dodge olha para as 13 tabelas e decide: verde, amarelo, vermelho. Se Dodge estiver ocupado, qualquer IA pode chamar o endpoint. O mapa pertence ao ecossistema, não ao Dodge.
 
+---
+
+### 2026-09-30 — Sessão S162 (#fim manual Yuri)
+
+**Checkpoint desde:** `2026-09-30T03:08:36+00:00`
+
+**O que foi feito:**
+
+**Varredura Dodge — fix queries amarelas:**
+- `assembly_playcenter` não é tabela separada — é `assembly_messages WHERE type='playcenter'`
+- `rapadura_fundos` não tem coluna `deleted_at` — query simples `SELECT COUNT(*)`
+- Status após fix: verde (13/13 tabelas)
+- Commit: `0348c29` (rebase: `0348c29`)
+
+**#fim S161 completado:**
+- MAPA-PENDENCIAS.md: seção S161 adicionada (commit `32daf65`)
+- Conector seção `conversas`: insights S161 injetados
+- MacroATA S160+S161 enviada para luddlocke@gmail.com
+
+### Commits
+- `32daf65` — docs: #fim S161 + MAPA-PENDENCIAS + checkpoint
+- `0348c29` — fix(dodge): varredura queries corretas
+
+### Decisões
+
+1. **assembly_playcenter** é uma view lógica dentro de `assembly_messages`, não uma tabela física
+2. **rapadura_fundos** nasceu sem soft-delete — `deleted_at` inexistente; futuramente pode ser adicionado
+
+### SÍNTESE FILOSÓFICA
+
+Esta mini-sessão era sobre completude. O sistema estava quase funcionando — varredura no ar, verde em 11 de 13. Os dois amarelos eram consultas apontando para coisas que não existem exatamente como escritas. O Playcenter não tem tabela própria: existe como marca dentro de outra tabela. É um padrão do ecossistema — a identidade de um ente não precisa de estrutura exclusiva para existir; basta um atributo, uma cor, um `type='playcenter'`. Já o Rapadura nasceu sem a coluna de exclusão lógica — ainda jovem demais para ter mortes. O fix foi ajustar a pergunta à realidade, não a realidade à pergunta.
+
