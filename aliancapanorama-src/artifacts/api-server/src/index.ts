@@ -26,6 +26,16 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
+// Porta abre imediatamente — healthcheck passa antes do bootstrap terminar
+app.listen(port, (err) => {
+  if (err) {
+    logger.error({ err }, "Error listening on port");
+    process.exit(1);
+  }
+  logger.info({ port }, "Server listening — bootstrap starting in background");
+});
+
+// Bootstrap corre em background sem bloquear o servidor
 ensureSessionTable()
   .then(() => ensureVectorMemory())
   .then(() => seedDatabase())
@@ -44,18 +54,11 @@ ensureSessionTable()
   .then(() => ensureJasmimTables())
   .then(() => ensureTasksIndices())
   .then(() => {
-    app.listen(port, (err) => {
-      if (err) {
-        logger.error({ err }, "Error listening on port");
-        process.exit(1);
-      }
-      logger.info({ port }, "Server listening");
-      startIsaCron();
-      startKeepaliveCron();
-      startAgeRemindersCron();
-    });
+    logger.info("bootstrap complete — starting crons");
+    startIsaCron();
+    startKeepaliveCron();
+    startAgeRemindersCron();
   })
   .catch((err) => {
-    logger.error({ err }, "bootstrap failed — refusing to start");
-    process.exit(1);
+    logger.error({ err }, "bootstrap error (servidor continua)");
   });
