@@ -193,7 +193,10 @@ export function AgePage() {
   const msgBottomRef = useRef<HTMLDivElement>(null);
 
   // New rule form
-  const [ruleForm, setRuleForm] = useState({ diaSemana: 1, horaInicio: "09:00", horaFim: "18:00", duracaoMin: 50, intervaloMin: 10, canal: "presencial" });
+  const [ruleForm, setRuleForm] = useState({ diasSemana: [1] as number[], horaInicio: "09:00", horaFim: "18:00", duracaoMin: 50, intervaloMin: 10, canal: "presencial" });
+  // SABIÁ Onboarding Wizard
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingStep, setOnboardingStep] = useState(1);
   // Exception form
   const [excForm, setExcForm] = useState({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
 
@@ -655,6 +658,14 @@ export function AgePage() {
         setAuthError(d.message ?? "Código enviado ao seu email.");
       } else if (d.ok) {
         setMode("professional"); setAuthStep("done"); setAuthNome(d.nome ?? "");
+        // Check if first login (no rules) → show SABIÁ onboarding
+        setTimeout(async () => {
+          try {
+            if (localStorage.getItem(`age-wizard-done-${slug}`)) return;
+            const rv = await fetch(`${API}/api/age/${slug}/availability`, { credentials: "include" });
+            if (rv.ok) { const data = await rv.json(); if ((data as unknown[]).length === 0) { setShowOnboarding(true); setOnboardingStep(1); } }
+          } catch { /* silencia */ }
+        }, 1000);
       } else {
         setAuthError(d.error ?? "Erro ao fazer login.");
       }
@@ -672,7 +683,16 @@ export function AgePage() {
         body: JSON.stringify({ slug, code: authCode }),
       });
       const d = await r.json() as { ok?: boolean; nome?: string; error?: string };
-      if (d.ok) { setMode("professional"); setAuthStep("done"); setAuthNome(d.nome ?? ""); }
+      if (d.ok) {
+        setMode("professional"); setAuthStep("done"); setAuthNome(d.nome ?? "");
+        setTimeout(async () => {
+          try {
+            if (localStorage.getItem(`age-wizard-done-${slug}`)) return;
+            const rv = await fetch(`${API}/api/age/${slug}/availability`, { credentials: "include" });
+            if (rv.ok) { const data = await rv.json(); if ((data as unknown[]).length === 0) { setShowOnboarding(true); setOnboardingStep(1); } }
+          } catch { /* silencia */ }
+        }, 1000);
+      }
       else setAuthError(d.error ?? "Código incorreto.");
     } catch { setAuthError("Sem conexão. Tente novamente."); }
     setAuthLoading(false);
@@ -754,19 +774,22 @@ export function AgePage() {
 
   async function addRule(e: React.FormEvent) {
     e.preventDefault();
+    if (ruleForm.diasSemana.length === 0) { addToast("Selecione ao menos um dia.", "err"); return; }
     try {
-      const r = await fetch(`${API}/api/age/${slug}/availability`, {
-        method: "POST", credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(ruleForm),
-      });
-      if (r.ok) {
-        addToast("Regra semanal salva! Slots atualizados.", "ok");
-        loadRules();
-        loadSlots();
+      let saved = 0;
+      for (const dia of ruleForm.diasSemana) {
+        const r = await fetch(`${API}/api/age/${slug}/availability`, {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...ruleForm, diaSemana: dia }),
+        });
+        if (r.ok) saved++;
+      }
+      if (saved > 0) {
+        addToast(`${saved === 1 ? "Regra salva" : `${saved} regras salvas`}! Slots atualizados.`, "ok");
+        loadRules(); loadSlots();
       } else {
-        const d = await r.json().catch(() => ({})) as { error?: string };
-        addToast(d.error ?? "Erro ao salvar regra.", "err");
+        addToast("Erro ao salvar regra.", "err");
       }
     } catch { addToast("Sem conexão. Tente novamente.", "err"); }
   }
@@ -3046,14 +3069,18 @@ export function AgePage() {
         <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem" }}>
           <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 12 }}>+ Nova regra semanal</div>
           <form onSubmit={addRule}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
-              <div>
-                <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Dia da semana</label>
-                <select value={ruleForm.diaSemana} onChange={e => setRuleForm(f => ({ ...f, diaSemana: Number(e.target.value) }))}
-                  style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }}>
-                  {DIAS.map((d, i) => <option key={i} value={i}>{d}</option>)}
-                </select>
+            <div style={{ marginBottom: 10 }}>
+              <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 6 }}>Dias da semana</label>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {DIAS.map((d, i) => { const sel = ruleForm.diasSemana.includes(i); return (
+                  <button key={i} type="button"
+                    onClick={() => setRuleForm(f => ({ ...f, diasSemana: sel ? f.diasSemana.filter(x => x !== i) : [...f.diasSemana, i] }))}
+                    style={{ background: sel ? color : "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: sel ? "#080c10" : "#94a3b8", padding: "6px 10px", fontSize: 12, fontWeight: sel ? 700 : 400, cursor: "pointer" }}>
+                    {d}
+                  </button>); })}
               </div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
               <div>
                 <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Canal</label>
                 <select value={ruleForm.canal} onChange={e => setRuleForm(f => ({ ...f, canal: e.target.value }))}
@@ -3945,9 +3972,111 @@ export function AgePage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#080c10", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(45,212,191,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(45,212,191,0.04) 0%, transparent 45%), repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px)", color: "#e2e8f0", fontFamily: "system-ui, sans-serif" }}>
+      {/* SABIÁ Onboarding Wizard */}
+      {showOnboarding && (
+        <div style={{ position: "fixed", inset: 0, background: "#080c10f0", zIndex: 10000, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+          <div style={{ background: "#0f1318", border: `1px solid ${color}44`, borderRadius: 16, padding: "1.5rem", maxWidth: 480, width: "100%" }}>
+            {onboardingStep === 1 && (<>
+              <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 16 }}>
+                <div style={{ fontSize: 40 }}>🐦</div>
+                <div>
+                  <div style={{ color, fontWeight: 700, fontSize: 17 }}>Olá! Sou a SABIÁ</div>
+                  <div style={{ color: "#94a3b8", fontSize: 12 }}>sua assistente de agenda</div>
+                </div>
+              </div>
+              <p style={{ color: "#e2e8f0", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
+                Que bom ter você aqui! Cuido da sua agenda, lembro dos seus pacientes e ajudo a organizar sua semana.<br /><br />
+                <strong style={{ color }}>Vamos configurar sua disponibilidade em 2 passos rápidos?</strong>
+              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <button type="button" onClick={() => { try { localStorage.setItem(`age-wizard-done-${slug}`, "1"); } catch { } setShowOnboarding(false); }}
+                  style={{ background: "none", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer" }}>
+                  Agora não
+                </button>
+                <button type="button" onClick={() => setOnboardingStep(2)}
+                  style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 24px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                  Vamos começar →
+                </button>
+              </div>
+            </>)}
+            {onboardingStep === 2 && (<>
+              <div style={{ color, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>📅 Sua disponibilidade semanal</div>
+              <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 14 }}>Selecione os dias e horários em que você atende.</div>
+              <div style={{ marginBottom: 10 }}>
+                <label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 6 }}>Dias</label>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {DIAS.map((d, i) => { const sel = ruleForm.diasSemana.includes(i); return (
+                    <button key={i} type="button"
+                      onClick={() => setRuleForm(f => ({ ...f, diasSemana: sel ? f.diasSemana.filter(x => x !== i) : [...f.diasSemana, i] }))}
+                      style={{ background: sel ? color : "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: sel ? "#080c10" : "#94a3b8", padding: "6px 10px", fontSize: 12, fontWeight: sel ? 700 : 400, cursor: "pointer" }}>
+                      {d}
+                    </button>); })}
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+                <div><label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Início</label>
+                  <input type="time" value={ruleForm.horaInicio} onChange={e => setRuleForm(f => ({ ...f, horaInicio: e.target.value }))}
+                    style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} /></div>
+                <div><label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Fim</label>
+                  <input type="time" value={ruleForm.horaFim} onChange={e => setRuleForm(f => ({ ...f, horaFim: e.target.value }))}
+                    style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} /></div>
+                <div><label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Duração (min)</label>
+                  <input type="number" value={ruleForm.duracaoMin} min={15} max={180} onChange={e => setRuleForm(f => ({ ...f, duracaoMin: Number(e.target.value) }))}
+                    style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} /></div>
+                <div><label style={{ color: "#94a3b8", fontSize: 11, display: "block", marginBottom: 4 }}>Canal</label>
+                  <select value={ruleForm.canal} onChange={e => setRuleForm(f => ({ ...f, canal: e.target.value }))}
+                    style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }}>
+                    {["presencial", "online", "ambos"].map(c => <option key={c} value={c}>{c}</option>)}
+                  </select></div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <button type="button" onClick={() => setOnboardingStep(1)}
+                  style={{ background: "none", border: `1px solid ${color}33`, borderRadius: 8, color: "#94a3b8", padding: "10px 16px", fontSize: 13, cursor: "pointer" }}>
+                  ← Voltar
+                </button>
+                <button type="button" onClick={async () => {
+                  if (ruleForm.diasSemana.length === 0) { addToast("Selecione ao menos um dia.", "err"); return; }
+                  let saved = 0;
+                  for (const dia of ruleForm.diasSemana) {
+                    const r = await fetch(`${API}/api/age/${slug}/availability`, {
+                      method: "POST", credentials: "include",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ ...ruleForm, diaSemana: dia }),
+                    });
+                    if (r.ok) saved++;
+                  }
+                  if (saved > 0) { loadRules(); loadSlots(); setOnboardingStep(3); }
+                  else addToast("Erro ao salvar. Tente novamente.", "err");
+                }} style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 24px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                  Salvar →
+                </button>
+              </div>
+            </>)}
+            {onboardingStep === 3 && (<>
+              <div style={{ textAlign: "center", padding: "1rem 0" }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
+                <div style={{ color, fontWeight: 700, fontSize: 17, marginBottom: 8 }}>Agenda configurada!</div>
+                <p style={{ color: "#94a3b8", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
+                  Seus horários estão prontos — pacientes já podem reservar slots.<br /><br />
+                  Qualquer dúvida, é só me perguntar! 🐦
+                </p>
+                <button type="button" onClick={() => { try { localStorage.setItem(`age-wizard-done-${slug}`, "1"); } catch { } setShowOnboarding(false); }}
+                  style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "12px 32px", fontWeight: 700, fontSize: 15, cursor: "pointer" }}>
+                  Começar a usar →
+                </button>
+              </div>
+            </>)}
+          </div>
+          <div style={{ display: "flex", gap: 6, marginTop: 16 }}>
+            {[1, 2, 3].map(s => (
+              <div key={s} style={{ width: s === onboardingStep ? 20 : 8, height: 8, borderRadius: 4, background: s === onboardingStep ? color : "#1e293b", transition: "width 0.2s" }} />
+            ))}
+          </div>
+        </div>
+      )}
       {/* Toasts de background */}
       {bgToasts.length > 0 && (
-        <div style={{ position: "fixed", bottom: 24, right: 16, zIndex: 9999, display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ position: "fixed", bottom: 24, right: 24, left: "auto", zIndex: 9999, display: "flex", flexDirection: "column", gap: 8 }}>
           {bgToasts.map(t => (
             <div key={t.id} style={{ background: t.type === "ok" ? "#052e16" : t.type === "err" ? "#2d0a0a" : "#0f1a2e", border: `1px solid ${t.type === "ok" ? "#4ade8055" : t.type === "err" ? "#f8717155" : color + "55"}`, borderRadius: 10, padding: "10px 16px", color: t.type === "ok" ? "#4ade80" : t.type === "err" ? "#f87171" : "#94a3b8", fontSize: 13, maxWidth: 300, boxShadow: "0 4px 20px #0008", display: "flex", alignItems: "center", gap: 8 }}>
               <span>{t.type === "ok" ? "✓" : t.type === "err" ? "✕" : "⏳"}</span>
