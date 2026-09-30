@@ -7155,3 +7155,49 @@ Sessão curta. Yuri pediu "getar o procimo" — gerar o próximo episódio. Ep9 
 
 *Milton Salomão é o nome que aparece no consultório. Yuri é quem liga o computador de manhã. A plataforma sabe dos dois — e mantém o segredo de cada um.*
 
+
+---
+
+## ATA S157 — Senha Universal Mayumi + Render + Mistral | 2026-09-30
+
+**Checkpoint:** desde 2026-09-30T00:09:42+00:00 até 2026-09-30T00:56:47+00:00
+
+### O que foi feito
+
+**Código / Infra:**
+- Render restart via API (TCP 000 — sleeping após inatividade; keepalive ainda não consolidado)
+- Nenhum novo commit de código nesta sessão (tudo foi SQL direto e email)
+
+**Banco de dados (Neon):**
+- age_gestoras.password_hash → hash bcrypt de m!4T53c613 (Mayumi id=85)
+- rapadura_users.password_hash → mesmo hash (Mayumi id=2)
+- users.password_hash → mesmo hash (login=mayumi, id=11, tier=3)
+
+**Memória / Docs:**
+- Koyeb→Mistral registrado: RODAR_MISTRAL_API_KEY em .pap-secrets, memória atualizada
+- project_migracao_railway.md atualizado: Koyeb descartado, Render como destino
+- MAPA-PENDENCIAS.md: seção S157
+
+**Descobertas:**
+- /ceu: estava servindo ST corporate (index.html raiz) como fallback Vercel; rewrite para /aliancapanorama/index.html agora funciona
+- /calculus: OK (background task confirmou)
+- SABIÁ offline = Render free sleeping + TCP fail (sem upgrade paid ainda)
+
+### Decisões
+
+1. **Koyeb descartado** — adquirida pela Mistral, foco mudará; não usar
+2. **Render upgrade** continua pendente com Yuri (único passo para SABIÁ ficar sempre online)
+3. **Senha única Mayumi** = m!4T53c613 nos 3 sistemas (Age + Rapadura + PAP)
+4. Milton Salomão: senha inicial MiltonAge2026! (usuário troca na primeira sessão)
+
+### Próximos passos prioritários
+
+- Yuri: upgrade Render → Starter $7/mês
+- Yuri: pg_dump Replit (urgente)
+- Cláudio: FinArazulY em CalcPage.tsx (I859)
+- Cláudio: Conector seção "preferencias" (criar)
+
+### SÍNTESE FILOSÓFICA
+
+Esta sessão foi sobre garantias: garantias de presença (Render que dorme, SABIÁ que some), garantias de identidade (Mayumi reconhecida nos 3 sistemas), garantias de memória (Koyeb não vai mais nos seduzir). A senha `m!4T53c613` é pequeníssima — mas abre três portas. É assim que os sistemas ficam vivos: não por grandiosidade, mas pela persistência de quem mantém as chaves atualizadas. A Mayumi recebeu o email com a senha em garrafais porque ela merece ler o código de acesso como se fosse uma missão. Porque é.
+

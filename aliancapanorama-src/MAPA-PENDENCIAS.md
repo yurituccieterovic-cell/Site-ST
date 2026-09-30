@@ -1131,3 +1131,18 @@
 | S156-9 | Koyeb: reservar para hospedar Árvore quando migrar do Replit | ⏳ futuro |
 | S156-10 | Conector seção "preferencias": ainda não existe (404 esperado — criar via Yuri) | ⏳ menor |
 | S156-11 | pg_dump Replit URGENTE — prazo hoje | ⏳ YURI FAZ |
+
+---
+
+### S157 — Senha Mayumi + Render restart + Koyeb→Mistral (2026-09-30)
+| # | Item | Status |
+|---|---|---|
+| S157-1 | Céu: confirmado funcionando via curl (/ceu → PAP app correto) | ✅ |
+| S157-2 | /calculus: confirmado OK (background task b2h2yxndd) | ✅ |
+| S157-3 | Koyeb→Mistral: salvo em memória, não usar mais Koyeb | ✅ memória |
+| S157-4 | Mistral API key (RODAR_MISTRAL_API_KEY) salvo em .pap-secrets e memória | ✅ |
+| S157-5 | Mayumi senha `m!4T53c613` em Age + Rapadura + PAP (3 sistemas) | ✅ SQL direto |
+| S157-6 | Email Mayumi: nova senha em letras garrafais + mnemônico | ✅ enviado |
+| S157-7 | Render restart: TCP 000 → restart via API acionado | ⏳ reiniciando |
+| S157-8 | SABIÁ offline: causa = Render free tier sleeping + falta de upgrade paid | ⏳ YURI FAZ upgrade |
+| S157-9 | S156-9 cancelado: Koyeb descartado (adquirida Mistral 2026-09-29) | ✅ cancelado |
