@@ -1433,3 +1433,25 @@
 - [ ] Cláudio: atualizar vercel.json com URL Railway (após Yuri conectar GitHub ou passar URL)
 - [ ] No Railway: ISA volta plena (sem DISABLE_HEAVY_CRONS)
 - [ ] MacroATA S168–S171: enviar quando Gmail restaurado
+
+---
+
+## S172 — 2026-09-30 — Railway estável + AGE 2.0
+
+### Concluído
+- [x] Dockerfile: node:24-alpine → node:24-slim (pnpm@9 sem binário musl)
+- [x] Startup fix: app.listen() ANTES do bootstrap (bootstrap em background)
+- [x] vercel.json apontando para Railway site-st-production.up.railway.app
+- [x] AGE 2.0: SABIÁ wizard 3 passos (primeiro login sem regras)
+- [x] AGE 2.0: multi-day rules (checkboxes Seg–Dom, addRule cria N entradas)
+- [x] Toast fix: right:24 + left:auto para desktop
+- [x] MacroATA S168–S171: enviada com sucesso
+- [x] Railway deploy dd71f33f: SUCCESS + healthz 200
+
+### Pendentes
+- [ ] Testar wizard SABIÁ no login real (Lisange/Suzana)
+- [ ] Confirmar bugs exception/paciente direto/tasks resolvidos pelo Railway
+- [ ] I901: SABIÁ com contexto histórico de consultas
+- [ ] I902: visualização calendar de disponibilidade por mês/semana
+- [ ] Mayumi: definir % faturamento (reunião pendente)
+- [ ] UptimeRobot: atualizar URL para Railway

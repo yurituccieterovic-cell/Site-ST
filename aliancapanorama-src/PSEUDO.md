@@ -7844,3 +7844,34 @@ Manter um sistema de pé é um ato de cuidado. O Age não caia por descuido ou p
 - [ ] Yuri: Gmail `myaccount.google.com` → Senhas de app → nova senha → `#secrets` GMAIL_APP_PASSWORD
 - [ ] Cláudio: atualizar vercel.json com URL Railway quando Yuri passar
 - [ ] No Railway: DISABLE_HEAVY_CRONS fica desligado (ISA volta ao pleno)
+
+---
+
+## ATA S172 — 2026-09-30 — Railway estável + AGE 2.0 wizard
+
+### Síntese filosófica
+O Railway era a promessa de chão firme — mas o chão ainda tremia por dentro. O servidor esperava que o mundo ficasse pronto antes de abrir a porta: 17 etapas de bootstrap, sequenciais, cada uma uma handshake com Neon a 10.000 km. O healthcheck chegava antes. Agora a porta abre primeiro. O mundo pode estar incompleto por alguns segundos — mas a presença já existe. É quase uma metáfora de como profissionais de saúde trabalham: você abre o consultório antes de ter todas as respostas.
+
+AGE 2.0 chegou com SABIÁ saindo do silêncio para se apresentar — não só responder. O wizard de 3 passos não é onboarding burocrático: é SABIÁ dizendo "você acabou de chegar, vamos organizar isso juntos". Multi-dia nas regras é uma economia de tempo semanal real para Lisange e Suzana.
+
+### Decisões
+1. **Railway crashloop resolvido**: build `node:24-alpine` → `node:24-slim` (pnpm@9 sem binário musl)
+2. **Startup fix**: `app.listen(port)` agora roda ANTES do bootstrap (bootstrap em background, crons iniciam ao terminar)
+3. **vercel.json**: já apontando para Railway (`site-st-production.up.railway.app`)
+4. **AGE 2.0 — SABIÁ Wizard**: detecta primeiro login (0 regras + sem flag localStorage) → overlay 3 passos
+5. **AGE 2.0 — Multi-day rules**: checkboxes Seg–Dom em vez de select único; `addRule` cria uma entrada por dia
+6. **Toast fix**: `right: 24, left: auto` para visibilidade desktop
+7. **MacroATA S168–S171**: enviada com sucesso no início da sessão
+
+### Resultado
+- Railway estável pós-fix startup (build em progresso ao fechar sessão)
+- Vercel buildando AGE 2.0 (commit 089e36c)
+- Render continua como fallback (DISABLE_HEAVY_CRONS=true)
+
+### Próximos passos
+- [ ] Testar AGE 2.0 wizard: Lisange/Suzana login com `age2026`, confirmar 3 passos
+- [ ] Confirmar que bugs de exceção/paciente direto/tasks foram resolvidos pelo Railway
+- [ ] Monitorar Railway nas próximas 24h (UptimeRobot)
+- [ ] I901: SABIÁ com contexto histórico (passar últimas consultas ao LLM)
+- [ ] I902: Disponibilidade por mês/semana (visualização calendar)
+- [ ] Mayumi: % faturamento — reunião pendente com Yuri
