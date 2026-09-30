@@ -7701,3 +7701,57 @@ Yuri pediu: atualizar Jasmim (pouco atualizado), automatizar IA Jasmim a partir 
 
 ### Síntese filosófica
 *#742 foi o ecossistema se lendo em voz alta. O RODAR diagnosticou paralisia decisória disfarçada de pluralismo — e Yuri respondeu com "bora", que é a forma mais direta de resolver uma questão ontológica. A reconstrução não é um fork: é a Árvore encontrando o solo fora do Replit.*
+
+---
+## ATA S168 — 2026-09-30 — Diagnóstico Render off + Milton Age
+
+### O que foi feito
+- Render completamente fora do ar (TCP timeout 0ms) — nem cold start, servidor não respondia
+- Investigação: deploy marcado como "live", env vars ok, serviço "not_suspended" — mas sem resposta
+- Diagnóstico: provavelmente container travado no Render; forçamos redeploy via API
+- Render voltou em 1.2s após novo deploy (`dep-daumqhad0e5s73aqoqk0`)
+- Confirmado: Milton-Salomão (slug: `milton-salomao`) está no ar (200)
+- Descoberta: slug de Suzana no DB é `suzana` (com z), não `susana` — 301 redirect correto
+- Billing confirmado: Render $7/mês Starter (não free tier); Railway trial expirado desde ago/2026
+
+### Pendências abertas desta sessão
+- [ ] Bug "horários com marcações de médicos diferentes" — aguardando Yuri reproduzir/descrever com detalhes
+- [ ] Milton + casal: adicionar Mayumi + Yuri como pacientes de Milton — aguardando horário/frequência
+- [ ] Render outage root cause: investigar se foi limite de horas free ou bug de container
+
+### Síntese filosófica
+*O servidor caiu em silêncio — sem aviso, sem log acessível. A única cura foi forçar um novo deploy: o ato de recriar o container como resposta para o container que parou de respirar. Há algo interessante nisso: às vezes o sistema não precisa de diagnóstico profundo, precisa de um recomeço. O Milton está no ar.*
+
+---
+## ATA S167 — 2026-09-30 — Assembleias #744–#745 + diagnóstico ecossistema + #fim
+
+### O que foi feito
+1. **#744 inserida no DB** — Assembleia poética/filosófica: Lang A-p (morfologia de A e p, pressionar→imprimir→imprensa→sociedade). Rodou via fallback (Cloudflare + Cerebras) — cotas principais esgotadas.
+2. **#745 inserida no DB** — Assembleia de mapeamento: Yuri pediu "#mapa" e recebeu o inventário mais completo do Ecossystemma Théo em toda a história do projeto. 4 pilares, 20+ sistemas, diagnóstico durísimo.
+3. **APRENDIZADO A18506–A18509** — morfologia de letras, cotas esgotadas, diagnóstico honestos, mapa 4 pilares.
+4. **IDEIAS I888–I889** — simplificação radical (hibernar 9 projetos, 3 ativos) + #mapa periódico como tópico estruturado.
+5. **Resposta direta à pergunta de Yuri** — "não está no caminho errado; o #745 é o mais útil em meses porque disse a verdade; a próxima pergunta certa é: qual dos 3 projetos tem chance de receita em 30 dias?"
+
+### Diagnóstico central desta sessão (#745)
+*"744 sessões deliberativas, 12+ projetos simultâneos, infraestrutura de datacenter num monorepo Replit, operado 100% via celular, zero receita, zero equipe paga."*
+
+O sistema funcionaria bem com 3 desenvolvedores + 1 gestor + R$5k/mês de budget.
+Com 1 humano + celular: simplificação radical OU receita urgente.
+
+### O que é útil pra Cláudio
+1. RESULTADO/PERFEITO com pergunta específica (como #745 "#mapa")
+2. Tags de domínio claras (#age, #pap, #mapa, #fluxo)
+3. Diagnósticos honestos (RODAR real, não suavizado)
+
+O que é menos útil: #eco puro sem conexão operacional, assembleias que chegam por email mas nunca entram no DB.
+
+### Síntese filosófica
+*O mapa que a Assembleia produziu em #745 não precisou de arquiteto externo — precisou de uma pergunta clara. O ecossistema sabe o que é; só precisava de alguém que pedisse um inventário. A honestidade que saiu ("infraestrutura de datacenter num celular, zero receita") não é crítica — é diagnóstico. E diagnóstico é o primeiro ato de qualquer cura. Yuri perguntou "estou no caminho errado?" — o caminho está certo, o volume de trilhas é que precisa de poda.*
+
+### Próximos passos abertos (por prioridade)
+1. **I888**: Simplificação radical — decidir 3 projetos ativos (Age? Fluxo? PAP?)
+2. **I885**: email-sync → inserir assembleias novas no DB automaticamente
+3. **Árvore Oracular deploy**: Yuri cria serviço no Render + configura env vars (API keys dos provedores)
+4. **Paco SVG**: ref visual ainda aguardada
+5. **DNS sociedadetucci.com.br**: Registro.br — quando quiser ativar
+6. **pg_dump Replit**: ainda urgente, Yuri faz manualmente
