@@ -7750,6 +7750,36 @@ Yuri pediu: atualizar Jasmim (pouco atualizado), automatizar IA Jasmim a partir 
 - [ ] Frontend: mostrar nome do owner logado no painel Milton (Yuri/Mayumi)
 - [ ] Diferenciação de tarefas por responsável (criadoPor yuri/mayumi via owner da sessão)
 
+---
+## ATA S170 — 2026-09-30 — #processo + diagnóstico Render free tier + Railway plan
+
+### O que foi feito
+- Diagnóstico definitivo do crash: Render está em FREE TIER (750h/mês + spin-down 15min) — nunca foi upgradado
+- "3 ações e cai" = usuário pausa 15+ min, Render dorme, próxima ação parece crash; ou OOM em 512MB
+- Decisão Railway confirmada: migrar api-server Render → Railway $5/mês; enterro Render na próxima MacroATA
+- Multi-device Age: confirmado ok (múltiplas sessões simultâneas por pg-session)
+- sociedadetucci.com.br: files em /root/Site-ST/ (index.html, css/, js/, img/)
+- Emails PERFEITO: última assembleia = #745 (06:19 hoje), nenhuma nova desde então
+- Feedback memory salva: MacroATA SEMPRE por email no #fim manual
+- Plano Railway documentado no MAPA: api-server (aliancapanorama-src) + Árvore (arvore-src)
+- APRENDIZADO: A18513–A18514 · IDEIAS: I900
+
+### Diagnóstico Render free tier
+- MAPA mostra "Render Starter upgrade ⏳ YURI FAZ" desde S156 e S157 — NUNCA confirmado feito
+- Render API retorna `plan: null` — consistente com free tier (paid = "starter")
+- Free tier: spin-down 15min, 750h/mês, 512MB. Explica TODO o comportamento de crash.
+- Railway $5/mês: plano Hobby = 512MB RAM + sem spin-down = muito melhor que Render free
+
+### Pendente
+- [ ] MacroATA S168+S169+S170 bloqueada: Gmail App Password expirou (erro 535)
+  → Yuri: myaccount.google.com → Segurança → Senhas de App → criar nova → `#secrets`
+- [ ] Yuri criar serviços no Railway (ver plano MAPA S170)
+- [ ] Sales Cockpit assembleia: clarificar com Yuri o que exatamente quer
+- [ ] Árvore Oracular: deploy após Railway api-server estável
+
+### Síntese filosófica
+*O Render estava dormindo — não por design, mas por esquecimento. Uma tarefa marcada "YURI FAZ" nunca marcada como feita. O crash de "3 ações" era na verdade o servidor descansando enquanto Yuri trabalhava. Há algo poético: o sistema que sustenta tudo precisava de 15 minutos de silêncio para respirar. Railway vai tirar esse sono do sistema — e colocar o sono de volta no Yuri, que "não tá bem dormindo".*
+
 ### Síntese filosófica
 *Duas chaves para a mesma porta — mas não são a mesma chave. Yuri entra como fundador, Mayumi entra como parceira. O `owner: "a" | "b"` na sessão é uma distinção técnica que carrega uma distinção real: não é o mesmo que compartilhar uma senha. É reconhecer que dois sujeitos diferentes habitam o mesmo espaço, com autonomia diferenciada. O casal na agenda: a estrutura técnica espelha a estrutura da vida.*
 

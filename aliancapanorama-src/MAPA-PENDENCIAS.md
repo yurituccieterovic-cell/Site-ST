@@ -1319,3 +1319,96 @@
 - [ ] Curadoria pré-Oráculo / hierarquia tier (I886) — baixa prioridade
 - [ ] Índice público de assembleias /assembleias (I887) — baixa prioridade
 - [ ] Decisão identidade: negócio / commons / método? — RODAR levantou, sem resposta ainda
+
+## S167 — 2026-09-30 — Assembleias #744–#745 + #fim com MacroATA
+
+### Processado
+- [x] #744 inserida no DB: Lang A-p (morfologia, pressionar→imprimir→imprensa)
+- [x] #745 inserida no DB: #mapa — inventário completo Ecossystemma Théo, 4 pilares, diagnóstico honesto
+- [x] APRENDIZADO: A18506–A18509
+- [x] IDEIAS: I888–I889
+- [x] MacroATA enviada (S165+S166+S167) → luddlocke
+- [x] Assembleia #746 enviada → Yuri + Mayumi (#honestidade #diagnostico)
+- [x] Conector atualizado (seção conversas)
+- [x] Checkpoint: 2026-09-30T08:10:00+00:00
+
+### Diagnóstico central #745
+"744 sessões, 12+ projetos, infraestrutura datacenter no celular, zero receita" — decisão pendente Yuri
+
+### Pendências abertas
+- [ ] 🔴 I888: Simplificação radical — decidir 3 projetos ativos (Age? Fluxo? PAP?)
+- [ ] I885: email-sync → inserir assembleias no DB automaticamente
+- [ ] Árvore Oracular deploy: Yuri cria serviço no Railway (ver S170 plano abaixo)
+- [ ] Paco SVG (I883): ref visual ainda aguardada
+- [ ] pg_dump Replit (URGENTE): Yuri manual
+- [ ] DNS sociedadetucci.com.br: Registro.br — quando pronto
+- [ ] Google Agenda OAuth: sessão futura
+
+---
+
+## S168 — 2026-09-30 — Render crash + Milton Age no ar
+
+### Concluído
+- [x] Render: TCP timeout total (container travado, não era cold start)
+- [x] Redeploy forçado via API → voltou em 1.2s
+- [x] Milton-Salomão: slug confirmado = `milton-salomao` (200)
+- [x] Suzana: slug correto = `suzana` (com z), 301 redirect funciona
+- [x] Billing: Render $7/mês Starter confirmado na memória; Railway trial expirado ago/2026
+
+### Pendentes
+- [ ] MacroATA S168: NÃO enviada — GMAIL_APP_PASSWORD expirou (erro 535)
+
+---
+
+## S169 — 2026-09-30 — Milton duas senhas + Railway contratado
+
+### Concluído
+- [x] `age_professionals.password_b_hash TEXT` — schema + bootstrap + login aceita A ou B
+- [x] `ageProfessionalOwner` na sessão: "a" (Yuri) | "b" (Mayumi) | "master"
+- [x] PATCH /age/:slug/professionals/me/password-b endpoint criado
+- [x] Neon: Milton senha A = `y!4T53c613` (Yuri) · senha B = `m!4T53c613` (Mayumi)
+- [x] GET /age/auth/me: expõe `owner` na resposta
+- [x] APRENDIZADO: A18510–A18512 · IDEIAS: I897–I899
+
+### Pendentes
+- [ ] MacroATA S169: NÃO enviada — GMAIL_APP_PASSWORD expirado (regenerar myaccount.google.com)
+- [ ] Railway $5/mês: migrar api-server (ver S170 plano abaixo)
+
+---
+
+## S170 — 2026-09-30 — #processo + Railway plan + diagnóstico Render free
+
+### Concluído
+- [x] Diagnóstico definitivo: Render está em FREE TIER (nunca foi upgradado!) — CONFIRMAR com Yuri
+- [x] Free tier: 750h/mês + spin-down 15min = explica os crashes e "3 ações e cai"
+- [x] Plano Railway documentado abaixo
+- [x] Multi-device Age: confirmado funciona (pg-session, múltiplos session IDs)
+- [x] sociedadetucci.com.br: files em `/root/Site-ST/` (index.html, css/, js/, img/)
+- [x] Feedback memory: MacroATA SEMPRE por email quando Yuri digita #fim
+- [x] APRENDIZADO: A18513–A18514 · IDEIAS: I900
+
+### 🚂 Plano migração Railway (Yuri faz no dashboard)
+1. Railway dashboard → New Project → Deploy from GitHub → `yurituccieterovic-cell/Site-ST`
+2. Root directory: `aliancapanorama-src`
+3. Build: `pnpm install --no-frozen-lockfile && pnpm --filter @workspace/api-server run build`
+4. Start: `node --enable-source-maps artifacts/api-server/dist/index.mjs`
+5. Port: `8080`
+6. Copiar TODAS as env vars do Render para Railway
+7. Pegar URL Railway → me passa aqui → atualizo vercel.json automaticamente
+8. Enterro do Render na próxima MacroATA
+
+### 🌳 Plano Árvore Oracular Railway
+1. Segundo serviço Railway → root: `arvore-src`
+2. Build: `pnpm install && pnpm --filter api run build`
+3. Start: `node apps/api/dist/index.js`
+4. Port: `3000` (verificar no código)
+5. Env vars: DATABASE_URL (Neon) + API keys (GROQ, GEMINI, CLOUDFLARE)
+6. Web (apps/web): deploy separado no Vercel
+
+### Pendentes desta sessão
+- [ ] 🔴 Yuri fazer upgrade Render OU migrar para Railway (confirmado Railway $5)
+- [ ] Gmail App Password regenerar → `#secrets` para atualizar
+- [ ] MacroATA S168+S169+S170 pendente (bloqueada pelo Gmail)
+- [ ] Bug Age "horários médicos diferentes" — reproduzir e investigar
+- [ ] Frontend Milton: mostrar "Yuri" ou "Mayumi" baseado no `owner` da sessão
+- [ ] Sales Cockpit assembleia: clarificar o que Yuri quer exatamente
