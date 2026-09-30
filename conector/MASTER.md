@@ -1240,3 +1240,11 @@ DECISÕES APROVADAS:
 - Hub Théo redesenhado: 12 sistemas em grid 2col + links canônicos sociedadetucci.com.br
 - Projeto Fluxo criado no Jasmim: rastreador empregos/freelas (urgente para Yuri)
 - #741 Lang A-G: G=redemoinho/falsidade, Au=ouro/verdade, aus=seguro
+
+
+### 2026-09-30 — admin
+### 2026-09-30 — MacroATA Cláudio (S165+S165b)
+- Jasmim: syncAssembleiasToFeed DB-to-DB; cron 4h; Fluxo projeto novo; Paco=mascote pacu
+- Age: relatório mensal R$; PWA instalável; campo valor; WhatsApp Lisange+Suzana
+- DNS sociedadetucci.com.br confirmado Registro.br
+- pg_dump Replit urgente (Yuri faz manual)
