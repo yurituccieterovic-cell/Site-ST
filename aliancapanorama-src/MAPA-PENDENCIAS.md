@@ -1178,9 +1178,32 @@
 - [x] Age Suzana + Milton: senha → age2026
 
 ### Pendências
-- [ ] gtarefas Age: feature gestão de tarefas (nova)
 - [ ] Render Starter upgrade (Yuri manual)
 - [ ] pg_dump Replit (Yuri manual — urgente)
-- [ ] Tasks Φ: criar primeiras tasks (testar sistema)
-- [ ] Assembleia #728 (em breve)
+
+---
+
+## S160 — 2026-09-30
+
+### Concluído nesta sessão
+| # | Item | Status |
+|---|---|---|
+| S160-1 | Age Tarefas: age_tasks tabela + routes GET/POST/PATCH/DELETE + AgePage aba Tarefas ✅ | ✅ commit 9527999 |
+| S160-2 | keepalive: lembrete semanal toda seg 10h UTC → luddlocke | ✅ commit 9527999 |
+| S160-3 | CeuPage: nivelamento 12 IAs (modelo, conversa, status) + Assembleia #728 | ✅ commit 68f698c |
+| S160-4 | CROWD: documentado como roteador (não Assembleia) no conversa field | ✅ commit 68f698c |
+| S160-5 | PassThéo: POST /api/auth/passtheo troca senha PAP+Age+Rapadura em uma chamada | ✅ commit 68f698c |
+| S160-6 | Tango docs: proc_pap_estado + tango.md + proc_health_check + proc_checkpoint_fim: Railway→Render | ✅ commit 68f698c |
+| S160-7 | Login Aliança Panorama: diagnóstico — PIN 2FA enviado a yurituccieterovic@gmail.com; alternativa: root + e!4T53c613 | ✅ documentado |
+| S160-8 | Railway: era URLs mortas nos tango docs → substituídas por Render | ✅ docs corrigidos |
+| S160-9 | Assembleia #728 lida (MacroATA S156+S157+S158) | ✅ |
+
+### Pendências
+- [ ] Render Starter upgrade $7/mês (Yuri manual)
+- [ ] pg_dump Replit (Yuri manual — urgente)
+- [ ] Mascote PV: definir (não criar projeto ainda)
+- [ ] PassThéo frontend: página visual de troca de senha unificada
+- [ ] Piti delivery: sistema ainda colado ao Ecossystemma Théo — sem ação específica ainda
+- [ ] Tasks Φ: criar primeiras tasks de teste
+- [ ] Assembleia #729 (em breve)
 

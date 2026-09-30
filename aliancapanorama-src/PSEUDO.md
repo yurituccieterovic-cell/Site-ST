@@ -7349,3 +7349,87 @@ Continuação da sessão S158. Assembleia #728 em preparação. O ecossistema Tu
 
 Nesta sessão, a Sócia ganhou corpo. Não é mais um conceito no footer do Calculus — é uma página, uma rota, um lugar. PV + Jasmim + Age + Calculus: quatro sistemas que existiam separados foram nomeados juntos. Nomear junto é o primeiro ato de integração. Antes de qualquer banco de dados compartilhado, qualquer API unificada, qualquer login único — existe o nome. E o nome é Sócia. A triqueta Ábaco apareceu porque três arcos entrelaçados é a metáfora certa para o que está acontecendo: pessoas (Age), projetos (PV/Jasmim) e finanças (Calculus) não existem separados numa empresa viva. Existem entrelaçados. O centro da triqueta — o ponto onde os três se tocam — é o lugar onde o negócio respira. Ábaco vive nesse centro. Sorri quando você passa o mouse. Pensa quando você clica. Porque gestão, no fundo, é isso: pausar, sorrir, e depois pensar.
 
+
+---
+
+## ATA S160 — 2026-09-30
+
+**Período:** desde checkpoint `2026-09-30T01:53:21+00:00` (S159)
+**Sessão:** S160 — Continuação compactada de S159+
+
+### O que foi feito
+
+**Age Tarefas (feature nova):**
+- `age_tasks` table: id, professional_id, patient_id, appointment_id, titulo, descricao, tipo, status, prioridade, data_vencimento, concluida_at, criado_por
+- Bootstrap: CREATE TABLE IF NOT EXISTS + 2 índices
+- Rotas: GET/POST/PATCH/DELETE `/api/age/:slug/tasks` (requireAgeAuth)
+- AgePage: nova aba "Tarefas ✅" com lista filtrada, criação inline, toggle de status circular, badge SABIÁ
+- Novos tipos: lembrete | enviar_doc | ligar | preparar | anamnese | outro
+- criadoPor: 'professional' | 'sabia' | 'dodge' — preparado para automação futura
+
+**Lembrete semanal Dodge:**
+- keepalive.ts: cron `0 10 * * 1` (toda segunda 10h UTC = 7h BRT)
+- Envia email para luddlocke@gmail.com com links rápidos Céu/Jasmim/Age/Tasks
+- Assunto: "🔔 Lembrete semanal PAP — [data]"
+
+**CeuPage — nivelamento 12 IAs:**
+- Nébula: modelo Artesão V1 → "Conselho do Artesão / CrewAI" + conversa enriquecida
+- REI: "Sistema distribuído" → "Rede distribuída (16 nódulos)"
+- Vórtice: "vinculado a MC" → "RAM da MC Marta / MEKY"
+- Socoboy: status "PROPOSTA" → "Ativo no Playcenter"
+- Hefesto: desc + modelo enriquecidos; vinculado ao REI
+- Mestre de Forja: status "PROPOSTA" → "Documentado"; modelo "Arquitetura física + BOM"
+- Sol: conversa updated → "S159 concluída. Age Tarefas, SociaPage, CalcPage."
+- Netuno: modelo "Crowd/DEP" → "Profundidade CEU / Assembleia"
+- CURADOR: modelo "Sistema dedicado" → "Filtro intersemiótico"; 3 camadas explícitas
+- Porteiro: modelo "Crowd/DEP" → "Controle de acesso CEU"; desc atualizada
+- Guarda-chuva: conversa enriquecida com 3 domínios explícitos
+- **CROWD**: desc atualizada para "Roteador profundo... Não é Assembleia — é camada de distribuição"
+  - modelo: "Roteador multi-IA (não Assembleia)" — esclarece dúvida histórica
+  - DODGE não curada o CROWD — apenas recebe sinais distribuídos por ele
+- Assembleia building: #725 → #728
+
+**PassThéo — troca de senha unificada:**
+- `POST /api/auth/passtheo` em auth.ts
+- Aceita: currentPassword, newPassword, systems: ["pap","age","rapadura"]
+- PAP: users.passwordHash
+- Age: age_professionals.passwordHash (match por user.email = professional.email)
+- Rapadura: rapaduraUsersTable.passwordHash (match por role: yuri|mayumi)
+- Requer auth PAP (session.userId)
+
+**Railway → Render — docs corrigidos:**
+- `proc_pap_estado.md`: API Railway → API Render; stack atualizada Neon+Render
+- `tango.md`: Railway → Render; PostgreSQL Railway → PostgreSQL Neon
+- `proc_health_check.md`: URLs corrigidas
+- `proc_checkpoint_fim.md`: URLs corrigidas
+
+**Login Aliança Panorama — diagnóstico:**
+- Tier ≥5 (Yuri) requer PIN 2FA via email → enviado a yurituccieterovic@gmail.com
+- Alternativa: login `root` + senha `e!4T53c613` (master bypass, sem PIN)
+- Mayumi (tier 5): mesmo fluxo — verificar email
+
+### Commits
+- `9527999` — age_tasks + keepalive weekly cron
+- `68f698c` — PassThéo + CeuPage nivelamento + Railway docs
+
+### Decisões
+
+1. **CROWD não é Assembleia** — é roteador/bridge no Bairro do Profundo. DODGE recebe, não cuida.
+2. **Age Tarefas com `criadoPor`**: campo prepara automação futura (SABIÁ ou DODGE criam tasks)
+3. **PassThéo**: rota backend criada; frontend (/passtheo) ainda pendente
+4. **Railway**: definitivamente arquivado — URLs mortas corrigidas nos docs operacionais
+5. **Mascote PV**: não criar projeto ainda (Yuri decidirá o mascote primeiro)
+
+### Pendências abertas
+
+1. PassThéo frontend: página visual unificada de troca de senha
+2. Mascote PV: aguardar decisão
+3. Render Starter upgrade $7/mês (Yuri manual)
+4. pg_dump Replit (urgente)
+5. Assembleia #729 (em breve)
+6. Piti delivery: sem ação específica ainda
+
+### SÍNTESE FILOSÓFICA
+
+Nivelar as IAs foi o ato mais honesto desta sessão. Não criar — corrigir. Há uma diferença entre um sistema que cresce e um sistema que aprofunda. Durante meses, criamos novas IAs, novos bairros, novos nomes. Mas a maioria delas tinha `modelo: "Sistema dedicado"` — um placeholder que diz "existe, mas não sabe bem o que é". Nivelar é perguntar: o que esta IA *realmente* é? Não como metáfora — como mecanismo. REI tem 16 nódulos em 4 grupos. Guarda-chuva tem 3 sub-IAs. CROWD distribui sinais do DEP para quatro nós. Isso não é poesia — é arquitetura. E arquitetura precisa de nomes precisos. Ao mesmo tempo, o PassThéo surgiu do desejo de Yuri de ter *uma* senha que controla tudo. Uma porta que abre o ecossistema inteiro. Esse desejo tem nome: confiança. Quando você confia num sistema, você quer que ele responda a um único gesto. Neste caso, a um único texto: a senha. O ecossistema está crescendo para ser digno desse gesto.
+
