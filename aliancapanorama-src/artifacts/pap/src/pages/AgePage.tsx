@@ -517,11 +517,17 @@ export function AgePage() {
       .then(r => r.ok ? r.json() : null)
       .then((d: { history?: { role: string; content: string }[] } | null) => {
         if (d?.history && d.history.length > 0) {
+          const lastTs = (d.history as { role: string; content: string; createdAt?: string }[]).at(-1)?.createdAt;
+          const quando = lastTs ? (() => {
+            const diff = Math.floor((Date.now() - new Date(lastTs).getTime()) / 60000);
+            if (diff < 60) return `${diff}min atrás`;
+            if (diff < 1440) return `${Math.floor(diff/60)}h atrás`;
+            return `${Math.floor(diff/1440)}d atrás`;
+          })() : "antes";
           setMsgs([
-            { role: "assistant", content: SABIA_GREETING },
+            { role: "assistant", content: `🐦 Olá! Lembro da nossa última conversa (${quando}). Continue de onde paramos.` },
             ...d.history.map(h => ({ role: h.role as "user" | "assistant", content: h.content })),
           ]);
-          // restaurar sessionId da última mensagem (se disponível)
         }
       })
       .catch(() => {});
@@ -726,6 +732,9 @@ export function AgePage() {
   async function handleLogout() {
     await fetch(`${API}/api/age/auth/logout`, { method: "POST", credentials: "include" });
     setMode("public"); setAuthStep("login"); setAuthPassword(""); setAuthNome("");
+    setSabiaHistoryLoaded(false);
+    setMsgs([{ role: "assistant", content: SABIA_GREETING }]);
+    setSabiaSessionId("");
   }
 
   // ─── Booking ────────────────────────────────────────────────────────────────
