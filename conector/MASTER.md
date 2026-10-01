@@ -1269,3 +1269,11 @@ DECISÕES APROVADAS:
 - Railway estável: fix node:24-slim + startup listen-first (bootstrap async)
 - AGE 2.0: SABIÁ wizard 3 passos + multi-day rules + toast desktop
 - MacroATA S172 enviada para luddlocke
+
+
+### 2026-10-01 — admin
+### 2026-10-01 — S173 Cláudio
+- Age estável: DISABLE_HEAVY_CRONS=true no Railway, 334→227MB baseline
+- SABIÁ memória fix: logout reseta flag + saudação contextual
+- Decisão: não vender antes de 72h estabilidade + LGPD
+- Email Assembleia enviado sobre estratégia comercial Age
