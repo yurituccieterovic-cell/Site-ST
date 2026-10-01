@@ -108,6 +108,7 @@ export function AgePage() {
 
   // Professional state
   const [view, setView] = useState<View>("agenda");
+  const [lastRefresh, setLastRefresh] = useState(0);
   const [appts, setAppts] = useState<Appt[]>([]);
   const [rules, setRules] = useState<AvailRule[]>([]);
   const [exceptions, setExceptions] = useState<Exception[]>([]);
@@ -405,14 +406,28 @@ export function AgePage() {
   }, []);
 
   // Carregar agenda (professional)
-  const loadAppts = useCallback(async () => {
+  const loadAppts = useCallback(async (silent = false) => {
     if (mode !== "professional") return;
     const de = new Date().toISOString().slice(0, 10);
     const ate = new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
     try {
       const r = await fetch(`${API}/api/age/${slug}/appointments?de=${de}&ate=${ate}`, { credentials: "include" });
       const data = await r.json() as Appt[];
-      setAppts(data);
+      if (silent) {
+        // Detecta novos agendamentos e notifica via SABIÁ
+        setAppts(prev => {
+          const prevIds = new Set(prev.map(a => a.id));
+          const novos = data.filter(a => !prevIds.has(a.id) && a.status === "confirmado");
+          if (novos.length > 0) {
+            const nomes = novos.map(a => a.patientNome ?? "Paciente").join(", ");
+            setMsgs(ms => [...ms, { role: "assistant" as const, content: `🐦 Nova consulta marcada: **${nomes}**. Verifique sua agenda!` }]);
+          }
+          return data;
+        });
+      } else {
+        setAppts(data);
+      }
+      setLastRefresh(Date.now());
     } catch { /* silencia falha de rede */ }
   }, [mode, slug]);
 
@@ -468,6 +483,16 @@ export function AgePage() {
     const notasVisible = view === "notas" || (drawerOpen && drawerTab === "notas");
     if (notasVisible && mode === "professional" && authStep === "done") loadNotas();
   }, [view, mode, authStep, loadNotas, drawerOpen, drawerTab]);
+
+  // Auto-refresh a cada 60s: agenda + feed (detecta novos agendamentos)
+  useEffect(() => {
+    if (mode !== "professional" || authStep !== "done") return;
+    const id = setInterval(() => {
+      loadAppts(true);
+      loadFeed();
+    }, 60_000);
+    return () => clearInterval(id);
+  }, [mode, authStep, loadAppts, loadFeed]);
 
   const loadTasks = useCallback(async (status?: string) => {
     if (mode !== "professional") return;
@@ -4098,6 +4123,11 @@ export function AgePage() {
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             {mode === "professional" ? (
               <>
+                {lastRefresh > 0 && (
+                  <span style={{ color: "#334155", fontSize: 10 }} title="Auto-atualiza a cada 60s">
+                    ● {Math.round((Date.now() - lastRefresh) / 1000) < 5 ? "agora" : `${Math.round((Date.now() - lastRefresh) / 60000)}m`}
+                  </span>
+                )}
                 <span style={{ color: "#64748b", fontSize: 12 }}>{authNome}</span>
                 <button onClick={handleLogout} style={{ background: "#1a2030", border: "1px solid #334155", borderRadius: 6, color: "#94a3b8", padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>
                   Sair
