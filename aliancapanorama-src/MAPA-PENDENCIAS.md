@@ -1455,3 +1455,20 @@
 - [ ] I902: visualização calendar de disponibilidade por mês/semana
 - [ ] Mayumi: definir % faturamento (reunião pendente)
 - [ ] UptimeRobot: atualizar URL para Railway
+
+---
+
+## S173 — 2026-10-01 — Estabilidade + SABIÁ memória
+
+### Concluído
+- [x] DISABLE_HEAVY_CRONS=true no Railway (ISA silenciada, 334→227MB)
+- [x] SABIÁ memória: logout reseta sabiaHistoryLoaded + msgs + sessionId
+- [x] Saudação contextual com tempo desde última mensagem
+- [x] Auto-refresh 60s: agenda + feed; SABIÁ notifica novos agendamentos
+- [x] Email Assembleia: Age estabilidade antes de vender
+
+### Pendentes (bloqueadores de venda)
+- [ ] 🔴 72h monitoramento Railway sem crash
+- [ ] 🔴 LGPD: checkbox consentimento + /age/privacidade
+- [ ] Retest bugs: addException, addDirectPatient, addTask
+- [ ] Aguardar resposta Assembleia sobre estratégia comercial

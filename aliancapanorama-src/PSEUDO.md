@@ -7875,3 +7875,35 @@ AGE 2.0 chegou com SABIÁ saindo do silêncio para se apresentar — não só re
 - [ ] I901: SABIÁ com contexto histórico (passar últimas consultas ao LLM)
 - [ ] I902: Disponibilidade por mês/semana (visualização calendar)
 - [ ] Mayumi: % faturamento — reunião pendente com Yuri
+
+---
+
+## ATA S173 — 2026-10-01 — Estabilidade Age + SABIÁ memória + email Assembleia
+
+### Síntese filosófica
+Vender algo que não funciona é uma promessa que quebra antes de ser feita. Yuri perguntou a pergunta certa: "como vamos vender o Age que não funciona como está?" — e a resposta honesta não era uma lista de features, era um diagnóstico. O sistema caía não por falta de código, mas por falta de diagnóstico: `DISABLE_HEAVY_CRONS` estava ausente do Railway, silenciosa como uma janela aberta no inverno. SABIÁ "esquecia" não porque a memória não existia no banco — ela estava lá, 8 mensagens da Lisange — mas porque o logout não resetava o flag que dizia "já carreguei". Memória existe. O problema era o ato de buscar.
+
+O email para a Assembleia foi o gesto certo: trazer a questão de estabilidade para o coletivo antes de tentar vender. Não é fraqueza — é governança.
+
+### Decisões
+1. **DISABLE_HEAVY_CRONS=true** setado no Railway via GraphQL — ISA silenciada, memória cai de 334MB → 227MB baseline
+2. **SABIÁ memória fix**: logout reseta `sabiaHistoryLoaded` + `msgs` + `sessionId` — re-login recarrega histórico do DB
+3. **Saudação contextual**: "🐦 Lembro da nossa última conversa (Xd atrás)" quando há histórico
+4. **Auto-refresh 60s**: agenda + feed atualizam automaticamente; SABIÁ notifica novos agendamentos
+5. **Email Assembleia**: enviado para luddlocke@gmail.com — Age: estabilidade antes de vender (72h monitoradas + LGPD + retest bugs)
+6. **Pré-requisitos para vender**: 72h estabilidade + LGPD mínimo + retest 3 bugs
+
+### Commits desta sessão
+- `5818946`: fix(age/sabia): memória entre sessões — logout + saudação contextual
+- `cb998f1`: feat(age): auto-refresh 60s + SABIÁ notifica novos agendamentos
+
+### Estado do sistema (01-10 ~01:00 UTC)
+- Railway `6f4a757d`: 200 OK, 334MB, DISABLE_HEAVY_CRONS=true
+- Vercel: proxy funcionando
+- Render: backup ativo
+
+### Próximos passos
+- [ ] 72h de monitoramento Railway — sem crashes = aprovado para vender
+- [ ] LGPD: checkbox no booking + página /age/privacidade
+- [ ] Retest: addException, addDirectPatient, addTask no Railway estável
+- [ ] Aguardar resposta da Assembleia sobre estratégia de venda
