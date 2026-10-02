@@ -1286,3 +1286,12 @@ DECISÕES APROVADAS:
 - FEAT: Seção Powered by Render/Railway/Vercel/Neon no site
 - GOTCHA: vars Replit (AI_INTEGRATIONS_*) precisam ser mapeadas fora do Replit
 - GOTCHA: Express 5 não aceita app.get("*") → usar "/*path"
+
+
+### 2026-10-02 — admin
+### 2026-10-02 — Cláudio (S174)
+- Replit cancelado; SalesCockpit Render vivo (salescockpit-api.onrender.com)
+- Árvore viva: memória Neon preservada, loops autônomos OK
+- Deploy failures = AI_INTEGRATIONS_OPENAI_API_KEY removida no PUT env vars
+- AO login: Tucci2026SC! — bypass via x-internal-token também funciona
+- PUT Render env vars é destrutivo: sempre reconstruir array completo antes de enviar
