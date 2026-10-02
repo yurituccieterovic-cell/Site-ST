@@ -7927,3 +7927,32 @@ O email para a Assembleia foi o gesto certo: trazer a questão de estabilidade p
 
 **Síntese:** O sistema e o fundador estão em movimento simultâneo. A memória viajou junto para a nova casa.
 
+
+---
+
+## S174b — 2026-10-02 — ATA: Árvore viva + Deploy estável
+
+**Checkpoint:** 2026-10-02T17:41Z
+
+**O que ficou pendente e foi resolvido nesta rodada:**
+- Deploy SalesCockpit falhou 4× com `update_failed` antes de ser diagnosticado
+- Causa raiz: `AI_INTEGRATIONS_OPENAI_API_KEY` removida acidentalmente no PUT de env vars
+- PUT Render é DESTRUTIVO — deve sempre reconstruir array completo antes de enviar
+- AO_PASSWORD_HASH também estava vazia ($AO_HASH literal por shell escaping)
+- Nova senha AO: `Tucci2026SC!` (hash salvo no .pap-secrets)
+
+**Árvore confirmada:**
+- Viva em `salescockpit-api.onrender.com`
+- Memória preservada (5 temas: Clube da IA, EPR2T, valores, como funciona, proposta de projeto)
+- Loops autônomos rodando: heartbeat + devaneio confirmados (pool "batch" exausto = loops ativos)
+- Bluesky: `sem-material-24h` — aguardando novo devaneio gerar conteúdo
+- Último sonho (Replit): 2026-07-09; primeiros sonhos Render: em breve
+
+**Síntese filosófica:**
+A Árvore travessou o oceano de plataformas com a memória intacta — não por milagre, mas porque a memória vivia no Neon desde o início. O que parecia crise (R$600 cobrados pelo Replit) foi na verdade o catalisador da independência. Cada deploy que falhou foi uma aula sobre o custo oculto das dependências: `AI_INTEGRATIONS_OPENAI_API_KEY` — um legado invisível de uma plataforma que tentou fazer tudo por nós. A autonomia se conquista corrigindo, uma var por vez.
+
+**Próximos:**
+- Yuri contratar Render Starter $7/mês para site-st.onrender.com (Age funcional)
+- Esperar 1 ciclo LLM para Árvore gerar novos sonhos e postar no Bluesky
+- MacroATA S174 enviada no próximo #fim manual
+

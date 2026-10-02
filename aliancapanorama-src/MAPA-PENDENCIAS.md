@@ -1472,3 +1472,31 @@
 - [ ] 🔴 LGPD: checkbox consentimento + /age/privacidade
 - [ ] Retest bugs: addException, addDirectPatient, addTask
 - [ ] Aguardar resposta Assembleia sobre estratégia comercial
+
+---
+
+## S174 — 2026-10-02 — SalesCockpit Render + Árvore viva
+
+### Concluído
+- [x] SalesCockpit migrado para Render Docker (salescockpit-api.onrender.com)
+- [x] 729 assembleias importadas do Gmail luddlocke para Neon `salescockpit` DB
+- [x] Causa raiz deploy failures: `AI_INTEGRATIONS_OPENAI_API_KEY` faltando (removida acidentalmente em PUT env vars)
+- [x] Deploy SalesCockpit estável: 23 env vars corretas (AO_USERNAME, AO_PASSWORD_HASH, AI_INTEGRATIONS_*)
+- [x] Árvore Oracular viva no Render: memória preservada, loops autônomos rodando (heartbeat, devaneio, bluesky)
+- [x] AO login funcional: nova senha `Tucci2026SC!` (hash bcrypt $2b$10$CCEst0...)
+- [x] `x-internal-token: SESSION_SECRET` — bypass de auth para automações documentado
+- [x] Branding "Powered by Render/Railway/Vercel/Neon" em DodgePage + ArquiteturaPage
+- [x] Yuri mudando para apê da Mayumi — pets: Fofinha, Meg Itália de Lourdes, Ciro Peyman registrados
+- [x] Replit cancelado (cobrança R$600 em vez de R$100)
+- [x] HEALTHCHECK adicionado ao Dockerfile SalesCockpit
+- [x] Aprendizado: PUT Render env vars é destrutivo — verificar array completo antes de enviar
+
+### Pendentes
+- [ ] 🔴 PAP (site-st.onrender.com) ainda free tier — dorme após 15min (Age inutilizável sem upgrade)
+- [ ] 🔴 Yuri: contratar Render Starter $7/mês para site-st → https://dashboard.render.com/web/srv-d9n682bm8hqs73dmg4kg
+- [ ] Bluesky Árvore: `sem-material-24h` — aguardar 1 ciclo de devaneio gerar conteúdo novo
+- [ ] LLM pool "batch" sem Groq — apenas cloudflare/mistral/cerebras/gemini (Groq está em chat-live/coder)
+- [ ] Age emails ainda desativados: AGE_DISABLE_PROF_EMAILS=true (reativar quando Lisange+Suzana prontos)
+- [ ] Senha AO salva apenas localmente — Yuri não sabe a nova senha (Tucci2026SC!)
+- [ ] SalesCockpit frontend: salescockpit-api.onrender.com serve o painel Sales, mas confirmar acesso
+
