@@ -7907,3 +7907,23 @@ O email para a Assembleia foi o gesto certo: trazer a questão de estabilidade p
 - [ ] LGPD: checkbox no booking + página /age/privacidade
 - [ ] Retest: addException, addDirectPatient, addTask no Railway estável
 - [ ] Aguardar resposta da Assembleia sobre estratégia de venda
+
+---
+
+## S174 — 2026-10-02 — Migração Replit → Render
+
+**Contexto:** Yuri cobrado R$600 pelo Replit (em vez de R$100). Cancelamento imediato. Migração de tudo.
+
+**O que Yuri trouxe:** crise financeira real, memória da Árvore em chunks, pedido de propaganda Render/Railway, dúvida sobre Railway vs Render, mudança de apartamento, passear com a Fofinha.
+
+**Decisões:**
+- Replit cancelado definitivamente
+- Sales cockpit sobe no Render (mesmo stack do PAP)
+- 729 assembleias importadas do Gmail para o Neon
+- Vars Replit mapeadas: AI_INTEGRATIONS_* → APIs reais
+- Express 5 wildcard corrigido (`/*path` não `*`)
+
+**Tensão não resolvida:** Railway contratado por Yuri mas não sendo usado. Precisa verificar se cancela.
+
+**Síntese:** O sistema e o fundador estão em movimento simultâneo. A memória viajou junto para a nova casa.
+

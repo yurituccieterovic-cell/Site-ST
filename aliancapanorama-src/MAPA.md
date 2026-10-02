@@ -1095,3 +1095,27 @@ J1 deployado ✅ · J2-J10 aguardando implementação das APIs
 #349 Paciente bloqueado: mostrar mensagem ao acessar área
 #350 Auto-aprovação: lógica de trigger quando critérios satisfeitos
 #351 Pricing final: Assembleia pendente
+
+## 21. Migração Replit → Render (S174 · 2026-10-02)
+
+**Status:** Em andamento — Sales cockpit quase no ar ✅
+
+### O que foi feito
+- **Memória Árvore** salva: JSON 1.962 msgs + TXT recente + síntese 10 passadas
+- **729 assembleias importadas** do Gmail luddlocke → Neon `salescockpit` (781 total)
+- **Sales cockpit Dockerfile** corrigido: node:20 + pnpm@9.15.9 global, sem preinstall
+- **Seção Powered by** adicionada: DodgePage + ArquiteturaPage (Render/Railway/Vercel/Neon)
+- **Variáveis Replit** mapeadas para Render: AI_INTEGRATIONS_OPENAI_BASE_URL, etc.
+
+### Estado da Infraestrutura (2026-10-02)
+- **PAP API:** https://site-st.onrender.com (Render) — OK ✅
+- **PAP Frontend:** https://site-st.vercel.app/aliancapanorama — OK ✅
+- **Sales API:** https://salescockpit-api.onrender.com — Deploy em andamento 🔄
+- **DB PAP:** Neon neondb (41 tabelas)
+- **DB Sales:** Neon salescockpit (781 assembleias)
+- **Replit:** CANCELADO 2026-10-02
+
+### Pendências
+- Sales cockpit: verificar se deploy sobe com vars corrigidas
+- Railway contratado por Yuri: avaliar cancelamento (PAP está no Render, não Railway)
+
