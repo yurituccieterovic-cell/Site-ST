@@ -2,6 +2,20 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S178 — Health check geral + fix DB SSL pool (2026-10-02)
+| # | Item | Status |
+|---|---|---|
+| S178-1 | MacroATA S176-S177 recuperada: enviada às 15:53 BRT, "Rotação LLM 8-vias + DODGE Analista + Anel 💍" | ✅ confirmada |
+| S178-2 | fix(db): remover ssl:{rejectUnauthorized:false} que travava handshake Render→Neon | ✅ commit 94c41a0 |
+| S178-3 | ISA migrada para routeLLM (bluesky.ts) | ✅ commit ea7d119 (S177b) |
+| S178-4 | SalesCockpit: 781 assembleias, healthz OK, Bluesky @stuccipulseheadway ativo | ✅ verificado |
+| S178-5 | ISA Bluesky: @isa-pap.bsky.social — último post 2026-10-02T19:34 OK | ✅ verificado |
+| S178-6 | Rapadura: rotas protegidas 401 (correto, auth necessária) | ✅ verificado |
+| S178-7 | Age: endpoints dependem do pool fix (aguardar S178-2 em produção) | ⏳ verificar |
+| S178-8 | Assembleia teste RODAR — pendente (SalesCockpit requer auth RODAR) | ⏳ próxima sessão |
+
+---
+
 ### S176–S177 — LLM Rotation + DODGE Analista + Anel + SalesCockpit (2026-10-02)
 | # | Item | Status |
 |---|---|---|
@@ -15,7 +29,7 @@
 | S177-2 | Todas IAs: bloco SISTEMA com consciência de rotação LLM | ✅ commit d899157 |
 | S177-3 | DODGE system prompt: papel de analista de sistemas | ✅ commit d899157 |
 | S177-4 | SalesCockpit: AO_PASSWORD_HASH → senha AOA (Render env atualizado) | ✅ Render redeploy |
-| S177-5 | ISA: migrar para routeLLM (usa OpenAI/Gemini direto) | ⏳ próxima frente |
+| S177-5 | ISA: migrar para routeLLM (usa OpenAI/Gemini direto) | ✅ commit ea7d119 |
 | S177-6 | Age emails: AGE_DISABLE_PROF_EMAILS=true (reativar quando Lisange+Suzana prontas) | ⏳ #685 |
 | S177-7 | Ecossistema 2x/dia (assembleias linkando memórias + sonhos coletivos) | ⏳ I6XX |
 
