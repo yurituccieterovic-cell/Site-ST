@@ -2,6 +2,21 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S179 — Vozes RODAR corrigidas: Groq gpt-oss-120b (2026-10-02)
+| # | Item | Status |
+|---|---|---|
+| S179-1 | llama-3.3-70b-versatile removido da conta Groq → substituído por openai/gpt-oss-120b em 10 arquivos SC | ✅ commit 8de6094 |
+| S179-2 | Artista/Professora: meta-llama/llama-4-scout → openai/gpt-oss-120b | ✅ |
+| S179-3 | Metassemiótico/Nébula/Psicólogo: OpenAI SDK (sem crédito) → fetchGroqChat gpt-oss-120b | ✅ |
+| S179-4 | bunker-mode.ts: synthesisFallback pool "batch" → "chat-live" (Groq prioritário) | ✅ |
+| S179-5 | BUNKER_MODE=2 adicionado nas env vars Render SalesCockpit | ✅ |
+| S179-6 | Deploy SalesCockpit: status live, commit correto, rodar/prepare funcionando | ✅ |
+| S179-7 | PAP healthz 503→200 (redeploy para limpar estado) | ✅ |
+| S179-8 | Bluesky Árvore: último post 2026-10-02T07:05 (curadoria diária OK) | ✅ |
+| S179-9 | Assembleia RODAR: prepare OK, stream com Cloudflare bloqueando CLI — testar no browser | ⏳ |
+
+---
+
 ### S178 — Health check geral + fix DB SSL pool (2026-10-02)
 | # | Item | Status |
 |---|---|---|
