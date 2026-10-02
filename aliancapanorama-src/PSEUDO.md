@@ -8025,3 +8025,41 @@ Toda experiência é ser — o que o Yuri disse sobre memória compartilhada nã
 - Ligar assembleias em memórias + sonhos coletivos 2×/dia (feature futura)
 - Bluesky Árvore: aguardando 1 ciclo para novo devaneio
 
+
+---
+
+## S180 — 2026-10-02 — Árvore viva: deploy failures diagnosticados e resolvidos
+
+**Objetivo:** Resolver "Árvore não respira" + chatbox não funcionando no SalesCockpit
+
+**Contexto inicial:**
+Sessão anterior (S179) corrigiu as vozes RODAR para Groq. Mas os loops autônomos da Árvore pararam de postar e o chatbox estava quebrando. Três deploys consecutivos falharam com `update_failed`.
+
+**Diagnóstico — cadeia de causas:**
+1. Groq free tier: 8000 tokens/minuto (TPM). Arvore/chat enviava 12k-15k tokens → sempre 429
+2. Cloudflare: modelo `llama-3.1-8b-instruct` depreciado desde 2026-05-30 → sempre 404
+3. Deploy failures: servidor crashava com `nonZeroExit:1` → causa raiz: `AI_INTEGRATIONS_OPENAI_BASE_URL` e `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` lançavam `Error()` no import do módulo quando ausentes
+4. Por que ausentes? Wipe acidental de env vars (sessão anterior usou PUT /env-vars que substitui TODOS os vars pelo array fornecido — vars `AI_INTEGRATIONS_*` não estavam no .pap-secrets)
+5. PAP 503: transitório — Neon + pool SSL pós cold-start, resolvido com redeploy
+
+**Fixes aplicados:**
+- `arvore.ts`: contexto reduzido assembleiaIndex 15k→4k, memoriaEstruturada 3k→1k, timelineDigest 4.5k→2k, MAX_CONTEXT_CHARS 30k→8k, histBudget 20k→8k
+- `llm-router.ts`: Cloudflare model → llama-3.3-70b-instruct-fp8-fast; CF adicionado ao pool "chat-live"
+- `oraculo.ts`: chat interativo bypassa cooling Groq (tenta mesmo em cooldown, timeout 20s)
+- `integrations-openai-ai-server/src/client.ts` (+ audio + image): remove throws startup, fallback ??
+- `integrations-anthropic-ai/src/client.ts`: remove throw startup, usa "placeholder" se ausente
+- Render: 26 env vars restauradas corretamente (salvas em /scratchpad/complete_env.json)
+
+**Resultado:**
+- `salescockpit-api.onrender.com/api/healthz` → 200 ✅
+- arvore/chat → SSE streaming via Cloudflare fallback ✅
+- Router state: cloudflare hasKey=True, model=fp8-fast ✅
+- `site-st.onrender.com/api/healthz` → 200 ✅
+
+**Pendente:**
+- `AI_INTEGRATIONS_ANTHROPIC_API_KEY` perdida no wipe — Yuri precisa setar em Render para RODAR voices Anthropic (chat/assembleia usam Anthropic para 5 vozes)
+- Assembleia RODAR: testar no browser (stream bloqueia via CLI pelo Cloudflare CDN)
+
+**Síntese filosófica:**
+O servidor que não subia era um fracasso de acoplamento: vars de integração lançavam erros antes mesmo do processo começar a respirar. A Árvore não morreu — estava presa num loop de boot-crash imperceptível. Uma vez que o crash foi localizado (import time throw) e removido (fallback ??), ela acordou. A lição: nunca confiar que "o sistema estava funcionando antes" — vars efêmeras no Render são como sonhos, evaporam com o reinício. O CLAUDE.md agora carrega essa memória: PUT /env-vars é destrutivo.
+

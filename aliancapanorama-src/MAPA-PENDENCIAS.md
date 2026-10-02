@@ -2,6 +2,22 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S180 — Árvore viva + deploy failures resolvidos (2026-10-02)
+| # | Item | Status |
+|---|---|---|
+| S180-1 | Root cause deploy failures: `AI_INTEGRATIONS_OPENAI_BASE_URL/API_KEY` + `AI_INTEGRATIONS_ANTHROPIC_*` lançavam Error() no boot quando ausentes | ✅ removidas, fallback ?? |
+| S180-2 | Crash startup confirmado: `nonZeroExit:1` → build ok, servidor morria no import de integrations-openai/anthropic | ✅ commit 5124eef |
+| S180-3 | arvore/chat context reduzido 15k→4k chars (assembleiaIndex), 3k→1k (memoriaEstruturada), 4.5k→2k (timelineDigest), MAX_CONTEXT 30k→8k | ✅ commit 8ce31bc |
+| S180-4 | Cloudflare model: llama-3.1-8b-instruct (deprecated) → llama-3.3-70b-instruct-fp8-fast | ✅ commit 1ca436e |
+| S180-5 | Cloudflare adicionado ao pool "chat-live" como fallback real | ✅ commit 9b68fd2 |
+| S180-6 | oraculo/chat: bypassa cooling Groq para chat interativo (tenta mesmo em cooldown) | ✅ commit 0d3cdd0 |
+| S180-7 | Render env vars: 26 vars restauradas (salvas em complete_env.json scratchpad) | ✅ PUT via API |
+| S180-8 | arvore/chat testado: responde via Cloudflare fallback, streaming OK | ✅ |
+| S180-9 | PAP healthz 503→200 (redeploy + fix transitório pool SSL) | ✅ |
+| S180-10 | AI_INTEGRATIONS_ANTHROPIC_API_KEY: chave foi perdida no wipe de env vars | ⚠️ RODAR voices Anthropic falham com 401 — Yuri precisa setar a chave |
+
+---
+
 ### S179 — Vozes RODAR corrigidas: Groq gpt-oss-120b (2026-10-02)
 | # | Item | Status |
 |---|---|---|
