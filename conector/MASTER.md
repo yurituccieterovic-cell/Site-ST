@@ -1328,3 +1328,10 @@ DECISÕES APROVADAS:
 - ISA Bluesky: @isa-pap.bsky.social último post 19:34 UTC
 - MacroATA S176-S177 confirmada: 15:53 BRT
 - Age OK pós-fix: Lisange (psicóloga), Suzana (médica), Milton
+
+
+### 2026-10-02 — admin
+### 2026-10-02 — S179 Cláudio
+- Assembleia #942 mostrou todas as IAs RODAR quebrando: llama-3.3-70b removido da Groq, OpenAI sem crédito
+- Fix: 10 arquivos migrados para openai/gpt-oss-120b; Metassemiótico/Nébula/Psicólogo→fetchGroqChat; synthesisFallback→pool chat-live; BUNKER_MODE=2 setado
+- Deploy SalesCockpit live (8de6094); Bluesky Árvore+ISA postando OK; PAP API 200 OK
