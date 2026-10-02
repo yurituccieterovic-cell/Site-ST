@@ -3,44 +3,37 @@ import { db, nodesTable, isaMemoryTable, bibliotecaDocsTable, isaTimeline } from
 import { asc, desc, sql } from "drizzle-orm";
 import { logger } from "../lib/logger";
 import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
+import { routeLLM } from "../lib/llm-router";
 
 const HANDLE = process.env["BLUESKY_HANDLE"] ?? "";
 const APP_PASSWORD = process.env["BLUESKY_APP_PASSWORD"] ?? "";
-const OPENAI_API_KEY = process.env["OPENAI_API_KEY"] ?? "";
-const GEMINI_API_KEY = process.env["GEMINI_API_KEY"] ?? "";
 
 let reflectionCounter = 0;
 
 async function generateReflection(nodeTitle: string, nodeContent: string | null): Promise<string> {
-  if (!OPENAI_API_KEY) {
-    return `📖 Hoje: ${nodeTitle} — tópico FUVEST que aparece toda hora nas provas. Estuda enquanto é cedo. #PAP #FUVEST #SociedadeTucci`;
-  }
-
-  const resp = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${OPENAI_API_KEY}` },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      max_completion_tokens: 120,
-      temperature: 0.85,
+  try {
+    const text = await routeLLM({
       messages: [
         {
           role: "system",
           content: `Escreva uma frase curta (máx 220 caracteres) sobre o tópico dado para postar no Bluesky.
 Tom: de quem estudou o assunto de verdade — natural, específico, um pouco seco. Sem "olá", sem entusiasmo forçado. Pode ser uma observação, um dado, uma pergunta ou um insight. Não mencione plataformas, não explique que é IA, não use linguagem de coach.
 Termine com no máximo 2 hashtags relevantes ao conteúdo (ex: #FUVEST ou o nome da disciplina).
-${PRINCIPIOS_ECOSSYSTEMMA}`
+${PRINCIPIOS_ECOSSYSTEMMA}`,
         },
         {
           role: "user",
-          content: `Tópico: ${nodeTitle}\n${nodeContent ? `Contexto: ${nodeContent.slice(0, 300)}` : ""}`
-        }
-      ]
-    })
-  });
-
-  const data = await resp.json() as { choices: { message: { content: string } }[] };
-  return (data.choices?.[0]?.message?.content ?? "").trim().slice(0, 290);
+          content: `Tópico: ${nodeTitle}\n${nodeContent ? `Contexto: ${nodeContent.slice(0, 300)}` : ""}`,
+        },
+      ],
+      pool: "batch",
+      maxTokens: 150,
+      temperature: 0.85,
+    });
+    return text.trim().slice(0, 290);
+  } catch {
+    return `📖 Hoje: ${nodeTitle} — tópico FUVEST que aparece toda hora nas provas. Estuda enquanto é cedo. #PAP #FUVEST #SociedadeTucci`;
+  }
 }
 
 async function pickFuvestNode() {
@@ -163,26 +156,16 @@ export async function createBlueskyAccount(
 
 // ─── Engajamento social ──────────────────────────────────────────────────────
 
-// Gera resposta curta via Gemini (OpenAI quota geralmente esgotada)
+// Gera resposta curta via routeLLM (pool batch, fallback multi-provedor)
 async function geminiReply(prompt: string): Promise<string> {
-  if (!GEMINI_API_KEY) return "";
   try {
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user",  parts: [{ text: prompt }] },
-            { role: "model", parts: [{ text: "" }] },
-          ],
-          generationConfig: { thinkingConfig: { thinkingBudget: 0 }, maxOutputTokens: 100 },
-        }),
-      }
-    );
-    const data = await resp.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-    return (data.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim().slice(0, 280);
+    const text = await routeLLM({
+      messages: [{ role: "user", content: prompt }],
+      pool: "batch",
+      maxTokens: 100,
+      temperature: 0.75,
+    });
+    return text.trim().slice(0, 280);
   } catch {
     return "";
   }
