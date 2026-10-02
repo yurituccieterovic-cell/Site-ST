@@ -996,8 +996,8 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
     } catch { /* falha silenciosa — eco não é crítico */ }
   }
 
-  // ── Buscar pertences e fundos para contexto patrimonial completo
-  const [fundosExistentes, pertencesUsuario] = await Promise.all([
+  // ── Buscar pertences, fundos e projeto do anel para contexto patrimonial completo
+  const [fundosExistentes, pertencesUsuario, ringRow] = await Promise.all([
     db.select({ id: rapaduraFundosTable.id, nome: rapaduraFundosTable.nome, gestora: rapaduraFundosTable.gestora, score: rapaduraFundosTable.scoreAtratividade })
       .from(rapaduraFundosTable).where(eq(rapaduraFundosTable.ativo, true))
       .orderBy(desc(rapaduraFundosTable.scoreAtratividade)).limit(15),
@@ -1005,6 +1005,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
       .from(rapaduraPertencesTable)
       .innerJoin(rapaduraFundosTable, eq(rapaduraPertencesTable.fundoId, rapaduraFundosTable.id))
       .where(and(eq(rapaduraPertencesTable.userId, userId), isNull(rapaduraPertencesTable.deletedAt))).limit(20),
+    db.execute(sql`SELECT dados, notas, status FROM rapadura_ring_project WHERE slug = 'anel-mayumi' LIMIT 1`),
   ]);
 
   const contextoFundos     = fundosExistentes.map(f => `ID${f.id}: ${f.nome} (${f.gestora}) score=${f.score}`).join("\n");
@@ -1024,10 +1025,17 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
 
   const contextoPessoa = `\n\nUsuário desta sessão: ${userName} (perfil: ${userRole}).${perfilBloco}${storedSummary ? `\n\nResumo das conversas anteriores com ${userName}:\n${storedSummary}` : ""}${ecoBloco}`;
 
+  // ── Contexto do projeto anel de noivado
+  const ringData = (ringRow as any)?.rows?.[0];
+  const ringBloco = ringData
+    ? `\n\nPROJETO ESPECIAL — ANEL DE NOIVADO PARA MAYUMI:\nStatus: ${ringData.status}\nDados: ${JSON.stringify(ringData.dados ?? {})}\nNotas: ${ringData.notas ?? "—"}\n(Você pode ajudar a evoluir este projeto — orçamento, ourives, decisões de design, acompanhamento.)`
+    : "";
+
   const systemWithContext = CANA_SYSTEM
     + contextoPessoa
     + `\n\nCarteira atual de ${userName}:\n${contextoPertences}`
-    + `\n\nFundos no catálogo:\n${contextoFundos || "(nenhum ainda)"}`;
+    + `\n\nFundos no catálogo:\n${contextoFundos || "(nenhum ainda)"}`
+    + ringBloco;
 
   // ── Histórico de contexto: últimas 12 msgs do full_history (prioridade request > stored)
   const baseHistory = history.length > 0 ? history : fullHistory;
@@ -1889,6 +1897,57 @@ router.post("/rapadura/documentos/confirmar", requireRapaduraAuth, requireAdmin,
   }
   await audit(userId, "DOCUMENTOS_CONFIRMAR", { total: operacoes.length, ok: resultados.filter(r => r.ok).length }, req.ip ?? "");
   res.json({ resultados, total: resultados.length, ok: resultados.filter(r => r.ok).length });
+});
+
+// ─── Projeto Especial: Anel de Noivado ───────────────────────────────────────
+
+// GET /rapadura/ring-project — dados completos (incluindo foto base64)
+router.get("/rapadura/ring-project", requireRapaduraAuth, async (req, res) => {
+  const result = await db.execute(sql`
+    SELECT dados, foto, notas, status, updated_at FROM rapadura_ring_project WHERE slug = 'anel-mayumi' LIMIT 1
+  `);
+  const row = (result as any)?.rows?.[0] ?? null;
+  res.json({ project: row });
+});
+
+// PUT /rapadura/ring-project — atualiza dados e notas
+router.put("/rapadura/ring-project", requireRapaduraAuth, async (req, res) => {
+  const { dados, notas, status } = req.body as { dados?: Record<string, unknown>; notas?: string; status?: string };
+  await db.execute(sql`
+    INSERT INTO rapadura_ring_project (slug, dados, notas, status)
+    VALUES ('anel-mayumi', ${JSON.stringify(dados ?? {})}::jsonb, ${notas ?? null}, ${status ?? 'planejando'})
+    ON CONFLICT (slug) DO UPDATE SET
+      dados = EXCLUDED.dados,
+      notas = COALESCE(EXCLUDED.notas, rapadura_ring_project.notas),
+      status = EXCLUDED.status,
+      updated_at = now()
+  `);
+  await audit(req.session.rapaduraUserId!, "RING_UPDATE", { status }, req.ip ?? "");
+  res.json({ ok: true });
+});
+
+// POST /rapadura/ring-project/photo — upload de foto (max 500KB, base64 no DB)
+router.post("/rapadura/ring-project/photo", requireRapaduraAuth,
+  uploadMiddleware.single("foto"),
+  async (req, res) => {
+    const file = (req as any).file as Express.Multer.File | undefined;
+    if (!file) { res.status(400).json({ error: "Arquivo obrigatório (campo 'foto')" }); return; }
+    if (file.size > 512_000) { res.status(400).json({ error: "Foto muito grande. Máximo: 500KB" }); return; }
+    const mime  = file.mimetype || "image/jpeg";
+    const b64   = file.buffer.toString("base64");
+    const dataUrl = `data:${mime};base64,${b64}`;
+    await db.execute(sql`
+      UPDATE rapadura_ring_project SET foto = ${dataUrl}, updated_at = now() WHERE slug = 'anel-mayumi'
+    `);
+    await audit(req.session.rapaduraUserId!, "RING_PHOTO_UPLOAD", { size: file.size, mime }, req.ip ?? "");
+    res.json({ ok: true, url: dataUrl.slice(0, 80) + "…" });
+  }
+);
+
+// DELETE /rapadura/ring-project/photo — remove foto
+router.delete("/rapadura/ring-project/photo", requireRapaduraAuth, async (req, res) => {
+  await db.execute(sql`UPDATE rapadura_ring_project SET foto = NULL, updated_at = now() WHERE slug = 'anel-mayumi'`);
+  res.json({ ok: true });
 });
 
 export default router;

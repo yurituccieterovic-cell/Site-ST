@@ -42,7 +42,7 @@ type Transacao = {
   notas: string | null; pertenceId: number | null; fundoId: number; fundoNome: string;
 };
 type ChatMsg = { role: "user" | "assistant"; content: string };
-type View = "oportunidades" | "pertences" | "transacoes" | "gerenciar" | "analisar" | "cana" | "comparar";
+type View = "oportunidades" | "pertences" | "transacoes" | "gerenciar" | "analisar" | "cana" | "comparar" | "anel";
 type XpPreviewItem = { data: string; descricao: string; valor: number; tipo: string; motivoI438?: string };
 
 type AlocacaoItem = {
@@ -2834,6 +2834,273 @@ function ChangePwModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+// ─── ANEL DE NOIVADO ─────────────────────────────────────────────────────────
+
+type RingStatus = "planejando" | "executando" | "concluido";
+
+interface RingProject {
+  dados: Record<string, unknown>;
+  foto?: string | null;
+  notas?: string | null;
+  status: RingStatus;
+  updated_at?: string;
+}
+
+function AnelView() {
+  const [project, setProject] = useState<RingProject | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [notas, setNotas] = useState("");
+  const [status, setStatus] = useState<RingStatus>("planejando");
+  const [uploading, setUploading] = useState(false);
+  const [msg, setMsg] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetch(`${API}/api/rapadura/ring-project`, { credentials: "include" })
+      .then(r => r.json() as Promise<{ project: RingProject | null }>)
+      .then(d => {
+        if (d.project) {
+          setProject(d.project);
+          setNotas(d.project.notas ?? "");
+          setStatus((d.project.status as RingStatus) ?? "planejando");
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const saveNotes = async () => {
+    setSaving(true); setMsg("");
+    try {
+      const r = await fetch(`${API}/api/rapadura/ring-project`, {
+        method: "PUT", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dados: project?.dados ?? {}, notas, status }),
+      });
+      if (r.ok) { setMsg("Salvo!"); setTimeout(() => setMsg(""), 2000); }
+      else setMsg("Erro ao salvar");
+    } catch { setMsg("Erro de rede"); } finally { setSaving(false); }
+  };
+
+  const uploadPhoto = async (file: File) => {
+    if (file.size > 512_000) { setMsg("Foto muito grande (máx 500KB)"); return; }
+    setUploading(true); setMsg("");
+    const fd = new FormData();
+    fd.append("foto", file);
+    try {
+      const r = await fetch(`${API}/api/rapadura/ring-project/photo`, {
+        method: "POST", credentials: "include", body: fd,
+      });
+      if (r.ok) {
+        const dataUrl = URL.createObjectURL(file);
+        setProject(p => p ? { ...p, foto: dataUrl } : p);
+        setMsg("Foto enviada!");
+        setTimeout(() => setMsg(""), 2000);
+      } else setMsg("Erro no upload");
+    } catch { setMsg("Erro de rede"); } finally { setUploading(false); }
+  };
+
+  const removePhoto = async () => {
+    await fetch(`${API}/api/rapadura/ring-project/photo`, { method: "DELETE", credentials: "include" });
+    setProject(p => p ? { ...p, foto: null } : p);
+  };
+
+  const d = project?.dados ?? {};
+  const statusColors: Record<RingStatus, string> = {
+    planejando: "#c8963b", executando: "#4a7c59", concluido: "#6644aa",
+  };
+
+  const field = (label: string, val: unknown) => val ? (
+    <div key={label} style={{ display: "flex", gap: 8, padding: "7px 0", borderBottom: "1px solid #0f1520" }}>
+      <span style={{ fontSize: 10, color: "#3d4a5e", letterSpacing: "0.1em", textTransform: "uppercase", minWidth: 120, flexShrink: 0 }}>{label}</span>
+      <span style={{ fontSize: 12, color: "#c5c0b8" }}>
+        {Array.isArray(val) ? (val as string[]).join(" · ") : String(val)}
+      </span>
+    </div>
+  ) : null;
+
+  if (loading) return <div style={{ padding: "48px 0", textAlign: "center", fontSize: 10, color: "#2a3545", letterSpacing: "0.2em" }}>carregando…</div>;
+
+  return (
+    <div style={{ maxWidth: 640, margin: "0 auto" }}>
+
+      {/* Header */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.3em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 6 }}>
+          Projeto especial
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 300, letterSpacing: "0.1em", color: "#ddd8d0", fontFamily: "'Georgia', serif" }}>
+            Anel de Noivado
+          </h2>
+          <span style={{
+            padding: "2px 8px", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
+            background: statusColors[status] + "22", color: statusColors[status], border: `1px solid ${statusColors[status]}44`,
+          }}>
+            {status}
+          </span>
+        </div>
+        <div style={{ fontSize: 11, color: "#5a5650", fontStyle: "italic" }}>
+          Para Mayumi ♡ — guardado pela Cana-Aurora
+        </div>
+      </div>
+
+      {/* Foto */}
+      <div style={{ marginBottom: 24 }}>
+        {project?.foto ? (
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <img
+              src={project.foto}
+              alt="Anel de noivado"
+              style={{ maxWidth: "100%", maxHeight: 320, objectFit: "contain", border: "1px solid #1a2030", display: "block" }}
+            />
+            <button
+              onClick={removePhoto}
+              style={{
+                position: "absolute", top: 6, right: 6,
+                background: "#040507cc", border: "none", color: "#5a5650",
+                cursor: "pointer", fontSize: 14, padding: "2px 6px", lineHeight: 1,
+              }}
+            >×</button>
+          </div>
+        ) : (
+          <div
+            onClick={() => fileRef.current?.click()}
+            style={{
+              border: "1px dashed #1a2030", padding: "32px 20px",
+              textAlign: "center", cursor: "pointer",
+              transition: "border-color .15s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = "#c8963b66")}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = "#1a2030")}
+          >
+            <div style={{ fontSize: 24, marginBottom: 8, opacity: 0.3 }}>💍</div>
+            <div style={{ fontSize: 10, color: "#3d4a5e", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+              {uploading ? "enviando…" : "Clique para adicionar referência visual"}
+            </div>
+            <div style={{ fontSize: 9, color: "#2a3040", marginTop: 4 }}>PNG · JPG · WEBP · máx 500KB</div>
+          </div>
+        )}
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          style={{ display: "none" }}
+          onChange={e => { const f = e.target.files?.[0]; if (f) uploadPhoto(f); e.target.value = ""; }}
+        />
+        {!project?.foto && (
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            style={{
+              marginTop: 8, padding: "6px 14px", background: uploading ? "#1a2030" : "transparent",
+              border: "1px solid #1a2030", color: uploading ? "#3d4a5e" : "#5a5650",
+              fontSize: 10, cursor: "pointer", fontFamily: "inherit", letterSpacing: "0.1em",
+            }}
+          >
+            {uploading ? "enviando…" : "Selecionar foto"}
+          </button>
+        )}
+      </div>
+
+      {/* Especificações técnicas */}
+      <div style={{ background: "#060b12", border: "1px solid #0f1520", padding: "16px 18px", marginBottom: 20 }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.25em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 12 }}>
+          Especificações
+        </div>
+        {field("Pedra", d.pedra)}
+        {field("Cor", d.cor)}
+        {field("Formato", d.formato)}
+        {field("Metal", d.metal)}
+        {field("Tamanho", d.tamanho ? `${d.tamanho} (dedo da Mayumi)` : null)}
+        {field("Garras", d.garras ? `${d.garras} garras reforçadas` : null)}
+        {field("Aro", d.aro_mm ? `${d.aro_mm}mm, ${d.acabamento}` : null)}
+        {field("Caixa", d.caixa)}
+        {field("Estilo", d.estilo)}
+        {field("Certificado", d.certificado)}
+        {field("Orçamento", d.orcamento_min && d.orcamento_max ? `R$${(d.orcamento_min as number).toLocaleString("pt-BR")} – R$${(d.orcamento_max as number).toLocaleString("pt-BR")}` : null)}
+        {field("Ourives ref.", d.ourives_ref)}
+        {field("Assembleia", d.assembleia_ref)}
+      </div>
+
+      {/* Status */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 8 }}>
+          Status
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          {(["planejando", "executando", "concluido"] as RingStatus[]).map(s => (
+            <button
+              key={s}
+              onClick={() => setStatus(s)}
+              style={{
+                padding: "5px 12px", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase",
+                cursor: "pointer", fontFamily: "inherit", border: "1px solid",
+                background: status === s ? statusColors[s] + "22" : "transparent",
+                borderColor: status === s ? statusColors[s] : "#1a2030",
+                color: status === s ? statusColors[s] : "#3d4a5e",
+              }}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Notas livres */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: "#3d4a5e", marginBottom: 8 }}>
+          Notas e atualizações
+        </div>
+        <textarea
+          value={notas}
+          onChange={e => setNotas(e.target.value)}
+          placeholder="Cotações visitadas, decisões de design, data alvo, surpresa para Mayumi…"
+          style={{
+            width: "100%", minHeight: 100, background: "#060b12", border: "1px solid #1a2030",
+            color: "#c5c0b8", fontSize: 12, padding: "10px 12px", fontFamily: "inherit",
+            resize: "vertical", boxSizing: "border-box", outline: "none",
+            lineHeight: 1.6,
+          }}
+        />
+      </div>
+
+      {/* Save */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <button
+          onClick={saveNotes}
+          disabled={saving}
+          style={{
+            padding: "8px 20px", background: saving ? "#1a2030" : "#c8963b",
+            color: saving ? "#3d4a5e" : "#040507", border: "none",
+            fontSize: 10, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", letterSpacing: "0.1em",
+          }}
+        >
+          {saving ? "Salvando…" : "Salvar"}
+        </button>
+        {msg && <span style={{ fontSize: 10, color: msg.startsWith("Erro") ? "#9a4040" : "#3f7254" }}>{msg}</span>}
+      </div>
+
+      {project?.updated_at && (
+        <div style={{ marginTop: 20, fontSize: 9, color: "#2a3040", letterSpacing: "0.1em" }}>
+          Última atualização: {new Date(project.updated_at).toLocaleString("pt-BR")}
+        </div>
+      )}
+
+      {/* Nota Cana */}
+      <div style={{
+        marginTop: 28, padding: "12px 16px",
+        background: "#06091230", borderLeft: "2px solid #c8963b20",
+        fontSize: 11, color: "#6644aa88", lineHeight: 1.6, fontStyle: "italic",
+      }}>
+        A Cana-Aurora conhece este projeto e pode ajudar com pesquisa de ourives, análise de orçamento,
+        acompanhamento de decisões e memória de conversas. Pergunte a ela diretamente na aba Cana-Aurora ✨
+      </div>
+    </div>
+  );
+}
+
 export function RapaduraPage() {
   const [user, setUser] = useState<RapaduraUser | null>(null);
   const [checking, setChecking] = useState(true);
@@ -2975,6 +3242,7 @@ export function RapaduraPage() {
     { id: "analisar", label: "Analisar" },
     { id: "comparar", label: "Comparar ⊕" },
     { id: "cana", label: "Cana-Aurora ✨", adminOnly: true },
+    { id: "anel", label: "Anel 💍", adminOnly: true },
     { id: "gerenciar", label: "Gerenciar", adminOnly: true },
   ];
 
@@ -3208,6 +3476,12 @@ export function RapaduraPage() {
           <CanaView onRefresh={loadData} />
         )}
         {view === "cana" && !isAdmin && (
+          <div style={{ textAlign: "center", padding: "64px 0", color: "#3d4a5e" }}>Acesso restrito.</div>
+        )}
+        {view === "anel" && isAdmin && (
+          <AnelView />
+        )}
+        {view === "anel" && !isAdmin && (
           <div style={{ textAlign: "center", padding: "64px 0", color: "#3d4a5e" }}>Acesso restrito.</div>
         )}
         {view === "gerenciar" && isAdmin && (

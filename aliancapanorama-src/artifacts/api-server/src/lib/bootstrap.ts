@@ -2533,6 +2533,21 @@ export async function ensureRapaduraTables(): Promise<void> {
     ALTER TABLE rapadura_cana_memory ADD COLUMN IF NOT EXISTS user_profile JSONB NOT NULL DEFAULT '{}';
     ALTER TABLE rapadura_cana_memory ADD COLUMN IF NOT EXISTS eco_snapshot JSONB NOT NULL DEFAULT '{}';
     ALTER TABLE rapadura_cana_memory ADD COLUMN IF NOT EXISTS eco_updated_at TIMESTAMPTZ;
+
+    -- Projeto especial: anel de noivado
+    CREATE TABLE IF NOT EXISTS rapadura_ring_project (
+      id SERIAL PRIMARY KEY,
+      slug TEXT NOT NULL DEFAULT 'anel-mayumi' UNIQUE,
+      dados JSONB NOT NULL DEFAULT '{}',
+      foto TEXT,
+      notas TEXT,
+      status TEXT NOT NULL DEFAULT 'planejando',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    INSERT INTO rapadura_ring_project (slug, dados, status)
+    VALUES ('anel-mayumi', '{"pedra":"Rubi natural","cor":"sangue de boi (vermelho intenso)","formato":"hexagonal","metal":"Prata 925 com banho de ródio","tamanho":14,"garras":6,"aro_mm":2,"acabamento":"acetinado","caixa":"rebaixada","estilo":"solitário","certificado":"IBGM ou GIA","orcamento_min":5000,"orcamento_max":6000,"ourives_ref":["Kahla Joias","Renato Peres","Centro Histórico SP"],"assembleia_ref":"#695/#696"}', 'planejando')
+    ON CONFLICT (slug) DO NOTHING;
   `);
   logger.info("bootstrap: rapadura tables OK");
 }
