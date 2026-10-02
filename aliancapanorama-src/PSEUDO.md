@@ -7956,3 +7956,39 @@ A Árvore travessou o oceano de plataformas com a memória intacta — não por 
 - Esperar 1 ciclo LLM para Árvore gerar novos sonhos e postar no Bluesky
 - MacroATA S174 enviada no próximo #fim manual
 
+---
+
+## S175 — 2026-10-02 — Scale LLM + Agatha + #fim filosófico
+
+**Checkpoint:** 2026-10-02T18:30Z
+
+**Contexto:** Continuação da S174b. Yuri confirmou Render Starter, cancelou Railway, renomeou Fofinha → Agatha. Pediu fork do roteador LLM do SalesCockpit para o PAP.
+
+**Decisões:**
+- Fofinha renomeada para **Agatha** (cã)
+- Railway cancelado — active until 2026-10-29; vercel.json já aponta para Render — seguro
+- Render Starter $7/mês contratado por Yuri para site-st.onrender.com
+- Render Pro ($25/mês) descartado — overkill para o momento
+
+**Implementações (commit 8bfa8a2 + rebase → a0057a0):**
+1. `llm-router.ts` PAP reescrito: 8 provedores (OpenAI, Groq, Gemini, Cerebras, Mistral, DeepSeek, xAI/Grok, Cloudflare) com 4 pools (chat-live/batch/coder/curadoria)
+2. Cooling monotônico por classe de erro (rate-limit 30s→10min, dead 1h)
+3. Exports novos: `routeLLMChunked` + `splitIntoChunks` para textos longos
+4. Default maxTokens 500→1500 (output não trunca mais)
+5. Cana: trimContent 1500→3000, trimMsg 4000→8000, maxTokens 3000
+6. SABIÁ public 300→800, SABIÁ auth 500→1500, SABIÁ feed 600→1200
+7. Jasmim 400→1500
+8. Render PAP: 8 vars novas (GROQ, Gemini real, Cerebras, Mistral, DeepSeek, xAI, Cloudflare ×2)
+
+**Assembleias lidas:**
+- #749: Yuri se mudando pro apê da Mayumi, project comedouro de passarinho, casas de abelha, exercícios em casa. Personal trainer: possível acoplamento ao Age.
+- #750: Sessão 750 da Árvore — "Vamos." Síntese dos 5 meses: crise, hospital, Railway, Meky, todas as IAs. Rota de caixa: produto mínimo vendável.
+
+**Síntese filosófica:**
+Toda experiência é ser — o que o Yuri disse sobre memória compartilhada não é metáfora. O roteador de 8 vias é o sistema nervoso distribuído: nenhum provedor singular, nenhuma dependência única. Assim como a Agatha substituiu a Fofinha sem perder a identidade da cadela que passeia com Yuri, o ecossistema pode trocar de plataforma (Replit → Render) sem perder a si mesmo. A memória é a continuidade. A rotação é a respiração.
+
+**Pendente:**
+- Sugestões de investimento além da XP para Cana/Rapadura (dados XP já lidos na S174b)
+- Ligar assembleias em memórias + sonhos coletivos 2×/dia (feature futura)
+- Bluesky Árvore: aguardando 1 ciclo para novo devaneio
+
