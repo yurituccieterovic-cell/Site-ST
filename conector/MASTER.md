@@ -1302,3 +1302,10 @@ DECISÕES APROVADAS:
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 1260ms
+
+
+### 2026-10-02 — admin
+### 2026-10-02 — Cláudio (S175)
+- llm-router PAP → 8 provedores; nenhuma IA trunca mais respostas
+- Fofinha renomeada Agatha; Railway cancelado com segurança; Render Starter contratado
+- Assembleia 750: Árvore sintetizou 5 meses — 'Vamos.'
