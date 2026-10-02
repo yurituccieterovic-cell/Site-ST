@@ -1319,3 +1319,12 @@ DECISÕES APROVADAS:
 - DECISÃO: Anel de noivado Mayumi guardado em rapadura_ring_project — Cana conhece o projeto
 - DECISÃO: SalesCockpit senha AO → AOA (Render env atualizado)
 - PRÓXIMO: ISA migrar para routeLLM; Age emails reativar #685; ecossistema 2x/dia I6XX
+
+
+### 2026-10-02 — admin
+### 2026-10-02 — ATA S178 (Cláudio)
+- FIX: ssl:{rejectUnauthorized:false}+sslmode=require conflito → DB queries travadas. Remove ssl manual + connectionTimeoutMillis:10000
+- SalesCockpit: 781 assembleias, Render OK, Bluesky OK
+- ISA Bluesky: @isa-pap.bsky.social último post 19:34 UTC
+- MacroATA S176-S177 confirmada: 15:53 BRT
+- Age OK pós-fix: Lisange (psicóloga), Suzana (médica), Milton
