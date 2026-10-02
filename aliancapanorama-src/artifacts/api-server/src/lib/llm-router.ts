@@ -50,8 +50,8 @@ const MODELS: Record<ProviderName, string> = {
 };
 
 const POOLS: Record<LLMPool, ProviderName[]> = {
-  // Latência importa: Groq 1º (mais rápido), xAI 2º, Gemini 3º
-  "chat-live": ["groq", "xai", "gemini", "openai", "cerebras"],
+  // xAI primeiro: única chave confiável no momento (Groq 404, Gemini quota, OpenAI sem crédito)
+  "chat-live": ["xai", "groq", "gemini", "openai", "cerebras"],
   // Tarefas background: Cloudflare 10k/dia, Mistral, Cerebras como reservas
   "batch":     ["cloudflare", "mistral", "cerebras", "gemini", "deepseek"],
   // Raciocínio profundo: DeepSeek-V3 forte e barato
@@ -151,16 +151,23 @@ class AdapterError extends Error {
   }
 }
 
-async function fetchT(url: string, init: RequestInit): Promise<Response> {
+async function fetchT(url: string, init: RequestInit, outerSignal?: AbortSignal): Promise<Response> {
+  if (outerSignal?.aborted) throw new AdapterError(499, "aborted", "caller-cancelled");
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  const onOuter = () => ctrl.abort();
+  outerSignal?.addEventListener("abort", onOuter, { once: true });
   try {
     return await fetch(url, { ...init, signal: ctrl.signal });
   } catch (err) {
-    if (ctrl.signal.aborted) throw new AdapterError(504, "timeout", `>${TIMEOUT_MS}ms`);
+    if (ctrl.signal.aborted) {
+      if (outerSignal?.aborted) throw new AdapterError(499, "aborted", "caller-cancelled");
+      throw new AdapterError(504, "timeout", `>${TIMEOUT_MS}ms`);
+    }
     throw err;
   } finally {
     clearTimeout(t);
+    outerSignal?.removeEventListener("abort", onOuter);
   }
 }
 
@@ -180,7 +187,7 @@ async function openaiCompat(
       temperature: req.temperature,
       ...(req.jsonMode ? { response_format: { type: "json_object" as const } } : {}),
     }),
-  });
+  }, req.signal);
   if (!resp.ok) {
     const body = await resp.text().catch(() => "");
     throw new AdapterError(resp.status, `${resp.status}`, body);
@@ -262,7 +269,7 @@ async function callGemini(req: LLMRequest): Promise<string> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  });
+  }, req.signal);
   if (!resp.ok) {
     const body = await resp.text().catch(() => "");
     throw new AdapterError(resp.status, `${resp.status}`, body);
@@ -282,7 +289,7 @@ async function callCloudflare(req: LLMRequest): Promise<string> {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({ messages: req.messages, max_tokens: req.maxTokens, temperature: req.temperature }),
-  });
+  }, req.signal);
   if (!resp.ok) {
     const body = await resp.text().catch(() => "");
     throw new AdapterError(resp.status, `${resp.status}`, body);
@@ -322,6 +329,11 @@ export async function routeLLM(req: LLMRequest): Promise<string> {
 
   const tried: string[] = [];
   for (const p of providers) {
+    if (req.signal?.aborted) {
+      const err = new Error("Request aborted by caller");
+      err.name = "AbortError";
+      throw err;
+    }
     if (!hasKey(p)) { tried.push(`${p}=no-key`); continue; }
     if (!isAvailable(p)) {
       const rem = Math.max(0, Math.round((state[p].cooldownUntil - Date.now()) / 1000));

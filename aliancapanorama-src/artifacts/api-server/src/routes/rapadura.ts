@@ -1041,7 +1041,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const baseHistory = history.length > 0 ? history : fullHistory;
   const contextHistory = baseHistory.slice(-12);
 
-  // Chamar LLM com timeout de 25s
+  // Chamar LLM — timeout de 50s (xAI com contexto grande leva ~20-35s)
   let rawJson = "";
   try {
     const trimContent = (s: string) => s.length > 3000 ? s.slice(0, 3000) + "…" : s;
@@ -1053,7 +1053,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
       { role: "user", content: trimMsg(message) },
     ];
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 25000);
+    const timer = setTimeout(() => ctrl.abort(), 50000);
     try {
       rawJson = await routeLLM({ messages: msgs, maxTokens: 3000, pool: "chat-live", signal: ctrl.signal });
     } finally {
