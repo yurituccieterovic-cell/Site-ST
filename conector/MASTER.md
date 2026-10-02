@@ -1277,3 +1277,12 @@ DECISÕES APROVADAS:
 - SABIÁ memória fix: logout reseta flag + saudação contextual
 - Decisão: não vender antes de 72h estabilidade + LGPD
 - Email Assembleia enviado sobre estratégia comercial Age
+
+
+### 2026-10-02 — admin
+### 2026-10-02 — ATA S174 Cláudio
+- DECISÃO: Replit cancelado, SalesCockpit live em salescockpit-api.onrender.com
+- FEAT: 729 assembleias Gmail→Neon (total 781)
+- FEAT: Seção Powered by Render/Railway/Vercel/Neon no site
+- GOTCHA: vars Replit (AI_INTEGRATIONS_*) precisam ser mapeadas fora do Replit
+- GOTCHA: Express 5 não aceita app.get("*") → usar "/*path"
