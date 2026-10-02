@@ -278,6 +278,46 @@ function DodgeGate() {
           </div>
         </div>
       </div>
+
+      {/* Powered by — infraestrutura */}
+      <div className="border-t border-gray-900 px-6 py-10 bg-black">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-center text-gray-600 text-[10px] uppercase tracking-widest mb-6 font-mono">Infraestrutura</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {/* Render */}
+            <a href="https://render.com" target="_blank" rel="noreferrer"
+              className="flex flex-col items-center gap-2 rounded-xl border border-[#46E3B7]/20 bg-[#46E3B7]/5 px-4 py-4 hover:border-[#46E3B7]/50 transition-colors group">
+              <div className="font-mono text-[10px] text-[#46E3B7]/60 group-hover:text-[#46E3B7] transition-colors leading-none tracking-widest uppercase">Render</div>
+              <div className="font-mono text-xs text-[#46E3B7] font-bold tracking-widest">API</div>
+              <div className="font-mono text-[9px] text-gray-600 text-center leading-relaxed">Backend + Deploy<br/>PostgreSQL host</div>
+            </a>
+            {/* Railway */}
+            <a href="https://railway.app" target="_blank" rel="noreferrer"
+              className="flex flex-col items-center gap-2 rounded-xl border border-[#B85EFF]/20 bg-[#B85EFF]/5 px-4 py-4 hover:border-[#B85EFF]/50 transition-colors group">
+              <div className="font-mono text-[10px] text-[#B85EFF]/60 group-hover:text-[#B85EFF] transition-colors leading-none tracking-widest uppercase">Railway</div>
+              <div className="font-mono text-xs text-[#B85EFF] font-bold tracking-widest">DB</div>
+              <div className="font-mono text-[9px] text-gray-600 text-center leading-relaxed">PostgreSQL<br/>infraestrutura</div>
+            </a>
+            {/* Vercel */}
+            <a href="https://vercel.com" target="_blank" rel="noreferrer"
+              className="flex flex-col items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-4 hover:border-white/30 transition-colors group">
+              <div className="font-mono text-[10px] text-gray-500 group-hover:text-white transition-colors leading-none tracking-widest uppercase">Vercel</div>
+              <div className="font-mono text-xs text-white font-bold tracking-widest">▲</div>
+              <div className="font-mono text-[9px] text-gray-600 text-center leading-relaxed">Frontend deploy<br/>edge network</div>
+            </a>
+            {/* Neon */}
+            <a href="https://neon.tech" target="_blank" rel="noreferrer"
+              className="flex flex-col items-center gap-2 rounded-xl border border-[#00E699]/20 bg-[#00E699]/5 px-4 py-4 hover:border-[#00E699]/50 transition-colors group">
+              <div className="font-mono text-[10px] text-[#00E699]/60 group-hover:text-[#00E699] transition-colors leading-none tracking-widest uppercase">Neon</div>
+              <div className="font-mono text-xs text-[#00E699] font-bold tracking-widest">~</div>
+              <div className="font-mono text-[9px] text-gray-600 text-center leading-relaxed">Serverless<br/>PostgreSQL</div>
+            </a>
+          </div>
+          <p className="text-center text-gray-700 text-[9px] font-mono mt-6">
+            Sociedade Tucci · stack 100% cloud · zero downtime
+          </p>
+        </div>
+      </div>
     </div>
   );
   return <DodgePage superAdm={state.tier >= 9}/>;

@@ -112,8 +112,34 @@ export function ArquiteturaPage() {
               ))}
             </section>
 
+            {/* Infraestrutura cloud */}
+            <section>
+              <div className="flex items-center gap-2 mb-3">
+                <Zap className="w-4 h-4 text-green-400" />
+                <h2 className="text-sm font-bold uppercase tracking-widest text-green-400">Powered by</h2>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {[
+                  { name: "Render", color: "#46E3B7", sub: "API + backend", icon: "▣", href: "https://render.com" },
+                  { name: "Railway", color: "#B85EFF", sub: "PostgreSQL DB", icon: "🚂", href: "https://railway.app" },
+                  { name: "Vercel", color: "#ffffff", sub: "Frontend deploy", icon: "▲", href: "https://vercel.com" },
+                  { name: "Neon", color: "#00E699", sub: "Serverless PG", icon: "~", href: "https://neon.tech" },
+                ].map(s => (
+                  <a key={s.name} href={s.href} target="_blank" rel="noreferrer"
+                    className="rounded-lg border px-3 py-3 flex flex-col gap-1 hover:brightness-125 transition-all"
+                    style={{ borderColor: s.color + "33", background: s.color + "0a" }}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg leading-none">{s.icon}</span>
+                      <span className="text-xs font-bold" style={{ color: s.color }}>{s.name}</span>
+                    </div>
+                    <span className="text-[10px] text-white/30">{s.sub}</span>
+                  </a>
+                ))}
+              </div>
+            </section>
+
             {/* Ecosia */}
-            <EcosiaSearch dark keywords={["Express.js Railway deploy", "Drizzle ORM PostgreSQL", "React Vite Vercel", "node-cron autonomous jobs", "bcrypt express-session"]} label="Aprofundar arquitetura no Ecosia" />
+            <EcosiaSearch dark keywords={["Express.js Render deploy", "Drizzle ORM Neon PostgreSQL", "React Vite Vercel", "node-cron autonomous jobs", "bcrypt express-session"]} label="Aprofundar arquitetura no Ecosia" />
           </>
         )}
 
