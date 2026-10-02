@@ -452,6 +452,7 @@ export function splitIntoChunks(text: string, chunkSize = 5000): string[] {
 // ── Estado para admin ─────────────────────────────────────────────────────────
 
 export function getRouterState() {
+  const now = Date.now();
   return {
     pools: POOLS,
     providers: (Object.keys(state) as ProviderName[]).map((name) => ({
@@ -459,7 +460,21 @@ export function getRouterState() {
       model:      MODELS[name],
       hasKey:     hasKey(name),
       available:  isAvailable(name),
+      coolingSecs: state[name].cooldownUntil > now ? Math.ceil((state[name].cooldownUntil - now) / 1000) : 0,
       ...state[name],
     })),
   };
+}
+
+/** Limpa cooling de um provedor específico ou de todos. */
+export function resetProviderCooling(provider?: string): { reset: string[] } {
+  const targets = provider
+    ? (state[provider as ProviderName] ? [provider as ProviderName] : [])
+    : (Object.keys(state) as ProviderName[]);
+  for (const p of targets) {
+    state[p].cooldownUntil = 0;
+    state[p].consecFails   = 0;
+    state[p].lastError     = undefined;
+  }
+  return { reset: targets };
 }

@@ -948,7 +948,9 @@ Regras:
 - Use ADD_FUNDO apenas quando explicitamente pedido por admin para adicionar ao catálogo
 - Sempre extraia TODOS os itens mencionados em itens[]
 - LIMITE: máximo 15 itens por mensagem. Se tiver mais de 15, processe os primeiros 15 e avise no campo "resposta" quantos ficaram de fora
-- IAs (Cana-Aurora, ISA, Artesão) têm Write access completo ao dossiê — podem atualizar campos sem aprovação humana`;
+- IAs (Cana-Aurora, ISA, Artesão) têm Write access completo ao dossiê — podem atualizar campos sem aprovação humana
+
+SISTEMA: Você roda em rotação automática entre 8 provedores LLM (xAI, Groq, Gemini, OpenAI, Cerebras, Mistral, DeepSeek, Cloudflare) via roteador com 4 pools. Se houver instabilidade momentânea, outro provedor assume. Pool padrão: chat-live. DODGE é o analista de sistemas que monitora e pode corrigir o roteador.`;
 
 router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   const { message, history = [] } = req.body as { message: string; history?: any[] };

@@ -3,7 +3,7 @@ import { db, nodesTable, bibliotecaDocsTable } from "@workspace/db";
 import { eq, inArray, sql, desc } from "drizzle-orm";
 import { getScArvoreChat, getScAssembleias, getScAssembleiaMessages, getScAgoras, getScDocs, getScStatus } from "../lib/salescockpit-bridge";
 import { invalidateNodeCache, getAllNodes } from "../lib/nodeCache";
-import { routeLLM } from "../lib/llm-router";
+import { routeLLM, getRouterState, resetProviderCooling } from "../lib/llm-router";
 import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
 
@@ -19,14 +19,19 @@ const publicChatRateLimit = rateLimit({
   message: { error: "Muitas mensagens. Aguarde um momento.", login_required: false },
 });
 
-const DODGE_SYSTEM_PROMPT = `Você é o Dodge, assistente da Sociedade Tucci.
+const DODGE_SYSTEM_PROMPT = `Você é o Dodge, assistente e analista de sistemas da Sociedade Tucci.
 
 Você pode:
 - Explicar o que é a Sociedade Tucci e o ecossistema PAP
 - Falar sobre como projetos com IA são desenvolvidos em geral
-- Apresentar as IAs do ecossistema (ISA, Amanda, MEKY, Árvore)
+- Apresentar as IAs do ecossistema (ISA, Cana-Aurora, SABIÁ, Jasmim, MEKY, Árvore)
 - Contar como seria o processo de produção de um projeto de IA
 - Responder perguntas sobre educação, gamificação, sistemas cognitivos
+
+Contexto técnico (use se perguntado):
+- O ecossistema roda em rotação multi-provedor de LLMs (xAI/Groq/Gemini/OpenAI/Cerebras/Mistral/DeepSeek/Cloudflare)
+- Cada IA usa um pool específico; se um provedor cair, outro assume automaticamente
+- Para status técnico em tempo real, use o painel admin (requer login superadm)
 
 Você NÃO deve:
 - Ajudar diretamente com o projeto específico do usuário (código, planejamento, execução)
@@ -414,6 +419,80 @@ router.get("/dodge/varredura", async (req, res) => {
       falhas: Object.entries(checks).filter(([,v]) => !v.ok).map(([k]) => k),
     },
   });
+});
+
+// ── LLM Router admin ─────────────────────────────────────────────────────────
+
+// GET /api/dodge/router-state — estado dos provedores LLM (adm)
+router.get("/dodge/router-state", (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+  res.json(getRouterState());
+});
+
+// POST /api/dodge/router-reset — limpar cooling de um ou todos provedores (superadm)
+// Body: { provider?: string }  (omitir provider = limpar todos)
+router.post("/dodge/router-reset", (req, res) => {
+  if (!isSuperAdm(req)) { res.status(403).json({ error: "Acesso superadm obrigatório" }); return; }
+  const { provider } = req.body as { provider?: string };
+  const result = resetProviderCooling(provider);
+  res.json({ ok: true, ...result });
+});
+
+// POST /api/dodge/syslog-chat — DODGE como analista de sistemas (adm)
+// Inclui estado atual do router + varredura recente no contexto
+const DODGE_ANALYST_SYSTEM = `Você é DODGE, analista de sistemas da Sociedade Tucci.
+
+Seu papel: monitorar saúde do ecossistema PAP, diagnosticar falhas de IA e propor correções.
+
+Você conhece:
+- Roteador LLM 8-vias: xAI/Groq/Gemini/OpenAI/Cerebras/Mistral/DeepSeek/Cloudflare
+- Pools: chat-live (Cana/SABIÁ/Jasmim), batch (assembleias), coder (raciocínio), curadoria (polish)
+- Cooling: rate-limit=30s→10min, dead/auth/forbidden=1h, server-error=2min
+- Ações disponíveis via API:
+  * GET /api/dodge/router-state → ver provedores com coolingSecs
+  * POST /api/dodge/router-reset {provider?} → limpar cooling (superadm)
+  * GET /api/dodge/varredura → saúde de todas as tabelas Neon
+
+Estado atual do router injetado no contexto desta conversa.
+
+Diagnóstico: leia o estado, identifique quais provedores estão em cooling/sem chave,
+diga qual está servindo agora, e sugira ação quando necessário.
+
+Seja direto, técnico, em PT-BR. Se identificar problema crítico, descreva em 1-2 frases o impacto e a correção.`;
+
+router.post("/dodge/syslog-chat", async (req, res) => {
+  if (!isAdm(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+
+  const schema = z.object({
+    messages: z.array(z.object({
+      role: z.enum(["user", "assistant"]),
+      content: z.string().max(4000),
+    })).min(1).max(30),
+  });
+  const parsed = schema.safeParse(req.body);
+  if (!parsed.success) { res.status(400).json({ error: "Payload inválido" }); return; }
+
+  const { messages } = parsed.data;
+  const routerState = getRouterState();
+  const routerBlock = `\n\n=== ESTADO ATUAL DO ROUTER LLM (${new Date().toISOString()}) ===\n` +
+    routerState.providers.map(p =>
+      `${p.name.padEnd(10)} | model: ${p.model} | chave: ${p.hasKey ? "sim" : "NÃO"} | disponível: ${p.available ? "SIM" : "cooling " + p.coolingSecs + "s"} | erros: ${p.failCount} | sucessos: ${p.successCount} | último erro: ${p.lastError ?? "-"}`
+    ).join("\n") +
+    `\n\nPools:\n` + Object.entries(routerState.pools).map(([pool, providers]) => `  ${pool}: [${providers.join(", ")}]`).join("\n");
+
+  try {
+    const reply = await routeLLM({
+      messages: [
+        { role: "system", content: DODGE_ANALYST_SYSTEM + routerBlock },
+        ...messages.map(m => ({ role: m.role as "user" | "assistant", content: m.content })),
+      ],
+      pool: "chat-live",
+      maxTokens: 1000,
+    });
+    res.json({ reply, routerState });
+  } catch (err) {
+    res.status(503).json({ error: "IA indisponível", detail: String(err) });
+  }
 });
 
 // POST /api/dodge/varredura — Dodge executa varredura e registra no roundtable + Conector
