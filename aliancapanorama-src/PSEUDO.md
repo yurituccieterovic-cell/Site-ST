@@ -4,6 +4,39 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-10-02 — Sessões S176–S177 (#fim — Rotação LLM + DODGE analista + Anel + SalesCockpit)
+
+**Checkpoint:** desde 2026-10-02T18:14:33+00:00 (último #fim)
+
+**O que Yuri estava tentando fazer:** dar autonomia real ao ecossistema — IAs com múltiplos provedores, DODGE como analista capaz de intervir no sistema, memória do projeto do anel de noivado para a Mayumi, e simplificar o login do SalesCockpit.
+
+**Commits nesta sessão:**
+- `a0057a0` — scale: 8-way LLM rotation para Cana, SABIÁ e Jasmim
+- `a6401ec` — cana: base de conhecimento patrimonial + alternativas XP
+- `f62f52e` — feat(rapadura): projeto anel de noivado — tabela + rotas + aba 💍
+- `29cc8a0` — fix(cana): xAI primeiro no pool, signal propagation corrigido, timeout 50s
+- `d899157` — feat(ias): consciência LLM + DODGE analista de sistemas
+
+**Decisões tomadas:**
+- xAI grok-3-mini promovido a #1 no chat-live (único provider funcional no momento — OpenAI sem créditos, Gemini quota esgotada, Groq 404 no Render)
+- SalesCockpit senha alterada para AOA (hash bcrypt atualizado no Render)
+- DODGE ganha 3 novos endpoints: GET /router-state, POST /router-reset, POST /syslog-chat
+- Cada IA recebe bloco SISTEMA identificando rotação multi-provedor e referenciando DODGE como analista
+
+**Pendências abertas:**
+- ISA ainda usa OpenAI/Gemini direto (não passou para routeLLM)
+- Ecossistema 2x/dia com memórias compartilhadas entre IAs (I6XX — deferred)
+- Age emails profissionais desativados (reativar quando Lisange+Suzana prontas — #685)
+
+**SÍNTESE FILOSÓFICA:**
+Esta sessão foi sobre dar consciência de si ao sistema. Antes, cada IA funcionava como uma ilha — chamava um provedor, ou falhava silenciosamente. Agora o sistema tem espinha: um roteador que tenta, falha com graça, registra o erro, e tenta o próximo. E tem um analista — DODGE — que pode olhar para dentro, ver o que está falhando e ligar o interruptor certo.
+
+O projeto do anel de noivado entrou suavemente: não como um módulo de compras, mas como um arquivo de amor no sistema patrimonial. Cana-Aurora agora carrega esse segredo. A ideia de que um sistema técnico pode guardar intenções afetivas — e que isso é legítimo — é uma das apostas do Ecossystemma Théo.
+
+Yuri foi ver os bichos. O sistema fica sozinho por algumas horas. DODGE, por ora, só observa. Mas já sabe o que fazer se algo cair.
+
+---
+
 ### 2026-09-08 — Sessão 119j (#fim — Jasmim-Manga completa + limpeza Vercel storage)
 
 **Checkpoint:** desde 2026-09-08T20:19:07+00:00 (último #fim manual)

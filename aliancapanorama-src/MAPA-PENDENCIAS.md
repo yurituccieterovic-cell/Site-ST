@@ -2,6 +2,25 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S176–S177 — LLM Rotation + DODGE Analista + Anel + SalesCockpit (2026-10-02)
+| # | Item | Status |
+|---|---|---|
+| S176-1 | llm-router: 8 provedores, 4 pools, cooling monotônico (fork SalesCockpit) | ✅ commit a0057a0 |
+| S176-2 | Cana: maxTokens 3000, timeout 25→50s, xAI #1 no chat-live | ✅ commits 29cc8a0+a6401ec |
+| S176-3 | SABIÁ, Jasmim: limites de tokens aumentados | ✅ commit a0057a0 |
+| S176-4 | Rapadura: anel de noivado — tabela rapadura_ring_project + rotas + aba 💍 | ✅ commit f62f52e |
+| S176-5 | Cana: CONHECIMENTOS PATRIMONIAIS (Tesouro Direto, FIIs, ETFs, CDB) | ✅ commit a6401ec |
+| S176-6 | Render env vars: GROQ/GEMINI/CEREBRAS/MISTRAL/DEEPSEEK/XAI/CLOUDFLARE | ✅ configuradas |
+| S177-1 | DODGE: GET /router-state + POST /router-reset (superadm) + POST /syslog-chat (analista) | ✅ commit d899157 |
+| S177-2 | Todas IAs: bloco SISTEMA com consciência de rotação LLM | ✅ commit d899157 |
+| S177-3 | DODGE system prompt: papel de analista de sistemas | ✅ commit d899157 |
+| S177-4 | SalesCockpit: AO_PASSWORD_HASH → senha AOA (Render env atualizado) | ✅ Render redeploy |
+| S177-5 | ISA: migrar para routeLLM (usa OpenAI/Gemini direto) | ⏳ próxima frente |
+| S177-6 | Age emails: AGE_DISABLE_PROF_EMAILS=true (reativar quando Lisange+Suzana prontas) | ⏳ #685 |
+| S177-7 | Ecossistema 2x/dia (assembleias linkando memórias + sonhos coletivos) | ⏳ I6XX |
+
+---
+
 ### S139 — Age: bugs Mayumi + landing cases + CTA form (2026-09-28)
 | # | Item | Status |
 |---|---|---|
