@@ -148,7 +148,7 @@ router.post("/jasmim/myym/chat", async (req, res) => {
   messages.push({ role: "user", content: mensagem.trim() });
 
   try {
-    const resposta = await routeLLM({ messages, pool: "chat-live", maxTokens: 400, temperature: 0.8 });
+    const resposta = await routeLLM({ messages, pool: "chat-live", maxTokens: 1500, temperature: 0.8 });
     await db.execute(sql`
       INSERT INTO jm_myym_memory (tipo, conteudo)
       VALUES ('conversa', ${`[user] ${mensagem.trim()}\n[myym] ${resposta}`})

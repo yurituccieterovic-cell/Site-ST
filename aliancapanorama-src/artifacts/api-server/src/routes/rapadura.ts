@@ -1001,8 +1001,8 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
   // Chamar LLM com timeout de 25s
   let rawJson = "";
   try {
-    const trimContent = (s: string) => s.length > 1500 ? s.slice(0, 1500) + "…" : s;
-    const trimMsg    = (s: string) => s.length > 4000 ? s.slice(0, 4000) + "…" : s;
+    const trimContent = (s: string) => s.length > 3000 ? s.slice(0, 3000) + "…" : s;
+    const trimMsg    = (s: string) => s.length > 8000 ? s.slice(0, 8000) + "…" : s;
     const combinedHistory = contextHistory;
     const msgs: any[] = [
       { role: "system", content: systemWithContext },
@@ -1012,7 +1012,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 25000);
     try {
-      rawJson = await routeLLM({ messages: msgs, maxTokens: 2000, signal: ctrl.signal });
+      rawJson = await routeLLM({ messages: msgs, maxTokens: 3000, pool: "chat-live", signal: ctrl.signal });
     } finally {
       clearTimeout(timer);
     }
@@ -1252,7 +1252,7 @@ router.post("/rapadura/cana", requireRapaduraAuth, async (req, res) => {
           const ctrl2 = new AbortController();
           const timer2 = setTimeout(() => ctrl2.abort(), 15000);
           try {
-            newSummary = await routeLLM({ messages: [{ role: "user", content: resumoPrompt }], maxTokens: 400, signal: ctrl2.signal });
+            newSummary = await routeLLM({ messages: [{ role: "user", content: resumoPrompt }], maxTokens: 700, pool: "batch", signal: ctrl2.signal });
           } finally { clearTimeout(timer2); }
         } catch { /* resumo falhou — mantém anterior */ }
       }

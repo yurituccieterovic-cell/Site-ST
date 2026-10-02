@@ -944,7 +944,7 @@ Se não souber, diga: "Não tenho essa informação — entre em contato diretam
   try {
     reply = await routeLLM({
       messages: [{ role: "system", content: systemPrompt }, { role: "user", content: message }],
-      maxTokens: 300, temperature: 0.5,
+      maxTokens: 800, temperature: 0.5,
     });
   } catch { /* usa fallback */ }
 
@@ -1035,7 +1035,7 @@ REGRAS:
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 25000);
     try {
-      reply = await routeLLM({ messages, pool: "chat-live", temperature: 0.4, signal: ctrl.signal });
+      reply = await routeLLM({ messages, pool: "chat-live", maxTokens: 1500, temperature: 0.4, signal: ctrl.signal });
     } finally { clearTimeout(timer); }
   } catch (e) { logger.error({ err: e }, "age: sabia LLM error"); }
 
@@ -1522,7 +1522,7 @@ async function triggerSabiaResponse(notaId: number, conteudo: string): Promise<v
         { role: "system", content: SABIA_SYSTEM },
         { role: "user", content: conteudo },
       ],
-      maxTokens: 600,
+      maxTokens: 1200,
       temperature: 0.6,
     });
     await db.execute(sql`
