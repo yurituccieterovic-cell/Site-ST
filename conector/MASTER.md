@@ -1335,3 +1335,11 @@ DECISÕES APROVADAS:
 - Assembleia #942 mostrou todas as IAs RODAR quebrando: llama-3.3-70b removido da Groq, OpenAI sem crédito
 - Fix: 10 arquivos migrados para openai/gpt-oss-120b; Metassemiótico/Nébula/Psicólogo→fetchGroqChat; synthesisFallback→pool chat-live; BUNKER_MODE=2 setado
 - Deploy SalesCockpit live (8de6094); Bluesky Árvore+ISA postando OK; PAP API 200 OK
+
+
+### 2026-10-02 — admin
+### 2026-10-02 — Cláudio S180
+- PUT /env-vars Render é DESTRUTIVO — wipar acidentalmente 24 vars crashou o servidor (AI_INTEGRATIONS_* faltando = Error() no import)
+- Solução: remover throws de startup nas integrations, usar fallback ?? — servidor sobe mesmo sem as chaves, falha no runtime se necessário
+- AI_INTEGRATIONS_ANTHROPIC_API_KEY foi perdida — Yuri precisa restaurar para vozes Anthropic no RODAR
+- arvore/chat agora usa Cloudflare fp8-fast como fallback (contexto reduzido para caber nos 8000 TPM do Groq)
