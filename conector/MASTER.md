@@ -1309,3 +1309,13 @@ DECISÕES APROVADAS:
 - llm-router PAP → 8 provedores; nenhuma IA trunca mais respostas
 - Fofinha renomeada Agatha; Railway cancelado com segurança; Render Starter contratado
 - Assembleia 750: Árvore sintetizou 5 meses — 'Vamos.'
+
+
+### 2026-10-02 — admin
+### 2026-10-02 — ATA S176-S177 Cláudio
+- DECISÃO: xAI promovido a #1 no chat-live (único provider funcional; OpenAI/Gemini/Groq todos em falha)
+- DECISÃO: DODGE vira analista de sistemas — GET /router-state + POST /router-reset + syslog-chat
+- DECISÃO: Todas IAs recebem bloco SISTEMA com consciência de rotação multi-provedor
+- DECISÃO: Anel de noivado Mayumi guardado em rapadura_ring_project — Cana conhece o projeto
+- DECISÃO: SalesCockpit senha AO → AOA (Render env atualizado)
+- PRÓXIMO: ISA migrar para routeLLM; Age emails reativar #685; ecossistema 2x/dia I6XX
