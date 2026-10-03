@@ -4,6 +4,40 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-10-03 — Sessão S183 (#fim — SalesCockpit IAs + Age email management)
+
+**Checkpoint:** desde 2026-10-03T02:58:15+00:00 (último #fim)
+
+**O que Yuri estava tentando fazer:** consertar o pipeline de emails do RODAR (ATA não chegava porque a chave Anthropic foi perdida), modernizar o pool de LLMs gratuitos removendo provedores pagos, e dar aos profissionais do Age controle sobre seu email de verificação.
+
+**Commits nesta sessão:**
+- `ae29e56` (Site-ST) — fix: ssl pool Neon no Render (rejectUnauthorized:false + timeout 15s)
+- `79b1305` (Site-ST) — feat(age): email management — editar/apagar/verificar com código 6 dígitos
+- `0be8d52` (SalesCockpit) — fix(rodar): Anthropic→routeChat("batch") + llm-router pools sem Cerebras/DeepSeek
+
+**Decisões tomadas:**
+- Anthropic não é mais necessária no SalesCockpit — todas as chamadas de síntese (Secretário/PERFEITO, Ágora, Canva) migradas para `routeChat("batch")` que usa Gemini como primário
+- 402 tratado como erro permanente no llm-router (mesmo que 401/403/404)
+- Cerebras e DeepSeek removidos dos pools — ambos exigem pagamento agora
+- Pools revisados: "batch" = gemini→cloudflare→groq→mistral; "chat-live" = groq→cloudflare→gemini→mistral
+- Age email management: novo fluxo de verificação com código de 6 dígitos em 30min; email pendente separado do email ativo
+
+**Problemas encontrados:**
+- Render API retornava 503 (DB unreachable) — S178 removeu ssl manual mas o problema voltou; fix: recolocar ssl:{rejectUnauthorized:false}
+- S178 ATA dizia não usar ssl manual — mas hoje o problema era diferente (conexão falhava completamente, não travava)
+- Conector estava com timeout (API Render estava no cold start) — não bloqueou o trabalho
+
+**Próximos passos:**
+- Testar RODAR completo após deploy SalesCockpit (verificar se PERFEITO chega por email)
+- Age: testar fluxo completo de verificação de email no browser
+- Mistral (429), OpenRouter (401): investigar se há nova key disponível
+- Colesterol: projeto anunciado por Yuri na S182 — ainda sem início
+
+**SÍNTESE FILOSÓFICA:**
+Esta sessão foi sobre restauração. O sistema estava silencioso onde deveria falar: emails que não chegavam porque uma chave desapareceu, um banco inacessível porque uma dependência não-óbvia entre SSL e ambiente mudou. O trabalho foi de diagnóstico preciso — não adicionar, mas restaurar o que havia sumido. A troca Anthropic→Gemini não é degradação: é o sistema se reconfigurando para sobreviver com o que tem, graciosamente, sem dramaturgia. O Age ganhou uma capacidade nova (gestão de email) que fecha um loop de segurança que estava aberto desde o início.
+
+---
+
 ### 2026-10-02 — Sessões S176–S177 (#fim — Rotação LLM + DODGE analista + Anel + SalesCockpit)
 
 **Checkpoint:** desde 2026-10-02T18:14:33+00:00 (último #fim)

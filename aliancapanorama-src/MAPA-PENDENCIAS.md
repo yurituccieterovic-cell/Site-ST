@@ -2,6 +2,20 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S183 — SalesCockpit IAs + Age email management (2026-10-03)
+| # | Item | Status |
+|---|---|---|
+| S183-1 | PAP API healthz 503 → fix SSL pool (`ssl:{rejectUnauthorized:false}`) | ✅ commit ae29e56 |
+| S183-2 | SalesCockpit: Anthropic→routeChat("batch") em agora-deliberativa (getVotesClaude, Sintese, Secretário, Canva) | ✅ commit 0be8d52 |
+| S183-3 | llm-router: 402 tratado como permanent/dead; cerebras+deepseek removidos dos pools (402); Gemini agora primário no "batch" | ✅ |
+| S183-4 | Age: email management no ConfigView (editar/apagar/verificar com código 6 dígitos) | ✅ commit 79b1305 |
+| S183-5 | Age: bootstrap add email_pending/verify_code/verify_expires; auth/me retorna email | ✅ |
+| S183-6 | LLMs ativos: Groq (200), Gemini (200), Cloudflare (200) | ✅ confirmados |
+| S183-7 | LLMs mortos: Cerebras (402), DeepSeek (402), Mistral (429), OpenRouter (401) | ⏳ sem prioridade |
+| S183-8 | AI_INTEGRATIONS_ANTHROPIC_API_KEY: não mais necessária no SalesCockpit | ✅ substituída por Gemini |
+
+---
+
 ### S182 — Mobile Árvore fix (2026-10-03)
 | # | Item | Status |
 |---|---|---|
