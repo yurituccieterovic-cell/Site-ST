@@ -156,6 +156,14 @@ export function AgePage() {
   const [intervaloSemanas, setIntervaloSemanas] = useState(0);
   const [intervaloSaving, setIntervaloSaving] = useState(false);
   const [intervaloMsg, setIntervaloMsg] = useState("");
+  // Email management
+  const [profEmail, setProfEmail] = useState<string | null>(null);
+  const [emailPending, setEmailPending] = useState<string | null>(null);
+  const [emailEditMode, setEmailEditMode] = useState<"none" | "input" | "code">("none");
+  const [emailNewVal, setEmailNewVal] = useState("");
+  const [emailCode, setEmailCode] = useState("");
+  const [emailMsg, setEmailMsg] = useState("");
+  const [emailLoading, setEmailLoading] = useState(false);
 
   // Patient registration (public)
   const [showRegister, setShowRegister] = useState(false);
@@ -370,11 +378,13 @@ export function AgePage() {
   useEffect(() => {
     fetch(`${API}/api/age/auth/me`, { credentials: "include" })
       .then(r => r.json())
-      .then((d: { authenticated: boolean; nome?: string; slug?: string }) => {
+      .then((d: { authenticated: boolean; nome?: string; slug?: string; email?: string | null; emailPending?: string | null }) => {
         if (d.authenticated && d.slug === slug) {
           setMode("professional");
           setAuthStep("done");
           setAuthNome(d.nome ?? "");
+          setProfEmail(d.email ?? null);
+          setEmailPending(d.emailPending ?? null);
         }
       })
       .catch(() => {});
@@ -2778,6 +2788,128 @@ export function AgePage() {
               💬 Enviar pelo WhatsApp
             </a>
           </div>
+        </div>
+
+        {/* Email do profissional */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 8 }}>✉️ Email de contato</div>
+          <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>
+            Usado para desafio de IP e notificações. Novos dispositivos recebem um código de verificação neste email.
+          </p>
+          {/* Estado atual */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
+            {profEmail
+              ? <span style={{ color: "#34d399", fontSize: 13, fontFamily: "monospace" }}>✓ {profEmail}</span>
+              : <span style={{ color: "#94a3b8", fontSize: 13 }}>Nenhum email cadastrado</span>
+            }
+            {emailPending && <span style={{ color: "#facc15", fontSize: 11 }}>(pendente: {emailPending})</span>}
+          </div>
+          {/* Botões principais */}
+          {emailEditMode === "none" && (
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <button
+                onClick={() => { setEmailEditMode("input"); setEmailNewVal(""); setEmailMsg(""); }}
+                style={{ background: color, border: "none", borderRadius: 8, padding: "8px 14px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                {profEmail ? "Alterar email" : "Adicionar email"}
+              </button>
+              {profEmail && (
+                <button
+                  onClick={async () => {
+                    if (!confirm("Remover email? O desafio de IP ficará desativado.")) return;
+                    setEmailLoading(true);
+                    const r = await fetch(`${API}/api/age/${slug}/professionals/me/email`, { method: "DELETE", credentials: "include" }).catch(() => null);
+                    if (r?.ok) { setProfEmail(null); setEmailMsg("Email removido."); }
+                    else setEmailMsg("Erro ao remover.");
+                    setEmailLoading(false);
+                    setTimeout(() => setEmailMsg(""), 3000);
+                  }}
+                  disabled={emailLoading}
+                  style={{ background: "#1e293b", border: "1px solid #ef444444", borderRadius: 8, padding: "8px 14px", color: "#ef4444", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  Apagar
+                </button>
+              )}
+            </div>
+          )}
+          {/* Form: inserir novo email */}
+          {emailEditMode === "input" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <input
+                type="email" placeholder="novo@email.com" value={emailNewVal}
+                onChange={e => setEmailNewVal(e.target.value)}
+                style={{ background: "#080c10", border: `1px solid ${color}44`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" }}
+              />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  onClick={async () => {
+                    if (!emailNewVal.includes("@")) { setEmailMsg("Email inválido."); return; }
+                    setEmailLoading(true); setEmailMsg("");
+                    const r = await fetch(`${API}/api/age/${slug}/professionals/me/email-request`, {
+                      method: "POST", credentials: "include",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email: emailNewVal }),
+                    }).catch(() => null);
+                    const d = await r?.json().catch(() => ({})) as { ok?: boolean; message?: string; error?: string };
+                    if (d.ok) { setEmailPending(emailNewVal); setEmailEditMode("code"); setEmailCode(""); setEmailMsg(d.message ?? "Código enviado!"); }
+                    else setEmailMsg(d.error ?? "Erro ao enviar código.");
+                    setEmailLoading(false);
+                  }}
+                  disabled={emailLoading}
+                  style={{ background: color, border: "none", borderRadius: 8, padding: "9px 16px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+                  {emailLoading ? "Enviando…" : "Enviar código"}
+                </button>
+                <button onClick={() => { setEmailEditMode("none"); setEmailMsg(""); }}
+                  style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 8, padding: "9px 14px", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+          {/* Form: inserir código de verificação */}
+          {emailEditMode === "code" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <p style={{ color: "#94a3b8", fontSize: 12, margin: 0 }}>
+                Código enviado para <strong style={{ color: "#e2e8f0" }}>{emailPending}</strong>. Insira abaixo:
+              </p>
+              <input
+                type="text" placeholder="000000" maxLength={6} value={emailCode}
+                onChange={e => setEmailCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                style={{ background: "#080c10", border: `1px solid ${color}44`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 18, letterSpacing: 8, outline: "none", width: 140 }}
+              />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  onClick={async () => {
+                    setEmailLoading(true); setEmailMsg("");
+                    const r = await fetch(`${API}/api/age/${slug}/professionals/me/email-confirm`, {
+                      method: "POST", credentials: "include",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ code: emailCode }),
+                    }).catch(() => null);
+                    const d = await r?.json().catch(() => ({})) as { ok?: boolean; email?: string; error?: string };
+                    if (d.ok && d.email) { setProfEmail(d.email); setEmailPending(null); setEmailEditMode("none"); setEmailMsg("Email confirmado!"); }
+                    else setEmailMsg(d.error ?? "Código incorreto.");
+                    setEmailLoading(false);
+                    setTimeout(() => setEmailMsg(""), 4000);
+                  }}
+                  disabled={emailLoading || emailCode.length < 6}
+                  style={{ background: emailCode.length < 6 ? "#333" : color, border: "none", borderRadius: 8, padding: "9px 16px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: emailCode.length < 6 ? "default" : "pointer" }}>
+                  {emailLoading ? "Confirmando…" : "Confirmar"}
+                </button>
+                <button onClick={() => setEmailEditMode("input")}
+                  style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 8, padding: "9px 14px", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>
+                  Reenviar
+                </button>
+                <button onClick={() => { setEmailEditMode("none"); setEmailMsg(""); setEmailPending(emailPending); }}
+                  style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 8, padding: "9px 14px", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+          {emailMsg && (
+            <div style={{ marginTop: 8, color: emailMsg.includes("✓") || emailMsg.includes("confirmado") || emailMsg.includes("enviado") ? "#34d399" : "#f87171", fontSize: 13 }}>
+              {emailMsg}
+            </div>
+          )}
         </div>
 
         {/* Opções de pagamento */}

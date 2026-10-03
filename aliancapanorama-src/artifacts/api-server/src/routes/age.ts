@@ -224,17 +224,22 @@ router.post("/age/auth/verify-challenge", loginLimit, async (req, res): Promise<
 });
 
 // GET /api/age/auth/me
-router.get("/age/auth/me", (req, res) => {
+router.get("/age/auth/me", async (req, res): Promise<void> => {
   if (!req.session?.ageProfessionalId) {
     res.json({ authenticated: false });
     return;
   }
+  const [prof] = await db.execute(
+    sql`SELECT email, email_pending FROM age_professionals WHERE id = ${req.session.ageProfessionalId} LIMIT 1`
+  ).then(r => r.rows as { email: string | null; email_pending: string | null }[]).catch(() => [null]);
   res.json({
     authenticated: true,
     id: req.session.ageProfessionalId,
     nome: req.session.ageProfessionalNome,
     slug: req.session.ageProfessionalSlug,
-    owner: req.session.ageProfessionalOwner ?? "a", // "a" | "b" | "master"
+    owner: req.session.ageProfessionalOwner ?? "a",
+    email: prof?.email ?? null,
+    emailPending: prof?.email_pending ?? null,
   });
 });
 
@@ -2761,6 +2766,64 @@ router.patch("/age/:slug/professionals/me/contato", requireAgeAuth, async (req, 
     logger.error({ err }, "age: atualizar contato");
     res.status(500).json({ error: "Erro ao atualizar contato." });
   }
+});
+
+// POST /api/age/:slug/professionals/me/email-request — solicitar troca de email (envia código)
+router.post("/age/:slug/professionals/me/email-request", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { email } = req.body as { email?: string };
+  if (!email || !email.includes("@")) { res.status(400).json({ error: "Email inválido." }); return; }
+  const newEmail = email.trim().toLowerCase();
+  // Gerar código 6 dígitos
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const expires = new Date(Date.now() + 30 * 60 * 1000); // 30 min
+  await db.execute(sql`
+    UPDATE age_professionals
+    SET email_pending = ${newEmail}, email_verify_code = ${code}, email_verify_expires = ${expires.toISOString()}
+    WHERE id = ${profId}
+  `);
+  await sendEmail(newEmail,
+    "Código de verificação — Age",
+    `Seu código para confirmar o email na plataforma Age:\n\n${code}\n\nVálido por 30 minutos.`,
+    { force: true }
+  ).catch(e => logger.error({ err: e }, "age: email-request sendEmail"));
+  res.json({ ok: true, message: "Código enviado para o novo email." });
+});
+
+// POST /api/age/:slug/professionals/me/email-confirm — confirmar troca com código
+router.post("/age/:slug/professionals/me/email-confirm", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { code } = req.body as { code?: string };
+  if (!code) { res.status(400).json({ error: "Código obrigatório." }); return; }
+  const [prof] = await db.execute(
+    sql`SELECT email_pending, email_verify_code, email_verify_expires FROM age_professionals WHERE id = ${profId} LIMIT 1`
+  ).then(r => r.rows as { email_pending: string | null; email_verify_code: string | null; email_verify_expires: string | null }[]);
+  if (!prof?.email_pending || !prof.email_verify_code) {
+    res.status(400).json({ error: "Nenhuma troca de email pendente." }); return;
+  }
+  if (prof.email_verify_code !== code.trim()) {
+    res.status(400).json({ error: "Código incorreto." }); return;
+  }
+  if (prof.email_verify_expires && new Date(prof.email_verify_expires) < new Date()) {
+    res.status(400).json({ error: "Código expirado. Solicite um novo." }); return;
+  }
+  await db.execute(sql`
+    UPDATE age_professionals
+    SET email = ${prof.email_pending}, email_pending = NULL, email_verify_code = NULL, email_verify_expires = NULL
+    WHERE id = ${profId}
+  `);
+  res.json({ ok: true, email: prof.email_pending });
+});
+
+// DELETE /api/age/:slug/professionals/me/email — remover email do profissional
+router.delete("/age/:slug/professionals/me/email", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  await db.execute(sql`
+    UPDATE age_professionals
+    SET email = NULL, email_pending = NULL, email_verify_code = NULL, email_verify_expires = NULL
+    WHERE id = ${profId}
+  `);
+  res.json({ ok: true });
 });
 
 // PATCH /api/age/:slug/professionals/me/password-b — definir/remover senha secundária (requer senha primária)
