@@ -2380,3 +2380,81 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 | I885 | **email-sync → arvore_assembleias** — fazer /api/jasmim/email-sync também inserir assembleias novas no DB (parsear email, extrair #N, topic, inserir se não existe) | 🟡 Média | ○ S | S166 — gotcha: assembleias chegavam por email mas nunca iam pro DB | Rota atualiza: IMAP busca "Assembleia #" → extrai ID + topic → INSERT arvore_assembleias ON CONFLICT DO NOTHING → então syncAssembleiasToFeed() |
 | I886 | **Curadoria pré-Oráculo** — filtrar fundação filosófica de barulho antes de carregar para recall; hierarquizar assembleias (fundação / operacional / descartável) | 🔵 Baixa | ◑ M | Assembleia #742 RODAR — memória sem hierarquia contamina recall | Campo tier em arvore_assembleias (fundacao/operacional/ruido); recall da Árvore filtra por tier |
 | I887 | **Índice público de assembleias** — página /assembleias com lista paginada, filtro por projeto, referência cruzada | 🔵 Baixa | ◑ M | Assembleia #742 RODAR — "índice público com ligação às 741 sessões" | GET /api/jasmim/assembleias já existe; frontend /assembleias (tier livre) com busca por projeto/data |
+
+## Novas ideias — Assembleia #745 · S167 · 2026-09-30
+
+| # | Ideia | Prioridade | Tamanho | Contexto | Implementação |
+|---|---|---|---|---|---|
+| I888 | **Simplificação radical — corte de projetos** — selecionar 2-3 projetos com maior chance de receita (Age, Fluxo, PAP) e hibernar os demais por 30 dias | 🔴 Alta | ○ S | Assembleia #745 diagnóstico — 12+ projetos simultâneos, 0 receita, 1 operador | Decisão Yuri: quais 3 projetos ficam ativos. Resto: README.md com status "hibernado" + sem novos commits |
+| I889 | **#mapa como tópico estruturado** — usar #mapa nas assembleias periodicamente para gerar inventário atualizado do ecossistema; manter histórico de snapshots | 🟡 Média | ○ S | Assembleia #745 — gerou o mapa mais completo das últimas 100 sessões via um único tópico estruturado | Tag #mapa → assembleia gera JSON estruturado; salvar snapshot em mapa_snapshots com timestamp |
+
+
+## Docs PAP — Ideias Novas (2026-09-30)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I890 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I891 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I892 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I893 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I894 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I895 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I896 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+---
+## I901 — AGE 2.0: SABIÁ onboarding nos 3 primeiros passos do login
+- Após primeiro login, mostrar wizard: Passo 1 (boas-vindas, SABIÁ se apresenta), Passo 2 (config perfil/horários), Passo 3 (tutorial agenda/pacientes)
+- SABIÁ deve ter balão de fala visível com animação — não só texto estático
+- Marcar `first_login_done = true` no localStorage após completar o wizard
+
+## I902 — AGE 2.0: regras multi-dia + multi-intervalo
+- Interface atual: uma regra por vez (1 dia + 1 horário)
+- Novo: selecionar múltiplos dias (checkbox segunda/terça/.../sábado) + múltiplos intervalos (08-12 + 14-18)
+- Uma "sessão de configuração" gera N regras no banco (uma por dia×intervalo)
+- UI: grade visual tipo calendário semanal com drag ou toggle
+
+## I903 — AGE 2.0: SABIÁ com contexto de histórico passado
+- SABIÁ hoje: apenas próximos 7 dias no system prompt
+- Adicionar: últimas 10 consultas realizadas + pacientes com maior frequência
+- Isso permite SABIÁ responder "Quanto tempo faz que o paciente X não vem?"
+
+## I904 — AGE 2.0: exceções com frequência/recorrência
+- Hoje: exceção é uma data avulsa (YYYY-MM-DD)
+- Adicionar: tipo "recorrente" (ex: toda segunda de outubro, ou todo dia 10 de cada mês)
+- Campos novos na tabela: recorrencia_tipo (avulsa|semanal|mensal), recorrencia_fim
+
+## I905 — AGE 2.0: disponibilidade visual por semana/mês
+- Hoje: lista de regras textual
+- Novo: mini-calendário mostrando dias disponíveis (verde) vs bloqueados (vermelho) vs sem regra (cinza)
+- Semana atual em destaque, navegar por semanas/meses
+
+
+## Docs PAP — Ideias Novas (2026-10-02)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I897 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I898 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I899 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I900 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I901 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I902 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I903 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+
+## Docs PAP — Ideias Novas (2026-10-03)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I904 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I905 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I906 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I907 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I908 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I909 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I910 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+## Docs PAP — Ideias Novas (2026-10-03 S184)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I911 | **Gaveta lateral (drawer) no Age mobile** | 🔴 Alta | ◑ M | Navegação mobile fluida — scroll independente sem vazar para a página | Drawer React com transição CSS slide-in. Botão puxador fixo no canto direito. Swipe gesture opcional. Conteúdo: SABIÁ + Notas + Configurações. Refs: feedback Mayumi 28/09 + #eage S184 |
+| I912 | **SABIÁ bolha flutuante fora da gaveta** | 🟡 Média | ○ S | SABIÁ visível mesmo quando gaveta fechada — avisos urgentes proativos | Botão circular flutuante (posição bottom-right, z-index alto) que abre SABIÁ. Quando gaveta abre, bolha desaparece. Permite alertas proativos (paciente cancelou, lembrete). |
+| I913 | **Age multi-profissão (nutricionista, fisio)** | 🟡 Média | ○ S | Arquitetura slug-based já suporta — só configurar tipos e SABIÁ especializada | Novo campo `profession_type` em age_professionals. SABIÁ usa system prompt baseado no tipo. Calendário e terminologia se adaptam (ex: "sessão" vs "consulta" vs "atendimento"). |

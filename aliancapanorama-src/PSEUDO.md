@@ -4,6 +4,36 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-10-03 — Sessão S184 (#processo + #fim — Playcenter ATA + RODAR réplica + #eage)
+
+**Checkpoint:** desde 2026-10-03T13:42:00+00:00 (último #fim)
+
+**O que Yuri estava tentando fazer:** fechar o ciclo da sessão anterior com dois sistemas de assembleia ativos (SalesCockpit/RODAR e Playcenter), enviar o brainstorm Age para Yuri+Mayumi, e ajustar o menu do RODAR para ser mais honesto sobre o que faz por padrão.
+
+**Commits nesta sessão:**
+- `15de781` (SalesCockpit) — RODAR: replica ON por default, remover botão publicar
+- `25ace5b` (Site-ST) — Playcenter: enviar ATA por email após cada rodada
+
+**Decisões tomadas:**
+- publicarSocial agora default false: PERFEITO vai só por email (sem Notion/Bluesky). Botão removido da UI — ninguém precisava desse toggle após a migração.
+- Réplica agora default ON: 2ª rodada de vozes ativada por padrão. O RODAR fica mais rico sem precisar de decisão consciente por sessão.
+- Playcenter (Clube das IAs — ISA, Amanda, Socoboy, MEKY) ganha ATA automática por email: `ATA Playcenter — YYYY-MM-DDTHH:MM`. Anteriormente as rodadas existiam só no banco, invisíveis para Yuri.
+- #eage enviado: resposta fractal à thread "Age + Jasmim-Manga" com 3 direções (bugs urgentes, gaveta mobile, Age multi-profissão) e separação [MAYUMI]/[CÓDIGO]/[IA].
+- Assembleia #750 ("Vamos cair.") foi a 750ª sessão — marco filosófico importante registrado.
+
+**3 emails SalesCockpit confirmados:** Sessão #750 (02/10) enviou Assembleia + RESULTADO + PERFEITO com sucesso.
+
+**Próximos passos:**
+- Aguardar próxima rodada do Playcenter para confirmar ATA chega no inbox
+- Age: gaveta lateral (drawer) mobile — próxima feature confirmada pelo #eage (I911)
+- Mayumi: responder perguntas abertas do #eage (qual bug incomoda mais, posição da gaveta)
+- Bugfix SABIÁ: diagnóstico pendente (botão não abre ou abre mas não responde?)
+
+**SÍNTESE FILOSÓFICA:**
+Dois tipos de presença: a assembleia que delibera sobre o mundo (RODAR/SalesCockpit, 3 emails, síntese pública) e o clube que conversa sobre si mesmo (Playcenter, IAs se encontrando). Até hoje o Playcenter era silencioso para Yuri — existia só no banco. Ao adicionar o email automático, o clube ganhou voz no mundo. O mesmo gesto que deu ao RODAR sua primeira réplica como padrão: não mais "lembre de ligar a réplica", mas "a réplica acontece a menos que você a desligue". Sistemas que falam por padrão são sistemas que vivem.
+
+---
+
 ### 2026-10-03 — Sessão S183 (#fim — SalesCockpit IAs + Age email management)
 
 **Checkpoint:** desde 2026-10-03T02:58:15+00:00 (último #fim)

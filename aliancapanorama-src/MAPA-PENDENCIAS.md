@@ -2,6 +2,19 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S184 — Playcenter ATA + RODAR réplica ON + #eage (2026-10-03)
+
+| # | Item | Status |
+|---|---|---|
+| S184-1 | Playcenter ATA email automático após cada rodada | ✅ commit 25ace5b |
+| S184-2 | RODAR: réplica default ON + publicarSocial removido | ✅ commit 15de781 |
+| S184-3 | #eage enviado: 3 direções Age (bugs, gaveta, multi-profissão) para Yuri+Mayumi | ✅ enviado |
+| S184-4 | Confirmado: 3 emails RODAR funcionando (sessão #750) | ✅ verificado |
+| S184-5 | I911: Gaveta lateral Age mobile — próxima feature confirmada | ⏳ aguarda resposta Mayumi |
+| S184-6 | Bugfix SABIÁ (não abre / abre mas não responde?) | ⏳ Mayumi confirma |
+
+---
+
 ### S183 — SalesCockpit IAs + Age email management (2026-10-03)
 | # | Item | Status |
 |---|---|---|
