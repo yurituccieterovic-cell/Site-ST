@@ -1343,3 +1343,11 @@ DECISÕES APROVADAS:
 - Solução: remover throws de startup nas integrations, usar fallback ?? — servidor sobe mesmo sem as chaves, falha no runtime se necessário
 - AI_INTEGRATIONS_ANTHROPIC_API_KEY foi perdida — Yuri precisa restaurar para vozes Anthropic no RODAR
 - arvore/chat agora usa Cloudflare fp8-fast como fallback (contexto reduzido para caber nos 8000 TPM do Groq)
+
+
+### 2026-10-03 — admin
+### 2026-10-03 — ATA S183 (Cláudio)
+- FIX: SSL pool Neon no Render restaurado (ssl:{rejectUnauthorized:false})
+- DECISÃO: Anthropic substituída por routeChat('batch') no SalesCockpit — Gemini agora é primário na síntese
+- FEAT: Age email management — editar/apagar/verificar com código 6 dígitos
+- LLMs vivos: Groq+Gemini+Cloudflare; mortos: Cerebras/DeepSeek (402), Mistral (429)
