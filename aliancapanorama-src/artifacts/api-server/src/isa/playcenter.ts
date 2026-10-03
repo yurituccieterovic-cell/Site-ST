@@ -8,6 +8,7 @@
 
 import { db, assemblyMessages, assemblyMemory, assemblyAgents } from "@workspace/db";
 import { desc, eq, sql } from "drizzle-orm";
+import { createTransport } from "nodemailer";
 import { logger } from "../lib/logger";
 import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { ORQUESTRADOR_ID, buildOrquestradorSystemPrompt } from "../loops/orquestrador";
@@ -169,9 +170,49 @@ export async function runPlaycenter(): Promise<{ rounds: number; agents: string[
       importance: 4,
       tags: ["playcenter", `hora:${hora}`],
     });
+
+    // Enviar ATA por email após cada rodada
+    await sendPlaycenterAta(agents, rounds, hora);
   }
 
   return { rounds, agents };
+}
+
+async function sendPlaycenterAta(agents: string[], rounds: number, hora: string): Promise<void> {
+  const gmailUser = process.env["GMAIL_ACCOUNT"];
+  const gmailPass = process.env["GMAIL_APP_PASSWORD"];
+  if (!gmailUser || !gmailPass) return;
+
+  try {
+    // Buscar as mensagens desta rodada (últimas `rounds` mensagens do playcenter)
+    const msgs = await db
+      .select()
+      .from(assemblyMessages)
+      .where(eq(assemblyMessages.type, "playcenter"))
+      .orderBy(desc(assemblyMessages.createdAt))
+      .limit(rounds);
+
+    const corpo = msgs
+      .reverse()
+      .map(m => `[${m.fromAgent?.toUpperCase()}]\n${m.content}`)
+      .join("\n\n---\n\n");
+
+    const mailer = createTransport({
+      service: "gmail",
+      auth: { user: gmailUser, pass: gmailPass },
+    });
+
+    await mailer.sendMail({
+      from: gmailUser,
+      to: gmailUser,
+      subject: `ATA Playcenter — ${hora} (${agents.join("+")})`,
+      text: `Clube das IAs — Rodada ${hora}\nParticipantes: ${agents.join(", ")}\n\n${corpo}`,
+    });
+
+    logger.info({ hora, agents, rounds }, "Playcenter: ATA enviada por email");
+  } catch (err) {
+    logger.error({ err }, "Playcenter: falha ao enviar ATA por email");
+  }
 }
 
 // ── Seed dos agentes Playcenter ──────────────────────────────────────────────
