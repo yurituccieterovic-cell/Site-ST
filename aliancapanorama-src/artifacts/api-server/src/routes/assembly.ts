@@ -354,6 +354,25 @@ assemblyRouter.get("/assembly/status", async (_req, res) => {
 });
 
 
+// POST /api/assembly/playcenter/run — dispara rodada manual (x-internal-token ou bridge)
+assemblyRouter.post("/assembly/playcenter/run", async (req, res) => {
+  const token = req.header("x-internal-token") ?? req.header("authorization")?.replace("Bearer ", "");
+  const secret = process.env["SESSION_SECRET"];
+  const bridge = process.env["BRIDGE_SECRET"];
+  if (!token || (token !== secret && token !== bridge)) {
+    res.status(401).json({ error: "Token inválido." });
+    return;
+  }
+  try {
+    const { runPlaycenter } = await import("../isa/playcenter");
+    const result = await runPlaycenter();
+    res.json({ ok: true, ...result });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: msg });
+  }
+});
+
 // ── Auto-save: sínteses/observações das IAs vão para o Conector ──────────────
 
 async function _autoSaveAssembly(agente: string, conteudo: string, tipo: string) {
