@@ -1564,3 +1564,15 @@
 - [ ] Senha AO salva apenas localmente — Yuri não sabe a nova senha (Tucci2026SC!)
 - [ ] SalesCockpit frontend: salescockpit-api.onrender.com serve o painel Sales, mas confirmar acesso
 
+
+---
+
+### S181 — Foto anel + Sangue de boi + Cana diagnóstico (2026-10-03)
+| # | Item | Status |
+|---|---|---|
+| S181-1 | Foto anel: limite 500KB→3MB + re-fetch após upload (blob URL bug) | ✅ commit bf8d242 |
+| S181-2 | Sangue de boi confirmado como cor do rubi | ✅ decisão |
+| S181-3 | RODAR assembleias #947+#948: tema errado por runPrepStore in-memory | ⚠️ issue conhecida |
+| S181-4 | Cana "Erro ao chamar IA": pg.Pool cold start Neon — retry na 2ª tentativa | ⚠️ fix pendente |
+| S181-5 | Anthropic key: console.anthropic.com/settings/keys (requer pagamento) | ⏳ Yuri decide |
+| S181-6 | SalesCockpit "Erro desconhecido": Groq 429 acumulado — aguardar reset | ⏳ <24h |
