@@ -2,6 +2,17 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S182 — Mobile Árvore fix (2026-10-03)
+| # | Item | Status |
+|---|---|---|
+| S182-1 | Sidebar Oráculo/Árvore: overlay hambúrguer mobile (fixed z-50 + backdrop + translate) | ✅ commit 5fd4d38, Render deploy queued |
+| S182-2 | Anthropic API key: Yuri sem crédito na conta | ⏳ Yuri tenta amanhã |
+| S182-3 | Cana "Erro ao chamar IA": pg.Pool cold start Neon — precisa retry ou Neon serverless | ⏳ próxima sessão |
+| S182-4 | runPrepStore in-memory: RODAR perde tema entre cold starts — persistir no DB | ⏳ próxima sessão |
+| S182-5 | **Software Colesterol**: novo projeto anunciado por Yuri | ⏳ amanhã |
+
+---
+
 ### S180 — Árvore viva + deploy failures resolvidos (2026-10-02)
 | # | Item | Status |
 |---|---|---|
