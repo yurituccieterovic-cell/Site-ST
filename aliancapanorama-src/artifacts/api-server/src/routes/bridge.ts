@@ -14,6 +14,7 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { isaMemoryTable, assemblyMessages, bibliotecaDocsTable, auliasTable } from "@workspace/db";
 import { desc, sql, asc } from "drizzle-orm";
+import nodemailer from "nodemailer";
 
 const router = Router();
 
@@ -108,6 +109,39 @@ router.post("/bridge/pap/aulias", async (req, res) => {
     professoraIaId: professoraIaId ?? null,
   }).returning();
   res.status(201).json(aulia);
+});
+
+// POST /api/bridge/email-relay — relay de email para sistemas sem SMTP (ex: SalesCockpit no Render)
+// Auth: x-bridge-secret
+router.post("/bridge/email-relay", async (req, res) => {
+  if (!bridgeAuth(req)) { res.status(403).json({ error: "Acesso negado" }); return; }
+
+  const { to, subject, text, html } = req.body as {
+    to?: string;
+    subject?: string;
+    text?: string;
+    html?: string;
+  };
+
+  if (!to || !subject || (!text && !html)) {
+    res.status(400).json({ error: "to, subject e text/html obrigatórios" });
+    return;
+  }
+
+  const gmailUser = process.env["GMAIL_ACCOUNT"];
+  const gmailPass = process.env["GMAIL_APP_PASSWORD"];
+  if (!gmailUser || !gmailPass) {
+    res.status(500).json({ error: "GMAIL_ACCOUNT ou GMAIL_APP_PASSWORD não configurados no PAP" });
+    return;
+  }
+
+  try {
+    const mailer = nodemailer.createTransport({ service: "gmail", auth: { user: gmailUser, pass: gmailPass } });
+    await mailer.sendMail({ from: gmailUser, to, subject, ...(text ? { text } : {}), ...(html ? { html } : {}) });
+    res.json({ ok: true, from: gmailUser, to, subject });
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
+  }
 });
 
 export default router;
