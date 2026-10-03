@@ -2458,3 +2458,10 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 | I911 | **Gaveta lateral (drawer) no Age mobile** | 🔴 Alta | ◑ M | Navegação mobile fluida — scroll independente sem vazar para a página | Drawer React com transição CSS slide-in. Botão puxador fixo no canto direito. Swipe gesture opcional. Conteúdo: SABIÁ + Notas + Configurações. Refs: feedback Mayumi 28/09 + #eage S184 |
 | I912 | **SABIÁ bolha flutuante fora da gaveta** | 🟡 Média | ○ S | SABIÁ visível mesmo quando gaveta fechada — avisos urgentes proativos | Botão circular flutuante (posição bottom-right, z-index alto) que abre SABIÁ. Quando gaveta abre, bolha desaparece. Permite alertas proativos (paciente cancelou, lembrete). |
 | I913 | **Age multi-profissão (nutricionista, fisio)** | 🟡 Média | ○ S | Arquitetura slug-based já suporta — só configurar tipos e SABIÁ especializada | Novo campo `profession_type` em age_professionals. SABIÁ usa system prompt baseado no tipo. Calendário e terminologia se adaptam (ex: "sessão" vs "consulta" vs "atendimento"). |
+
+## Docs PAP — Ideias Novas (2026-10-03 S185)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I914 | **Remover debug endpoints SalesCockpit** | 🟡 Média | ○ S | test-email e test-relay são úteis em diagnóstico mas expostos; remover após 1 semana estável | Deletar blocos `router.post("/assembleia/test-email", ...)` e `router.post("/assembleia/test-relay", ...)` de assembleia.ts. Testar que deploy continua OK. |
+| I915 | **runPrepStore → persistir tema no DB** | 🔴 Alta | ◑ M | Cold starts perdem tema do RODAR em andamento — sessions #950/#951 foram afetadas | Gravar `prep_topic` e `prep_state` em tabela `rodar_prep` no Neon quando tema é carregado. Ler do DB no arranque em vez de in-memory. Garante continuidade entre restarts. |

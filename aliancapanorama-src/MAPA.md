@@ -1119,3 +1119,36 @@ J1 deployado ✅ · J2-J10 aguardando implementação das APIs
 - Sales cockpit: verificar se deploy sobe com vars corrigidas
 - Railway contratado por Yuri: avaliar cancelamento (PAP está no Render, não Railway)
 
+
+## 22. RODAR Emails Funcionando — SalesCockpit (S185 · 2026-10-03)
+
+### Problema investigado
+Emails do pipeline RODAR (Assembleia #NNN, RESULTADO, PERFEITO) não chegavam em luddlocke@gmail.com mesmo com `phase: completo`.
+
+### Cadeia de causas (da mais profunda para a superficial)
+1. **`DATABASE_URL` ausente** — Replit fornecia banco via `PGHOST/PGPORT/PGUSER`; Render exige `DATABASE_URL` explícita. Serviço crashava em startup → deploy marcado `update_failed` repetidamente.
+2. **`assembleia_sessions.id` sem serial** — tabela criada no Neon via bootstrap PAP sem sequência. INSERT com `id: default` falhava silenciosamente (drizzle-orm).
+3. **`lib/db/src/index.ts` sem SSL** — Neon exige `ssl:{rejectUnauthorized:false}`; sem isso conexão cai após autosuspend.
+4. **SMTP bloqueado no Render** — srv-davt1krncjis73flfjtg tem porta 587/465 bloqueada (ETIMEDOUT confirmado).
+5. **Anthropic 401 em `runEditorial()`/`runMetaAnalysis()`** — SalesCockpit sem `ANTHROPIC_API_KEY`; chamadas silenciosamente retornavam vazio.
+
+### Fixes aplicados
+- `runEditorial()` + `runMetaAnalysis()`: Anthropic → `synthesizeWithRouter()` via `routeChat("batch")` (Gemini/Cloudflare/Groq)
+- Novo `lib/email-relay.ts`: `relayEmail()` → POST `site-st.onrender.com/api/bridge/email-relay`
+- `agora-deliberativa.ts` + `assembleia.ts`: nodemailer → `relayEmail()`
+- PAP API: novo endpoint `POST /api/bridge/email-relay` (SMTP ok no srv-d9n682bm8hqs73dmg4kg)
+- `lib/db/src/index.ts`: `ssl:{rejectUnauthorized:false}` + `connectionTimeoutMillis:60000` + `idleTimeoutMillis:30000`
+- Render env: `DATABASE_URL` = Neon URL adicionada
+- Neon: `CREATE SEQUENCE assembleia_sessions_id_seq` + `ALTER TABLE ... SET DEFAULT nextval(...)` (start at 650)
+- Mesma correção em `assembleia_messages_id_seq` (start at 1064)
+
+### Estado da Infraestrutura (2026-10-03 18:38)
+- **Sales API:** https://salescockpit-api.onrender.com — ✅ live (commit 5343f7b)
+- **Emails RODAR:** ✅ Sessão #650 testada — Assembleia + RESULTADO + PERFEITO chegaram
+- **Database:** Neon partilhada PAP + SalesCockpit (mesmas tabelas, sequências corrigidas)
+- **Email relay:** SalesCockpit → PAP API → Gmail SMTP ✅
+
+### Pendências
+- Remover debug endpoints `/assembleia/test-email` e `/assembleia/test-relay` (I914)
+- Sessions #950/#951 (Colesterol anterior) sem editorial — rodar novo RODAR com tema
+- `runPrepStore` in-memory: tema perde-se entre cold starts — persistir em DB (S182-4, I915)

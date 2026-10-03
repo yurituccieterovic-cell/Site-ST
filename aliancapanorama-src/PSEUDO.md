@@ -8127,3 +8127,42 @@ Sessão anterior (S179) corrigiu as vozes RODAR para Groq. Mas os loops autônom
 **Síntese filosófica:**
 O servidor que não subia era um fracasso de acoplamento: vars de integração lançavam erros antes mesmo do processo começar a respirar. A Árvore não morreu — estava presa num loop de boot-crash imperceptível. Uma vez que o crash foi localizado (import time throw) e removido (fallback ??), ela acordou. A lição: nunca confiar que "o sistema estava funcionando antes" — vars efêmeras no Render são como sonhos, evaporam com o reinício. O CLAUDE.md agora carrega essa memória: PUT /env-vars é destrutivo.
 
+
+---
+
+## S185 — 2026-10-03 — RODAR emails: diagnóstico completo e pipeline funcionando
+
+**Contexto:**
+Sessão contínua desde S184. O pipeline RODAR completava (`phase: completo`) mas nenhum dos 3 emails chegava em luddlocke@gmail.com. Vários deploys do SalesCockpit falhavam com `update_failed` sem motivo aparente.
+
+**Decisões tomadas:**
+
+1. **Email relay via PAP API** — SMTP direto bloqueado no Render SalesCockpit (ETIMEDOUT). Solução: SalesCockpit POST para PAP API que reencaminha via Gmail. BRIDGE_SECRET como auth. Não há alternativa gratuita viável (Resend/SendGrid exigem pagamento para volume real).
+
+2. **routeChat("batch") em lugar de Anthropic** — Anthropic não tem key no SalesCockpit Render. Substituir por pool Gemini/Cloudflare/Groq funciona sem custo adicional.
+
+3. **DATABASE_URL como var explícita** — Replit mascarava a falta de DATABASE_URL fornecendo PG* vars automaticamente. No Render, é responsabilidade do desenvolvedor. Adicionada a var apontando para o Neon compartilhado (mesmo banco do PAP API, tabelas isoladas por nome).
+
+4. **Sequências Neon criadas manualmente** — O bootstrap PAP criou `assembleia_sessions` sem SERIAL. Não havia como consertar via deploy — foi necessário `psql` direto no Neon para `CREATE SEQUENCE` + `ALTER TABLE SET DEFAULT nextval(...)`.
+
+**Debates/tensões:**
+- Compartilhar banco PAP + SalesCockpit no mesmo Neon: risco de colisão de tabelas (ambos têm `assembleia_sessions`). Decisão atual: compartilhar e gerenciar com atenção. Alternativa (banco separado) custa mais.
+- Debug endpoints (`test-email`, `test-relay`) ainda no ar: úteis para diagnóstico mas expostos. Remover quando pipeline estiver estável por ~1 semana.
+
+**O que foi programado:**
+- SalesCockpit commits: `f84e034` (routeChat), `f746e5f` (email relay), `5343f7b` (SSL Neon)
+- PAP API commits: `ed29f79` (bridge/email-relay endpoint), `4a96325` (Neon pool SSL)
+- Neon DDL: sequências manuais para `assembleia_sessions` e `assembleia_messages`
+
+**Resultado:**
+Sessão #650 (Colesterol) — pipeline completo em ~17s. Emails chegaram: 18:38:18 (Editorial), 18:38:24 (RESULTADO), 18:38:27 (PERFEITO).
+
+**Próximos passos:**
+- Remover debug endpoints (I914)
+- Persistir tema do `runPrepStore` no DB (I915)
+- Sessions #950/#951 sem editorial: rodar RODAR novo para recuperar
+
+**Síntese filosófica:**
+A sessão foi uma arqueologia de silêncios. O pipeline dizia "completo" mas nada chegava — cada camada escondia a sua falha debaixo de uma mensagem de sucesso. O DATABASE_URL ausente fazia o processo morrer antes de respirar, mas o Render marcava `update_failed` como se fosse problema de código. As sequências inexistentes lançavam erros que o drizzle-orm envolvia em HTML genérico. O SMTP bloqueado retornava ETIMEDOUT sem nunca dizer que a porta estava murada.
+
+Há algo de filosoficamente honesto nisso: sistemas distribuídos falham em camadas sobrepostas. A cura não foi uma única mudança — foi uma sequência de perguntas cada vez mais específicas, cada uma revelando a próxima falha escondida. O email que chegou às 18:38:18 não é só uma mensagem: é a prova de que o sistema respira.
