@@ -8166,3 +8166,73 @@ Sessão #650 (Colesterol) — pipeline completo em ~17s. Emails chegaram: 18:38:
 A sessão foi uma arqueologia de silêncios. O pipeline dizia "completo" mas nada chegava — cada camada escondia a sua falha debaixo de uma mensagem de sucesso. O DATABASE_URL ausente fazia o processo morrer antes de respirar, mas o Render marcava `update_failed` como se fosse problema de código. As sequências inexistentes lançavam erros que o drizzle-orm envolvia em HTML genérico. O SMTP bloqueado retornava ETIMEDOUT sem nunca dizer que a porta estava murada.
 
 Há algo de filosoficamente honesto nisso: sistemas distribuídos falham em camadas sobrepostas. A cura não foi uma única mudança — foi uma sequência de perguntas cada vez mais específicas, cada uma revelando a próxima falha escondida. O email que chegou às 18:38:18 não é só uma mensagem: é a prova de que o sistema respira.
+
+---
+
+## S186-A — 2026-10-03 — #eage Colesterol: brainstorm + Assembleia #651
+
+**Contexto:**
+Yuri enviou 3 emails (2699+2714+2715) sobre o software "Colesterol" — app de lista de compras inteligente, parte da suíte SOS. Também enviou lista real de compras de grãos (para 2 pessoas) e itens para o apê com Mayumi.
+
+**Decisões/direcionamentos:**
+- Software Colesterol = lista de compras com IA (receita/evento/rotina) + cache de preços + aprendizado de padrões
+- 4 tipos de item: routine / project / upgrade / task (categorização automática por IA)
+- Cache de preços via Google Shopping API (v1) + crowdsourcing (v2)
+- Anticosmos: cashback + dados anonimizados + assinatura pro + afiliado de receitas
+- Integração futura Age/SABIÁ: paciente com restrição alimentar → lista personalizada
+
+**Assembleia #651 gerada:**
+- Editorial: 8.5/10 — resumo público do software Colesterol com funcionalidades e perguntas abertas
+- RESULTADO + PERFEITO: chegaram em luddlocke em ~90s
+
+**Emails enviados:**
+- Brainstorm (Cláudio → Yuri+Mayumi): "Re: Colesterol brainstorm — Ramificação Fractal"
+- Pipeline: Assembleia #651 + RESULTADO + PERFEITO
+
+**Síntese filosófica:**
+A lista de compras é talvez o artefato mais humano que existe — registra o que falta, o que se quer, o que se cuida. Colesterol não é um app de mercado; é uma tentativa de dar inteligência ao ato de sustentar a vida doméstica. A lista de grãos de Yuri (castanha, quinoa, chia para duas pessoas num apê novo) é ao mesmo tempo dado técnico e poesia cotidiana.
+
+---
+
+## S186-B — 2026-10-03 — #eage Árvore: rate limiting + copy + Assembleia #652
+
+**Contexto:**
+Dois emails: 2712 (a própria Árvore respondendo via luddlocke sobre cursos + funcionalidade copy + integração Théo) e 2713 (Yuri reportando erro "providers todos ocupados" após 2 respostas grandes).
+
+**Decisões/direcionamentos:**
+- Rate limiting = Groq TPM depois de contexto grande. Fix: reduzir mais o contexto enviado (S180 reduziu 30k→8k; pode precisar ir para ~4k)
+- Funcionalidade copy: boa ideia, pequena, mas rate limiting é mais urgente
+- Integração EcossystemmaThéo: futura (precisa decidir se Théo é público ou só interno)
+- Cursos ML (Michigan, Northwestern, Project Network) — anotar para fase de design
+
+**Assembleia #652 gerada:**
+- Editorial: 5.0/10 — conteúdo mais técnico/operacional, pontuação menor
+- RESULTADO + PERFEITO: chegaram em luddlocke em ~90s
+- metaAnalysis = null (pipeline completou mas síntese ficou vazia — conteúdo pequeno demais)
+
+**Síntese filosófica:**
+A Árvore sem fôlego não é falha — é o limite da generosidade gratuita. Cada provedor grátis é um poço que se esvazia quando a conversa fica profunda demais. A solução não é encontrar um poço maior, mas aprender a beber menos de uma vez — comprimir, sumarizar, essencializar. A memória precisa ser mais raíz do que folha.
+
+---
+
+## S186 — 2026-10-03 — #eage Colesterol + Árvore + #processo + deploy
+
+**Resumo da sessão completa:**
+Sessão iniciada por Yuri com `#pap #eage` sobre 4 emails enviados (Colesterol concept + brainstorm 1+2, Árvore problemas + resposta da própria Árvore).
+
+**Fluxo executado:**
+1. #pap — contexto carregado, health check (SalesCockpit ok, PAP dormindo)
+2. #eage Colesterol (651) — email enviado Yuri+Mayumi + assembleia criada + 3 emails pipeline
+3. #fim-1 (MacroATA Colesterol)
+4. #eage Árvore (652) — email enviado Yuri + assembleia criada + 3 emails pipeline
+5. #fim-2 (MacroATA Árvore)
+6. #processo: I922 implementado (MAX_CONTEXT_CHARS 8k→4k, histBudget 8k→4k)
+7. Deploy SalesCockpit live (commit e04c5b4)
+8. #fim final
+
+**Ideias geradas:** I916–I924 (6 Colesterol + 3 Árvore)
+**Emails enviados:** 2 brainstorms + 2 MacroATAs + 6 emails pipeline (3×651 + 3×652)
+**Código:** arvore.ts contexto reduzido (I922)
+
+**Síntese filosófica:**
+Dois emails de Yuri — um sobre uma lista de compras, outro sobre uma Árvore sem fôlego — parecem mundos separados. Mas têm a mesma raiz: o problema de carregar memória demais. A lista de compras esquece o que foi comprado. A Árvore falha porque carrega o passado inteiro em cada conversa. O Colesterol vai aprender padrões aos poucos. A Árvore vai aprender a lembrar menos para durar mais. Ambos são exercícios de edição: o que cortar para que o essencial flua.

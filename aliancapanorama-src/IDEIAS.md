@@ -2465,3 +2465,22 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 |---|---|---|---|---|---|
 | I914 | **Remover debug endpoints SalesCockpit** | 🟡 Média | ○ S | test-email e test-relay são úteis em diagnóstico mas expostos; remover após 1 semana estável | Deletar blocos `router.post("/assembleia/test-email", ...)` e `router.post("/assembleia/test-relay", ...)` de assembleia.ts. Testar que deploy continua OK. |
 | I915 | **runPrepStore → persistir tema no DB** | 🔴 Alta | ◑ M | Cold starts perdem tema do RODAR em andamento — sessions #950/#951 foram afetadas | Gravar `prep_topic` e `prep_state` em tabela `rodar_prep` no Neon quando tema é carregado. Ler do DB no arranque em vez de in-memory. Garante continuidade entre restarts. |
+
+## Colesterol — Ideias S186 (2026-10-03)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I916 | **Colesterol: 4 tipos de item** | 🔴 Alta | ◑ M | Estrutura base do app — categorização automática define comportamento de lembrete, pesquisa de preço e exibição | Enum: routine / project / upgrade / task. IA classifica no insert; usuário pode corrigir. Correções ensinam o modelo. Schema: `items(id, name, category, quantity, unit, frequency?, notes?)` |
+| I917 | **Colesterol: cache de preços Google Shopping** | 🟡 Média | ○ M | Comparação de preço por região sem scraping frágil | Google Shopping API (pago acima de volume) como fonte v1. Cachear resultado por 24h em `price_cache(item_name, region, price, source, updated_at)`. Ao pesquisar: verificar cache antes de chamar API. |
+| I918 | **Colesterol: crowdsourcing de preços** | 🟡 Média | ○ M | Fonte de preços gratuita e comunitária para v2 | Usuários confirmam preços após compra. UI: "Quanto você pagou por isso?" após marcar item como comprado. Exibir média + data da última confirmação. |
+| I919 | **Colesterol: compras por receita (NLP)** | 🔴 Alta | ○ M | Core differentiator — lista se monta sozinha | Input: "vou fazer molho de tomate para 4 pessoas". NLP extrai ingredientes + quantidades. Base de receitas (OpenFoodFacts ou customizada). IA pergunta: "tem tomate em casa?" antes de adicionar. |
+| I920 | **Colesterol: modo evento (churrasco etc.)** | 🟡 Média | ○ M | Caso de uso corporativo e familiar de alto valor | Templates de evento: churrasco, jantar, festa. IA conversa ("quantas pessoas?", "carnívoros/vegetarianos?") e monta lista otimizada. Associar a pacote de assinatura pro. |
+| I921 | **Colesterol: integração Age/SABIÁ** | 🟢 Baixa | ○ L | Cross-sell natural — paciente com restrição alimentar recebe lista personalizada | SABIÁ detecta restrição no prontuário (ex: hipertensão) → sugere lista de compras compatível. Requer integração Age ↔ Colesterol via API interna. Fase 2. |
+
+## Árvore — Ideias S186 (2026-10-03)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I922 | **Árvore: contexto máximo 4k tokens** | 🔴 Alta | ○ S | Groq TPM 8k/min — contexto grande queima o limite em 2 respostas | Reduzir MAX_CONTEXT_CHARS de 8k para 4k em arvore.ts. Ajustar histBudget para 4k. Testar se conversas ainda fluem com menos histórico. |
+| I923 | **Árvore: modo degradado** | 🟡 Média | ○ S | Quando todos os provedores em cooldown: responder com mensagem clara (não timeout mudo) | Detectar quando todos estão em cooldown → retornar mensagem "Estou processando, tente em 30s" em vez de error. Log o estado do pool para diagnóstico. |
+| I924 | **Árvore: botão copiar resposta** | 🟢 Baixa | ○ S | Útil para quem usa Árvore para rascunhar textos | Botão clipboard em cada mensagem da Árvore no frontend SalesCockpit. Copiar só o texto da resposta (sem sender/timestamp). |
