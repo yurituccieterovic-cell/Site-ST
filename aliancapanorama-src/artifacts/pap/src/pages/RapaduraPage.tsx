@@ -2884,7 +2884,7 @@ function AnelView() {
   };
 
   const uploadPhoto = async (file: File) => {
-    if (file.size > 512_000) { setMsg("Foto muito grande (máx 500KB)"); return; }
+    if (file.size > 3_145_728) { setMsg("Foto muito grande (máx 3MB)"); return; }
     setUploading(true); setMsg("");
     const fd = new FormData();
     fd.append("foto", file);
@@ -2893,11 +2893,15 @@ function AnelView() {
         method: "POST", credentials: "include", body: fd,
       });
       if (r.ok) {
-        const dataUrl = URL.createObjectURL(file);
-        setProject(p => p ? { ...p, foto: dataUrl } : p);
+        const refetch = await fetch(`${API}/api/rapadura/ring-project`, { credentials: "include" });
+        const { project: updated } = await refetch.json() as { project: RingProject | null };
+        if (updated) setProject(updated);
         setMsg("Foto enviada!");
         setTimeout(() => setMsg(""), 2000);
-      } else setMsg("Erro no upload");
+      } else {
+        const err = await r.json().catch(() => ({})) as { error?: string };
+        setMsg(err.error ?? "Erro no upload");
+      }
     } catch { setMsg("Erro de rede"); } finally { setUploading(false); }
   };
 

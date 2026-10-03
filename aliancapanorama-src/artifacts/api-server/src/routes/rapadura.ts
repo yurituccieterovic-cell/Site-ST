@@ -1928,13 +1928,13 @@ router.put("/rapadura/ring-project", requireRapaduraAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
-// POST /rapadura/ring-project/photo — upload de foto (max 500KB, base64 no DB)
+// POST /rapadura/ring-project/photo — upload de foto (max 3MB, base64 no DB)
 router.post("/rapadura/ring-project/photo", requireRapaduraAuth,
   uploadMiddleware.single("foto"),
   async (req, res) => {
     const file = (req as any).file as Express.Multer.File | undefined;
     if (!file) { res.status(400).json({ error: "Arquivo obrigatório (campo 'foto')" }); return; }
-    if (file.size > 512_000) { res.status(400).json({ error: "Foto muito grande. Máximo: 500KB" }); return; }
+    if (file.size > 3_145_728) { res.status(400).json({ error: "Foto muito grande. Máximo: 3MB" }); return; }
     const mime  = file.mimetype || "image/jpeg";
     const b64   = file.buffer.toString("base64");
     const dataUrl = `data:${mime};base64,${b64}`;
