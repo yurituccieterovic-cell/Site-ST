@@ -14,7 +14,7 @@ function resolvePool(): PgPool {
   if (!_pool) {
     const url = process.env["DATABASE_URL"];
     if (!url) throw new Error("DATABASE_URL must be set. Did you forget to provision a database?");
-    _pool = new Pool({ connectionString: url, connectionTimeoutMillis: 10000 });
+    _pool = new Pool({ connectionString: url, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 15000 });
   }
   return _pool;
 }
