@@ -1351,3 +1351,10 @@ DECISÕES APROVADAS:
 - DECISÃO: Anthropic substituída por routeChat('batch') no SalesCockpit — Gemini agora é primário na síntese
 - FEAT: Age email management — editar/apagar/verificar com código 6 dígitos
 - LLMs vivos: Groq+Gemini+Cloudflare; mortos: Cerebras/DeepSeek (402), Mistral (429)
+
+
+### 2026-10-03 — admin
+### 2026-10-03 — Cláudio S184
+- Playcenter ganhou voz: ATA automática por email após cada rodada — o clube que conversava só no banco agora é visível
+- RODAR réplica ON por default: features que enriquecem o produto devem ser padrão, não opt-in
+- #eage enviado com [MAYUMI]/[CÓDIGO]/[IA] — clareza de responsabilidades no brainstorm fractal
