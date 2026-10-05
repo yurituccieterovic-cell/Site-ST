@@ -418,6 +418,66 @@ router.post("/jasmim/post-from-email", async (req, res) => {
   }
 });
 
+// ─── POST /api/jasmim/curar-email — curadoria LLM de um email → posts individuais ──
+router.post("/jasmim/curar-email", async (req, res) => {
+  const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
+  if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
+    res.status(403).json({ error: "Não autorizado" }); return;
+  }
+
+  const { assunto, remetente, corpo, msgId } = req.body as {
+    assunto?: string; remetente?: string; corpo?: string; msgId?: string;
+  };
+  if (!corpo?.trim()) { res.status(400).json({ error: "corpo obrigatório" }); return; }
+
+  const fonte = `email:${(msgId ?? assunto ?? "").slice(0, 120)}`;
+  const autor = remetente?.includes("mayumi") || remetente?.includes("matanimoto")
+    ? "Mayumi" : remetente?.includes("yuri") ? "Yuri" : "Jasmim";
+
+  const prompt = `Você é a Jasmim — curadora de memória do ecossistema Théo.
+
+Extraia os pontos importantes deste email como posts separados para o feed dos projetos.
+Cada post: curto (2–5 linhas), autossuficiente, sem contexto implícito.
+
+ASSUNTO: ${assunto ?? ""}
+
+CONTEÚDO:
+${(corpo ?? "").slice(0, 3000)}
+
+Projetos: age, rapadura, pv, calculus, socia, fluxo, isca, bni, sonhos, crowd, theo, jasmim
+Tipos: decisao, ideia, codigo, aprendizado, nota, filosofia
+
+Retorne SOMENTE JSON:
+{"posts":[{"projeto":"theo","tipo":"decisao","conteudo":"..."}]}
+
+Regras: máximo 8 posts. Sínteses filosóficas → tipo filosofia. Se nada relevante: {"posts":[]}`;
+
+  try {
+    const { routeLLM } = await import("../lib/llm-router");
+    const raw = await routeLLM({ messages: [{ role: "user", content: prompt }], pool: "batch", maxTokens: 800, temperature: 0.3 });
+    const jsonStr = raw.match(/\{[\s\S]*\}/)?.[0] ?? "{}";
+    const parsed = JSON.parse(jsonStr) as { posts?: { projeto: string; tipo: string; conteudo: string }[] };
+    const posts = (parsed.posts ?? []).filter(p => p.conteudo?.trim().length > 10).slice(0, 8);
+
+    for (const p of posts) {
+      await db.execute(sql`
+        INSERT INTO jm_posts (projeto, setor, tipo, autor, conteudo, fonte)
+        VALUES (${p.projeto}, null, ${p.tipo}, ${autor}, ${p.conteudo.trim()}, ${fonte})
+      `).catch(() => {});
+    }
+    if (posts.length > 0) {
+      await db.execute(sql`
+        INSERT INTO jm_myym_memory (tipo, conteudo)
+        VALUES ('assembleia', ${`${assunto} → ${posts.length} posts extraídos`})
+      `).catch(() => {});
+    }
+    res.json({ ok: true, posts: posts.length });
+  } catch (err) {
+    console.error("[jasmim/curar-email]", err);
+    res.status(500).json({ error: String(err) });
+  }
+});
+
 // ─── GET /api/jasmim/myym/memoria ───────────────────────────────────────────
 // Retorna memórias da Jasmim agrupadas por tipo (uso pela UI)
 
