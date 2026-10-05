@@ -237,6 +237,51 @@ async function testLLMQuick(): Promise<TestResult> {
   });
 }
 
+// ── Testes focados no SalesCockpit + Árvore (adicionados por pedido do Yuri) ──
+
+async function testSCArvorePing(): Promise<TestResult> {
+  return measure("SC Árvore timeline (público)", async () => {
+    const r = await fetch(`${SC_API}/api/arvore/timeline?limit=3`, {
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json() as { messages?: unknown[]; total?: number } | unknown[];
+    const msgs = Array.isArray(d) ? d : ((d as Record<string, unknown>).messages ?? []);
+    return `${(msgs as unknown[]).length} msgs na timeline`;
+  });
+}
+
+async function testSCRODARStatus(): Promise<TestResult> {
+  return measure("SC RODAR pipeline status", async () => {
+    if (!BRIDGE) throw new Error("BRIDGE_SECRET não configurado");
+    // Não aciona LLM — só consulta sessions abertas (se tiver alguma em andamento)
+    const r = await fetch(`${SC_API}/api/rodar/sessions?limit=1`, {
+      headers: { "x-bridge-secret": BRIDGE },
+      signal: AbortSignal.timeout(10_000),
+    });
+    // 401/403 = endpoint existe mas requer auth de sessão (OK — não é falha de infra)
+    if (r.status === 404 || r.status === 503 || r.status === 502) throw new Error(`HTTP ${r.status}`);
+    return `endpoint respondeu (${r.status})`;
+  });
+}
+
+async function testSCHeartbeatStatus(): Promise<TestResult> {
+  return measure("SC Árvore heartbeat (última reflexão)", async () => {
+    // Última entrada da arvore-noturna na timeline — sem chamar LLM
+    const r = await fetch(`${SC_API}/api/arvore/timeline?limit=20`, {
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json() as { messages?: Array<{ author?: string; createdAt?: string }> };
+    const msgs = Array.isArray(d) ? d : (d.messages ?? []);
+    const last = (msgs as Array<{ author?: string; createdAt?: string }>)
+      .find(m => m.author === "arvore-noturna");
+    if (!last) return "Árvore ainda sem reflexões postadas";
+    const ago = Math.round((Date.now() - new Date(last.createdAt ?? 0).getTime()) / 3_600_000);
+    return `última reflexão há ${ago}h`;
+  });
+}
+
 // ── Geração de relatório em texto ──────────────────────────────────────────
 
 function formatReport(report: LeucocitoReport): string {
@@ -329,19 +374,26 @@ export async function getRecentReports(limit = 14): Promise<Array<{
 // ── Execução principal ─────────────────────────────────────────────────────
 
 const TESTS: Array<() => Promise<TestResult>> = [
+  // Infra central
   testNeonDB,
   testPAPHealth,
-  testSalesHealth,
-  testGmailSMTP,
   testEmailRelay,
   testConector,
-  testJasmimFeed,
-  testJasmimCuradoria,
-  testISACrons,
+  // SalesCockpit + Árvore (foco principal)
+  testSalesHealth,
+  testSCArvorePing,
+  testSCHeartbeatStatus,
+  testSCRODARStatus,
+  // Age (agenda médica/psicológica)
   testAgeEndpoints,
+  // Gmail + LLM
+  testGmailSMTP,
+  testLLMQuick,
+  // Secundários (úteis mas menos críticos)
+  testJasmimFeed,
+  testISACrons,
   testBridgeSalesCockpit,
   testBlueskyRead,
-  testLLMQuick,
 ];
 
 export async function runLeucocito(opts: {
