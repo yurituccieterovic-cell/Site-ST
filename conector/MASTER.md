@@ -1398,3 +1398,12 @@ DECISÕES APROVADAS:
 - SC: respirar 5x delay 1.5s→4s (Gemini free 15 RPM)
 - Email Mayumi: apps iOS Age + Colesterol enviados
 - ABERTOS: assembleia email 100%, Software Colesterol briefing, páginas IAs, loopings
+
+
+### 2026-10-05 — admin
+### 2026-10-05 — ATA S191 Cláudio
+- SC Respirar 5x: callGroqDirect bypassa cooling, reflexão funciona mesmo sem material
+- SC email fallback: transcript cru quando pipeline editorial falha
+- Groq AbortSignal 45s: TCP hang vira fallback em 45s (antes: eterno)
+- Leucócito: 3 novos testes SC+Árvore+Age, reordenados por prioridade
+- Colesterol: apenas assembleia #651 (brainstorm), zero código
