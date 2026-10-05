@@ -8252,3 +8252,38 @@ Dois emails de Yuri — um sobre uma lista de compras, outro sobre uma Árvore s
 **Feature planejada:** pipeline Gmail (MacroATAs + emails não-sales) → SalesCockpit → ASSEMBLEIA+RESULTADO+PERFEITO por email apenas
 
 **Síntese filosófica:** O limite entre ferramenta e voz é onde está a responsabilidade. Manter esse limite não é neutralidade — é preservar que a voz que fala seja humana quando o que está em jogo é humano.
+
+---
+
+## S188 — 2026-10-05 — Leucócito + Fix emails Sales + Jasmim curadoria
+
+**Trigger:** Yuri reportou emails de assembleia Sales não chegando + pediu Leucócito IA de diagnóstico.
+
+**Investigação de emails Sales:**
+- Bridge PAP (`/api/bridge/email-relay`) funcionando corretamente (testado: 200 OK)
+- Problema raiz: `relayEmail.ts` no SalesCockpit sem timeout nem retry
+- Quando PAP está em cold start (~30-60s), o `fetch` travava silenciosamente
+- Fix: retry 3× com backoff 2s→6s + AbortSignal.timeout(20s) por tentativa
+
+**Leucócito IA — concepção e implementação:**
+- Módulo `leucocito.ts`: 13 testes em paralelo (DB, healthz, Gmail SMTP, email relay, Conector, Jasmim feed+curadoria, ISA crons, Age, bridge SC↔PAP, Bluesky read, LLM ping)
+- Rota `POST /api/leucocito/run` protegida por BRIDGE_SECRET
+- Cron diário 6h45 UTC (9h45 Brasília)
+- Relatório formatado por email ao final
+- Rate limit: 30min entre execuções (evita cascata)
+- Safety: testes de escrita isolados, sem deletar dados reais, sem post Bluesky
+
+**Segurança e prevenção de perda de dados:**
+- Leucócito usa prefixo "leucocito-test-" em writes
+- Nunca deleta dados reais
+- LLM test é read-only (pergunta simples)
+- Email de teste tem assunto especial identificável
+
+**Deploys:**
+- SalesCockpit: 4306bec (relayEmail retry)
+- PAP: 3cc04f7 (Leucócito + cron + rota)
+- Ambos HTTP 202 no Render
+
+**Síntese filosófica:**
+O Leucócito não cura — observa. Como os glóbulos brancos que percorrem o sistema em busca de irregularidades antes que se tornem doença, esta IA circula diariamente pelo ecossistema, testando cada conexão, cada email, cada LLM, cada banco. A saúde de um sistema distribuído não é a ausência de falha em um nó — é a capacidade de perceber quando um nó falha e nomear isso antes que o silêncio se torne colapso.
+
