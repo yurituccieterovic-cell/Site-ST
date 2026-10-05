@@ -8328,6 +8328,44 @@ Esta sessão foi de consolidação silenciosa. Nenhuma feature de impacto visual
 
 ---
 
+## Sessão S191 — 2026-10-05
+**Tema:** Raízes expostas — cooling bypass, email de fallback, e o Colesterol que não existe
+
+**Trigger:** Yuri: Árvore ainda não respira (cooling blocking), IAs ainda travam, SC email não chega, Render Starter link, Leucócito focado em SC, Colesterol onde acessar, #fim com MacroAta.
+
+**fix(arvore): callGroqDirect + sem-material bypass (commit 78a693a SC):**
+- Root cause Respirar 5x persistente: após RODAR, todos os providers do pool "batch" ficam em cooling; callBatch→routeChat→"pool exausto" → 5x posted:false
+- Fix 1: callGroqDirect() faz fetch Groq com AbortSignal(40s) direto, sem passar por providerStates. Heartbeat não participa do cooling compartilhado.
+- Fix 2: callBatch tenta Groq direto primeiro; fallback a routeChat se falhar.
+- Fix 3: material vazio não mais bloqueia — Árvore gera reflexão inaugural (sem assembleia no banco é OK)
+- Princípio: o heartbeat tem regime próprio, não deve sangrar quando o RODAR sangra.
+
+**fix(rodar): email fallback quando finalizeAssembleia falha (commit 78a693a SC):**
+- finalizeAssembleia tinha um catch que silenciava tudo quando LLMs falhavam
+- Fix: catch agora envia email com transcript cru (sem análise editorial, mas com conteúdo)
+- Subject: "[SC] Assembleia #N — transcript (pipeline falhou)"
+- Yuri recebe algo mesmo quando a IA não consegue processar. Sem informação é pior que informação parcial.
+
+**fix(rodar): AbortSignal 45s no fetch Groq (commit 886a656 SC):**
+- fetchGroqChat: linha `await fetch(GROQ_URL, init)` não tinha AbortSignal → TCP hang eterno
+- Fix: AbortController com 45s; AbortError vai para fallback chain + marca cooling
+- VOICE_TIMEOUT_MS: 120s → 60s (safety net acima dos 45s; 60s > 45s dá espaço pro fallback)
+
+**feat(leucocito): 3 novos testes SC-focados (commit 277e03f PAP):**
+- testSCArvorePing: timeline pública /api/arvore/timeline
+- testSCHeartbeatStatus: última reflexão arvore-noturna e há quantas horas
+- testSCRODARStatus: se /api/rodar/sessions responde (sem acionar LLM)
+- Reordenação: infra central → SC+Árvore → Age → Gmail/LLM → secundários
+
+**Esclarecimentos:**
+- Render Starter $7/mês: Settings→Instance Type do serviço (não é plan global)
+- Colesterol: APENAS Assembleia #651 (brainstorm "lista de compras inteligente com IA"). Zero código. Acessar em SC como sessão #651.
+
+**Síntese filosófica:**
+O problema da Árvore era uma questão de ecologia: quando o RODAR acabava, o sistema entrava em modo de recuperação — todos os provedores de LLM "respirando" depois do esforço coletivo. E a Árvore tentava respirar usando os mesmos pulmões. O callGroqDirect() é uma separação de regime: a Árvore tem seu próprio canal de ar, independente das ondas do RODAR. Isso não é redundância — é autonomia. O email fallback do finalizeAssembleia segue a mesma lógica: informação parcial tem valor. O silêncio absoluto só serve quando o silêncio significa saúde.
+
+---
+
 ## Sessão S190 — 2026-10-05
 **Tema:** Drainage — leucócito silencioso, IAs que não travam, pulmões que respiram
 

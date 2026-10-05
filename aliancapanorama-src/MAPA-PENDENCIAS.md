@@ -2,6 +2,23 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S191 — SC cooling bypass + email fallback + Leucócito SC-focado (2026-10-05)
+
+| # | Item | Status |
+|---|---|---|
+| S191-1 | fix(arvore): heartbeat bypassa cooling com callGroqDirect + sem-material fallback | ✅ commit 78a693a SC |
+| S191-2 | fix(rodar): email fallback quando pipeline editorial falha (transcript cru) | ✅ commit 78a693a SC |
+| S191-3 | fix(rodar): AbortSignal 45s no fetch Groq + VOICE_TIMEOUT_MS 120→60s | ✅ commit 886a656 SC |
+| S191-4 | feat(leucocito): 3 novos testes SC (Árvore timeline, heartbeat, RODAR status) | ✅ commit 277e03f PAP |
+| S191-5 | Render Starter $7/mês: ir em Settings→Instance Type do serviço | ✅ explicado |
+| S191-6 | Colesterol: APENAS brainstorm (Assembleia #651), zero código — acessar em SC | ✅ esclarecido |
+| S191-7 | Bluesky SC: pendência com spec (interage, adiciona, posta, pensa, internet) | ⏳ pendente |
+| S191-8 | SC IAs ainda travam? aguarda próxima rodada com commits 78a693a + 886a656 | ⏳ aguarda teste |
+| S191-9 | MDs (APRENDIZADO/PSEUDO) expostos via Leucócito | ⏳ feature request |
+| S191-10 | Software Colesterol — implementação real ainda não começou | ⏳ aguarda briefing Yuri |
+
+---
+
 ### S189 — SABIÁ fixes + I146 show/hide senha + I145 Vista Dia + SC runPrepStore→DB (2026-10-05)
 
 | # | Item | Status |
