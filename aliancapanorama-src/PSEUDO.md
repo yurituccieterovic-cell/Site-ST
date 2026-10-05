@@ -8287,3 +8287,41 @@ Dois emails de Yuri — um sobre uma lista de compras, outro sobre uma Árvore s
 **Síntese filosófica:**
 O Leucócito não cura — observa. Como os glóbulos brancos que percorrem o sistema em busca de irregularidades antes que se tornem doença, esta IA circula diariamente pelo ecossistema, testando cada conexão, cada email, cada LLM, cada banco. A saúde de um sistema distribuído não é a ausência de falha em um nó — é a capacidade de perceber quando um nó falha e nomear isso antes que o silêncio se torne colapso.
 
+
+---
+
+## Sessão S189 — 2026-10-05
+**Tema:** Consolidação silenciosa — SABIÁ, runPrepStore, Vista Dia
+
+**Trigger:** Yuri pediu continuar pendências da sessão anterior (context compacted) e #fim com MacroAta ao final.
+
+**PAP API cold start:**
+- Render estava dormindo; API retornava 503 no início da sessão
+- Redeploy forçado via Render API → 200 em ~20 segundos
+- Padrão recorrente: sempre verificar antes de assumir bug de código
+
+**SABIÁ fixes (S184-6, commit 01d8aa9):**
+- History fetch não tinha try/catch — Neon cold start podia derrubar o endpoint inteiro
+- Timeout backend 25s→35s, frontend 30s→40s (Neon cold start leva até 20s)
+- Lição: endpoints com DB + LLM em cold start precisam de camadas de proteção
+
+**I146 show/hide senha (commit 01d8aa9):**
+- SetPasswordView e ChangePasswordView tinham inputs de senha sem visibility toggle
+- PatientLoginView já tinha o padrão; agora consistente em toda a interface
+- Estado compartilhado por campo: showSetPw (ambos da SetPasswordView), showChangePw (ChangePassword)
+
+**runPrepStore Map→DB (S182-4, commit cd2309f no SalesCockpit):**
+- RODAR perdía o "tema" entre cold starts porque runPrepStore era Map em memória
+- Criada tabela rodar_run_preps no Neon (bootstrap idempotente)
+- Helpers async: prepSet (UPSERT), prepGet (SELECT), prepDelete (DELETE + limpeza >10min)
+- Decisão definitiva: nada de estado crítico em memória num servidor free tier
+
+**I145 Vista Dia (commit 5b25e35):**
+- Agenda profissional só tinha lista de 30 dias corrida
+- Adicionados agendaFilter + agendaDayOffset no estado top-level (respeitando rules of hooks)
+- Barra de filtro "Todos / Por dia" + navegação ‹ Hoje › dentro do AgendaView
+- Filtering: quando "dia", grouped filtra para só o targetDay; header adapta título
+- A Lisange precisa saber o que acontece hoje — não os próximos 30 dias de uma vez
+
+**Síntese filosófica:**
+Esta sessão foi de consolidação silenciosa. Nenhuma feature de impacto visual — mas três correções que tapam buracos onde a plataforma sangrava sem fazer barulho. Há algo específico nesse tipo de trabalho: você não está construindo, está tornando o que já existe mais real. A diferença entre "devia funcionar" e "funciona" é exatamente onde o sistema começa a ter peso, a ter vida útil. O I145 é pequeno mas tem alma de ferramenta — é a diferença entre uma agenda e um painel de turno.

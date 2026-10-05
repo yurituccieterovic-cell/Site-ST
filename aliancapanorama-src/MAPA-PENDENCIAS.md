@@ -2,6 +2,21 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S189 — SABIÁ fixes + I146 show/hide senha + I145 Vista Dia + SC runPrepStore→DB (2026-10-05)
+
+| # | Item | Status |
+|---|---|---|
+| S189-1 | PAP API 503 cold start → redeploy Render | ✅ voltou 200 |
+| S189-2 | fix(age): SABIÁ history try/catch + timeout 35s backend | ✅ commit 01d8aa9 |
+| S189-3 | fix(age): I146 show/hide senha (SetPasswordView + ChangePassword) + SABIÁ frontend 40s | ✅ commit 01d8aa9 |
+| S189-4 | fix(SC): runPrepStore Map→DB (rodar_run_preps Neon) — sobrevive cold starts | ✅ commit cd2309f |
+| S189-5 | feat(age): I145 Vista Dia — filtro "Todos/Por dia" + nav ‹Hoje› na agenda profissional | ✅ commit 5b25e35 |
+| S189-6 | I911: Gaveta lateral Age mobile | ⏳ aguarda resposta Mayumi |
+| S189-7 | S182-3: Cana "Erro ao chamar IA" — root cause em routeLLM cold start | ⏳ próxima sessão |
+| S189-8 | Software Colesterol — novo projeto, sem spec ainda | ⏳ aguarda briefing Yuri |
+
+---
+
 ### S184 — Playcenter ATA + RODAR réplica ON + #eage (2026-10-03)
 
 | # | Item | Status |
