@@ -2,6 +2,23 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S193 — #eage + Colesterol resumo + assembleias SC + Dodge pending (2026-10-05)
+
+| # | Item | Status |
+|---|---|---|
+| S193-1 | #eage: lido 8 emails, respondido brainstorm Age 2.0/3.0 + SABIÁ pessoal para Yuri+Mayumi | ✅ enviado |
+| S193-2 | Colesterol: resumo completo + acesso SC (login AO/AOA) enviado para Yuri+Mayumi | ✅ enviado |
+| S193-3 | Assembleias #659 #660 #661 gravadas no SC (Colesterol + Age 2.0 + Age 3.0) | ✅ gravadas |
+| S193-4 | IDEIAS I906-I916 registradas (Colesterol, Age 2.0/3.0, SABIÁ pessoal, Dodge auto) | ✅ |
+| S193-5 | #assembleia passada geral salva nas preferências do Conector | ⏳ Conector offline |
+| S193-6 | PAP API: db:unreachable → redeploy acionado | ⏳ aguarda redeploy |
+| S193-7 | Bugs P0 Age 2.0 (6 bugs): cadastro, exceções, email, pop-up, trava, regra | ⏳ aguarda aprovação Yuri |
+| S193-8 | I915: Dodge automático varrer emails + rodar assembleias | ⏳ pendente implementação |
+| S193-9 | SC Groq 429 nas assembleias (rate limit) — melhora sozinho após alguns minutos | ⏳ monitorar |
+| S193-10 | SABIÁ personal trainer + fisioterapia estilo Hebe | ⏳ aguarda aprovação Yuri |
+
+---
+
 ### S192 — SC auto-split + cópia Árvore + fix convocar + memória Replit (2026-10-05)
 
 | # | Item | Status |

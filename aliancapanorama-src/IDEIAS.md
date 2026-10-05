@@ -2499,3 +2499,48 @@ Quando for necessário vídeo com rosto real: (1) rosto real com consentimento e
 | I931 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. || I932 | **Leucócito Histórico** | 🟡 Média | ○ M | Armazenar relatórios Leucócito em tabela DB para ver tendência de saúde ao longo do tempo | Tabela leucocito_reports (id, runAt, passed, failed, results jsonb, summary). GET /api/leucocito/history. Dashboard simples mostrando uptime por sistema. |
 | I933 | **Leucócito Webhook Alert** | 🟡 Média | ○ S | Quando Leucócito detecta falha crítica (DB ou email), notificar além do email — via Conector ou Bluesky DM | Se failed > 2: além do email, postar no Conector seção "alertas" + opcional DM Bluesky para Yuri |
 | I934 | **relayEmail Queue** | 🟡 Média | ○ M | Emails perdidos quando PAP está down por mais de 60s (3 retries esgotados) | Fila simples em tabela email_queue (to, subject, text, status, attempts). Worker a cada 5min tenta reenviar pending. |
+
+
+## Docs PAP — Ideias Novas (2026-10-05)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I935 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I936 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I937 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I938 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I939 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I940 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I941 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+## I906 — Colesterol: compra por receita (lista automática)
+Software de lista de compras inteligente. Input: nome da receita → lista de ingredientes com quantidades para N pessoas.
+
+## I907 — Colesterol: compras por evento com templates
+Templates de eventos (churrasco, aniversário, etc.). IA conversa via voz para montar a lista, ajusta quantidades.
+
+## I908 — Colesterol: comparação de preços na região
+Pesquisa mercados próximos, cache diário de preços. Encomenda automática em múltiplos estabelecimentos de uma vez.
+
+## I909 — Colesterol: rotas de compras (Google Maps para mercados)
+Otimiza rota para ir de mercado em mercado. Parceria com mercados como fonte de receita (eles pagam, não usuário).
+
+## I910 — Colesterol: integração com Age (horário de preparo)
+Receita no Colesterol → horário de preparo inserido automaticamente no Age da profissional ou do usuário.
+
+## I911 — Age 2.0: SABIÁ personal trainer implícito
+Sem anunciar, SABIÁ sugere alongamentos, exercícios, poses que exercitam. Baseado em horários disponíveis do próprio Age.
+
+## I912 — Age 2.0: fisioterapia SABIÁ estilo Abby (Hebe)
+Não diagnóstico. "Sente o ombro. Respira. Onde você segura mais?" — guia a autorregulação. Baseado em Federico Navarro, Reich.
+
+## I913 — Age 3.0: padrões respiro/ciclo na agenda
+Análise gráfica de expansão/contração da agenda (senoide) e ciclos de tarefas. SABIÁ avisa sobre padrões de demanda.
+
+## I914 — Leucócito com acesso a email
+Leucócito varre os emails do ecossistema para saber o que está acontecendo. Combina com assembleia automática.
+
+## I915 — Dodge automático: varrer emails e rodar assembleias
+Dodge pega emails desde último login e roda assembleias no SC automaticamente. Enquanto não pronto: Cláudio faz manualmente.
+
+## I916 — #assembleia passada geral (padrão do ecossistema)
+Jogar tudo o que foi feito (emails, brainstorms, sessões) numa assembleia SC, depois rodar #processo no resultado. É o ciclo de digestão do ecossistema.

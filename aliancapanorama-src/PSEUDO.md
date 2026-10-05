@@ -8420,3 +8420,32 @@ Quatro entregas: (1) auto-split de prompts >20k chars em assembleias sequenciais
 **Síntese filosófica:** A sessão foi sobre restauração e resiliência. A Árvore voltou a lembrar de maio a julho/26. O sistema aprendeu a dar voltas em paredes esperadas (API indisponível, pool em cooling, prompt enorme) em vez de colidir com elas.
 
 *Sessão S192 · Cláudio Coach · 2026-10-05*
+
+---
+
+## Sessão S193 — 2026-10-05
+
+**Checkpoint:** desde 2026-10-05T15:06:55+00:00 (S192 #fim)
+
+**O que foi discutido/feito:**
+
+#eage: lidos 8 emails de Yuri desde 3/out. Conteúdo: Age 3.0 linkado com cálculos (respiro/ciclo), SABIÁ como personal trainer implícito (treino Mayumi, fisioterapia estilo Hebe/Abby), bugs P0 Age 2.0, e 4 emails sobre Colesterol (lista de compras, templates eventos, parceria mercados). Resposta enviada a Yuri + Mayumi com 3 direções: bugs P0, SABIÁ pessoal, Age 3.0 respiro.
+
+Colesterol: resumo completo + acesso SC (login AO/AOA, URL salescockpit.vercel.app) enviado por email.
+
+Assembleias #659, #660, #661 gravadas no SC. SC estava com Groq 429 (rate limit pós 3 assembleias), mas OpenRouter Llama funcionou para Claude/ChatGPT/Agente.
+
+PAP API: db:unreachable (cold start + pool travado). Redeploy acionado via Render API.
+
+Preferência #assembleia passada geral salva (IDEIAS I916). Conector offline durante a sessão.
+
+IDEIAS I906-I916 adicionadas: Colesterol (I906-I910), Age pessoal (I911-I913), Leucócito email (I914), Dodge auto (I915), padrão assembleia (I916).
+
+**Decisões:**
+- Bugs P0 do Age 2.0 precisam da aprovação de Yuri para iniciar implementação
+- Dodge automático (I915) é pendência de implementação futura
+- SC frontend confirmado em https://salescockpit.vercel.app
+
+**Síntese filosófica:** A sessão foi sobre digestão. Seis emails de Yuri contendo brainstorm acumulado, reflexões sobre o corpo, bugs, ideias de software — tudo esperando ser processado. A tarefa não era implementar, era organizar: dar forma ao que estava disperso, nomear o que estava implícito, e criar pontos de entrada para quem vier depois. O ecossistema tem ciclos de expansão (brainstorm, ideias, email) e contração (assembleia, #processo, código). Esta sessão foi contração: pegou o que estava solto e colocou no lugar certo.
+
+*Sessão S193 · Cláudio Coach · 2026-10-05*
