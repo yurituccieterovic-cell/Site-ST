@@ -368,6 +368,23 @@ router.post("/jasmim/email-sync", async (req, res) => {
   }
 });
 
+// ─── POST /api/jasmim/posts/cleanup-blobs — remove posts-blob antigos (tipo=auto, fonte=email:) ──
+router.post("/jasmim/posts/cleanup-blobs", async (req, res) => {
+  const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
+  if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
+    res.status(403).json({ error: "Não autorizado" }); return;
+  }
+  try {
+    const result = await db.execute(sql`
+      DELETE FROM jm_posts WHERE tipo = 'auto' AND fonte LIKE 'email:%'
+    `);
+    const deleted = (result as any).rowCount ?? 0;
+    res.json({ ok: true, deleted });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
 // ─── POST /api/jasmim/post-from-email (inserção manual de post via email) ──
 router.post("/jasmim/post-from-email", async (req, res) => {
   const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
