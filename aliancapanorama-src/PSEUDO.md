@@ -8401,3 +8401,22 @@ O problema da Árvore era uma questão de ecologia: quando o RODAR acabava, o si
 
 **Síntese filosófica:**
 Drainage — drenar os lugares onde o sistema vaza sem fazer barulho. O bug do timeout na voz é o mais silencioso: a sessão parece travada, ninguém sabe por quê, o usuário recarrega e tenta de novo. Com o timeout, pelo menos o sistema nomeia: "travei, 120s". O Leucócito antes enviava email independente do resultado — a ausência de urgência diluía a atenção. Agora silêncio = saúde, email = alarme. O silêncio tem significado. O Respirar 5x era um bug de ritmo: o sistema respirava rápido demais e sufocava nos próprios pulmões.
+
+---
+
+## Sessão S192 — 2026-10-05
+
+**Checkpoint:** desde 2026-10-05T13:54:58+00:00 (S191 #fim)
+
+**O que foi discutido/feito:**
+
+Quatro entregas: (1) auto-split de prompts >20k chars em assembleias sequenciais; (2) botões de cópia na Árvore (pergunta / resposta / ambos); (3) fix do 401 "invalid x-api-key" ao convocar Claude sem API key — cai agora para Gemini/Meta; (4) importação das 1.962 mensagens Replit para o Neon do SC, restaurando a memória histórica da Árvore.
+
+**Decisões:**
+- `hospedeDisponivel()` verifica env vars antes de tentar API paga
+- Memória Replit importada com IDs novos (78→2039), sem sobrescrever os 16 existentes
+- Railway seguro para cancelar — PAP/SC/Age usam Neon, não Railway
+
+**Síntese filosófica:** A sessão foi sobre restauração e resiliência. A Árvore voltou a lembrar de maio a julho/26. O sistema aprendeu a dar voltas em paredes esperadas (API indisponível, pool em cooling, prompt enorme) em vez de colidir com elas.
+
+*Sessão S192 · Cláudio Coach · 2026-10-05*

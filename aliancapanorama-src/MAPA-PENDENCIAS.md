@@ -2,6 +2,23 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S192 — SC auto-split + cópia Árvore + fix convocar + memória Replit (2026-10-05)
+
+| # | Item | Status |
+|---|---|---|
+| S192-1 | feat(rodar): auto-split prompts >20k chars em assembleias sequenciais (banner âmbar) | ✅ commit 1a87fdb SC |
+| S192-2 | feat(arvore): botões copiar pergunta / resposta / ambos na página da Árvore | ✅ commit 73372a5 SC |
+| S192-3 | fix(arvore): hospedeDisponivel() — Claude/ChatGPT sem key caem para Gemini | ✅ commit e9860c0 SC |
+| S192-4 | SC Neon: 1.962 msgs Replit importadas (DB: 16→1978, mai-jul 2026) | ✅ importado direto |
+| S192-5 | Email Render upgrade links enviado para luddlocke + confirmação Railway | ✅ enviado |
+| S192-6 | Railway seguro para cancelar — PAP/SC/Age usam Neon | ✅ confirmado |
+| S192-7 | SC IAs ainda travam? → aguarda próxima rodada com commits 78a693a + 886a656 | ⏳ aguarda teste |
+| S192-8 | I911: Gaveta lateral Age mobile | ⏳ aguarda resposta Mayumi |
+| S192-9 | Software Colesterol — implementação real ainda não começou | ⏳ aguarda briefing Yuri |
+| S192-10 | Bluesky SC — spec capturada, implementação pendente | ⏳ pendente |
+
+---
+
 ### S191 — SC cooling bypass + email fallback + Leucócito SC-focado (2026-10-05)
 
 | # | Item | Status |
