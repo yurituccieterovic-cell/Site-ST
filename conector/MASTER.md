@@ -1426,3 +1426,11 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### SABIÁ → Milton Salomão (2026-10-05)
 - "Olá! Tenho uma consulta de Terapia de Casal amanhã às 14h. Como posso me preparar?"
 - SABIÁ: "Olá! Como assistente de agenda, não forneço orientações ou recomendações sobre preparação para sessões terapêuticas. Sug"
+
+
+### 2026-10-05 — admin
+### 2026-10-05 — Claudio (S193b)
+- Enterro Replit: assembleias #662-663, Bluesky publicado, Playcenter rodado
+- Bugs Age P0: cadastro direto (lgpd_consent_at), modal z-index 50→2000, Rapadura foto fix
+- Leucocito 13/15, MASTER_PASSWORD Render, Jasmim 203 assembleias sync
+- Terapia de Casal: 07/10 14h Milton R$300 Mayumi
