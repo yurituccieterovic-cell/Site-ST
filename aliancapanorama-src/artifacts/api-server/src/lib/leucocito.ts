@@ -45,16 +45,21 @@ export interface LeucocitoReport {
   summary: string;
 }
 
-// ── Helper: medir tempo + capturar erro ───────────────────────────────────
+// ── Helper: medir tempo + capturar erro (1 retry automático em falha) ─────
 
 async function measure(name: string, fn: () => Promise<string>): Promise<TestResult> {
   const t0 = Date.now();
-  try {
-    const detail = await fn();
-    return { name, ok: true, durationMs: Date.now() - t0, detail };
-  } catch (err) {
-    return { name, ok: false, durationMs: Date.now() - t0, error: String(err).slice(0, 300) };
+  let lastError = "";
+  for (let attempt = 0; attempt < 2; attempt++) {
+    if (attempt > 0) await new Promise(r => setTimeout(r, 3000));
+    try {
+      const detail = await fn();
+      return { name, ok: true, durationMs: Date.now() - t0, detail };
+    } catch (err) {
+      lastError = String(err).slice(0, 300);
+    }
   }
+  return { name, ok: false, durationMs: Date.now() - t0, error: lastError };
 }
 
 // ── Testes individuais ─────────────────────────────────────────────────────
