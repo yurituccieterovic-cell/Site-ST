@@ -241,7 +241,7 @@ async function testLLMQuick(): Promise<TestResult> {
 
 async function testSCArvorePing(): Promise<TestResult> {
   return measure("SC Árvore timeline (público)", async () => {
-    const r = await fetch(`${SC_API}/api/arvore/timeline?limit=3`, {
+    const r = await fetch(`${SC_API}/api/arvore/history?limit=3`, {
       signal: AbortSignal.timeout(15_000),
     });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
@@ -267,8 +267,8 @@ async function testSCRODARStatus(): Promise<TestResult> {
 
 async function testSCHeartbeatStatus(): Promise<TestResult> {
   return measure("SC Árvore heartbeat (última reflexão)", async () => {
-    // Última entrada da arvore-noturna na timeline — sem chamar LLM
-    const r = await fetch(`${SC_API}/api/arvore/timeline?limit=20`, {
+    // Última entrada da arvore-noturna no histórico — sem chamar LLM
+    const r = await fetch(`${SC_API}/api/arvore/history?limit=20`, {
       signal: AbortSignal.timeout(15_000),
     });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
