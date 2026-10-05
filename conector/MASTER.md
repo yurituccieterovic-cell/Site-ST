@@ -1407,3 +1407,7 @@ DECISÕES APROVADAS:
 - Groq AbortSignal 45s: TCP hang vira fallback em 45s (antes: eterno)
 - Leucócito: 3 novos testes SC+Árvore+Age, reordenados por prioridade
 - Colesterol: apenas assembleia #651 (brainstorm), zero código
+
+
+### 2026-10-05 — admin
+GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120s+. Fix: AbortController 45s agora aborta na raiz.
