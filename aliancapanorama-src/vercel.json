@@ -1,6 +1,28 @@
 {
   "buildCommand": "pnpm install --no-frozen-lockfile && BASE_PATH=/ pnpm --filter @workspace/pap run build",
   "outputDirectory": "artifacts/pap/dist/public",
+  "redirects": [
+    {
+      "source": "/salescockpit",
+      "destination": "https://salescockpit.vercel.app",
+      "permanent": false
+    },
+    {
+      "source": "/salescockpit/(.*)",
+      "destination": "https://salescockpit.vercel.app/$1",
+      "permanent": false
+    },
+    {
+      "source": "/assembleia",
+      "destination": "https://salescockpit.vercel.app",
+      "permanent": false
+    },
+    {
+      "source": "/assembleia/(.*)",
+      "destination": "https://salescockpit.vercel.app/$1",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/aliancapanorama/calculus/(.*)",
