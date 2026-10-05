@@ -1420,3 +1420,9 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - Enquanto Dodge nao esta pronto: Claudio faz manualmente quando solicitado
 - E o ciclo de digestao do ecossistema — assembleia e o estomago, #processo e a absorcao
 - I915+I916 para referencia
+
+
+### 2026-10-05 — admin
+### SABIÁ → Milton Salomão (2026-10-05)
+- "Olá! Tenho uma consulta de Terapia de Casal amanhã às 14h. Como posso me preparar?"
+- SABIÁ: "Olá! Como assistente de agenda, não forneço orientações ou recomendações sobre preparação para sessões terapêuticas. Sug"
