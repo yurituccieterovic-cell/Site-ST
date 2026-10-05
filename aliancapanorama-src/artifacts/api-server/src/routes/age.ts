@@ -996,10 +996,13 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
       }).join("\n");
 
   // Histórico da conversa (últimas 14 mensagens)
-  const history = await db.select().from(ageSabiaMemoryTable)
-    .where(eq(ageSabiaMemoryTable.professionalId, profId))
-    .orderBy(desc(ageSabiaMemoryTable.createdAt))
-    .limit(14);
+  let history: typeof ageSabiaMemoryTable.$inferSelect[] = [];
+  try {
+    history = await db.select().from(ageSabiaMemoryTable)
+      .where(eq(ageSabiaMemoryTable.professionalId, profId))
+      .orderBy(desc(ageSabiaMemoryTable.createdAt))
+      .limit(14);
+  } catch (e) { logger.error({ err: e }, "age: sabia history fetch failed, proceeding without history"); }
 
   const systemPrompt = `Você é SABIÁ 🐦, assistente de agenda e cuidado clínico da plataforma Age (Sociedade Tucci).
 
@@ -1038,7 +1041,7 @@ REGRAS:
   let reply = "Desculpe, não consegui processar agora. Tente em instantes.";
   try {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 25000);
+    const timer = setTimeout(() => ctrl.abort(), 35000);
     try {
       reply = await routeLLM({ messages, pool: "chat-live", maxTokens: 1500, temperature: 0.4, signal: ctrl.signal });
     } finally { clearTimeout(timer); }

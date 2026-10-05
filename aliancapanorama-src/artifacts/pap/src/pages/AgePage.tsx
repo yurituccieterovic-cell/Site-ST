@@ -309,6 +309,8 @@ export function AgePage() {
 
   // Show/hide senha — profissional (já existia) + paciente
   const [showPatientPassword, setShowPatientPassword] = useState(false);
+  const [showSetPw, setShowSetPw] = useState(false);
+  const [showChangePw, setShowChangePw] = useState(false);
   const [showPatientPwNew, setShowPatientPwNew] = useState(false);
 
   // Tarefas
@@ -945,7 +947,7 @@ export function AgePage() {
     setSabiaLoading(true);
     const ctrl = new AbortController();
     sabiaAbortRef.current = ctrl;
-    const timer = setTimeout(() => ctrl.abort(), 30000);
+    const timer = setTimeout(() => ctrl.abort(), 40000);
     try {
       const endpoint = mode === "professional"
         ? `${API}/api/age/${slug}/sabia`
@@ -3805,12 +3807,24 @@ export function AgePage() {
           </div>
         </div>
         <form onSubmit={handleSetPassword} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <input type="password" placeholder="Nova senha (mín. 8 caracteres)" value={setPwForm.password}
-            onChange={e => setSetPwForm(f => ({ ...f, password: e.target.value }))}
-            style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
-          <input type="password" placeholder="Confirmar senha" value={setPwForm.confirm}
-            onChange={e => setSetPwForm(f => ({ ...f, confirm: e.target.value }))}
-            style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+          <div style={{ position: "relative" }}>
+            <input type={showSetPw ? "text" : "password"} placeholder="Nova senha (mín. 8 caracteres)" value={setPwForm.password}
+              onChange={e => setSetPwForm(f => ({ ...f, password: e.target.value }))}
+              style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 40px 10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box" }} />
+            <button type="button" onClick={() => setShowSetPw(v => !v)}
+              style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16, padding: 0, lineHeight: 1 }}>
+              {showSetPw ? "🙈" : "👁"}
+            </button>
+          </div>
+          <div style={{ position: "relative" }}>
+            <input type={showSetPw ? "text" : "password"} placeholder="Confirmar senha" value={setPwForm.confirm}
+              onChange={e => setSetPwForm(f => ({ ...f, confirm: e.target.value }))}
+              style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 40px 10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box" }} />
+            <button type="button" onClick={() => setShowSetPw(v => !v)}
+              style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16, padding: 0, lineHeight: 1 }}>
+              {showSetPw ? "🙈" : "👁"}
+            </button>
+          </div>
           {setPwMsg && <div style={{ color: "#f87171", fontSize: 13 }}>{setPwMsg}</div>}
           <button type="submit" disabled={setPwStatus === "loading" || !setPwForm.password || !setPwForm.confirm}
             style={{ background: setPwStatus === "loading" ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
@@ -4116,12 +4130,24 @@ export function AgePage() {
         {patientView === "password" && (
           <form onSubmit={handlePatientChangePassword} style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 360 }}>
             <div style={{ color: "#94a3b8", fontSize: 13 }}>Alterar senha</div>
-            <input type="password" placeholder="Senha atual" value={patientPwForm.current}
-              onChange={e => setPatientPwForm(f => ({ ...f, current: e.target.value }))}
-              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
-            <input type="password" placeholder="Nova senha (mín. 8 chars)" value={patientPwForm.next}
-              onChange={e => setPatientPwForm(f => ({ ...f, next: e.target.value }))}
-              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            <div style={{ position: "relative" }}>
+              <input type={showChangePw ? "text" : "password"} placeholder="Senha atual" value={patientPwForm.current}
+                onChange={e => setPatientPwForm(f => ({ ...f, current: e.target.value }))}
+                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 40px 10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box" }} />
+              <button type="button" onClick={() => setShowChangePw(v => !v)}
+                style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16, padding: 0, lineHeight: 1 }}>
+                {showChangePw ? "🙈" : "👁"}
+              </button>
+            </div>
+            <div style={{ position: "relative" }}>
+              <input type={showChangePw ? "text" : "password"} placeholder="Nova senha (mín. 8 chars)" value={patientPwForm.next}
+                onChange={e => setPatientPwForm(f => ({ ...f, next: e.target.value }))}
+                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 40px 10px 14px", color: "#e2e8f0", fontSize: 14, boxSizing: "border-box" }} />
+              <button type="button" onClick={() => setShowChangePw(v => !v)}
+                style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16, padding: 0, lineHeight: 1 }}>
+                {showChangePw ? "🙈" : "👁"}
+              </button>
+            </div>
             {patientPwError && <div style={{ color: "#f87171", fontSize: 13 }}>{patientPwError}</div>}
             {patientPwOk && <div style={{ color: "#4ade80", fontSize: 13 }}>Senha alterada com sucesso!</div>}
             <button type="submit" disabled={!patientPwForm.current || !patientPwForm.next}
