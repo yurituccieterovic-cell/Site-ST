@@ -16,6 +16,7 @@ import { runDodgeCuracao, runIsaRaizPap } from "../dodge/curador";
 import { runIsaNodulos } from "./raiz-to-nodulos";
 import { runMorfeu } from "./morfeu";
 import { runPosHumanismo } from "./pos-humanismo";
+import { runJasmimEmailIngest } from "../lib/jasmim-imap";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 // DISABLE_HEAVY_CRONS=true desliga crons que fazem chamadas LLM (útil no Render free tier para evitar OOM)
@@ -50,6 +51,18 @@ export function startIsaCron(): void {
   registerLoop("isa_raiz_pap",       "ISA Raiz PAP",             "4h:00",   "isa");
   registerLoop("isa_nodulos",        "ISA Nódulos+PDFs",         "5h:00",   "isa");
   registerLoop("morfeu",             "Morfeu — Sonhos de Telos", "3h:30",   "morfeu");
+  registerLoop("jasmim_email",       "Jasmim Email Ingest",      "*/6h:10", "jasmim");
+
+  // Jasmim: ingestão de emails Gmail → feed — a cada 6h nos :10
+  cron.schedule("10 */6 * * *", async () => {
+    try {
+      const r = await runJasmimEmailIngest(2); // últimas 48h por ciclo
+      updateLoop("jasmim_email", true, `+${r.synced} emails, +${r.memories} memórias`);
+    } catch (err) {
+      logger.error({ err }, "cron jasmim_email: erro não tratado");
+      updateLoop("jasmim_email", false, "erro");
+    }
+  });
 
   // Ciclo ISA principal: análise + tasks — todo hora cheia
   scheduleHeavy("0 * * * *", "ISA Ciclo", async () => {

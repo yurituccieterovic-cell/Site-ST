@@ -24,6 +24,7 @@
     "express": "^5",
     "express-rate-limit": "^8.5.1",
     "express-session": "^1.19.0",
+    "imapflow": "^1.7.8",
     "multer": "^2.2.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.1",
