@@ -1411,3 +1411,12 @@ DECISÕES APROVADAS:
 
 ### 2026-10-05 — admin
 GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120s+. Fix: AbortController 45s agora aborta na raiz.
+
+
+### 2026-10-05 — admin
+### #assembleia passada geral
+- Padrao: jogar TUDO que foi feito (emails, brainstorms, sessoes) numa assembleia SC, depois rodar #processo no resultado
+- Dodge (quando pronto) faz automatico: varre emails desde ultimo login e roda assembleias
+- Enquanto Dodge nao esta pronto: Claudio faz manualmente quando solicitado
+- E o ciclo de digestao do ecossistema — assembleia e o estomago, #processo e a absorcao
+- I915+I916 para referencia
