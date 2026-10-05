@@ -70,9 +70,10 @@ async function testPAPHealth(): Promise<TestResult> {
 
 async function testSalesHealth(): Promise<TestResult> {
   return measure("SalesCockpit healthz", async () => {
-    const r = await fetch(`${SC_API}/healthz`, { signal: AbortSignal.timeout(10_000) });
+    const r = await fetch(`${SC_API}/api/healthz`, { signal: AbortSignal.timeout(10_000) });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return "ok";
+    const d = await r.json() as Record<string, unknown>;
+    return `status=${d.status}`;
   });
 }
 
@@ -172,16 +173,16 @@ async function testAgeEndpoints(): Promise<TestResult> {
 
 async function testBridgeSalesCockpit(): Promise<TestResult> {
   return measure("Bridge SC ↔ PAP", async () => {
-    // SalesCockpit expõe status público em /healthz (sem auth)
-    const r = await fetch(`${SC_API}/healthz`, { signal: AbortSignal.timeout(10_000) });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    // Verifica se PAP consegue chamar SalesCockpit via bridge
-    if (!BRIDGE) return "healthz ok (BRIDGE_SECRET ausente — bridge não testado)";
-    const rb = await fetch(`${SC_API}/api/assembleia/sessions?limit=1`, {
+    // Verifica comunicação PAP → SalesCockpit via bridge secret
+    if (!BRIDGE) throw new Error("BRIDGE_SECRET não configurado");
+    const r = await fetch(`${SC_API}/api/healthz`, { signal: AbortSignal.timeout(10_000) });
+    if (!r.ok) throw new Error(`SC healthz HTTP ${r.status}`);
+    // Testa autenticação bridge acessando endpoint interno
+    const rb = await fetch(`${SC_API}/api/bridge/pap/status`, {
       headers: { "x-bridge-secret": BRIDGE },
       signal: AbortSignal.timeout(10_000),
     });
-    return `healthz OK, sessions=${rb.status}`;
+    return `SC healthz OK, bridge/pap/status=${rb.status}`;
   });
 }
 
@@ -219,7 +220,7 @@ async function testLLMQuick(): Promise<TestResult> {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${groqKey}` },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        model: "llama-3.3-70b-versatile",
         messages: [{ role: "user", content: "Responda apenas: pong" }],
         max_tokens: 10,
       }),
