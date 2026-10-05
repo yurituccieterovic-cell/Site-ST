@@ -17,6 +17,7 @@ import { runIsaNodulos } from "./raiz-to-nodulos";
 import { runMorfeu } from "./morfeu";
 import { runPosHumanismo } from "./pos-humanismo";
 import { runJasmimEmailIngest } from "../lib/jasmim-imap";
+import { runLeucocito } from "../lib/leucocito";
 
 // ISA acorda em quatro ritmos — Railway, sem celular, sem intervenção manual
 // DISABLE_HEAVY_CRONS=true desliga crons que fazem chamadas LLM (útil no Render free tier para evitar OOM)
@@ -52,6 +53,7 @@ export function startIsaCron(): void {
   registerLoop("isa_nodulos",        "ISA Nódulos+PDFs",         "5h:00",   "isa");
   registerLoop("morfeu",             "Morfeu — Sonhos de Telos", "3h:30",   "morfeu");
   registerLoop("jasmim_email",       "Jasmim Email Ingest",      "*/6h:10", "jasmim");
+  registerLoop("leucocito",          "Leucócito Diagnóstico",    "6h:45 diário", "leucocito");
 
   // Jasmim: ingestão de emails Gmail → feed — a cada 6h nos :10
   cron.schedule("10 */6 * * *", async () => {
@@ -61,6 +63,17 @@ export function startIsaCron(): void {
     } catch (err) {
       logger.error({ err }, "cron jasmim_email: erro não tratado");
       updateLoop("jasmim_email", false, "erro");
+    }
+  });
+
+  // Leucócito: diagnóstico diário às 6h45 UTC (9h45 Brasília)
+  cron.schedule("45 6 * * *", async () => {
+    try {
+      const report = await runLeucocito({ sendEmail: true, force: true });
+      updateLoop("leucocito", report.failed === 0, `${report.passed}ok/${report.failed}falha`);
+    } catch (err) {
+      logger.error({ err }, "cron leucocito: erro não tratado");
+      updateLoop("leucocito", false, "erro");
     }
   });
 

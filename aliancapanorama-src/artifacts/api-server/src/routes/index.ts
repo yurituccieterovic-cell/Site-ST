@@ -46,6 +46,7 @@ import ageRouter from "./age";
 import pvRouter from "./pv";
 import jasmimRouter from "./jasmim";
 import arvoreTokenRouter from "./arvore-token";
+import leucocitoRouter from "./leucocito";
 
 const router: IRouter = Router();
 
@@ -78,6 +79,7 @@ router.use(ageRouter);
 router.use("/pv", pvRouter);
 router.use(jasmimRouter);
 router.use(arvoreTokenRouter);
+router.use(leucocitoRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
