@@ -1380,3 +1380,12 @@ DECISÕES APROVADAS:
 - Leucócito IA: 13 testes paralelos + cron diário + email report
 - Fix publicarSocial=false em assembleia close (Bluesky indevido)
 - IAs RODAR: modelo Cerebras inválido trocado por llama-3.3-70b-versatile
+
+
+### 2026-10-05 — admin
+### 2026-10-05 — ATA S189 Cláudio
+- SABIÁ history try/catch + timeout 35s/40s
+- I146 show/hide senha SetPassword+ChangePassword
+- runPrepStore Map→Neon DB (rodar_run_preps) no SC
+- I145 Vista Dia na agenda profissional (agendaFilter+agendaDayOffset+nav)
+- PRÓXIMOS: I911 gaveta mobile, S182-3 Cana IA, Software Colesterol briefing
