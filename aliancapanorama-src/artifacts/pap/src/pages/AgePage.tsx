@@ -324,6 +324,10 @@ export function AgePage() {
   const [interForm, setInterForm] = useState({ nome: "", email: "", espec: "", pacientes: "", msg: "" });
   const [interStatus, setInterStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
 
+  // Vista Dia da agenda profissional (I145)
+  const [agendaFilter, setAgendaFilter] = useState<"todos" | "dia">("todos");
+  const [agendaDayOffset, setAgendaDayOffset] = useState(0); // 0=hoje, +1=amanhã, etc.
+
   // Visualização calendário (público) — todos os estados no top-level para respeitar rules of hooks
   type CalView = "lista" | "semana" | "mes";
   const [calView, setCalView] = useState<CalView>("lista");
@@ -1971,23 +1975,59 @@ export function AgePage() {
 
   function AgendaView() {
     // Agrupar por data
-    const grouped = appts.reduce<Record<string, Appt[]>>((acc, a) => {
+    const allGrouped = appts.reduce<Record<string, Appt[]>>((acc, a) => {
       const day = new Date(a.dataHora).toISOString().slice(0, 10);
       (acc[day] ??= []).push(a);
       return acc;
     }, {});
+
+    // Vista Dia: calcular data alvo e filtrar
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(today); targetDate.setDate(today.getDate() + agendaDayOffset);
+    const targetDay = targetDate.toISOString().slice(0, 10);
+    const grouped = agendaFilter === "dia"
+      ? (allGrouped[targetDay] ? { [targetDay]: allGrouped[targetDay] } : {})
+      : allGrouped;
 
     const publicUrl = `${window.location.origin}/aliancapanorama/age/${slug}`;
     const showOnboarding = rules.length === 0 && !onboardDismissed;
 
     return (
       <div style={{ padding: "1rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600 }}>Agenda — próximos 30 dias</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600 }}>
+            {agendaFilter === "dia"
+              ? targetDate.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })
+              : "Agenda — próximos 30 dias"}
+          </h2>
           <div style={{ display: "flex", gap: 8 }}>
             <button onClick={loadAppts} style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>↻</button>
             <button onClick={openProfBook} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "5px 12px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>+ Nova consulta</button>
           </div>
+        </div>
+
+        {/* Filtro Vista Dia */}
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 16 }}>
+          <button onClick={() => setAgendaFilter("todos")}
+            style={{ padding: "4px 12px", borderRadius: 20, border: `1px solid ${agendaFilter === "todos" ? color : "#334155"}`, background: agendaFilter === "todos" ? color + "22" : "none", color: agendaFilter === "todos" ? color : "#64748b", fontSize: 12, cursor: "pointer", fontWeight: agendaFilter === "todos" ? 700 : 400 }}>
+            Todos
+          </button>
+          <button onClick={() => setAgendaFilter("dia")}
+            style={{ padding: "4px 12px", borderRadius: 20, border: `1px solid ${agendaFilter === "dia" ? color : "#334155"}`, background: agendaFilter === "dia" ? color + "22" : "none", color: agendaFilter === "dia" ? color : "#64748b", fontSize: 12, cursor: "pointer", fontWeight: agendaFilter === "dia" ? 700 : 400 }}>
+            Por dia
+          </button>
+          {agendaFilter === "dia" && (
+            <div style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: 4 }}>
+              <button onClick={() => setAgendaDayOffset(o => o - 1)}
+                style={{ background: "none", border: `1px solid #334155`, borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14, lineHeight: 1 }}>‹</button>
+              <button onClick={() => setAgendaDayOffset(0)}
+                style={{ background: agendaDayOffset === 0 ? color + "22" : "none", border: `1px solid ${agendaDayOffset === 0 ? color + "66" : "#334155"}`, borderRadius: 6, color: agendaDayOffset === 0 ? color : "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
+                Hoje
+              </button>
+              <button onClick={() => setAgendaDayOffset(o => o + 1)}
+                style={{ background: "none", border: `1px solid #334155`, borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14, lineHeight: 1 }}>›</button>
+            </div>
+          )}
         </div>
 
         {/* Onboarding self-service — aparece quando não há regras de disponibilidade */}
@@ -2261,7 +2301,10 @@ export function AgePage() {
             </div>
           </div>
         )}
-        {appts.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>Nenhum agendamento.</div>}
+        {agendaFilter === "todos" && appts.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>Nenhum agendamento.</div>}
+        {agendaFilter === "dia" && Object.keys(grouped).length === 0 && (
+          <div style={{ color: "#64748b", fontSize: 14 }}>Nenhuma consulta neste dia.</div>
+        )}
         {Object.entries(grouped).map(([day, dayAppts]) => (
           <div key={day} style={{ marginBottom: 20 }}>
             <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
