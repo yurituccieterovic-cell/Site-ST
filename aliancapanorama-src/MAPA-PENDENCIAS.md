@@ -1722,3 +1722,26 @@
 | S190-6 | Software Colesterol — briefing pendente | ⏳ Yuri responde: o que mede, quem usa, tela principal |
 | S190-7 | Páginas para passar pelas IAs (Yuri vai mandar hoje) | ⏳ aguardando |
 | S190-8 | Loopings antigos para repassar | ⏳ aguardando |
+
+---
+
+### S193b — Crowd + Piti + Age fixes + Enterro Replit (2026-10-05)
+| # | Item | Status |
+|---|---|---|
+| S193b-1 | Rapadura ring photo: uploadImageMiddleware (image/* ao invés de PDF) | ✅ commit 61f8e37 |
+| S193b-2 | Leucócito: URL SC arvore/timeline→arvore/history | ✅ commit 9c10b21 |
+| S193b-3 | Milton login: MASTER_PASSWORD adicionada ao Render PAP | ✅ Render API |
+| S193b-4 | Age /patients/direct: lgpd_at→lgpd_consent_at (typo SQL) | ✅ commit 8216770 |
+| S193b-5 | Age modal agendamento: z-index 50→2000 (sobreposto header) | ✅ commit 8216770 |
+| S193b-6 | Jasmim: 203 assembleias atrasadas sincronizadas | ✅ 7x loop email-sync |
+| S193b-7 | Terapia de Casal: agendada Age (Milton, 07/10 14h, R$300 Mayumi) | ✅ email confirmação |
+| S193b-8 | Enterro Replit: assembleias #662+#663+Playcenter+Bluesky | ✅ publicado |
+| S193b-9 | vercel.json: redirects /salescockpit+/assembleia → SC | ✅ commit ec12fdc |
+| S193b-10 | Sistema Crowd: assembleia #664 + Playcenter round | ✅ I917-I920 |
+| S193b-11 | SC auth parceiro Piti: role=parceiro, credenciais Render | ✅ commit 3e97328 |
+| S193b-12 | SABIÁ por áudio (fork Árvore TTS) | ⏳ futuro |
+| S193b-13 | Age bug 1 (trava após 3 ações) | ⚠️ monitorar |
+| S193b-14 | Age bug 2 (exceções — testar UI real) | ⏳ testar |
+| S193b-15 | Railway: deixar expirar (cancelado 2026-10-02) | ⏳ expire |
+| S193b-16 | sociedadetucci.com.br: Yuri adiciona domínio Vercel + CNAME Registro.br | ⏳ Yuri |
+| S193b-17 | SABIÁ personal trainer + fisioterapia estilo Hebe | ⏳ futuro |

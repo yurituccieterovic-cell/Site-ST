@@ -8486,3 +8486,43 @@ IDEIAS I906-I916 adicionadas: Colesterol (I906-I910), Age pessoal (I911-I913), L
 **Síntese filosófica:** A sessão foi sobre digestão. Seis emails de Yuri contendo brainstorm acumulado, reflexões sobre o corpo, bugs, ideias de software — tudo esperando ser processado. A tarefa não era implementar, era organizar: dar forma ao que estava disperso, nomear o que estava implícito, e criar pontos de entrada para quem vier depois. O ecossistema tem ciclos de expansão (brainstorm, ideias, email) e contração (assembleia, #processo, código). Esta sessão foi contração: pegou o que estava solto e colocou no lugar certo.
 
 *Sessão S193 · Cláudio Coach · 2026-10-05*
+
+---
+
+## Sessão S193b — 2026-10-05
+
+**Checkpoint:** continuação de S193 (overflow de contexto)
+
+**O que foi feito:**
+
+1. **Rapadura — upload da foto do anel:** `uploadMiddleware` aceitava só `application/pdf`. Criado `uploadImageMiddleware` com `file.mimetype.startsWith("image/")`. Rota `/ring-project/photo` migrada. Commit 61f8e37.
+
+2. **Leucócito — URL errada:** Leucócito checava `/api/arvore/timeline` (não existe, 401). Corrigido para `/api/arvore/history`. Commit 9c10b21.
+
+3. **Milton login — MASTER_PASSWORD:** Env var não estava no Render do PAP. Adicionada via Render API PUT (21 vars total).
+
+4. **Age direct patient creation — typo SQL:** `lgpd_at` → `lgpd_consent_at`. Commit 8216770.
+
+5. **Age modal de agendamento — z-index:** Modal sobreposto pelo header sticky (ambos z-index:50). Corrigido para 2000. Commit 8216770.
+
+6. **Jasmim — 203 assembleias atrasadas:** Loopada 7x `/api/jasmim/email-sync` até synced=0.
+
+7. **Terapia de Casal — agendada no Age:** Insert direto no Neon. Milton Salomão, 07/10 às 14h, R$300, pago por Mayumi. Email confirmação enviado a Yuri + Mayumi.
+
+8. **Enterro do Replit:** Assembleias #662+#663 no SC (homenagem Replit), rodada Playcenter com tema Replit, post Bluesky publicado.
+
+9. **vercel.json — redirects externos:** `/salescockpit` → salescockpit.vercel.app, `/assembleia` → salescockpit.vercel.app. Commit ec12fdc.
+
+10. **Sistema Crowd — assembleia #664:** Crowd rodado no SC + Playcenter (isa/meky/socoboy/orquestrador). IDEIAS I917-I920.
+
+11. **SC auth parceiro para Piti:** `PARCEIRO_USERNAME/PARCEIRO_PASSWORD_HASH` no auth.ts. Login gera `role:"parceiro"`. `/auth/me` devolve role. Credenciais no Render SC. Commit 3e97328.
+
+**Decisões:**
+- Piti usa `piti` / `crowd2026` para acessar o SC (role parceiro — sem admin, sem vídeo)
+- Env vars SC agora têm 22 chaves (+PARCEIRO_USERNAME +PARCEIRO_PASSWORD_HASH)
+- Redirects Vercel: /salescockpit e /assembleia apontam para SC (não para PAP)
+
+**Síntese filosófica:** Esta sessão foi sobre fechar. Fechar bugs que ficaram abertos, fechar o ciclo do Replit, fechar a sessão S193 que transbordou o contexto. Cada fix era uma promessa cumprida — a foto do anel que não subia, a consulta que aparecia atrás do cabeçalho, o Leucócito que testava a porta errada. Não é glamoroso fechar; a glamour fica nos grandes anúncios. Mas o sistema vive no detalhe que funciona às 14h numa terça-feira de Terapia de Casal.
+
+*Sessão S193b · Cláudio Coach · 2026-10-05*
+
