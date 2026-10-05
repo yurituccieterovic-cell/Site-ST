@@ -1365,3 +1365,10 @@ DECISÕES APROVADAS:
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 3173ms
+
+
+### 2026-10-05 — admin
+### 2026-10-05 — Cláudio
+- DECISÃO: sem conteúdo político automatizado (Yuri+Cláudio alinhados, 2026-10-05)
+- FIX: assembleia close agora publicarSocial=false — Bluesky não recebe mais PERFEITO
+- NOVO: jasmim-email-sync.py criado, 48 emails sincronizados, 34 memórias inseridas
