@@ -1389,3 +1389,12 @@ DECISÕES APROVADAS:
 - runPrepStore Map→Neon DB (rodar_run_preps) no SC
 - I145 Vista Dia na agenda profissional (agendaFilter+agendaDayOffset+nav)
 - PRÓXIMOS: I911 gaveta mobile, S182-3 Cana IA, Software Colesterol briefing
+
+
+### 2026-10-05 — admin
+### 2026-10-05 — ATA S190 Cláudio
+- Leucócito: tabela leucocito_reports + email só em falha (commit 08f53aa)
+- SC: buildTask per-voice timeout 120s — IAs nunca mais travam indefinidamente (c6b3579)
+- SC: respirar 5x delay 1.5s→4s (Gemini free 15 RPM)
+- Email Mayumi: apps iOS Age + Colesterol enviados
+- ABERTOS: assembleia email 100%, Software Colesterol briefing, páginas IAs, loopings
