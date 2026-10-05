@@ -69,7 +69,9 @@ export function startIsaCron(): void {
   // Leucócito: diagnóstico diário às 6h45 UTC (9h45 Brasília)
   cron.schedule("45 6 * * *", async () => {
     try {
-      const report = await runLeucocito({ sendEmail: true, force: true });
+      // sendEmail não passado: runLeucocito decide (envia só se failed > 0 ou force)
+      // force: true ignora rate-limit (cron pode rodar em horários fixos)
+      const report = await runLeucocito({ force: true });
       updateLoop("leucocito", report.failed === 0, `${report.passed}ok/${report.failed}falha`);
     } catch (err) {
       logger.error({ err }, "cron leucocito: erro não tratado");

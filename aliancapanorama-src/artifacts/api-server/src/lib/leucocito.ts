@@ -277,6 +277,55 @@ async function sendReport(report: LeucocitoReport): Promise<void> {
   await t.sendMail({ from: GMAIL_ACCOUNT, to: REPORT_TO, subject, text });
 }
 
+// ── Persistência no DB (histórico sem email) ───────────────────────────────
+
+export async function ensureLeucocitoTable(): Promise<void> {
+  try {
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS leucocito_reports (
+        id SERIAL PRIMARY KEY,
+        run_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        total_ms INTEGER NOT NULL,
+        passed INTEGER NOT NULL,
+        failed INTEGER NOT NULL,
+        summary TEXT NOT NULL,
+        results JSONB NOT NULL
+      )
+    `);
+    // Mantém só os últimos 90 dias (evita crescimento infinito)
+    await db.execute(sql`DELETE FROM leucocito_reports WHERE run_at < NOW() - INTERVAL '90 days'`);
+  } catch (err) {
+    console.error("[Leucócito] Falha ao criar tabela leucocito_reports:", err);
+  }
+}
+
+async function saveReportToDB(report: LeucocitoReport): Promise<void> {
+  try {
+    await db.execute(sql`
+      INSERT INTO leucocito_reports (run_at, total_ms, passed, failed, summary, results)
+      VALUES (${report.runAt}::timestamptz, ${report.totalMs}, ${report.passed}, ${report.failed}, ${report.summary}, ${JSON.stringify(report.results)}::jsonb)
+    `);
+  } catch (err) {
+    console.error("[Leucócito] Falha ao salvar relatório no DB:", err);
+  }
+}
+
+export async function getRecentReports(limit = 14): Promise<Array<{
+  id: number; run_at: string; passed: number; failed: number; summary: string;
+}>> {
+  try {
+    const rows = await db.execute(sql`
+      SELECT id, run_at, passed, failed, summary
+      FROM leucocito_reports
+      ORDER BY run_at DESC
+      LIMIT ${limit}
+    `);
+    return (rows as any).rows ?? [];
+  } catch {
+    return [];
+  }
+}
+
 // ── Execução principal ─────────────────────────────────────────────────────
 
 const TESTS: Array<() => Promise<TestResult>> = [
@@ -331,7 +380,13 @@ export async function runLeucocito(opts: {
     summary,
   };
 
-  if (opts.sendEmail !== false) {
+  // Salva SEMPRE no DB (histórico consultável sem email)
+  void saveReportToDB(report);
+
+  // Email: só quando há falhas OU quando é rodada manual (force=true via rota).
+  // Cron diário saudável → sem email. Falha → email imediato. Manual → email sempre.
+  const shouldEmail = opts.sendEmail !== false && (failed > 0 || opts.force);
+  if (shouldEmail) {
     try {
       await sendReport(report);
     } catch (err) {

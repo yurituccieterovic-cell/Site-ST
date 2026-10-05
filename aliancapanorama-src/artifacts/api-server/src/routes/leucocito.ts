@@ -6,7 +6,7 @@
  */
 
 import { Router } from "express";
-import { runLeucocito, type LeucocitoReport } from "../lib/leucocito";
+import { runLeucocito, getRecentReports, type LeucocitoReport } from "../lib/leucocito";
 
 const router = Router();
 
@@ -37,7 +37,7 @@ router.post("/leucocito/run", async (req, res) => {
   }
 });
 
-// GET /api/leucocito/last — retorna último relatório
+// GET /api/leucocito/last — retorna último relatório (em memória, inclui results detalhados)
 router.get("/leucocito/last", (req, res) => {
   if (!bridgeAuth(req as unknown as { headers: Record<string, string | string[] | undefined> })) {
     res.status(403).json({ error: "Acesso negado" });
@@ -45,11 +45,23 @@ router.get("/leucocito/last", (req, res) => {
   }
 
   if (!lastReport) {
-    res.status(404).json({ error: "Nenhum diagnóstico executado ainda" });
+    res.status(404).json({ error: "Nenhum diagnóstico executado ainda nesta instância" });
     return;
   }
 
   res.json(lastReport);
+});
+
+// GET /api/leucocito/history — últimos N relatórios do DB (default 14, max 90)
+router.get("/leucocito/history", async (req, res) => {
+  if (!bridgeAuth(req as unknown as { headers: Record<string, string | string[] | undefined> })) {
+    res.status(403).json({ error: "Acesso negado" });
+    return;
+  }
+
+  const limit = Math.min(Number(req.query.limit ?? 14), 90);
+  const rows = await getRecentReports(limit);
+  res.json(rows);
 });
 
 export default router;
