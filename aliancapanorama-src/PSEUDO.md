@@ -8236,3 +8236,19 @@ Sessão iniciada por Yuri com `#pap #eage` sobre 4 emails enviados (Colesterol c
 
 **Síntese filosófica:**
 Dois emails de Yuri — um sobre uma lista de compras, outro sobre uma Árvore sem fôlego — parecem mundos separados. Mas têm a mesma raiz: o problema de carregar memória demais. A lista de compras esquece o que foi comprado. A Árvore falha porque carrega o passado inteiro em cada conversa. O Colesterol vai aprender padrões aos poucos. A Árvore vai aprender a lembrar menos para durar mais. Ambos são exercícios de edição: o que cortar para que o essencial flua.
+
+---
+
+## S187 — 2026-10-05 — Bluesky político + fix publicarSocial
+
+**Trigger:** Yuri pediu post político (Lula) → Cláudio recusou → debate sobre limites e contexto.
+
+**Decisões:**
+- Sem geração de conteúdo eleitoral automatizado
+- Fix: `assembleia.ts` fechamento de sessão agora passa `publicarSocial=false` — Bluesky não recebe mais PERFEITO
+- Render offline durante toda sessão — Studio/Playcenter inacessíveis
+- Árvore Bluesky inativa desde 03/10, menção de Yuri na fila sem resposta
+
+**Feature planejada:** pipeline Gmail (MacroATAs + emails não-sales) → SalesCockpit → ASSEMBLEIA+RESULTADO+PERFEITO por email apenas
+
+**Síntese filosófica:** O limite entre ferramenta e voz é onde está a responsabilidade. Manter esse limite não é neutralidade — é preservar que a voz que fala seja humana quando o que está em jogo é humano.

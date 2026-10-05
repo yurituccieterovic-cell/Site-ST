@@ -304,7 +304,7 @@ const PROJETO_KEYWORDS: Record<string, string[]> = {
   bni:      ["bni"],
   sonhos:   ["sonhos", "sonho"],
   crowd:    ["crowd"],
-  theo:     ["theo", "théo", "ecossistema", "assembleia"],
+  theo:     ["theo", "théo", "ecossistema", "assembleia", "pap", "macroata", "macro ata", "perfeito", "resultado", "rodar", "cláudio", "claudio", "salescockpit", "sales cockpit"],
   jasmim:   ["jasmim", "myym", "mayumi"],
 };
 
