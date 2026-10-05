@@ -2325,7 +2325,7 @@ export function AgePage() {
 
         {/* Modal de agendamento */}
         {selectedAppt && (
-          <div style={{ position: "fixed", inset: 0, background: "#000000cc", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+          <div style={{ position: "fixed", inset: 0, background: "#000000cc", zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
             <div style={{ background: "#0f1318", border: `1px solid ${color}44`, borderRadius: 16, padding: "1.5rem", width: 380, maxWidth: "100%", maxHeight: "80vh", overflowY: "auto" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
                 <div>

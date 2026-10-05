@@ -1340,7 +1340,7 @@ router.post("/age/:slug/patients/direct", requireAgeAuth, async (req, res): Prom
   if (existing) { res.status(409).json({ error: "Paciente com este email já cadastrado" }); return; }
 
   const result = await db.execute(sql`
-    INSERT INTO age_patients (professional_id, nome, email, telefone, status, lgpd_consent, lgpd_at)
+    INSERT INTO age_patients (professional_id, nome, email, telefone, status, lgpd_consent, lgpd_consent_at)
     VALUES (${profId}, ${nome.trim()}, ${emailLower}, ${telefone?.trim() ?? null}, 'aprovado', true, now())
     RETURNING id, nome, email, telefone, status, created_at, updated_at
   `);
