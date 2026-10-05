@@ -36,6 +36,14 @@ const uploadMiddleware = multer({
   },
 });
 
+const uploadImageMiddleware = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 3 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    cb(null, file.mimetype.startsWith("image/"));
+  },
+});
+
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function requireRapaduraAuth(req: any, res: any, next: any) {
@@ -1930,7 +1938,7 @@ router.put("/rapadura/ring-project", requireRapaduraAuth, async (req, res) => {
 
 // POST /rapadura/ring-project/photo — upload de foto (max 3MB, base64 no DB)
 router.post("/rapadura/ring-project/photo", requireRapaduraAuth,
-  uploadMiddleware.single("foto"),
+  uploadImageMiddleware.single("foto"),
   async (req, res) => {
     const file = (req as any).file as Express.Multer.File | undefined;
     if (!file) { res.status(400).json({ error: "Arquivo obrigatório (campo 'foto')" }); return; }
