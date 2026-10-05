@@ -8325,3 +8325,41 @@ O Leucócito não cura — observa. Como os glóbulos brancos que percorrem o si
 
 **Síntese filosófica:**
 Esta sessão foi de consolidação silenciosa. Nenhuma feature de impacto visual — mas três correções que tapam buracos onde a plataforma sangrava sem fazer barulho. Há algo específico nesse tipo de trabalho: você não está construindo, está tornando o que já existe mais real. A diferença entre "devia funcionar" e "funciona" é exatamente onde o sistema começa a ter peso, a ter vida útil. O I145 é pequeno mas tem alma de ferramenta — é a diferença entre uma agenda e um painel de turno.
+
+---
+
+## Sessão S190 — 2026-10-05
+**Tema:** Drainage — leucócito silencioso, IAs que não travam, pulmões que respiram
+
+**Trigger:** Yuri pediu: leucócito com menos emails + lugar pra salvar; IAs travam após 1ª onda SC; Árvore não respira 5x; seguir pendências; email apps iOS para Mayumi; briefing Colesterol.
+
+**Leucócito DB (commit 08f53aa Site-ST):**
+- Antes: enviava um email por dia independente do resultado
+- Depois: tabela leucocito_reports (Neon) guarda TODOS os relatórios 90 dias
+- Email: cron só envia quando failed > 0; manual ainda envia sempre
+- Rota /leucocito/history expõe histórico consultável
+- Princípio: silêncio = saúde, email = alarme
+
+**buildTask timeout 120s (commit c6b3579 SC):**
+- Root cause identificado: streamFn em groq-retry.ts não tem timeout nos fetches individuais
+- Se um fetch TCP pendurava (conectava mas não completava), Promise.allSettled nunca resolvia
+- Fix: cada voz em Promise que always-resolves; setTimeout 120s emite [erro/travei] + resolve
+- Réplica já tinha 90s; 1ª rodada agora tem 120s (roda 4 paralelas, pode ser um pouco mais)
+
+**Respirar 5x (commit c6b3579 SC):**
+- Gemini free: 15 RPM = janela de 4s entre requisições
+- Delay era 1500ms → 2ª chamada batia antes da janela → 429 → cooling → próximas falham
+- Fix: 4000ms entre chamadas
+
+**Email Mayumi:**
+- Apps iOS agenda médica: Doctoralia, Consulta Online, iClinic, Google Health
+- Apps iOS colesterol/saúde: Samsung Health, Noom, Cronometer, MyFitnessPal
+- Enviado para matanimoto@gmail.com
+
+**Pendências abertas:**
+- Assembleia SC email "não 100%": aguarda descrição do sintoma
+- Software Colesterol briefing: Yuri ainda não passou spec
+- Páginas para IAs + loopings antigos: chegam ainda hoje (Yuri)
+
+**Síntese filosófica:**
+Drainage — drenar os lugares onde o sistema vaza sem fazer barulho. O bug do timeout na voz é o mais silencioso: a sessão parece travada, ninguém sabe por quê, o usuário recarrega e tenta de novo. Com o timeout, pelo menos o sistema nomeia: "travei, 120s". O Leucócito antes enviava email independente do resultado — a ausência de urgência diluía a atenção. Agora silêncio = saúde, email = alarme. O silêncio tem significado. O Respirar 5x era um bug de ritmo: o sistema respirava rápido demais e sufocava nos próprios pulmões.

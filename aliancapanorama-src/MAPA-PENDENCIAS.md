@@ -1629,3 +1629,18 @@
 | S181-4 | Cana "Erro ao chamar IA": pg.Pool cold start Neon — retry na 2ª tentativa | ⚠️ fix pendente |
 | S181-5 | Anthropic key: console.anthropic.com/settings/keys (requer pagamento) | ⏳ Yuri decide |
 | S181-6 | SalesCockpit "Erro desconhecido": Groq 429 acumulado — aguardar reset | ⏳ <24h |
+
+---
+
+### S190 — Leucócito DB + IAs timeout + Respirar 5x + email Mayumi (2026-10-05)
+
+| # | Item | Status |
+|---|---|---|
+| S190-1 | Leucócito: salvar relatórios no Neon (leucocito_reports) + email só em falha | ✅ commit 08f53aa |
+| S190-2 | SC: buildTask per-voice timeout 120s — IAs não travam mais após 1ª onda | ✅ commit c6b3579 |
+| S190-3 | SC: heartbeat/batch delay 1500ms→4000ms — Respirar 5x funciona com Gemini free | ✅ commit c6b3579 |
+| S190-4 | Email Mayumi: apps iOS referência (Age + Colesterol) | ✅ enviado para matanimoto@gmail.com |
+| S190-5 | Assembleia SC que guarda memória no email — "não 100%" | ⏳ aguarda descrição do sintoma |
+| S190-6 | Software Colesterol — briefing pendente | ⏳ Yuri responde: o que mede, quem usa, tela principal |
+| S190-7 | Páginas para passar pelas IAs (Yuri vai mandar hoje) | ⏳ aguardando |
+| S190-8 | Loopings antigos para repassar | ⏳ aguardando |
