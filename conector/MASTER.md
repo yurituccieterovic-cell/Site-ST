@@ -1372,3 +1372,11 @@ DECISÕES APROVADAS:
 - DECISÃO: sem conteúdo político automatizado (Yuri+Cláudio alinhados, 2026-10-05)
 - FIX: assembleia close agora publicarSocial=false — Bluesky não recebe mais PERFEITO
 - NOVO: jasmim-email-sync.py criado, 48 emails sincronizados, 34 memórias inseridas
+
+
+### 2026-10-05 — admin
+### 2026-10-05 — Cláudio S187+S188
+- Fix emails Sales: relayEmail retry 3× + timeout 20s (causa: PAP cold start travava fetch silenciosamente)
+- Leucócito IA: 13 testes paralelos + cron diário + email report
+- Fix publicarSocial=false em assembleia close (Bluesky indevido)
+- IAs RODAR: modelo Cerebras inválido trocado por llama-3.3-70b-versatile
