@@ -2544,3 +2544,15 @@ Dodge pega emails desde último login e roda assembleias no SC automaticamente. 
 
 ## I916 — #assembleia passada geral (padrão do ecossistema)
 Jogar tudo o que foi feito (emails, brainstorms, sessões) numa assembleia SC, depois rodar #processo no resultado. É o ciclo de digestão do ecossistema.
+
+## I917 — Sistema Crowd: interface visual tipo carro com sistemas interligados
+Interface "painel de controle" onde cada módulo (Age, Colesterol, Rapadura, Jasmim, PAP, Fluxo) é uma IA clicável. Selecionar partes para assembleia, loopings automáticos entre setores. Entregue ao Pitch (PI/SAP) como sistema visual + jurídico + técnico.
+
+## I918 — Crowd: looping automático entre setores
+Setor Age + Colesterol: "toda vez que muda a lista de compras, atualiza horário de preparo na agenda". Setor PAP + Jasmim: "toda vez que há nova assembleia, cria tarefa no feed Théo". Execução automática via triggers no backend.
+
+## I919 — Crowd: privacidade por parceiro (Piti/Pitch)
+Seções do SalesCockpit visíveis por acesso privado. Piti tem login próprio com visibilidade restrita (só o que foi compartilhado com ele). Base: Árvore já tem `private: true` para mensagens; estender para projetos/assembleias.
+
+## I920 — Crowd: página de apresentação para o Pitch
+Página estática (ou Jasmim) que explica o Sistema em linguagem PI+SAP: módulos como "módulos ERP", loopings como "triggers de integração", assembleias como "board de decisão auditável". URL pública: crowd.sociedadetucci.com.br
