@@ -2,6 +2,33 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S193b — Bugs Age + Enterro Replit + Terapia de Casal + Leucócito (2026-10-05)
+
+| # | Item | Status |
+|---|---|---|
+| S193b-1 | Bug Age 3 (cadastro direto paciente): lgpd_at→lgpd_consent_at | ✅ fix commit 8216770 |
+| S193b-2 | Bug Age 5 (pop-up modal): zIndex: 50 → 2000 na modal de agendamento | ✅ fix commit 8216770 |
+| S193b-3 | Rapadura anel de noivado: uploadMiddleware PDF→uploadImageMiddleware imagem | ✅ fix commit 61f8e37 |
+| S193b-4 | Leucócito 13/15: /arvore/timeline→/arvore/history (URL correta) | ✅ fix commit 9c10b21 |
+| S193b-5 | MASTER_PASSWORD adicionado ao Render PAP env vars (login Milton OK) | ✅ |
+| S193b-6 | Jasmim: 203 assembleias sincronizadas para feed Théo (já atualizado) | ✅ |
+| S193b-7 | Terapia de Casal: agendado Age ID#6, 07/10 14h, Milton, R$300 Mayumi | ✅ email confirmação enviado |
+| S193b-8 | Enterro do Replit: assembleias #662+#663, Bluesky @isa-pap, Playcenter | ✅ publicado |
+| S193b-9 | vercel.json: redirects /salescockpit e /assembleia → salescockpit.vercel.app | ✅ commit ec12fdc |
+| S193b-10 | Cana "Erro ao chamar IA": era intermitente (cold start), resolveu após redeploy | ✅ monitorar |
+| S193b-11 | Render Starter plan: ambos serviços confirmados buildPlan=starter OK | ✅ |
+| S193b-12 | Bug Age 1 (trava após 3 ações): investigado — pode ser cold start Render, monitorar | ⏳ monitorar |
+| S193b-13 | Bug Age 2 (exceções): backend OK, frontend parece correto — precisa teste real | ⏳ testar |
+| S193b-14 | Bug Age 4 (email configurável via UI): nova feature, não bug — pendente implementação | ⏳ |
+| S193b-15 | Claude Code no desktop/Termux: via npm `npm install -g @anthropic-ai/claude-code` | ℹ️ informado |
+| S193b-16 | Railway até fim cobrança: deixar expirar — não usar para nada novo | ⏳ retirar |
+| S193b-17 | sociedadetucci.com.br: adicionar como custom domain no Vercel (Yuri precisa fazer) | ⏳ Yuri faz |
+| S193b-18 | sociedadetucci.org indisponível: assembleia #663 discutiu alternativas (.app, .com) | ✅ assembleia gravada |
+| S193b-19 | SABIÁ por áudio: feature futura — Árvore tem TTS, Age SABIÁ ainda só texto | ⏳ future |
+| S193b-20 | SABIÁ personal trainer + fisioterapia estilo Hebe | ⏳ aguarda implementação |
+
+---
+
 ### S193 — #eage + Colesterol resumo + assembleias SC + Dodge pending (2026-10-05)
 
 | # | Item | Status |

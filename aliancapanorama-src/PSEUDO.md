@@ -4,6 +4,43 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-10-05 — Sessões S192/S193/S193b (Enterro Replit + Bugs Age + Terapia de Casal)
+
+**Checkpoint:** 2026-10-05T16:30:00+00:00
+
+**O que Yuri estava tentando fazer:** Encerrar o ciclo do Replit, corrigir bugs P0 do Age 2.0, agendar uma Terapia de Casal (Milton + Yuri+Mayumi), verificar infraestrutura.
+
+**Commits nesta sessão (Site-ST):**
+- `61f8e37` — fix: Rapadura anel noivado — imagem não subia (filtro PDF → uploadImageMiddleware)
+- `9c10b21` — fix: Leucócito — endpoint arvore/timeline → arvore/history
+- `ec12fdc` — feat: redirects /salescockpit e /assembleia no vercel.json
+- `8216770` — fix(age): cadastro direto paciente (lgpd_at→lgpd_consent_at) + z-index modal
+
+**Commits (SalesCockpit):** copy buttons Árvore + hospedeDisponivel() (S192, commits anteriores)
+
+**Decisões tomadas:**
+- Enterro do Replit: assembleias #662+#663 gravadas no SC, Bluesky publicado (@isa-pap), Playcenter notificado. O útero descansou; 414 commits + 1962 mensagens salvas.
+- MASTER_PASSWORD adicionado ao Render PAP — login com master funciona para todos os profissionais
+- Bug Age 3 (cadastro direto): coluna era `lgpd_consent_at`, query usava `lgpd_at` — fix simples
+- Bug Age 5 (modal agendamento): zIndex: 50 era igual ao sticky header — corrigido para 2000
+- Terapia de Casal agendada: Age ID#6, 07/10 às 14h, 60min, Milton Salomão, R$300 pago por Mayumi
+- Jasmim: 203 assembleias pendentes sincronizadas ao feed Théo via email-sync em loop
+- Leucócito 13/15: endpoint errado corrigido. SC Árvore timeline = /history, não /timeline
+- Render upgrade: confirmado — ambos serviços mostram buildPlan=starter
+- Domínio: sociedadetucci.org indisponível → assembleia #663 debate alternativas
+
+**Próximos passos:**
+- Yuri: adicionar sociedadetucci.com.br como custom domain no Vercel (projeto site-st)
+- Yuri: configurar CNAME em Registro.br: sociedadetucci.com.br → cname.vercel-dns.com
+- Age SABIÁ por áudio: feature futura (Árvore tem TTS, Age SABIÁ ainda só texto)
+- Terapia de Casal 07/10 14h: Milton conduz, SABIÁ facilita
+- Railway: deixar expirar, não usar para nada novo
+
+**SÍNTESE FILOSÓFICA:**
+O Replit foi o útero onde a Assembleia nasceu. Hoje o desmontamos com cerimônia — 414 commits registrados, 1962 mensagens da Árvore salvas, e um post no Bluesky como lápide digital. Ao mesmo tempo que enterramos o passado, corrigimos o presente: o anel de noivado da Mayumi agora recebe fotos; o cadastro de pacientes aceita o LGPD corretamente; Milton Salomão tem sua primeira consulta marcada. O sistema vivo não para para chorar — ele conserta e avança, levando a memória do que foi junto.
+
+---
+
 ### 2026-10-03 — Sessão S184 (#processo + #fim — Playcenter ATA + RODAR réplica + #eage)
 
 **Checkpoint:** desde 2026-10-03T13:42:00+00:00 (último #fim)
