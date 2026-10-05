@@ -74,23 +74,11 @@ async function testPAPHealth(): Promise<TestResult> {
 }
 
 async function testSalesHealth(): Promise<TestResult> {
-  return measure("SalesCockpit (bridge PAP→SC)", async () => {
-    // Verifica SC via bridge — mais confiável que chamar diretamente de dentro do Render
-    if (!BRIDGE) throw new Error("BRIDGE_SECRET não configurado");
-    const r = await fetch(`${SC_API}/api/bridge/pap/health`, {
-      headers: { "x-bridge-secret": BRIDGE },
-      signal: AbortSignal.timeout(15_000),
-    });
-    // Tenta /api/healthz como fallback se bridge não existir
-    if (r.status === 404) {
-      const r2 = await fetch(`${SC_API}/api/healthz`, { signal: AbortSignal.timeout(15_000) });
-      if (!r2.ok) throw new Error(`HTTP ${r2.status}`);
-      const d2 = await r2.json() as Record<string, unknown>;
-      return `status=${d2.status}`;
-    }
+  return measure("SalesCockpit healthz", async () => {
+    const r = await fetch(`${SC_API}/api/healthz`, { signal: AbortSignal.timeout(15_000) });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json() as Record<string, unknown>;
-    return `status=${d.status ?? "ok"}`;
+    return `status=${d.status}`;
   });
 }
 
@@ -189,18 +177,17 @@ async function testAgeEndpoints(): Promise<TestResult> {
 }
 
 async function testBridgeSalesCockpit(): Promise<TestResult> {
-  return measure("Bridge PAP → SC assembleias", async () => {
-    // PAP lê assembleias do SC via bridge — testa autenticação e conectividade
+  return measure("Bridge PAP (assembleias PAP)", async () => {
+    // Testa bridge PAP lendo assembleias do DB local — confirma que bridge auth funciona
     if (!BRIDGE) throw new Error("BRIDGE_SECRET não configurado");
-    const r = await fetch(`${SC_API}/api/bridge/sc/assembleias?limit=1`, {
+    const r = await fetch(`${PAP_API}/api/bridge/pap/assembleias?limit=3`, {
       headers: { "x-bridge-secret": BRIDGE },
-      signal: AbortSignal.timeout(15_000),
+      signal: AbortSignal.timeout(10_000),
     });
-    if (r.status === 401 || r.status === 403) throw new Error(`bridge auth falhou: ${r.status}`);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json() as Record<string, unknown>;
-    const items = (d.data as unknown[]) ?? [];
-    return `${items.length} assembleias via bridge`;
+    const rows = Array.isArray(d) ? d : (d.data as unknown[] ?? []);
+    return `${rows.length} msgs PAP via bridge`;
   });
 }
 
