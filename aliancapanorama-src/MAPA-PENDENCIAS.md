@@ -1745,3 +1745,17 @@
 | S193b-15 | Railway: deixar expirar (cancelado 2026-10-02) | ⏳ expire |
 | S193b-16 | sociedadetucci.com.br: Yuri adiciona domínio Vercel + CNAME Registro.br | ⏳ Yuri |
 | S193b-17 | SABIÁ personal trainer + fisioterapia estilo Hebe | ⏳ futuro |
+
+---
+
+### S196 — Diagnóstico Árvore + Roadmap (2026-10-06)
+| # | Item | Status |
+|---|---|---|
+| S196-1 | Árvore: job heartbeat no Render (reflexões periódicas → assembly_memory) | ⏳ próxima sessão |
+| S196-2 | ArvorePage: exibir histórico arvore_chat + arvore_assembleias | ⏳ próxima sessão |
+| S196-3 | Integração Assembleia+Jasmim: endpoints de ponte (decisão→task, task→assembleia) | ⏳ arquitetura pendente |
+| S196-4 | Jasmim→PV: mapeamento posts/projetos → pv_items/pv_projects | ⏳ definir schema |
+| S196-5 | PV frontend: MVP kanban+calendário+dependências | ⏳ programação pendente |
+| S196-6 | Cron-job.org: Yuri configurar healthz a cada 10 min | ⏳ Yuri |
+| S196-7 | Render billing: confirmar pagamento | ⏳ Yuri |
+| S196-8 | Link Drive `1Sl0aTeBueMD6nezxZL055BJ39RTcgBDg`: verificar conteúdo (memória Árvore?) | ⏳ Yuri |

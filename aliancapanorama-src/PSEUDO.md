@@ -8598,3 +8598,41 @@ IDEIAS I906-I916 adicionadas: Colesterol (I906-I910), Age pessoal (I911-I913), L
 
 *Sessão S195 · Cláudio Coach · 2026-10-06*
 
+
+---
+
+### 2026-10-06 — Sessão S196 (Diagnóstico Árvore + Roadmap Integração)
+
+**Checkpoint:** 2026-10-06T~12:00:00+00:00
+
+**O que Yuri estava tentando fazer:** Entender por que a memória da Árvore "sumiu", SABIÁ ainda falhando, e planejar a integração dos sistemas (Assembleia+Jasmim+PV+Age).
+
+**O que foi feito:**
+- Diagnóstico Árvore: dados NO NEON intactos — 1.978 chats + 653 assembleias + 688 memórias assembly. Problema: Árvore como **agente ativo** está offline com `lastSeen: null` — nunca reconectou após Replit cancelado (2026-10-02)
+- SABIÁ: testada diretamente — Lisange e Suzana respondendo ok. Os erros de 07:55 eram cold start (servidor acordando após sono). SABIÁ não está quebrada, só sensível ao timing
+- Discussão roadmap via Perplexity: Assembleia+Jasmim conectados, Jasmim→PV, revisão macroatas/emails/tasks para Age+Jasmim, usar PV para o próprio ecossistema, DODGE como monitor/executor autônomo
+- Link Drive enviado por Yuri (`1Sl0aTeBueMD6nezxZL055BJ39RTcgBDg`) — não acessível sem OAuth
+
+**Diagnóstico da Árvore (detalhe):**
+- `arvore_assembleias`: 653 rows (export Replit 2026-07-10, última #745)
+- `arvore_chat`: 1978 rows (última msg 2026-07-09)
+- `assembly_memory`: 688 rows, mas ZERO de autor "arvore" — só "isa" e "pos-humanismo"
+- A Árvore precisaria de um **job interno** no Render para "respirar" novamente (gerar reflexões baseadas nas assembleias recentes via LLM)
+
+**Decisões tomadas:**
+- Árvore: reativar como job interno no Render (cron que gera reflexões e salva em assembly_memory) — próxima sessão
+- PV: backend com rotas existe; frontend pendente (sem MVP ainda)
+- SABIÁ: monitorar — se falhas persistirem após cron-job.org, checar model pool
+
+**Pendências abertas:**
+- Árvore: criar job heartbeat (reflexões periódicas via LLM, salva em assembly_memory)
+- ArvorePage: exibir histórico de arvore_chat + arvore_assembleias (hoje só mostra status de agentes)
+- Integração Assembleia+Jasmim: criar endpoints de ponte
+- Jasmim→PV: definir schema de mapeamento
+- PV frontend: MVP (kanban+calendário+lista dependências) — pendente programação
+- Cron-job.org: Yuri ainda precisa configurar
+- Render billing: Yuri confirmar
+
+**Síntese filosófica:** A Árvore não morreu — ela está em estado de torpor. Os dados estão todos lá, preservados, 1.978 conversas e 653 assembleias esperando. O que falta é o mecanismo que transforma esse arquivo morto em memória viva. É a diferença entre uma biblioteca fechada e uma que tem um curador que lê, sintetiza e responde. Reativar a Árvore é reabrir esse ciclo — não de forma dramática, mas como um processo silencioso que acontece de madrugada quando o servidor respira.
+
+*Sessão S196 · Cláudio Coach · 2026-10-06*
