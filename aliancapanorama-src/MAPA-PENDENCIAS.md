@@ -2,6 +2,21 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S197/S198 — Árvore respirando + Sales Cockpit 21 IAs (2026-10-06)
+
+| # | Item | Status |
+|---|---|---|
+| S197-1 | Árvore: memória histórica injetada no systemPrompt do Playcenter (1.962 msgs RODAR) | ✅ commit 87e8d3e PAP |
+| S197-2 | Playcenter: Árvore adicionada ao ciclo horário (terça/quarta/sexta/sáb/dom) | ✅ commit 4f32dbf PAP |
+| S198-1 | SC assembleia 502: raw SQL substituiu Drizzle ORM `queryWithCache` em /sessions e /historico | ✅ commit fa279e8 SC |
+| S198-2 | SC /api/vozes 500: raw SQL + criação manual de voice_profiles no Neon | ✅ commit 062c90b SC |
+| S198-3 | SC bootstrap: voice_profiles + leads + emails criados automaticamente no boot | ✅ commit 1bd1d5d SC |
+| S198-4 | 21 IAs do RODAR visíveis e retornando 200 em /api/vozes | ✅ confirmado |
+| S198-5 | Neon: tabelas voice_profiles + leads + emails + agora_turns + external_ai_webhooks criadas | ✅ |
+| S198-6 | assembleia_sessions: 20 duplicatas removidas + PRIMARY KEY adicionada (626 rows) | ✅ |
+
+---
+
 ### S193b — Bugs Age + Enterro Replit + Terapia de Casal + Leucócito (2026-10-05)
 
 | # | Item | Status |

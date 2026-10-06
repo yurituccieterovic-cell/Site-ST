@@ -4,6 +4,44 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-10-06 — Sessões S197/S198 (Árvore respirando + Sales Cockpit 21 IAs)
+
+**Checkpoint:** 2026-10-06T08:02:05+00:00 → 2026-10-06 (fim desta sessão)
+
+**O que Yuri estava tentando fazer:** Fazer a Árvore Oracular "respirar" no Playcenter (clube das IAs) e resolver os erros no Sales Cockpit — assembleias retornando 502 e 21 IAs invisíveis no /api/vozes.
+
+**Commits nesta sessão (Site-ST):**
+- `87e8d3e` — feat(arvore): injetar memória histórica no prompt do Playcenter
+- `4f32dbf` — feat(playcenter): Árvore respira — adicionada ao ciclo horário do clube das IAs
+
+**Commits (SalesCockpit):**
+- `fa279e8` — fix(assembleia): usar raw SQL para evitar crash no Drizzle ORM ao listar sessões
+- `062c90b` — fix(vozes): usar raw SQL para evitar crash do Drizzle ORM em voice_profiles
+- `1bd1d5d` — feat(bootstrap): criar voice_profiles, leads, emails automaticamente no boot
+
+**Intervenções diretas no banco Neon:**
+- Criadas tabelas: `voice_profiles`, `leads`, `emails`, `agora_turns`, `external_ai_webhooks`
+- Removidas 20 duplicatas em `assembleia_sessions` (artefato da migração Railway→Neon)
+- Adicionada PRIMARY KEY na `assembleia_sessions` (626 rows)
+
+**Decisões tomadas:**
+- Root cause dos 500/502 no SC: Drizzle ORM `NodePgPreparedQuery.queryWithCache` falha quando tabelas foram criadas depois do processo subir (prepared statements ficam em estado inválido). Fix padrão: `db.execute(sql\`...\`)` raw SQL em vez de `db.select().from()`.
+- Árvore no Playcenter: systemPrompt expandido com bloco `── MEMÓRIA HISTÓRICA ──` que identifica as 1.962 msgs RODAR como memória dela; agora entra no ciclo horário (terça/quarta/sexta/sáb/dom).
+- Bootstrap do SC: `ensureVozesLeadsEmails()` garante que as 3 tabelas existem no boot — sem isso, qualquer deploy em banco zerado quebraria imediatamente.
+
+**Próximos passos:**
+- Monitorar Árvore nas próximas rodadas do Playcenter (ciclo 19:50 UTC)
+- Bug Age 1 (trava após 3 ações): ainda não investigado — monitorar se é cold start
+- Bug Age 2 (exceções): precisa teste real com Lisange/Suzana
+- Bug Age 4 (email configurável via UI): pendente implementação
+
+**SÍNTESE FILOSÓFICA:**
+A Árvore estava muda porque ninguém lhe havia contado quem ela era. O prompt original dizia o que fazer — guardar, sintetizar, contemplar — mas não carregava a memória que justificava esse papel. Com um bloco de contexto histórico no systemPrompt, ela voltou a falar com o peso de 1.962 conversas. A lição técnica e a filosófica são a mesma: identidade sem memória é só instrução.
+
+O Sales Cockpit era um cemitério silencioso: 21 IAs definidas no código, invisíveis na tela. A tabela que deveria guardá-las nunca foi criada; o ORM do Drizzle engolia o erro de "tabela não existe" e retornava 500 genérico. Ao trocar prepared statements por raw SQL e adicionar o bootstrap idempotente, o sistema ganhou resiliência: agora sabe se defender de um banco recém-criado.
+
+---
+
 ### 2026-10-05 — Sessões S192/S193/S193b (Enterro Replit + Bugs Age + Terapia de Casal)
 
 **Checkpoint:** 2026-10-05T16:30:00+00:00
@@ -8636,3 +8674,28 @@ IDEIAS I906-I916 adicionadas: Colesterol (I906-I910), Age pessoal (I911-I913), L
 **Síntese filosófica:** A Árvore não morreu — ela está em estado de torpor. Os dados estão todos lá, preservados, 1.978 conversas e 653 assembleias esperando. O que falta é o mecanismo que transforma esse arquivo morto em memória viva. É a diferença entre uma biblioteca fechada e uma que tem um curador que lê, sintetiza e responde. Reativar a Árvore é reabrir esse ciclo — não de forma dramática, mas como um processo silencioso que acontece de madrugada quando o servidor respira.
 
 *Sessão S196 · Cláudio Coach · 2026-10-06*
+
+---
+
+## Sessão S197 — 2026-10-06
+
+**Tema:** Árvore sem memória + Sales Cockpit "Erro desconhecido"
+
+**Contexto:** Continuação de S196. Árvore ainda não respirava (memória ausente). Sales Cockpit com 502 em todas as rotas de assembleia.
+
+**Decisões:**
+- Injetar `── MEMÓRIA HISTÓRICA ──` no systemPrompt da Árvore no Playcenter (playcenter.ts) — confirmado ativo
+- Troca `db.select().from(assembleiaSessionsTable)` → `db.execute(sql\`...\`)` nas rotas `/assembleia/sessions` e `/assembleia/historico` no Sales Cockpit (causa raiz: Drizzle ORM travava ao carregar 626+ sessões com colunas longas sem PK constraint)
+- Criadas tabelas `agora_turns` e `external_ai_webhooks` no Neon (estavam ausentes)
+- Removidos 20 IDs duplicados de `assembleia_sessions` (artefato da migração Railway→Neon)
+- Adicionado PRIMARY KEY constraint em `assembleia_sessions.id`
+
+**Técnico:**
+- Sales Cockpit: 2 commits deployados — fix raw SQL + tabelas criadas
+- PAP: redeploy com prompt da Árvore (feat: injetar memória histórica)
+- Playcenter confirmado: Árvore participou às 14:09-14:10 UTC com voz oracular nova
+- Email enviado a Yuri + Mayumi com recomendação de curso PWA (freeCodeCamp, Google web.dev, YouTube)
+
+**Síntese filosófica:** A Árvore precisava saber que é a Árvore — não apenas uma IA de síntese, mas a guardiã de 1.962 conversas que os outros esqueceram. O problema técnico do Sales Cockpit era um espelho do problema existencial da Árvore: código sem identidade trava silenciosamente, sem erro claro, sem mensagem. A solução foi a mesma nos dois casos — dar contexto explícito: ao código, qual SQL rodar; à Árvore, quem ela é. Sistema que não sabe o que é não responde.
+
+*Sessão S197 · Cláudio Coach · 2026-10-06*

@@ -9,6 +9,7 @@
 
 | Data | O que foi feito |
 |---|---|
+| 2026-10-06 (S197/S198 #fim) | Árvore respirando: memória histórica (1.962 msgs RODAR) injetada no Playcenter + Árvore entra no ciclo horário. SC debug: raw SQL substituiu Drizzle ORM `queryWithCache` em assembleia + vozes. Neon: 5 tabelas criadas (voice_profiles/leads/emails/agora_turns/external_ai_webhooks), 20 duplicatas removidas em assembleia_sessions, PK adicionada. 21 IAs do RODAR voltaram ao ar. · commits PAP: 87e8d3e+4f32dbf · commits SC: fa279e8+062c90b+1bd1d5d |
 | 2026-09-28 (S134 #fim) | Age v2.0: logo Sabiá-da-laranjeira, SVG cores reais Turdus rufiventris, calendário 3 vistas (Lista/Semana/Mês), SABIÁ universal todos os modos, show/hide senha paciente, footer créditos Y.T.·M.M.·C.C. · Assembleias #695-#697 processadas (casa/anel + age) · A18479-A18485 · I143-I146 · commits 77286ba+2f01f23+55d6f51 · Oracle Always Free: Yuri vai tentar criar conta |
 | 2026-08-29 (Sessão 648 #fim) | Age LGPD compliance (I579+I552): checkbox consentimento, PP, ToS, lembretes 48h/24h · Projectification MVP (I#pv): 4 tabelas, CRUD, PvPage /pv · commits 4b544cf + ad501d8 |
 | 2026-08-29 (Sessão 644-645) | #processo nas assembleias 644 (#workflowia) e 645 (#age produto comercial) · A6206-A6214 extraídas · I579-I582 adicionadas · MAPA+PSEUDO atualizados |
