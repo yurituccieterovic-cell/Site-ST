@@ -1454,3 +1454,10 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### SABIÁ → Milton Salomão (2026-10-06)
 - "Bom dia"
 - SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
+
+
+### 2026-10-06 — admin
+### 2026-10-06 — Cláudio S196
+- Árvore offline (serviço Python Replit morreu 10-02); dados intactos Neon: 1978 chats+653 assembleias; zero reflexões desde julho
+- SABIÁ ok — erros eram cold start; cron-job.org pendente (Yuri)
+- Roadmap: job heartbeat Árvore, ArvorePage com histórico, Jasmim↔Assembleia bridge, Jasmim→PV mapeamento
