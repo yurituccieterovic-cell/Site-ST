@@ -1440,3 +1440,11 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### SABIÁ → Milton Salomão (2026-10-06)
 - "Oi"
 - SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
+
+
+### 2026-10-06 — admin
+### 2026-10-06 — ATA S194 Cláudio
+- RENDER DORMIA → restart + keep-alive push trigger + Groq qwen3.8-27b
+- #eage rodada 2: I921 drawer mobile, I922 tipos consulta, I923 WhatsApp
+- 16 emails encaminhados por Yuri (madrugada) — pendente processar na Assembleia
+- Script email→assembleia (I915 parcial) pendente
