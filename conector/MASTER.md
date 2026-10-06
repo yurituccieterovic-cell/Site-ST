@@ -1508,3 +1508,8 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - Drizzle ORM travava ao carregar 626+ sessões sem PK constraint → trocado por raw SQL
 - Árvore ganhou memória histórica no Playcenter (1962 msgs RODAR injetadas no prompt)
 - agora_turns + external_ai_webhooks criadas no Neon; 20 duplicados removidos de assembleia_sessions
+
+
+### 2026-10-06 — admin
+### 2026-10-06T19:44 — Playcenter
+- Participantes: isa+amanda+meky+orquestrador+arvore (5 falas)
