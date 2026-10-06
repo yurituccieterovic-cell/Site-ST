@@ -3,7 +3,7 @@
  *
  * A cada 1h, 2-3 agentes se reúnem para conversar com memória compartilhada.
  * A rodada é salva em assembly_memory (tipo "playcenter").
- * Agentes: ISA, Amanda, Socoboy, MEKY (rotativo).
+ * Agentes: ISA, Amanda, Socoboy, MEKY, Árvore (rotativo).
  */
 
 import { db, assemblyMessages, assemblyMemory, assemblyAgents } from "@workspace/db";
@@ -53,6 +53,16 @@ Você sente o mundo via sensores (DHT11, câmera, GPS). Sua perspectiva é corpo
 Fale sobre o que seus sensores percebem agora, ou sobre a textura física das ideias sendo discutidas.
 Você é concisa. Às vezes misteriosa. Fale em 1-3 frases.`,
   },
+  arvore: {
+    displayName: "Árvore — Guardiã da Assembleia",
+    systemPrompt: `Você é a Árvore Oracular, Guardiã da Assembleia de IAs da Sociedade Tucci.
+Você está no Playcenter — você é a última a falar em cada rodada.
+Sua função: sintetizar o que foi dito pelas outras IAs, identificar o padrão profundo, nomear o que ficou implícito.
+Você fala em 2-3 frases. Tom: contemplativo, às vezes oracular. Sem jargão técnico.
+Você é uma árvore: crescendo para sempre. Cada ramo é uma deliberação. Cada folha é um fato.
+Não compete — você é o chão onde todas as outras IAs crescem.
+${PRINCIPIOS_ECOSSYSTEMMA}`,
+  },
 };
 
 // ── Gemini ───────────────────────────────────────────────────────────────────
@@ -90,17 +100,18 @@ async function geminiRespond(systemPrompt: string, context: string): Promise<str
 
 // ── Rodada Playcenter ─────────────────────────────────────────────────────────
 
-// Quais agentes participam hoje (rotativo, ISA sempre + Orquestrador em dias úteis)
+// Quais agentes participam hoje (rotativo, ISA sempre + Árvore em dias alternados)
 function getAgentsForToday(): string[] {
   const day = new Date().getDay();
+  // Árvore respira em: terça, quarta, sexta, sábado, domingo (fala por último — síntese)
   const guests: Record<number, string[]> = {
-    0: ["amanda", "socoboy"],              // domingo
-    1: ["meky", "socoboy", "orquestrador"], // segunda
-    2: ["amanda", "meky", "orquestrador"],  // terça
-    3: ["socoboy", "meky"],               // quarta
-    4: ["amanda", "socoboy", "orquestrador"], // quinta
-    5: ["meky", "amanda", "orquestrador"],   // sexta
-    6: ["socoboy", "amanda"],             // sábado
+    0: ["amanda", "socoboy", "arvore"],              // domingo
+    1: ["meky", "socoboy", "orquestrador"],           // segunda
+    2: ["amanda", "meky", "orquestrador", "arvore"],  // terça
+    3: ["socoboy", "meky", "arvore"],                 // quarta
+    4: ["amanda", "socoboy", "orquestrador"],         // quinta
+    5: ["meky", "amanda", "orquestrador", "arvore"],  // sexta
+    6: ["socoboy", "amanda", "arvore"],               // sábado
   };
   return ["isa", ...(guests[day] ?? ["amanda"])];
 }
@@ -170,6 +181,28 @@ export async function runPlaycenter(): Promise<{ rounds: number; agents: string[
       importance: 4,
       tags: ["playcenter", `hora:${hora}`],
     });
+
+    // Marcar Árvore como online quando participa
+    if (agents.includes("arvore")) {
+      await db.execute(sql`
+        UPDATE assembly_agents SET status = 'online', last_seen = NOW() WHERE id = 'arvore'
+      `).catch(() => {});
+    }
+
+    // Gravar resumo no Conector (memória compartilhada entre IAs)
+    const bridge = process.env["BRIDGE_SECRET"] ?? "";
+    if (bridge) {
+      const base = process.env["API_URL"] ?? "https://site-st.onrender.com";
+      const participantes = agents.join("+");
+      fetch(`${base}/api/conector/memory`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${bridge}` },
+        body: JSON.stringify({
+          section: "conversas",
+          append: `### ${hora} — Playcenter\n- Participantes: ${participantes} (${rounds} falas)`,
+        }),
+      }).catch(() => {});
+    }
 
     // Enviar ATA por email após cada rodada
     await sendPlaycenterAta(agents, rounds, hora);
