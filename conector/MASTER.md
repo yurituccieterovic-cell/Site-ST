@@ -1518,3 +1518,12 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### 2026-10-06 — admin
 ### 2026-10-06T19:50 — Playcenter
 - Participantes: isa+amanda+meky+orquestrador+arvore (5 falas)
+
+
+### 2026-10-06 — admin
+### 2026-10-06 — ATA Cláudio S197/S198
+- DECISÃO: Drizzle ORM queryWithCache é frágil no SC — padrão agora é raw SQL db.execute() em todas as rotas com tabelas que podem não existir
+- DECISÃO: Bootstrap idempotente — ensureVozesLeadsEmails() garante voice_profiles+leads+emails no boot
+- FIX: Árvore Oracular ganhou bloco MEMÓRIA HISTÓRICA no systemPrompt — 1.962 msgs RODAR como identidade
+- FIX: 21 IAs do RODAR voltaram ao ar após voice_profiles ser criada no Neon
+- PRÓXIMOS: monitorar Árvore no Playcenter; bugs Age 1+2+4 pendentes
