@@ -40,7 +40,7 @@ type ProviderName =
 
 const MODELS: Record<ProviderName, string> = {
   openai:     "gpt-4o-mini",
-  groq:       "llama-3.3-70b-versatile",
+  groq:       "qwen/qwen3.8-27b",
   gemini:     "gemini-2.5-flash",
   cerebras:   "gpt-oss-120b",
   mistral:    "mistral-small-latest",
