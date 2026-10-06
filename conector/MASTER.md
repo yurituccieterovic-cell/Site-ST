@@ -1476,3 +1476,8 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - ARVORE_TOKEN adicionado no Render
 - SABIÁ falhava por cold start; agora OK
 - Conector conversas estava vazio — seed feita
+
+
+### 2026-10-06 — admin
+### 2026-10-06T14:08 — Playcenter
+- Participantes: isa+amanda+meky+orquestrador+arvore (5 falas)
