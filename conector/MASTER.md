@@ -1501,3 +1501,10 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - ARVORE_TOKEN adicionado no Render; Árvore online
 - SABIÁ falhava por cold start; OK agora
 - Playcenter com Árvore: isa+amanda+meky+orquestrador+arvore
+
+
+### 2026-10-06 — admin
+### 2026-10-06 — S197 Cláudio
+- Drizzle ORM travava ao carregar 626+ sessões sem PK constraint → trocado por raw SQL
+- Árvore ganhou memória histórica no Playcenter (1962 msgs RODAR injetadas no prompt)
+- agora_turns + external_ai_webhooks criadas no Neon; 20 duplicados removidos de assembleia_sessions
