@@ -2686,12 +2686,28 @@ export async function ensureJasmimTables(): Promise<void> {
     );
     CREATE INDEX IF NOT EXISTS idx_jm_myym_memory_tipo ON jm_myym_memory(tipo, created_at DESC);
   `);
-  // Expandir constraint legada (caso o servidor já existia com constraint menor)
+  // Tabela de projetos dinâmicos (permite criar novos projetos sem deploy)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS jm_projetos (
+      slug       TEXT        PRIMARY KEY,
+      nome       TEXT        NOT NULL,
+      descricao  TEXT,
+      setores    JSONB       DEFAULT '[]',
+      created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+    )
+  `).catch(() => {});
+
+  // Remover constraint rígida de projeto (agora aceita qualquer texto — validação feita no app)
   await db.execute(sql`
     DO $$ BEGIN
       ALTER TABLE jm_posts DROP CONSTRAINT IF EXISTS jm_posts_projeto_check;
-      ALTER TABLE jm_posts ADD CONSTRAINT jm_posts_projeto_check
-        CHECK (projeto IN ('age','rapadura','pv','isca','bni','sonhos','crowd','theo','jasmim'));
+    EXCEPTION WHEN others THEN NULL; END $$;
+  `).catch(() => {});
+
+  // Expandir tipo para aceitar mais valores (decisao, ideia, codigo, aprendizado, filosofia)
+  await db.execute(sql`
+    DO $$ BEGIN
+      ALTER TABLE jm_posts DROP CONSTRAINT IF EXISTS jm_posts_tipo_check;
     EXCEPTION WHEN others THEN NULL; END $$;
   `).catch(() => {});
   // Tabela de emails agendados (lembretes de cancelamento, notificações futuras)

@@ -167,42 +167,53 @@ router.post("/jasmim/myym/chat", async (req, res) => {
 router.get("/jasmim/feed", async (req, res) => {
   const projeto = (req.query.projeto as string) ?? "age";
   const setor   = (req.query.setor as string) ?? null;
-  const validos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim", "calculus", "socia", "fluxo"];
-  if (!validos.includes(projeto)) {
-    res.status(400).json({ error: "projeto inválido" });
-    return;
-  }
+  const all     = (req.query.all as string) === "true";
+  const page    = Math.max(1, parseInt((req.query.page as string) ?? "1", 10));
+  const limit   = Math.min(500, Math.max(1, parseInt((req.query.limit as string) ?? "80", 10)));
+  const offset  = (page - 1) * limit;
 
+  // Aceita projetos fixos + projetos criados dinamicamente
+  const fixos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim", "calculus", "socia", "fluxo"];
   try {
-    // DESC pega os 80 mais recentes; subquery inverte para exibição cronológica (mais antigo no topo)
-    const rows = setor
-      ? await db.execute(sql`
-          SELECT * FROM (
-            SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
-            FROM jm_posts
-            WHERE projeto = ${projeto} AND setor = ${setor}
-            ORDER BY created_at DESC LIMIT 80
-          ) sub ORDER BY created_at ASC`)
-      : await db.execute(sql`
-          SELECT * FROM (
-            SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
-            FROM jm_posts
-            WHERE projeto = ${projeto}
-            ORDER BY created_at DESC LIMIT 80
-          ) sub ORDER BY created_at ASC`);
+    const dinamicos = await db.execute(sql`SELECT slug FROM jm_projetos`).then(
+      (r: any) => (r.rows ?? []).map((row: any) => row.slug as string)
+    ).catch(() => [] as string[]);
+    const validos = [...new Set([...fixos, ...dinamicos])];
 
-    const posts = rows.rows.map((r: Record<string, unknown>) => ({
-      id: r.id,
-      tipo: r.tipo,
-      projeto: r.projeto,
-      setor: r.setor,
-      autor: r.autor,
-      conteudo: r.conteudo,
-      fonte: r.fonte,
-      ts: r.created_at,
+    if (!validos.includes(projeto)) {
+      res.status(400).json({ error: "projeto inválido" });
+      return;
+    }
+
+    // all=true retorna tudo; padrão pagina em blocos
+    const rows = all
+      ? await db.execute(sql`
+          SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
+          FROM jm_posts
+          WHERE projeto = ${projeto} ${setor ? sql`AND setor = ${setor}` : sql``}
+          ORDER BY created_at ASC`)
+      : await db.execute(sql`
+          SELECT id, projeto, setor, tipo, autor, conteudo, fonte, created_at
+          FROM jm_posts
+          WHERE projeto = ${projeto} ${setor ? sql`AND setor = ${setor}` : sql``}
+          ORDER BY created_at DESC
+          LIMIT ${limit} OFFSET ${offset}`);
+
+    const totalRow = await db.execute(sql`
+      SELECT COUNT(*)::int AS n FROM jm_posts
+      WHERE projeto = ${projeto} ${setor ? sql`AND setor = ${setor}` : sql``}
+    `);
+    const total = (totalRow as any).rows?.[0]?.n ?? 0;
+
+    const posts = (rows as any).rows.map((r: Record<string, unknown>) => ({
+      id: r.id, tipo: r.tipo, projeto: r.projeto, setor: r.setor,
+      autor: r.autor, conteudo: r.conteudo, fonte: r.fonte, ts: r.created_at,
     }));
 
-    res.json({ posts, total: posts.length });
+    // Se paginado, inverte para exibição cronológica (mais antigo no topo)
+    if (!all) posts.reverse();
+
+    res.json({ posts, total, page: all ? 1 : page, limit: all ? total : limit });
   } catch (err) {
     console.error("[jasmim/feed]", err);
     res.status(500).json({ error: "Erro ao carregar feed." });
@@ -232,6 +243,91 @@ router.post("/jasmim/posts", async (req, res) => {
   } catch (err) {
     console.error("[jasmim/posts]", err);
     res.status(500).json({ error: "Erro ao salvar post." });
+  }
+});
+
+// ─── PATCH /api/jasmim/posts/:id (editar post) ──────────────────────────────
+
+router.patch("/jasmim/posts/:id", async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) { res.status(400).json({ error: "id inválido" }); return; }
+
+  const { conteudo, setor, tipo } = req.body as { conteudo?: string; setor?: string; tipo?: string };
+  if (!conteudo?.trim() && !setor && !tipo) {
+    res.status(400).json({ error: "pelo menos um campo para atualizar" }); return;
+  }
+
+  try {
+    const sets: string[] = [];
+    if (conteudo?.trim()) sets.push(`conteudo = '${conteudo.trim().replace(/'/g, "''")}'`);
+    if (setor !== undefined)  sets.push(`setor = ${setor ? `'${setor.replace(/'/g, "''")}'` : "NULL"}`);
+    if (tipo)  sets.push(`tipo = '${tipo.replace(/'/g, "''")}'`);
+
+    const result = await db.execute(sql.raw(`
+      UPDATE jm_posts SET ${sets.join(", ")} WHERE id = ${id} RETURNING id
+    `));
+    if (!(result as any).rows?.length) { res.status(404).json({ error: "post não encontrado" }); return; }
+    res.json({ ok: true, id });
+  } catch (err) {
+    console.error("[jasmim/posts/patch]", err);
+    res.status(500).json({ error: "Erro ao editar post." });
+  }
+});
+
+// ─── DELETE /api/jasmim/posts/:id ────────────────────────────────────────────
+
+router.delete("/jasmim/posts/:id", async (req, res) => {
+  const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
+  if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
+    res.status(403).json({ error: "Não autorizado" }); return;
+  }
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) { res.status(400).json({ error: "id inválido" }); return; }
+  try {
+    await db.execute(sql`DELETE FROM jm_posts WHERE id = ${id}`);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+// ─── POST /api/jasmim/projetos (criar projeto dinâmico) ─────────────────────
+
+router.post("/jasmim/projetos", async (req, res) => {
+  const bridgeSecret = process.env["BRIDGE_SECRET"] ?? "";
+  if (!bridgeSecret || !checkBridgeAuth(req, bridgeSecret)) {
+    res.status(403).json({ error: "Não autorizado" }); return;
+  }
+  const { slug, nome, descricao, setores } = req.body as {
+    slug?: string; nome?: string; descricao?: string; setores?: string[];
+  };
+  if (!slug?.trim() || !nome?.trim()) {
+    res.status(400).json({ error: "slug e nome obrigatórios" }); return;
+  }
+  const slugClean = slug.trim().toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  try {
+    await db.execute(sql`
+      INSERT INTO jm_projetos (slug, nome, descricao, setores)
+      VALUES (${slugClean}, ${nome.trim()}, ${descricao ?? null}, ${JSON.stringify(setores ?? [])})
+      ON CONFLICT (slug) DO UPDATE SET nome = EXCLUDED.nome, descricao = EXCLUDED.descricao, setores = EXCLUDED.setores
+    `);
+    res.status(201).json({ ok: true, slug: slugClean });
+  } catch (err) {
+    console.error("[jasmim/projetos]", err);
+    res.status(500).json({ error: String(err) });
+  }
+});
+
+// ─── GET /api/jasmim/projetos ─────────────────────────────────────────────────
+
+router.get("/jasmim/projetos", async (_req, res) => {
+  const fixos = ["age", "rapadura", "pv", "isca", "bni", "sonhos", "crowd", "theo", "jasmim", "calculus", "socia", "fluxo"];
+  try {
+    const rows = await db.execute(sql`SELECT slug, nome, descricao, setores, created_at FROM jm_projetos ORDER BY created_at`);
+    const dinamicos = (rows as any).rows ?? [];
+    res.json({ projetos: [...fixos.map(s => ({ slug: s, nome: s, dinamico: false })), ...dinamicos.map((r: any) => ({ ...r, dinamico: true }))] });
+  } catch {
+    res.json({ projetos: fixos.map(s => ({ slug: s, nome: s, dinamico: false })) });
   }
 });
 

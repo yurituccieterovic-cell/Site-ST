@@ -2566,6 +2566,21 @@ Insight Consultorio.ME (nota 4.7). Campo tipo_consulta nos agendamentos: "1ª co
 ## I923 — Age: confirmação por WhatsApp (canal de saúde de facto no BR)
 Todos apps bem avaliados têm (Saluz, Consultorio Live, Agendart). Dois caminhos: Evolution API (grátis, self-hosted) ou Twilio ($0,10/msg, simples). SABIÁ redige a mensagem certa por tipo de consulta e perfil de paciente.
 
+## I924 — Age: Dodge como monitor do sistema
+Dodge no Age para monitoramento e análise: latência das rotas, erros LLM, ocupação de slots. Leucócito e Dodge conversam no máximo 4 vezes/dia (não 10).
+
+## I925 — Age + Jasmim: Painel da Mayumi unificado
+"Painel da Mayumi" que une Age (agenda, pacientes, financeiro) com Jasmim (feed projetos, carrinho de ideias, MYYM). Uma tela, tudo o que Mayumi precisa para operar. I719 (aprovação de pacientes) entra aqui.
+
+## I926 — Jasmim: criar projetos dinamicamente + editar/deletar posts
+Implementado em S194: PATCH /api/jasmim/posts/:id, DELETE /api/jasmim/posts/:id, POST /api/jasmim/projetos, GET /api/jasmim/projetos. Tabela jm_projetos no Neon. Feed com paginação e ?all=true para histórico completo.
+
+## I927 — Leucócito+Dodge: protocolo de diálogo limitado
+Conversa máxima de 4 rounds/dia entre Leucócito e Dodge. Controle via DB (contador diário). Evita loops de monitoramento que consomem quota de LLM.
+
+## I928 — SABIÁ: fork da Árvore (áudio + transcrição do SalesCockpit)
+SABIÁ herda o sistema de áudio/transcrição que funciona no SalesCockpit. Melhora a qualidade da comunicação no Age. Pré-requisito: resolver infraestrutura de áudio no Render primeiro.
+
 
 ## Docs PAP — Ideias Novas (2026-10-06)
 

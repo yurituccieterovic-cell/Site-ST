@@ -8563,3 +8563,38 @@ IDEIAS I906-I916 adicionadas: Colesterol (I906-I910), Age pessoal (I911-I913), L
 
 *Sessão S194 · Cláudio Coach · 2026-10-06*
 
+---
+
+### 2026-10-06 — Sessão S195 (Jasmim fixes + #processo email Age2.0+Jasmim+PV)
+
+**O que Yuri estava tentando fazer:** Corrigir Jasmim (histórico faltando, dados imprecisos, sem edição), processar email de brainstorm Age 2.0 + Jasmim + PV via #processo.
+
+**Commits nesta sessão:**
+- Jasmim: feed com paginação + `?all=true` para histórico completo
+- Jasmim: `PATCH /api/jasmim/posts/:id` — editar posts
+- Jasmim: `DELETE /api/jasmim/posts/:id` — deletar posts (requer BRIDGE)
+- Jasmim: `POST /api/jasmim/projetos` — criar projetos dinâmicos
+- Jasmim: `GET /api/jasmim/projetos` — listar projetos
+- Bootstrap: tabela `jm_projetos` + remover constraint rígida de projeto e tipo
+
+**Decisões:**
+- Constraint de projeto no jm_posts REMOVIDA — validação agora é no app (lista fixa + jm_projetos dinâmicos)
+- Tipos aceitos expandidos: inclui decisao, ideia, codigo, aprendizado, filosofia além dos anteriores
+- I926 implementado nesta sessão
+
+**Email processado (2916 — Age 2.0 + Jasmim + PV):**
+- PV: propaganda "a partir do verde" — pendente definir com Sérgio
+- PWA/Apps: email explicativo para Yuri+Mayumi pendente de envio
+- SABIÁ: fork da Árvore para melhorar áudio+transcrição (I928)
+- Jasmim: Dodge no Age (I924), Painel Mayumi unificado (I925)
+- Aprovação de paciente por secretária (já é I720)
+- Leucócito+Dodge: máx 4 conversas/dia (I927)
+
+**Perguntas abertas de Yuri:**
+- Função da MYYM Jasmim: resposta = antropóloga do ecossistema, curadora de memória, parceira de brainstorm. Não age sozinha — tudo vai para o Carrinho primeiro.
+- PWA vs App nativo: enviar email explicativo (I721 pendente para iOS meta tags)
+
+**Síntese filosófica:** Corrigir o que existe é diferente de construir o que falta. Yuri pediu edição — não porque o sistema estava errado, mas porque estava incompleto. Um feed sem edição é um monólogo; com edição vira conversa. A história faltando no Jasmim era simbólica: o sistema acumulava, mas não mostrava. Agora mostra. O que se registra e o que se pode ver são coisas diferentes — esta sessão os aproximou.
+
+*Sessão S195 · Cláudio Coach · 2026-10-06*
+
