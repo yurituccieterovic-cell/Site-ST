@@ -8526,3 +8526,40 @@ IDEIAS I906-I916 adicionadas: Colesterol (I906-I910), Age pessoal (I911-I913), L
 
 *Sessão S193b · Cláudio Coach · 2026-10-05*
 
+---
+
+### 2026-10-06 — Sessão S194 (Keepalive + #eage Rodada 2 + Groq fix)
+
+**Checkpoint:** 2026-10-06T~08:00:00+00:00
+
+**O que Yuri estava tentando fazer:** Garantir que o servidor não durma mais (SABIÁ offline), processar backlog de emails com Mayumi sobre o Age, entender como automatizar o fluxo email→assembleia, e iniciar a rodada 2 do brainstorm Age.
+
+**Commits nesta sessão (Site-ST):**
+- `e7db885` — keep-alive melhorado: push trigger + retry no cold start
+- `eef3c23` — fix Groq model: llama-3.3-70b-versatile → qwen/qwen3.8-27b (modelo descontinuado)
+
+**O que foi feito:**
+- Diagnóstico: servidor Render dormia → SABIÁ mostrava "não consegui processar". Causa: Render free tier, billing não confirmado.
+- Fix imediato: restart via Render API → servidor acordado
+- Keep-alive melhorado: agora dispara em todo push/deploy (antes: schedule throttled pelo GitHub)
+- Groq corrigido: modelo `llama-3.3-70b-versatile` descontinuado → `qwen/qwen3.8-27b` (testado e funcionando)
+- #eage rodada 2 executado: lidos 2 emails de Mayumi sobre Age (bugs 28/set + análise de apps 5/out), email de brainstorm fractal enviado para Yuri + Mayumi com 3 direções: drawer mobile (I921), tipos de consulta (I922), WhatsApp (I923)
+- Leucócito 6 falhas: todos timeouts durante sono do servidor — falsos positivos, nada quebrado
+
+**Decisões tomadas:**
+- Billing Render: Yuri vai tentar confirmar pagamento diretamente no dashboard
+- Keepalive: cron-job.org recomendado como solução definitiva (5 min de setup)
+- Groq: qwen3.8-27b como substituto até modelo llama voltar
+
+**Pendências abertas:**
+- Cron-job.org setup (Yuri)
+- Billing Render (Yuri)
+- I921/I922/I923: aguardar resposta de Mayumi na thread de brainstorm
+- Automação email→assembleia→#processo (ver I915/I916)
+- Jasmim: revisão insatisfatória (Yuri mencionou)
+- Forwarded emails 2895-2910: processar na Assembleia (pendente)
+
+**Síntese filosófica:** Servidores dormem como humanos — e quando dormem no momento errado, deixam quem precisava de ajuda falando com o silêncio. O trabalho desta sessão foi acordar o sistema, não construir algo novo. Às vezes a manutenção é o ato mais importante: não a ideia que brilha, mas o fio que conecta. Yuri enviou emails de madrugada encaminhando histórico — gestos de quem sabe que a memória institucional é frágil e quer protegê-la antes que se perca.
+
+*Sessão S194 · Cláudio Coach · 2026-10-06*
+

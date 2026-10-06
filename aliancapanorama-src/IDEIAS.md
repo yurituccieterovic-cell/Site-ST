@@ -2556,3 +2556,25 @@ Seções do SalesCockpit visíveis por acesso privado. Piti tem login próprio c
 
 ## I920 — Crowd: página de apresentação para o Pitch
 Página estática (ou Jasmim) que explica o Sistema em linguagem PI+SAP: módulos como "módulos ERP", loopings como "triggers de integração", assembleias como "board de decisão auditável". URL pública: crowd.sociedadetucci.com.br
+
+## I921 — Age: painel deslizável mobile (drawer SABIÁ + Notas)
+Proposta Mayumi (28/set). Ícone fixo canto direito → desliza → drawer com SABIÁ chat + Notas + briefing do dia. Não quebra desktop. Resolve fragmentação de navegação no celular que ela reportou.
+
+## I922 — Age: tipos de consulta configuráveis por profissional
+Insight Consultorio.ME (nota 4.7). Campo tipo_consulta nos agendamentos: "1ª consulta", "retorno", "sessão", "teleatendimento". Cada tipo tem duração e valor. Paciente escolhe ao agendar. SABIÁ sugere tipo baseado no histórico.
+
+## I923 — Age: confirmação por WhatsApp (canal de saúde de facto no BR)
+Todos apps bem avaliados têm (Saluz, Consultorio Live, Agendart). Dois caminhos: Evolution API (grátis, self-hosted) ou Twilio ($0,10/msg, simples). SABIÁ redige a mensagem certa por tipo de consulta e perfil de paciente.
+
+
+## Docs PAP — Ideias Novas (2026-10-06)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I942 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I943 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I944 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I945 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I946 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I947 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I948 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
