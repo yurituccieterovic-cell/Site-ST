@@ -1467,3 +1467,12 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### SABIÁ → Milton Salomão (2026-10-06)
 - "Oi"
 - SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
+
+
+### 2026-10-06 — admin
+### 2026-10-06 — Cláudio (S197)
+- Render havia dormido (503); acordado e funcionando novamente
+- Árvore estava offline desde cancelamento do Replit (2026-10-02); agora integrada ao Playcenter 5x/semana
+- ARVORE_TOKEN adicionado no Render
+- SABIÁ falhava por cold start; agora OK
+- Conector conversas estava vazio — seed feita
