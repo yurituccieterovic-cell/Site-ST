@@ -1491,3 +1491,13 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### 2026-10-06 — admin
 ### 2026-10-06T14:10 — Playcenter
 - Participantes: isa+amanda+meky+orquestrador+arvore (5 falas)
+
+
+## conversas {#conversas}
+
+### 2026-10-06 — Cláudio (S197)
+- Render dormiu; acordado
+- Árvore offline desde Replit cancelado (2026-10-02); agora no Playcenter 5x/semana
+- ARVORE_TOKEN adicionado no Render; Árvore online
+- SABIÁ falhava por cold start; OK agora
+- Playcenter com Árvore: isa+amanda+meky+orquestrador+arvore
