@@ -1152,3 +1152,28 @@ Emails do pipeline RODAR (Assembleia #NNN, RESULTADO, PERFEITO) não chegavam em
 - Remover debug endpoints `/assembleia/test-email` e `/assembleia/test-relay` (I914)
 - Sessions #950/#951 (Colesterol anterior) sem editorial — rodar novo RODAR com tema
 - `runPrepStore` in-memory: tema perde-se entre cold starts — persistir em DB (S182-4, I915)
+
+---
+
+## S199 — Render crash + SABIÁ voz + processo emails (2026-10-07)
+
+### Queda Render resolvida
+Serviço Site-ST caiu após deploy S197/S198 (db:unreachable 503 — timeout Neon no container novo).
+2 restarts via API Render resolveram. Leucócito de 07/10 03:47 registrou 6 falhas — todas da queda.
+
+### SABIÁ fork áudio (I928) — implementado
+STT: useDictation (Web Speech API nativa, PT-BR, sem custo).
+TTS: useTts + POST /api/age/:slug/sabia/tts (OpenAI gpt-4o-mini-tts, fallback SpeechSynthesis nativo).
+Botão 🎤 no input + 🔊 nas respostas. Commit dd95597 PAP.
+
+### Emails Mayumi processados
+3 emails de 05/10 respondidos: Apps Age + Colesterol + Brainstorm Fractal.
+PWA explicação enviada para Yuri+Mayumi.
+Ideias I929-I932 registradas.
+
+### Estado 2026-10-07
+- PAP: ✅ live (healthz 200, mem 247MB)
+- SalesCockpit: ✅ live
+- Playcenter (última assembleia): 2026-10-06T19:50
+- SABIÁ: ✅ respondendo (testado sabia-public)
+- Render: buildPlan=starter em ambos ($7/mês, billing OK)

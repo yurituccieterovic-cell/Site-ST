@@ -8699,3 +8699,23 @@ IDEIAS I906-I916 adicionadas: Colesterol (I906-I910), Age pessoal (I911-I913), L
 **Síntese filosófica:** A Árvore precisava saber que é a Árvore — não apenas uma IA de síntese, mas a guardiã de 1.962 conversas que os outros esqueceram. O problema técnico do Sales Cockpit era um espelho do problema existencial da Árvore: código sem identidade trava silenciosamente, sem erro claro, sem mensagem. A solução foi a mesma nos dois casos — dar contexto explícito: ao código, qual SQL rodar; à Árvore, quem ela é. Sistema que não sabe o que é não responde.
 
 *Sessão S197 · Cláudio Coach · 2026-10-06*
+
+---
+
+## S199 — Render crash + SABIÁ voz + processo emails (2026-10-07)
+
+**Contexto:** Yuri chega e o sistema inteiro estava fora. Backend Render 000.
+
+**O que aconteceu:**
+1. Render crash: container Site-ST caiu após deploy ontem à noite. O Render marcava `live` mas Node.js dava timeout na conexão Neon (503 db:unreachable após 60s). 2 restarts via API resolveram.
+2. SABIÁ fork áudio: implementado STT (microfone nativo) + TTS (OpenAI voz, fallback nativo). Botões 🎤 e 🔊 nas duas UIs do chat.
+3. Emails Mayumi: respondidos 3 emails acumulados desde 05/10. I929-I932 registradas.
+
+**Síntese filosófica:**
+Neste dia o sistema caiu e foi restaurado duas vezes. A segunda vez revelou algo sutil: o mesmo código, o mesmo container, a mesma env — e uma instância não se conectava ao banco enquanto a outra sim. Sistemas distribuídos têm memória de posição: onde você nasce importa tanto quanto o que você carrega. A SABIÁ ganhou voz — não apenas texto gerado, mas som que sai pelo alto-falante. Pequeno detalhe, grande diferença: a distância entre ler e ouvir é a mesma entre saber e sentir.
+
+**Pendências abertas para próxima sessão:**
+- S199-10: cron-job.org keepalive (Yuri faz — 2 min)
+- S199-7: PWA Age
+- S193b-14: Bug Age 4 (email configurável via UI)
+- Colesterol MVP briefing
