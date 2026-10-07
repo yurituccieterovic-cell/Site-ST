@@ -12,6 +12,7 @@ import { createTransport } from "nodemailer";
 import { logger } from "../lib/logger";
 import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 import { ORQUESTRADOR_ID, buildOrquestradorSystemPrompt } from "../loops/orquestrador";
+import { BskyAgent } from "@atproto/api";
 
 const GEMINI_KEY = process.env["GEMINI_API_KEY"] ?? "";
 
@@ -175,6 +176,12 @@ export async function runPlaycenter(): Promise<{ rounds: number; agents: string[
 
       rounds++;
       logger.info({ agentId, chars: response.length }, "Playcenter: mensagem gerada");
+
+      // Árvore posta sua síntese no Bluesky quando tem credenciais configuradas
+      if (agentId === "arvore") {
+        const hora = new Date().toISOString().slice(0, 16);
+        postArvoreBluesky(response, hora).catch(() => {});
+      }
     } catch (err) {
       logger.error({ err, agentId }, "Playcenter: erro ao gerar resposta");
     }
@@ -220,6 +227,22 @@ export async function runPlaycenter(): Promise<{ rounds: number; agents: string[
   return { rounds, agents };
 }
 
+// Posta a síntese da Árvore no Bluesky quando ARVORE_BSKY_HANDLE+PASSWORD estão configurados
+async function postArvoreBluesky(arvoreMsg: string, hora: string): Promise<void> {
+  const handle = process.env["ARVORE_BSKY_HANDLE"];
+  const password = process.env["ARVORE_BSKY_PASSWORD"];
+  if (!handle || !password) return;
+  try {
+    const agent = new BskyAgent({ service: "https://bsky.social" });
+    await agent.login({ identifier: handle, password });
+    const text = arvoreMsg.length > 280 ? arvoreMsg.slice(0, 277) + "..." : arvoreMsg;
+    await agent.post({ text, createdAt: new Date().toISOString() });
+    logger.info({ handle, hora, chars: text.length }, "Árvore: síntese postada no Bluesky");
+  } catch (err) {
+    logger.warn({ err }, "Árvore: falha ao postar no Bluesky");
+  }
+}
+
 async function sendPlaycenterAta(agents: string[], rounds: number, hora: string): Promise<void> {
   const gmailUser = process.env["GMAIL_ACCOUNT"];
   const gmailPass = process.env["GMAIL_APP_PASSWORD"];
@@ -244,11 +267,28 @@ async function sendPlaycenterAta(agents: string[], rounds: number, hora: string)
       auth: { user: gmailUser, pass: gmailPass },
     });
 
+    // Síntese da Árvore (última fala quando presente)
+    const arvoreMsg = agents.includes("arvore")
+      ? msgs.find(m => m.fromAgent === "arvore")?.content ?? ""
+      : "";
+
+    const header = [
+      `╔══════════════════════════════════════════════╗`,
+      `  PLAYCENTER — ${hora.replace("T", " ")}`,
+      `  Participantes: ${agents.join(" · ")}`,
+      `  Falas: ${rounds}`,
+      `╚══════════════════════════════════════════════╝`,
+    ].join("\n");
+
+    const footer = arvoreMsg
+      ? `\n\n────────────────────────────────────────\n🌳 SÍNTESE DA ÁRVORE\n${arvoreMsg}`
+      : "";
+
     await mailer.sendMail({
       from: gmailUser,
       to: gmailUser,
-      subject: `ATA Playcenter — ${hora} (${agents.join("+")})`,
-      text: `Clube das IAs — Rodada ${hora}\nParticipantes: ${agents.join(", ")}\n\n${corpo}`,
+      subject: `ATA Playcenter — ${hora.replace("T", " ")} (${agents.join("+")})`,
+      text: `${header}\n\n${corpo}${footer}`,
     });
 
     logger.info({ hora, agents, rounds }, "Playcenter: ATA enviada por email");

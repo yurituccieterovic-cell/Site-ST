@@ -3103,10 +3103,10 @@ export function AgePage() {
         </div>
 
         {/* PWA — Instalar no celular */}
-        {pwaPrompt && (
+        {pwaPrompt ? (
           <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
             <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 6 }}>📱 Instalar no celular</div>
-            <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>Use o Age como app — acesso rápido direto da tela inicial.</p>
+            <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>Use o Age como app — acesso rápido direto da tela inicial. Funciona no Android e em qualquer navegador que suporte PWA.</p>
             <button
               onClick={async () => {
                 pwaPrompt.prompt();
@@ -3116,6 +3116,16 @@ export function AgePage() {
               style={{ background: color, border: "none", borderRadius: 8, padding: "10px 20px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
               📲 Instalar Age
             </button>
+          </div>
+        ) : (
+          <div style={{ background: "#0f1318", border: "1px solid #1e293b", borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+            <div style={{ color: "#64748b", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>📱 Usar como app</div>
+            <p style={{ color: "#475569", fontSize: 12, marginBottom: 8 }}>
+              <strong style={{ color: "#94a3b8" }}>Android (Chrome):</strong> aparece automaticamente uma barra "Instalar" na parte inferior da tela. Ou toque nos ⋮ do Chrome → "Adicionar à tela inicial".
+            </p>
+            <p style={{ color: "#475569", fontSize: 12, marginBottom: 0 }}>
+              <strong style={{ color: "#94a3b8" }}>iPhone (Safari):</strong> toque em <span style={{ fontWeight: 700 }}>↑ Compartilhar</span> → <span style={{ fontWeight: 700 }}>Adicionar à Tela de Início</span>. O ícone fica na sua tela como app nativo.
+            </p>
           </div>
         )}
       </div>
