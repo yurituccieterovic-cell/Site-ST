@@ -1554,3 +1554,12 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - SABIÁ VOZ: STT (microfone nativo) + TTS (OpenAI/fallback nativo) implementados. 🎤 e 🔊 nas duas UIs.
 - EMAILS MAYUMI: respondidos 3 emails acumulados (05/10). I929-I932: Colesterol modos busca, Eventos, integração Age, concorrentes.
 - RENDER BILLING: buildPlan=starter ativo em ambos os serviços; cobrança pelo ciclo mensal.
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — S200 Cláudio
+- Logo Age PWA atualizado (age-logo.png 1254x1254 → ícones 192/512)
+- Service worker age-sw.js criado — PWA instalável no Android, instrução iOS
+- Árvore Bluesky fiada no playcenter (aguarda conta Bluesky de Yuri)
+- ATA Playcenter reformatada com síntese da Árvore no rodapé
+- Tarefas: horário + allDay + Sem data + chips na agenda
