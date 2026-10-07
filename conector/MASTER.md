@@ -1546,3 +1546,11 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### 2026-10-07 — admin
 ### 2026-10-07T16:50 — Playcenter
 - Participantes: isa+socoboy+meky+arvore (4 falas)
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — ATA #fim S199
+- RENDER CRASH: container caiu pós-S197; timeout Neon no container novo; 2 restarts resolveram. Padrão: onde nasce importa tanto quanto o que carrega.
+- SABIÁ VOZ: STT (microfone nativo) + TTS (OpenAI/fallback nativo) implementados. 🎤 e 🔊 nas duas UIs.
+- EMAILS MAYUMI: respondidos 3 emails acumulados (05/10). I929-I932: Colesterol modos busca, Eventos, integração Age, concorrentes.
+- RENDER BILLING: buildPlan=starter ativo em ambos os serviços; cobrança pelo ciclo mensal.
