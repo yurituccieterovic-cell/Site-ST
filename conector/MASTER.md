@@ -1694,3 +1694,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### SABIÁ → Milton Salomão (2026-10-07)
 - "Oi"
 - SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — S201f
+- Docs pacientes: seguros (Neon base64 ACID)
+- Bug docUploadMsg: limpa ao trocar paciente
+- SABIÁ: lê metadados de docs no systemPrompt
+- Tasks: duração 15-180min, horaFim calculado
