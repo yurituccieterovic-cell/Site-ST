@@ -4,13 +4,19 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // voz nativa do navegador (grátis, custo zero) se o backend falhar.
 // `endpoint` = URL completa do endpoint TTS (ex: "/api/age/lisange/sabia/tts").
 
+// Vozes femininas preferidas para a SABIÁ (tom apassarinhado)
+const FEMALE_VOICE_HINTS = ["luciana", "francisca", "camila", "vitoria", "female", "fem", "-a ", "wavenet-a", "standard-a", "neural2-a"];
+
 function getPtVoices(): SpeechSynthesisVoice[] {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return [];
   const voices = window.speechSynthesis.getVoices();
   if (!voices.length) return [];
   const br = voices.filter((v) => /pt[-_]br/i.test(v.lang));
   const pt = voices.filter((v) => /^pt/i.test(v.lang) && !br.includes(v));
-  return [...br, ...pt];
+  const all = [...br, ...pt];
+  // Tenta escolher voz feminina (mais próxima de uma SABIÁ)
+  const female = all.find((v) => FEMALE_VOICE_HINTS.some((h) => v.name.toLowerCase().includes(h)));
+  return female ? [female, ...all.filter((v) => v !== female)] : all;
 }
 
 function splitSegments(text: string): string[] {
@@ -62,14 +68,14 @@ export function useTts(endpoint: string) {
       const segments = splitSegments(text);
       if (!segments.length) return false;
       const voices = getPtVoices();
-      const pitches = [1.0, 1.18, 0.86];
       setLoadingKey((k) => (k === key ? null : k));
       setPlayingKey(key);
-      segments.forEach((seg, idx) => {
+      segments.forEach((seg, _idx) => {
         const utter = new SpeechSynthesisUtterance(seg);
         utter.lang = "pt-BR";
-        if (voices.length) utter.voice = voices[idx % voices.length];
-        utter.pitch = pitches[idx % pitches.length];
+        if (voices.length) utter.voice = voices[0]; // voz feminina preferida
+        utter.pitch = 1.25; // tom apassarinhado
+        utter.rate = 1.05;  // levemente ágil
         const isLast = idx === segments.length - 1;
         if (isLast) {
           utter.onend = () => { if (mySeq === seqRef.current) setPlayingKey((k) => (k === key ? null : k)); };

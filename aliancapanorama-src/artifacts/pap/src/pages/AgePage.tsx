@@ -204,10 +204,34 @@ export function AgePage() {
   const [sabiaQueue, setSabiaQueue] = useState<string[]>([]);
   const [sabiaCopied, setSabiaCopied] = useState<string | null>(null);
   const msgBottomRef = useRef<HTMLDivElement>(null);
+  const sabiaVoiceModeRef = useRef(false); // mic foi ativado → próximo envio = voz
+  const sabiaVoiceRef = useRef(false);     // resposta deve ser lida automaticamente
+  const prevListeningRef = useRef(false);
+  const sabiaInputRef = useRef("");
 
   // SABIÁ voz — STT (microfone) e TTS (falar resposta)
   const dictation = useDictation((text) => setSabiaInput(text));
   const tts = useTts(`${API}/api/age/${slug ?? ""}/sabia/tts`);
+
+  // Mantém ref do sabiaInput sempre atualizada (para useEffects com dep estável)
+  useEffect(() => { sabiaInputRef.current = sabiaInput; }, [sabiaInput]);
+
+  // Auto-send quando o ditado por voz termina (startOnce → listening → false)
+  useEffect(() => {
+    const wasListening = prevListeningRef.current;
+    prevListeningRef.current = dictation.listening;
+    if (wasListening && !dictation.listening && sabiaVoiceModeRef.current) {
+      sabiaVoiceModeRef.current = false;
+      const msg = sabiaInputRef.current.trim();
+      if (msg) {
+        sabiaVoiceRef.current = true;
+        setSabiaInput("");
+        try { localStorage.removeItem(`sabia-draft-${window.location.pathname}`); } catch { /* ignore */ }
+        setTimeout(() => void dispatchSabia(msg), 80);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dictation.listening]);
 
   // New rule form
   const [ruleForm, setRuleForm] = useState({ diasSemana: [1] as number[], horaInicio: "09:00", horaFim: "18:00", duracaoMin: 50, intervaloMin: 10, canal: "presencial" });
@@ -973,10 +997,17 @@ export function AgePage() {
       });
       clearTimeout(timer);
       const d = await r.json() as { reply?: string; sessionId?: string };
-      setMsgs(m => [...m, { role: "assistant", content: d.reply ?? "Não consegui responder agora. Tente novamente. 🐦" }]);
+      const reply = d.reply ?? "Não consegui responder agora. Tente novamente. 🐦";
+      setMsgs(m => [...m, { role: "assistant", content: reply }]);
       if (d.sessionId) setSabiaSessionId(d.sessionId);
+      // leitura automática quando entrada foi por voz
+      if (sabiaVoiceRef.current) {
+        sabiaVoiceRef.current = false;
+        setTimeout(() => void tts.speak(`auto-${Date.now()}`, reply), 200);
+      }
     } catch (err) {
       clearTimeout(timer);
+      sabiaVoiceRef.current = false;
       const isAbort = err instanceof DOMException && err.name === "AbortError";
       if (!isAbort) {
         setMsgs(m => [...m, { role: "assistant", content: "🐦 Servidor sem resposta. Se for a primeira vez hoje, aguarde 1 min (cold start) e tente novamente." }]);
@@ -996,6 +1027,7 @@ export function AgePage() {
   async function sendSabia(e: React.FormEvent) {
     e.preventDefault();
     if (!sabiaInput.trim()) return;
+    if (dictation.listening) dictation.stop(); // pausa mic ao enviar
     const userMsg = sabiaInput.trim();
     setSabiaInput("");
     try { localStorage.removeItem(`sabia-draft-${window.location.pathname}`); } catch { /* ignore */ }
@@ -3939,8 +3971,12 @@ export function AgePage() {
             style={{ flex: 1, background: "#1a2030", border: `1px solid ${sabiaLoading ? color + "33" : color + "33"}`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, resize: "none", lineHeight: 1.5 }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             {dictation.supported && (
-              <button type="button" onClick={() => dictation.toggle(sabiaInput)}
-                title={dictation.listening ? "Parar ditado" : "Ditar por voz"}
+              <button type="button"
+                onClick={() => {
+                  if (dictation.listening) { dictation.stop(); }
+                  else { sabiaVoiceModeRef.current = true; dictation.startOnce(sabiaInput); }
+                }}
+                title={dictation.listening ? "Parar ditado" : "Ditar por voz (auto-envio)"}
                 style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 8, padding: "6px 12px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 13 }}>
                 {dictation.listening ? "🎙 ouvindo…" : "🎤"}
               </button>
@@ -4809,8 +4845,12 @@ export function AgePage() {
                 />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   {dictation.supported && (
-                    <button type="button" onClick={() => dictation.toggle(sabiaInput)}
-                      title={dictation.listening ? "Parar ditado" : "Ditar por voz"}
+                    <button type="button"
+                      onClick={() => {
+                        if (dictation.listening) { dictation.stop(); }
+                        else { sabiaVoiceModeRef.current = true; dictation.startOnce(sabiaInput); }
+                      }}
+                      title={dictation.listening ? "Parar ditado" : "Ditar por voz (auto-envio)"}
                       style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 6, padding: "4px 8px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 11 }}>
                       {dictation.listening ? "🎙" : "🎤"}
                     </button>

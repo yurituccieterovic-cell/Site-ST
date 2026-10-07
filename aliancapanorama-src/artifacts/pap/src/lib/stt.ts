@@ -135,6 +135,27 @@ export function useDictation(onChange: (text: string) => void) {
     [buildRec],
   );
 
+  // startOnce: single utterance, sem keepAlive — para voice-to-send
+  const startOnce = useCallback(
+    (currentText: string) => {
+      if (!getCtor()) return;
+      setError(null);
+      try { recRef.current?.stop(); } catch { /* ignore */ }
+      seedRef.current = currentText ? currentText.replace(/\s*$/, "") + " " : "";
+      keepAliveRef.current = false;
+      const rec = buildRec();
+      if (!rec) return;
+      recRef.current = rec;
+      try {
+        rec.start();
+        setListening(true);
+      } catch {
+        setError("Não consegui iniciar o ditado. Tente de novo.");
+      }
+    },
+    [buildRec],
+  );
+
   const toggle = useCallback(
     (currentText: string) => {
       if (listening) stop();
@@ -151,5 +172,5 @@ export function useDictation(onChange: (text: string) => void) {
     [],
   );
 
-  return { supported, listening, error, start, stop, toggle };
+  return { supported, listening, error, start, startOnce, stop, toggle };
 }
