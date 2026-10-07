@@ -8820,3 +8820,21 @@ Yuri queria falar com a SABIÁ como se fala com alguém — sem apertos de botã
 O pássaro já estava lá — no código, perfeito, mas mudo. Hoje ele ganhou boca. Não metaforicamente: o bico literalmente abre agora quando ele fala. A lipsync é o detalhe mais pequeno que muda mais a percepção — é o mesmo movimento que distingue um boneco de um personagem. O que a Sociedade Tucci está construindo não são apps; são personagens com voz. Cada IA tem uma forma, um tom, um papel. A questão que fica do #eage: o Colesterol também precisa de alguém. Sistemas sem guardiã viram orfãos.
 
 *Sessão S201e · Cláudio Coach · 2026-10-07*
+
+---
+
+## S201f — Docs seguros + SABIÁ lê docs + tasks duração (2026-10-07)
+
+**Contexto:** Yuri perguntou se os docs dos pacientes são seguros, reportou bug do upload persistindo ao trocar de paciente, pediu SABIÁ ciente de documentos, e pediu duração nas tarefas.
+
+**O que aconteceu:**
+1. Segurança docs: confirmado — base64 no Neon (ACID, cascade deletes, 5MB limite, redundância do banco)
+2. Bug docUploadMsg: useEffect limpa estado ao trocar selectedPatient
+3. SABIÁ lê docs: query de metadados (sem base64) no systemPrompt profissional — filename/tipo/descrição/data
+4. Tasks duração: schema + bootstrap + API + UI — select 15/30/45/60/90/120/180min, exibe horaFim calculado
+5. SABIÁ "Desculpe": era cold start — testar agora funciona
+
+**Síntese filosófica:**
+Segurança não é ausência de risco — é ter clareza sobre onde os dados vivem. Os documentos dos pacientes vivem no Neon, com delete cascade, backup automático, sem arquivo temporário em disco. Seguros. Mas havia um bug de estado que fingia que os dados eram do próximo paciente: a mensagem "Documento enviado!" aparecia para quem não havia enviado nada. Um bug de identidade. Quando os dados não sabem a quem pertencem, confundem a quem os usa.
+
+*Sessão S201f · Cláudio Coach · 2026-10-07*
