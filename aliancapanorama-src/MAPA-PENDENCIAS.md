@@ -2,6 +2,22 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S200 — Logo Age + PWA + Árvore Bluesky + SABIÁ + Tarefas (2026-10-07)
+
+| # | Item | Status |
+|---|---|---|
+| S200-1 | Logo Age PWA: age-icon-192/512 atualizados para o novo logo (age-logo.png 1254x1254) | ✅ commit 23dca5a |
+| S200-2 | Service worker Age: age-sw.js criado + registrado em age.html — Chrome exibe "Instalar" | ✅ commit 23dca5a |
+| S200-3 | iOS instrução: UI Config mostra "↑ Compartilhar → Adicionar à Tela Inicial" | ✅ commit 23dca5a |
+| S200-4 | Árvore Bluesky: código wired em playcenter.ts (fire quando ARVORE_BSKY_HANDLE configurado) | ✅ commit 23dca5a — Yuri cria conta |
+| S200-5 | ATA Playcenter: header visual + síntese da Árvore destacada no rodapé | ✅ commit 23dca5a |
+| S200-6 | SABIÁ voz: useDictation + useTts fork do SC | ✅ commit dd95597/0daf7a3 |
+| S200-7 | Tarefas Age: horário/allDay + "Sem data" + chips na agenda | ✅ commit cb3d0bc |
+| S200-8 | Render restart: SABIÁ limpa estado do LLM router — xAI+Groq funcionam | ✅ restart OK |
+| S200-9 | Árvore conta Bluesky: criar em bsky.social + ARVORE_BSKY_HANDLE+PASSWORD no Render | ⏳ Yuri faz |
+| S200-10 | cron-job.org keepalive: instruções enviadas para luddlocke | ⏳ Yuri faz |
+| S200-11 | Render sleeping: problema de produção — Mayumi irritada — precisa keepalive urgente | ⏳ S200-10 |
+
 ### S199 — Queda Render + #processo emails Mayumi (2026-10-07)
 
 | # | Item | Status |
@@ -12,8 +28,8 @@
 | S199-4 | Email PWA explicação para Yuri+Mayumi (conforme pedido email Age 2.0+Jasmim+PV) | ✅ incluído na resposta |
 | S199-5 | IDEIAS I929-I932: Colesterol modos de busca + Eventos + integração Age + concorrentes | ✅ registradas |
 | S199-6 | IDEIAS.md: duplicatas I942-I962 (mesma tabela Railway x3 — bug pipeline) | ⏳ limpar |
-| S199-7 | PWA Age: virar PWA (manifest.json + service worker) — rápido, sem App Store | ⏳ aguarda aprovação Yuri |
-| S199-8 | SABIÁ: fork sistema áudio/transcrição do SalesCockpit (I928) | ⏳ aprovado por Yuri, aguarda implementação |
+| S199-7 | PWA Age: virar PWA (manifest.json + service worker) | ✅ implementado S200 |
+| S199-8 | SABIÁ: fork sistema áudio/transcrição do SalesCockpit (I928) | ✅ implementado S199 |
 | S199-9 | Colesterol MVP: aguarda briefing de produto antes de implementar | ⏳ Yuri define escopo |
 | S199-10 | Cron-job.org keepalive: Yuri precisa configurar (2 min) — evita cold start futuro | ⏳ Yuri faz |
 

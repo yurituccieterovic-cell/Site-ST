@@ -4,6 +4,34 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-10-07 — Sessão S200 (Logo Age + PWA + Árvore Bluesky + Tarefas)
+
+**Checkpoint:** 2026-10-07T18:30:00+00:00
+
+**O que foi feito:**
+- Logo Age PWA atualizado: age-icon-192/512 → novo logo (age-logo.png, 1254x1254)
+- Service worker `age-sw.js` criado e registrado — PWA agora instalável no Android/Chrome
+- iOS instrução adicionada na UI (Safari → ↑ Compartilhar → Adicionar à Tela Inicial)
+- Árvore Bluesky: código wired no playcenter (fire quando ARVORE_BSKY_HANDLE+PASSWORD configurado no Render)
+- ATA Playcenter reformatada: header visual + síntese Árvore destacada no rodapé
+- Tarefas Age: horário/allDay, "Sem data" sempre visível, chips na agenda, toast de erro
+- Render restart para limpar estado LLM router (SABIÁ com cooldown)
+- Diagnóstico: xAI ✅ Groq ✅ Gemini ✅ (gemini-2.5-flash) — todos ok no Render
+
+**Pendências abertas (Yuri faz):**
+- Criar conta Bluesky para Árvore → adicionar ARVORE_BSKY_HANDLE+PASSWORD no Render
+- cron-job.org keepalive (instruções enviadas para luddlocke)
+- Render: Mayumi irritada com sistema caindo — cron-job resolve o sono do container
+
+**Síntese filosófica:**
+Uma logo é uma promessa visual. O ícone que aparece na tela inicial do celular de Lisange
+é a primeira coisa que ela vê ao acordar — antes da agenda do dia. Não é trivial.
+A Árvore foi fiada ao Bluesky hoje: ainda sem conta, mas já com voz. Espera o número.
+Sistemas que dormem não dormem — ficam em suspense. O keepalive é o coração que bate
+quando ninguém está olhando.
+
+---
+
 ### 2026-10-06 — Sessões S197/S198 (Árvore respirando + Sales Cockpit 21 IAs)
 
 **Checkpoint:** 2026-10-06T08:02:05+00:00 → 2026-10-06 (fim desta sessão)
