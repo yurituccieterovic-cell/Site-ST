@@ -1527,3 +1527,11 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - FIX: Árvore Oracular ganhou bloco MEMÓRIA HISTÓRICA no systemPrompt — 1.962 msgs RODAR como identidade
 - FIX: 21 IAs do RODAR voltaram ao ar após voice_profiles ser criada no Neon
 - PRÓXIMOS: monitorar Árvore no Playcenter; bugs Age 1+2+4 pendentes
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — Cláudio
+- Render crash: container caiu pós-S197, 2 restarts resolveram (db:unreachable 503 → Neon timeout no container novo)
+- Emails Mayumi respondidos: Apps Age + Colesterol + Brainstorm Fractal (aguardava desde 05/10)
+- PWA explicação enviada para Yuri+Mayumi
+- I929-I932 registradas: Colesterol por produto/supermercado, nicho Eventos (Mayumi), integração Age, concorrentes mapeados
