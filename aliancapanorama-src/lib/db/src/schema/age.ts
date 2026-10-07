@@ -166,6 +166,7 @@ export const ageTasksTable = pgTable("age_tasks", {
   // pendente | em_andamento | concluida | cancelada
   prioridade:     integer("prioridade").notNull().default(3), // 1-5
   dataVencimento: timestamp("data_vencimento", { withTimezone: true }),
+  allDay:         boolean("all_day").notNull().default(true),
   concluidaAt:    timestamp("concluida_at", { withTimezone: true }),
   criadoPor:      text("criado_por").notNull().default("professional"), // professional | sabia | dodge
   projectType:    text("project_type"), // age | pv | jasmim | calculus | socia (null = age padrão)

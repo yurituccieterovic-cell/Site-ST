@@ -2649,11 +2649,21 @@ router.get("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> =
 // POST /api/age/:slug/tasks — cria tarefa (auth required)
 router.post("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> => {
   const profId = req.session.ageProfessionalId!;
-  const { titulo, descricao, tipo = "lembrete", prioridade = 3, dataVencimento, patientId, appointmentId } =
+  const { titulo, descricao, tipo = "lembrete", prioridade = 3, dataVencimento, horario, allDay = true, patientId, appointmentId } =
     req.body as { titulo?: string; descricao?: string; tipo?: string; prioridade?: number;
-                  dataVencimento?: string; patientId?: number; appointmentId?: number };
+                  dataVencimento?: string; horario?: string; allDay?: boolean;
+                  patientId?: number; appointmentId?: number };
 
   if (!titulo?.trim()) { res.status(400).json({ error: "titulo obrigatório" }); return; }
+
+  let dvDate: Date | null = null;
+  if (dataVencimento) {
+    dvDate = new Date(dataVencimento);
+    if (!allDay && horario) {
+      const [h = 0, m = 0] = horario.split(":").map(Number);
+      dvDate.setHours(h, m, 0, 0);
+    }
+  }
 
   const [task] = await db.insert(ageTasksTable).values({
     professionalId: profId,
@@ -2661,7 +2671,8 @@ router.post("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> 
     descricao: descricao ?? null,
     tipo,
     prioridade,
-    dataVencimento: dataVencimento ? new Date(dataVencimento) : null,
+    dataVencimento: dvDate,
+    allDay: allDay !== false,
     patientId: patientId ?? null,
     appointmentId: appointmentId ?? null,
     criadoPor: "professional",
@@ -2673,16 +2684,28 @@ router.post("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> 
 router.patch("/age/:slug/tasks/:id", requireAgeAuth, async (req, res): Promise<void> => {
   const profId = req.session.ageProfessionalId!;
   const id = parseInt(req.params.id ?? "0", 10);
-  const { titulo, descricao, tipo, prioridade, dataVencimento, status } =
+  const { titulo, descricao, tipo, prioridade, dataVencimento, horario, allDay, status } =
     req.body as { titulo?: string; descricao?: string; tipo?: string; prioridade?: number;
-                  dataVencimento?: string; status?: string };
+                  dataVencimento?: string; horario?: string; allDay?: boolean; status?: string };
 
   const updates: Record<string, unknown> = { updatedAt: new Date() };
   if (titulo !== undefined)         updates["titulo"] = titulo;
   if (descricao !== undefined)      updates["descricao"] = descricao;
   if (tipo !== undefined)           updates["tipo"] = tipo;
   if (prioridade !== undefined)     updates["prioridade"] = prioridade;
-  if (dataVencimento !== undefined) updates["dataVencimento"] = dataVencimento ? new Date(dataVencimento) : null;
+  if (allDay !== undefined)         updates["allDay"] = allDay;
+  if (dataVencimento !== undefined) {
+    if (!dataVencimento) {
+      updates["dataVencimento"] = null;
+    } else {
+      const dvDate = new Date(dataVencimento);
+      if (allDay === false && horario) {
+        const [h = 0, m = 0] = horario.split(":").map(Number);
+        dvDate.setHours(h, m, 0, 0);
+      }
+      updates["dataVencimento"] = dvDate;
+    }
+  }
   if (status !== undefined) {
     updates["status"] = status;
     if (status === "concluida")     updates["concluidaAt"] = new Date();

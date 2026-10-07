@@ -24,7 +24,7 @@ type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
 type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null; faltou90d?: number; realizadas90d?: number };
 type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed" | "notas" | "tarefas";
-type AgeTask = { id: number; titulo: string; descricao?: string | null; tipo: string; status: string; prioridade: number; dataVencimento?: string | null; concluidaAt?: string | null; patientId?: number | null; patient_nome?: string | null; criadoPor: string; createdAt: string };
+type AgeTask = { id: number; titulo: string; descricao?: string | null; tipo: string; status: string; prioridade: number; dataVencimento?: string | null; allDay?: boolean; concluidaAt?: string | null; patientId?: number | null; patient_nome?: string | null; criadoPor: string; createdAt: string };
 type FeedItem = {
   tipo: "appointment" | "patient" | "nota" | "pergunta" | "anuncio";
   id: string;
@@ -323,7 +323,7 @@ export function AgePage() {
   const [tasks, setTasks] = useState<AgeTask[]>([]);
   const [tasksLoading, setTasksLoading] = useState(false);
   const [taskFilter, setTaskFilter] = useState<"" | "pendente" | "em_andamento" | "concluida">("");
-  const [newTask, setNewTask] = useState({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "" });
+  const [newTask, setNewTask] = useState({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "", horario: "", allDay: true });
   const [taskSaving, setTaskSaving] = useState(false);
 
   // Formulário de interesse (landing profissional)
@@ -528,7 +528,7 @@ export function AgePage() {
   }, [mode, slug]);
 
   useEffect(() => {
-    if (view === "tarefas" && mode === "professional" && authStep === "done") loadTasks(taskFilter || undefined);
+    if ((view === "tarefas" || view === "agenda") && mode === "professional" && authStep === "done") loadTasks(undefined);
   }, [view, mode, authStep, loadTasks, taskFilter]);
 
   // Carregar histórico SABIÁ ao entrar no portal
@@ -2311,23 +2311,42 @@ export function AgePage() {
         {agendaFilter === "dia" && Object.keys(grouped).length === 0 && (
           <div style={{ color: "#64748b", fontSize: 14 }}>Nenhuma consulta neste dia.</div>
         )}
-        {Object.entries(grouped).map(([day, dayAppts]) => (
-          <div key={day} style={{ marginBottom: 20 }}>
-            <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
-              {fmtDay(day + "T12:00:00")}
-            </div>
-            {dayAppts.map(a => (
-              <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); setApptValor(a.valor ?? ""); }}
-                style={{ background: "#0f1318", border: `1px solid ${(STATUS_COLOR[a.status] ?? color) + "55"}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: STATUS_COLOR[a.status] ?? color, flexShrink: 0 }} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{fmtTime(a.dataHora)} — {a.patientNome ?? "Paciente"}</div>
-                  <div style={{ color: "#64748b", fontSize: 12 }}>{STATUS_LABEL[a.status] ?? a.status} · {a.duracaoMin}min · {a.canal}</div>
-                </div>
+        {Object.entries(grouped).map(([day, dayAppts]) => {
+          const dayTasks = tasks.filter(t =>
+            t.dataVencimento &&
+            t.dataVencimento.slice(0, 10) === day &&
+            t.status !== "concluida" && t.status !== "cancelada"
+          );
+          return (
+            <div key={day} style={{ marginBottom: 20 }}>
+              <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
+                {fmtDay(day + "T12:00:00")}
               </div>
-            ))}
-          </div>
-        ))}
+              {dayAppts.map(a => (
+                <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); setApptValor(a.valor ?? ""); }}
+                  style={{ background: "#0f1318", border: `1px solid ${(STATUS_COLOR[a.status] ?? color) + "55"}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: STATUS_COLOR[a.status] ?? color, flexShrink: 0 }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{fmtTime(a.dataHora)} — {a.patientNome ?? "Paciente"}</div>
+                    <div style={{ color: "#64748b", fontSize: 12 }}>{STATUS_LABEL[a.status] ?? a.status} · {a.duracaoMin}min · {a.canal}</div>
+                  </div>
+                </div>
+              ))}
+              {dayTasks.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 4 }}>
+                  {dayTasks.map(t => (
+                    <div key={t.id} onClick={() => setView("tarefas")}
+                      style={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 6, padding: "3px 8px", fontSize: 11, color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, maxWidth: 200 }}>
+                      <span style={{ color: t.prioridade >= 5 ? "#f87171" : t.prioridade >= 4 ? "#fb923c" : "#facc15", flexShrink: 0 }}>✅</span>
+                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.titulo}</span>
+                      {t.allDay === false && <span style={{ color: "#475569", flexShrink: 0 }}>{new Date(t.dataVencimento!).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</span>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
 
         {/* Modal de agendamento */}
         {selectedAppt && (
@@ -3347,13 +3366,21 @@ export function AgePage() {
         const r = await fetch(`${API}/api/age/${slug}/tasks`, {
           method: "POST", credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...newTask, dataVencimento: newTask.dataVencimento || undefined }),
+          body: JSON.stringify({
+            titulo: newTask.titulo, descricao: newTask.descricao || undefined,
+            tipo: newTask.tipo, prioridade: newTask.prioridade,
+            dataVencimento: newTask.dataVencimento || undefined,
+            horario: (!newTask.allDay && newTask.horario) ? newTask.horario : undefined,
+            allDay: newTask.allDay,
+          }),
         });
         if (r.ok) {
-          setNewTask({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "" });
+          setNewTask({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "", horario: "", allDay: true });
           await loadTasks(taskFilter || undefined);
+        } else {
+          addToast("Erro ao salvar tarefa. Tente novamente.", "err");
         }
-      } catch { /* silencia */ }
+      } catch { addToast("Sem conexão. Verifique sua internet.", "err"); }
       setTaskSaving(false);
     };
 
@@ -3409,6 +3436,14 @@ export function AgePage() {
             </select>
             <input type="date" value={newTask.dataVencimento} onChange={e => setNewTask(p => ({ ...p, dataVencimento: e.target.value }))}
               style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: "#94a3b8", fontSize: 12 }} />
+            <label style={{ display: "flex", alignItems: "center", gap: 4, color: "#94a3b8", fontSize: 12, cursor: "pointer", userSelect: "none" }}>
+              <input type="checkbox" checked={newTask.allDay} onChange={e => setNewTask(p => ({ ...p, allDay: e.target.checked }))} style={{ cursor: "pointer" }} />
+              Dia inteiro
+            </label>
+            {!newTask.allDay && (
+              <input type="time" value={newTask.horario} onChange={e => setNewTask(p => ({ ...p, horario: e.target.value }))}
+                style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: "#38bdf8", fontSize: 12 }} />
+            )}
           </div>
           <button onClick={saveTask} disabled={taskSaving || !newTask.titulo.trim()}
             style={{ background: color, color: "#000", border: "none", borderRadius: 6, padding: "7px 16px", fontWeight: 700, fontSize: 13, cursor: "pointer", opacity: taskSaving ? 0.6 : 1 }}>
@@ -3438,7 +3473,14 @@ export function AgePage() {
                     {task.descricao && <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{task.descricao}</div>}
                     <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
                       {task.patient_nome && <span style={{ fontSize: 11, color: "#94a3b8" }}>👤 {task.patient_nome}</span>}
-                      {task.dataVencimento && <span style={{ fontSize: 11, color: new Date(task.dataVencimento) < new Date() && task.status !== "concluida" ? "#f87171" : "#94a3b8" }}>⏰ {new Date(task.dataVencimento).toLocaleDateString("pt-BR")}</span>}
+                      {task.dataVencimento ? (
+                        <span style={{ fontSize: 11, color: new Date(task.dataVencimento) < new Date() && task.status !== "concluida" ? "#f87171" : "#94a3b8" }}>
+                          ⏰ {new Date(task.dataVencimento).toLocaleDateString("pt-BR")}
+                          {task.allDay === false && ` ${new Date(task.dataVencimento).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`}
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 11, color: "#334155" }}>Sem data</span>
+                      )}
                       {task.concluidaAt && <span style={{ fontSize: 11, color: "#4ade80" }}>✓ {new Date(task.concluidaAt).toLocaleDateString("pt-BR")}</span>}
                     </div>
                   </div>

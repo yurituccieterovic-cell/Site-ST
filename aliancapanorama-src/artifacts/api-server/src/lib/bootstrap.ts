@@ -424,6 +424,7 @@ export async function ensureAgeTables(): Promise<void> {
     )
   `);
   await db.execute(sql`ALTER TABLE age_tasks ADD COLUMN IF NOT EXISTS project_type TEXT`);
+  await db.execute(sql`ALTER TABLE age_tasks ADD COLUMN IF NOT EXISTS all_day BOOLEAN NOT NULL DEFAULT true`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_tasks_prof ON age_tasks(professional_id, status, created_at DESC)`);
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_tasks_venc ON age_tasks(professional_id, data_vencimento) WHERE status NOT IN ('concluida','cancelada')`);
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS whatsapp TEXT`);
