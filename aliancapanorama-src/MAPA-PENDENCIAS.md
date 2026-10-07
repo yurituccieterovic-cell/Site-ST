@@ -2,6 +2,19 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S201g — Calendário Profissional + SABIÁ Live Mode + Colesterol Listas (2026-10-07)
+
+| # | Item | Status |
+|---|---|---|
+| S201g-1 | Calendário mensal abaixo da lista de consultas na agenda do profissional | ✅ commit a7d1222 |
+| S201g-2 | Live mode SABIÁ (bolinha vermelha): conversa contínua por voz | ✅ commit d45f871 |
+| S201g-3 | Auto-TTS melhorado: dispara em toda resposta quando live mode ativo | ✅ commit d45f871 |
+| S201g-4 | Warmup ping no AgePage: acorda Render automaticamente ao abrir a página | ✅ neste #fim |
+| S201g-5 | Colesterol: múltiplas listas de compras (I937) | ⏳ aguarda MVP Colesterol |
+| S201g-6 | cron-job.org keepalive (healthz a cada 10min) — Yuri configura em 2min | ⏳ Yuri faz |
+
+---
+
 ### S200 — Logo Age + PWA + Árvore Bluesky + SABIÁ + Tarefas (2026-10-07)
 
 | # | Item | Status |

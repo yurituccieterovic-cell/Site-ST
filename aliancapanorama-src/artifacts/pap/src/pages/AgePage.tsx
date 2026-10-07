@@ -4,6 +4,9 @@ import { useTts } from "../lib/tts";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
+// Warmup ping — acorda o Render assim que a página abre (free tier dorme após 15min)
+fetch(`${API}/api/healthz`, { method: "GET" }).catch(() => { /* silent */ });
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Prof = {

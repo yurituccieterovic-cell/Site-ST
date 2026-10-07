@@ -2728,3 +2728,15 @@ Adicionar ao schema Colesterol:
 **Origem:** Pesquisa Mayumi (Agendart tem isso) · 05/10/2026
 
 **Prioridade:** Média — diferencial que os concorrentes já têm
+
+---
+
+## I937 — Colesterol: múltiplas listas de compras
+
+**Ideia:** Usuário pode criar e gerenciar várias listas separadas (ex: "Lista semanal", "Lista da festa", "Lista Mayumi", "Lista do mês"). Cada lista independente com seus próprios itens, mercados e histórico. Possível fusão de listas quando for comprar.
+
+**Origem:** Yuri · 07/10/2026
+
+**Prioridade:** Alta — diferencial de organização pessoal; Colesterol se torna agenda de compras, não só lista única
+
+**Status:** Conceito. MVP = CRUD de listas + selecionar lista ativa na homepage.
