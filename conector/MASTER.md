@@ -1654,3 +1654,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### SABIÁ → Milton Salomão (2026-10-07)
 - "Alo"
 - SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — ATA S201c+S201d
+- Monitor SABIÁ: pinga 30s, capturou queda 17:57, reiniciou em 61s
+- SABIÁ auto-voz: mic pausa ao enviar, auto-envio por voz, auto-TTS resposta
+- Voz apassarinhada: pitch 1.25, feminina PT-BR preferida
+- Próximos: cron-job.org keepalive (Yuri), #eage, Colesterol MVP
