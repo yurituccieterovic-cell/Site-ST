@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useDictation } from "../lib/stt";
+import { useTts } from "../lib/tts";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
@@ -200,6 +202,10 @@ export function AgePage() {
   const [sabiaSessionId, setSabiaSessionId] = useState("");
   const [sabiaHistoryLoaded, setSabiaHistoryLoaded] = useState(false);
   const msgBottomRef = useRef<HTMLDivElement>(null);
+
+  // SABIÁ voz — STT (microfone) e TTS (falar resposta)
+  const dictation = useDictation((text) => setSabiaInput(text));
+  const tts = useTts(`${API}/api/age/${slug ?? ""}/sabia/tts`);
 
   // New rule form
   const [ruleForm, setRuleForm] = useState({ diasSemana: [1] as number[], horaInicio: "09:00", horaFim: "18:00", duracaoMin: 50, intervaloMin: 10, canal: "presencial" });
@@ -3795,6 +3801,15 @@ export function AgePage() {
                 color: m.role === "user" ? color : "#e2e8f0",
               }}>
                 {m.content}
+                {m.role === "assistant" && (
+                  <button
+                    onClick={() => tts.toggle(`msg-${i}`, m.content)}
+                    title={tts.playingKey === `msg-${i}` ? "Parar" : "Ouvir"}
+                    style={{ display: "block", marginTop: 6, background: "none", border: "none", cursor: "pointer", color: tts.playingKey === `msg-${i}` ? color : "#64748b", fontSize: 13, padding: 0 }}
+                  >
+                    {tts.loadingKey === `msg-${i}` ? "⏳" : tts.playingKey === `msg-${i}` ? "⏹ parar" : "🔊 ouvir"}
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -3815,12 +3830,21 @@ export function AgePage() {
             placeholder="Pergunte à SABIÁ… (Enter envia, Shift+Enter nova linha)"
             disabled={sabiaLoading} rows={2}
             style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, resize: "none", lineHeight: 1.5 }} />
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            {dictation.supported && (
+              <button type="button" onClick={() => dictation.toggle(sabiaInput)}
+                title={dictation.listening ? "Parar ditado" : "Ditar por voz"}
+                style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 8, padding: "6px 12px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 13 }}>
+                {dictation.listening ? "🎙 ouvindo…" : "🎤"}
+              </button>
+            )}
+            {!dictation.supported && <span />}
             {sabiaLoading
               ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 8, padding: "6px 14px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 13 }}>✕ cancelar</button>
               : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 8, padding: "6px 18px", color: "#080c10", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>Enviar ↑</button>
             }
           </div>
+          {dictation.error && <div style={{ fontSize: 11, color: "#f87171" }}>{dictation.error}</div>}
         </form>
       </div>
     );
@@ -4632,7 +4656,17 @@ export function AgePage() {
                       background: m.role === "user" ? colorDark : "#1a2030",
                       border: `1px solid ${m.role === "user" ? color + "44" : "#ffffff18"}`,
                       color: m.role === "user" ? color : "#e2e8f0",
-                    }}>{m.content}</div>
+                    }}>
+                      {m.content}
+                      {m.role === "assistant" && (
+                        <button
+                          onClick={() => tts.toggle(`drw-${i}`, m.content)}
+                          title={tts.playingKey === `drw-${i}` ? "Parar" : "Ouvir"}
+                          style={{ display: "block", marginTop: 4, background: "none", border: "none", cursor: "pointer", color: tts.playingKey === `drw-${i}` ? color : "#64748b", fontSize: 11, padding: 0 }}>
+                          {tts.loadingKey === `drw-${i}` ? "⏳" : tts.playingKey === `drw-${i}` ? "⏹" : "🔊"}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
                 {sabiaLoading && (
@@ -4656,12 +4690,21 @@ export function AgePage() {
                   disabled={sabiaLoading} rows={2}
                   style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 12, resize: "none" }}
                 />
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  {dictation.supported && (
+                    <button type="button" onClick={() => dictation.toggle(sabiaInput)}
+                      title={dictation.listening ? "Parar ditado" : "Ditar por voz"}
+                      style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 6, padding: "4px 8px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 11 }}>
+                      {dictation.listening ? "🎙" : "🎤"}
+                    </button>
+                  )}
+                  {!dictation.supported && <span />}
                   {sabiaLoading
                     ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 6, padding: "4px 10px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 11 }}>✕ cancelar</button>
                     : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "4px 12px", cursor: "pointer", fontWeight: 700, fontSize: 11 }}>Enviar →</button>
                   }
                 </div>
+                {dictation.error && <div style={{ fontSize: 10, color: "#f87171" }}>{dictation.error}</div>}
               </form>
             </div>
           )}

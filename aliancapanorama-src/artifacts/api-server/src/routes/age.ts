@@ -13,6 +13,7 @@ import { eq, and, gte, lte, desc, not, inArray, sql, isNull } from "drizzle-orm"
 import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
+import { synthesizeSpeech, DEFAULT_TTS_VOICE } from "../lib/tts";
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 
@@ -1067,6 +1068,38 @@ REGRAS:
   res.json({ reply, sessionId: sid });
 });
 
+// POST /api/age/:slug/sabia/tts — SABIÁ fala a resposta (OpenAI TTS, cai em nativo se falhar)
+const ttsCalls = new Map<number, number[]>();
+const TTS_WINDOW_MS = 60_000;
+const TTS_MAX_PER_MIN = 20;
+
+router.post("/age/:slug/sabia/tts", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = (req.session as any).ageProfId as number;
+  const now = Date.now();
+  const hits = (ttsCalls.get(profId) ?? []).filter((t) => now - t < TTS_WINDOW_MS);
+  if (hits.length >= TTS_MAX_PER_MIN) {
+    res.status(429).json({ error: "muitas chamadas de voz; espere um momento" });
+    return;
+  }
+  hits.push(now);
+  ttsCalls.set(profId, hits);
+
+  const { text, voice } = (req.body ?? {}) as { text?: string; voice?: string };
+  if (!text || typeof text !== "string" || !text.trim()) {
+    res.status(400).json({ error: "texto vazio" });
+    return;
+  }
+  try {
+    const { audio, contentType } = await synthesizeSpeech(text, voice ?? DEFAULT_TTS_VOICE);
+    res.setHeader("Content-Type", contentType);
+    res.setHeader("Cache-Control", "no-store");
+    res.send(audio);
+  } catch (err) {
+    logger.error({ err }, "[age] SABIÁ TTS falhou");
+    res.status(502).json({ error: "não consegui gerar o áudio agora" });
+  }
+});
+
 // ─── Pacientes ────────────────────────────────────────────────────────────────
 
 const FRONT_URL = process.env.FRONTEND_URL ?? "https://site-st.vercel.app/aliancapanorama";
@@ -1948,9 +1981,8 @@ router.post("/age/:slug/invite", requireAgeAuth, async (req, res): Promise<void>
     VALUES (${profId}, ${token}, ${email}, ${expiraAt})
   `);
 
-  const BASE = process.env.FRONTEND_URL ?? "https://site-st.vercel.app";
   const slug = req.session.ageProfessionalSlug!;
-  const link = `${BASE}/age/${slug}?join=${token}`;
+  const link = `${FRONT_URL}/age/${slug}?join=${token}`;
   res.json({ ok: true, link, expiraAt });
 });
 
@@ -2011,8 +2043,7 @@ router.post("/age/:slug/join", async (req, res): Promise<void> => {
   await db.execute(sql`UPDATE age_invite_tokens SET used_at = now() WHERE id = ${inv.id}`);
 
   // Email com link para criar senha
-  const BASE = process.env.FRONTEND_URL ?? "https://site-st.vercel.app";
-  const setPasswordLink = `${BASE}/age/${slug}?set-password=${setPasswordToken}`;
+  const setPasswordLink = `${FRONT_URL}/age/${slug}?set-password=${setPasswordToken}`;
   try {
     const transporter = createTransport({ service: "gmail", auth: { user: GMAIL, pass: GMAIL_PASS } });
     await transporter.sendMail({
