@@ -1807,3 +1807,19 @@
 | S196-6 | Cron-job.org: Yuri configurar healthz a cada 10 min | ⏳ Yuri |
 | S196-7 | Render billing: confirmar pagamento | ⏳ Yuri |
 | S196-8 | Link Drive `1Sl0aTeBueMD6nezxZL055BJ39RTcgBDg`: verificar conteúdo (memória Árvore?) | ⏳ Yuri |
+
+### S201 — SABIÁ fila + cópia + PWA manifest per-slug + Cana restart (2026-10-07)
+
+| # | Item | Status |
+|---|---|---|
+| S201-1 | SABIÁ fila de mensagens: textarea liberada, mensagens enfileiram automaticamente | ✅ commit 0a7264b |
+| S201-2 | SABIÁ botões cópia: 📋 por mensagem + 📋P+R (pergunta+resposta) | ✅ commit 0a7264b |
+| S201-3 | PWA manifest per-slug: GET /api/age/:slug/manifest.json — fix instalação Lisange | ✅ commit 0a7264b |
+| S201-4 | API 503: restart Render — Cana+SABIÁ voltaram (cold start transitório) | ✅ restart OK |
+| S201-5 | .gitignore: node_modules/ adicionado — evita commit acidental | ✅ commit 0a7264b |
+| S201-6 | Hosting 100% uptime: recomendado Render Starter pago (~$25/mês) | ⏳ Yuri decide |
+| S201-7 | PWA logo no celular: reinstalar o app para ver novo logo (cache PWA) | ⏳ Yuri faz |
+| S201-8 | Terapia às 15h (Milton): SABIÁ no ar, API 200 OK | ✅ confirmado |
+| S201-9 | Google Calendar import + tutorial importação | ⏳ próxima sessão |
+| S201-10 | IDEIAS.md: limpar duplicatas I942-I962 | ⏳ |
+

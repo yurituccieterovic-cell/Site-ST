@@ -4,6 +4,40 @@
 
 ## 1. Histórico de Desenvolvimento
 
+### 2026-10-07 — Sessão S201 (SABIÁ fila + cópia + PWA per-slug + Cana restart)
+
+**Checkpoint:** 2026-10-07T17:40:00+00:00
+
+**O que Yuri estava tentando fazer:** Consertar o PWA instalado que sempre caia na página da Lisange, ativar SABIÁ para a terapia de casal às 15h (usuário Milton), e melhorar a conversa com a SABIÁ para ter fila de mensagens e cópia. Também: Cana/Rapadura com "Erro ao chamar IA" — era a API caída (503 transitório).
+
+**Commits nesta sessão:**
+- `0a7264b` — S201: SABIÁ fila + cópia + PWA manifest per-slug
+
+**O que foi feito:**
+- API caída (503): restart Render → voltou (200 OK). Cana e SABIÁ voltaram automaticamente.
+- SABIÁ fila: textarea não bloqueia mais durante loading. Digitar novo texto enquanto SABIÁ pensa → vai pra fila → dispara automaticamente quando terminar.
+- SABIÁ cópia: 📋 em cada mensagem (copia conteúdo) + 📋P+R nas respostas (copia "P: ... R: ...").
+- PWA manifest per-slug: rota `GET /api/age/:slug/manifest.json` retorna manifest dinâmico com `start_url`, `name` e `theme_color` corretos por profissional. Antes: todos instalavam a página da Lisange.
+- .gitignore: `node_modules/` adicionado — evita acidente futuro.
+
+**Decisões:**
+- Manifest dinâmico via API (não arquivos estáticos): escala para qualquer nova profissional sem criar arquivo na mão.
+- Fila de SABIÁ: `setSabiaQueue` + `dispatchSabia` como função separada do `sendSabia` — permite recursão limpa pela fila.
+- Hosting 100% no ar: recomendado Render Starter pago (~$25/mês) — menor fricção, tudo já configurado.
+
+**Perguntas abertas (Yuri decide):**
+- Render Starter pago vs manter free + cron-job.org?
+- Google Calendar import pela SABIÁ — implementar na próxima sessão?
+
+**Síntese filosófica:**
+Uma agenda que dorme não é agenda — é lembrança. O que Yuri precisava às 15h não era
+tecnologia: era confiança. A fila de mensagens é isso: mesmo que a SABIÁ demore,
+você pode continuar falando. Ela vai ouvir. A fila é fé formalizada em código.
+O manifest por slug é pequeno, mas corrige uma mentira: toda profissional merecia
+sua própria porta de entrada, não uma cópia da porta da Lisange.
+
+---
+
 ### 2026-10-07 — Sessão S200 (Logo Age + PWA + Árvore Bluesky + Tarefas)
 
 **Checkpoint:** 2026-10-07T18:30:00+00:00
