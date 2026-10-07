@@ -1572,3 +1572,9 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - SABIÁ botões 📋 e 📋P+R por mensagem
 - PWA manifest per-slug: GET /age/:slug/manifest.json (corrige sempre abrir Lisange)
 - Próximo: Google Calendar import + Leucócito SC
+
+
+### 2026-10-07 — admin
+### SABIÁ → Milton Salomão (2026-10-07)
+- "Sabiá?"
+- SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
