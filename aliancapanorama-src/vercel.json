@@ -41,6 +41,14 @@
       "destination": "/index.html"
     },
     {
+      "source": "/age/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/age",
+      "destination": "/index.html"
+    },
+    {
       "source": "/aliancapanorama/isa",
       "destination": "/index.html"
     },

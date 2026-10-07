@@ -201,6 +201,8 @@ export function AgePage() {
   const [sabiaLoading, setSabiaLoading] = useState(false);
   const [sabiaSessionId, setSabiaSessionId] = useState("");
   const [sabiaHistoryLoaded, setSabiaHistoryLoaded] = useState(false);
+  const [sabiaQueue, setSabiaQueue] = useState<string[]>([]);
+  const [sabiaCopied, setSabiaCopied] = useState<string | null>(null);
   const msgBottomRef = useRef<HTMLDivElement>(null);
 
   // SABIÁ voz — STT (microfone) e TTS (falar resposta)
@@ -819,14 +821,18 @@ export function AgePage() {
     } finally { setRelatLoading(false); }
   }
 
-  // PWA: captura o prompt de instalação e troca o manifest para o do Age
+  // PWA: manifest per-slug + captura prompt de instalação
   useEffect(() => {
     const link = document.querySelector('link[rel="manifest"]') as HTMLLinkElement | null;
-    if (link) link.href = "/aliancapanorama/age-manifest.json";
+    if (link) {
+      link.href = slug
+        ? `${API}/api/age/${slug}/manifest.json`
+        : "/aliancapanorama/age-manifest.json";
+    }
     const handler = (e: Event) => { e.preventDefault(); setPwaPrompt(e); };
     window.addEventListener("beforeinstallprompt", handler as EventListener);
     return () => window.removeEventListener("beforeinstallprompt", handler as EventListener);
-  }, []);
+  }, [slug]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function addRule(e: React.FormEvent) {
     e.preventDefault();
@@ -947,12 +953,7 @@ export function AgePage() {
     setMsgs(m => [...m, { role: "assistant", content: "🐦 Cancelado. Pode tentar novamente." }]);
   }
 
-  async function sendSabia(e: React.FormEvent) {
-    e.preventDefault();
-    if (!sabiaInput.trim() || sabiaLoading) return;
-    const userMsg = sabiaInput.trim();
-    setSabiaInput("");
-    try { localStorage.removeItem(`sabia-draft-${window.location.pathname}`); } catch { /* ignore */ }
+  async function dispatchSabia(userMsg: string) {
     setMsgs(m => [...m, { role: "user", content: userMsg }]);
     setSabiaLoading(true);
     const ctrl = new AbortController();
@@ -981,7 +982,34 @@ export function AgePage() {
     } finally {
       setSabiaLoading(false);
       sabiaAbortRef.current = null;
+      // processar próximo da fila
+      setSabiaQueue(q => {
+        const [next, ...rest] = q;
+        if (next) setTimeout(() => dispatchSabia(next), 100);
+        return rest;
+      });
     }
+  }
+
+  async function sendSabia(e: React.FormEvent) {
+    e.preventDefault();
+    if (!sabiaInput.trim()) return;
+    const userMsg = sabiaInput.trim();
+    setSabiaInput("");
+    try { localStorage.removeItem(`sabia-draft-${window.location.pathname}`); } catch { /* ignore */ }
+    if (sabiaLoading) {
+      setSabiaQueue(q => [...q, userMsg]);
+      setMsgs(m => [...m, { role: "user", content: `⏳ (em fila) ${userMsg}` }]);
+      return;
+    }
+    await dispatchSabia(userMsg);
+  }
+
+  function copySabia(text: string, key: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      setSabiaCopied(key);
+      setTimeout(() => setSabiaCopied(null), 1500);
+    }).catch(() => {});
   }
 
   async function handlePatientLogin(e: React.FormEvent) {
@@ -3842,6 +3870,11 @@ export function AgePage() {
         <div style={{ background: "#0c1a12", border: "1px solid #4ade8033", borderRadius: 8, margin: "0.75rem 1rem 0", padding: "8px 12px", fontSize: 11, color: "#6b8f6b", lineHeight: 1.5 }}>
           🐦 <strong>SABIÁ é assistente de agenda</strong>, não substituta de avaliação clínica. Não emite laudos nem toma decisões sobre pacientes. Conforme CFP Resolução 11/2018.
         </div>
+        {sabiaQueue.length > 0 && (
+          <div style={{ margin: "6px 1rem 0", padding: "5px 10px", background: "#1a1505", border: "1px solid #f59e0b44", borderRadius: 6, fontSize: 11, color: "#f59e0b" }}>
+            ⏳ {sabiaQueue.length} mensagem{sabiaQueue.length > 1 ? "ns" : ""} em fila
+          </div>
+        )}
         <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: "flex", flexDirection: "column", gap: 12 }}>
           {msgs.map((m, i) => (
             <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
@@ -3853,15 +3886,35 @@ export function AgePage() {
                 color: m.role === "user" ? color : "#e2e8f0",
               }}>
                 {m.content}
-                {m.role === "assistant" && (
+                {/* Ações da mensagem */}
+                <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
+                  {m.role === "assistant" && (
+                    <button
+                      onClick={() => tts.toggle(`msg-${i}`, m.content)}
+                      title={tts.playingKey === `msg-${i}` ? "Parar" : "Ouvir"}
+                      style={{ background: "none", border: "none", cursor: "pointer", color: tts.playingKey === `msg-${i}` ? color : "#64748b", fontSize: 12, padding: 0 }}
+                    >
+                      {tts.loadingKey === `msg-${i}` ? "⏳" : tts.playingKey === `msg-${i}` ? "⏹ parar" : "🔊"}
+                    </button>
+                  )}
                   <button
-                    onClick={() => tts.toggle(`msg-${i}`, m.content)}
-                    title={tts.playingKey === `msg-${i}` ? "Parar" : "Ouvir"}
-                    style={{ display: "block", marginTop: 6, background: "none", border: "none", cursor: "pointer", color: tts.playingKey === `msg-${i}` ? color : "#64748b", fontSize: 13, padding: 0 }}
+                    onClick={() => copySabia(m.content, `copy-${i}`)}
+                    title="Copiar"
+                    style={{ background: "none", border: "none", cursor: "pointer", color: sabiaCopied === `copy-${i}` ? color : "#64748b", fontSize: 12, padding: 0 }}
                   >
-                    {tts.loadingKey === `msg-${i}` ? "⏳" : tts.playingKey === `msg-${i}` ? "⏹ parar" : "🔊 ouvir"}
+                    {sabiaCopied === `copy-${i}` ? "✓" : "📋"}
                   </button>
-                )}
+                  {/* Copiar pergunta+resposta só disponível na resposta do assistente */}
+                  {m.role === "assistant" && i > 0 && msgs[i - 1]?.role === "user" && (
+                    <button
+                      onClick={() => copySabia(`P: ${msgs[i-1]!.content}\n\nR: ${m.content}`, `copy-qa-${i}`)}
+                      title="Copiar pergunta e resposta"
+                      style={{ background: "none", border: "none", cursor: "pointer", color: sabiaCopied === `copy-qa-${i}` ? color : "#64748b", fontSize: 11, padding: 0 }}
+                    >
+                      {sabiaCopied === `copy-qa-${i}` ? "✓" : "📋P+R"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -3879,9 +3932,9 @@ export function AgePage() {
           <textarea value={sabiaInput}
             onChange={e => setSabiaInput(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendSabia(e as unknown as React.FormEvent); } }}
-            placeholder="Pergunte à SABIÁ… (Enter envia, Shift+Enter nova linha)"
-            disabled={sabiaLoading} rows={2}
-            style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, resize: "none", lineHeight: 1.5 }} />
+            placeholder={sabiaLoading ? "SABIÁ pensando… (pode digitar para enfileirar)" : "Pergunte à SABIÁ… (Enter envia, Shift+Enter nova linha)"}
+            rows={2}
+            style={{ flex: 1, background: "#1a2030", border: `1px solid ${sabiaLoading ? color + "33" : color + "33"}`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, resize: "none", lineHeight: 1.5 }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             {dictation.supported && (
               <button type="button" onClick={() => dictation.toggle(sabiaInput)}
@@ -3891,10 +3944,14 @@ export function AgePage() {
               </button>
             )}
             {!dictation.supported && <span />}
-            {sabiaLoading
-              ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 8, padding: "6px 14px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 13 }}>✕ cancelar</button>
-              : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 8, padding: "6px 18px", color: "#080c10", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>Enviar ↑</button>
-            }
+            <div style={{ display: "flex", gap: 6 }}>
+              {sabiaLoading && (
+                <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 8, padding: "6px 14px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 13 }}>✕ cancelar</button>
+              )}
+              <button type="submit" disabled={!sabiaInput.trim()} style={{ background: sabiaLoading ? "#1e293b" : color, border: sabiaLoading ? "1px solid " + color + "44" : "none", borderRadius: 8, padding: "6px 18px", color: sabiaLoading ? color : "#080c10", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
+                {sabiaLoading ? "↑ fila" : "Enviar ↑"}
+              </button>
+            </div>
           </div>
           {dictation.error && <div style={{ fontSize: 11, color: "#f87171" }}>{dictation.error}</div>}
         </form>
@@ -4710,14 +4767,20 @@ export function AgePage() {
                       color: m.role === "user" ? color : "#e2e8f0",
                     }}>
                       {m.content}
-                      {m.role === "assistant" && (
-                        <button
-                          onClick={() => tts.toggle(`drw-${i}`, m.content)}
-                          title={tts.playingKey === `drw-${i}` ? "Parar" : "Ouvir"}
-                          style={{ display: "block", marginTop: 4, background: "none", border: "none", cursor: "pointer", color: tts.playingKey === `drw-${i}` ? color : "#64748b", fontSize: 11, padding: 0 }}>
-                          {tts.loadingKey === `drw-${i}` ? "⏳" : tts.playingKey === `drw-${i}` ? "⏹" : "🔊"}
+                      <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
+                        {m.role === "assistant" && (
+                          <button
+                            onClick={() => tts.toggle(`drw-${i}`, m.content)}
+                            title={tts.playingKey === `drw-${i}` ? "Parar" : "Ouvir"}
+                            style={{ background: "none", border: "none", cursor: "pointer", color: tts.playingKey === `drw-${i}` ? color : "#64748b", fontSize: 11, padding: 0 }}>
+                            {tts.loadingKey === `drw-${i}` ? "⏳" : tts.playingKey === `drw-${i}` ? "⏹" : "🔊"}
+                          </button>
+                        )}
+                        <button onClick={() => copySabia(m.content, `drwcp-${i}`)} title="Copiar"
+                          style={{ background: "none", border: "none", cursor: "pointer", color: sabiaCopied === `drwcp-${i}` ? color : "#64748b", fontSize: 11, padding: 0 }}>
+                          {sabiaCopied === `drwcp-${i}` ? "✓" : "📋"}
                         </button>
-                      )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -4738,8 +4801,8 @@ export function AgePage() {
                   value={sabiaInput}
                   onChange={e => setSabiaInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendSabia(e as unknown as React.FormEvent); } }}
-                  placeholder="Pergunte… (Enter envia)"
-                  disabled={sabiaLoading} rows={2}
+                  placeholder={sabiaLoading ? "pensando… (pode digitar para enfileirar)" : "Pergunte… (Enter envia)"}
+                  rows={2}
                   style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 12, resize: "none" }}
                 />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -4751,10 +4814,14 @@ export function AgePage() {
                     </button>
                   )}
                   {!dictation.supported && <span />}
-                  {sabiaLoading
-                    ? <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 6, padding: "4px 10px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 11 }}>✕ cancelar</button>
-                    : <button type="submit" disabled={!sabiaInput.trim()} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "4px 12px", cursor: "pointer", fontWeight: 700, fontSize: 11 }}>Enviar →</button>
-                  }
+                  <div style={{ display: "flex", gap: 4 }}>
+                    {sabiaLoading && (
+                      <button type="button" onClick={cancelSabia} style={{ background: "#1e293b", border: "1px solid #f8717155", borderRadius: 6, padding: "4px 8px", color: "#f87171", fontWeight: 700, cursor: "pointer", fontSize: 11 }}>✕</button>
+                    )}
+                    <button type="submit" disabled={!sabiaInput.trim()} style={{ background: sabiaLoading ? "#1e293b" : color, border: sabiaLoading ? `1px solid ${color}44` : "none", borderRadius: 6, color: sabiaLoading ? color : "#080c10", padding: "4px 10px", cursor: "pointer", fontWeight: 700, fontSize: 11 }}>
+                      {sabiaLoading ? "↑fila" : "→"}
+                    </button>
+                  </div>
                 </div>
                 {dictation.error && <div style={{ fontSize: 10, color: "#f87171" }}>{dictation.error}</div>}
               </form>

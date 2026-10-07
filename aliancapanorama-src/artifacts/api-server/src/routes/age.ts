@@ -308,6 +308,38 @@ router.get("/age/:slug", async (req, res): Promise<void> => {
   res.json(prof);
 });
 
+// GET /api/age/:slug/manifest.json — manifest PWA dinâmico por profissional
+router.get("/age/:slug/manifest.json", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const [prof] = await db.select({
+    nome: ageProfessionalsTable.nome,
+    cor: ageProfessionalsTable.cor,
+  }).from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const manifest = {
+    name: `Age — ${prof.nome}`,
+    short_name: "Age",
+    description: `Agenda de saúde — ${prof.nome}`,
+    start_url: `/aliancapanorama/age/${slug}`,
+    scope: "/aliancapanorama/age/",
+    display: "standalone",
+    background_color: "#080c10",
+    theme_color: prof.cor ?? "#2dd4bf",
+    icons: [
+      { src: "/aliancapanorama/age-icon-192.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+      { src: "/aliancapanorama/age-icon-512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" },
+    ],
+  };
+
+  res.setHeader("Content-Type", "application/manifest+json");
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.json(manifest);
+});
+
 // ─── Disponibilidade ──────────────────────────────────────────────────────────
 
 // GET /api/age/:slug/availability
