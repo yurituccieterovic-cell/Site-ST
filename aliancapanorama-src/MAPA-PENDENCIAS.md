@@ -2,6 +2,23 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S199 — Queda Render + #processo emails Mayumi (2026-10-07)
+
+| # | Item | Status |
+|---|---|---|
+| S199-1 | Render crash: container Site-ST caiu após deploy S197/S198 — db:unreachable 503 | ✅ 2 restarts resolveram |
+| S199-2 | Leucócito 07/10 03:47: 6 falhas (PAP+Neon+Conector+Age+Jasmim) — todos eram da queda | ✅ sistema OK após restart |
+| S199-3 | Email Mayumi: respondidos 3 emails (Apps Age, Colesterol, Brainstorm) — Mayumi+Yuri | ✅ enviado |
+| S199-4 | Email PWA explicação para Yuri+Mayumi (conforme pedido email Age 2.0+Jasmim+PV) | ✅ incluído na resposta |
+| S199-5 | IDEIAS I929-I932: Colesterol modos de busca + Eventos + integração Age + concorrentes | ✅ registradas |
+| S199-6 | IDEIAS.md: duplicatas I942-I962 (mesma tabela Railway x3 — bug pipeline) | ⏳ limpar |
+| S199-7 | PWA Age: virar PWA (manifest.json + service worker) — rápido, sem App Store | ⏳ aguarda aprovação Yuri |
+| S199-8 | SABIÁ: fork sistema áudio/transcrição do SalesCockpit (I928) | ⏳ aprovado por Yuri, aguarda implementação |
+| S199-9 | Colesterol MVP: aguarda briefing de produto antes de implementar | ⏳ Yuri define escopo |
+| S199-10 | Cron-job.org keepalive: Yuri precisa configurar (2 min) — evita cold start futuro | ⏳ Yuri faz |
+
+---
+
 ### S197/S198 — Árvore respirando + Sales Cockpit 21 IAs (2026-10-06)
 
 | # | Item | Status |
