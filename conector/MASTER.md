@@ -1719,3 +1719,12 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### SABIÁ → Milton Salomão (2026-10-07)
 - "alô testando alô testando"
 - SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — ATA S201g
+- Calendário mensal na agenda do profissional (grade 7 colunas, clique navega para vista-dia)
+- Live mode SABIÁ: bolinha vermelha, conversa contínua por voz, mic auto-reinicia após TTS
+- Warmup ping no AgePage: Render acorda ao carregar página
+- I937: Colesterol múltiplas listas de compras
+- Próximos: cron-job.org keepalive + Colesterol MVP
