@@ -1,8 +1,8 @@
 {
   "name": "Age — Agenda de Saúde",
   "short_name": "Age",
-  "description": "Agenda inteligente para profissionais de saúde — Lisange e Suzana.",
-  "start_url": "/aliancapanorama/age/lisange",
+  "description": "Agenda inteligente para profissionais de saúde.",
+  "start_url": "/aliancapanorama/age/",
   "scope": "/aliancapanorama/age/",
   "display": "standalone",
   "orientation": "any",
@@ -17,12 +17,12 @@
   "prefer_related_applications": false,
   "shortcuts": [
     {
-      "name": "Agenda Lisange",
+      "name": "Lisange",
       "url": "/aliancapanorama/age/lisange",
       "icons": [{ "src": "/aliancapanorama/age-icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Agenda Suzana",
+      "name": "Suzana",
       "url": "/aliancapanorama/age/suzana",
       "icons": [{ "src": "/aliancapanorama/age-icon-192.png", "sizes": "192x192" }]
     }

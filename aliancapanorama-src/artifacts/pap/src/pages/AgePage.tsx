@@ -821,12 +821,14 @@ export function AgePage() {
     } finally { setRelatLoading(false); }
   }
 
-  // PWA: manifest per-slug + captura prompt de instalação
+  // PWA: manifest per-slug (same-origin, static) + captura prompt de instalação
   useEffect(() => {
     const link = document.querySelector('link[rel="manifest"]') as HTMLLinkElement | null;
     if (link) {
-      link.href = slug
-        ? `${API}/api/age/${slug}/manifest.json`
+      // Manifests estáticos same-origin — cross-origin (onrender.com) é rejeitado pelo Chrome
+      const known = ["lisange", "suzana"];
+      link.href = slug && known.includes(slug)
+        ? `/aliancapanorama/age-manifest-${slug}.json`
         : "/aliancapanorama/age-manifest.json";
     }
     const handler = (e: Event) => { e.preventDefault(); setPwaPrompt(e); };
