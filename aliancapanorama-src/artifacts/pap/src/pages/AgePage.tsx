@@ -24,7 +24,7 @@ type ChatMsg = { role: "user" | "assistant"; content: string };
 type Exception = { id: number; data: string; tipo: string; horaInicio?: string | null; horaFim?: string | null; descricao?: string | null };
 type Patient = { id: number; nome: string; email: string; telefone?: string | null; status: string; observacoesPro?: string | null; createdAt: string; frequenciaEsperada?: string; semaforo?: string; ultimaConsulta?: string | null; alertaEnviadoAt?: string | null; faltou90d?: number; realizadas90d?: number };
 type View = "agenda" | "pacientes" | "disponibilidade" | "config" | "sabia" | "feed" | "notas" | "tarefas";
-type AgeTask = { id: number; titulo: string; descricao?: string | null; tipo: string; status: string; prioridade: number; dataVencimento?: string | null; allDay?: boolean; concluidaAt?: string | null; patientId?: number | null; patient_nome?: string | null; criadoPor: string; createdAt: string };
+type AgeTask = { id: number; titulo: string; descricao?: string | null; tipo: string; status: string; prioridade: number; dataVencimento?: string | null; allDay?: boolean; duracaoMin?: number | null; concluidaAt?: string | null; patientId?: number | null; patient_nome?: string | null; criadoPor: string; createdAt: string };
 type FeedItem = {
   tipo: "appointment" | "patient" | "nota" | "pergunta" | "anuncio";
   id: string;
@@ -298,6 +298,10 @@ export function AgePage() {
   const [docUploadDesc, setDocUploadDesc] = useState("");
   const [docUploading, setDocUploading] = useState(false);
   const [docUploadMsg, setDocUploadMsg] = useState("");
+  // limpa estado de upload ao trocar de paciente
+  useEffect(() => {
+    setDocUploadMsg(""); setDocUploadFile(null); setDocUploadTipo("documento"); setDocUploadDesc("");
+  }, [selectedPatient?.id]);
 
   // Recuperação de senha
   const [forgotMode, setForgotMode] = useState(false);
@@ -349,7 +353,7 @@ export function AgePage() {
   const [tasks, setTasks] = useState<AgeTask[]>([]);
   const [tasksLoading, setTasksLoading] = useState(false);
   const [taskFilter, setTaskFilter] = useState<"" | "pendente" | "em_andamento" | "concluida">("");
-  const [newTask, setNewTask] = useState({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "", horario: "", allDay: true });
+  const [newTask, setNewTask] = useState({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "", horario: "", allDay: true, duracaoMin: 60 });
   const [taskSaving, setTaskSaving] = useState(false);
 
   // Formulário de interesse (landing profissional)
@@ -3445,10 +3449,11 @@ export function AgePage() {
             dataVencimento: newTask.dataVencimento || undefined,
             horario: (!newTask.allDay && newTask.horario) ? newTask.horario : undefined,
             allDay: newTask.allDay,
+            duracaoMin: newTask.duracaoMin,
           }),
         });
         if (r.ok) {
-          setNewTask({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "", horario: "", allDay: true });
+          setNewTask({ titulo: "", descricao: "", tipo: "lembrete", prioridade: 3, dataVencimento: "", horario: "", allDay: true, duracaoMin: 60 });
           await loadTasks(taskFilter || undefined);
         } else {
           addToast("Erro ao salvar tarefa. Tente novamente.", "err");
@@ -3514,8 +3519,19 @@ export function AgePage() {
               Dia inteiro
             </label>
             {!newTask.allDay && (
-              <input type="time" value={newTask.horario} onChange={e => setNewTask(p => ({ ...p, horario: e.target.value }))}
-                style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: "#38bdf8", fontSize: 12 }} />
+              <>
+                <input type="time" value={newTask.horario} onChange={e => setNewTask(p => ({ ...p, horario: e.target.value }))}
+                  style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: "#38bdf8", fontSize: 12 }} />
+                <select value={newTask.duracaoMin} onChange={e => setNewTask(p => ({ ...p, duracaoMin: Number(e.target.value) }))}
+                  style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 6, padding: "6px 8px", color: "#94a3b8", fontSize: 12, cursor: "pointer" }}>
+                  {[15,30,45,60,90,120,180].map(d => <option key={d} value={d}>{d}min</option>)}
+                </select>
+                {newTask.horario && (
+                  <span style={{ color: "#475569", fontSize: 11, whiteSpace: "nowrap" }}>
+                    até {(() => { const [h=0,m=0]=newTask.horario.split(":").map(Number); const end=new Date(2000,0,1,h,m+newTask.duracaoMin); return `${end.getHours().toString().padStart(2,"0")}:${end.getMinutes().toString().padStart(2,"0")}`; })()}
+                  </span>
+                )}
+              </>
             )}
           </div>
           <button onClick={saveTask} disabled={taskSaving || !newTask.titulo.trim()}
@@ -3549,7 +3565,16 @@ export function AgePage() {
                       {task.dataVencimento ? (
                         <span style={{ fontSize: 11, color: new Date(task.dataVencimento) < new Date() && task.status !== "concluida" ? "#f87171" : "#94a3b8" }}>
                           ⏰ {new Date(task.dataVencimento).toLocaleDateString("pt-BR")}
-                          {task.allDay === false && ` ${new Date(task.dataVencimento).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`}
+                          {task.allDay === false && (() => {
+                            const start = new Date(task.dataVencimento);
+                            const startStr = start.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+                            if (task.duracaoMin) {
+                              const end = new Date(start.getTime() + task.duracaoMin * 60000);
+                              const endStr = end.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+                              return ` ${startStr}–${endStr} (${task.duracaoMin}min)`;
+                            }
+                            return ` ${startStr}`;
+                          })()}
                         </span>
                       ) : (
                         <span style={{ fontSize: 11, color: "#334155" }}>Sem data</span>

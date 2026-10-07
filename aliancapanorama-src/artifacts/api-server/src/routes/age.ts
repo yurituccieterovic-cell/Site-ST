@@ -1039,6 +1039,38 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
       .limit(14);
   } catch (e) { logger.error({ err: e }, "age: sabia history fetch failed, proceeding without history"); }
 
+  // Documentos dos pacientes (metadados apenas, sem base64)
+  let docsText = "";
+  try {
+    const docs = await db.select({
+      patientId: ageDocumentsTable.patientId,
+      tipo: ageDocumentsTable.tipo,
+      filename: ageDocumentsTable.filename,
+      descricao: ageDocumentsTable.descricao,
+      createdAt: ageDocumentsTable.createdAt,
+    }).from(ageDocumentsTable)
+      .where(eq(ageDocumentsTable.professionalId, profId))
+      .orderBy(desc(ageDocumentsTable.createdAt))
+      .limit(60);
+
+    const docsMap: Record<number, string[]> = {};
+    docs.forEach(d => {
+      if (!docsMap[d.patientId]) docsMap[d.patientId] = [];
+      const date = d.createdAt ? new Date(d.createdAt).toLocaleDateString("pt-BR") : "?";
+      docsMap[d.patientId].push(`${d.tipo}:${d.filename}${d.descricao ? ` (${d.descricao})` : ""} [${date}]`);
+    });
+
+    const patientRows = await db.select({ id: agePatientsTable.id, nome: agePatientsTable.nome })
+      .from(agePatientsTable)
+      .where(and(eq(agePatientsTable.professionalId, profId), inArray(agePatientsTable.id, Object.keys(docsMap).map(Number))));
+    const nameMap: Record<number, string> = {};
+    patientRows.forEach(p => { nameMap[p.id] = p.nome; });
+
+    docsText = Object.entries(docsMap)
+      .map(([pid, items]) => `${nameMap[Number(pid)] ?? `Paciente #${pid}`}: ${items.join(" | ")}`)
+      .join("\n");
+  } catch (e) { logger.warn({ err: e }, "age: sabia docs fetch failed, proceeding without docs"); }
+
   const systemPrompt = `Você é SABIÁ 🐦, assistente de agenda e cuidado clínico da plataforma Age (Sociedade Tucci).
 
 PERFIL DA PROFISSIONAL:
@@ -1049,6 +1081,9 @@ Bio: ${prof?.bio ?? "—"}
 
 PACIENTES:
 ${ptStats || "Sem pacientes cadastrados ainda."}
+
+DOCUMENTOS DOS PACIENTES (metadados — tipo:arquivo [data]):
+${docsText || "Nenhum documento cadastrado ainda."}
 
 AGENDA — próximos 7 dias:
 ${agendaSemana}
@@ -2683,10 +2718,10 @@ router.get("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> =
 // POST /api/age/:slug/tasks — cria tarefa (auth required)
 router.post("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> => {
   const profId = req.session.ageProfessionalId!;
-  const { titulo, descricao, tipo = "lembrete", prioridade = 3, dataVencimento, horario, allDay = true, patientId, appointmentId } =
+  const { titulo, descricao, tipo = "lembrete", prioridade = 3, dataVencimento, horario, allDay = true, patientId, appointmentId, duracaoMin = 60 } =
     req.body as { titulo?: string; descricao?: string; tipo?: string; prioridade?: number;
                   dataVencimento?: string; horario?: string; allDay?: boolean;
-                  patientId?: number; appointmentId?: number };
+                  patientId?: number; appointmentId?: number; duracaoMin?: number };
 
   if (!titulo?.trim()) { res.status(400).json({ error: "titulo obrigatório" }); return; }
 
@@ -2707,6 +2742,7 @@ router.post("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> 
     prioridade,
     dataVencimento: dvDate,
     allDay: allDay !== false,
+    duracaoMin: duracaoMin ?? 60,
     patientId: patientId ?? null,
     appointmentId: appointmentId ?? null,
     criadoPor: "professional",
