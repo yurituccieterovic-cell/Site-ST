@@ -1563,3 +1563,12 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 - Árvore Bluesky fiada no playcenter (aguarda conta Bluesky de Yuri)
 - ATA Playcenter reformatada com síntese da Árvore no rodapé
 - Tarefas: horário + allDay + Sem data + chips na agenda
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — ATA S201 Cláudio
+- API 503 → restart Render: Cana+SABIÁ voltaram
+- SABIÁ fila automática (textarea liberada durante loading)
+- SABIÁ botões 📋 e 📋P+R por mensagem
+- PWA manifest per-slug: GET /age/:slug/manifest.json (corrige sempre abrir Lisange)
+- Próximo: Google Calendar import + Leucócito SC
