@@ -208,6 +208,9 @@ export function AgePage() {
   const sabiaVoiceRef = useRef(false);     // resposta deve ser lida automaticamente
   const prevListeningRef = useRef(false);
   const sabiaInputRef = useRef("");
+  const [sabiaLiveMode, setSabiaLiveMode] = useState(false);
+  const sabiaLiveModeRef = useRef(false);
+  const prevTtsPlayingRef = useRef<string | null>(null);
 
   // SABIÁ voz — STT (microfone) e TTS (falar resposta)
   const dictation = useDictation((text) => setSabiaInput(text));
@@ -232,6 +235,25 @@ export function AgePage() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dictation.listening]);
+
+  // Sync live mode ref com state
+  useEffect(() => { sabiaLiveModeRef.current = sabiaLiveMode; }, [sabiaLiveMode]);
+
+  // Live mode: quando TTS termina → restart mic automaticamente
+  useEffect(() => {
+    const was = prevTtsPlayingRef.current;
+    prevTtsPlayingRef.current = tts.playingKey;
+    if (was !== null && tts.playingKey === null && sabiaLiveModeRef.current && !sabiaLoading) {
+      setTimeout(() => {
+        if (sabiaLiveModeRef.current && !dictation.listening) {
+          sabiaVoiceModeRef.current = true;
+          sabiaVoiceRef.current = false;
+          dictation.startOnce("");
+        }
+      }, 700);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tts.playingKey]);
 
   // New rule form
   const [ruleForm, setRuleForm] = useState({ diasSemana: [1] as number[], horaInicio: "09:00", horaFim: "18:00", duracaoMin: 50, intervaloMin: 10, canal: "presencial" });
@@ -978,6 +1000,18 @@ export function AgePage() {
 
   const sabiaAbortRef = useRef<AbortController | null>(null);
 
+  function toggleLiveMode() {
+    const next = !sabiaLiveModeRef.current;
+    setSabiaLiveMode(next);
+    sabiaLiveModeRef.current = next;
+    if (next && !dictation.listening && !sabiaLoading) {
+      sabiaVoiceModeRef.current = true;
+      dictation.startOnce("");
+    } else if (!next && dictation.listening) {
+      dictation.stop();
+    }
+  }
+
   function cancelSabia() {
     sabiaAbortRef.current?.abort();
     setSabiaLoading(false);
@@ -1005,8 +1039,8 @@ export function AgePage() {
       const reply = d.reply ?? "Não consegui responder agora. Tente novamente. 🐦";
       setMsgs(m => [...m, { role: "assistant", content: reply }]);
       if (d.sessionId) setSabiaSessionId(d.sessionId);
-      // leitura automática quando entrada foi por voz
-      if (sabiaVoiceRef.current) {
+      // leitura automática: entrada por voz OU live mode ativo
+      if (sabiaVoiceRef.current || sabiaLiveModeRef.current) {
         sabiaVoiceRef.current = false;
         setTimeout(() => void tts.speak(`auto-${Date.now()}`, reply), 200);
       }
@@ -4142,17 +4176,32 @@ export function AgePage() {
             rows={2}
             style={{ flex: 1, background: "#1a2030", border: `1px solid ${sabiaLoading ? color + "33" : color + "33"}`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, resize: "none", lineHeight: 1.5 }} />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            {dictation.supported && (
-              <button type="button"
-                onClick={() => {
-                  if (dictation.listening) { dictation.stop(); }
-                  else { sabiaVoiceModeRef.current = true; dictation.startOnce(sabiaInput); }
-                }}
-                title={dictation.listening ? "Parar ditado" : "Ditar por voz (auto-envio)"}
-                style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 8, padding: "6px 12px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 13 }}>
-                {dictation.listening ? "🎙 ouvindo…" : "🎤"}
-              </button>
-            )}
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              {dictation.supported && (
+                <button type="button"
+                  onClick={() => {
+                    if (dictation.listening) { dictation.stop(); }
+                    else { sabiaVoiceModeRef.current = true; dictation.startOnce(sabiaInput); }
+                  }}
+                  title={dictation.listening ? "Parar ditado" : "Ditar por voz (auto-envio)"}
+                  style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 8, padding: "6px 12px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 13 }}>
+                  {dictation.listening ? "🎙 ouvindo…" : "🎤"}
+                </button>
+              )}
+              {dictation.supported && (
+                <button type="button" onClick={toggleLiveMode}
+                  title={sabiaLiveMode ? "Modo ao vivo ativo — clique para pausar" : "Modo ao vivo: conversa contínua por voz"}
+                  style={{ display: "flex", alignItems: "center", gap: 5, background: sabiaLiveMode ? "#ef444422" : "none", border: `1px solid ${sabiaLiveMode ? "#ef4444" : "#334155"}`, borderRadius: 8, padding: "6px 10px", cursor: "pointer" }}>
+                  <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%",
+                    background: sabiaLiveMode ? "#ef4444" : "#334155",
+                    boxShadow: sabiaLiveMode ? "0 0 6px #ef4444" : "none",
+                    animation: sabiaLiveMode ? "pulse 1.2s infinite" : "none" }} />
+                  <span style={{ color: sabiaLiveMode ? "#ef4444" : "#475569", fontSize: 11, fontWeight: 600 }}>
+                    {sabiaLiveMode ? "ao vivo" : "live"}
+                  </span>
+                </button>
+              )}
+            </div>
             {!dictation.supported && <span />}
             <div style={{ display: "flex", gap: 6 }}>
               {sabiaLoading && (
@@ -5038,17 +5087,29 @@ export function AgePage() {
                   style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "7px 10px", fontSize: 12, resize: "none" }}
                 />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  {dictation.supported && (
-                    <button type="button"
-                      onClick={() => {
-                        if (dictation.listening) { dictation.stop(); }
-                        else { sabiaVoiceModeRef.current = true; dictation.startOnce(sabiaInput); }
-                      }}
-                      title={dictation.listening ? "Parar ditado" : "Ditar por voz (auto-envio)"}
-                      style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 6, padding: "4px 8px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 11 }}>
-                      {dictation.listening ? "🎙" : "🎤"}
-                    </button>
-                  )}
+                  <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                    {dictation.supported && (
+                      <button type="button"
+                        onClick={() => {
+                          if (dictation.listening) { dictation.stop(); }
+                          else { sabiaVoiceModeRef.current = true; dictation.startOnce(sabiaInput); }
+                        }}
+                        title={dictation.listening ? "Parar ditado" : "Ditar por voz (auto-envio)"}
+                        style={{ background: dictation.listening ? color + "22" : "none", border: `1px solid ${dictation.listening ? color : "#334155"}`, borderRadius: 6, padding: "4px 8px", color: dictation.listening ? color : "#64748b", cursor: "pointer", fontSize: 11 }}>
+                        {dictation.listening ? "🎙" : "🎤"}
+                      </button>
+                    )}
+                    {dictation.supported && (
+                      <button type="button" onClick={toggleLiveMode}
+                        title={sabiaLiveMode ? "Ao vivo ativo" : "Modo ao vivo"}
+                        style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, background: sabiaLiveMode ? "#ef444422" : "none", border: `1px solid ${sabiaLiveMode ? "#ef4444" : "#334155"}`, borderRadius: "50%", cursor: "pointer", padding: 0 }}>
+                        <span style={{ display: "inline-block", width: 9, height: 9, borderRadius: "50%",
+                          background: sabiaLiveMode ? "#ef4444" : "#334155",
+                          boxShadow: sabiaLiveMode ? "0 0 5px #ef4444" : "none",
+                          animation: sabiaLiveMode ? "pulse 1.2s infinite" : "none" }} />
+                      </button>
+                    )}
+                  </div>
                   {!dictation.supported && <span />}
                   <div style={{ display: "flex", gap: 4 }}>
                     {sabiaLoading && (
