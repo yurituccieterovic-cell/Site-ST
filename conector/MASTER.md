@@ -1590,3 +1590,17 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### 2026-10-07 — admin
 ### 2026-10-07T17:50 — Playcenter
 - Participantes: isa+socoboy+meky+arvore (4 falas)
+
+
+### 2026-10-07 — admin
+### 2026-10-07T17:50 — Playcenter
+- Participantes: isa+socoboy+meky+arvore (4 falas)
+
+
+### 2026-10-07 — admin
+### #1234 — Pipeline completo de manutenção
+1. MacroATAs + emails (exceto assembleias) → assembleias → #processo (emails resultado/perfeitos) → #fim
+2. Leucócito no email → #processo → #fim
+3. assembleia-perfeitos → #processo → #fim
+4. #eage (emails Yuri+Mayumi)
+Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre; memória importa.
