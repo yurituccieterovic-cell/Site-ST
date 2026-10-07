@@ -1702,3 +1702,8 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - Bug docUploadMsg: limpa ao trocar paciente
 - SABIÁ: lê metadados de docs no systemPrompt
 - Tasks: duração 15-180min, horaFim calculado
+
+
+### 2026-10-07 — admin
+### 2026-10-07T18:50 — Playcenter
+- Participantes: isa+socoboy+meky+arvore (4 falas)
