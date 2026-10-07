@@ -2628,3 +2628,73 @@ Mayumi confirmou: integração não é opcional, é fundamental. Caso de uso: m�
 
 ## I932 — Age: apps concorrentes mapeados (Mayumi pesquisou)
 Agendart (nota 4.7, pago): agenda inteligente + prontuário + financeiro + teleconsulta + WhatsApp. Consultorio Live VBB Software (nota 5): confirmações, anexos médicos, proteção de documentos, gerenciamento de agenda. Diferencial Age: SABIÁ (IA conversacional) + código aberto + custos baixíssimos.
+
+## I933 — Colesterol: Caso X — Farmácia Caseira (Yuri × Mayumi)
+**Exemplo real de uso do Colesterol: kit de primeiros socorros para casal com preferências diferentes.**
+
+### Contexto do caso
+- **Yuri** → Neosaldina (drágeas/comprimido) para dor de cabeça
+- **Mayumi** → Novalgina/dipirona **líquida** (aversão ao comprimido)
+- Mesma família (dipirona), formas diferentes — geram "briga de remédio" que o app precisa tratar com campo `para_quem` + `forma`
+
+### Schema sugerido para item de farmácia
+```
+items:
+  name: "Dipirona"
+  category: "farmácia"
+  para_quem: "Mayumi"          ← campo novo
+  forma: "líquido"             ← enum: líquido/comprimido/drágea/pomada/spray
+  quantity: 1
+  unit: "frasco"
+  tag_cuidado: true            ← flag: automedicação — exibe aviso no app
+  prioridade: 2                ← na ordem de compra quando orçamento aperta
+  preco_estimado: 18.00
+  teto_orcamento: 200.00
+```
+
+### Lista kit ~R$200 (ordem de prioridade)
+1. Termômetro digital (~R$25)
+2. Dipirona líquida → Mayumi (~R$18) + Neosaldina → Yuri (~R$25)
+3. Paracetamol comum (~R$12)
+4. Soro fisiológico 0,9% + álcool 70% (~R$18)
+5. Curativos + gaze + micropore (~R$25)
+6. Eno/antiácido + antialérgico genérico (~R$28)
+7. Antigripal simples (~R$18)
+8. Luvas + algodão (~R$18)
+9. Pomada arnica + bolsa térmica (~R$30) — cortar se orçamento apertar
+
+**Total estimado em genéricos: R$167–200**
+
+### Texto de alerta no app (obrigatório no UI)
+> "Itens de alívio sintomático. Não substituem avaliação médica. Antibiótico não entra em kit caseiro. Em dúvida, consulte farmacêutico ou médico."
+
+### O que NÃO entra no kit inicial
+Antibiótico, corticoide forte, vários antigripais simultâneos, controlados.
+
+### Para o Colesterol (lista de compras estruturada)
+```
+Categoria: Farmácia caseira
+├── Mayumi → dipirona líquida
+├── Yuri → Neosaldina drágea
+├── Ambos → paracetamol, soro, álcool, curativos, eno, antialérgico
+├── tag_cuidado: true (exibir aviso automedicação)
+└── teto: R$ 200
+```
+
+### Checklist antes de ir à farmácia (UI sugerido)
+- [ ] O que já tem em casa (álcool, soro, termômetro)?
+- [ ] Mayumi aceita outra forma de dipirona?
+- [ ] Alguma alergia a dipirona, paracetamol ou anti-inflamatório?
+- [ ] Remédio de uso contínuo dela que precisa repor?
+
+### Exemplo de uso do Colesterol (mercado + farmácia no mesmo app)
+- **Grãos e mercado**: lista normal (arroz, feijão, azeite — itens frequentes do casal)
+- **Farmácia caseira**: lista com `tag_cuidado + para_quem` — aparece com ícone diferente
+- **Integração futura**: SABIÁ detecta restrição no prontuário (Age) → sugere atualizar lista Colesterol automaticamente (I921)
+
+### Próximo passo técnico
+Adicionar ao schema Colesterol:
+- Campo `para_quem` (text nullable)
+- Campo `forma` (enum: comprimido | líquido | drágea | pomada | spray | outro)
+- Campo `tag_cuidado` (boolean default false)
+- Aviso no UI quando `tag_cuidado = true`
