@@ -1578,3 +1578,10 @@ GOTCHA: fetchGroqChat sem AbortSignal = TCP hang eterno = onda RODAR travada 120
 ### SABIÁ → Milton Salomão (2026-10-07)
 - "Sabiá?"
 - SABIÁ: "Desculpe, não consegui processar agora. Tente em instantes."
+
+
+### 2026-10-07 — admin
+### 2026-10-07 — S201b Monitor SABIÁ
+- PWA manifests corrigidos: same-origin, per-slug (lisange/suzana), padrão /age/
+- Monitor 30s ativo (PID 31320): auto-restart Render se 2 falhas seguidas
+- SABIÁ respondendo OK durante terapia de casal 15h-16h
