@@ -1849,3 +1849,15 @@
 | S201d-4 | SABIÁ auto-leitura resposta: `sabiaVoiceRef` → `tts.speak` após resposta | ✅ commit 5891d3c |
 | S201d-5 | tts.ts: voz feminina preferida (Luciana/Francisca), pitch 1.25, rate 1.05 | ✅ commit 5891d3c |
 | S201d-6 | Servidor dormindo: reiniciar via monitor ou cron-job.org | ⏳ Yuri configura cron-job.org |
+
+### S201e — Pendências processadas (2026-10-07)
+
+| # | Item | Status |
+|---|---|---|
+| S201e-1 | Avatar SABIÁ: pássaro CSS animado, lipsync bico, balão de fala, widget preview | ✅ commit 25fb752 |
+| S201e-2 | Performance: slots carregam em paralelo com prof (não sequencial) | ✅ commit 25fb752 |
+| S201e-3 | Cache headers: GET /api/age/:slug (60s), /slots (30s) | ✅ commit 25fb752 |
+| S201e-4 | #eage: resposta brainstorm Colesterol enviada → Mayumi+Yuri | ✅ enviado |
+| S201e-5 | Assembleia #663-664: aprendizados A557-A558 + ideias I934-I936 | ✅ |
+| S201e-6 | Sistema Crowd (I934): interface unificadora do ecossistema — conceito documentado | ✅ IDEIAS.md |
+| S201e-7 | S201c-3/S201c-8 (email PWA + hashtags): já feito na S201c | ✅ retroativo |

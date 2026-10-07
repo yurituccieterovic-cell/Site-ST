@@ -2698,3 +2698,33 @@ Adicionar ao schema Colesterol:
 - Campo `forma` (enum: comprimido | líquido | drágea | pomada | spray | outro)
 - Campo `tag_cuidado` (boolean default false)
 - Aviso no UI quando `tag_cuidado = true`
+
+## I934 — Sistema Crowd: painel de controle do ecossistema Tucci
+
+**Ideia:** Interface tipo "dashboard de carro" onde cada módulo é uma IA da Sociedade Tucci (Age, Colesterol, Rapadura, Jasmim, PAP, Fluxo). Clica no módulo → abre detalhes, status, últimas ações. Seleciona partes de sistemas para lançar em assembleia combinada. Loopings automáticos: lista Colesterol muda → notifica Age se for item de saúde.
+
+**Origem:** Assembleia #664 · Yuri · 05/10/2026
+
+**Prioridade:** Alta — é a interface unificadora que evita que o ecossistema pareça apps soltos.
+
+**Status:** Conceito. MVP = página única tipo CeuPage com cards de sistemas + status em tempo real.
+
+---
+
+## I935 — Colesterol: pagamento integrado multi-mercado
+
+**Ideia:** O usuário fecha uma única "conta" e o app distribui o pagamento para cada supermercado (Pix, cartão). Inclui opção de frete de cada mercado.
+
+**Origem:** Mayumi · 05/10/2026
+
+**Prioridade:** Alta (diferencial competitivo)
+
+---
+
+## I936 — Age: integração WhatsApp (como Agendart)
+
+**Ideia:** Confirmações de consulta por WhatsApp — o paciente recebe mensagem automática para confirmar/cancelar/remarcar sem precisar entrar no app.
+
+**Origem:** Pesquisa Mayumi (Agendart tem isso) · 05/10/2026
+
+**Prioridade:** Média — diferencial que os concorrentes já têm

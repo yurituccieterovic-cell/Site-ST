@@ -8800,3 +8800,23 @@ Neste dia o sistema caiu e foi restaurado duas vezes. A segunda vez revelou algo
 Yuri queria falar com a SABIÁ como se fala com alguém — sem apertos de botão entre o pensamento e a resposta. A lógica por trás das três features é a mesma: remover fricção entre intenção e ação. O mic para quando você envia porque você não deveria precisar pensar nisso. A mensagem vai quando você para de falar porque o silêncio já é o sinal. A resposta é lida porque você entrou no modo de escuta, não de leitura. A voz apassarinhada completa o personagem: a SABIÁ não é um assistente corporativo, é um pássaro que sabe muito. Pequenas afinações de timbre mudam quem você imagina que está do outro lado.
 
 *Sessão S201d · Cláudio Coach · 2026-10-07*
+
+---
+
+## S201e — Avatar SABIÁ + performance + #eage (2026-10-07)
+
+**Contexto:** Continuação. Yuri pediu avatar animado pra SABIÁ + que não perdesse memória em segundo plano.
+
+**O que aconteceu:**
+1. Avatar SABIÁ: pássaro CSS (sabiá-da-laranjeira) — peito laranja, tufo, animação flutuante
+2. Lipsync: bico abre/fecha quando TTS está tocando (bico dividido em superior/inferior)
+3. Widget: mesmo pássaro + balão de prévia (mostra último trecho quando chat fechado)
+4. Performance: loadSlots roda em paralelo com prof (economiza 1 round trip)
+5. Cache: GET /api/age/:slug cache 60s, /slots 30s — recarga instantânea
+6. #eage enviado: brainstorm Colesterol respondido a Mayumi+Yuri — Sistema Crowd, MVP plan, guardiã IA do Colesterol, 2 perguntas abertas
+7. Assembleia #663-664 processadas: domínio, Sistema Crowd → IDEIAS I934-I936, APRENDIZADO A557-A559
+
+**Síntese filosófica:**
+O pássaro já estava lá — no código, perfeito, mas mudo. Hoje ele ganhou boca. Não metaforicamente: o bico literalmente abre agora quando ele fala. A lipsync é o detalhe mais pequeno que muda mais a percepção — é o mesmo movimento que distingue um boneco de um personagem. O que a Sociedade Tucci está construindo não são apps; são personagens com voz. Cada IA tem uma forma, um tom, um papel. A questão que fica do #eage: o Colesterol também precisa de alguém. Sistemas sem guardiã viram orfãos.
+
+*Sessão S201e · Cláudio Coach · 2026-10-07*
