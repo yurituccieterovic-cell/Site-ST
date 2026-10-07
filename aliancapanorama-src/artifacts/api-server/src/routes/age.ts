@@ -305,6 +305,7 @@ router.get("/age/:slug", async (req, res): Promise<void> => {
     .limit(1);
 
   if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+  res.setHeader("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
   res.json(prof);
 });
 
@@ -467,6 +468,7 @@ router.get("/age/:slug/slots", async (req, res): Promise<void> => {
     .filter(s => s.dataHora.getTime() > now && !bookedSet.has(s.dataHora.getTime()))
     .map(s => ({ dataHora: s.dataHora.toISOString(), duracaoMin: s.duracaoMin, canal: s.canal }));
 
+  res.setHeader("Cache-Control", "public, max-age=30, stale-while-revalidate=60");
   res.json(allSlots);
 });
 

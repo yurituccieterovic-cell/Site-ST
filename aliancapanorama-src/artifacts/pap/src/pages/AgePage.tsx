@@ -439,7 +439,8 @@ export function AgePage() {
       .catch(() => {});
   }, [slug]);
 
-  useEffect(() => { if (!loading) loadSlots(); }, [loading, loadSlots]);
+  // slots são públicos — carrega em paralelo com o prof, sem esperar loading=false
+  useEffect(() => { if (slug) loadSlots(); }, [slug, loadSlots]);
 
   // Persistir bookForm no localStorage
   useEffect(() => {
@@ -3898,10 +3899,75 @@ export function AgePage() {
   }
 
   function SabiaView() {
+    const lastAsstMsg = [...msgs].reverse().find(m => m.role === "assistant")?.content ?? "";
+    const bubbleText = sabiaLoading ? "pensando…" : lastAsstMsg.slice(0, 120) + (lastAsstMsg.length > 120 ? "…" : "");
+    const isTalking = tts.playingKey !== null;
     return (
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+
+        {/* Avatar SABIÁ + balão de fala */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "10px 14px", background: color + "07", borderBottom: `1px solid ${color}20` }}>
+          <style>{`
+            @keyframes sv-float { 0%,100%{transform:translateY(0)rotate(0deg)} 50%{transform:translateY(-5px)rotate(2deg)} }
+            @keyframes sv-wing  { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-14deg)} }
+            @keyframes sv-tail  { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(8deg)} }
+            @keyframes sv-beak  { 0%,40%{transform:rotate(0deg)} 50%{transform:rotate(14deg)} 60%,100%{transform:rotate(0deg)} }
+            @keyframes sv-wfast { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-22deg)} }
+            .sv-body  { animation: sv-float 2.8s ease-in-out infinite; }
+            .sv-wing  { animation: sv-wing  2.8s ease-in-out infinite; transform-origin: 38px 54px; }
+            .sv-wing-talk { animation: sv-wfast 0.22s ease-in-out infinite; transform-origin: 38px 54px; }
+            .sv-tail  { animation: sv-tail  2.8s ease-in-out infinite; transform-origin: 48px 70px; }
+            .sv-beak-lo { transform-origin: 54px 44px; animation: ${isTalking ? "sv-beak 0.22s ease-in-out infinite" : "none"}; }
+          `}</style>
+          <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" style={{ width: 60, height: 60, flexShrink: 0 }}>
+            <g className="sv-tail">
+              <ellipse cx="48" cy="76" rx="6" ry="11" fill="#6b5242" transform="rotate(5 48 76)" opacity="0.9"/>
+              <ellipse cx="42" cy="78" rx="4" ry="9" fill="#4f3a2a" transform="rotate(-10 42 78)" opacity="0.7"/>
+              <ellipse cx="54" cy="78" rx="4" ry="9" fill="#4f3a2a" transform="rotate(10 54 78)" opacity="0.7"/>
+            </g>
+            <g className={isTalking ? "sv-wing-talk" : "sv-wing"}>
+              <ellipse cx="28" cy="54" rx="12" ry="6" fill="#5a4535" transform="rotate(-30 28 54)" opacity="0.85"/>
+            </g>
+            <g className="sv-body">
+              <ellipse cx="48" cy="58" rx="16" ry="13" fill="#6b5242"/>
+              <ellipse cx="48" cy="56" rx="12" ry="10" fill="#7d6050"/>
+              <ellipse cx="64" cy="54" rx="10" ry="5" fill="#5a4535" transform="rotate(20 64 54)" opacity="0.9"/>
+              <ellipse cx="48" cy="64" rx="8" ry="7" fill="#f97316" opacity="0.92"/>
+              <ellipse cx="48" cy="66" rx="6" ry="5" fill="#fb923c" opacity="0.7"/>
+              <circle cx="48" cy="42" r="12" fill="#4a5568"/>
+              <circle cx="48" cy="41" r="9" fill="#5a6b80"/>
+              <circle cx="51" cy="40" r="3.5" fill="#0a0f16"/>
+              <circle cx="52" cy="39" r="1.2" fill="white"/>
+              {/* Bico superior (fixo) */}
+              <path d="M54,42 L64,40 L54,44 Z" fill="#fbbf24"/>
+              {/* Bico inferior (lipsync) */}
+              <g className="sv-beak-lo">
+                <path d="M54,44 L64,40 L54,47 Z" fill="#f59e0b"/>
+              </g>
+              <ellipse cx="44" cy="31" rx="3" ry="5" fill="#374151" transform="rotate(-15 44 31)"/>
+            </g>
+          </svg>
+          {/* Balão de fala */}
+          <div style={{ flex: 1, position: "relative" }}>
+            <div style={{
+              position: "absolute", left: -8, top: "50%", transform: "translateY(-50%)",
+              width: 0, height: 0,
+              borderTop: "6px solid transparent", borderBottom: "6px solid transparent",
+              borderRight: `8px solid ${color}30`,
+            }}/>
+            <div style={{
+              background: "#111827", border: `1px solid ${color}30`, borderRadius: "4px 12px 12px 12px",
+              padding: "8px 12px", fontSize: 12, color: sabiaLoading ? "#64748b" : "#cbd5e1",
+              lineHeight: 1.5, minHeight: 38,
+              fontStyle: sabiaLoading ? "italic" : "normal",
+            }}>
+              {bubbleText || "Olá! Pode perguntar 🐦"}
+            </div>
+          </div>
+        </div>
+
         {/* Disclaimer CFP/LGPD — obrigatório */}
-        <div style={{ background: "#0c1a12", border: "1px solid #4ade8033", borderRadius: 8, margin: "0.75rem 1rem 0", padding: "8px 12px", fontSize: 11, color: "#6b8f6b", lineHeight: 1.5 }}>
+        <div style={{ background: "#0c1a12", border: "1px solid #4ade8033", borderRadius: 8, margin: "0.5rem 1rem 0", padding: "8px 12px", fontSize: 11, color: "#6b8f6b", lineHeight: 1.5 }}>
           🐦 <strong>SABIÁ é assistente de agenda</strong>, não substituta de avaliação clínica. Não emite laudos nem toma decisões sobre pacientes. Conforme CFP Resolução 11/2018.
         </div>
         {sabiaQueue.length > 0 && (
@@ -4727,10 +4793,13 @@ export function AgePage() {
                   <style>{`
                     @keyframes sbFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-5px) rotate(2deg); } }
                     @keyframes sbWing  { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(-14deg); } }
+                    @keyframes sbWfast { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(-24deg); } }
                     @keyframes sbTail  { 0%,100% { transform:rotate(0deg); } 50% { transform:rotate(8deg); } }
+                    @keyframes sbBeak  { 0%,40%{transform:rotate(0deg)} 50%{transform:rotate(14deg)} 60%,100%{transform:rotate(0deg)} }
                     .sb-body { animation: sbFloat 2.4s ease-in-out infinite; }
-                    .sb-wing { animation: sbWing  2.4s ease-in-out infinite; transform-origin: 38px 54px; }
+                    .sb-wing { animation: ${tts.playingKey ? "sbWfast 0.22s" : "sbWing 2.4s"} ease-in-out infinite; transform-origin: 38px 54px; }
                     .sb-tail { animation: sbTail  2.4s ease-in-out infinite; transform-origin: 48px 70px; }
+                    .sb-beak-lo { transform-origin: 54px 44px; animation: ${tts.playingKey ? "sbBeak 0.22s ease-in-out infinite" : "none"}; }
                   `}</style>
                 </defs>
                 {/* Cauda — marrom */}
@@ -4758,14 +4827,33 @@ export function AgePage() {
                   {/* Olho */}
                   <circle cx="51" cy="40" r="3.5" fill="#0a0f16"/>
                   <circle cx="52" cy="39" r="1.2" fill="white"/>
-                  {/* Bico amarelo-alaranjado */}
-                  <path d="M56,43 L64,41 L56,46 Z" fill="#fbbf24"/>
+                  {/* Bico superior (fixo) */}
+                  <path d="M54,42 L64,40 L54,44 Z" fill="#fbbf24"/>
+                  {/* Bico inferior (lipsync) */}
+                  <g className="sb-beak-lo"><path d="M54,44 L64,40 L54,47 Z" fill="#f59e0b"/></g>
                   {/* Tufo */}
                   <ellipse cx="44" cy="31" rx="3" ry="5" fill="#374151" transform="rotate(-15 44 31)"/>
                 </g>
               </svg>
             )}
           </button>
+
+          {/* Balão de prévia — quando chat fechado e há última resposta */}
+          {!sabiaOpen && msgs.length > 1 && (() => {
+            const last = [...msgs].reverse().find(m => m.role === "assistant");
+            if (!last) return null;
+            const preview = last.content.slice(0, 60) + (last.content.length > 60 ? "…" : "");
+            return (
+              <div style={{
+                position: "absolute", bottom: 72, right: 4,
+                background: "#111827", border: `1px solid ${color}44`, borderRadius: "10px 10px 2px 10px",
+                padding: "7px 11px", fontSize: 11, color: "#94a3b8", maxWidth: 200, lineHeight: 1.4,
+                boxShadow: `0 2px 12px ${color}22`, pointerEvents: "none",
+              }}>
+                {preview}
+              </div>
+            );
+          })()}
 
           {/* Painel do chat */}
           {sabiaOpen && (
