@@ -8781,3 +8781,22 @@ Neste dia o sistema caiu e foi restaurado duas vezes. A segunda vez revelou algo
 - S199-7: PWA Age
 - S193b-14: Bug Age 4 (email configurável via UI)
 - Colesterol MVP briefing
+
+---
+
+## S201d — SABIÁ auto-voz + voz apassarinhada (2026-10-07)
+
+**Contexto:** Continuação da S201. Yuri queria que a SABIÁ falasse automaticamente e que o mic parasse sozinho ao enviar.
+
+**O que aconteceu:**
+1. `stt.ts`: adicionado `startOnce` — uma única utterance sem keepAlive, base do voice-to-send
+2. Mic auto-pausa: `dictation.stop()` chamado em `sendSabia` antes de processar
+3. Auto-envio por voz: quando `dictation.listening` vai de `true → false` com `sabiaVoiceModeRef.current`, dispara `dispatchSabia` automaticamente
+4. Auto-TTS: `sabiaVoiceRef.current` marcado na rota de voz → após resposta, `tts.speak` é chamado automaticamente
+5. Voz: `pitch: 1.25`, `rate: 1.05`, prefere vozes femininas PT-BR (Luciana, Francisca) — "apassarinhada e educada"
+6. Servidor dormiu 2x durante a sessão; monitor PID 31320 capturou e reiniciou na primeira, Yuri reportou a segunda
+
+**Síntese filosófica:**
+Yuri queria falar com a SABIÁ como se fala com alguém — sem apertos de botão entre o pensamento e a resposta. A lógica por trás das três features é a mesma: remover fricção entre intenção e ação. O mic para quando você envia porque você não deveria precisar pensar nisso. A mensagem vai quando você para de falar porque o silêncio já é o sinal. A resposta é lida porque você entrou no modo de escuta, não de leitura. A voz apassarinhada completa o personagem: a SABIÁ não é um assistente corporativo, é um pássaro que sabe muito. Pequenas afinações de timbre mudam quem você imagina que está do outro lado.
+
+*Sessão S201d · Cláudio Coach · 2026-10-07*

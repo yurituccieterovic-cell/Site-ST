@@ -1823,3 +1823,29 @@
 | S201-9 | Google Calendar import + tutorial importação | ⏳ próxima sessão |
 | S201-10 | IDEIAS.md: limpar duplicatas I942-I962 | ⏳ |
 
+
+### S201c — #1234 Pipeline + #eage 2916 (2026-10-07)
+
+| # | Item | Status |
+|---|---|----|
+| S201c-1 | Monitor 30s ativo: auto-restart na queda (17:57→17:58, 61s downtime) | ✅ funcionou |
+| S201c-2 | Leucócito 6 falhas 03:47: causa = Render dormindo (sem keepalive externo) | ✅ diagnosticado |
+| S201c-3 | #eage 2916: Yuri pede email PWA/APPs para ele e Mayumi | ⏳ fazer |
+| S201c-4 | #eage: SABIÁ fork SC Árvore (audio+transcrição melhorada) | ⏳ próxima sessão |
+| S201c-5 | #eage: Dodge como monitor do Age | ⏳ próxima sessão |
+| S201c-6 | #eage: papel concreto do Jasmim | ⏳ definir com Yuri |
+| S201c-7 | Sessão Render limpa sessões em memória — Milton precisa relogar após restart | ✅ informado |
+| S201c-8 | Email hashtags para Assembleia + email divertido Yuri+Mayumi | ⏳ fazer agora |
+| S201c-9 | GMAIL_APP_PASSWORD local expirado — usar RODAR_GMAIL_APP_PASSWORD para IMAP | ✅ workaround |
+
+
+### S201d — SABIÁ auto-voz + voz apassarinhada (2026-10-07)
+
+| # | Item | Status |
+|---|---|---|
+| S201d-1 | stt.ts: `startOnce` (single utterance, sem keepAlive) — base para voice-to-send | ✅ commit 5891d3c |
+| S201d-2 | SABIÁ mic pausa ao enviar: `dictation.stop()` em `sendSabia` | ✅ commit 5891d3c |
+| S201d-3 | SABIÁ auto-envio por voz: `sabiaVoiceModeRef` + useEffect watching `dictation.listening` | ✅ commit 5891d3c |
+| S201d-4 | SABIÁ auto-leitura resposta: `sabiaVoiceRef` → `tts.speak` após resposta | ✅ commit 5891d3c |
+| S201d-5 | tts.ts: voz feminina preferida (Luciana/Francisca), pitch 1.25, rate 1.05 | ✅ commit 5891d3c |
+| S201d-6 | Servidor dormindo: reiniciar via monitor ou cron-job.org | ⏳ Yuri configura cron-job.org |
