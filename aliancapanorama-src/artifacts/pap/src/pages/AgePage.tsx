@@ -2488,6 +2488,87 @@ export function AgePage() {
             </div>
           </div>
         )}
+
+        {/* ── Calendário mensal de consultas ────────────────────────────────── */}
+        {(() => {
+          const now2 = new Date(); now2.setHours(0,0,0,0);
+          const todayStr = now2.toISOString().slice(0,10);
+          const mStart = new Date(now2.getFullYear(), now2.getMonth() + calMonthOffset, 1);
+          const mEnd   = new Date(now2.getFullYear(), now2.getMonth() + calMonthOffset + 1, 0);
+          const firstDow = mStart.getDay() === 0 ? 6 : mStart.getDay() - 1;
+          const totalCells = Math.ceil((firstDow + mEnd.getDate()) / 7) * 7;
+          const cells = Array.from({ length: totalCells }, (_, i) => {
+            const d = new Date(mStart); d.setDate(1 - firstDow + i);
+            return d.toISOString().slice(0,10);
+          });
+          const mName = mStart.toLocaleString("pt-BR", { month: "long", year: "numeric" });
+          const mStartStr = mStart.toISOString().slice(0,10);
+          const mEndStr   = mEnd.toISOString().slice(0,10);
+          return (
+            <div style={{ marginTop: 28, paddingTop: 20, borderTop: `1px solid #1e293b` }}>
+              {/* Header mês */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <span style={{ color: "#94a3b8", fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1 }}>{mName}</span>
+                <div style={{ display: "flex", gap: 4 }}>
+                  <button onClick={() => setCalMonthOffset(o => o - 1)}
+                    style={{ background: "none", border: `1px solid #334155`, borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14 }}>‹</button>
+                  <button onClick={() => setCalMonthOffset(0)}
+                    style={{ background: calMonthOffset === 0 ? color+"22" : "none", border: `1px solid ${calMonthOffset === 0 ? color+"66" : "#334155"}`, borderRadius: 6, color: calMonthOffset === 0 ? color : "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>Hoje</button>
+                  <button onClick={() => setCalMonthOffset(o => o + 1)}
+                    style={{ background: "none", border: `1px solid #334155`, borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14 }}>›</button>
+                </div>
+              </div>
+              {/* Grade 7 colunas */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: 3 }}>
+                {["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d => (
+                  <div key={d} style={{ color: "#334155", fontSize: 9, textAlign: "center", fontWeight: 700, paddingBottom: 4 }}>{d}</div>
+                ))}
+                {cells.map((day, idx) => {
+                  const inMonth = day >= mStartStr && day <= mEndStr;
+                  const dayAppts = allGrouped[day] ?? [];
+                  const isToday = day === todayStr;
+                  const isPast  = day < todayStr;
+                  return (
+                    <div key={idx} onClick={() => {
+                      if (!inMonth) return;
+                      const diff = Math.round((new Date(day+"T12:00:00").getTime() - now2.getTime()) / 86400000);
+                      setAgendaFilter("dia");
+                      setAgendaDayOffset(diff);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }} style={{
+                      minHeight: 52, background: isToday ? color+"18" : (dayAppts.length && inMonth) ? color+"0e" : "transparent",
+                      border: `1px solid ${isToday ? color+"66" : inMonth ? "#1e293b" : "transparent"}`,
+                      borderRadius: 6, padding: "3px 2px",
+                      cursor: inMonth ? "pointer" : "default",
+                      opacity: inMonth ? 1 : 0.25,
+                    }}>
+                      <div style={{ textAlign: "center", fontSize: 10, fontWeight: isToday ? 700 : 400,
+                        color: isToday ? color : (dayAppts.length && inMonth) ? "#e2e8f0" : isPast ? "#334155" : "#64748b",
+                        marginBottom: 2 }}>
+                        {new Date(day+"T12:00:00").getDate()}
+                      </div>
+                      {inMonth && dayAppts.slice(0,2).map((a,i) => (
+                        <div key={i} style={{
+                          background: a.status === "cancelado" ? "#334155" : a.status === "realizado" ? "#14532d" : color,
+                          borderRadius: 3, fontSize: 7, color: a.status === "cancelado" ? "#64748b" : "#080c10",
+                          fontWeight: 700, padding: "1px 3px", marginBottom: 1,
+                          overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {new Date(a.dataHora).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})} {(a.patientNome??"").split(" ")[0]}
+                        </div>
+                      ))}
+                      {inMonth && dayAppts.length > 2 && (
+                        <div style={{ color: color, fontSize: 7, textAlign: "center", fontWeight: 700 }}>+{dayAppts.length-2}</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ marginTop: 8, fontSize: 10, color: "#334155", textAlign: "center" }}>
+                Clique em um dia para ver os detalhes
+              </div>
+            </div>
+          );
+        })()}
       </div>
     );
   }
