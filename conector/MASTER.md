@@ -1879,3 +1879,12 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 844ms
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — S198: #1234 + Arquitetura PAP como Cockpit (Cláudio Coach)
+- ARQUITETURA VALIDADA: PAP como cockpit (não merger) — SalesCockpit permanece microsserviço autônomo de assembleia
+- 5 MIGRAÇÕES PRIORIZADAS: /adm/pipeline > /adm/atas > /adm/saude > trigger assembleia > brainstorm #eage integrado
+- RODAR ENGINE: não migra — 22 vozes, schema próprio, isolamento permanente (A18550)
+- PLAYCENTER: ISA ciclos 17-19 com prompt vazando (20-21 OK) — transiente, monitorar
+- PAP 502 → restart → voltou (causa raiz: healthCheckPath ainda vazio)
