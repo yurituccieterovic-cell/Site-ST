@@ -2740,3 +2740,28 @@ Adicionar ao schema Colesterol:
 **Prioridade:** Alta — diferencial de organização pessoal; Colesterol se torna agenda de compras, não só lista única
 
 **Status:** Conceito. MVP = CRUD de listas + selecionar lista ativa na homepage.
+
+
+## Docs PAP — Ideias Novas (2026-10-08)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I963 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I964 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I965 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I966 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I967 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I968 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I969 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+### I970: healthCheckPath no Render — autocura do servidor
+**Prioridade:** 🔴 Alta  **Complexidade:** ○ S  
+Configurar `healthCheckPath=/api/healthz` no serviço Render via API. Quando o processo Node.js travar, o Render detecta e reinicia automaticamente sem precisar de restart manual.  
+**Impl:** `PATCH /api/v1/services/{id}` com `{"serviceDetails":{"healthCheckPath":"/api/healthz"}}`.
+
+### I971: Sistema Crowd — painel unificador do ecossistema
+**Prioridade:** 🟡 Média  **Complexidade:** ◑ M  
+Interface tipo "painel de controle de carro" onde cada módulo é uma IA (AGE, Colesterol, Rapadura, Jasmim, PAP, Fluxo). Loopings automáticos entre módulos. Linguagem SAP para o Pitch (PI/propriedade intelectual). Visibilidade restrita para parceiros externos (Piti).
+
+### I972: Age bug P0 — trava após 3 ações consecutivas
+**Prioridade:** 🔴 Alta  **Complexidade:** ◑ M  
+Sistema Age trava após 3 ações seguidas (reportado por Lisange/Suzana na Assembleia #660). Investigar event loop bloqueante ou pool de conexões esgotado. Reproduzir: fazer 3 ações rápidas no portal profissional e observar onde trava.

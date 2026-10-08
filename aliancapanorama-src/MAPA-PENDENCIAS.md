@@ -1874,3 +1874,13 @@
 | S201e-5 | Assembleia #663-664: aprendizados A557-A558 + ideias I934-I936 | ✅ |
 | S201e-6 | Sistema Crowd (I934): interface unificadora do ecossistema — conceito documentado | ✅ IDEIAS.md |
 | S201e-7 | S201c-3/S201c-8 (email PWA + hashtags): já feito na S201c | ✅ retroativo |
+
+## S197 — 2026-10-08 Assembleias #660-#666 + Render mistério
+
+| ID | Tarefa | Status |
+|----|--------|--------|
+| S197-1 | Configurar healthCheckPath=/api/healthz no Render (I970) — autocura do servidor | ⏳ PENDENTE |
+| S197-2 | Investigar bug Age P0: trava após 3 ações consecutivas (I972) — reproduzir e corrigir | ⏳ PENDENTE |
+| S197-3 | Investigar causa raiz crash silencioso Render Starter — logs no dashboard web Render | ⏳ PENDENTE |
+| S197-4 | Sistema Crowd (I971): wireframe painel de controle do ecossistema para o Pitch | ⏳ PENDENTE |
+| S197-5 | Assembleia #665 (Subversão Ambiental Mundial): definição operacional SMART — Árvore consolidar | ⏳ PENDENTE |

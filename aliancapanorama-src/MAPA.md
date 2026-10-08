@@ -1177,3 +1177,10 @@ Ideias I929-I932 registradas.
 - Playcenter (última assembleia): 2026-10-06T19:50
 - SABIÁ: ✅ respondendo (testado sabia-public)
 - Render: buildPlan=starter em ambos ($7/mês, billing OK)
+
+## S197 — Estado Infraestrutura (2026-10-08)
+- **PAP API (site-st.onrender.com):** Render Starter $7/mês, 0.5c-512MB — VOLTOU ✅ (restart + deploy S197)
+- **healthCheckPath:** `/api/healthz` configurado via Render API (S197) — antes estava vazio
+- **Mistério aberto:** processo Node.js crasha silenciosamente em ciclos. Causa raiz: DESCONHECIDA. Investigar logs no dashboard web Render.
+- **Age:** Lisange 200, Suzana 200 (slug correto: `suzana` com z)
+- **Assembleia RODAR #666:** rodada manualmente por Cláudio (08/10/2026) — estado do ecossistema + bugs Age + Render crash

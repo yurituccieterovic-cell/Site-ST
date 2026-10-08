@@ -8838,3 +8838,39 @@ O pássaro já estava lá — no código, perfeito, mas mudo. Hoje ele ganhou bo
 Segurança não é ausência de risco — é ter clareza sobre onde os dados vivem. Os documentos dos pacientes vivem no Neon, com delete cascade, backup automático, sem arquivo temporário em disco. Seguros. Mas havia um bug de estado que fingia que os dados eram do próximo paciente: a mensagem "Documento enviado!" aparecia para quem não havia enviado nada. Um bug de identidade. Quando os dados não sabem a quem pertencem, confundem a quem os usa.
 
 *Sessão S201f · Cláudio Coach · 2026-10-07*
+
+---
+## S197 — 2026-10-08 | Assembleias #660-#666 + Render Mistério
+
+**Contexto:** Yuri reportou Age fora do ar. Perguntou sobre upgrade de plano Render.
+
+**Diagnóstico:**
+- Plano Render já é Starter ($7/mês, 0.5c-512MB) — não dorme por design
+- O processo Node.js estava travado sem morrer — Render não percebeu porque healthCheckPath está vazio
+- Restart manual via API resolveu temporariamente (voltou a cair minutos depois)
+- Causa raiz: DESCONHECIDA — MISTÉRIO ABERTO. Suspeitas: bug silencioso, deadlock, exception não tratada
+- Conector também caiu junto (mesmo serviço) — impossível registrar durante o crash
+
+**Assembleias processadas:**
+- #660 (05/10): Age 2.0 — 6 bugs P0 + funcionalidades SABIÁ (A18543)
+- #661 (05/10): Age 3.0 + SABIÁ personal trainer + Leucócito evoluído (A18544)
+- #662 (05/10): Enterro do Replit — 414 commits, 6 fases, memória preservada
+- #663 (05/10): Domínio Sociedade Tucci — .com.br suficiente por ora, .com para expansão
+- #664 (05/10): Sistema Crowd — painel de controle do ecossistema (I971, A18545)
+- #665 (07/10): Subversão Ambiental Mundial — necessita definição operacional SMART
+- #666 (08/10): Estado do Ecossistema — assembleia rodada manualmente por Cláudio
+
+**Assembleia #666 (Ágora Deliberativa):**
+- CONSENSO: estabilidade e segurança da infraestrutura são prioritárias — expansão depois
+- Crash Render: causa mais provável = exception não tratada ou esgotamento pool conexões
+- Bug Age maior impacto: trava após 3 ações (inviabiliza uso contínuo)
+- Sistema Crowd para Pitch: linguagem ERP/SAP, não "assembleia de IAs"
+- Email RESULTADO não chegou (possível falha no envio — agoraResultado=null)
+
+**Decisões:**
+- NÃO fazer upgrade de plano Render (não é o problema)
+- Configurar healthCheckPath como próximo passo imediato (I970)
+- Registrar mistério na memória para investigação futura
+
+**Ideias geradas:** I970, I971, I972
+**Aprendizados:** A18543-A18546
