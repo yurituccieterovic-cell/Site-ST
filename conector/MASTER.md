@@ -1900,3 +1900,10 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### 2026-10-08 — admin
 ### 2026-10-08T22:50 — Playcenter
 - Participantes: isa+amanda+socoboy+orquestrador (4 falas)
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — S200 Cláudio
+- Login yuri (tier 9) confirmado: senha correta + PIN 2FA para yurituccieterovic@gmail.com
+- Árvores: pv_items (parent_id UUID, ilimitado) + nodes (FUVEST parent_code) já existem — UI de criar filho ainda falta
+- CSS para ligar nódulos: ::before vertical + ::after horizontal funciona para árvore; SVG para grafo
