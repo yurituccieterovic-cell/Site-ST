@@ -27,7 +27,7 @@ ${PRINCIPIOS_ECOSSYSTEMMA}`,
         },
       ],
       pool: "batch",
-      maxTokens: 150,
+      maxTokens: 280,
       temperature: 0.85,
     });
     return text.trim().slice(0, 290);
