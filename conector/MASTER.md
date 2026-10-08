@@ -1754,3 +1754,10 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - 8 vozes RODAR com proteção automática de crédito
 - healthCheckPath=/api/healthz no Render ativo
 - #1234 documentado; hashtags salvas
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — Cláudio · S197c Leucócito Fix
+- CAUSA RAIZ: Neon hiberna após restart, janela 9min descoberta
+- FIX: keepalive 9min→4min + ping startup 3s (commit 673ff3c)
+- MISTÉRIO RESOLVIDO: Render não dormia — era o Neon dentro do servidor vivo
