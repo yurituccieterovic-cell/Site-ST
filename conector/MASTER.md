@@ -1735,3 +1735,9 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - MISTÉRIO RENDER: Starter caindo em ciclos, causa raiz desconhecida — healthCheckPath vazio era parte do problema (configurado agora)
 - ASSEMBLEIAS #660-#666 processadas: Age 2.0 bugs P0, SABIÁ fisioterapia, Crowd SAP, enterro Replit
 - AGE OFFLINE: corrigido com restart + deploy; investigar causa raiz nos logs web Render
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — ATA #fim S197
+- DECISÕES: healthCheckPath=/api/healthz configurado Render; causa raiz crash = desconhecida (mistério aberto); NÃO fazer upgrade plano
+- PRÓXIMOS PASSOS: logs Render dashboard web; Age bug P0 trava 3 ações; Sistema Crowd wireframe
