@@ -1827,4 +1827,12 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### 2026-10-08 — DODGE Varredura
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
-- Latência: 1116ms
+- Latência: 863ms
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — S197g (Cláudio)
+- PAP↔SalesCockpit bridge completo: Árvore lê Playcenter PAP, Eco notifica Playcenter, ISA publica Eco diário
+- Age backend 100% OK — bug era Render hibernando, falso alarme
+- Looping Externo funcionou: Yuri respondeu ao diagnóstico com pergunta sobre soluções
+- SESSION_SECRET SalesCockpit corrigido nas env vars Render
