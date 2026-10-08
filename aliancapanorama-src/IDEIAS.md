@@ -2801,3 +2801,27 @@ Quando o ciclo ISA falha por erro LLM (Gemini rejeita, OpenAI sem crédito), reg
 ### I981: healthCheckPath Render via API — tarefa automatizável
 **Prioridade:** 🔴 Alta  **Complexidade:** ○ XS  
 Configurar healthCheckPath=/api/healthz em todos os serviços Render via API REST (PATCH /v1/services/:id). Sem isso, crash do processo não é detectado e o Render não reinicia automaticamente.
+
+### I982: Sistema Crowd — painel de controle visual do ecossistema
+**Prioridade:** 🔴 Alta  **Complexidade:** ◑ M  
+Interface tipo dashboard de carro: cada módulo = uma IA (AGE, Colesterol, Rapadura, etc.). Clique abre detalhes, loopings automáticos entre módulos. Linguagem SAP para parceiro Pitch. Base: ecossistema.ts já tem páginas — construir sobre isso.
+
+### I983: Domínio .app para a Sociedade Tucci
+**Prioridade:** 🟡 Média  **Complexidade:** ○ XS  
+sociedadetucci.app — moderno, indica software/plataforma, faz sentido para o ecossistema de IAs. Verificar disponibilidade e custo antes de decidir. Complementar ao .com.br atual (não substituir).
+
+### I984: /adm/pipeline — página visual do #processo
+**Prioridade:** 🔴 Alta  **Complexidade:** ● Média  
+Página no PAP /adm que permite Yuri disparar o pipeline #processo sem precisar do terminal Cláudio. Steps visuais em tempo real: Extrair → Aprendizados → Ideias → MAPA → PSEUDO → Deploy. Validado pelas Assembleias #667-#668 como migração prioritária.
+
+### I985: /adm/atas — histórico de MacroATAs e ATAs navegável
+**Prioridade:** 🔴 Alta  **Complexidade:** ○ XS  
+Hoje as ATAs chegam por email luddlocke e ficam lá. Criar /adm/atas no PAP com lista navegável de ATAs, busca por data, resumo expansível. Conectar ao mesmo Conector que já tem a seção "conversas".
+
+### I986: /adm/saude — dashboard Leucócito em tempo real
+**Prioridade:** 🟡 Média  **Complexidade:** ● Média  
+Dashboard visual de saúde do ecossistema em /adm/saude — histórico de checks do Leucócito, status PAP/SalesCockpit/Age, alertas visuais quando algum sistema falha. Hoje só via email.
+
+### I987: Trigger assembleia no PAP via SalesCockpit API
+**Prioridade:** 🟡 Média  **Complexidade:** ● Média  
+Botão em /adm do PAP que permite criar e fechar uma sessão de assembleia no SalesCockpit sem precisar do terminal. PAP chama SC API com x-internal-token. Resultado retorna para o PAP e para email.

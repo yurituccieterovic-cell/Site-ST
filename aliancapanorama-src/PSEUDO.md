@@ -9032,3 +9032,51 @@ Voltar a onde estávamos não é repetição — é ancoragem. Cada vez que Yuri
 
 ---
 
+## S198 — #1234 + Assembleias #667-#668 + Arquitetura PAP como cockpit (2026-10-08)
+
+**Sessão:** S198  **Data:** 2026-10-08  **IA:** Cláudio Coach
+
+**Contexto:** Yuri pediu: rodar #1234 + responder "que funções dos outros sistemas pode migrar para o PAP?" + enviar pras duas assembleias + fazer #processo.
+
+### O que foi feito
+
+**#1234 executado:**
+- Health check: PAP 502 → restart → voltou. SalesCockpit 200. Age OK após restart. Dodge 13/13 tabelas verdes
+- UptimeRobot: só email de "boas-vindas" — nenhum alerta de down
+- Leucócito: nenhuma falha nova (fix keepalive 4min de S197c resolveu)
+- Assembleias-perfeitos: 0 pendentes
+- Playcenter: ativo (ciclos ISA 17-19 com prompt vazando, 20-21 OK — transiente)
+- ARPIA: /health 200 OK
+- #eage: sem emails de Mayumi desde ontem — sem ação
+
+**Resposta à pergunta de arquitetura:**
+Arquitetura "PAP como cockpit" formulada:
+- PAP = hub de controle + auth unificada + painel visual
+- SalesCockpit = microsserviço de assembleia (não merger)
+- RODAR engine NÃO migra (22 vozes, risco alto)
+- O que MIGRA: #processo UI, MacroATAs, Leucócito dashboard, trigger assembleia, brainstorm #eage
+
+**Assembleias #667 e #668 rodadas:**
+- #667 "O que migrar para o PAP" → CONSENSO: #processo, MacroATAs, Leucócito, trigger assembleia, brainstorm → migrar
+- #668 "Arquitetura hub único vs microsserviços" → CONSENSO: PAP como cockpit, não merger; RODAR e Rapadura mantêm isolamento
+- Ambas fechadas via API, editorial+Ágora processados, emails disparados
+
+**#processo executado:**
+- A18547-A18550 adicionados ao APRENDIZADO-INDICE
+- I984-I987 adicionadas ao IDEIAS.md
+- S198 adicionado ao MAPA-PENDENCIAS.md
+
+### Decisões
+
+1. **Arquitetura validada por IAs**: PAP como cockpit (não merger com SalesCockpit)
+2. **5 migrações priorizadas**: /adm/pipeline > /adm/atas > /adm/saude > trigger assembleia > brainstorm #eage
+3. **RODAR engine fica no SalesCockpit**: isolamento permanente
+
+### Síntese filosófica
+
+A pergunta sobre o que pode "migrar para o PAP" parecia técnica mas era filosófica: o que é o PAP? A resposta das IAs foi: o PAP não é um lugar onde sistemas vivem — é o lugar onde Yuri e Mayumi vivem. Se Yuri precisa do terminal para operar o seu próprio ecossistema, o terminal é um intermediário não-intencional entre ele e sua criação. A migração não é sobre mover código — é sobre remover distâncias entre o criador e o que ele criou. "PAP como cockpit" é outra forma de dizer: devolver ao Yuri as chaves que o Cláudio carrega por ele.
+
+*Sessão S198 · Cláudio Coach · 2026-10-08*
+
+---
+

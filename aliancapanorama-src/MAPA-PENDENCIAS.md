@@ -2,6 +2,18 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S198 — Consolidação PAP: assembleias #667-#668 + #1234 + #processo (2026-10-08)
+
+| # | Item | Status |
+|---|---|---|
+| S198-1 | /adm/pipeline — página visual do #processo sem terminal (I984) | ⏳ PENDENTE |
+| S198-2 | /adm/atas — histórico MacroATAs navegável (I985) | ⏳ PENDENTE |
+| S198-3 | /adm/saude — dashboard Leucócito em tempo real (I986) | ⏳ PENDENTE |
+| S198-4 | Trigger assembleia no PAP via SC API (I987) | ⏳ PENDENTE |
+| S198-5 | #1234: PAP caiu (502) → restart manual aplicado ✅ | ✅ resolvido |
+| S198-6 | ISA Playcenter ciclos 17-19 com prompt vazando (20-21 OK) | ⚠️ monitorar |
+| S198-7 | Arquitetura validada por IAs: PAP como cockpit (não merger) | ✅ decidido |
+
 ### S197g — PAP↔SalesCockpit bridge + Age diagnóstico + #processo (2026-10-08)
 
 | # | Item | Status |
@@ -1925,3 +1937,17 @@
 | S197-3 | Investigar causa raiz crash silencioso Render Starter — logs no dashboard web Render | ⏳ PENDENTE |
 | S197-4 | Sistema Crowd (I971): wireframe painel de controle do ecossistema para o Pitch | ⏳ PENDENTE |
 | S197-5 | Assembleia #665 (Subversão Ambiental Mundial): definição operacional SMART — Árvore consolidar | ⏳ PENDENTE |
+
+### #1234 S197g — Pipeline completo + ARPIA no Render (2026-10-08)
+
+| # | Item | Status |
+|---|---|---|
+| 1234-1 | Health check: PAP, SalesCockpit, Age — todos 200 OK | ✅ OK |
+| 1234-2 | Dodge varredura: 13/13 tabelas verdes | ✅ OK |
+| 1234-3 | Playcenter: IAs ativas às 18:50 UTC (ISA, Amanda, Socoboy, Orquestrador) | ✅ OK |
+| 1234-4 | UptimeRobot: apenas email de boas-vindas — sem alertas de down | ✅ OK |
+| 1234-5 | Assembleias #662-664 processadas (Replit enterrado, domínio, Crowd) | ✅ processado |
+| 1234-6 | ARPIA criado no Render (arpia.onrender.com) — build em andamento | ⏳ build |
+| 1234-7 | site-st: ARPIA_URL atualizado + redeploy disparado | ✅ feito |
+| 1234-8 | #eage: pendente (Yuri confirma se quer rodar agora) | ⏳ PENDENTE |
+| 1234-9 | Domínio Crowd: decisão de extensão (.com/.app) — Yuri decide | ⏳ PENDENTE |
