@@ -1761,3 +1761,10 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - CAUSA RAIZ: Neon hiberna após restart, janela 9min descoberta
 - FIX: keepalive 9min→4min + ping startup 3s (commit 673ff3c)
 - MISTÉRIO RESOLVIDO: Render não dormia — era o Neon dentro do servidor vivo
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — ATA #fim Pipeline #1234
+- Leucócito: Neon nightly suspend diagnosticado → keepalive 9→4min + startup warmup
+- #eage rodada 3: Painel Mayumi + PWA explicado + Colesterol módulo Age
+- Mistério Render/Neon encerrado: servidor vivo, Neon hibernava na janela de 9min
