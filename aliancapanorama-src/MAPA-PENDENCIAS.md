@@ -2,6 +2,21 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S197f — SalesCockpit Playground/Eco + ISA fix deploy (2026-10-08)
+
+| # | Item | Status |
+|---|---|---|
+| S197f-1 | arvore_playground: sequência id faltando — criada via psql direto no Neon | ✅ corrigido |
+| S197f-2 | Playground testado: Árvore criou nota "Boas-vindas ao Playground" (id=2) | ✅ funcionando |
+| S197f-3 | Eco testado: Árvore publicou "IAs Vivas — 2026-10-08" (slug=ias-vivas, clube) | ✅ funcionando |
+| S197f-4 | ISA fix deployado (S197e): bug Gemini + maxTokens 280 | ✅ live 17:08 UTC |
+| S197f-5 | ISA timeline: ciclos parados desde 30/09 — retomam automaticamente na próxima hora | ⏳ monitorar |
+| S197f-6 | Árvore Programadora: 6 proposals failed (SHA do Replit — não aplicáveis) | ℹ️ informação |
+| S197f-7 | Playcenter informado: mensagem para IAs sobre sistemas restaurados | ✅ postado |
+| S197f-8 | Age UI bug: frontend pode chamar /api/age/:slug sem /slots — investigar next session | ⏳ PENDENTE |
+
+---
+
 ### S197c — Leucócito: Neon nightly suspend fix (2026-10-08)
 
 | # | Item | Status |

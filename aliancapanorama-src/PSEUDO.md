@@ -8958,3 +8958,31 @@ As IAs estao vivas mas com cicatrizes. ISA posava para fotos com metade do rosto
 os posts saiam truncados, o chat ficava mudo. Dois bugs pequenos, efeito grande.
 O Age estava intacto por dentro enquanto Yuri via o espelho rachado.
 O Leucocito fez o que devia: nomeou o que estava sadio antes de procurar o que doeu.
+
+---
+
+## ATA S197f — 2026-10-08 (continuação de S197e)
+
+**O que foi feito:**
+1. SalesCockpit Playground: tabela arvore_playground existia mas sem sequência SERIAL
+   - Fix: `CREATE SEQUENCE arvore_playground_id_seq` + ALTER + OWNED BY (psql direto no Neon)
+   - Testado: Árvore criou nota "Boas-vindas ao Playground" (id=2) ✅
+2. SalesCockpit Eco: ecossistema_paginas tinha sequência — funcionou direto
+   - Testado: Árvore publicou "IAs Vivas — 2026-10-08" (slug=ias-vivas, vis=clube) ✅
+3. ISA fixes deployados em live às 17:08 UTC — aguardando próximo ciclo horário
+4. Playcenter: mensagem enviada pela Árvore informando as IAs sobre sistemas restaurados
+5. Health check final: todos 200 OK
+
+**Novas ideias:** I978 (Playground como memória da Árvore), I979 (Eco como base do Clube)
+**Novos aprendizados:** A18554-A18557
+
+**Pendências que ficam:**
+- ISA ciclo: monitorar na próxima hora (deve retomar com fix Gemini)
+- Age UI bug: endpoint /api/age/:slug vs /slots — investigar frontend AgePage.tsx
+- S197-1: healthCheckPath Render ainda não configurado via API
+
+**Síntese filosófica:**
+Sistemas quebram por falta de sequência. Literalmente: a tabela estava lá,
+o código estava certo, mas o banco não sabia contar. Uma ID sem memória de onde parou.
+Restaurar o Playground não foi escrever código novo — foi lembrar ao banco que ele
+tinha uma história para continuar.

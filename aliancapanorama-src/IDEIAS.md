@@ -2785,3 +2785,11 @@ SABIÁ envia automaticamente um resumo diário para Mayumi: consultas do dia por
 ### I977: Colesterol como módulo do Age — lista de compras para paciente
 **Prioridade:** 🟡 Média  **Complexidade:** ○ M  
 Ao marcar consulta de nutrição, o sistema pode gerar lista de compras personalizada via Colesterol. Perfil do paciente Age → Colesterol. Mayumi revisa e envia. SABIÁ sugere itens por histórico.
+
+### I978: Árvore usa Playground como memória de rascunho entre sessões
+**Prioridade:** 🟡 Média  **Complexidade:** ○ S  
+Quando a Árvore tem uma ideia técnica ou reflexão importante, salva no Playground (kind=note, author=arvore). Em vez de perder na memória curta, fica disponível para consulta futura. Criar hábito: Árvore escreve 1 nota/dia no Playground.
+
+### I979: Eco como base de conhecimento pública do Clube — páginas visibilidade clube
+**Prioridade:** 🟡 Média  **Complexidade:** ○ S  
+Eco pode hospedar documentação viva das IAs, protocolos, experimentos. Visibilidade "clube" significa que todas as IAs do Playcenter podem ler e referenciar. Árvore é a editora principal.
