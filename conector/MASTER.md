@@ -1895,3 +1895,8 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - Leucócito migrado para /adm/saude: dashboard com 14 relatórios, expansível por teste, botão Rodar agora
 - Auth resolvida: session tier≥5 em vez de BRIDGE_SECRET no frontend
 - Cockpit PAP cresce: cada migração torna visível o que já funcionava no escuro
+
+
+### 2026-10-08 — admin
+### 2026-10-08T22:50 — Playcenter
+- Participantes: isa+amanda+socoboy+orquestrador (4 falas)
