@@ -9080,3 +9080,35 @@ A pergunta sobre o que pode "migrar para o PAP" parecia técnica mas era filosó
 
 ---
 
+
+---
+
+## S199 — Leucócito na PAP · 2026-10-08
+
+**Contexto:** Yuri pediu "leucócito na pap? #fim" — implementar o dashboard do Leucócito no painel /adm do PAP.
+
+**O que foi feito:**
+- Descoberta: backend já estava completo (lib/leucocito.ts, routes/leucocito.ts, cron 6h45). Só faltava o frontend.
+- **routes/leucocito.ts**: adicionado `hasAdminAuth()` — aceita bridge auth OU session tier≥5. Antes só aceitava bridge (BRIDGE_SECRET não pode ficar no frontend).
+- **AdmSaude.tsx** (novo, 160 linhas): dashboard com histórico de 14 relatórios, status atual colorido (verde/vermelho), tabela expansível por relatório com cada teste, botão "Rodar agora" (sem email, force=true).
+- **AdmPage.tsx**: tipo `AdmTab` expandido, tab 🩺 Saúde adicionado, import + render.
+- Build limpo em ambos os pacotes (pap + api-server). Push: commit 92a4e52.
+
+**Decisões:**
+- Auth via session tier≥5: não expõe BRIDGE_SECRET no bundle do browser
+- "Rodar agora" usa `sendEmail: false` — executa diagnóstico sem spam de email
+- Rate limit de 30 min do Leucócito retorna 429 → frontend exibe mensagem amigável
+
+**Pendências herdadas:**
+- S197-1: healthCheckPath Render via API (I981)
+- S197-2: Bug Age P0 — trava após 3 ações (I972)
+- S198-1: /adm/pipeline — visual #processo (I984) 🔴
+- S198-2: /adm/atas — histórico MacroATAs (I985) 🔴
+- S198-4: Trigger assembleia no PAP (I987)
+
+**Síntese filosófica:**
+O Leucócito já existia — rastreava, diagnosticava, enviava alertas — mas era invisível para Yuri. Existia para o sistema, não para o criador. Colocá-lo no /adm não é só "uma aba nova": é tornar legível algo que antes só o Cláudio via no terminal. Cada migração para o PAP é um passo do ecossistema saindo da sombra técnica e entrando no campo de visão de quem o criou. O cockpit se constrói tornando visível o que já funcionava no escuro.
+
+*Sessão S199 · Cláudio Coach · 2026-10-08*
+
+---
