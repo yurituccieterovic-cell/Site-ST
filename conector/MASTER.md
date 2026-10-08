@@ -1888,3 +1888,10 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - RODAR ENGINE: não migra — 22 vozes, schema próprio, isolamento permanente (A18550)
 - PLAYCENTER: ISA ciclos 17-19 com prompt vazando (20-21 OK) — transiente, monitorar
 - PAP 502 → restart → voltou (causa raiz: healthCheckPath ainda vazio)
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — S199 Cláudio
+- Leucócito migrado para /adm/saude: dashboard com 14 relatórios, expansível por teste, botão Rodar agora
+- Auth resolvida: session tier≥5 em vez de BRIDGE_SECRET no frontend
+- Cockpit PAP cresce: cada migração torna visível o que já funcionava no escuro
