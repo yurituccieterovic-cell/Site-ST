@@ -6,11 +6,12 @@ import { AdmTipos } from "./AdmTipos";
 import { AdmCatalogos } from "./AdmCatalogos";
 import { AdmUsuarios } from "./AdmUsuarios";
 import { AdmNebula } from "./AdmNebula";
+import { AdmSaude } from "./AdmSaude";
 import { IsaChat } from "./IsaChat";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
-type AdmTab = "eventos" | "relacoes" | "tipos" | "catalogos" | "usuarios" | "nebula";
+type AdmTab = "eventos" | "relacoes" | "tipos" | "catalogos" | "usuarios" | "nebula" | "saude";
 
 const TABS: { id: AdmTab; label: string; emoji: string }[] = [
   { id: "eventos", label: "Eventos", emoji: "⚡" },
@@ -19,6 +20,7 @@ const TABS: { id: AdmTab; label: string; emoji: string }[] = [
   { id: "catalogos", label: "Catálogos", emoji: "📚" },
   { id: "usuarios", label: "Usuários", emoji: "👥" },
   { id: "nebula", label: "Nebula's House", emoji: "🌌" },
+  { id: "saude", label: "Saúde", emoji: "🩺" },
 ];
 
 interface AdminUser { id: number; login: string; tier: number; displayName?: string | null; }
@@ -226,6 +228,7 @@ export function AdmPage() {
           {activeTab === "catalogos" && <AdmCatalogos />}
           {activeTab === "usuarios" && <AdmUsuarios />}
           {activeTab === "nebula" && <AdmNebula />}
+          {activeTab === "saude" && <AdmSaude />}
         </div>
         {isaOpen && (
           <div className="w-96 border-l border-[#E5E7EB] bg-white flex-shrink-0">

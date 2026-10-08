@@ -19,9 +19,14 @@ function bridgeAuth(req: { headers: Record<string, string | string[] | undefined
   return req.headers["x-bridge-secret"] === secret || req.headers["authorization"] === `Bearer ${secret}`;
 }
 
-// POST /api/leucocito/run — dispara diagnóstico completo
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function hasAdminAuth(req: any): boolean {
+  return bridgeAuth(req) || ((req.session?.userTier ?? 0) >= 5);
+}
+
+// POST /api/leucocito/run — dispara diagnóstico completo (bridge ou admin tier 5)
 router.post("/leucocito/run", async (req, res) => {
-  if (!bridgeAuth(req as unknown as { headers: Record<string, string | string[] | undefined> })) {
+  if (!hasAdminAuth(req)) {
     res.status(403).json({ error: "Acesso negado" });
     return;
   }
@@ -39,7 +44,7 @@ router.post("/leucocito/run", async (req, res) => {
 
 // GET /api/leucocito/last — retorna último relatório (em memória, inclui results detalhados)
 router.get("/leucocito/last", (req, res) => {
-  if (!bridgeAuth(req as unknown as { headers: Record<string, string | string[] | undefined> })) {
+  if (!hasAdminAuth(req)) {
     res.status(403).json({ error: "Acesso negado" });
     return;
   }
@@ -54,7 +59,7 @@ router.get("/leucocito/last", (req, res) => {
 
 // GET /api/leucocito/history — últimos N relatórios do DB (default 14, max 90)
 router.get("/leucocito/history", async (req, res) => {
-  if (!bridgeAuth(req as unknown as { headers: Record<string, string | string[] | undefined> })) {
+  if (!hasAdminAuth(req)) {
     res.status(403).json({ error: "Acesso negado" });
     return;
   }
