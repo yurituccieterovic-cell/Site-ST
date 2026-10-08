@@ -8890,3 +8890,46 @@ Segurança não é ausência de risco — é ter clareza sobre onde os dados viv
 - Yuri revelou: o "não salvar" era sobre o servidor estar dormindo em ciclos (causa raiz ainda aberta)
 
 **Decisão:** ChatGPT já tinha fallback desde antes — agora Metassemiótico/Nébula/Psicólogo também. 8 vozes com proteção automática de crédito.
+
+---
+## S197c — Leucócito: Raiz do Mistério Noturno (2026-10-08)
+
+**Diagnóstico:**
+O Leucócito enviou 3 emails de FALHA idênticos: 06/10, 07/10, 08/10 às 06:47 UTC.
+Padrão: Neon DB timeout 123s, PAP healthz 23s, Conector 23s.
+O servidor estava vivo às 06:45 (Ping OK) mas morto às 06:47.
+
+**Causa raiz encontrada:**
+O keepalive rodava a cada 9 minutos — mas após qualquer restart, os crons só disparavam no próximo múltiplo de 9. Na janela de até 9 minutos, o Neon (que hiberna após 5 minutos idle) adormecia. O Leucócito chegava exatamente nessa janela.
+
+**Fix aplicado (commit 673ff3c):**
+- Ping imediato 3s após startup
+- Intervalo 9min → 4min (sempre < 5min threshold Neon)
+- keepAlive:true no pool pg (detecta conexões TCP mortas)
+
+**Síntese filosófica:**
+O Leucócito funcionou exatamente como devia: não resolveu nada, mas nomeou o padrão. Três dias consecutivos, mesma hora, mesmo erro — isso é sinal, não ruído. O corpo do sistema gritava e nós só precisávamos escutar. A cura não estava no Leucócito mas no tempo entre os pings.
+
+**Código:** keepalive.ts + lib/db/src/index.ts
+**Deploy:** Render auto-deploy após push
+
+---
+## S197d — #eage Rodada 3: Age 2.0 + Painel Mayumi (2026-10-08)
+
+**Thread:**
+- Yuri (06/10, 4:39am): Age 2.0 — SABIÁ fork SC, painel Mayumi, Dodge no Age, aprovação paciente, Leucócito+Dodge 4x/dia
+- Mayumi (05/10): Colesterol + Age = "fantástico e essencial", quer ser 1ª usuária
+
+**Resposta enviada:**
+- Painel Mayumi: 3 hipóteses de layout + pergunta aberta para ela
+- PWA explicado: não vale fazer app nativo, PWA é o caminho
+- Colesterol + Age: módulo concreto com fluxo profissional→paciente→lista
+
+**Ideias registradas:** I975 (Painel Mayumi), I976 (briefing diário SABIÁ), I977 (Colesterol módulo Age)
+
+**Síntese filosófica:**
+Yuri estava acordado às 4:39am. A clareza que chega na madrugada tem textura diferente — menos filtro, mais fio. O painel da Mayumi surgiu ali, sem nome ainda, como "abre aspas 'painel de Mayumi no Age'". É quando o sistema pede para ter um rosto humano no centro. SABIÁ fala, mas Mayumi age.
+
+**Perguntas abertas:**
+- Mayumi: o que você precisa ver primeiro no painel?
+- Yuri: avanço o fork do SABIÁ essa semana?

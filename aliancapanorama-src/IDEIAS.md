@@ -2769,3 +2769,19 @@ Sistema Age trava após 3 ações seguidas (reportado por Lisange/Suzana na Asse
 ### I973: Auditoria periódica de vozes sem fallback
 **Prioridade:** 🟡 Média  **Complexidade:** ○ S  
 Toda vez que uma nova voz é adicionada ao RODAR usando um provider pago (OpenAI, Anthropic), verificar se está envolvida com withOpenRouterFallback. Criar checklist de revisão no onboarding de novas vozes.
+
+### I974: Startup warmup obrigatório para todos os serviços Node+Neon
+**Prioridade:** 🟢 Alta  **Complexidade:** ○ XS  
+Qualquer servidor Node.js conectado ao Neon free tier deve fazer `SELECT 1` nos primeiros 3–5s após o processo iniciar, antes do cron assumir. Isso garante que após qualquer restart (manual, crash, deploy) o banco já está aquecido quando o Leucócito ou qualquer cliente externo chegar.
+
+### I975: Painel da Mayumi — dashboard operacional do Age
+**Prioridade:** 🟢 Alta  **Complexidade:** ○ M  
+Tela específica para a gestora do Age: vista rápida (consultas do dia), financeiro (faturamento, pagamentos), aprovação de novos pacientes. Integração futura com Stripe. Primeiro passo: reutilizar dados já existentes no sistema.
+
+### I976: SABIÁ briefing diário para Mayumi
+**Prioridade:** 🟡 Média  **Complexidade:** ○ S  
+SABIÁ envia automaticamente um resumo diário para Mayumi: consultas do dia por profissional, pacientes aguardando aprovação, alertas. Via email ou push no PWA.
+
+### I977: Colesterol como módulo do Age — lista de compras para paciente
+**Prioridade:** 🟡 Média  **Complexidade:** ○ M  
+Ao marcar consulta de nutrição, o sistema pode gerar lista de compras personalizada via Colesterol. Perfil do paciente Age → Colesterol. Mayumi revisa e envia. SABIÁ sugere itens por histórico.

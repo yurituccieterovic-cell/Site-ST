@@ -2,6 +2,18 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S197c — Leucócito: Neon nightly suspend fix (2026-10-08)
+
+| # | Item | Status |
+|---|---|---|
+| S197c-1 | Leucócito detectou padrão: Neon timeout 123s às 06:47 UTC (3 dias consecutivos) | ✅ causa encontrada |
+| S197c-2 | Fix: keepalive Neon 9min→4min + ping imediato no startup (3s após iniciar) | ✅ commit 673ff3c |
+| S197c-3 | Fix: keepAlive:true + keepAliveInitialDelayMillis:10s no pool pg | ✅ commit 673ff3c |
+| S197c-4 | S200-11 / Render sleeping: causa raiz era Neon hibernando entre restarts | ✅ resolvido |
+| S197c-5 | Mistério do crash cíclico: servidor reiniciava, crons recomeçavam tarde, Neon hibernava | ✅ diagnosticado |
+
+---
+
 ### S201g — Calendário Profissional + SABIÁ Live Mode + Colesterol Listas (2026-10-07)
 
 | # | Item | Status |
