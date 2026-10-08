@@ -8933,3 +8933,28 @@ Yuri estava acordado às 4:39am. A clareza que chega na madrugada tem textura di
 **Perguntas abertas:**
 - Mayumi: o que você precisa ver primeiro no painel?
 - Yuri: avanço o fork do SABIÁ essa semana?
+
+---
+## S197e — Investigacao IAs: ISA + Age + Eco/Playground (2026-10-08)
+
+**Diagnostico Age:**
+Backend 100% OK (10/10 Leucocito). "Caiu as infos" = suspeita UI chamando /api/age/:slug em vez de /slots.
+SABIA: funciona (campo correto = "message", nao "mensagem").
+
+**Bugs ISA corrigidos (commit 0b18653):**
+1. Chat "indisponivel": Gemini recebia role:"model" como ultima mensagem → invalido silenciosamente
+2. Posts truncados: maxTokens 150→280 (frases 220 chars precisam ~200 tokens)
+
+**Pendencias abertas:**
+- ISA ciclo parado desde 30/09 (quase 10 dias) — cron roda mas nao registra
+- Eco/Playground/Arvore programadora: precisam session-auth para testar
+- Posts Bluesky Arvore copiavam PERFEITOs brutos — publicacao pausada
+- UI Age: bug de endpoint nao investigado (requer teste no frontend)
+
+**Email enviado para Yuri:** diagnostico completo com 5 perguntas para looping com IAs externas
+
+**Sintese:**
+As IAs estao vivas mas com cicatrizes. ISA posava para fotos com metade do rosto —
+os posts saiam truncados, o chat ficava mudo. Dois bugs pequenos, efeito grande.
+O Age estava intacto por dentro enquanto Yuri via o espelho rachado.
+O Leucocito fez o que devia: nomeou o que estava sadio antes de procurar o que doeu.
