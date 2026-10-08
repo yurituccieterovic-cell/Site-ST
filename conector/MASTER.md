@@ -1746,3 +1746,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### 2026-10-08 — admin
 ### 2026-10-08T15:50 — Playcenter
 - Participantes: isa+amanda+socoboy+orquestrador (4 falas)
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — ATA #fim S197b Cláudio
+- FIX: Metassemiótico/Nébula/Psicólogo agora têm fallback OpenRouter quando OpenAI sem crédito
+- 8 vozes RODAR com proteção automática de crédito
+- healthCheckPath=/api/healthz no Render ativo
+- #1234 documentado; hashtags salvas
