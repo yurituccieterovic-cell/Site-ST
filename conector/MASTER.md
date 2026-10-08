@@ -1775,3 +1775,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 1156ms
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — Yuri em férias
+- Bluesky @stuccipulseheadway: mensagem de férias postada
+- Publicação automática pausada (BLUESKY_CURADORIA_PAUSED=true no SalesCockpit)
+- Sistema continua vivo: Leucócito, Playcenter, Dodge, Age, keepalives
+- Retomar com #1234 quando Yuri voltar
