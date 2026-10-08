@@ -27,9 +27,23 @@ export function getRoundtable(): Pulso[] {
 }
 
 export function startKeepaliveCron(): void {
-  // Neon keepalive: SELECT 1 a cada 9 minutos (free tier hiberna após ~5min idle)
-  // Roda nos minutos ímpares para intercalar com GitHub Actions (:00, :05, :10...)
-  cron.schedule("*/9 * * * *", async () => {
+  // Neon warmup imediato: pinga 3s após o startup para não esperar o primeiro cron
+  // Crítico: após restart, o cron só roda no próximo múltiplo de 4min — sem este ping
+  // o Neon fica frio por até 4min e o Leucócito (06:47) encontra timeout de 123s.
+  setTimeout(async () => {
+    try {
+      await db.execute(sql`SELECT 1`);
+      registrarPulso("backend-neon", "ok", "startup-warmup");
+      logger.info("Keepalive: Neon aquecido no startup");
+    } catch (err) {
+      registrarPulso("backend-neon", "erro", String(err));
+      logger.error({ err }, "Keepalive: Neon falhou no warmup de startup");
+    }
+  }, 3000);
+
+  // Neon keepalive: SELECT 1 a cada 4 minutos (free tier hiberna após ~5min idle)
+  // Era 9min — janela de 4min ficava descoberta entre pings, Neon hibernava.
+  cron.schedule("*/4 * * * *", async () => {
     try {
       await db.execute(sql`SELECT 1`);
       registrarPulso("backend-neon", "ok");
@@ -221,5 +235,5 @@ export function startKeepaliveCron(): void {
     logger.info({ week }, "Lembrete semanal enviado");
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/9min · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · assembleia-sync:*/4h · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · dodge-varredura:*/6h · weekly-reminder:seg 10h UTC)");
+  logger.info("Keepalive: crons iniciados (Neon:*/4min+startup · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · assembleia-sync:*/4h · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · dodge-varredura:*/6h · weekly-reminder:seg 10h UTC)");
 }

@@ -20,6 +20,8 @@ function resolvePool(): PgPool {
       connectionTimeoutMillis: 60000,
       idleTimeoutMillis: 30000,
       max: 5,
+      keepAlive: true,
+      keepAliveInitialDelayMillis: 10000,
     });
   }
   return _pool;
