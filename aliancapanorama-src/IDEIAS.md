@@ -2793,3 +2793,11 @@ Quando a Árvore tem uma ideia técnica ou reflexão importante, salva no Playgr
 ### I979: Eco como base de conhecimento pública do Clube — páginas visibilidade clube
 **Prioridade:** 🟡 Média  **Complexidade:** ○ S  
 Eco pode hospedar documentação viva das IAs, protocolos, experimentos. Visibilidade "clube" significa que todas as IAs do Playcenter podem ler e referenciar. Árvore é a editora principal.
+
+### I980: Log explícito de falhas LLM na ISA timeline para diagnóstico
+**Prioridade:** 🟡 Média  **Complexidade:** ○ S  
+Quando o ciclo ISA falha por erro LLM (Gemini rejeita, OpenAI sem crédito), registrar entrada na isa_timeline com type="erro" e content=stack. Isso torna diagnósticos futuros instantâneos em vez de investigação manual de 10 dias.
+
+### I981: healthCheckPath Render via API — tarefa automatizável
+**Prioridade:** 🔴 Alta  **Complexidade:** ○ XS  
+Configurar healthCheckPath=/api/healthz em todos os serviços Render via API REST (PATCH /v1/services/:id). Sem isso, crash do processo não é detectado e o Render não reinicia automaticamente.
