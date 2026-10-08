@@ -2765,3 +2765,7 @@ Interface tipo "painel de controle de carro" onde cada módulo é uma IA (AGE, C
 ### I972: Age bug P0 — trava após 3 ações consecutivas
 **Prioridade:** 🔴 Alta  **Complexidade:** ◑ M  
 Sistema Age trava após 3 ações seguidas (reportado por Lisange/Suzana na Assembleia #660). Investigar event loop bloqueante ou pool de conexões esgotado. Reproduzir: fazer 3 ações rápidas no portal profissional e observar onde trava.
+
+### I973: Auditoria periódica de vozes sem fallback
+**Prioridade:** 🟡 Média  **Complexidade:** ○ S  
+Toda vez que uma nova voz é adicionada ao RODAR usando um provider pago (OpenAI, Anthropic), verificar se está envolvida com withOpenRouterFallback. Criar checklist de revisão no onboarding de novas vozes.

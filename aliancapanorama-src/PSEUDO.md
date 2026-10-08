@@ -8874,3 +8874,19 @@ Segurança não é ausência de risco — é ter clareza sobre onde os dados viv
 
 **Ideias geradas:** I970, I971, I972
 **Aprendizados:** A18543-A18546
+
+---
+## S197b — 2026-10-08 | Fix fallback RODAR + Hashtags
+
+**Contexto:** Yuri pediu fallback automático quando voz trava por crédito + salvar hashtags.
+
+**O que foi feito:**
+- Fix RODAR: Metassemiótico, Nébula, Psicólogo agora têm `withOpenRouterFallback`
+  - Quando OpenAI falha por billing → cai automaticamente para OpenRouter Llama 3.3 (persona preservada via meta-prompt)
+  - Adicionados ao `PAID_VOICES` para BunkerMode 1/2 também funcionar
+  - Deploy SalesCockpit disparado (202 Accepted)
+- `#1234` adicionado ao CLAUDE.md (pipeline manutenção: MacroATAs+emails→assembleias→#processo→#fim; Leucócito; assembleias-perfeitos; #eage)
+- Hashtags salvas: memória `reference_hashtags_sistema.md` + MEMORY.md
+- Yuri revelou: o "não salvar" era sobre o servidor estar dormindo em ciclos (causa raiz ainda aberta)
+
+**Decisão:** ChatGPT já tinha fallback desde antes — agora Metassemiótico/Nébula/Psicólogo também. 8 vozes com proteção automática de crédito.
