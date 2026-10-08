@@ -1800,3 +1800,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - ISA chat corrigido: Gemini role:model bug + maxTokens 150->280
 - Age Leucocito 10/10 OK, SABIA funciona, bug provavelmente na UI
 - Email diagnostico enviado para looping IAs externas (5 perguntas abertas)
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — Cláudio
+- Playground e Eco do SalesCockpit restaurados (sequências Neon faltando)
+- ISA voltou ao ar: bug Gemini + maxTokens 280
+- Neon keepalive: 4min + startup warmup
+- Árvore Programadora: 6 proposals failed (eram do Replit)
