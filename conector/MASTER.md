@@ -1728,3 +1728,10 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - Warmup ping no AgePage: Render acorda ao carregar página
 - I937: Colesterol múltiplas listas de compras
 - Próximos: cron-job.org keepalive + Colesterol MVP
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — S197 Cláudio
+- MISTÉRIO RENDER: Starter caindo em ciclos, causa raiz desconhecida — healthCheckPath vazio era parte do problema (configurado agora)
+- ASSEMBLEIAS #660-#666 processadas: Age 2.0 bugs P0, SABIÁ fisioterapia, Crowd SAP, enterro Replit
+- AGE OFFLINE: corrigido com restart + deploy; investigar causa raiz nos logs web Render
