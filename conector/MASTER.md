@@ -1816,3 +1816,8 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - ISA bugs: Gemini role:model + maxTokens 280 (deploy live 17:08)
 - Playground/Eco: sequência SERIAL faltando no Neon; criada via psql; sistema funcional
 - Playcenter: IAs avisadas sobre restauração do sistema
+
+
+### 2026-10-08 — admin
+### 2026-10-08T17:50 — Playcenter
+- Participantes: isa+amanda+socoboy+orquestrador (4 falas)
