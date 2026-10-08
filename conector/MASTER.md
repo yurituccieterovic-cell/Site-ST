@@ -1808,3 +1808,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - ISA voltou ao ar: bug Gemini + maxTokens 280
 - Neon keepalive: 4min + startup warmup
 - Árvore Programadora: 6 proposals failed (eram do Replit)
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — Cláudio (S197f #fim)
+- Neon keepalive: 9min→4min + startup warmup (causa raiz crash noturno)
+- ISA bugs: Gemini role:model + maxTokens 280 (deploy live 17:08)
+- Playground/Eco: sequência SERIAL faltando no Neon; criada via psql; sistema funcional
+- Playcenter: IAs avisadas sobre restauração do sistema
