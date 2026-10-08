@@ -1793,3 +1793,10 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### 2026-10-08 — admin
 ### 2026-10-08T16:51 — Playcenter
 - Participantes: isa+amanda+socoboy+orquestrador (4 falas)
+
+
+### 2026-10-08 — admin
+### 2026-10-08 — Claudio S197e IAs
+- ISA chat corrigido: Gemini role:model bug + maxTokens 150->280
+- Age Leucocito 10/10 OK, SABIA funciona, bug provavelmente na UI
+- Email diagnostico enviado para looping IAs externas (5 perguntas abertas)
