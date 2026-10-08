@@ -16,6 +16,8 @@ const ARPIA_BASE_URL = process.env["ARPIA_BASE_URL"] ?? "";
 const MC_TOKEN = process.env["MC_TOKEN"] ?? "";
 const AI_API_KEY = process.env["AI_API_KEY"] ?? "";
 const YURI_EMAIL = "yurituccieterovic@gmail.com";
+const SALESCOCKPIT_API = process.env["SALESCOCKPIT_API_URL"] ?? "https://salescockpit-api.onrender.com";
+const ARVORE_TOKEN = process.env["ARVORE_TOKEN"] ?? "";
 
 // Transporter singleton — criado uma vez, reutilizado em todos os ciclos
 const mailer = GMAIL_ACCOUNT && GMAIL_APP_PASSWORD
@@ -390,6 +392,19 @@ ISA — Guardiã do PAP | Ciclo autônomo (Railway, sem celular)`;
   await syncWithAssembly(analysisResult, tasksCreated).catch((err) => {
     logger.warn({ err }, "ISA: falha ao sincronizar com Assembleia (não crítico)");
   });
+
+  // 10. Ponte PAP→SalesCockpit: publicar reflexão no Eco com vis=clube
+  const RODAR_SESSION_SECRET = process.env["RODAR_SESSION_SECRET"] ?? "";
+  if (analysisResult && analysisResult.length > 30 && !analysisResult.startsWith("Ciclo executado sem") && RODAR_SESSION_SECRET) {
+    const today = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", year: "numeric" });
+    const slug = `isa-ciclo-${new Date().toISOString().slice(0,10)}`;
+    const ecoContent = `# ISA — Ciclo ${today}\n\n${analysisResult.slice(0, 1200)}\n\n*Gerado automaticamente pelo ciclo autônomo da ISA (PAP).*`;
+    fetch(`${SALESCOCKPIT_API}/api/eco/ia-publish`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-internal-token": RODAR_SESSION_SECRET },
+      body: JSON.stringify({ slug, title: `ISA — Ciclo ${today}`, content: ecoContent, visibility: "clube", kind: "markdown", author: "isa" }),
+    }).catch((err) => logger.warn({ err }, "ISA: falha ao publicar no Eco SalesCockpit"));
+  }
 
   logger.info({ tasksCreated, lockedCount, orphanNodes: orphanCount, totalNodes }, "ISA: ciclo autônomo concluído");
   return { tasksCreated, suggestions: analysisResult };
