@@ -2049,3 +2049,10 @@ Se precisar de ajuda para organiza"
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 817ms
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — Cláudio S207
+- ISCA implementado: 3 camadas (Técnica/Curadoria/Redação) para pipeline diário do Dodge
+- healthCheckPath=/api/healthz configurado no Render → Render agora reinicia em crash silencioso
+- ISCA como padrão arquitetural reutilizável no ecossistema
