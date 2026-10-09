@@ -285,6 +285,10 @@ export function AgePage() {
   const [perguntaEnviada, setPerguntaEnviada] = useState(false);
   const [forkId, setForkId] = useState<number | null>(null);
   const [forkConteudo, setForkConteudo] = useState("");
+  const [notaAcao, setNotaAcao] = useState<{ id: number | null; tipo: "fork" | "tarefa" | "paciente" | null }>({ id: null, tipo: null });
+  const [notaTarefaForm, setNotaTarefaForm] = useState({ titulo: "", descricao: "" });
+  const [notaPacienteForm, setNotaPacienteForm] = useState({ nome: "", email: "" });
+  const [notaAcaoSaving, setNotaAcaoSaving] = useState(false);
 
   // Área do paciente
   const [patientNome, setPatientNome] = useState("");
@@ -4091,6 +4095,50 @@ export function AgePage() {
       setNotas(prev => prev.filter(n => n.id !== id));
     }
 
+    function abrirAcao(notaId: number, tipo: "fork" | "tarefa" | "paciente", nota: Nota) {
+      if (notaAcao.id === notaId && notaAcao.tipo === tipo) {
+        setNotaAcao({ id: null, tipo: null });
+        return;
+      }
+      setNotaAcao({ id: notaId, tipo });
+      if (tipo === "fork") { setForkId(notaId); setForkConteudo(""); }
+      if (tipo === "tarefa") {
+        const words = nota.conteudo.trim().split(/\s+/);
+        setNotaTarefaForm({ titulo: words.slice(0, 8).join(" "), descricao: nota.conteudo.slice(0, 500) });
+      }
+      if (tipo === "paciente") setNotaPacienteForm({ nome: "", email: "" });
+    }
+
+    async function criarTarefaDaNota() {
+      if (!notaTarefaForm.titulo.trim()) return;
+      setNotaAcaoSaving(true);
+      try {
+        const r = await fetch(`${API}/api/age/${slug}/tasks`, {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ titulo: notaTarefaForm.titulo, descricao: notaTarefaForm.descricao || undefined, tipo: "lembrete", prioridade: 3 }),
+        });
+        if (r.ok) { setNotaAcao({ id: null, tipo: null }); addToast("Tarefa criada!", "ok"); }
+        else addToast("Erro ao criar tarefa.", "err");
+      } catch { addToast("Sem conexão.", "err"); }
+      setNotaAcaoSaving(false);
+    }
+
+    async function criarPacienteDaNota() {
+      if (!notaPacienteForm.nome.trim() || !notaPacienteForm.email.trim()) return;
+      setNotaAcaoSaving(true);
+      try {
+        const r = await fetch(`${API}/api/age/${slug}/patients`, {
+          method: "POST", credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome: notaPacienteForm.nome, email: notaPacienteForm.email }),
+        });
+        if (r.ok) { setNotaAcao({ id: null, tipo: null }); addToast("Paciente adicionado!", "ok"); }
+        else { const d = await r.json() as { error?: string }; addToast(d.error ?? "Erro ao adicionar paciente.", "err"); }
+      } catch { addToast("Sem conexão.", "err"); }
+      setNotaAcaoSaving(false);
+    }
+
     return (
       <div style={{ padding: "1rem" }}>
         {/* Formulário de nova nota */}
@@ -4182,26 +4230,83 @@ export function AgePage() {
               )}
 
               {/* Ações */}
-              <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                <button onClick={() => { setForkId(nota.id); setForkConteudo(""); }}
-                  style={{ background: "none", border: `1px solid #1e293b`, borderRadius: 6, color: "#64748b", fontSize: 11, padding: "3px 10px", cursor: "pointer" }}>
-                  🔀 Fork
+              <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
+                {([
+                  { tipo: "fork"     as const, label: "🔀 Ramificar",     title: "Ramificar esta nota" },
+                  { tipo: "tarefa"   as const, label: "📋 Criar tarefa",  title: "Criar tarefa a partir desta nota" },
+                  { tipo: "paciente" as const, label: "👤 Adicionar paciente", title: "Cadastrar paciente a partir desta nota" },
+                ] as const).map(({ tipo, label, title }) => {
+                  const ativo = notaAcao.id === nota.id && notaAcao.tipo === tipo;
+                  return (
+                    <button key={tipo} onClick={() => abrirAcao(nota.id, tipo, nota)} title={title}
+                      style={{ background: ativo ? tc + "22" : "none", border: `1px solid ${ativo ? tc + "66" : "#1e293b"}`, borderRadius: 6, color: ativo ? tc : "#64748b", fontSize: 11, padding: "3px 10px", cursor: "pointer", transition: "all 0.15s" }}>
+                      {label}
+                    </button>
+                  );
+                })}
+                <button onClick={() => { setView("agenda"); }} title="Ir para agenda para agendar consulta"
+                  style={{ background: "none", border: "1px solid #1e293b", borderRadius: 6, color: "#64748b", fontSize: 11, padding: "3px 10px", cursor: "pointer" }}>
+                  📅 Agendar
                 </button>
               </div>
 
-              {/* Modal de fork */}
-              {forkId === nota.id && (
+              {/* Painel de ação ativo */}
+              {notaAcao.id === nota.id && notaAcao.tipo === "fork" && (
                 <div style={{ marginTop: 10, background: "#0a0f16", border: `1px solid ${tc}33`, borderRadius: 8, padding: "10px 12px" }}>
-                  <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 6 }}>🔀 Fork desta nota</div>
+                  <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 6 }}>🔀 Ramificação desta nota</div>
                   <textarea value={forkConteudo} onChange={e => setForkConteudo(e.target.value)}
-                    placeholder="Ramificação desta nota..." rows={2}
+                    placeholder="Desdobramento, continuação ou complemento..." rows={2}
                     style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 6, color: "#e2e8f0", padding: "6px 10px", fontSize: 13, resize: "vertical", boxSizing: "border-box" }} />
                   <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
                     <button onClick={() => enviarFork(nota.id)} disabled={notaEnviando || !forkConteudo.trim()}
                       style={{ padding: "4px 14px", background: tc, border: "none", borderRadius: 6, color: "#0a0f16", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>
-                      Criar fork
+                      Criar ramificação
                     </button>
-                    <button onClick={() => setForkId(null)}
+                    <button onClick={() => setNotaAcao({ id: null, tipo: null })}
+                      style={{ background: "none", border: "1px solid #1e293b", borderRadius: 6, color: "#64748b", fontSize: 12, padding: "4px 10px", cursor: "pointer" }}>
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {notaAcao.id === nota.id && notaAcao.tipo === "tarefa" && (
+                <div style={{ marginTop: 10, background: "#0a0f16", border: "1px solid #f97316aa", borderRadius: 8, padding: "10px 12px" }}>
+                  <div style={{ fontSize: 12, color: "#fb923c", fontWeight: 700, marginBottom: 8 }}>📋 Nova tarefa a partir desta nota</div>
+                  <input value={notaTarefaForm.titulo} onChange={e => setNotaTarefaForm(f => ({ ...f, titulo: e.target.value }))}
+                    placeholder="Título da tarefa"
+                    style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 6, color: "#e2e8f0", padding: "6px 10px", fontSize: 13, marginBottom: 6, boxSizing: "border-box" }} />
+                  <textarea value={notaTarefaForm.descricao} onChange={e => setNotaTarefaForm(f => ({ ...f, descricao: e.target.value }))}
+                    placeholder="Descrição (opcional)" rows={2}
+                    style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 6, color: "#e2e8f0", padding: "6px 10px", fontSize: 12, resize: "vertical", boxSizing: "border-box" }} />
+                  <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                    <button onClick={criarTarefaDaNota} disabled={notaAcaoSaving || !notaTarefaForm.titulo.trim()}
+                      style={{ padding: "4px 14px", background: "#f97316", border: "none", borderRadius: 6, color: "#fff", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>
+                      {notaAcaoSaving ? "Criando…" : "Criar tarefa"}
+                    </button>
+                    <button onClick={() => setNotaAcao({ id: null, tipo: null })}
+                      style={{ background: "none", border: "1px solid #1e293b", borderRadius: 6, color: "#64748b", fontSize: 12, padding: "4px 10px", cursor: "pointer" }}>
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {notaAcao.id === nota.id && notaAcao.tipo === "paciente" && (
+                <div style={{ marginTop: 10, background: "#0a0f16", border: "1px solid #38bdf8aa", borderRadius: 8, padding: "10px 12px" }}>
+                  <div style={{ fontSize: 12, color: "#38bdf8", fontWeight: 700, marginBottom: 8 }}>👤 Adicionar paciente</div>
+                  <input value={notaPacienteForm.nome} onChange={e => setNotaPacienteForm(f => ({ ...f, nome: e.target.value }))}
+                    placeholder="Nome do paciente"
+                    style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 6, color: "#e2e8f0", padding: "6px 10px", fontSize: 13, marginBottom: 6, boxSizing: "border-box" }} />
+                  <input value={notaPacienteForm.email} onChange={e => setNotaPacienteForm(f => ({ ...f, email: e.target.value }))}
+                    placeholder="Email do paciente" type="email"
+                    style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 6, color: "#e2e8f0", padding: "6px 10px", fontSize: 13, marginBottom: 6, boxSizing: "border-box" }} />
+                  <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
+                    <button onClick={criarPacienteDaNota} disabled={notaAcaoSaving || !notaPacienteForm.nome.trim() || !notaPacienteForm.email.trim()}
+                      style={{ padding: "4px 14px", background: "#38bdf8", border: "none", borderRadius: 6, color: "#0a0f16", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>
+                      {notaAcaoSaving ? "Adicionando…" : "Adicionar"}
+                    </button>
+                    <button onClick={() => setNotaAcao({ id: null, tipo: null })}
                       style={{ background: "none", border: "1px solid #1e293b", borderRadius: 6, color: "#64748b", fontSize: 12, padding: "4px 10px", cursor: "pointer" }}>
                       Cancelar
                     </button>

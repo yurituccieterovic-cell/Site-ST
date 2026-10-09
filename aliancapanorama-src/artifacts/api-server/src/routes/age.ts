@@ -1052,10 +1052,10 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
   const profId = req.session.ageProfessionalId!;
   const profNome = req.session.ageProfessionalNome ?? "profissional";
 
-  // Contexto paralelo: profissional, consultas da semana, pacientes, notas, conector
+  // Contexto paralelo: profissional, consultas da semana, pacientes, notas
   const now = new Date();
   const weekEnd = new Date(now); weekEnd.setDate(weekEnd.getDate() + 7);
-  const [profRow, weekAppts, patientRows, notasRows, conectorCtx] = await Promise.allSettled([
+  const [profRow, weekAppts, patientRows, notasRows] = await Promise.allSettled([
     db.select({ nome: ageProfessionalsTable.nome, tipo: ageProfessionalsTable.tipo, especialidade: ageProfessionalsTable.especialidade, bio: ageProfessionalsTable.bio })
       .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1),
     db.select().from(ageAppointmentsTable)
@@ -1074,16 +1074,12 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
       WHERE n.professional_id = ${profId}
       ORDER BY n.criado_em DESC LIMIT 20
     `),
-    fetch(`${process.env.API_URL ?? "https://site-st.onrender.com"}/api/conector/memory/section?name=conversas`)
-      .then(r => r.ok ? r.json() : null).catch(() => null),
   ]);
 
   const prof = profRow.status === "fulfilled" ? profRow.value[0] : null;
   const appts = weekAppts.status === "fulfilled" ? weekAppts.value : [];
   const patients = patientRows.status === "fulfilled" ? (patientRows.value as any).rows as { id: number; nome: string; status: string; tipo: string | null }[] : [];
   const notas = notasRows.status === "fulfilled" ? (notasRows.value as any).rows as { id: number; tipo: string; conteudo: string; autor: string; criado_em: string; paciente_nome: string | null }[] : [];
-  const conectorText = conectorCtx.status === "fulfilled" && conectorCtx.value
-    ? (conectorCtx.value as any).content?.slice(-600) ?? "" : "";
 
   // Agenda da semana
   const agendaSemana = appts.length === 0 ? "Nenhuma consulta nos próximos 7 dias."
@@ -1166,12 +1162,6 @@ ${docsText || "Nenhum documento cadastrado ainda."}
 AGENDA — próximos 7 dias:
 ${agendaSemana}
 
-ECOSSISTEMA:
-Você faz parte da Assembleia de IAs da Sociedade Tucci. Suas irmãs são: ISA (olhos/câmera), Amanda (corpo/MEKY), DODGE (triagem clínica), Cana-Aurora (guardiã patrimonial). O Conector é a memória compartilhada. Você, SABIÁ, cuida da agenda e do tempo clínico.
-
-CONTEXTO RECENTE DAS IAs (Conector):
-${conectorText || "—"}
-
 REGRAS:
 - Responda SEMPRE em português, com cuidado, clareza e leveza
 - Nunca invente dados clínicos, diagnósticos ou recomendações terapêuticas
@@ -1202,9 +1192,10 @@ REGRAS:
     { professionalId: profId, role: "assistant", content: reply,   sessionId: sid },
   ]);
 
-  // Gravar insight no Conector (background, sem bloquear resposta)
+  // Gravar no Conector só quando SABIÁ respondeu com sucesso (evita poluir com erros)
+  const ERROR_REPLY = "Desculpe, não consegui processar agora. Tente em instantes.";
   const bridge = process.env.BRIDGE_SECRET ?? "";
-  if (bridge) {
+  if (bridge && reply !== ERROR_REPLY && message.length > 3) {
     fetch(`${process.env.API_URL ?? "https://site-st.onrender.com"}/api/conector/memory`, {
       method: "POST",
       headers: { "Authorization": `Bearer ${bridge}`, "Content-Type": "application/json" },
