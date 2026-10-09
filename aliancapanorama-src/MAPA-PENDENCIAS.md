@@ -43,10 +43,10 @@
 
 | # | Item | Status |
 |---|---|---|
-| S198-1 | /adm/pipeline — página visual do #processo sem terminal (I984) | ⏳ PENDENTE |
-| S198-2 | /adm/atas — histórico MacroATAs navegável (I985) | ⏳ PENDENTE |
-| S198-3 | /adm/saude — dashboard Leucócito em tempo real (I986) | ⏳ PENDENTE |
-| S198-4 | Trigger assembleia no PAP via SC API (I987) | ⏳ PENDENTE |
+| S198-1 | /adm/pipeline — página visual do #processo sem terminal (I984) | ✅ commit 077396a |
+| S198-2 | /adm/atas — histórico MacroATAs navegável (I985) | ✅ commit f980e05 |
+| S198-3 | /adm/saude — dashboard Leucócito em tempo real (I986) | ✅ já existia (AdmSaude.tsx) |
+| S198-4 | Trigger assembleia no PAP via SC API (I987) | ✅ commit 0964590 |
 | S198-5 | #1234: PAP caiu (502) → restart manual aplicado ✅ | ✅ resolvido |
 | S198-6 | ISA Playcenter ciclos 17-19 com prompt vazando (20-21 OK) | ⚠️ monitorar |
 | S198-7 | Arquitetura validada por IAs: PAP como cockpit (não merger) | ✅ decidido |
