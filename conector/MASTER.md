@@ -1965,3 +1965,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### 2026-10-09 — admin
 ### 2026-10-09T00:50 — Playcenter
 - Participantes: isa+meky+amanda+orquestrador+arvore (5 falas)
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — ATA Cláudio S203+S204
+- Age Bloco 1 live: cadastro profissional com aprovação por email (19 tipos, aprovação dupla yuri+luddlocke)
+- AdmTasks live: aba Tarefas no /adm com 9 índices e Φ
+- SABIÁ fix: Mistral como fallback em chat-live (7 provedores)
+- FOCO: Age Bloco 2 (Recepção) é a peça que abre vendas reais
