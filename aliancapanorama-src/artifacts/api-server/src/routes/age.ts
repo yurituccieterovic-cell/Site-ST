@@ -46,9 +46,10 @@ async function sendEmail(to: string, subject: string, body: string, opts?: { for
   if (!GMAIL_PASS) { logger.warn("AGE: GMAIL_APP_PASSWORD ausente, email não enviado"); return; }
   const transport = createTransport({ service: "gmail", auth: { user: GMAIL, pass: GMAIL_PASS } });
 
-  // Quando disabled: envia só para o forward (luddlocke), não para o destinatário real
+  // force=true: envia sempre para o destinatário real (ex: reset de senha)
+  // Quando disabled: envia só para o forward (luddlocke)
   const skipTo = AGE_DISABLE_PROF && !opts?.force;
-  const dest   = AGE_EMAIL_TO || (skipTo ? null : to);
+  const dest   = (!opts?.force && AGE_EMAIL_TO) || (skipTo ? null : to);
   const bcc    = AGE_FORWARD && AGE_FORWARD !== dest ? AGE_FORWARD : undefined;
 
   if (!dest && !bcc) { logger.info({ to, subject }, "age: email ignorado (AGE_DISABLE_PROF_EMAILS=true, sem forward)"); return; }
@@ -1828,6 +1829,59 @@ function requireGestoraAuth(req: any, res: any, next: any) {
   }
   next();
 }
+
+// POST /api/age/gestora/forgot-password — envia link de redefinição para o email da gestora
+router.post("/age/gestora/forgot-password", loginLimit, async (req, res): Promise<void> => {
+  const { email } = req.body as { email?: string };
+  if (!email?.trim()) { res.status(400).json({ error: "Email obrigatório" }); return; }
+  const emailNorm = email.trim().toLowerCase();
+
+  const result = await db.execute(sql`SELECT id, nome FROM age_gestoras WHERE email = ${emailNorm} AND ativa = true LIMIT 1`);
+  const gestora = (result as any).rows[0];
+
+  if (gestora) {
+    const token = randomUUID();
+    const expira = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+    await db.execute(sql`UPDATE age_gestoras SET reset_token = ${token}, reset_token_expira_at = ${expira} WHERE id = ${gestora.id}`);
+
+    const frontUrl = process.env.FRONTEND_URL ?? "https://site-st.vercel.app/aliancapanorama";
+    const resetUrl = `${frontUrl}/gestora?reset=${token}`;
+
+    await sendEmail(
+      emailNorm,
+      "Age — Redefinir senha do painel gestora",
+      `Olá ${gestora.nome},\n\nClique no link abaixo para redefinir sua senha de acesso ao painel gestora:\n\n${resetUrl}\n\nO link é válido por 1 hora.\nSe você não solicitou isso, ignore este email.\n\n— Age, Sociedade Tucci`,
+      { force: true },
+    ).catch(e => logger.error({ err: e }, "gestora: forgot-password email error"));
+  }
+
+  // Sempre retorna ok para não revelar quais emails existem
+  res.json({ ok: true });
+});
+
+// POST /api/age/gestora/reset-password — redefine senha via token
+router.post("/age/gestora/reset-password", async (req, res): Promise<void> => {
+  const { token, senha } = req.body as { token?: string; senha?: string };
+  if (!token?.trim() || !senha?.trim()) { res.status(400).json({ error: "Token e senha obrigatórios" }); return; }
+  if (senha.length < 6) { res.status(400).json({ error: "Senha deve ter pelo menos 6 caracteres" }); return; }
+
+  const result = await db.execute(sql`
+    SELECT id, nome FROM age_gestoras
+    WHERE reset_token = ${token} AND reset_token_expira_at > NOW() AND ativa = true
+    LIMIT 1
+  `);
+  const gestora = (result as any).rows[0];
+
+  if (!gestora) { res.status(400).json({ error: "Link inválido ou expirado. Solicite um novo." }); return; }
+
+  const hash = await bcrypt.hash(senha, 12);
+  await db.execute(sql`
+    UPDATE age_gestoras SET password_hash = ${hash}, reset_token = NULL, reset_token_expira_at = NULL
+    WHERE id = ${gestora.id}
+  `);
+
+  res.json({ ok: true, nome: gestora.nome });
+});
 
 // POST /api/age/gestora/login
 router.post("/age/gestora/login", loginLimit, async (req, res): Promise<void> => {

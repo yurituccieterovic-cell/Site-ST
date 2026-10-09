@@ -20,12 +20,19 @@ type Profissional = {
 
 // ─── Login ────────────────────────────────────────────────────────────────────
 
-function GestoraLogin({ onSuccess }: { onSuccess: (nome: string) => void }) {
+function GestoraLogin({ onSuccess, resetToken }: { onSuccess: (nome: string) => void; resetToken?: string }) {
+  const [mode, setMode] = useState<"login" | "forgot" | "reset">(resetToken ? "reset" : "login");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [novaSenha, setNovaSenha] = useState("");
+  const [novaSenha2, setNovaSenha2] = useState("");
   const [showSenha, setShowSenha] = useState(false);
   const [erro, setErro] = useState("");
+  const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const inputStyle = { background: "#1a1a2e", border: "1px solid #333", borderRadius: 10, color: "#e8e8e8", padding: "12px 16px", fontSize: 14, outline: "none", width: "100%", boxSizing: "border-box" as const };
+  const btnStyle = (disabled: boolean) => ({ background: disabled ? "#333" : "linear-gradient(135deg, #2dd4bf, #0ea5e9)", border: "none", borderRadius: 10, padding: 13, color: "#111", fontWeight: 800, fontSize: 14, cursor: disabled ? "not-allowed" as const : "pointer" as const });
 
   async function entrar() {
     if (!email.trim() || !senha.trim() || loading) return;
@@ -44,38 +51,98 @@ function GestoraLogin({ onSuccess }: { onSuccess: (nome: string) => void }) {
     finally { setLoading(false); }
   }
 
+  async function enviarReset() {
+    if (!email.trim() || loading) return;
+    setLoading(true); setErro("");
+    try {
+      await fetch(`${API}/api/age/gestora/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      setMsg("Se o email estiver cadastrado, você receberá um link em instantes.");
+    } catch { setErro("Sem conexão. Tente de novo."); }
+    finally { setLoading(false); }
+  }
+
+  async function redefinirSenha() {
+    if (novaSenha !== novaSenha2) { setErro("As senhas não conferem."); return; }
+    if (novaSenha.length < 6) { setErro("Senha deve ter pelo menos 6 caracteres."); return; }
+    setLoading(true); setErro("");
+    try {
+      const r = await fetch(`${API}/api/age/gestora/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: resetToken, senha: novaSenha }),
+      });
+      const d = await r.json() as { ok?: boolean; nome?: string; error?: string };
+      if (r.ok) setMsg(`Senha redefinida! Olá ${d.nome}. Pode entrar agora.`);
+      else setErro(d.error ?? "Erro ao redefinir senha.");
+    } catch { setErro("Sem conexão. Tente de novo."); }
+    finally { setLoading(false); }
+  }
+
+  const containerStyle = { minHeight: "100vh", background: "#080c10", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "system-ui, sans-serif", padding: 24 };
+  const cardStyle = { width: "min(360px, 100%)", textAlign: "center" as const };
+
+  if (mode === "forgot") return (
+    <div style={containerStyle}><div style={cardStyle}>
+      <div style={{ fontSize: 48, marginBottom: 12 }}>🌸</div>
+      <h1 style={{ color: "#2dd4bf", fontWeight: 800, fontSize: 22, margin: "0 0 4px" }}>Recuperar Acesso</h1>
+      <p style={{ color: "#666", fontSize: 13, margin: "0 0 28px" }}>Enviaremos um link de redefinição</p>
+      {msg ? <p style={{ color: "#2dd4bf", fontSize: 14, background: "#0d2b2b", borderRadius: 10, padding: "12px 16px", margin: "0 0 16px" }}>{msg}</p> : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <input type="email" placeholder="seu email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && enviarReset()} style={inputStyle} />
+          {erro && <p style={{ color: "#f87171", fontSize: 13, margin: 0 }}>{erro}</p>}
+          <button onClick={enviarReset} disabled={loading || !email.trim()} style={btnStyle(loading || !email.trim())}>
+            {loading ? "Enviando…" : "Enviar link →"}
+          </button>
+        </div>
+      )}
+      <button onClick={() => setMode("login")} style={{ background: "none", border: "none", color: "#666", fontSize: 13, cursor: "pointer", marginTop: 16 }}>← Voltar ao login</button>
+    </div></div>
+  );
+
+  if (mode === "reset") return (
+    <div style={containerStyle}><div style={cardStyle}>
+      <div style={{ fontSize: 48, marginBottom: 12 }}>🔑</div>
+      <h1 style={{ color: "#2dd4bf", fontWeight: 800, fontSize: 22, margin: "0 0 4px" }}>Nova Senha</h1>
+      <p style={{ color: "#666", fontSize: 13, margin: "0 0 28px" }}>Painel Gestora — Age</p>
+      {msg ? <p style={{ color: "#2dd4bf", fontSize: 14, background: "#0d2b2b", borderRadius: 10, padding: "12px 16px", margin: "0 0 16px" }}>{msg}</p> : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <input type="password" placeholder="nova senha (mín. 6 caracteres)" value={novaSenha} onChange={e => setNovaSenha(e.target.value)} style={inputStyle} />
+          <input type="password" placeholder="confirmar senha" value={novaSenha2} onChange={e => setNovaSenha2(e.target.value)} onKeyDown={e => e.key === "Enter" && redefinirSenha()} style={inputStyle} />
+          {erro && <p style={{ color: "#f87171", fontSize: 13, margin: 0 }}>{erro}</p>}
+          <button onClick={redefinirSenha} disabled={loading || !novaSenha.trim()} style={btnStyle(loading || !novaSenha.trim())}>
+            {loading ? "Salvando…" : "Salvar nova senha →"}
+          </button>
+        </div>
+      )}
+    </div></div>
+  );
+
   return (
-    <div style={{
-      minHeight: "100vh", background: "#080c10", display: "flex",
-      alignItems: "center", justifyContent: "center", fontFamily: "system-ui, sans-serif", padding: 24,
-    }}>
-      <div style={{ width: "min(360px, 100%)", textAlign: "center" }}>
+    <div style={containerStyle}>
+      <div style={cardStyle}>
         <div style={{ fontSize: 48, marginBottom: 12 }}>🌸</div>
         <h1 style={{ color: "#2dd4bf", fontWeight: 800, fontSize: 22, margin: "0 0 4px" }}>Painel Gestora</h1>
         <p style={{ color: "#666", fontSize: 13, margin: "0 0 28px" }}>Age — Sociedade Tucci</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <input
-            type="email" placeholder="email" value={email}
-            onChange={e => setEmail(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && entrar()}
-            style={{ background: "#1a1a2e", border: "1px solid #333", borderRadius: 10, color: "#e8e8e8", padding: "12px 16px", fontSize: 14, outline: "none" }}
-          />
+          <input type="email" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && entrar()} style={inputStyle} />
           <div style={{ position: "relative" }}>
-            <input
-              type={showSenha ? "text" : "password"} placeholder="senha" value={senha}
-              onChange={e => setSenha(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && entrar()}
-              style={{ width: "100%", boxSizing: "border-box", background: "#1a1a2e", border: "1px solid #333", borderRadius: 10, color: "#e8e8e8", padding: "12px 44px 12px 16px", fontSize: 14, outline: "none" }}
-            />
+            <input type={showSenha ? "text" : "password"} placeholder="senha" value={senha} onChange={e => setSenha(e.target.value)} onKeyDown={e => e.key === "Enter" && entrar()}
+              style={{ ...inputStyle, paddingRight: 44 }} />
             <button type="button" onClick={() => setShowSenha(s => !s)} tabIndex={-1}
               style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#666", fontSize: 16 }}>
               {showSenha ? "🙈" : "👁️"}
             </button>
           </div>
           {erro && <p style={{ color: "#f87171", fontSize: 13, margin: 0 }}>{erro}</p>}
-          <button onClick={entrar} disabled={loading || !email.trim() || !senha.trim()}
-            style={{ background: loading ? "#333" : "linear-gradient(135deg, #2dd4bf, #0ea5e9)", border: "none", borderRadius: 10, padding: 13, color: "#111", fontWeight: 800, fontSize: 14, cursor: loading ? "not-allowed" : "pointer" }}>
+          <button onClick={entrar} disabled={loading || !email.trim() || !senha.trim()} style={btnStyle(loading || !email.trim() || !senha.trim())}>
             {loading ? "Entrando…" : "Entrar →"}
+          </button>
+          <button onClick={() => setMode("forgot")} style={{ background: "none", border: "none", color: "#666", fontSize: 12, cursor: "pointer", marginTop: 4 }}>
+            Esqueci minha senha
           </button>
         </div>
       </div>
@@ -614,7 +681,13 @@ export default function GestoraAgePage() {
   const [estado, setEstado] = useState<"verificando" | "login" | "ok">("verificando");
   const [nome, setNome] = useState("");
 
+  // Detectar token de reset na URL (?reset=TOKEN)
+  const resetToken = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("reset") ?? undefined
+    : undefined;
+
   useEffect(() => {
+    if (resetToken) { setEstado("login"); return; }
     fetch(`${API}/api/age/gestora/me`, { credentials: "include" })
       .then(r => r.ok ? r.json() : null)
       .then(d => {
@@ -622,7 +695,7 @@ export default function GestoraAgePage() {
         else setEstado("login");
       })
       .catch(() => setEstado("login"));
-  }, []);
+  }, [resetToken]);
 
   async function logout() {
     await fetch(`${API}/api/age/gestora/logout`, { method: "POST", credentials: "include" });
@@ -638,7 +711,7 @@ export default function GestoraAgePage() {
   }
 
   if (estado === "login") {
-    return <GestoraLogin onSuccess={n => { setNome(n); setEstado("ok"); }} />;
+    return <GestoraLogin onSuccess={n => { setNome(n); setEstado("ok"); }} resetToken={resetToken} />;
   }
 
   return <GestoraDashboard nome={nome} onLogout={logout} />;

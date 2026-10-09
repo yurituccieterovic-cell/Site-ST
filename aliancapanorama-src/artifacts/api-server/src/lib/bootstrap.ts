@@ -436,6 +436,8 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS email_pending TEXT`);
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS email_verify_code TEXT`);
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS email_verify_expires TIMESTAMPTZ`);
+  await db.execute(sql`ALTER TABLE age_gestoras ADD COLUMN IF NOT EXISTS reset_token TEXT`);
+  await db.execute(sql`ALTER TABLE age_gestoras ADD COLUMN IF NOT EXISTS reset_token_expira_at TIMESTAMPTZ`);
 
   logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type +whatsapp +valor +password_b_hash +email_verify)");
 
