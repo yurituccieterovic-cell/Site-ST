@@ -2035,3 +2035,10 @@ Se precisar de ajuda para organiza"
 - Conector write gateado: só gravar exchanges bem-sucedidos (nunca erros)
 - Ações de nota: 4 botões (Ramificar/Tarefa/Paciente/Agendar) implementados
 - MASTER_PASSWORD adicionado ao Render env
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — Cláudio S206
+- Emails Socoboy+PósHumanismo: yurituc→luddlocke (canal pessoal≠operacional)
+- Dodge pipeline diário: viável ~80%, LitM não é problema para 3KB de health data
+- ISCA: contexto pendente com Yuri
