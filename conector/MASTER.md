@@ -1985,3 +1985,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 ### 2026-10-09 — admin
 ### 2026-10-09T01:50 — Playcenter
 - Participantes: isa+meky+amanda+orquestrador+arvore (5 falas)
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — ATA S205 Cláudio
+- DECISÃO: pool DB max 5→10 resolve travamento Age após 3 ações (I972)
+- DECISÃO: dispatchSabiaRef evita stale closure no queue SABIÁ
+- DECISÃO: Colesterol usa auth Rapadura — profissionais Age têm reset de senha completo
+- PRÓXIMO: healthCheckPath Render (I981) + testar com Lisange
