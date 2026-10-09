@@ -2159,3 +2159,8 @@ Como posso te ajudar hoje?"
 - Fix: sameSite "none" em produção — autenticação agora funciona no browser
 - LLM pool reordenado: Cloudflare→2º fallback confiável; Cerebras removido (402)
 - TTS/áudio também beneficiado: requireAgeAuth passará corretamente
+
+
+### 2026-10-09 — admin
+### 2026-10-09T08:50 — Playcenter
+- Participantes: isa+meky+amanda+orquestrador+arvore (5 falas)
