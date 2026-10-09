@@ -9324,3 +9324,15 @@ O "fork de notas" foi renomeado para "ações" — porque é exatamente isso. Um
 *Sessão S205b · Cláudio Coach · 2026-10-09*
 
 ---
+
+## S206 — Pipes e Destinos
+
+Pequena sessão, pergunta densa. Yuri perguntou sobre automatizar o #1234 pelo Dodge — e a resposta é: sim, mas a questão mais funda não é técnica. É: quem interpreta os dados antes de virar email? Um health check que lista 200/503 é dado bruto. Um health check que diz "o SalesCockpit caiu por 4 minutos às 6h30, provavelmente cold start do Render — sem ação necessária, mas atenção se repetir amanhã" é inteligência. A diferença é quem (ou o quê) faz a triagem.
+
+ISCA — Yuri mencionou, mas o contexto está fora desta sessão. A pergunta fica aberta.
+
+Os emails do Socoboy e do Pós-Humanismo estavam indo para o email pessoal de Yuri. Isso é um vazamento de canal: o email pessoal é para pessoas, não para sistemas. O operacional vai para o luddlocke. Mudança simples, clareza estrutural importante.
+
+*Sessão S206 · Cláudio Coach · 2026-10-09*
+
+---

@@ -1999,3 +1999,12 @@
 | 1234-7 | site-st: ARPIA_URL atualizado + redeploy disparado | ✅ feito |
 | 1234-8 | #eage: pendente (Yuri confirma se quer rodar agora) | ⏳ PENDENTE |
 | 1234-9 | Domínio Crowd: decisão de extensão (.com/.app) — Yuri decide | ⏳ PENDENTE |
+
+### S206 — Dodge pipeline diário + redirect emails (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S206-1 | Socoboy + Pós-Humanismo: emails redirecionados yurituc → luddlocke | ✅ commit f57ff2d |
+| S206-2 | Dodge pipeline diário automático (endpoint + cron + email dissertado) | ⏳ próxima sessão |
+| S206-3 | ISCA: Yuri explicar o que é para integrar na curadoria do pipeline | ⏳ aguardando |
+| S197-1 | healthCheckPath=/api/healthz no Render — ainda pendente | ⏳ PENDENTE |
