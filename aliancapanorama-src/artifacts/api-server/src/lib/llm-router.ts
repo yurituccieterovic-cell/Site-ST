@@ -50,8 +50,8 @@ const MODELS: Record<ProviderName, string> = {
 };
 
 const POOLS: Record<LLMPool, ProviderName[]> = {
-  // Groq primeiro (rápido, gratuito); Cloudflare/Mistral como fallback garantido
-  "chat-live": ["xai", "groq", "gemini", "openai", "cerebras", "cloudflare", "mistral"],
+  // xAI → Cloudflare (2º mais confiável) → Groq → Gemini → Mistral → OpenAI; Cerebras removido (402 consistente)
+  "chat-live": ["xai", "cloudflare", "groq", "gemini", "mistral", "openai"],
   // Tarefas background: Cloudflare 10k/dia, Mistral, Cerebras como reservas
   "batch":     ["cloudflare", "mistral", "cerebras", "gemini", "deepseek"],
   // Raciocínio profundo: DeepSeek-V3 forte e barato
