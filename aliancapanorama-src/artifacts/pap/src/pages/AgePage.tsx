@@ -409,6 +409,14 @@ export function AgePage() {
   const [authCode, setAuthCode] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState("");
+  // Professional forgot/reset password
+  const [profForgotMode, setProfForgotMode] = useState(false);
+  const [profForgotEmail, setProfForgotEmail] = useState("");
+  const [profForgotMsg, setProfForgotMsg] = useState("");
+  const [profResetToken, setProfResetToken] = useState("");
+  const [profResetForm, setProfResetForm] = useState({ password: "", confirm: "" });
+  const [profResetStatus, setProfResetStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [profResetMsg, setProfResetMsg] = useState("");
 
   const [profList, setProfList] = useState<Prof[] | null>(null);
 
@@ -717,6 +725,16 @@ export function AgePage() {
     if (!tok || !slug) return;
     setSetPwToken(tok);
     setSetPwStatus("idle");
+    window.history.replaceState({}, "", window.location.pathname);
+  }, [slug]);
+
+  // Detectar ?reset= na URL (reset de senha profissional)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tok = params.get("reset");
+    if (!tok || !slug) return;
+    setProfResetToken(tok);
+    setProfResetStatus("idle");
     window.history.replaceState({}, "", window.location.pathname);
   }, [slug]);
 
@@ -1256,6 +1274,38 @@ export function AgePage() {
     } catch { setSetPwStatus("error"); setSetPwMsg("Sem conexão."); }
   }
 
+  async function profForgotSend(e: React.FormEvent) {
+    e.preventDefault();
+    if (!profForgotEmail) return;
+    setProfForgotMsg("");
+    try {
+      const r = await fetch(`${API}/api/age/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: profForgotEmail }),
+      });
+      const d = await r.json() as { ok?: boolean; message?: string; error?: string };
+      setProfForgotMsg(d.ok ? "Link enviado! Verifique seu email." : (d.error ?? "Erro ao enviar."));
+    } catch { setProfForgotMsg("Sem conexão."); }
+  }
+
+  async function profResetSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (profResetForm.password !== profResetForm.confirm) { setProfResetMsg("As senhas não coincidem."); return; }
+    if (profResetForm.password.length < 8) { setProfResetMsg("Mínimo 8 caracteres."); return; }
+    setProfResetStatus("loading"); setProfResetMsg("");
+    try {
+      const r = await fetch(`${API}/api/age/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: profResetToken, password: profResetForm.password }),
+      });
+      const d = await r.json() as { ok?: boolean; error?: string };
+      if (d.ok) { setProfResetStatus("done"); setProfResetToken(""); }
+      else { setProfResetStatus("error"); setProfResetMsg(d.error ?? "Link inválido ou expirado."); }
+    } catch { setProfResetStatus("error"); setProfResetMsg("Sem conexão."); }
+  }
+
   async function handlePatientChangePassword(e: React.FormEvent) {
     e.preventDefault();
     setPatientPwError(""); setPatientPwOk(false);
@@ -1707,6 +1757,50 @@ export function AgePage() {
     );
   }
 
+  // ─── PROFESSIONAL RESET PASSWORD ─────────────────────────────────────────────
+
+  function ProfResetView() {
+    return (
+      <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+        <div style={{ background: "#0f1318", border: `1px solid ${color}44`, borderRadius: 16, padding: "2rem", width: 340, maxWidth: "90vw" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+            <span style={{ fontSize: 28 }}>🐦</span>
+            <div>
+              <div style={{ color, fontWeight: 700, fontSize: 16 }}>SABIÁ</div>
+              <div style={{ color: "#64748b", fontSize: 12 }}>Redefinir senha — {prof?.nome ?? slug}</div>
+            </div>
+          </div>
+          {profResetStatus === "done" ? (
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
+              <div style={{ color: "#4ade80", fontSize: 15, fontWeight: 700 }}>Senha redefinida!</div>
+              <div style={{ color: "#94a3b8", fontSize: 13, marginTop: 8 }}>Você já pode entrar com a nova senha.</div>
+              <button onClick={() => setMode("login" as any)}
+                style={{ marginTop: 16, background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 24px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                Fazer login
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={profResetSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ color: "#94a3b8", fontSize: 13 }}>Digite sua nova senha de acesso.</div>
+              <input type="password" placeholder="Nova senha (mín. 8 caracteres)" value={profResetForm.password}
+                onChange={e => setProfResetForm(f => ({ ...f, password: e.target.value }))}
+                style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+              <input type="password" placeholder="Confirmar nova senha" value={profResetForm.confirm}
+                onChange={e => setProfResetForm(f => ({ ...f, confirm: e.target.value }))}
+                style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+              {profResetMsg && <div style={{ color: "#f87171", fontSize: 13 }}>{profResetMsg}</div>}
+              <button type="submit" disabled={profResetStatus === "loading" || !profResetForm.password || !profResetForm.confirm}
+                style={{ background: profResetStatus === "loading" ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                {profResetStatus === "loading" ? "Salvando…" : "Redefinir senha"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // ─── LOGIN MODAL ─────────────────────────────────────────────────────────────
 
   function LoginModal() {
@@ -1721,7 +1815,7 @@ export function AgePage() {
             </div>
           </div>
 
-          {authStep === "login" ? (
+          {authStep === "login" && !profForgotMode ? (
             <form onSubmit={handleLogin}>
               <div style={{ position: "relative", marginBottom: 12 }}>
                 <input
@@ -1739,8 +1833,30 @@ export function AgePage() {
                 style={{ width: "100%", background: authLoading ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: authLoading ? "not-allowed" : "pointer" }}>
                 {authLoading ? "Verificando…" : "Entrar"}
               </button>
-              <button type="button" onClick={() => setMode("public")} style={{ width: "100%", marginTop: 8, background: "transparent", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer", padding: "6px 0" }}>
+              <button type="button" onClick={() => { setProfForgotMode(true); setProfForgotMsg(""); setProfForgotEmail(""); }}
+                style={{ width: "100%", marginTop: 6, background: "transparent", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer", padding: "4px 0" }}>
+                Esqueci minha senha
+              </button>
+              <button type="button" onClick={() => setMode("public")} style={{ width: "100%", marginTop: 4, background: "transparent", border: "none", color: "#475569", fontSize: 12, cursor: "pointer", padding: "4px 0" }}>
                 Cancelar
+              </button>
+            </form>
+          ) : authStep === "login" && profForgotMode ? (
+            <form onSubmit={profForgotSend} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ color: "#94a3b8", fontSize: 13 }}>
+                Informe seu email e enviaremos um link para redefinir sua senha.
+              </div>
+              <input type="email" placeholder="Seu email" value={profForgotEmail}
+                onChange={e => setProfForgotEmail(e.target.value)}
+                style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+              {profForgotMsg && <div style={{ color: profForgotMsg.includes("enviado") ? "#4ade80" : "#f87171", fontSize: 13 }}>{profForgotMsg}</div>}
+              <button type="submit" disabled={!profForgotEmail}
+                style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                Enviar link
+              </button>
+              <button type="button" onClick={() => { setProfForgotMode(false); setProfForgotMsg(""); }}
+                style={{ background: "none", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer", padding: "4px 0" }}>
+                Voltar ao login
               </button>
             </form>
           ) : (
@@ -4916,7 +5032,10 @@ export function AgePage() {
         {/* Área de criação de senha via token */}
         {setPwToken && PatientAreaOrSetPw()}
 
-        {!setPwToken && (mode === "patient" ? (
+        {/* Reset de senha profissional via token */}
+        {profResetToken && ProfResetView()}
+
+        {!setPwToken && !profResetToken && (mode === "patient" ? (
           PatientAreaView()
         ) : mode === "patient-login" ? (
           PatientLoginView()

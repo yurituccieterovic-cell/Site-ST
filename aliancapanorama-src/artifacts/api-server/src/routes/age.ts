@@ -131,6 +131,58 @@ function generateSlots(
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
+// POST /api/age/auth/forgot-password — envia link de reset para o email da profissional
+router.post("/age/auth/forgot-password", loginLimit, async (req, res): Promise<void> => {
+  const { email } = req.body as { email?: string };
+  if (!email?.trim()) { res.status(400).json({ error: "Email obrigatório" }); return; }
+  const emailNorm = email.trim().toLowerCase();
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, slug: ageProfessionalsTable.slug })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.email, emailNorm), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+
+  if (prof) {
+    const token = randomUUID();
+    const expira = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+    await db.execute(sql`UPDATE age_professionals SET reset_token = ${token}, reset_token_expira_at = ${expira} WHERE id = ${prof.id}`);
+
+    const frontUrl = process.env.VITE_FRONT_URL ?? "https://site-st.vercel.app/aliancapanorama/age";
+    const resetUrl = `${frontUrl}/${prof.slug}?reset=${token}`;
+
+    await sendEmail(
+      emailNorm,
+      "Age — Redefinir sua senha",
+      `Olá ${prof.nome},\n\nClique no link abaixo para redefinir sua senha de acesso ao Age:\n\n${resetUrl}\n\nO link é válido por 1 hora.\n\n— SABIÁ · Age · Sociedade Tucci`,
+      { force: true },
+    ).catch(e => logger.error({ err: e }, "age: forgot-password email error"));
+  }
+
+  res.json({ ok: true });
+});
+
+// POST /api/age/auth/reset-password — redefine senha da profissional via token
+router.post("/age/auth/reset-password", async (req, res): Promise<void> => {
+  const { token, senha } = req.body as { token?: string; senha?: string };
+  if (!token?.trim() || !senha?.trim()) { res.status(400).json({ error: "Token e senha obrigatórios" }); return; }
+  if (senha.length < 6) { res.status(400).json({ error: "Senha deve ter pelo menos 6 caracteres" }); return; }
+
+  const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome })
+    .from(ageProfessionalsTable)
+    .where(and(
+      eq(ageProfessionalsTable.ativa, true),
+      sql`reset_token = ${token}`,
+      sql`reset_token_expira_at > NOW()`,
+    )).limit(1);
+
+  if (!prof) { res.status(400).json({ error: "Link inválido ou expirado. Solicite um novo." }); return; }
+
+  const hash = await bcrypt.hash(senha, 12);
+  await db.execute(sql`UPDATE age_professionals SET password_hash = ${hash}, reset_token = NULL, reset_token_expira_at = NULL WHERE id = ${prof.id}`);
+
+  res.json({ ok: true, nome: prof.nome });
+});
+
 // POST /api/age/auth/login
 router.post("/age/auth/login", loginLimit, async (req, res): Promise<void> => {
   const { slug, password } = req.body as { slug?: string; password?: string };
