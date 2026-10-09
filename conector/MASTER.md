@@ -1934,3 +1934,10 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - I988-I991: roadmap Colesterol MVP derivado do Caso X
 - ARPIA URL corrigida: arpia.onrender.com (não arpia-api)
 - Sistema de tasks: backend completo, 9 índices ontológicos, 0 tasks criadas, sem frontend ainda
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — S202 Cláudio
+- Diagnóstico Age: estruturalmente completo, emails desativados, healthCheckPath ausente, sem fluxo de cadastro/aprovação profissional
+- Plano 5 blocos para Age 100%: emails→aprovação→SABIÁ→gestora→LGPD
+- Sugestão: começar pelo Bloco 1 (base sólida antes de features)
