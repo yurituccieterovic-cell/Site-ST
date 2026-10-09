@@ -9139,3 +9139,43 @@ Yuri está mapeando o terreno antes de construir. As perguntas formam um padrão
 *Sessão S200 · Cláudio Coach · 2026-10-08*
 
 ---
+
+---
+
+## S201 — Caso X + Saúde das IAs + Revisão de Tasks · 2026-10-09
+
+**Contexto:** Yuri pediu saúde das IAs, revisão do sistema de tasks, e enviou o Caso X completo para salvar com informações de compra + colesterol.
+
+**Saúde das IAs (todos verdes):**
+- PAP, Vercel, SalesCockpit, Age, Dodge, Playcenter: ✅
+- ARPIA: ✅ 200 OK em arpia.onrender.com/health (URL corrigida — antes estava sendo testada em arpia-api.onrender.com que não existe)
+
+**Revisão do sistema de tasks:**
+- Backend completo: CRUD, 9 Índices Ontológicos, Φ (coerência), relações, catálogo central
+- 0 tasks criadas — sistema nunca usado
+- Sem frontend
+- Dois paradigmas coexistem: pv_items (visual/Yuri) vs tasks (ontológico/IAs)
+- Catálogo central: 5 itens (tasks schema, ISA ciclo, Assembleia #366...)
+
+**Caso X — salvo em tango/caso_x.md:**
+- Inventário doméstico completo Yuri+Mayumi
+- 10 estados de item (comprar_agora → cancelado)
+- Schema JSON de rastreamento de compra
+- Kit de saúde (o que temos / comprar agora / depois)
+- Itens domésticos + decisões pendentes
+- Casa, carro, jardim
+- Alimentos sacolão + grãos/sementes/castanhas
+- Roadmap do software Colesterol derivado
+
+**IDEIAS adicionadas:**
+- I988: Colesterol MVP (lista de estados + histórico)
+- I989: Colesterol input por voz/texto livre
+- I990: Frontend Colesterol no PAP
+- I991: Colesterol ↔ Rapadura (gastos domésticos)
+
+**Síntese filosófica:**
+O Caso X começou como uma voz gravada — fragmentos, hesitações, "o gelol é caro pra caralho". Esse é o estado natural da necessidade humana: desordenada, contextual, cheia de "e também" e "mas espera". O Colesterol não vai organizar uma lista — vai aprender a viver dentro dessa desordem e transformá-la em algo navegável. O sistema não pode exigir que Yuri pense em categorias antes de falar. Tem que ouvir primeiro.
+
+*Sessão S201 · Cláudio Coach · 2026-10-09*
+
+---
