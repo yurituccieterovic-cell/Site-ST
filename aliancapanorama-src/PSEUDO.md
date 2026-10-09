@@ -9350,3 +9350,19 @@ O healthCheckPath estava ausente no Render desde o início. O servidor podia tra
 *Sessão S207 · Cláudio Coach · 2026-10-09*
 
 ---
+
+## S208 — SABIÁ e a Verdade que Estava Escondida na Config
+
+Esta sessão foi uma investigação forense. O SABIÁ respondia às vezes, errava outras. O padrão intermitente é o mais difícil — não é uma falha total, é uma falha condicional. Você não sabe se o problema é você, a rede, o provedor de IA.
+
+A pista estava no lugar mais simples: o painel do Render. A XAI_API_KEY nunca tinha sido adicionada. O roteador de LLMs tentava o xAI primeiro (na pool "chat-live"), falhava silenciosamente, e os outros provedores estavam em cooldown ou sem chave. Resultado: "Desculpe, não consegui processar agora" — a mensagem genérica de falha que esconde o diagnóstico.
+
+Milton Salomão não era acessível pelo URL óbvio `/age/milton`. O slug real era `milton-salomao` — uma convenção de nomenclatura que o sistema usa para nomes compostos. Isso importa para o acesso profissional: o link que Yuri compartilhará em Catanduva precisa ser o correto.
+
+O leucócito ganhou dois novos testes que testam o caminho completo: público (sem login) e autenticado (com MASTER_PASSWORD). Agora o diagnóstico diário verifica não só se os endpoints existem, mas se a IA dentro deles responde.
+
+A "sumidinha da memória" era um falso alarme — os 37 arquivos de memória estavam intactos. Às vezes o sistema parece menor do que é porque não se encaixa na janela de contexto de uma vez.
+
+*Sessão S208 · Cláudio Coach · 2026-10-09*
+
+---

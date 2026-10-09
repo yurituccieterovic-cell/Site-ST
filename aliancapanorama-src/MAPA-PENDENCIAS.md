@@ -2019,3 +2019,16 @@
 | S207-4 | Cron 10:00 UTC diário para ISCA pipeline + endpoint manual /dodge/pipeline-diario | ✅ commit 3844e91 |
 | S207-5 | Teste manual do pipeline: verde 6/6, email recebido em luddlocke | ✅ confirmado |
 | S207-6 | ISCA documentado: sistema de refinamento em 3 camadas (Técnica + Curadoria + Redação) | ✅ código |
+
+### S208 — Age: SABIÁ + Leucócito + Milton Salomão (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S208-1 | Milton Salomão investigado: slug "milton-salomao", email yurituccieterovic@gmail.com | ✅ mapeado |
+| S208-2 | SABIÁ root cause: XAI_API_KEY faltando no Render → fallback Groq sem chave | ✅ corrigido |
+| S208-3 | Render: adicionadas XAI_API_KEY + CLOUDFLARE_AI_TOKEN + CLOUDFLARE_ACCOUNT_ID | ✅ 23 vars |
+| S208-4 | Leucócito: 2 novos testes Age (SABIÁ pública + login profissional + SABIÁ auth) | ✅ commit cac3681 |
+| S208-5 | Leucócito: corrigido slug "susana" → "suzana" nos health checks | ✅ corrigido |
+| S208-6 | Mapa pendências Age para demo Catanduva (Lisange/Suzana) | ✅ mapeado |
+| S208-7 | sessionId bug SABIÁ: `?? ""` deve ser `\|\| ""` — pequeno fix | ⏳ próxima sessão |
+| S208-8 | Memory project_age_emails_desativados.md: entrada desatualizada (AGE_DISABLE_PROF_EMAILS NÃO está ativo) | ✅ corrigir memória |
