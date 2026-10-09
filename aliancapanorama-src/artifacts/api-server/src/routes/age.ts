@@ -1186,7 +1186,7 @@ REGRAS:
   } catch (e) { logger.error({ err: e }, "age: sabia LLM error"); }
 
   // Salvar na memória
-  const sid = sessionId ?? `age-${profId}-${Date.now()}`;
+  const sid = sessionId || `age-${profId}-${Date.now()}`;
   await db.insert(ageSabiaMemoryTable).values([
     { professionalId: profId, role: "user",      content: message, sessionId: sid },
     { professionalId: profId, role: "assistant", content: reply,   sessionId: sid },
