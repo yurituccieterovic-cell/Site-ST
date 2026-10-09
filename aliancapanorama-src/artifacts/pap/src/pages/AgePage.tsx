@@ -419,6 +419,10 @@ export function AgePage() {
   const [profResetMsg, setProfResetMsg] = useState("");
 
   const [profList, setProfList] = useState<Prof[] | null>(null);
+  // "Sou profissional" na landing page
+  const [findProfMode, setFindProfMode] = useState(false);
+  const [findProfEmail, setFindProfEmail] = useState("");
+  const [findProfMsg, setFindProfMsg] = useState("");
 
   const [waking, setWaking] = useState(false);
 
@@ -1469,8 +1473,45 @@ export function AgePage() {
           </svg>
           <span style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 17, letterSpacing: 1 }}>age</span>
           <span style={{ color: "#334155", fontSize: 13, marginLeft: 6 }}>Agenda de Saúde</span>
-          <div style={{ marginLeft: "auto", display: "flex", gap: 10 }}>
-            <a href="/aliancapanorama/age/gestora" style={{ color: "#475569", fontSize: 12, textDecoration: "none" }}>Profissional</a>
+          <div style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
+            {!findProfMode ? (
+              <button onClick={() => setFindProfMode(true)}
+                style={{ background: "none", border: "1px solid #1e293b", borderRadius: 8, color: "#64748b", fontSize: 12, cursor: "pointer", padding: "6px 14px" }}>
+                Sou profissional
+              </button>
+            ) : (
+              <form onSubmit={async e => {
+                e.preventDefault();
+                if (!findProfEmail) return;
+                setFindProfMsg("");
+                try {
+                  await fetch(`${API}/api/age/auth/forgot-password`, {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: findProfEmail }),
+                  });
+                } catch { /* ignore */ }
+                setFindProfMsg("Se você tem cadastro, receberá seu link por email.");
+                setFindProfEmail("");
+              }} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {findProfMsg ? (
+                  <span style={{ color: "#4ade80", fontSize: 11 }}>{findProfMsg}</span>
+                ) : (
+                  <input type="email" placeholder="Seu email" value={findProfEmail}
+                    onChange={e => setFindProfEmail(e.target.value)} autoFocus
+                    style={{ background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "5px 10px", fontSize: 12, outline: "none" }} />
+                )}
+                {!findProfMsg && (
+                  <button type="submit" disabled={!findProfEmail}
+                    style={{ background: "#2dd4bf", color: "#080c10", border: "none", borderRadius: 8, fontSize: 12, fontWeight: 700, padding: "6px 12px", cursor: "pointer", whiteSpace: "nowrap" }}>
+                    Entrar
+                  </button>
+                )}
+                <button type="button" onClick={() => { setFindProfMode(false); setFindProfMsg(""); setFindProfEmail(""); }}
+                  style={{ background: "none", border: "none", color: "#475569", fontSize: 16, cursor: "pointer", padding: "0 4px" }}>
+                  ×
+                </button>
+              </form>
+            )}
           </div>
         </header>
 
