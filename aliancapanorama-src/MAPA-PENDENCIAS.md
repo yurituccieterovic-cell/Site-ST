@@ -2,6 +2,17 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S205b — SABIÁ timeout P0 + ações de nota + #1234 (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S205b-1 | SABIÁ P0: self-HTTP Conector fetch → timeout 40s — removido, agora 2.3s | ✅ commit cd3fb9a |
+| S205b-2 | SABIÁ: Conector write gateado (só exchanges bem-sucedidos, nunca erros) | ✅ commit cd3fb9a |
+| S205b-3 | Ações de nota: 4 botões (Ramificar, Criar tarefa, Adicionar paciente, Agendar) | ✅ commit cd3fb9a |
+| S205b-4 | MASTER_PASSWORD adicionado ao Render (teste e emergência) | ✅ env var |
+| S205b-5 | #1234: health check completo — todos ✅, Dodge 13/13, UptimeRobot sem alertas | ✅ OK |
+| S205b-6 | Leucócito email S205b enviado para luddlocke | ✅ enviado |
+
 ### S205 — Age P0 fix + Bloco 3 + Gestora + Prof password + Colesterol MVP (2026-10-09)
 
 | # | Item | Status |

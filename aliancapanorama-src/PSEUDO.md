@@ -9308,3 +9308,19 @@ Esta sessão foi sobre remover o último atrito antes de abrir o portão. O bug 
 *Sessão S205 · Cláudio Coach · 2026-10-09*
 
 ---
+
+## S205b — A Causa Raiz e o Feedback Loop
+
+Esta sessão foi sobre diagnóstico profundo. SABIÁ estava falhando não por falta de capacidade — o modelo LLM funcionava, os dados chegavam — mas por uma dependência circular invisível: o servidor chamando a si mesmo para buscar contexto, enquanto o contexto que buscava crescia a cada erro registrado.
+
+É o tipo de falha que não aparece em logs diretos. Aparece em 40 segundos de silêncio, seguidos de "Desculpe". O problema técnico era uma função Promise.allSettled com 5 itens, onde o 5º item era um fetch HTTP para o próprio Render. Em um servidor de instância única, isso não é só overhead — é um possível deadlock de event loop. E pior: cada falha era gravada no Conector como "SABIÁ: Desculpe, não consegui processar", que seria lido na próxima chamada, tornando o contexto progressivamente mais contaminado.
+
+A correção foi pequena: remover o item 5, gatear o write-back para só gravar sucesso. Resultado: 2.3 segundos.
+
+A lição maior: toda memória compartilhada sem curadoria vira ruído. O Conector é precioso porque é intencional — mas "intencional" inclui não gravar erros como se fossem insights. Memória com filtro é sabedoria; memória sem filtro é barulho que cresce.
+
+O "fork de notas" foi renomeado para "ações" — porque é exatamente isso. Uma nota não deve gerar apenas ramificação de texto; deve poder gerar ação concreta: uma tarefa, um agendamento, um cadastro de paciente. A nota como vetor de intenção, não apenas de registro.
+
+*Sessão S205b · Cláudio Coach · 2026-10-09*
+
+---

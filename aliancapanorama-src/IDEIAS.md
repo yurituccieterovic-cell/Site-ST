@@ -2889,3 +2889,12 @@ Yuri quer uma assembleia unificada chamada "Secretaria" que junte o SalesCockpit
 | I974 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
 | I975 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
 | I976 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |
+## I938 — SABIÁ: memória com curadoria (não gravar erros no Conector)
+**Origem:** S205b — bug SABIÁ timeout
+**Conceito:** Toda IA que grava na memória compartilhada deve filtrar o que grava. Erros, timeouts e "não consegui processar" NÃO são insights — são ruído. Só gravar quando há resposta significativa.
+**Aplicação:** Gate no write-back do SABIÁ (já implementado). Estender para outras IAs que gravem no Conector.
+
+## I939 — Nota como vetor de ação (nota → tarefa / paciente / agendamento)
+**Origem:** S205b — "fork de notas" renomeado para "ações"
+**Conceito:** Uma nota clínica deve poder ser convertida diretamente em ação operacional: criar tarefa, cadastrar paciente, abrir agenda. O texto registrado alimenta o formulário (titulo/descricao pré-preenchidos).
+**Aplicação:** Já implementado em AgePage. Próximo: adicionar "Criar consulta com paciente X" quando a nota menciona um paciente.
