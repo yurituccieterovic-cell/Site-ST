@@ -385,6 +385,12 @@ export function AgePage() {
   const [interForm, setInterForm] = useState({ nome: "", email: "", espec: "", pacientes: "", msg: "" });
   const [interStatus, setInterStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
 
+  // Formulário de cadastro de profissional
+  const [cadForm, setCadForm] = useState({ nome: "", email: "", tipo: "", especialidade: "", registro: "", bio: "", whatsapp: "" });
+  const [cadStatus, setCadStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
+  const [cadError, setCadError] = useState("");
+  const TIPOS_PROF = ["psicóloga","psicólogo","médica","médico","nutricionista","fisioterapeuta","terapeuta","coach de saúde","enfermeira","enfermeiro","fonoaudióloga","fonoaudiólogo","dentista","psiquiatra","neurologista","cardiologista","dermatologista","ginecologista","pediatra","outro"];
+
   // Vista Dia da agenda profissional (I145)
   const [agendaFilter, setAgendaFilter] = useState<"todos" | "dia">("todos");
   const [agendaDayOffset, setAgendaDayOffset] = useState(0); // 0=hoje, +1=amanhã, etc.
@@ -1566,57 +1572,62 @@ export function AgePage() {
             ))}
           </div>
 
-          {/* CTA — formulário de interesse */}
+          {/* CTA — formulário de cadastro profissional */}
           <div style={{ marginTop: 36, background: "#0a0f16", border: "1px solid #2dd4bf33", borderRadius: 16, padding: "24px" }}>
-            <h3 style={{ color: "#e2e8f0", fontWeight: 700, fontSize: 16, marginBottom: 6, textAlign: "center" }}>Quero usar o Age na minha clínica</h3>
-            <p style={{ color: "#64748b", fontSize: 13, textAlign: "center", marginBottom: 20 }}>Preencha abaixo — te avisamos quando seu acesso estiver pronto.</p>
-            {interStatus === "ok" ? (
+            <h3 style={{ color: "#e2e8f0", fontWeight: 700, fontSize: 16, marginBottom: 6, textAlign: "center" }}>Cadastrar-se como profissional</h3>
+            <p style={{ color: "#64748b", fontSize: 13, textAlign: "center", marginBottom: 20 }}>Preencha o formulário — seu cadastro será analisado e você receberá o acesso por email.</p>
+            {cadStatus === "ok" ? (
               <div style={{ textAlign: "center", padding: "1rem 0" }}>
                 <div style={{ fontSize: 36, marginBottom: 10 }}>🐦</div>
-                <div style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 15, marginBottom: 6 }}>Recebemos seu interesse!</div>
-                <div style={{ color: "#64748b", fontSize: 13 }}>Entraremos em contato pelo email informado.</div>
+                <div style={{ color: "#2dd4bf", fontWeight: 700, fontSize: 15, marginBottom: 6 }}>Cadastro enviado!</div>
+                <div style={{ color: "#64748b", fontSize: 13 }}>Você receberá um email de confirmação em breve.</div>
               </div>
             ) : (
               <form onSubmit={async e => {
                 e.preventDefault();
-                if (!interForm.nome || !interForm.email) return;
-                setInterStatus("sending");
+                if (!cadForm.nome || !cadForm.email || !cadForm.tipo) return;
+                setCadStatus("sending"); setCadError("");
                 try {
-                  const r = await fetch(`${API}/api/age/interesse`, {
+                  const r = await fetch(`${API}/api/age/cadastro`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(interForm),
+                    body: JSON.stringify(cadForm),
                   });
-                  setInterStatus(r.ok ? "ok" : "err");
-                } catch { setInterStatus("err"); }
+                  const d = await r.json() as { error?: string };
+                  if (!r.ok) { setCadStatus("err"); setCadError(d.error ?? "Erro ao enviar."); }
+                  else setCadStatus("ok");
+                } catch { setCadStatus("err"); setCadError("Erro de conexão. Tente novamente."); }
               }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
-                  <input required value={interForm.nome} onChange={e => setInterForm(f => ({ ...f, nome: e.target.value }))}
-                    placeholder="Seu nome *" style={{ flex: "1 1 160px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
-                  <input required type="email" value={interForm.email} onChange={e => setInterForm(f => ({ ...f, email: e.target.value }))}
+                  <input required value={cadForm.nome} onChange={e => setCadForm(f => ({ ...f, nome: e.target.value }))}
+                    placeholder="Nome completo *" style={{ flex: "1 1 180px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+                  <input required type="email" value={cadForm.email} onChange={e => setCadForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Email profissional *" style={{ flex: "1 1 200px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
-                  <input value={interForm.espec} onChange={e => setInterForm(f => ({ ...f, espec: e.target.value }))}
-                    placeholder="Especialidade (psicologia, medicina, terapia…)" style={{ flex: "1 1 200px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
-                  <select value={interForm.pacientes} onChange={e => setInterForm(f => ({ ...f, pacientes: e.target.value }))}
-                    style={{ flex: "0 1 180px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: interForm.pacientes ? "#e2e8f0" : "#475569", padding: "10px 14px", fontSize: 14 }}>
-                    <option value="">Pacientes por semana (opcional)</option>
-                    <option value="preparando">Ainda não atendo, estou me preparando</option>
-                    <option value="menos-10">Menos de 10</option>
-                    <option value="10-30">10 a 30</option>
-                    <option value="mais-30">Mais de 30</option>
+                  <select required value={cadForm.tipo} onChange={e => setCadForm(f => ({ ...f, tipo: e.target.value }))}
+                    style={{ flex: "1 1 180px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: cadForm.tipo ? "#e2e8f0" : "#475569", padding: "10px 14px", fontSize: 14 }}>
+                    <option value="">Tipo de profissional *</option>
+                    {TIPOS_PROF.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
                   </select>
+                  <input value={cadForm.registro} onChange={e => setCadForm(f => ({ ...f, registro: e.target.value }))}
+                    placeholder="Nº de registro (CRM, CRP, etc)" style={{ flex: "1 1 160px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
                 </div>
-                <textarea value={interForm.msg} onChange={e => setInterForm(f => ({ ...f, msg: e.target.value }))}
-                  placeholder="Alguma dúvida ou detalhe? (opcional)" rows={2}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
+                  <input value={cadForm.especialidade} onChange={e => setCadForm(f => ({ ...f, especialidade: e.target.value }))}
+                    placeholder="Especialidade (opcional)" style={{ flex: "1 1 200px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+                  <input value={cadForm.whatsapp} onChange={e => setCadForm(f => ({ ...f, whatsapp: e.target.value }))}
+                    placeholder="WhatsApp (opcional)" style={{ flex: "1 1 160px", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14 }} />
+                </div>
+                <textarea value={cadForm.bio} onChange={e => setCadForm(f => ({ ...f, bio: e.target.value }))}
+                  placeholder="Apresentação breve (bio — opcional)" rows={2}
                   style={{ width: "100%", background: "#0f1318", border: "1px solid #1e293b", borderRadius: 8, color: "#e2e8f0", padding: "10px 14px", fontSize: 14, resize: "vertical", boxSizing: "border-box", marginBottom: 14 }} />
-                {interStatus === "err" && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 10 }}>Erro ao enviar. Tente novamente ou escreva para contato@sociedadetucci.com.br</div>}
+                {cadStatus === "err" && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 10 }}>{cadError || "Erro ao enviar. Tente novamente."}</div>}
                 <div style={{ display: "flex", gap: 12, alignItems: "center", justifyContent: "flex-end" }}>
                   <a href="mailto:contato@sociedadetucci.com.br" style={{ color: "#475569", fontSize: 12, textDecoration: "none" }}>ou email direto</a>
-                  <button type="submit" disabled={interStatus === "sending" || !interForm.nome || !interForm.email}
-                    style={{ background: "#2dd4bf", border: "none", borderRadius: 8, color: "#080c10", fontWeight: 700, fontSize: 14, padding: "10px 24px", cursor: "pointer", opacity: interStatus === "sending" ? 0.7 : 1 }}>
-                    {interStatus === "sending" ? "Enviando…" : "Enviar interesse"}
+                  <button type="submit" disabled={cadStatus === "sending" || !cadForm.nome || !cadForm.email || !cadForm.tipo}
+                    style={{ background: "#2dd4bf", border: "none", borderRadius: 8, color: "#080c10", fontWeight: 700, fontSize: 14, padding: "10px 24px", cursor: "pointer", opacity: cadStatus === "sending" ? 0.7 : 1 }}>
+                    {cadStatus === "sending" ? "Enviando…" : "Solicitar cadastro"}
                   </button>
                 </div>
               </form>

@@ -2980,4 +2980,223 @@ router.patch("/age/:slug/professionals/me/password-b", requireAgeAuth, async (re
   }
 });
 
+// ─── Tipos de profissional ────────────────────────────────────────────────────
+
+export const TIPOS_PROFISSIONAL = [
+  "psicóloga", "psicólogo",
+  "médica", "médico",
+  "nutricionista",
+  "fisioterapeuta",
+  "terapeuta",
+  "coach de saúde",
+  "enfermeira", "enfermeiro",
+  "fonoaudióloga", "fonoaudiólogo",
+  "dentista",
+  "psiquiatra",
+  "neurologista",
+  "cardiologista",
+  "dermatologista",
+  "ginecologista",
+  "pediatra",
+  "outro",
+] as const;
+
+// GET /api/age/tipos — lista pública de tipos de profissional
+router.get("/age/tipos", (_req, res) => {
+  res.json({ tipos: TIPOS_PROFISSIONAL });
+});
+
+// ─── Cadastro de profissional com aprovação ───────────────────────────────────
+
+const cadastroLimit = rateLimit({ windowMs: 60 * 60 * 1000, limit: 5, message: { error: "Muitas tentativas de cadastro. Tente em 1 hora." } });
+
+// POST /api/age/cadastro — registro público de nova profissional (pendente aprovação)
+router.post("/age/cadastro", cadastroLimit, async (req, res): Promise<void> => {
+  const { nome, email, tipo, especialidade, registro, bio, whatsapp, mensagem } =
+    (req.body ?? {}) as Record<string, string>;
+
+  if (!nome?.trim() || !email?.trim() || !tipo?.trim()) {
+    res.status(400).json({ error: "nome, email e tipo são obrigatórios" });
+    return;
+  }
+
+  const emailLower = email.toLowerCase().trim();
+
+  // Verificar duplicata (email já cadastrado como profissional ativo)
+  const [existing] = await db
+    .select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable)
+    .where(eq(ageProfessionalsTable.email, emailLower))
+    .limit(1);
+  if (existing) { res.status(409).json({ error: "Este email já está cadastrado como profissional." }); return; }
+
+  const token = randomUUID();
+
+  await db.execute(sql`
+    INSERT INTO age_interesse (nome, email, tipo, especialidade, registro, bio, whatsapp, mensagem, approval_token, status)
+    VALUES (
+      ${nome.trim()}, ${emailLower}, ${tipo.trim()},
+      ${especialidade?.trim() ?? null}, ${registro?.trim() ?? null},
+      ${bio?.trim() ?? null}, ${whatsapp?.trim() ?? null},
+      ${mensagem?.trim() ?? null}, ${token}, 'pendente'
+    )
+    ON CONFLICT (email) DO UPDATE SET
+      nome = EXCLUDED.nome, tipo = EXCLUDED.tipo,
+      especialidade = EXCLUDED.especialidade, registro = EXCLUDED.registro,
+      bio = EXCLUDED.bio, whatsapp = EXCLUDED.whatsapp,
+      mensagem = EXCLUDED.mensagem, approval_token = EXCLUDED.approval_token,
+      status = 'pendente', criado_em = now()
+  `);
+
+  const BASE = process.env.PUBLIC_URL ?? "https://site-st.onrender.com";
+  const aprovarLink  = `${BASE}/api/age/aprovar?token=${token}`;
+  const recusarLink  = `${BASE}/api/age/recusar?token=${token}`;
+
+  const adminBody = `Nova solicitação de cadastro no Age:
+
+Nome:          ${nome}
+Email:         ${emailLower}
+Tipo:          ${tipo}
+Especialidade: ${especialidade ?? "-"}
+Registro:      ${registro ?? "-"}
+WhatsApp:      ${whatsapp ?? "-"}
+Bio:           ${bio ?? "-"}
+Mensagem:      ${mensagem ?? "-"}
+
+✅ APROVAR: ${aprovarLink}
+❌ RECUSAR: ${recusarLink}
+
+— SABIÁ · Age · Sociedade Tucci`;
+
+  // Envia para Yuri E luddlocke
+  await Promise.allSettled([
+    sendEmail("yurituccieterovic@gmail.com", `🐦 Age — Novo cadastro pendente: ${nome}`, adminBody, { force: true }),
+    sendEmail("luddlocke@gmail.com", `🐦 Age — Novo cadastro pendente: ${nome}`, adminBody, { force: true }),
+    sendEmail(emailLower, "Age — Recebemos sua solicitação de cadastro 🐦",
+      `Olá ${nome}!\n\nRecebemos sua solicitação de cadastro no Age.\n\nRevisaremos e entraremos em contato em breve pelo email ${emailLower}.\n\n— SABIÁ · Age · Sociedade Tucci`,
+      { force: true }
+    ),
+  ]);
+
+  res.json({ ok: true, message: "Solicitação recebida! Você receberá um email quando for analisada." });
+});
+
+// GET /api/age/aprovar?token=xxx — aprova cadastro e cria a profissional
+router.get("/age/aprovar", async (req, res): Promise<void> => {
+  const { token } = req.query as { token?: string };
+  if (!token) { res.status(400).send("Token ausente"); return; }
+
+  const [row] = (await db.execute(sql`
+    SELECT * FROM age_interesse WHERE approval_token = ${token} AND status = 'pendente' LIMIT 1
+  `) as any).rows ?? [];
+
+  if (!row) {
+    res.status(404).send("Solicitação não encontrada ou já processada.");
+    return;
+  }
+
+  // Gerar slug único a partir do nome
+  const baseSlug = (row.nome as string)
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+
+  let slug = baseSlug;
+  let attempt = 0;
+  while (attempt < 20) {
+    const [existing] = await db.select({ id: ageProfessionalsTable.id })
+      .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.slug, slug)).limit(1);
+    if (!existing) break;
+    attempt++;
+    slug = `${baseSlug}-${attempt}`;
+  }
+
+  // Senha temporária
+  const tempPass = Math.random().toString(36).slice(2, 10);
+  const passwordHash = await bcrypt.hash(tempPass, 12);
+
+  const cores = ["#2dd4bf", "#a78bfa", "#f97316", "#22c55e", "#3b82f6", "#f59e0b", "#ec4899"];
+  const cor = cores[Math.floor(Math.random() * cores.length)] ?? "#2dd4bf";
+
+  await db.insert(ageProfessionalsTable).values({
+    slug,
+    nome: row.nome as string,
+    tipo: (row.tipo as string) ?? "outro",
+    especialidade: (row.especialidade as string) ?? null,
+    registro: (row.registro as string) ?? null,
+    bio: (row.bio as string) ?? null,
+    whatsapp: (row.whatsapp as string) ?? null,
+    email: row.email as string,
+    passwordHash,
+    cor,
+    ativa: true,
+  });
+
+  await db.execute(sql`
+    UPDATE age_interesse SET status = 'aprovado', analisado_em = now() WHERE approval_token = ${token}
+  `);
+
+  const frontUrl = process.env.VITE_FRONT_URL ?? "https://site-st.vercel.app/aliancapanorama/age";
+  await sendEmail(row.email as string, "Age — Seu cadastro foi aprovado! 🐦",
+    `Olá ${row.nome}!\n\nSeu cadastro no Age foi aprovado!\n\nAcesse sua agenda em: ${frontUrl}/${slug}\n\nSua senha temporária: ${tempPass}\n\nPor segurança, troque sua senha no primeiro acesso em /age/${slug} → Configurações.\n\n— SABIÁ · Age · Sociedade Tucci`,
+    { force: true }
+  ).catch(() => {});
+
+  res.send(`
+    <html><body style="font-family:sans-serif;padding:40px;max-width:500px;margin:auto">
+      <h2>✅ Cadastro aprovado!</h2>
+      <p><strong>${row.nome}</strong> foi cadastrada como <em>${row.tipo}</em>.</p>
+      <p>Slug: <code>${slug}</code></p>
+      <p>Um email com a senha temporária foi enviado para <strong>${row.email}</strong>.</p>
+      <p>Agenda: <a href="${frontUrl}/${slug}">${frontUrl}/${slug}</a></p>
+    </body></html>
+  `);
+});
+
+// GET /api/age/recusar?token=xxx — recusa cadastro
+router.get("/age/recusar", async (req, res): Promise<void> => {
+  const { token, motivo } = req.query as { token?: string; motivo?: string };
+  if (!token) { res.status(400).send("Token ausente"); return; }
+
+  const [row] = (await db.execute(sql`
+    SELECT * FROM age_interesse WHERE approval_token = ${token} AND status = 'pendente' LIMIT 1
+  `) as any).rows ?? [];
+
+  if (!row) {
+    res.status(404).send("Solicitação não encontrada ou já processada.");
+    return;
+  }
+
+  await db.execute(sql`
+    UPDATE age_interesse SET status = 'recusado', analisado_em = now(), analisado_por = 'admin'
+    WHERE approval_token = ${token}
+  `);
+
+  await sendEmail(row.email as string, "Age — Sobre sua solicitação de cadastro",
+    `Olá ${row.nome},\n\nAnalisamos sua solicitação de cadastro no Age. Infelizmente não conseguimos avançar no momento${motivo ? `: ${motivo}` : ""}.\n\nSe tiver dúvidas, responda este email.\n\n— Equipe Age · Sociedade Tucci`,
+    { force: true }
+  ).catch(() => {});
+
+  res.send(`
+    <html><body style="font-family:sans-serif;padding:40px;max-width:500px;margin:auto">
+      <h2>❌ Cadastro recusado</h2>
+      <p>A solicitação de <strong>${row.nome}</strong> foi recusada.</p>
+      <p>Um email de notificação foi enviado para <strong>${row.email}</strong>.</p>
+    </body></html>
+  `);
+});
+
+// GET /api/age/pendentes — lista cadastros pendentes (bridge auth)
+router.get("/age/pendentes", async (req, res): Promise<void> => {
+  const secret = process.env.BRIDGE_SECRET ?? "";
+  const auth = req.headers["x-bridge-secret"] ?? req.headers["authorization"]?.replace("Bearer ", "");
+  if (!secret || auth !== secret) { res.status(403).json({ error: "Acesso negado" }); return; }
+
+  const rows = (await db.execute(sql`
+    SELECT id, nome, email, tipo, especialidade, registro, whatsapp, status, criado_em
+    FROM age_interesse WHERE status = 'pendente' ORDER BY criado_em DESC LIMIT 50
+  `) as any).rows ?? [];
+
+  res.json(rows);
+});
+
 export default router;

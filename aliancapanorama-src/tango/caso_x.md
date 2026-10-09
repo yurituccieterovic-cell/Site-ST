@@ -2,7 +2,7 @@
 
 > **O que é**: Sistema de gestão de compras e inventário doméstico para Yuri + Mayumi.
 > **Software derivado**: Colesterol — app de compras colaborativo (ideias I916-I921, I906-I908, I988-I991).
-> **Última atualização**: 2026-10-08 (S201)
+> **Última atualização**: 2026-10-09 (S203)
 
 ---
 
@@ -75,17 +75,17 @@ O Caso X é um **inventário vivo de necessidades**, não uma lista de compras. 
 |---|---|---|
 | Nebacetin | `comprar_agora` | Só uso tópico pontual; não usar em boca, olhos, feridas profundas |
 | Merthiolate spray (sem álcool) | `comprar_agora` | Base clorexidina — menos ardência; Mercado Livre |
-| Própolis em spray | `comprar_agora` | Uso oral conforme rótulo; Mercado Livre |
+| Própolis em spray | `ja_temos` | ✅ Drogasil 08/10 — Apis Vida Gengibre R$19,99; Mayumi já tem 1 também |
 | Bepantol labial | `comprar_agora` | Hidratação labial — não é antibiótico |
-| Band-aids variados | `comprar_agora` | |
-| Gaze | `comprar_agora` | |
-| Micropore | `comprar_agora` | |
-| Algodão + embalagem | `comprar_agora` | |
+| Band-aids variados | `ja_temos` | ✅ Drogasil 08/10 — 30 un R$18,99 |
+| Gaze | `ja_temos` | ✅ Drogasil 08/10 — 15 gazes (3 × 5 un) R$6,57 |
+| Micropore | `ja_temos` | ✅ Drogasil 08/10 — fita microporosa Needs R$8,99 |
+| Algodão + embalagem | `ja_temos` | ✅ Drogasil 08/10 — algodão disco 50 un R$10,99 |
 | Luvas descartáveis | `comprar_agora` | |
 | Tesoura pequena/média | `comprar_agora` | Limpa, dedicada ao kit |
 | Pinça | `comprar_agora` | 1 ou 2, se houver uso real |
-| Termômetro digital | `comprar_agora` | Simples, durável |
-| Colírio lubrificante | `comprar_agora` | Base carmelose/CMC, sem conservantes, sem vasoconstritor |
+| Termômetro digital | `ja_temos` | ✅ Drogasil 08/10 — Caretech azul R$20,87 |
+| Colírio lubrificante | `ja_temos` | ✅ Drogasil 08/10 — Cristalin 15ml R$12,99 |
 | Estojo rígido ou nécessaire | `comprar_agora` | Para curativos |
 
 ### Comprar depois
@@ -93,13 +93,13 @@ O Caso X é um **inventário vivo de necessidades**, não uma lista de compras. 
 | Item | Status | Observação |
 |---|---|---|
 | Antigripal | `comprar_depois` | Escolher UM; verificar composição e contraindicações |
-| Eno | `comprar_depois` | |
+| Eno | `ja_temos` | ✅ Drogasil 08/10 — Limão (2 env) R$5,16 + Laranja (4 env) R$9,98 |
 | Bepantol corporal | `comprar_depois` | Já tem Hipoglós para assadura |
 | Laxante | `comprar_depois` | Só para constipação ocasional, conforme bula |
 | Pomada com corticoide | `comprar_depois` | |
 | Colírio medicamentoso | `comprar_depois` | |
-| Gelol ou equivalente | `comprar_depois` | Ver abaixo |
-| Bolsa térmica extra | `comprar_depois` | Presente para Mayumi — sem urgência |
+| Gelol ou equivalente | `ja_temos` | ✅ Drogasil 08/10 — Gelol Gel 60g R$42,79 |
+| Bolsa térmica extra | `ja_temos` | ✅ Drogasil 08/10 — Multilaser HC353 Azul R$24,90 |
 
 ### Sobre o Gelol
 - Aerossol: salicilato de metila + cânfora + mentol
@@ -266,7 +266,36 @@ Quando Yuri enviar o que foi comprado, o sistema transforma em histórico:
 
 ---
 
-## 10. Desenvolvimento do Colesterol — roadmap derivado do Caso X
+## 10. Histórico de compras
+
+### Drogasil online — 08/10/2026
+**Pedido:** 261008168925 · **Entrega:** até 13/10/2026  
+**Endereço:** Av. Manoel Pedro Pimentel, 200 - AP 74 - Osasco, SP  
+**Pagamento:** Nubank · **Total pago:** R$ 276,52 (desconto R$63,63 + cupom R$10,00)
+
+| Item | Qtd | Preço | Obs |
+|---|---|---|---|
+| Fita Microporosa Needs Bege (2,5cm × 1,35m) | 1 | R$ 8,99 | ✅ comprado |
+| NiQuitin Adesivos 21mg (7 adesivos) | 1 | R$ 104,30 | ✅ comprado — novo item, não estava na lista |
+| Bolsa Térmica Gel Multilaser HC353 Azul | 1 | R$ 24,90 | ✅ comprado |
+| Sal de Fruta Eno Limão 5g (2 envelopes) | 1 | R$ 5,16 | ✅ comprado |
+| Sal de Fruta Eno Laranja 5g (4 envelopes) | 2 | R$ 9,98 | ✅ comprado |
+| Algodão Disco Needs Beauty 50 un | 1 | R$ 10,99 | ✅ comprado |
+| Band-Aid Curativos (30 un) | 1 | R$ 18,99 | ✅ comprado |
+| Termômetro Digital Caretech | 1 | R$ 20,87 | ✅ comprado |
+| Própolis em Spray Gengibre Apis Vida | 1 | R$ 19,99 | ✅ comprado — nota: Mayumi já tem própolis spray; ia comprar no ML mas comprou na Drogasil |
+| Cristalin Colírio 15ml | 1 | R$ 12,99 | ✅ comprado |
+| Gelol Gel Relaxante 60g | 1 | R$ 42,79 | ✅ comprado |
+| Gaze Cremer Max (5 un por pacote) | 3 | R$ 6,57 | ✅ comprado (15 gazes no total) |
+
+**Notas:**
+- NiQuitin (adesivos de nicotina) = item não previsto na lista — novo item do Caso X
+- Própolis duplicado (Mayumi tem um) — verificar se vai usar os dois ou guardar/presentear
+- Micropore (fita microporosa) = equivalente ao Micropore listado no kit de saúde
+
+---
+
+## 11. Desenvolvimento do Colesterol — roadmap derivado do Caso X
 
 Ver IDEIAS.md: I916-I921 (S186) + I988-I991 (S201)
 
