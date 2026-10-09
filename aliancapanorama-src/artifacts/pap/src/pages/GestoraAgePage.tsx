@@ -5,7 +5,7 @@ const API = import.meta.env.VITE_API_URL ?? "";
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
 type Paciente = { id: number; nome: string; email: string; telefone?: string; created_at: string };
-type Agendamento = { id: number; patient_nome: string; data_hora: string; status: string; canal: string };
+type Agendamento = { id: number; patient_nome: string; patient_id?: number | null; data_hora: string; status: string; canal: string; observacao?: string | null };
 type Mensalidade = { mes: string; pago: boolean; pagoAt: string | null; valorReais: number | null };
 type Profissional = {
   id: number; slug: string; nome: string; cor: string; tipo: string; email: string | null;
@@ -162,6 +162,62 @@ function ProfCard({ prof, onAprovar, onRecusar, aprovando, onRefresh }: {
 }) {
   const [aba, setAba] = useState<"pacientes" | "agenda" | "financeiro">("pacientes");
   const [showBloquear, setShowBloquear] = useState(false);
+
+  // Agenda expandida: range + agendamentos carregados dinamicamente
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const [agendaRange, setAgendaRange] = useState<"hoje" | "semana" | "14dias">("hoje");
+  const [agendaItems, setAgendaItems] = useState<Agendamento[]>(prof.agendaHoje);
+  const [agendaLoading, setAgendaLoading] = useState(false);
+  const [atualizandoAppt, setAtualizandoAppt] = useState<number | null>(null);
+
+  // Modal nova consulta
+  const [showNovaConsulta, setShowNovaConsulta] = useState(false);
+  const [novaForm, setNovaForm] = useState({ patientNome: "", dataHora: "", canal: "presencial", observacao: "" });
+  const [novaLoading, setNovaLoading] = useState(false);
+  const [novaErro, setNovaErro] = useState("");
+
+  async function carregarAgenda(range: "hoje" | "semana" | "14dias") {
+    setAgendaRange(range);
+    setAgendaLoading(true);
+    try {
+      const dias = range === "hoje" ? 1 : range === "semana" ? 7 : 14;
+      const toDate = new Date(); toDate.setDate(toDate.getDate() + dias);
+      const to = toDate.toISOString().slice(0, 10);
+      const r = await fetch(`${API}/api/age/gestora/profissionais/${prof.id}/agenda?from=${todayStr}&to=${to}`, { credentials: "include" });
+      if (r.ok) { const d = await r.json() as { appointments: Agendamento[] }; setAgendaItems(d.appointments); }
+    } finally { setAgendaLoading(false); }
+  }
+
+  async function mudarStatusAppt(id: number, status: string) {
+    setAtualizandoAppt(id);
+    try {
+      await fetch(`${API}/api/age/gestora/appointments/${id}/status`, {
+        method: "PATCH", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      setAgendaItems(items => items.map(a => a.id === id ? { ...a, status } : a));
+    } finally { setAtualizandoAppt(null); }
+  }
+
+  async function criarConsulta() {
+    if (!novaForm.patientNome.trim() || !novaForm.dataHora) { setNovaErro("Nome e data/hora são obrigatórios"); return; }
+    setNovaLoading(true); setNovaErro("");
+    try {
+      const r = await fetch(`${API}/api/age/gestora/profissionais/${prof.id}/appointments`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(novaForm),
+      });
+      const d = await r.json() as { id?: number; error?: string };
+      if (r.ok) {
+        setShowNovaConsulta(false);
+        setNovaForm({ patientNome: "", dataHora: "", canal: "presencial", observacao: "" });
+        await carregarAgenda(agendaRange);
+      } else { setNovaErro(d.error ?? "Erro ao criar consulta"); }
+    } catch { setNovaErro("Sem conexão. Tente novamente."); }
+    finally { setNovaLoading(false); }
+  }
   const [togglingMens, setTogglingMens] = useState(false);
   const [pendExpanded, setPendExpanded] = useState(false);
 
@@ -277,20 +333,100 @@ function ProfCard({ prof, onAprovar, onRecusar, aprovando, onRefresh }: {
       {/* Aba Agenda */}
       {aba === "agenda" && (
         <div>
-          {prof.agendaHoje.length === 0 ? (
-            <p style={{ color: "#444", fontSize: 13, textAlign: "center", margin: "8px 0" }}>Sem agenda hoje.</p>
-          ) : prof.agendaHoje.map(ag => (
-            <div key={ag.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", borderBottom: "1px solid #1f2937" }}>
-              <span style={{ color: "#60a5fa", fontWeight: 700, fontSize: 13, fontVariantNumeric: "tabular-nums", width: 40 }}>
-                {new Date(ag.data_hora).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
-              </span>
-              <span style={{ color: "#e8e8e8", fontSize: 13, flex: 1 }}>{ag.patient_nome ?? "Disponível"}</span>
-              <span style={{ color: "#888", fontSize: 11 }}>{ag.canal}</span>
-              <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 20, background: ag.status === "confirmado" ? "#16a34a22" : "#f59e0b22", color: ag.status === "confirmado" ? "#34d399" : "#f59e0b" }}>
-                {ag.status}
-              </span>
+          {/* Range + Nova consulta */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 4, flex: 1 }}>
+              {(["hoje", "semana", "14dias"] as const).map(r => (
+                <button key={r} onClick={() => carregarAgenda(r)}
+                  style={{ flex: 1, padding: "5px 0", borderRadius: 7, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 600,
+                    background: agendaRange === r ? "#1f2937" : "transparent",
+                    color: agendaRange === r ? prof.cor : "#555" }}>
+                  {r === "hoje" ? "Hoje" : r === "semana" ? "7 dias" : "14 dias"}
+                </button>
+              ))}
             </div>
-          ))}
+            <button onClick={() => setShowNovaConsulta(true)}
+              style={{ background: prof.cor + "22", border: `1px solid ${prof.cor}44`, borderRadius: 8, padding: "5px 12px", color: prof.cor, fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+              + Consulta
+            </button>
+          </div>
+
+          {/* Modal nova consulta */}
+          {showNovaConsulta && (
+            <div style={{ background: "#0f172a", border: "1px solid #374151", borderRadius: 12, padding: 16, marginBottom: 12 }}>
+              <div style={{ color: "#e8e8e8", fontWeight: 700, fontSize: 13, marginBottom: 10 }}>Nova consulta</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <input value={novaForm.patientNome} onChange={e => setNovaForm(f => ({ ...f, patientNome: e.target.value }))}
+                  placeholder="Nome do paciente *"
+                  style={{ background: "#1a1a2e", border: "1px solid #333", borderRadius: 8, color: "#e8e8e8", padding: "8px 12px", fontSize: 13, outline: "none" }} />
+                <input type="datetime-local" value={novaForm.dataHora} onChange={e => setNovaForm(f => ({ ...f, dataHora: e.target.value }))}
+                  style={{ background: "#1a1a2e", border: "1px solid #333", borderRadius: 8, color: "#e8e8e8", padding: "8px 12px", fontSize: 13, outline: "none" }} />
+                <div style={{ display: "flex", gap: 8 }}>
+                  {["presencial", "online", "telefone"].map(c => (
+                    <button key={c} onClick={() => setNovaForm(f => ({ ...f, canal: c }))}
+                      style={{ flex: 1, padding: "6px 0", borderRadius: 7, border: `1px solid ${novaForm.canal === c ? prof.cor : "#333"}`, background: novaForm.canal === c ? prof.cor + "22" : "transparent", color: novaForm.canal === c ? prof.cor : "#666", fontSize: 11, cursor: "pointer" }}>
+                      {c}
+                    </button>
+                  ))}
+                </div>
+                <input value={novaForm.observacao} onChange={e => setNovaForm(f => ({ ...f, observacao: e.target.value }))}
+                  placeholder="Observação (opcional)"
+                  style={{ background: "#1a1a2e", border: "1px solid #333", borderRadius: 8, color: "#e8e8e8", padding: "8px 12px", fontSize: 13, outline: "none" }} />
+                {novaErro && <p style={{ color: "#f87171", fontSize: 12, margin: 0 }}>{novaErro}</p>}
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => { setShowNovaConsulta(false); setNovaErro(""); }}
+                    style={{ flex: 1, background: "none", border: "1px solid #374151", borderRadius: 8, padding: 9, color: "#666", fontSize: 12, cursor: "pointer" }}>
+                    Cancelar
+                  </button>
+                  <button onClick={() => void criarConsulta()} disabled={novaLoading}
+                    style={{ flex: 1, background: novaLoading ? "#333" : prof.cor, border: "none", borderRadius: 8, padding: 9, color: "#111", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                    {novaLoading ? "Criando…" : "Agendar"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Lista de agendamentos */}
+          {agendaLoading ? (
+            <p style={{ color: "#444", fontSize: 12, textAlign: "center" }}>Carregando…</p>
+          ) : agendaItems.length === 0 ? (
+            <p style={{ color: "#444", fontSize: 13, textAlign: "center", margin: "8px 0" }}>Nenhuma consulta no período.</p>
+          ) : agendaItems.map(ag => {
+            const dt = new Date(ag.data_hora);
+            const diaStr = dt.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" });
+            const hrStr = dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+            const isCancelado = ag.status === "cancelado";
+            return (
+              <div key={ag.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 0", borderBottom: "1px solid #1f2937", opacity: isCancelado ? 0.5 : 1 }}>
+                <div style={{ width: 70, flexShrink: 0 }}>
+                  <div style={{ color: "#60a5fa", fontWeight: 700, fontSize: 12 }}>{hrStr}</div>
+                  <div style={{ color: "#555", fontSize: 10 }}>{diaStr}</div>
+                </div>
+                <span style={{ color: "#e8e8e8", fontSize: 13, flex: 1, textDecoration: isCancelado ? "line-through" : "none" }}>{ag.patient_nome ?? "—"}</span>
+                <span style={{ color: "#888", fontSize: 10, flexShrink: 0 }}>{ag.canal}</span>
+                <span style={{ fontSize: 10, padding: "2px 7px", borderRadius: 20, flexShrink: 0,
+                  background: ag.status === "confirmado" ? "#16a34a22" : ag.status === "cancelado" ? "#37141422" : "#f59e0b22",
+                  color: ag.status === "confirmado" ? "#34d399" : ag.status === "cancelado" ? "#666" : "#f59e0b" }}>
+                  {ag.status}
+                </span>
+                {!isCancelado && (
+                  <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
+                    {ag.status !== "confirmado" && (
+                      <button onClick={() => void mudarStatusAppt(ag.id, "confirmado")} disabled={atualizandoAppt === ag.id}
+                        style={{ background: "#16a34a22", border: "1px solid #16a34a44", borderRadius: 6, padding: "3px 8px", color: "#34d399", fontSize: 10, cursor: "pointer" }}>
+                        {atualizandoAppt === ag.id ? "…" : "✓"}
+                      </button>
+                    )}
+                    <button onClick={() => void mudarStatusAppt(ag.id, "cancelado")} disabled={atualizandoAppt === ag.id}
+                      style={{ background: "#991b1b22", border: "1px solid #991b1b44", borderRadius: 6, padding: "3px 8px", color: "#f87171", fontSize: 10, cursor: "pointer" }}>
+                      {atualizandoAppt === ag.id ? "…" : "✗"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

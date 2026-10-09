@@ -2004,6 +2004,71 @@ router.patch("/age/gestora/profissionais/:profId/mensalidade", requireGestoraAut
   res.json({ ok: true, mes: mesRef, pago: pago ?? true });
 });
 
+// PATCH /api/age/gestora/appointments/:id/status — confirmar ou cancelar consulta
+router.patch("/age/gestora/appointments/:id/status", requireGestoraAuth, async (req, res): Promise<void> => {
+  const id = parseInt(req.params.id);
+  const { status } = req.body as { status?: string };
+  if (!["confirmado", "cancelado", "agendado"].includes(status ?? "")) {
+    res.status(400).json({ error: "Status inválido. Use: confirmado, cancelado, agendado" }); return;
+  }
+  const apptRes = await db.execute(sql`
+    SELECT a.id, a.patient_nome, a.patient_id, a.professional_id,
+           p.nome AS prof_nome, p.slug AS prof_slug,
+           pat.email AS pat_email
+    FROM age_appointments a
+    JOIN age_professionals p ON p.id = a.professional_id
+    LEFT JOIN age_patients pat ON pat.id = a.patient_id
+    WHERE a.id = ${id} LIMIT 1
+  `);
+  const appt = (apptRes as any).rows?.[0];
+  if (!appt) { res.status(404).json({ error: "Consulta não encontrada" }); return; }
+  await db.execute(sql`UPDATE age_appointments SET status = ${status}, updated_at = now() WHERE id = ${id}`);
+  if (status === "cancelado" && appt.pat_email) {
+    sendEmail(appt.pat_email, `Consulta cancelada — ${appt.prof_nome}`,
+      `Olá ${appt.patient_nome},\n\nSua consulta com ${appt.prof_nome} foi cancelada.\n\nPara reagendar, acesse: ${FRONT_URL}/age/${appt.prof_slug}\n\n— SABIÁ`
+    ).catch(() => {});
+  }
+  res.json({ ok: true, id, status });
+});
+
+// GET /api/age/gestora/profissionais/:profId/agenda — agenda range (padrão: próximos 7 dias)
+router.get("/age/gestora/profissionais/:profId/agenda", requireGestoraAuth, async (req, res): Promise<void> => {
+  const profId = parseInt(req.params.profId);
+  const from = (req.query.from as string) ?? new Date().toISOString().slice(0, 10);
+  const toDate = new Date(from); toDate.setDate(toDate.getDate() + 7);
+  const to = (req.query.to as string) ?? toDate.toISOString().slice(0, 10);
+  const rows = await db.execute(sql`
+    SELECT id, patient_nome, patient_id, data_hora, status, canal, observacao
+    FROM age_appointments
+    WHERE professional_id = ${profId}
+      AND data_hora >= ${from}::timestamptz
+      AND data_hora < ${to}::timestamptz
+      AND status != 'bloqueado'
+    ORDER BY data_hora ASC LIMIT 100
+  `);
+  res.json({ appointments: (rows as any).rows, from, to });
+});
+
+// POST /api/age/gestora/profissionais/:profId/appointments — criar consulta manualmente
+router.post("/age/gestora/profissionais/:profId/appointments", requireGestoraAuth, async (req, res): Promise<void> => {
+  const profId = parseInt(req.params.profId);
+  const { patientNome, dataHora, canal = "presencial", observacao } = req.body as {
+    patientNome?: string; dataHora?: string; canal?: string; observacao?: string;
+  };
+  if (!patientNome?.trim() || !dataHora) {
+    res.status(400).json({ error: "patientNome e dataHora são obrigatórios" }); return;
+  }
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrado" }); return; }
+  const result = await db.execute(sql`
+    INSERT INTO age_appointments (professional_id, patient_nome, data_hora, status, canal, observacao)
+    VALUES (${profId}, ${patientNome.trim()}, ${new Date(dataHora)}, 'agendado', ${canal}, ${observacao ?? null})
+    RETURNING id, patient_nome, data_hora, status, canal
+  `);
+  res.status(201).json((result as any).rows?.[0] ?? {});
+});
+
 // ─── Convites de pré-aprovação (I564) ────────────────────────────────────────
 
 // POST /api/age/:slug/patients/:id/portal-invite — profissional convida paciente já cadastrado para criar conta
