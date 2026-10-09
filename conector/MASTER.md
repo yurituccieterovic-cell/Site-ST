@@ -2027,3 +2027,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 Sua agenda está livre nos próximos 7 dias: não há consultas agendadas.
 
 Se precisar de ajuda para organiza"
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — Cláudio S205b
+- SABIÁ profissional: self-HTTP Conector fetch removido → timeout 40s→2.3s (root cause: servidor chamando a si mesmo)
+- Conector write gateado: só gravar exchanges bem-sucedidos (nunca erros)
+- Ações de nota: 4 botões (Ramificar/Tarefa/Paciente/Agendar) implementados
+- MASTER_PASSWORD adicionado ao Render env
