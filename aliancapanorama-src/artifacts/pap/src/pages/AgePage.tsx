@@ -211,6 +211,7 @@ export function AgePage() {
   const sabiaVoiceRef = useRef(false);     // resposta deve ser lida automaticamente
   const prevListeningRef = useRef(false);
   const sabiaInputRef = useRef("");
+  const dispatchSabiaRef = useRef<(msg: string) => void>(() => {});
   const [sabiaLiveMode, setSabiaLiveMode] = useState(false);
   const sabiaLiveModeRef = useRef(false);
   const prevTtsPlayingRef = useRef<string | null>(null);
@@ -1032,7 +1033,8 @@ export function AgePage() {
     setSabiaLoading(true);
     const ctrl = new AbortController();
     sabiaAbortRef.current = ctrl;
-    const timer = setTimeout(() => ctrl.abort(), 40000);
+    let timedOut = false;
+    const timer = setTimeout(() => { timedOut = true; ctrl.abort(); }, 40000);
     try {
       const endpoint = mode === "professional"
         ? `${API}/api/age/${slug}/sabia`
@@ -1059,18 +1061,22 @@ export function AgePage() {
       const isAbort = err instanceof DOMException && err.name === "AbortError";
       if (!isAbort) {
         setMsgs(m => [...m, { role: "assistant", content: "🐦 Servidor sem resposta. Se for a primeira vez hoje, aguarde 1 min (cold start) e tente novamente." }]);
+      } else if (timedOut) {
+        setMsgs(m => [...m, { role: "assistant", content: "🐦 Tempo limite excedido (40s). Servidor ocupado — tente novamente em instantes." }]);
       }
     } finally {
       setSabiaLoading(false);
       sabiaAbortRef.current = null;
-      // processar próximo da fila
+      // processar próximo da fila — usa ref estável para evitar closure stale
       setSabiaQueue(q => {
         const [next, ...rest] = q;
-        if (next) setTimeout(() => dispatchSabia(next), 100);
+        if (next) setTimeout(() => dispatchSabiaRef.current(next), 100);
         return rest;
       });
     }
   }
+  // Atualiza ref após cada render para que a fila sempre use a versão mais recente
+  dispatchSabiaRef.current = dispatchSabia;
 
   async function sendSabia(e: React.FormEvent) {
     e.preventDefault();

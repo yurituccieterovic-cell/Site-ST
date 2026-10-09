@@ -17,9 +17,9 @@ function resolvePool(): PgPool {
     _pool = new Pool({
       connectionString: url,
       ssl: { rejectUnauthorized: false },
-      connectionTimeoutMillis: 60000,
+      connectionTimeoutMillis: 30000,
       idleTimeoutMillis: 30000,
-      max: 5,
+      max: 10,
       keepAlive: true,
       keepAliveInitialDelayMillis: 10000,
     });
