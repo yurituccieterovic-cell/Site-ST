@@ -50,8 +50,8 @@ const MODELS: Record<ProviderName, string> = {
 };
 
 const POOLS: Record<LLMPool, ProviderName[]> = {
-  // xAI primeiro: única chave confiável no momento (Groq 404, Gemini quota, OpenAI sem crédito)
-  "chat-live": ["xai", "groq", "gemini", "openai", "cerebras"],
+  // Groq primeiro (rápido, gratuito); Cloudflare/Mistral como fallback garantido
+  "chat-live": ["xai", "groq", "gemini", "openai", "cerebras", "cloudflare", "mistral"],
   // Tarefas background: Cloudflare 10k/dia, Mistral, Cerebras como reservas
   "batch":     ["cloudflare", "mistral", "cerebras", "gemini", "deepseek"],
   // Raciocínio profundo: DeepSeek-V3 forte e barato
