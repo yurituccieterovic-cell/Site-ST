@@ -2,6 +2,17 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S201 — Caso X + Colesterol + Saúde das IAs (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S201-1 | tango/caso_x.md criado — inventário doméstico completo Yuri+Mayumi | ✅ feito |
+| S201-2 | I988-I991: ideias Colesterol MVP registradas no IDEIAS.md | ✅ feito |
+| S201-3 | Frontend de tasks no /adm (I984 derivado) | ⏳ PENDENTE |
+| S201-4 | Frontend Colesterol no PAP (/colesterol ou /adm/compras) (I990) | ⏳ PENDENTE |
+| S201-5 | Enviar links por email quando tasks + Colesterol estiverem no ar | ⏳ PENDENTE |
+| S201-6 | ARPIA URL corrigida para monitoramento: arpia.onrender.com (não arpia-api) | ✅ corrigido |
+
 ### S198 — Consolidação PAP: assembleias #667-#668 + #1234 + #processo (2026-10-08)
 
 | # | Item | Status |

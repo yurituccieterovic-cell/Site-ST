@@ -2825,3 +2825,19 @@ Dashboard visual de saúde do ecossistema em /adm/saude — histórico de checks
 ### I987: Trigger assembleia no PAP via SalesCockpit API
 **Prioridade:** 🟡 Média  **Complexidade:** ● Média  
 Botão em /adm do PAP que permite criar e fechar uma sessão de assembleia no SalesCockpit sem precisar do terminal. PAP chama SC API com x-internal-token. Resultado retorna para o PAP e para email.
+
+### I988: Colesterol — MVP Caso X (lista de estados + histórico de compras)
+**Prioridade:** 🔴 Alta  **Complexidade:** ● Média  
+App de compras compartilhado Yuri+Mayumi derivado do Caso X. Itens com 10 estados (comprar_agora, já_temos, verificar_mayumi, etc). Categorias: saúde, cozinha, alimentos, casa/carro, grãos. Histórico por compra (data, loja, preço, quem pagou). Schema JSON em tango/caso_x.md.
+
+### I989: Colesterol — input por voz/texto livre
+**Prioridade:** 🔴 Alta  **Complexidade:** ◑ Média  
+Usuário fala ou digita livremente ("preciso de band-aids e termômetro") → NLP extrai itens, categoriza automaticamente, pergunta quantidades. Derivado da origem do Caso X (transcrição de voz).
+
+### I990: Colesterol — frontend no PAP (/colesterol ou /adm/compras)
+**Prioridade:** 🟡 Média  **Complexidade:** ◑ Média  
+Página no PAP para o Colesterol. Pode ser rota própria acessível para tier ≥ 1 (Yuri + Mayumi) ou tab no /adm. Lista com filtro por status e categoria, botão "marcar como comprado", histórico navegável.
+
+### I991: Colesterol — integração Rapadura (gastos domésticos)
+**Prioridade:** 🟢 Baixa  **Complexidade:** ● Média  
+Quando item é marcado como comprado com preço, registrar automaticamente como despesa doméstica no Rapadura. Categoria: "casa". Permite ver gasto total de compras no mês no painel patrimonial.
