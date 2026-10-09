@@ -187,7 +187,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax", // "none" obrigatório para cross-origin (Vercel → Render)
       secure: isProduction,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
