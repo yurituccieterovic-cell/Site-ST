@@ -2841,3 +2841,38 @@ Página no PAP para o Colesterol. Pode ser rota própria acessível para tier �
 ### I991: Colesterol — integração Rapadura (gastos domésticos)
 **Prioridade:** 🟢 Baixa  **Complexidade:** ● Média  
 Quando item é marcado como comprado com preço, registrar automaticamente como despesa doméstica no Rapadura. Categoria: "casa". Permite ver gasto total de compras no mês no painel patrimonial.
+
+### I992: Colesterol — compras recorrentes (como app Cobase)
+**Prioridade:** alta | **Complexidade:** média
+Marcar itens como recorrentes — sistema sugere repor automaticamente quando o ciclo estimado termina. Ex: "esse shampoo dura ~30 dias → lembra dia 25".
+**Origem:** Yuri brainstorm voz 08/10/2026
+
+### I993: Colesterol — carrinhos por ocasião
+**Prioridade:** média | **Complexidade:** média
+Separar compras por contexto: "churrasco de sábado", "compras do mês", "farmácia urgente". Cada carrinho tem orçamento próprio e lista de itens.
+**Origem:** Yuri brainstorm 08/10/2026
+
+### I994: Colesterol — limite de gastos por compra
+**Prioridade:** alta | **Complexidade:** baixa
+Usuário define teto: "nessa compra, máximo R$200". Sistema pondera alternativas e avisa quando está perto do limite. Alternativas mostradas na hora de fechar o carrinho.
+**Origem:** Yuri brainstorm 08/10/2026
+
+### I995: Colesterol — link compartilhável com carrinho personalizado
+**Prioridade:** média | **Complexidade:** alta
+Gerar link único com lista de compras + filtros + produtos específicos já aplicados. Compartilhável com Mayumi ou qualquer pessoa.
+**Origem:** Yuri brainstorm 08/10/2026
+
+### I996: Colesterol — memória de buscas e compras
+**Prioridade:** média | **Complexidade:** média
+Guardar histórico de pesquisas e compras com metadados: onde buscou, o que encontrou, quanto estava, quando. Permite comparar preços ao longo do tempo.
+**Origem:** Yuri brainstorm 08/10/2026
+
+### I997: Colesterol — valores totais com taxa e parcelamento
+**Prioridade:** alta | **Complexidade:** baixa
+Mostrar sempre: subtotal + frete + taxa de parcelamento + total real. Comparar diferentes formas de pagamento antes de confirmar.
+**Origem:** Yuri brainstorm 08/10/2026
+
+### I998: Assembleia "Secretaria" — fusão SalesCockpit + Playcenter
+**Prioridade:** baixa | **Complexidade:** alta
+Yuri quer uma assembleia unificada chamada "Secretaria" que junte o SalesCockpit e o Playcenter em uma única thread. Avaliar viabilidade técnica.
+**Origem:** Yuri brainstorm 08/10/2026
