@@ -164,7 +164,7 @@ async function testConector(): Promise<TestResult> {
 
 async function testAgeEndpoints(): Promise<TestResult> {
   return measure("Age endpoints", async () => {
-    const slugs = ["lisange", "susana"];
+    const slugs = ["lisange", "suzana"];
     const results: string[] = [];
     for (const slug of slugs) {
       const r = await fetch(`${PAP_API}/api/age/${slug}`, { signal: AbortSignal.timeout(10_000) });
@@ -173,6 +173,54 @@ async function testAgeEndpoints(): Promise<TestResult> {
     const allOk = results.every(r => r.endsWith(":200"));
     if (!allOk) throw new Error(results.join(" "));
     return results.join(" ");
+  });
+}
+
+async function testAgeSabiaPublic(): Promise<TestResult> {
+  return measure("Age SABIÁ pública", async () => {
+    const r = await fetch(`${PAP_API}/api/age/lisange/sabia-public`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "ping leucócito — responda em 1 palavra" }),
+      signal: AbortSignal.timeout(35_000),
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json() as { reply?: string };
+    if (!d.reply) throw new Error("Sem reply na resposta");
+    return `reply: ${d.reply.slice(0, 60)}`;
+  });
+}
+
+async function testAgeProfLoginAndSabia(): Promise<TestResult> {
+  return measure("Age login + SABIÁ auth", async () => {
+    const masterPwd = process.env.MASTER_PASSWORD ?? "";
+    if (!masterPwd) throw new Error("MASTER_PASSWORD não configurado");
+
+    // Login com senha master (bypassa IP challenge)
+    const loginR = await fetch(`${PAP_API}/api/age/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug: "lisange", password: masterPwd }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!loginR.ok) throw new Error(`login HTTP ${loginR.status}`);
+    const loginD = await loginR.json() as { ok?: boolean; challenge?: boolean };
+    if (!loginD.ok) throw new Error(`login falhou: ${JSON.stringify(loginD)}`);
+
+    // Captura cookie de sessão
+    const cookie = loginR.headers.get("set-cookie") ?? "";
+
+    // Chama SABIÁ com a sessão
+    const sabiaR = await fetch(`${PAP_API}/api/age/lisange/sabia`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Cookie": cookie },
+      body: JSON.stringify({ message: "ping leucócito — responda ok" }),
+      signal: AbortSignal.timeout(35_000),
+    });
+    if (!sabiaR.ok) throw new Error(`SABIÁ HTTP ${sabiaR.status}`);
+    const sabiaD = await sabiaR.json() as { reply?: string };
+    if (!sabiaD.reply) throw new Error("Sem reply do SABIÁ");
+    return `login ok → SABIÁ: ${sabiaD.reply.slice(0, 60)}`;
   });
 }
 
@@ -386,6 +434,8 @@ const TESTS: Array<() => Promise<TestResult>> = [
   testSCRODARStatus,
   // Age (agenda médica/psicológica)
   testAgeEndpoints,
+  testAgeSabiaPublic,
+  testAgeProfLoginAndSabia,
   // Gmail + LLM
   testGmailSMTP,
   testLLMQuick,
