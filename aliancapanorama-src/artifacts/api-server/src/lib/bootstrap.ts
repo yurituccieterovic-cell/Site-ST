@@ -2810,3 +2810,26 @@ export async function ensureTasksIndices(): Promise<void> {
   `);
   logger.info("bootstrap: tasks.indices_data OK");
 }
+
+// Colesterol — lista de compras doméstica (I990)
+export async function ensureColesterolTable(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS colesterol_items (
+      id SERIAL PRIMARY KEY,
+      nome TEXT NOT NULL,
+      categoria TEXT NOT NULL DEFAULT 'geral',
+      quantidade TEXT DEFAULT '1',
+      status TEXT NOT NULL DEFAULT 'pendente',
+      recorrente BOOLEAN DEFAULT false,
+      carrinho TEXT DEFAULT 'geral',
+      notas TEXT,
+      criado_por TEXT DEFAULT 'yuri',
+      preco_ref NUMERIC(10,2),
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW(),
+      comprado_em TIMESTAMPTZ
+    )
+  `);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_colesterol_status ON colesterol_items(status, categoria, carrinho)`);
+  logger.info("bootstrap: colesterol_items OK");
+}

@@ -21,6 +21,7 @@ import { PlaycenterPage } from "@/pages/PlaycenterPage";
 import { ArvorePage } from "@/pages/ArvorePage";
 import { ArvoreTokenPage } from "@/pages/ArvoreTokenPage";
 import { RapaduraPage } from "@/pages/RapaduraPage";
+import ColesterolPage from "@/pages/ColesterolPage";
 import { AgePage } from "@/pages/AgePage";
 import { AgePrivacidadePage } from "@/pages/AgePrivacidadePage";
 import { AgeTermosPage } from "@/pages/AgeTermosPage";
@@ -410,6 +411,7 @@ const isArvoreToken = path.includes("/arvore-token");
 const isArvore      = path.includes("/arvore") && !isArvoreToken;
 const isManuel      = path.includes("/rapadura/manuel");
 const isRapadura    = path.includes("/rapadura");
+const isColesterol  = path.includes("/compras");
 const isCalc           = path.includes("/calculus");
 const isAgePrivacidade = path.includes("/age/privacidade");
 const isAgeTermos      = path.includes("/age/termos");
@@ -527,6 +529,10 @@ function App() {
 
   if (isRapadura) {
     return <RapaduraPage />;
+  }
+
+  if (isColesterol) {
+    return <ColesterolPage />;
   }
 
   if (isCssTutorial) {

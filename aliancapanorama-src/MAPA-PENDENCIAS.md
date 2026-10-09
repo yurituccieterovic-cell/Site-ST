@@ -2,6 +2,16 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S205 — Age P0 fix + Bloco 3 + Gestora password reset (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S205-1 | Bug P0 I972: pool DB max 5→10 + timeout SABIÁ visível + stale closure queue | ✅ commit cec8a50 |
+| S205-2 | Age Bloco 3: SABIÁ memória total — pacientes ativos + notas no contexto LLM | ✅ commit c2b7363 |
+| S205-3 | Gestora forgot/reset password (rotas + frontend + bootstrap + sendEmail force) | ✅ commit 38b5634 |
+| S205-4 | Age Bloco 5: lembretes 48h/24h + LGPD — já estava implementado (cron OK) | ✅ confirmado |
+| S205-5 | Frontend Colesterol no PAP (/adm/compras ou /colesterol) | ⏳ PENDENTE |
+
 ### S204 — Age Bloco 1 + Tasks /adm + SABIÁ fix (2026-10-09)
 
 | # | Item | Status |
@@ -11,11 +21,11 @@
 | S204-3 | AdmTasks: aba Tarefas no /adm com stats, filtros, criação, 9 índices, Φ | ✅ commit 0001034 |
 | S204-4 | LLM router: Mistral adicionado como fallback em chat-live → SABIÁ mais resiliente | ✅ commit 0001034 |
 | S204-5 | Links enviados por email para luddlocke (tasks + age cadastro) | ✅ feito |
-| S204-6 | Frontend Colesterol no PAP (/adm/compras ou /colesterol) | ⏳ PENDENTE |
-| S204-7 | Age Bloco 2: painel secretaria/recepção (/age/recepcao) | ⏳ PENDENTE |
-| S204-8 | Age Bloco 3: SABIÁ persistente + memória total | ⏳ PENDENTE |
-| S204-9 | Age Bloco 5: lembretes automáticos 48h/24h + LGPD checkbox | ⏳ PENDENTE |
-| S204-10 | Nome do painel secretaria: "Recepção" ou "Gestora" — decidir com Yuri | ⏳ aguarda decisão |
+| S204-6 | Frontend Colesterol no PAP (/adm/compras ou /colesterol) | ⏳ S205-5 |
+| S204-7 | Age Bloco 2: GestoraAgePage — confirmar/cancelar/criar consultas | ✅ commit 240569c |
+| S204-8 | Age Bloco 3: SABIÁ persistente + memória total | ✅ S205-2 |
+| S204-9 | Age Bloco 5: lembretes automáticos 48h/24h + LGPD checkbox | ✅ já implementado |
+| S204-10 | Nome do painel secretaria: "Gestora" — decidido | ✅ |
 
 ### S201 — Caso X + Colesterol + Saúde das IAs (2026-10-09)
 

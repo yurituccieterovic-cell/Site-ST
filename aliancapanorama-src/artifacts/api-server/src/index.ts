@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso, seedAuliasCursoAvancado, ensureVectorMemory, seedRoteirosVideo, ensureRapaduraTables, seedRapaduraUsers, ensureAgeTables, ensurePvTables, ensureJasmimTables, ensureTasksIndices } from "./lib/bootstrap";
+import { seedDatabase, enforceUniquePasswords, ensureMekyTables, seedSystemAgents, ensureSessionTable, ensureDomesticoTables, seedAuliasCurso, seedAuliasCursoAvancado, ensureVectorMemory, seedRoteirosVideo, ensureRapaduraTables, seedRapaduraUsers, ensureAgeTables, ensurePvTables, ensureJasmimTables, ensureTasksIndices, ensureColesterolTable } from "./lib/bootstrap";
 import { ensureLeucocitoTable } from "./lib/leucocito";
 import { seedPlaycenterAgents } from "./isa/playcenter";
 import { startIsaCron } from "./isa/cron";
@@ -54,6 +54,7 @@ ensureSessionTable()
   .then(() => ensurePvTables())
   .then(() => ensureJasmimTables())
   .then(() => ensureTasksIndices())
+  .then(() => ensureColesterolTable())
   .then(() => ensureLeucocitoTable())
   .then(() => {
     logger.info("bootstrap complete — starting crons");
