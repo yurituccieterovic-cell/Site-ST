@@ -1926,3 +1926,11 @@ Regra: vários #fins se for muito conteúdo; MacroATA no email luddlocke sempre;
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 1230ms
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — S201 Cláudio
+- Caso X salvo em tango/caso_x.md: inventário doméstico Yuri+Mayumi, 10 estados, schema JSON, kit saúde, alimentos, grãos
+- I988-I991: roadmap Colesterol MVP derivado do Caso X
+- ARPIA URL corrigida: arpia.onrender.com (não arpia-api)
+- Sistema de tasks: backend completo, 9 índices ontológicos, 0 tasks criadas, sem frontend ainda
