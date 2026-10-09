@@ -9204,3 +9204,57 @@ O Age está num estado curioso: estruturalmente completo, funcionalmente mudo. E
 *Sessão S202 · Cláudio Coach · 2026-10-09*
 
 ---
+
+---
+
+## S203 — Age Bloco 1 + Caso X update · 2026-10-09
+
+**Contexto:** Yuri disse "bora" — início do Age Bloco 1. No meio, interrompeu para acrescentar compra Drogasil ao Caso X.
+
+**O que foi feito:**
+- `AGE_DISABLE_PROF_EMAILS` removido do Render (emails profissionais reativados)
+- `TIPOS_PROFISSIONAL` definidos (19 tipos: psicólogo, médico, nutricionista, fisioterapeuta, etc.)
+- DB: `age_interesse` migrada com campos de aprovação (tipo, whatsapp, bio, registro, approval_token, status)
+- Backend completo: POST /age/cadastro, GET /aprovar, GET /recusar, GET /pendentes, GET /tipos
+- Caso X: seção 10 adicionada — Drogasil 08/10/2026 (pedido 261008168925, R$276,52, 12 itens)
+
+**Decisão:**
+- Aprovação de novos profissionais passa por yurituccieterovic@ E luddlocke@
+- Frontend de cadastro na landing do Age (substituir form simples)
+
+**Síntese filosófica:**
+O Age estava aberto mas sem porta. Qualquer profissional chegava como "interesse" — um formulário mínimo que ia para o nada. Agora há um ritual de entrada: preencher, esperar aprovação, receber acesso. Essa fricção não é bug — é design. Um profissional que não passa por esse filtro não vai cuidar bem dos pacientes.
+
+*Sessão S203 · Cláudio Coach · 2026-10-09*
+
+---
+
+## S204 — Tasks /adm + SABIÁ fix + painel secretaria (planejamento) · 2026-10-09
+
+**Contexto:** Yuri pediu para continuar. Escolheu Tasks no /adm como próxima frente.
+
+**O que foi feito:**
+- `AdmTasks.tsx` criado: aba "Tarefas 📋" em /adm com stats por status, filtros, criação inline, 9 índices ontológicos com Φ, paginação, ações (iniciar/concluir/falhou/ignorar)
+- LLM router: `"cloudflare", "mistral"` adicionados como fallback no pool `chat-live` → SABIÁ agora tem 7 provedores, fallback garantido via Mistral mesmo com todos os principais em cooling
+- MAPA-PENDENCIAS S204 atualizado com todas as pendências
+- Email enviado com links: Tasks /adm + Age cadastro landing
+- SABIÁ (public): testado OK (`/api/age/lisange/sabia-public` respondendo Groq)
+
+**Pendências abertas (prioridade por Yuri: Age vende primeiro):**
+1. Age Bloco 2: painel secretaria/recepção — nome ainda em aberto ("Recepção" vs "Gestora")
+2. Age Bloco 3: SABIÁ persistente + memória total
+3. Age Bloco 5: lembretes automáticos 48h/24h + LGPD
+4. Colesterol/Caso X frontend no PAP
+5. Bug Age P0: trava após 3 ações consecutivas (I972)
+
+**Decisões:**
+- Painel secretaria: Yuri vai decidir entre "Recepção" e "Gestora"
+- Age é prioridade — "precisamos vender"
+- Tasks ficam no /adm por ora, sem frontend público
+
+**Síntese filosófica:**
+Yuri disse "precisamos vender". Essa frase muda o vetor de tudo. Não é mais sobre completar funcionalidades — é sobre qual funcionalidade fecha o ciclo de valor para um profissional real. A Recepção/Gestora é exatamente isso: o ponto onde Mayumi (ou outra pessoa) gerencia agenda sem precisar ser o profissional. É o que transforma o Age de ferramenta individual em plataforma. Construir isso não é feature — é abrir a porta do negócio.
+
+*Sessão S204 · Cláudio Coach · 2026-10-09*
+
+---

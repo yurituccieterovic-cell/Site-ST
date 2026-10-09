@@ -1184,3 +1184,21 @@ Ideias I929-I932 registradas.
 - **Mistério aberto:** processo Node.js crasha silenciosamente em ciclos. Causa raiz: DESCONHECIDA. Investigar logs no dashboard web Render.
 - **Age:** Lisange 200, Suzana 200 (slug correto: `suzana` com z)
 - **Assembleia RODAR #666:** rodada manualmente por Cláudio (08/10/2026) — estado do ecossistema + bugs Age + Render crash
+
+## S204 — Estado Infraestrutura (2026-10-09)
+- **PAP API (site-st.onrender.com):** Render Starter $7/mês — ativo ✅
+- **Age:** Bloco 1 concluído — cadastro com aprovação por email funcionando
+- **SABIÁ:** pool chat-live reforçado (Groq+Gemini+OpenAI+Cerebras+Mistral) — mais resiliente
+- **Tasks /adm:** aba Tarefas live com 9 índices ontológicos e Φ
+- **LLM router:** Mistral adicionado como fallback garantido em chat-live
+
+### Pendências prioritárias (2026-10-09)
+| # | Item | Prioridade |
+|---|---|---|
+| S204-7 | Age Bloco 2: painel Recepção (/age/recepcao) | 🔴 ALTA — "precisamos vender" |
+| S204-8 | Age Bloco 3: SABIÁ persistente + memória total | 🔴 ALTA |
+| S204-9 | Age Bloco 5: lembretes automáticos 48h/24h + LGPD | 🟡 MÉDIA |
+| I972 | Bug Age P0: trava após 3 ações consecutivas | 🟡 MÉDIA |
+| S204-6 | Colesterol MVP frontend no PAP | 🟢 BAIXA |
+| I984 | /adm/pipeline visual #processo | ⬜ DEPOIS |
+| I985 | /adm/atas histórico MacroATAs | ⬜ DEPOIS |
