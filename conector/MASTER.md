@@ -2151,3 +2151,11 @@ Como posso te ajudar hoje?"
 ### SABIÁ → Milton Salomão (2026-10-09)
 - "Opa boa tarde"
 - SABIÁ: "Boa tarde! Como posso ajudar?"
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — S209 — Cláudio Coach
+- sameSite "lax" era o root cause do SABIÁ: cookie não viajava no fetch cross-origin Vercel→Render
+- Fix: sameSite "none" em produção — autenticação agora funciona no browser
+- LLM pool reordenado: Cloudflare→2º fallback confiável; Cerebras removido (402)
+- TTS/áudio também beneficiado: requireAgeAuth passará corretamente
