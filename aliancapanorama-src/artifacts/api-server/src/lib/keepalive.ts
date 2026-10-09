@@ -218,7 +218,21 @@ export function startKeepaliveCron(): void {
     }
   });
 
+  // ISCA Pipeline diário: todos os dias às 10:00 UTC (07:00 BRT)
+  // Health check completo + Playcenter + Dodge varredura + curadoria 3 camadas + email
+  cron.schedule("0 10 * * *", async () => {
+    try {
+      const { runPipelineDiario } = await import("../dodge/pipeline-diario");
+      const result = await runPipelineDiario();
+      registrarPulso("isca-pipeline", result.ok ? "ok" : "erro", result.resumo);
+    } catch (err) {
+      registrarPulso("isca-pipeline", "erro", String(err).slice(0, 80));
+      logger.error({ err }, "ISCA Pipeline: erro no cron");
+    }
+  });
+
   // Lembrete semanal (segunda-feira às 10h UTC = 7h BRT): atualizar IAs, Céu, Jasmim
+  // Nota: na segunda-feira, o ISCA pipeline roda primeiro (0 10 * * *), depois o lembrete semanal
   cron.schedule("0 10 * * 1", async () => {
     const mailer = nodemailer.createTransport({
       service: "gmail",
@@ -235,5 +249,5 @@ export function startKeepaliveCron(): void {
     logger.info({ week }, "Lembrete semanal enviado");
   });
 
-  logger.info("Keepalive: crons iniciados (Neon:*/4min+startup · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · assembleia-sync:*/4h · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · dodge-varredura:*/6h · weekly-reminder:seg 10h UTC)");
+  logger.info("Keepalive: crons iniciados (Neon:*/4min+startup · self-ping:*/13min · age-warm:*/11min · self-announce:*/7min · Jasmim:*/17min · assembleia-sync:*/4h · email-diário:11h UTC · rapadura-snapshot:1º mês 06h · phi-job:*/hora:05 · dodge-varredura:*/6h · isca-pipeline:10h UTC diário · weekly-reminder:seg 10h UTC)");
 }

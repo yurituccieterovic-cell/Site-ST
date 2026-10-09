@@ -524,4 +524,22 @@ router.post("/dodge/varredura", async (req, res) => {
   res.json({ ok: true, varredura: data });
 });
 
+// POST /api/dodge/pipeline-diario — ISCA: pipeline completo com curadoria em 3 camadas
+// Protegido por BRIDGE_SECRET; também chamado pelo cron diário às 10:00 UTC
+router.post("/dodge/pipeline-diario", async (req, res): Promise<void> => {
+  const { auth } = req.body as { auth?: string };
+  const BRIDGE = process.env["BRIDGE_SECRET"];
+  if (!BRIDGE || auth !== BRIDGE) {
+    res.status(403).json({ error: "Sem autorização" });
+    return;
+  }
+  try {
+    const { runPipelineDiario } = await import("../dodge/pipeline-diario");
+    const result = await runPipelineDiario();
+    res.json(result);
+  } catch (e) {
+    res.status(500).json({ error: String(e) });
+  }
+});
+
 export default router;
