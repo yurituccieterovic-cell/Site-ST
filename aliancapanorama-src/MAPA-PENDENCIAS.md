@@ -2,7 +2,7 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
-### S205 — Age P0 fix + Bloco 3 + Gestora password reset (2026-10-09)
+### S205 — Age P0 fix + Bloco 3 + Gestora + Prof password + Colesterol MVP (2026-10-09)
 
 | # | Item | Status |
 |---|---|---|
@@ -10,7 +10,8 @@
 | S205-2 | Age Bloco 3: SABIÁ memória total — pacientes ativos + notas no contexto LLM | ✅ commit c2b7363 |
 | S205-3 | Gestora forgot/reset password (rotas + frontend + bootstrap + sendEmail force) | ✅ commit 38b5634 |
 | S205-4 | Age Bloco 5: lembretes 48h/24h + LGPD — já estava implementado (cron OK) | ✅ confirmado |
-| S205-5 | Frontend Colesterol no PAP (/adm/compras ou /colesterol) | ⏳ PENDENTE |
+| S205-5 | Frontend Colesterol no PAP (/compras, auth Rapadura, CRUD completo) | ✅ commit f335ceb |
+| S205-6 | Professional forgot/reset password (rotas + frontend LoginModal + ProfResetView) | ✅ commit 6f63cc7 |
 
 ### S204 — Age Bloco 1 + Tasks /adm + SABIÁ fix (2026-10-09)
 

@@ -2762,9 +2762,9 @@ Configurar `healthCheckPath=/api/healthz` no serviço Render via API. Quando o p
 **Prioridade:** 🟡 Média  **Complexidade:** ◑ M  
 Interface tipo "painel de controle de carro" onde cada módulo é uma IA (AGE, Colesterol, Rapadura, Jasmim, PAP, Fluxo). Loopings automáticos entre módulos. Linguagem SAP para o Pitch (PI/propriedade intelectual). Visibilidade restrita para parceiros externos (Piti).
 
-### I972: Age bug P0 — trava após 3 ações consecutivas
+### I972: Age bug P0 — trava após 3 ações consecutivas ✅ S205
 **Prioridade:** 🔴 Alta  **Complexidade:** ◑ M  
-Sistema Age trava após 3 ações seguidas (reportado por Lisange/Suzana na Assembleia #660). Investigar event loop bloqueante ou pool de conexões esgotado. Reproduzir: fazer 3 ações rápidas no portal profissional e observar onde trava.
+~~Sistema Age trava após 3 ações seguidas~~ — RESOLVIDO S205: pool max 5→10, timeout SABIÁ visível (timedOut flag), stale closure via dispatchSabiaRef. commit cec8a50.
 
 ### I973: Auditoria periódica de vozes sem fallback
 **Prioridade:** 🟡 Média  **Complexidade:** ○ S  
@@ -2834,9 +2834,9 @@ App de compras compartilhado Yuri+Mayumi derivado do Caso X. Itens com 10 estado
 **Prioridade:** 🔴 Alta  **Complexidade:** ◑ Média  
 Usuário fala ou digita livremente ("preciso de band-aids e termômetro") → NLP extrai itens, categoriza automaticamente, pergunta quantidades. Derivado da origem do Caso X (transcrição de voz).
 
-### I990: Colesterol — frontend no PAP (/colesterol ou /adm/compras)
+### I990: Colesterol — frontend no PAP (/colesterol ou /adm/compras) ✅ S205
 **Prioridade:** 🟡 Média  **Complexidade:** ◑ Média  
-Página no PAP para o Colesterol. Pode ser rota própria acessível para tier ≥ 1 (Yuri + Mayumi) ou tab no /adm. Lista com filtro por status e categoria, botão "marcar como comprado", histórico navegável.
+~~Página no PAP para o Colesterol~~ — RESOLVIDO S205: /compras com ColesterolPage.tsx, auth Rapadura, CRUD completo, filtros status/carrinho/categoria, total com preço. commit f335ceb.
 
 ### I991: Colesterol — integração Rapadura (gastos domésticos)
 **Prioridade:** 🟢 Baixa  **Complexidade:** ● Média  
@@ -2876,3 +2876,16 @@ Mostrar sempre: subtotal + frete + taxa de parcelamento + total real. Comparar d
 **Prioridade:** baixa | **Complexidade:** alta
 Yuri quer uma assembleia unificada chamada "Secretaria" que junte o SalesCockpit e o Playcenter em uma única thread. Avaliar viabilidade técnica.
 **Origem:** Yuri brainstorm 08/10/2026
+
+
+## Docs PAP — Ideias Novas (2026-10-09)
+
+| # | Feature | Prior. | Compl. | Impacto | Descrição técnica |
+|---|---|---|---|---|---|
+| I970 | **Audit Log de /api/ai/*** | 🔴 Alta | ○ S | Rastrear todas as chamadas externas à API de agentes | Middleware em ai.ts que loga X-Api-Key parcial, endpoint, IP e timestamp em tabela ai_audit_log. Detecta abuso antes que vire custo. |
+| I971 | **Connection Pool Tuning para Neon** | 🟡 Média | ○ S | Neon tem limite de conexões no free tier; pool mal configurado causa erros em pico | Configurar pg.Pool com max: 5 (Neon free: 10 conexões). Adicionar pool.on("error") para log. Considerar pgBouncer externo se ultrapassar. |
+| I972 | **Migration System (drizzle-kit migrate)** | 🔴 Alta | ◑ M | push --force em produção pode apagar dados; migrations versionadas são seguras | Trocar drizzle-kit push por drizzle-kit generate + migrate. Criar pasta migrations/. Adicionar no Railway: step de migração no start command antes do node. |
+| I973 | **Score Histórico por Semana** | 🟡 Média | ○ S | Permite mostrar evolução de XP semana a semana no heatmap | View ou query: SUM(node_code.length * 10) de exercise_attempts agrupado por semana ISO. Endpoint GET /api/progress/weekly-score. Gráfico de linha no menu. |
+| I974 | **Paginação em /api/ai/nodes e /exercises** | 🟡 Média | ○ S | Com 57+ nós e centenas de exercícios, retornar tudo de uma vez é ineficiente | Query params: ?limit=50&offset=0. Resposta: { data: [...], total, limit, offset }. Não quebra clientes existentes (default limit alto). |
+| I975 | **Health Check com DB Ping** | 🔴 Alta | ○ S | Railway usa /health para saber se o serviço está saudável; hoje retorna OK mesmo com DB morto | GET /health: faz SELECT 1 no pool. Se OK → 200 { status: "ok", db: "ok" }. Se falhar → 503 { status: "error", db: "unreachable" }. Railway reinicia automaticamente no 503. |
+| I976 | **Variável ALLOWED_ORIGINS no Railway** | 🔴 Alta | ○ S | Sem isso, o frontend Vercel recebe erro CORS da API Railway | Adicionar nas env vars do Railway: ALLOWED_ORIGINS=https://pap-tan-seven.vercel.app,https://pap.sociedadetucci.com.br. O código já lê essa variável em allowedOrigins.ts. |

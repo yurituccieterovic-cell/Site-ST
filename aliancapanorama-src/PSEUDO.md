@@ -9258,3 +9258,53 @@ Yuri disse "precisamos vender". Essa frase muda o vetor de tudo. Não é mais so
 *Sessão S204 · Cláudio Coach · 2026-10-09*
 
 ---
+
+---
+
+## S205 — Age completo: pool fix + Bloco 3 + passwords reset + Colesterol MVP · 2026-10-09
+
+**Contexto:** Sessão de continuação automática ("cont8nuae"). Yuri havia deixado o Age travando com bug P0 e uma lista de pendências. Prioridade explícita: "Age é mais importante agora. Precisamos vender."
+
+**O que foi feito:**
+
+*Bug P0 (I972) — Age travando após 3 ações consecutivas:*
+- Root cause: pool DB `max: 5` esgotado quando 5 queries disparam simultaneamente (loadAppts + loadRules + loadExceptions + loadPatients + loadFeed) + session store na mesma pool
+- Fix triplo: pool 5→10, timeout 60s→30s, AbortController agora exibe mensagem em vez de silêncio, stale closure no queue processor corrigido via `dispatchSabiaRef`
+
+*Age Bloco 3 — SABIÁ memória total:*
+- Promise.allSettled expandido de 4 para 5 queries: adicionou lista de até 40 pacientes (id, nome, status, tipo) e últimas 20 notas (com nome do paciente via LEFT JOIN)
+- System prompt do SABIÁ agora tem seções "PACIENTES ATIVOS" e "NOTAS RECENTES" — profissional pode perguntar "como está o João?" e SABIÁ realmente sabe
+
+*Gestora forgot/reset password:*
+- `POST /api/age/gestora/forgot-password` + `POST /api/age/gestora/reset-password`
+- Fix crítico descoberto no processo: `sendEmail` com `force: true` ainda enviava para `AGE_EMAIL_TO` (luddlocke) — bug sutil na lógica `||`. Fix: `(!opts?.force && AGE_EMAIL_TO) || (skipTo ? null : to)`
+- Frontend GestoraAgePage: modos "login" / "forgot" / "reset" com detecção de `?reset=TOKEN` na URL
+
+*Colesterol MVP (I990):*
+- DB: `colesterol_items` com 12 campos (nome, categoria, quantidade, status, recorrente, carrinho, notas, preco_ref, criado_por, timestamps)
+- Backend: GET /api/colesterol/items (multi-filtro), GET /meta, POST, PATCH, DELETE (soft) — auth via `req.session.rapaduraNome`
+- Frontend: `ColesterolPage.tsx` em `/compras` com filtros por status/carrinho/categoria, form de criação, toggle comprado/pendente, total com preço
+- Ambos Yuri e Mayumi já têm conta Rapadura — zero fricção de auth
+
+*Professional forgot/reset password:*
+- `POST /api/age/auth/forgot-password` + `POST /api/age/auth/reset-password`
+- Bootstrap: `reset_token` + `reset_token_expira_at` em `age_professionals`
+- Frontend LoginModal: link "Esqueci minha senha" → modo forgot
+- `ProfResetView`: form fullscreen ativado por `?reset=TOKEN` na URL
+
+**Decisões:**
+- Age vende primeiro — todo o esforço desta sessão foi no Age e no Colesterol (utilitário doméstico)
+- Colesterol usa Rapadura como auth (decisão de conveniência — sem conta extra, sem fricção)
+- `profForgotMode` separado de `forgotMode` (que é do paciente) — evita colisão de estado
+
+**Tensões não resolvidas:**
+- healthCheckPath Render ainda ausente (I981) — Render pode continuar dormindo/caindo
+- ISA ciclos: monitorar se retomaram após fix
+- /adm/pipeline, /adm/atas, Assembleia Secretaria — ainda ⏳
+
+**Síntese filosófica:**
+Esta sessão foi sobre remover o último atrito antes de abrir o portão. O bug P0 era o tipo de problema que mata adoção antes do primeiro usuário real: a profissional loga, tenta três coisas, o sistema congela — ela nunca volta. Resolver isso não é técnico; é respeito pelo tempo de Lisange e Suzana. O Colesterol foi um gesto diferente: Yuri e Mayumi precisam de infraestrutura doméstica tanto quanto de plataforma profissional. Uma lista de compras compartilhada é cotidiano. O sistema que cuida do cotidiano deles cuida também da confiança deles no sistema maior.
+
+*Sessão S205 · Cláudio Coach · 2026-10-09*
+
+---
