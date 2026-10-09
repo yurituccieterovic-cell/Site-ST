@@ -16,7 +16,7 @@ import { PRINCIPIOS_ECOSSYSTEMMA } from "../lib/ecossystemma-principios";
 const GEMINI_KEY = process.env["GEMINI_API_KEY"] ?? "";
 const GMAIL_ACCOUNT = process.env["GMAIL_ACCOUNT"] ?? "luddlocke@gmail.com";
 const GMAIL_APP_PASSWORD = process.env["GMAIL_APP_PASSWORD"] ?? "";
-const YURI_EMAIL = "yurituccieterovic@gmail.com";
+const YURI_EMAIL = process.env.POS_HUMANISMO_EMAIL_TO ?? GMAIL_ACCOUNT;
 
 // ── Temas rotativos semanais ──────────────────────────────────────────────────
 

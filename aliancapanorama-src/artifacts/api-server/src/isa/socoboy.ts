@@ -15,7 +15,7 @@ import { logger } from "../lib/logger";
 
 const GMAIL = process.env.GMAIL_ACCOUNT ?? "luddlocke@gmail.com";
 const GMAIL_PASS = process.env.GMAIL_APP_PASSWORD ?? "";
-const YURI_EMAIL = "yurituccieterovic@gmail.com";
+const YURI_EMAIL = process.env.SOCOBOY_EMAIL_TO ?? GMAIL;
 
 // ── Prompt do Socoboy ────────────────────────────────────────────────────────
 
