@@ -9366,3 +9366,21 @@ A "sumidinha da memória" era um falso alarme — os 37 arquivos de memória est
 *Sessão S208 · Cláudio Coach · 2026-10-09*
 
 ---
+
+## S209 — O Cookie Que Não Chegava
+
+O SABIÁ continuava falhando depois de todos os fixes. A LLM funcionava perfeita no terminal. A chave do xAI estava configurada. O pool tinha Cloudflare em segundo lugar. E mesmo assim, no browser, a SABIÁ respondia "Desculpe, não consegui processar agora".
+
+A resposta estava numa linha do app.ts: `sameSite: "lax"`.
+
+HTTP cookies têm uma propriedade chamada SameSite que diz ao browser quando enviar o cookie. "Lax" significa: manda só quando for o mesmo site, ou quando o usuário clica num link de outra página. Não manda em chamadas fetch entre domínios diferentes. E aqui está o problema: o frontend está no Vercel (`site-st.vercel.app`) e o backend está no Render (`site-st.onrender.com`). São domínios diferentes. O browser nunca enviava o cookie de autenticação.
+
+Resultado prático: toda vez que o SABIÁ era chamado no browser, o servidor recebia uma requisição sem sessão. O middleware `requireAgeAuth` devia retornar 401 — mas o frontend, por não detectar isso como erro de autenticação, caia no modo público. O endpoint público funcionava na maior parte do tempo, mas às vezes o LLM falhava, e Yuri ficava preso na mensagem de erro.
+
+A correção é uma linha: `sameSite: "none"` em produção. Com isso o cookie viaja em qualquer fetch, mesmo cross-origin. O `secure: true` e o `httpOnly: true` já estavam lá pra garantir que o cookie não fosse lido por scripts nem enviado por HTTP simples.
+
+Às vezes os bugs mais profundos têm causas mais simples. O SABIÁ não estava quebrado — ele estava sendo chamado sem identidade.
+
+*Sessão S209 · Cláudio Coach · 2026-10-09*
+
+---

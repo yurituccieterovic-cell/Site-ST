@@ -2032,3 +2032,15 @@
 | S208-6 | Mapa pendências Age para demo Catanduva (Lisange/Suzana) | ✅ mapeado |
 | S208-7 | sessionId bug SABIÁ: `?? ""` deve ser `\|\| ""` — pequeno fix | ⏳ próxima sessão |
 | S208-8 | Memory project_age_emails_desativados.md: entrada desatualizada (AGE_DISABLE_PROF_EMAILS NÃO está ativo) | ✅ corrigir memória |
+
+### S209 — sameSite fix + SABIÁ root cause (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S209-1 | Root cause SABIÁ: sameSite "lax" bloqueava cookies cross-origin (Vercel→Render) | ✅ identificado |
+| S209-2 | Fix: sameSite "none" em produção — cookie agora viaja no fetch cross-origin | ✅ commit bf2420e |
+| S209-3 | LLM pool reordenado: Cloudflare→2º, Cerebras removido (402 consistente) | ✅ commit f96537a |
+| S209-4 | sessionId bug corrigido: `?? ""` → `\|\| ""` | ✅ commit ef92f9c |
+| S209-5 | Leucócito: 17/17 verde confirmado com novos testes Age | ✅ |
+| S209-6 | TTS/áudio também beneficiado pelo fix sameSite (requireAgeAuth passava a falhar) | ✅ fix implícito |
+| S209-7 | Yuri precisa fazer logout+login para renovar cookie (antigo era lax) | ⚠️ instrução |
