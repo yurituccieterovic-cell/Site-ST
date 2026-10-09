@@ -999,18 +999,27 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
   const profId = req.session.ageProfessionalId!;
   const profNome = req.session.ageProfessionalNome ?? "profissional";
 
-  // Contexto paralelo: profissional, consultas da semana, pacientes ativos, conector
+  // Contexto paralelo: profissional, consultas da semana, pacientes, notas, conector
   const now = new Date();
   const weekEnd = new Date(now); weekEnd.setDate(weekEnd.getDate() + 7);
-  const [profRow, weekAppts, patientStats, conectorCtx] = await Promise.allSettled([
+  const [profRow, weekAppts, patientRows, notasRows, conectorCtx] = await Promise.allSettled([
     db.select({ nome: ageProfessionalsTable.nome, tipo: ageProfessionalsTable.tipo, especialidade: ageProfessionalsTable.especialidade, bio: ageProfessionalsTable.bio })
       .from(ageProfessionalsTable).where(eq(ageProfessionalsTable.id, profId)).limit(1),
     db.select().from(ageAppointmentsTable)
       .where(and(eq(ageAppointmentsTable.professionalId, profId), gte(ageAppointmentsTable.dataHora, now), lte(ageAppointmentsTable.dataHora, weekEnd)))
       .orderBy(ageAppointmentsTable.dataHora).limit(20),
     db.execute(sql`
-      SELECT status, count(*)::int as total FROM age_patients
-      WHERE professional_id = ${profId} GROUP BY status
+      SELECT id, nome, status, tipo FROM age_patients
+      WHERE professional_id = ${profId} AND status != 'inativo'
+      ORDER BY nome ASC LIMIT 40
+    `),
+    db.execute(sql`
+      SELECT n.id, n.tipo, n.conteudo, n.autor, n.criado_em,
+             p.nome AS paciente_nome
+      FROM age_notas n
+      LEFT JOIN age_patients p ON p.id = n.paciente_id
+      WHERE n.professional_id = ${profId}
+      ORDER BY n.criado_em DESC LIMIT 20
     `),
     fetch(`${process.env.API_URL ?? "https://site-st.onrender.com"}/api/conector/memory/section?name=conversas`)
       .then(r => r.ok ? r.json() : null).catch(() => null),
@@ -1018,10 +1027,10 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
 
   const prof = profRow.status === "fulfilled" ? profRow.value[0] : null;
   const appts = weekAppts.status === "fulfilled" ? weekAppts.value : [];
-  const ptStats = patientStats.status === "fulfilled"
-    ? (patientStats.value as any).rows.map((r: any) => `${r.status}: ${r.total}`).join(", ") : "";
+  const patients = patientRows.status === "fulfilled" ? (patientRows.value as any).rows as { id: number; nome: string; status: string; tipo: string | null }[] : [];
+  const notas = notasRows.status === "fulfilled" ? (notasRows.value as any).rows as { id: number; tipo: string; conteudo: string; autor: string; criado_em: string; paciente_nome: string | null }[] : [];
   const conectorText = conectorCtx.status === "fulfilled" && conectorCtx.value
-    ? (conectorCtx.value as any).content?.slice(-800) ?? "" : "";
+    ? (conectorCtx.value as any).content?.slice(-600) ?? "" : "";
 
   // Agenda da semana
   const agendaSemana = appts.length === 0 ? "Nenhuma consulta nos próximos 7 dias."
@@ -1071,6 +1080,19 @@ router.post("/age/:slug/sabia", requireAgeAuth, async (req, res): Promise<void> 
       .join("\n");
   } catch (e) { logger.warn({ err: e }, "age: sabia docs fetch failed, proceeding without docs"); }
 
+  // Formata lista de pacientes ativos
+  const pacientesText = patients.length === 0 ? "Nenhum paciente ativo ainda." :
+    patients.map(p => `• ${p.nome}${p.tipo ? ` (${p.tipo})` : ""} [${p.status}]`).join("\n");
+
+  // Formata notas recentes
+  const notasText = notas.length === 0 ? "Nenhuma nota registrada ainda." :
+    notas.map(n => {
+      const dt = new Date(n.criado_em).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit" });
+      const quem = n.paciente_nome ? ` [${n.paciente_nome}]` : "";
+      const trunc = n.conteudo.length > 200 ? n.conteudo.slice(0, 200) + "…" : n.conteudo;
+      return `${dt}${quem} (${n.tipo}/${n.autor}): ${trunc}`;
+    }).join("\n");
+
   const systemPrompt = `Você é SABIÁ 🐦, assistente de agenda e cuidado clínico da plataforma Age (Sociedade Tucci).
 
 PERFIL DA PROFISSIONAL:
@@ -1079,8 +1101,11 @@ Tipo: ${prof?.tipo ?? "profissional de saúde"}
 Especialidade: ${prof?.especialidade ?? "—"}
 Bio: ${prof?.bio ?? "—"}
 
-PACIENTES:
-${ptStats || "Sem pacientes cadastrados ainda."}
+PACIENTES ATIVOS (${patients.length}):
+${pacientesText}
+
+NOTAS RECENTES (últimas 20):
+${notasText}
 
 DOCUMENTOS DOS PACIENTES (metadados — tipo:arquivo [data]):
 ${docsText || "Nenhum documento cadastrado ainda."}
