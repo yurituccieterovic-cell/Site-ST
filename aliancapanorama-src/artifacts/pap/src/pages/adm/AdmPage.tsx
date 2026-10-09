@@ -10,11 +10,12 @@ import { AdmSaude } from "./AdmSaude";
 import { AdmTasks } from "./AdmTasks";
 import { AdmPipeline } from "./AdmPipeline";
 import { AdmAtas } from "./AdmAtas";
+import { AdmAssembleia } from "./AdmAssembleia";
 import { IsaChat } from "./IsaChat";
 
 const API = import.meta.env.VITE_API_URL ?? "";
 
-type AdmTab = "eventos" | "relacoes" | "tipos" | "catalogos" | "usuarios" | "nebula" | "saude" | "tasks" | "pipeline" | "atas";
+type AdmTab = "eventos" | "relacoes" | "tipos" | "catalogos" | "usuarios" | "nebula" | "saude" | "tasks" | "pipeline" | "atas" | "assembleia";
 
 const TABS: { id: AdmTab; label: string; emoji: string }[] = [
   { id: "eventos", label: "Eventos", emoji: "⚡" },
@@ -27,6 +28,7 @@ const TABS: { id: AdmTab; label: string; emoji: string }[] = [
   { id: "tasks", label: "Tarefas", emoji: "📋" },
   { id: "pipeline", label: "Pipeline", emoji: "🚀" },
   { id: "atas", label: "ATAs", emoji: "📄" },
+  { id: "assembleia", label: "Assembleia", emoji: "🌳" },
 ];
 
 interface AdminUser { id: number; login: string; tier: number; displayName?: string | null; }
@@ -238,6 +240,7 @@ export function AdmPage() {
           {activeTab === "tasks" && <AdmTasks />}
           {activeTab === "pipeline" && <AdmPipeline />}
           {activeTab === "atas" && <AdmAtas />}
+          {activeTab === "assembleia" && <AdmAssembleia />}
         </div>
         {isaOpen && (
           <div className="w-96 border-l border-[#E5E7EB] bg-white flex-shrink-0">
