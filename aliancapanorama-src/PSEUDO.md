@@ -9179,3 +9179,28 @@ O Caso X começou como uma voz gravada — fragmentos, hesitações, "o gelol é
 *Sessão S201 · Cláudio Coach · 2026-10-09*
 
 ---
+
+---
+
+## S202 — Diagnóstico Age + SABIÁ · 2026-10-09
+
+**Contexto:** Yuri perguntou sobre o estado do Age e SABIÁ, o que está funcionando, o que falta para 100%.
+
+**Diagnóstico:**
+- Funcionando: agenda pública, login profissional, painel completo (agenda/pacientes/notas/tarefas/feed/SABIÁ), cancelamento por token, área paciente
+- Quebrado/desativado: emails (AGE_DISABLE_PROF_EMAILS=true — desativado em S122), healthCheckPath ausente (crashes), cadastro profissional só por SQL
+- Faltando: tipos de profissional, fluxo de aprovação (yuri+luddlocke), painel gestora Mayumi, lembretes automáticos, LGPD
+
+**Plano sugerido — 5 blocos:**
+1. Base: emails reativados + healthCheckPath + tipos de profissional
+2. Cadastro com aprovação por email
+3. SABIÁ completa (memória total + popup persistente)
+4. Secretaria Mayumi (painel gestora)
+5. Lembretes automáticos + LGPD
+
+**Síntese filosófica:**
+O Age está num estado curioso: estruturalmente completo, funcionalmente mudo. Emails desativados, cadastro só por SQL, healthCheck ausente. É como um consultório montado mas sem campainha na porta e sem luz no corredor. A pergunta de Yuri — "conseguimos 100%?" — não é sobre o código. É sobre se o sistema está pronto para receber Lisange e Suzana como colaboradoras reais, não como dados de teste. Está quase lá.
+
+*Sessão S202 · Cláudio Coach · 2026-10-09*
+
+---
