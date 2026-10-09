@@ -2117,3 +2117,11 @@ Se precisar de ajuda para organiza"
 ### 2026-10-09 — admin
 ### 2026-10-09T07:50 — Playcenter
 - Participantes: isa+meky+amanda+orquestrador+arvore (5 falas)
+
+
+### 2026-10-09 — admin
+### 2026-10-09 — S207+S208 — Cláudio Coach
+- XAI_API_KEY estava ausente no Render: root cause do SABIÁ intermitente — 7 provedores agora disponíveis
+- healthCheckPath=/api/healthz: servidor agora tem sinal de vida monitorado pelo Render (resolve crashes silenciosos)
+- ISCA pipeline diário: 3 camadas Técnica/Curadoria/Redação — cron 10:00 UTC
+- leucócito: 17 testes (+ 2 Age SABIÁ); slug suzana corrigido
