@@ -9336,3 +9336,17 @@ Os emails do Socoboy e do Pós-Humanismo estavam indo para o email pessoal de Yu
 *Sessão S206 · Cláudio Coach · 2026-10-09*
 
 ---
+
+## S207 — ISCA e a Arte de Separar Sinal de Ruído
+
+Esta sessão foi sobre curadoria em camadas. O problema de um relatório automático não é técnico — é epistêmico: como fazer um sistema distinguir o que é urgente do que é informação, do que é apenas barulho de fundo?
+
+A resposta do ISCA é arquitetural: três camadas com responsabilidades distintas. A Técnica não opina — só descreve fatos. A Curadoria classifica sem jargão: crítico / atenção / ok / ruído. A Redação transforma o resultado em linguagem humana para Yuri. Nenhuma camada faz o trabalho da outra.
+
+É uma divisão que imita o que um bom analista faz mentalmente em segundos — mas explicitada em código para que possa ser auditada, melhorada, ou substituída por IA melhor quando vier.
+
+O healthCheckPath estava ausente no Render desde o início. O servidor podia travar silenciosamente e o Render não sabia — não havia sinal de vida para monitorar. Agora há. Foi uma linha de configuração via API que talvez resolva o mistério dos crashes silenciosos que estávamos investigando.
+
+*Sessão S207 · Cláudio Coach · 2026-10-09*
+
+---

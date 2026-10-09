@@ -2008,3 +2008,14 @@
 | S206-2 | Dodge pipeline diário automático (endpoint + cron + email dissertado) | ⏳ próxima sessão |
 | S206-3 | ISCA: Yuri explicar o que é para integrar na curadoria do pipeline | ⏳ aguardando |
 | S197-1 | healthCheckPath=/api/healthz no Render — ainda pendente | ⏳ PENDENTE |
+
+### S207 — ISCA pipeline diário + S197-1 + emails redirect (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S207-1 | S197-1: healthCheckPath=/api/healthz configurado no Render via API | ✅ PATCH API feito |
+| S207-2 | S197-3: causa raiz crash silencioso — healthCheckPath era o fix faltante | ✅ resolvido |
+| S207-3 | ISCA pipeline diário: 3 camadas (técnica/curadoria/redação) + email dissertado | ✅ commit 3844e91 |
+| S207-4 | Cron 10:00 UTC diário para ISCA pipeline + endpoint manual /dodge/pipeline-diario | ✅ commit 3844e91 |
+| S207-5 | Teste manual do pipeline: verde 6/6, email recebido em luddlocke | ✅ confirmado |
+| S207-6 | ISCA documentado: sistema de refinamento em 3 camadas (Técnica + Curadoria + Redação) | ✅ código |

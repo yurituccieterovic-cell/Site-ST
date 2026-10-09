@@ -2898,3 +2898,10 @@ Yuri quer uma assembleia unificada chamada "Secretaria" que junte o SalesCockpit
 **Origem:** S205b — "fork de notas" renomeado para "ações"
 **Conceito:** Uma nota clínica deve poder ser convertida diretamente em ação operacional: criar tarefa, cadastrar paciente, abrir agenda. O texto registrado alimenta o formulário (titulo/descricao pré-preenchidos).
 **Aplicação:** Já implementado em AgePage. Próximo: adicionar "Criar consulta com paciente X" quando a nota menciona um paciente.
+
+## I940 — ISCA: pipeline de curadoria em 3 camadas reutilizável
+**Origem:** S207 — construção do pipeline diário do Dodge
+**Conceito:** ISCA (Refinamento e Curadoria) como padrão arquitetural do ecossistema:
+Camada 1 TÉCNICA → Camada 2 CURADORIA → Camada 3 REDAÇÃO
+Pode ser aplicado em: relatórios do Leucócito, ATAs de assembleia, resumos de sessão, análise de notas clínicas.
+**Aplicação imediata:** dodge/pipeline-diario.ts — testado e funcionando
