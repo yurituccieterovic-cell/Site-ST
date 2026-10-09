@@ -2,15 +2,30 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S204 — Age Bloco 1 + Tasks /adm + SABIÁ fix (2026-10-09)
+
+| # | Item | Status |
+|---|---|---|
+| S204-1 | Age Bloco 1: cadastro profissional completo com aprovação por email (POST /age/cadastro, GET /aprovar, /recusar, /pendentes, /tipos) | ✅ commit 14ffecb |
+| S204-2 | AgePage: formulário de cadastro com 19 tipos, especialidade, registro, bio, whatsapp | ✅ commit 14ffecb |
+| S204-3 | AdmTasks: aba Tarefas no /adm com stats, filtros, criação, 9 índices, Φ | ✅ commit 0001034 |
+| S204-4 | LLM router: Mistral adicionado como fallback em chat-live → SABIÁ mais resiliente | ✅ commit 0001034 |
+| S204-5 | Links enviados por email para luddlocke (tasks + age cadastro) | ✅ feito |
+| S204-6 | Frontend Colesterol no PAP (/adm/compras ou /colesterol) | ⏳ PENDENTE |
+| S204-7 | Age Bloco 2: painel secretaria/recepção (/age/recepcao) | ⏳ PENDENTE |
+| S204-8 | Age Bloco 3: SABIÁ persistente + memória total | ⏳ PENDENTE |
+| S204-9 | Age Bloco 5: lembretes automáticos 48h/24h + LGPD checkbox | ⏳ PENDENTE |
+| S204-10 | Nome do painel secretaria: "Recepção" ou "Gestora" — decidir com Yuri | ⏳ aguarda decisão |
+
 ### S201 — Caso X + Colesterol + Saúde das IAs (2026-10-09)
 
 | # | Item | Status |
 |---|---|---|
 | S201-1 | tango/caso_x.md criado — inventário doméstico completo Yuri+Mayumi | ✅ feito |
 | S201-2 | I988-I991: ideias Colesterol MVP registradas no IDEIAS.md | ✅ feito |
-| S201-3 | Frontend de tasks no /adm (I984 derivado) | ⏳ PENDENTE |
-| S201-4 | Frontend Colesterol no PAP (/colesterol ou /adm/compras) (I990) | ⏳ PENDENTE |
-| S201-5 | Enviar links por email quando tasks + Colesterol estiverem no ar | ⏳ PENDENTE |
+| S201-3 | Frontend de tasks no /adm (I984 derivado) | ✅ feito S204-3 |
+| S201-4 | Frontend Colesterol no PAP (/colesterol ou /adm/compras) (I990) | ⏳ S204-6 |
+| S201-5 | Enviar links por email quando tasks + Colesterol estiverem no ar | ✅ tasks enviado S204-5 |
 | S201-6 | ARPIA URL corrigida para monitoramento: arpia.onrender.com (não arpia-api) | ✅ corrigido |
 
 ### S198 — Consolidação PAP: assembleias #667-#668 + #1234 + #processo (2026-10-08)
