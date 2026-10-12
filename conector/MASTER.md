@@ -2766,3 +2766,10 @@ Como posso te ajudar hoje?"
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 1493ms
+
+
+### 2026-10-12 — admin
+### 2026-10-12 — S206 Parte 2 — bcrypt + Leucócito + #1234
+- DECISÕES: bcrypt custo 10→8 (bcrypt nativo falha no Render por falta de build tools); [skip deploy] no Conector está funcionando; Milton login OK com age2026
+- APRENDIZADO: bcryptjs puro JS bloqueia event loop ~6s por hash; custo 8 = ~1.5s; bcrypt nativo (worker threads) incompatível com Render Starter build env
+- PENDÊNCIA: RODAR assembleias paradas desde 2026-10-08 — investigar SalesCockpit cron próxima sessão
