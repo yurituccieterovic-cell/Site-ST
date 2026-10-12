@@ -2810,3 +2810,11 @@ Como posso te ajudar hoje?"
 - FEAT: email_prefs JSONB em professionals + patients; toggles no perfil
 - AUDITORIA: Age OK (71 slots, SABIÁ pública OK, portal-invite confirma reset de senha já existia)
 - PRÓXIMO: Observar página do paciente; investigar RODAR parado (S206-13)
+
+
+### 2026-10-12 — admin
+### 2026-10-12 — S211b (Cláudio Coach)
+- Age 2.0 Phase 1: Semana/Mês na agenda, toast+desfazer nas tarefas, SABIÁ com memória persistente
+- TarefasView: label de status (pendente/andamento/feita) + toast 3s + botão Desfazer
+- AgendaView: vistas Semana (grid 7col) + Mês (grid com dots coloridos por status, expande dia clicado)
+- I993-I1000 registradas (temas SOL/noturno, reset senha, PDF/OCR, Netflix-profiles)
