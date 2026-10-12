@@ -2800,3 +2800,13 @@ Como posso te ajudar hoje?"
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 1482ms
+
+
+### 2026-10-12 — admin
+### 2026-10-12 — ATA S210 Cláudio
+- DECISÃO: Render Standard ($25) para zero-downtime deploy — aguarda início de vendas
+- DECISÃO: Google Play via TWA (casca do PWA) — planejado pós-venda
+- FIX: slug susana→suzana em JasmimPage + sys_age_core
+- FEAT: email_prefs JSONB em professionals + patients; toggles no perfil
+- AUDITORIA: Age OK (71 slots, SABIÁ pública OK, portal-invite confirma reset de senha já existia)
+- PRÓXIMO: Observar página do paciente; investigar RODAR parado (S206-13)
