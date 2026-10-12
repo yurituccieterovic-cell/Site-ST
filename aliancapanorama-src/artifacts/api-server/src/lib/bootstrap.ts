@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import fs from "fs";
 import path from "path";
 import { db } from "@workspace/db";
@@ -445,7 +445,7 @@ export async function ensureAgeTables(): Promise<void> {
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";
-  const defaultHash = await bcrypt.hash(defaultPass, 12);
+  const defaultHash = await bcrypt.hash(defaultPass, 10);
 
   const professionals = [
     { slug: "lisange", nome: "Lisange", tipo: "psicóloga", especialidade: "Psicologia Clínica", cor: "#2dd4bf", bio: "Atendimento psicológico com escuta ativa e presença." },
@@ -2790,7 +2790,7 @@ export async function ensureJasmimTables(): Promise<void> {
 export async function ensureJasmimUsers(): Promise<void> {
   const { usersTable } = await import("@workspace/db");
   const { eq } = await import("drizzle-orm");
-  const bcrypt = await import("bcryptjs");
+  const bcrypt = await import("bcrypt");
 
   const existing = await db.select().from(usersTable).where(eq(usersTable.login, "yuri")).limit(1);
   if (existing.length === 0) {

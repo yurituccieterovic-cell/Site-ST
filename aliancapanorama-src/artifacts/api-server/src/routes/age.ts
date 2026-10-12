@@ -10,7 +10,7 @@ import {
 } from "@workspace/db";
 import { randomUUID } from "crypto";
 import { eq, and, gte, lte, desc, not, inArray, sql, isNull } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
 import { synthesizeSpeech, DEFAULT_TTS_VOICE } from "../lib/tts";

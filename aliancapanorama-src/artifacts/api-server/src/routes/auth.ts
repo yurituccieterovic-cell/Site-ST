@@ -4,7 +4,7 @@ import { db } from "@workspace/db";
 import { usersTable, ageProfessionalsTable, rapaduraUsersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { LoginBody } from "@workspace/api-zod";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { allowedOrigins } from "../lib/allowedOrigins";
 import nodemailer from "nodemailer";
 

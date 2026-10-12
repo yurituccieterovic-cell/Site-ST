@@ -13,7 +13,7 @@ import {
   rapaduraCanaMemoryTable,
 } from "@workspace/db";
 import { eq, isNull, desc, sql, and, asc, inArray } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import PDFDocument from "pdfkit";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
