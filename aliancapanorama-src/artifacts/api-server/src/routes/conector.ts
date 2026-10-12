@@ -148,7 +148,7 @@ async function syncToGitHub(content: string, updatedBy: string): Promise<void> {
   } catch {}
   // Commit do conteúdo atualizado
   const body = JSON.stringify({
-    message: `conector: sync por ${updatedBy} em ${new Date().toISOString().slice(0,16)}`,
+    message: `conector: sync por ${updatedBy} em ${new Date().toISOString().slice(0,16)} [skip deploy]`,
     content: Buffer.from(content).toString("base64"),
     ...(sha ? { sha } : {}),
     branch: "main",
