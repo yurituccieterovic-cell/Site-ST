@@ -1846,21 +1846,52 @@ router.patch("/age/:slug/payment-options", requireAgeAuth, async (req, res): Pro
 // GET /api/age/:slug/config
 router.get("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const result = await db.execute(sql`SELECT intervalo_sessao_semanas FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const result = await db.execute(sql`SELECT intervalo_sessao_semanas, email_prefs FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
   const row = (result as any).rows?.[0];
   if (!row) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
-  res.json({ intervaloSessaoSemanas: row.intervalo_sessao_semanas ?? 0 });
+  const defaultPrefs = { novo_agendamento: true, cancelamento: true, lembrete: true };
+  res.json({
+    intervaloSessaoSemanas: row.intervalo_sessao_semanas ?? 0,
+    emailPrefs: { ...defaultPrefs, ...(row.email_prefs ?? {}) },
+  });
 });
 
 // PATCH /api/age/:slug/config
 router.patch("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
   const { slug } = req.params;
   if (req.session.ageProfessionalSlug !== slug) { res.status(403).json({ error: "Sem permissão" }); return; }
-  const { intervaloSessaoSemanas } = req.body as { intervaloSessaoSemanas?: number };
+  const { intervaloSessaoSemanas, emailPrefs } = req.body as { intervaloSessaoSemanas?: number; emailPrefs?: Record<string, boolean> };
   if (intervaloSessaoSemanas !== undefined) {
     const v = Math.max(0, Math.min(52, Math.floor(intervaloSessaoSemanas)));
     await db.execute(sql`UPDATE age_professionals SET intervalo_sessao_semanas = ${v} WHERE slug = ${slug}`);
   }
+  if (emailPrefs && typeof emailPrefs === "object") {
+    const allowed = ["novo_agendamento", "cancelamento", "lembrete"];
+    const safe: Record<string, boolean> = {};
+    for (const k of allowed) if (typeof emailPrefs[k] === "boolean") safe[k] = emailPrefs[k];
+    await db.execute(sql`UPDATE age_professionals SET email_prefs = ${JSON.stringify(safe)}::jsonb WHERE slug = ${slug}`);
+  }
+  res.json({ ok: true });
+});
+
+// GET /api/age/:slug/patients/auth/prefs — preferências de email do paciente logado
+router.get("/age/:slug/patients/auth/prefs", requirePatientAuth, async (req, res): Promise<void> => {
+  const patId = req.session.agePatientId!;
+  const result = await db.execute(sql`SELECT email_prefs FROM age_patients WHERE id = ${patId} LIMIT 1`);
+  const row = (result as any).rows?.[0];
+  const defaultPrefs = { confirmacao: true, cancelamento: true, lembrete: true };
+  res.json({ emailPrefs: { ...defaultPrefs, ...(row?.email_prefs ?? {}) } });
+});
+
+// PATCH /api/age/:slug/patients/auth/prefs — atualiza preferências de email do paciente
+router.patch("/age/:slug/patients/auth/prefs", requirePatientAuth, async (req, res): Promise<void> => {
+  const patId = req.session.agePatientId!;
+  const { emailPrefs } = req.body as { emailPrefs?: Record<string, boolean> };
+  if (!emailPrefs || typeof emailPrefs !== "object") { res.status(400).json({ error: "emailPrefs obrigatório" }); return; }
+  const allowed = ["confirmacao", "cancelamento", "lembrete"];
+  const safe: Record<string, boolean> = {};
+  for (const k of allowed) if (typeof emailPrefs[k] === "boolean") safe[k] = emailPrefs[k];
+  await db.execute(sql`UPDATE age_patients SET email_prefs = ${JSON.stringify(safe)}::jsonb WHERE id = ${patId}`);
   res.json({ ok: true });
 });
 

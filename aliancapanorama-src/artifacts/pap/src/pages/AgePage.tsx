@@ -161,6 +161,9 @@ export function AgePage() {
   const [intervaloSemanas, setIntervaloSemanas] = useState(0);
   const [intervaloSaving, setIntervaloSaving] = useState(false);
   const [intervaloMsg, setIntervaloMsg] = useState("");
+  const [emailPrefs, setEmailPrefs] = useState<Record<string, boolean>>({ novo_agendamento: true, cancelamento: true, lembrete: true });
+  const [emailPrefsSaving, setEmailPrefsSaving] = useState(false);
+  const [emailPrefsMsg, setEmailPrefsMsg] = useState("");
   // Email management
   const [profEmail, setProfEmail] = useState<string | null>(null);
   const [emailPending, setEmailPending] = useState<string | null>(null);
@@ -297,7 +300,10 @@ export function AgePage() {
   const [patientLoginLoading, setPatientLoginLoading] = useState(false);
   const [patientAppts, setPatientAppts] = useState<PatientAppt[]>([]);
   const [patientApptLoading, setPatientApptLoading] = useState(false);
-  const [patientView, setPatientView] = useState<"appointments" | "password" | "docs" | "forms" | "sabia">("appointments");
+  const [patientView, setPatientView] = useState<"appointments" | "password" | "docs" | "forms" | "sabia" | "notif">("appointments");
+  const [patientEmailPrefs, setPatientEmailPrefs] = useState<Record<string, boolean>>({ confirmacao: true, cancelamento: true, lembrete: true });
+  const [patientPrefsSaving, setPatientPrefsSaving] = useState(false);
+  const [patientPrefsMsg, setPatientPrefsMsg] = useState("");
   const [patientSabiaInput, setPatientSabiaInput] = useState("");
   const [patientSabiaMsgs, setPatientSabiaMsgs] = useState<{ role: "user" | "assistant"; content: string }[]>([{ role: "assistant", content: "Olá! Sou a SABIÁ 🐦, sua assistente. Posso ajudar com dúvidas sobre suas consultas ou agendamentos." }]);
   const [patientSabiaLoading, setPatientSabiaLoading] = useState(false);
@@ -542,7 +548,12 @@ export function AgePage() {
     fetch(`${API}/api/age/${slug}/payment-options`, { credentials: "include" })
       .then(r => r.ok ? r.json() : null).then(d => { if (d?.opcoes) setPaymentOpts(d.opcoes); }).catch(() => {});
     fetch(`${API}/api/age/${slug}/config`, { credentials: "include" })
-      .then(r => r.ok ? r.json() : null).then(d => { if (d) setIntervaloSemanas(d.intervaloSessaoSemanas ?? 0); }).catch(() => {});
+      .then(r => r.ok ? r.json() : null).then(d => {
+        if (d) {
+          setIntervaloSemanas(d.intervaloSessaoSemanas ?? 0);
+          if (d.emailPrefs) setEmailPrefs(prev => ({ ...prev, ...d.emailPrefs }));
+        }
+      }).catch(() => {});
   }, [mode, slug]);
 
   const loadExceptions = useCallback(() => {
@@ -724,7 +735,14 @@ export function AgePage() {
     fetch(`${API}/api/age/${slug}/patients/auth/me`, { credentials: "include" })
       .then(r => r.json())
       .then((d: { authenticated: boolean; nome?: string }) => {
-        if (d.authenticated) { setMode("patient"); setPatientNome(d.nome ?? ""); }
+        if (d.authenticated) {
+          setMode("patient"); setPatientNome(d.nome ?? "");
+          // Carregar preferências de email do paciente
+          fetch(`${API}/api/age/${slug}/patients/auth/prefs`, { credentials: "include" })
+            .then(r => r.ok ? r.json() : null)
+            .then(p => { if (p?.emailPrefs) setPatientEmailPrefs(prev => ({ ...prev, ...p.emailPrefs })); })
+            .catch(() => {});
+        }
       })
       .catch(() => {});
   }, [slug]);
@@ -3413,6 +3431,41 @@ export function AgePage() {
           {intervaloMsg && <span style={{ marginLeft: 12, color: intervaloMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{intervaloMsg}</span>}
         </div>
 
+        {/* Notificações por email */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 4 }}>📧 Notificações por email</div>
+          <p style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>Escolha quais emails você deseja receber automaticamente.</p>
+          {([
+            ["novo_agendamento", "Novo agendamento confirmado"],
+            ["cancelamento", "Consulta cancelada"],
+            ["lembrete", "Lembretes 48h e 24h antes"],
+          ] as [string, string][]).map(([key, label]) => (
+            <label key={key} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, cursor: "pointer" }}>
+              <input type="checkbox" checked={!!emailPrefs[key]} onChange={e => setEmailPrefs(p => ({ ...p, [key]: e.target.checked }))}
+                style={{ width: 16, height: 16, accentColor: color }} />
+              <span style={{ color: "#e2e8f0", fontSize: 13 }}>{label}</span>
+            </label>
+          ))}
+          <button
+            onClick={async () => {
+              setEmailPrefsSaving(true); setEmailPrefsMsg("");
+              try {
+                const r = await fetch(`${API}/api/age/${slug}/config`, {
+                  method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include",
+                  body: JSON.stringify({ emailPrefs }),
+                });
+                setEmailPrefsMsg(r.ok ? "✓ Preferências salvas" : "Erro ao salvar.");
+              } catch { setEmailPrefsMsg("Sem conexão."); }
+              setEmailPrefsSaving(false);
+              setTimeout(() => setEmailPrefsMsg(""), 2500);
+            }}
+            disabled={emailPrefsSaving}
+            style={{ marginTop: 4, background: emailPrefsSaving ? "#333" : color, border: "none", borderRadius: 8, padding: "10px 20px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: emailPrefsSaving ? "default" : "pointer" }}>
+            {emailPrefsSaving ? "Salvando…" : "Salvar preferências"}
+          </button>
+          {emailPrefsMsg && <span style={{ marginLeft: 12, color: emailPrefsMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{emailPrefsMsg}</span>}
+        </div>
+
         {/* Relatório Mensal Financeiro */}
         <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
           <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 8 }}>📊 Relatório Mensal Financeiro</div>
@@ -4675,7 +4728,7 @@ export function AgePage() {
 
         {/* Nav interna */}
         <div style={{ display: "flex", borderBottom: "1px solid #1e293b", marginBottom: 20, flexWrap: "wrap" }}>
-          {([["appointments", "Consultas"], ["sabia", "🐦 SABIÁ"], ["docs", "Documentos"], ["forms", "Formulários"], ["password", "Senha"]] as const).map(([v, label]) => (
+          {([["appointments", "Consultas"], ["sabia", "🐦 SABIÁ"], ["docs", "Documentos"], ["forms", "Formulários"], ["notif", "Notificações"], ["password", "Senha"]] as const).map(([v, label]) => (
             <button key={v} onClick={() => setPatientView(v)}
               style={{ padding: "8px 14px", background: "none", border: "none", borderBottom: patientView === v ? `2px solid ${color}` : "2px solid transparent", color: patientView === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: patientView === v ? 700 : 400 }}>
               {label}
@@ -4914,6 +4967,44 @@ export function AgePage() {
               Alterar senha
             </button>
           </form>
+        )}
+
+        {/* Notificações por email — paciente */}
+        {patientView === "notif" && (
+          <div style={{ maxWidth: 420 }}>
+            <div style={{ color, fontSize: 14, fontWeight: 700, marginBottom: 4 }}>📧 Notificações por email</div>
+            <p style={{ color: "#64748b", fontSize: 12, marginBottom: 16 }}>Escolha quais emails você deseja receber.</p>
+            {([
+              ["confirmacao", "Confirmação de agendamento"],
+              ["cancelamento", "Aviso de cancelamento"],
+              ["lembrete", "Lembretes antes da consulta"],
+            ] as [string, string][]).map(([key, label]) => (
+              <label key={key} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, cursor: "pointer" }}>
+                <input type="checkbox" checked={!!patientEmailPrefs[key]}
+                  onChange={e => setPatientEmailPrefs(p => ({ ...p, [key]: e.target.checked }))}
+                  style={{ width: 16, height: 16, accentColor: color }} />
+                <span style={{ color: "#e2e8f0", fontSize: 13 }}>{label}</span>
+              </label>
+            ))}
+            <button
+              onClick={async () => {
+                setPatientPrefsSaving(true); setPatientPrefsMsg("");
+                try {
+                  const r = await fetch(`${API}/api/age/${slug}/patients/auth/prefs`, {
+                    method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include",
+                    body: JSON.stringify({ emailPrefs: patientEmailPrefs }),
+                  });
+                  setPatientPrefsMsg(r.ok ? "✓ Preferências salvas" : "Erro ao salvar.");
+                } catch { setPatientPrefsMsg("Sem conexão."); }
+                setPatientPrefsSaving(false);
+                setTimeout(() => setPatientPrefsMsg(""), 2500);
+              }}
+              disabled={patientPrefsSaving}
+              style={{ background: patientPrefsSaving ? "#333" : color, border: "none", borderRadius: 8, padding: "10px 20px", color: "#080c10", fontWeight: 700, fontSize: 13, cursor: patientPrefsSaving ? "default" : "pointer", marginTop: 4 }}>
+              {patientPrefsSaving ? "Salvando…" : "Salvar preferências"}
+            </button>
+            {patientPrefsMsg && <div style={{ marginTop: 8, color: patientPrefsMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{patientPrefsMsg}</div>}
+          </div>
         )}
       </div>
     );

@@ -440,8 +440,12 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`ALTER TABLE age_gestoras ADD COLUMN IF NOT EXISTS reset_token_expira_at TIMESTAMPTZ`);
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS reset_token TEXT`);
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS reset_token_expira_at TIMESTAMPTZ`);
+  // Preferências de email: profissional escolhe quais notificações receber
+  await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS email_prefs JSONB NOT NULL DEFAULT '{"novo_agendamento": true, "cancelamento": true, "lembrete": true}'`);
+  // Preferências de email: paciente escolhe quais notificações receber
+  await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS email_prefs JSONB NOT NULL DEFAULT '{"confirmacao": true, "cancelamento": true, "lembrete": true}'`);
 
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type +whatsapp +valor +password_b_hash +email_verify)");
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type +whatsapp +valor +password_b_hash +email_verify +email_prefs)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";
