@@ -2,6 +2,19 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S206 — Downtime horário + bcrypt + Milton Age (2026-10-12)
+
+| # | Item | Status |
+|---|---|---|
+| S206-1 | Causa raiz downtime: Conector.syncToGitHub() → commit GitHub → Render auto-deploy → 16min fora do ar por hora | ✅ identificado |
+| S206-2 | Fix: [skip deploy] adicionado na mensagem de commit do Conector (conector.ts) | ✅ commit 97db57fe |
+| S206-3 | bcrypt cost 12 → 10 no Age (login: 7s → <1s no Render Starter 0.5 CPU) | ✅ commit 97db57fe |
+| S206-4 | Age: short-circuit okA/okB — senha B só testada se A falhar | ✅ commit 97db57fe |
+| S206-5 | Milton Salomão profissional: senha A = Yuri, senha B = Mayumi (cost 10 em DB) | ✅ DB atualizado |
+| S206-6 | Paciente Milton (id=3): nome + senha age2026 atualizados | ✅ DB atualizado |
+| S206-7 | Deploy code fix: commit tinha [skip deploy] no título → deploy manual via Render API | ✅ deploy dep-db6hf2brjlhs73epon9g |
+| S206-8 | Assembleia: mensagem de diagnóstico enviada (id: 493ce808) | ✅ enviado |
+
 ### S205b — SABIÁ timeout P0 + ações de nota + #1234 (2026-10-09)
 
 | # | Item | Status |
