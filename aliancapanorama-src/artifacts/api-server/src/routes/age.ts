@@ -3386,4 +3386,62 @@ router.get("/age/pendentes", async (req, res): Promise<void> => {
   res.json(rows);
 });
 
+// POST /api/age/:slug/patients/sabia — SABIÁ para o paciente logado
+router.post("/age/:slug/patients/sabia", requirePatientAuth, async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { message } = req.body as { message?: string };
+  if (!message?.trim()) { res.status(400).json({ error: "message obrigatório" }); return; }
+
+  const patientId = req.session.agePatientId!;
+  const patientNome = req.session.agePatientNome ?? "paciente";
+
+  const [prof] = await db.select({ nome: ageProfessionalsTable.nome, tipo: ageProfessionalsTable.tipo, bio: ageProfessionalsTable.bio })
+    .from(ageProfessionalsTable).where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true))).limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const now = new Date();
+  const weekEnd = new Date(now); weekEnd.setDate(weekEnd.getDate() + 14);
+
+  const [patient] = await db.select({ email: agePatientsTable.email })
+    .from(agePatientsTable).where(eq(agePatientsTable.id, patientId)).limit(1);
+
+  const appts = patient ? await db.select({ dataHora: ageAppointmentsTable.dataHora, status: ageAppointmentsTable.status, canal: ageAppointmentsTable.canal })
+    .from(ageAppointmentsTable)
+    .where(and(
+      sql`LOWER(${ageAppointmentsTable.patientEmail}) = LOWER(${patient.email})`,
+      gte(ageAppointmentsTable.dataHora, now),
+      lte(ageAppointmentsTable.dataHora, weekEnd),
+    ))
+    .orderBy(ageAppointmentsTable.dataHora).limit(5) : [];
+
+  const agendaText = appts.length === 0
+    ? "Nenhuma consulta agendada nos próximos 14 dias."
+    : appts.map(a => {
+        const dt = new Date(a.dataHora).toLocaleString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+        return `${dt} (${a.canal}, ${a.status})`;
+      }).join("\n");
+
+  const systemPrompt = `Você é SABIÁ 🐦, assistente do paciente na plataforma Age (Sociedade Tucci).
+Você está falando com ${patientNome}.
+Profissional responsável: ${prof.nome} (${prof.tipo}).
+${prof.bio ? `Bio: ${prof.bio}` : ""}
+
+Próximas consultas de ${patientNome}:
+${agendaText}
+
+Você pode ajudar com: dúvidas sobre as consultas, como remarcar ou cancelar, preparação para atendimento.
+NÃO compartilhe dados de outros pacientes. NÃO faça diagnósticos médicos.
+Seja acolhedor, claro e empático. Respostas curtas em português.`;
+
+  let reply = "Não consegui processar agora. Tente em instantes.";
+  try {
+    reply = await routeLLM({
+      messages: [{ role: "system", content: systemPrompt }, { role: "user", content: message }],
+      maxTokens: 600, temperature: 0.5,
+    });
+  } catch { /* usa fallback */ }
+
+  res.json({ reply });
+});
+
 export default router;

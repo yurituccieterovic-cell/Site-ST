@@ -297,7 +297,10 @@ export function AgePage() {
   const [patientLoginLoading, setPatientLoginLoading] = useState(false);
   const [patientAppts, setPatientAppts] = useState<PatientAppt[]>([]);
   const [patientApptLoading, setPatientApptLoading] = useState(false);
-  const [patientView, setPatientView] = useState<"appointments" | "password" | "docs" | "forms">("appointments");
+  const [patientView, setPatientView] = useState<"appointments" | "password" | "docs" | "forms" | "sabia">("appointments");
+  const [patientSabiaInput, setPatientSabiaInput] = useState("");
+  const [patientSabiaMsgs, setPatientSabiaMsgs] = useState<{ role: "user" | "assistant"; content: string }[]>([{ role: "assistant", content: "Olá! Sou a SABIÁ 🐦, sua assistente. Posso ajudar com dúvidas sobre suas consultas ou agendamentos." }]);
+  const [patientSabiaLoading, setPatientSabiaLoading] = useState(false);
   const [patientPwForm, setPatientPwForm] = useState({ current: "", next: "" });
   const [patientPwError, setPatientPwError] = useState("");
   const [patientPwOk, setPatientPwOk] = useState(false);
@@ -841,8 +844,8 @@ export function AgePage() {
   }
 
   async function handleLogout() {
-    await fetch(`${API}/api/age/auth/logout`, { method: "POST", credentials: "include" });
-    setMode("public"); setAuthStep("login"); setAuthPassword(""); setAuthNome("");
+    try { await fetch(`${API}/api/age/auth/logout`, { method: "POST", credentials: "include" }); } catch { /* ignore */ }
+    setProf(null); setMode("public"); setAuthStep("login"); setAuthPassword(""); setAuthNome("");
     setSabiaHistoryLoaded(false);
     setMsgs([{ role: "assistant", content: SABIA_GREETING }]);
     setSabiaSessionId("");
@@ -1143,8 +1146,8 @@ export function AgePage() {
   }
 
   async function handlePatientLogout() {
-    await fetch(`${API}/api/age/${slug}/patients/auth/logout`, { method: "POST", credentials: "include" });
-    setMode("public"); setPatientNome(""); setPatientAppts([]);
+    try { await fetch(`${API}/api/age/${slug}/patients/auth/logout`, { method: "POST", credentials: "include" }); } catch { /* ignore */ }
+    setMode("public"); setPatientNome(""); setPatientAppts([]); setPatientView("appointments");
   }
 
   async function handleForgotPassword(e: React.FormEvent) {
@@ -4672,7 +4675,7 @@ export function AgePage() {
 
         {/* Nav interna */}
         <div style={{ display: "flex", borderBottom: "1px solid #1e293b", marginBottom: 20, flexWrap: "wrap" }}>
-          {([["appointments", "Consultas"], ["docs", "Documentos"], ["forms", "Formulários"], ["password", "Senha"]] as const).map(([v, label]) => (
+          {([["appointments", "Consultas"], ["sabia", "🐦 SABIÁ"], ["docs", "Documentos"], ["forms", "Formulários"], ["password", "Senha"]] as const).map(([v, label]) => (
             <button key={v} onClick={() => setPatientView(v)}
               style={{ padding: "8px 14px", background: "none", border: "none", borderBottom: patientView === v ? `2px solid ${color}` : "2px solid transparent", color: patientView === v ? color : "#64748b", cursor: "pointer", fontSize: 13, fontWeight: patientView === v ? 700 : 400 }}>
               {label}
@@ -4841,6 +4844,45 @@ export function AgePage() {
                 )}
               </>
             )}
+          </div>
+        )}
+
+        {patientView === "sabia" && (
+          <div style={{ display: "flex", flexDirection: "column", height: "60vh", minHeight: 320 }}>
+            <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 8, paddingBottom: 8 }}>
+              {patientSabiaMsgs.map((m, i) => (
+                <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
+                  <div style={{ maxWidth: "80%", background: m.role === "user" ? colorDark : "#1a2030", border: `1px solid ${m.role === "user" ? color + "44" : "#1e293b"}`, borderRadius: 10, padding: "8px 12px", color: "#e2e8f0", fontSize: 13, whiteSpace: "pre-wrap", lineHeight: 1.5 }}>
+                    {m.content}
+                  </div>
+                </div>
+              ))}
+              {patientSabiaLoading && (
+                <div style={{ color: "#64748b", fontSize: 12 }}>SABIÁ está pensando…</div>
+              )}
+            </div>
+            <form onSubmit={async e => {
+              e.preventDefault();
+              const msg = patientSabiaInput.trim();
+              if (!msg || patientSabiaLoading) return;
+              setPatientSabiaMsgs(prev => [...prev, { role: "user", content: msg }]);
+              setPatientSabiaInput("");
+              setPatientSabiaLoading(true);
+              try {
+                const r = await fetch(`${API}/api/age/${slug}/patients/sabia`, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify({ message: msg }) });
+                const d = await r.json() as { reply?: string; error?: string };
+                setPatientSabiaMsgs(prev => [...prev, { role: "assistant", content: d.reply ?? d.error ?? "Sem resposta." }]);
+              } catch { setPatientSabiaMsgs(prev => [...prev, { role: "assistant", content: "Sem conexão. Tente novamente." }]); }
+              setPatientSabiaLoading(false);
+            }} style={{ display: "flex", gap: 8, marginTop: 8 }}>
+              <input value={patientSabiaInput} onChange={e => setPatientSabiaInput(e.target.value)}
+                placeholder="Pergunte sobre suas consultas…"
+                style={{ flex: 1, background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+              <button type="submit" disabled={!patientSabiaInput.trim() || patientSabiaLoading}
+                style={{ background: color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 16px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+                →
+              </button>
+            </form>
           </div>
         )}
 
