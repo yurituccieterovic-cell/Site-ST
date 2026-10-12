@@ -2773,3 +2773,8 @@ Como posso te ajudar hoje?"
 - DECISÕES: bcrypt custo 10→8 (bcrypt nativo falha no Render por falta de build tools); [skip deploy] no Conector está funcionando; Milton login OK com age2026
 - APRENDIZADO: bcryptjs puro JS bloqueia event loop ~6s por hash; custo 8 = ~1.5s; bcrypt nativo (worker threads) incompatível com Render Starter build env
 - PENDÊNCIA: RODAR assembleias paradas desde 2026-10-08 — investigar SalesCockpit cron próxima sessão
+
+
+### 2026-10-12 — admin
+### 2026-10-12T18:50 — Playcenter
+- Participantes: isa+meky+socoboy+orquestrador (4 falas)
