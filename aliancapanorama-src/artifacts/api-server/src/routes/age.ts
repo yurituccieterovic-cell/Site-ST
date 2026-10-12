@@ -10,7 +10,7 @@ import {
 } from "@workspace/db";
 import { randomUUID } from "crypto";
 import { eq, and, gte, lte, desc, not, inArray, sql, isNull } from "drizzle-orm";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
 import { synthesizeSpeech, DEFAULT_TTS_VOICE } from "../lib/tts";
@@ -177,7 +177,7 @@ router.post("/age/auth/reset-password", async (req, res): Promise<void> => {
 
   if (!prof) { res.status(400).json({ error: "Link inválido ou expirado. Solicite um novo." }); return; }
 
-  const hash = await bcrypt.hash(senha, 10);
+  const hash = await bcrypt.hash(senha, 8);
   await db.execute(sql`UPDATE age_professionals SET password_hash = ${hash}, reset_token = NULL, reset_token_expira_at = NULL WHERE id = ${prof.id}`);
 
   res.json({ ok: true, nome: prof.nome });
@@ -320,7 +320,7 @@ router.post("/age/auth/change-password", loginLimit, requireAgeAuth, async (req,
   const ok = await bcrypt.compare(currentPassword, prof.passwordHash);
   if (!ok) { res.status(401).json({ error: "Senha atual incorreta" }); return; }
 
-  const hash = await bcrypt.hash(newPassword, 10);
+  const hash = await bcrypt.hash(newPassword, 8);
   await db.update(ageProfessionalsTable).set({ passwordHash: hash }).where(eq(ageProfessionalsTable.id, prof.id));
   res.json({ ok: true });
 });
@@ -1917,7 +1917,7 @@ router.post("/age/gestora/reset-password", async (req, res): Promise<void> => {
 
   if (!gestora) { res.status(400).json({ error: "Link inválido ou expirado. Solicite um novo." }); return; }
 
-  const hash = await bcrypt.hash(senha, 10);
+  const hash = await bcrypt.hash(senha, 8);
   await db.execute(sql`
     UPDATE age_gestoras SET password_hash = ${hash}, reset_token = NULL, reset_token_expira_at = NULL
     WHERE id = ${gestora.id}
@@ -2353,7 +2353,7 @@ router.post("/age/:slug/patients/auth/set-password", async (req, res): Promise<v
     res.status(403).json({ error: "Cadastro ainda não aprovado." }); return;
   }
 
-  const hash = await bcrypt.hash(password, 10);
+  const hash = await bcrypt.hash(password, 8);
   await db.update(agePatientsTable)
     .set({ passwordHash: hash, resetToken: null, resetTokenExpiraAt: null, updatedAt: new Date() } as any)
     .where(eq(agePatientsTable.id, patient.id));
@@ -2476,7 +2476,7 @@ router.post("/age/:slug/patients/auth/change-password", requirePatientAuth, asyn
   const ok = await bcrypt.compare(currentPassword, (patient as any).passwordHash);
   if (!ok) { res.status(401).json({ error: "Senha atual incorreta." }); return; }
 
-  const hash = await bcrypt.hash(newPassword, 10);
+  const hash = await bcrypt.hash(newPassword, 8);
   await db.update(agePatientsTable)
     .set({ passwordHash: hash, updatedAt: new Date() } as any)
     .where(eq(agePatientsTable.id, patient.id));
@@ -2792,7 +2792,7 @@ router.post("/age/admin/setup", async (req, res): Promise<void> => {
     return;
   }
 
-  const hash = await bcrypt.hash(password, 10);
+  const hash = await bcrypt.hash(password, 8);
   const [prof] = await db.insert(ageProfessionalsTable)
     .values({ slug, nome, tipo: tipo ?? "psicóloga", registro, especialidade, bio, cor: cor ?? "#2dd4bf", email, passwordHash: hash })
     .onConflictDoUpdate({ target: ageProfessionalsTable.slug, set: { nome, tipo, registro, especialidade, bio, cor, email } })
@@ -3159,7 +3159,7 @@ router.patch("/age/:slug/professionals/me/password-b", requireAgeAuth, async (re
     await db.execute(sql`UPDATE age_professionals SET password_b_hash = NULL WHERE id = ${profId}`);
     res.json({ ok: true, message: "Senha B removida." });
   } else if (newPasswordB && newPasswordB.length >= 6) {
-    const hash = await bcrypt.hash(newPasswordB, 10);
+    const hash = await bcrypt.hash(newPasswordB, 8);
     await db.execute(sql`UPDATE age_professionals SET password_b_hash = ${hash} WHERE id = ${profId}`);
     res.json({ ok: true, message: "Senha B definida." });
   } else {
@@ -3299,7 +3299,7 @@ router.get("/age/aprovar", async (req, res): Promise<void> => {
 
   // Senha temporária
   const tempPass = Math.random().toString(36).slice(2, 10);
-  const passwordHash = await bcrypt.hash(tempPass, 10);
+  const passwordHash = await bcrypt.hash(tempPass, 8);
 
   const cores = ["#2dd4bf", "#a78bfa", "#f97316", "#22c55e", "#3b82f6", "#f59e0b", "#ec4899"];
   const cor = cores[Math.floor(Math.random() * cores.length)] ?? "#2dd4bf";

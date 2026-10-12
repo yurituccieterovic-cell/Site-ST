@@ -13,7 +13,7 @@ import {
   rapaduraCanaMemoryTable,
 } from "@workspace/db";
 import { eq, isNull, desc, sql, and, asc, inArray } from "drizzle-orm";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import PDFDocument from "pdfkit";
 import { routeLLM } from "../lib/llm-router";
 import { logger } from "../lib/logger";
@@ -308,7 +308,7 @@ router.post("/rapadura/auth/change-password", loginLimit, requireRapaduraAuth, a
     res.status(401).json({ error: "Senha atual incorreta" });
     return;
   }
-  const newHash = await bcrypt.hash(newPassword, 12);
+  const newHash = await bcrypt.hash(newPassword, 8);
   await db.update(rapaduraUsersTable).set({ passwordHash: newHash }).where(eq(rapaduraUsersTable.id, userId));
   await audit(userId, "PASSWORD_CHANGE", null, req.ip ?? "");
   res.json({ ok: true });

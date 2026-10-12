@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
 import { db } from "@workspace/db";
@@ -445,7 +445,7 @@ export async function ensureAgeTables(): Promise<void> {
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";
-  const defaultHash = await bcrypt.hash(defaultPass, 10);
+  const defaultHash = await bcrypt.hash(defaultPass, 8);
 
   const professionals = [
     { slug: "lisange", nome: "Lisange", tipo: "psicóloga", especialidade: "Psicologia Clínica", cor: "#2dd4bf", bio: "Atendimento psicológico com escuta ativa e presença." },
@@ -2585,7 +2585,7 @@ export async function seedRapaduraUsers(): Promise<void> {
 
   for (const m of MEMBERS) {
     if (!existingNomes.has(m.nome)) {
-      const hash = await bcrypt.hash(m.pwd, 12);
+      const hash = await bcrypt.hash(m.pwd, 8);
       await db.insert(rapaduraUsersTable).values({ nome: m.nome, role: m.role, passwordHash: hash });
       logger.info(`bootstrap: rapadura user ${m.nome} (${m.role}) criado`);
     }
@@ -2790,11 +2790,11 @@ export async function ensureJasmimTables(): Promise<void> {
 export async function ensureJasmimUsers(): Promise<void> {
   const { usersTable } = await import("@workspace/db");
   const { eq } = await import("drizzle-orm");
-  const bcrypt = await import("bcrypt");
+  const bcrypt = await import("bcryptjs");
 
   const existing = await db.select().from(usersTable).where(eq(usersTable.login, "yuri")).limit(1);
   if (existing.length === 0) {
-    const hash = await bcrypt.hash(process.env["JASMIM_YURI_PASSWORD"] ?? "tucci@jasmim26", 12);
+    const hash = await bcrypt.hash(process.env["JASMIM_YURI_PASSWORD"] ?? "tucci@jasmim26", 8);
     await db.execute(sql`
       INSERT INTO users (login, password_hash, tier, display_name)
       VALUES ('yuri', ${hash}, 4, 'Yuri — Fundador')

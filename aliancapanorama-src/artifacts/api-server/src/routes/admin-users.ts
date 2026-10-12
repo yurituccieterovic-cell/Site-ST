@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq, desc } from "drizzle-orm";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { z } from "zod";
 
 const router = Router();
@@ -41,7 +41,7 @@ router.post("/admin/users", async (req, res) => {
   const parsed = schema.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: "Dados inválidos" }); return; }
   const { login, password, tier, displayName } = parsed.data;
-  const passwordHash = await bcrypt.hash(password, 12);
+  const passwordHash = await bcrypt.hash(password, 8);
   try {
     const [user] = await db.insert(usersTable).values({ login, passwordHash, tier, displayName }).returning();
     res.status(201).json({ id: user?.id, login: user?.login, tier: user?.tier });
@@ -66,7 +66,7 @@ router.patch("/admin/users/:id", async (req, res) => {
   const updates: Record<string, unknown> = {};
   if (tier !== undefined) updates.tier = tier;
   if (displayName !== undefined) updates.displayName = displayName;
-  if (password) updates.passwordHash = await bcrypt.hash(password, 12);
+  if (password) updates.passwordHash = await bcrypt.hash(password, 8);
   if (Object.keys(updates).length === 0) { res.status(400).json({ error: "Nada para atualizar" }); return; }
   await db.update(usersTable).set(updates).where(eq(usersTable.id, id));
   res.json({ ok: true });
@@ -89,7 +89,7 @@ router.post("/admin/setup", async (req, res) => {
   if (!parsed.success) { res.status(400).json({ error: "Dados inválidos" }); return; }
   const existing = await db.select().from(usersTable).limit(1);
   if (existing.length > 0) { res.status(409).json({ error: "Admin já configurado" }); return; }
-  const passwordHash = await bcrypt.hash(parsed.data.password, 12);
+  const passwordHash = await bcrypt.hash(parsed.data.password, 8);
   const [user] = await db
     .insert(usersTable)
     .values({ login: parsed.data.login, passwordHash, tier: 5, displayName: "Admin" })

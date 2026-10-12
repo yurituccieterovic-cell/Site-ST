@@ -4,7 +4,7 @@ import { db } from "@workspace/db";
 import { usersTable, ageProfessionalsTable, rapaduraUsersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { LoginBody } from "@workspace/api-zod";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { allowedOrigins } from "../lib/allowedOrigins";
 import nodemailer from "nodemailer";
 
@@ -259,7 +259,7 @@ router.post("/auth/passtheo", loginRateLimit, async (req, res): Promise<void> =>
   const ok = await bcrypt.compare(currentPassword, user.passwordHash);
   if (!ok) { res.status(401).json({ error: "Senha atual incorreta" }); return; }
 
-  const newHash = await bcrypt.hash(newPassword, 12);
+  const newHash = await bcrypt.hash(newPassword, 8);
   const changed: string[] = [];
 
   // PAP
