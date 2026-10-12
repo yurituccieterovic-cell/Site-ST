@@ -2837,3 +2837,12 @@ Como posso te ajudar hoje?"
 - FEAT: Tarefas — label de status + toast + desfazer + ordenação semântica
 - SPEC: AGE 2.0 completo registrado I993-I1000 (temas, docs/OCR, multi-perfis)
 - PRÓXIMO: temas visuais SOL/Noturno (I993), Vista Lista calendário (I994), PDF/OCR (I999)
+
+
+### 2026-10-12 — admin
+### 2026-10-12 — Cláudio (S212)
+- Diretrizes AGE 2.0: sistema confiável falha de forma compreensível, preserva trabalho do usuário e mostra caminho de volta
+- Calendário por unidades: drill-down Mês→Semana→Dia→Unidade→Task; parent_id já existe em age_notas
+- Email em 7 fluxos obrigatórios + SPF/DKIM/DMARC antes de vender; pac↔prof via endereço intermediário
+- Estados honestos: spinner só durante request ativa; 6 estados nomeados; autosave local obrigatório
+- Age 3.0: após PDF/OCR (I999/I1007) + multi-perfis (I1000) + pagamentos; não antes
