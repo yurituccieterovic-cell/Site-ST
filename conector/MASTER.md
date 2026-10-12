@@ -2738,3 +2738,12 @@ Como posso te ajudar hoje?"
 ### SABIÁ → Lisange (2026-10-12)
 - "ping leucócito — responda ok"
 - SABIÁ: "ok"
+
+
+### 2026-10-12 — admin
+### 2026-10-12 — ATA Cláudio S206
+- DECISÃO: [skip deploy] no Conector para evitar auto-redeploy horário (causa raiz downtime)
+- FIX: bcrypt cost 12→10 no Age + short-circuit okA/okB (login 7s→<1s)
+- FEAT: SABIÁ para paciente (endpoint + aba na área do paciente)
+- FIX: logout Age com try/catch (não trava se API reiniciando)
+- DB: Milton profissional senha A=Yuri, B=Mayumi; paciente age2026
