@@ -14,6 +14,11 @@
 | S206-6 | Paciente Milton (id=3): nome + senha age2026 atualizados | ✅ DB atualizado |
 | S206-7 | Deploy code fix: commit tinha [skip deploy] no título → deploy manual via Render API | ✅ deploy dep-db6hf2brjlhs73epon9g |
 | S206-8 | Assembleia: mensagem de diagnóstico enviada (id: 493ce808) | ✅ enviado |
+| S206-9 | SABIÁ no painel do paciente: aba "🐦 SABIÁ" adicionada em AgePage.tsx | ✅ commit fd3bb4db |
+| S206-10 | Logout profissional + paciente Age: fix com try/catch e reset de estado | ✅ commit fd3bb4db |
+| S206-11 | bcryptjs → bcrypt nativo: event loop livre durante hashes (worker threads) | ✅ commit 07dbefe8 |
+| S206-12 | Leucócito: 16/17 ✅ (único ❌: login 502 durante deploy bcrypt) | ✅ rodado |
+| S206-13 | RODAR assembleias paradas desde 2026-10-08 — investigar SalesCockpit cron | 🔴 pendente |
 
 ### S205b — SABIÁ timeout P0 + ações de nota + #1234 (2026-10-09)
 

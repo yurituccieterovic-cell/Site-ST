@@ -9384,3 +9384,80 @@ A correção é uma linha: `sameSite: "none"` em produção. Com isso o cookie v
 *Sessão S209 · Cláudio Coach · 2026-10-09*
 
 ---
+
+---
+## Sessão 206 — 2026-10-12 (Downtime + Age Milton + SABIÁ Paciente)
+
+### O que foi feito
+
+**1. Diagnóstico de Queda Horária**
+O sistema estava caindo ~16 minutos toda hora desde pelo menos as 06:45 UTC. Via Render API e GitHub, identifiquei a causa: `Conector.syncToGitHub()` commitava o `MASTER.md` no GitHub após cada escrita de memória das IAs. Isso disparava `trigger: new_commit` no Render → auto-deploy → downtime.
+
+**Fix:** `[skip deploy]` adicionado na mensagem de commit do Conector. Simples, cirúrgico, zero impacto.
+
+**Gotcha extra:** nosso próprio commit de fix continha `[skip deploy]` no título → Render skipou ele também → deploy manual necessário via Render API.
+
+**2. Age — Milton Salomão**
+- Login demorava 7s: `bcrypt cost 12` no Render Starter (0.5 CPU)
+- Reduzido para cost 10 em todo o `age.ts` (novos hashes)
+- Short-circuit na comparação: `okA` e `okB` eram calculados sempre em série (2 × 7s); agora `okB` só roda se `okA` falhar
+- Senha de Milton resetada no banco (hash errado no histórico)
+- Senhas atualizadas: A = Yuri (`y!4T53c613`), B = Mayumi (`m!4T53c613`)
+- Paciente id=3 atualizado: nome "Milton Salomão", senha `age2026`
+
+**3. SABIÁ para Paciente**
+- Novo endpoint: `POST /api/age/:slug/patients/sabia` (requirePatientAuth)
+- Contexto: nome do paciente, próximas consultas (14 dias), info do profissional
+- Frontend: aba "🐦 SABIÁ" na área do paciente, chat simples
+
+**4. Fix Logout**
+- `handleLogout` e `handlePatientLogout` travavam se API estivesse reiniciando
+- Adicionado `try/catch` nos dois; `setProf(null)` incluído no logout profissional
+
+### Decisões Tomadas
+- `[skip deploy]` como padrão nos commits do Conector (não de código)
+- bcrypt cost 10 como novo padrão para Age (cost 12 era excessivo para 0.5 CPU)
+- SABIÁ para paciente: usar `routeLLM` simples (sem memória persistente por ora)
+
+### Próximos Passos
+- Verificar login Milton após deploy terminar
+- Testar SABIÁ no paciente
+- Considerar migração gradual de hashes antigos (cost 12 → 10 na próxima troca de senha)
+
+### Síntese Filosófica
+O sistema estava se derrubando sozinho — as IAs escrevendo memória disparavam redeploys que apagavam a memória de quem estava online. Uma recursão destrutiva sem intenção. O fix foi mínimo: uma anotação no commit. O que importa: sistemas autônomos precisam de sinais explícitos sobre quando suas ações têm efeitos colaterais no próprio sistema que os sustenta. O `[skip deploy]` é menos um hotfix e mais um princípio de design que ficou faltando.
+
+---
+
+## S206 Parte 2 — bcrypt nativo + Leucócito + #1234 · 2026-10-12
+
+**Hora:** ~18:15 BRT (continuação da sessão S206 após almoço)
+
+**Contexto:** Milton ainda não conseguia logar após a parte 1. Sistema caindo de novo.
+
+**O que descobrimos:**
+- A rota de login profissional Age é `/api/age/auth/login`, não `/api/age/:slug/auth/login`. Confundimos no curl de teste
+- bcryptjs (pure JS) bloqueia o event loop: com cost 10, 6s de CPU coloca o Render em estado de "não responde" → health check falha → reinicia. A cada login = risco de queda
+- Solução: `bcrypt` nativo (N-API worker threads) — mesma API, não bloqueia event loop
+
+**O que fizemos:**
+- Limpamos `last_login_ip` e `challenge_code` de Milton no DB (descongelar challenge preso)
+- Confirmado: Milton entra com `age2026` — `{"ok":true,"nome":"Milton Salomão"}` ✅
+- Trocamos `bcryptjs` → `bcrypt` nativo em 5 arquivos (age.ts, auth.ts, admin-users.ts, rapadura.ts, bootstrap.ts)
+- package.json: `bcryptjs@3.0.3` → `bcrypt@5.1.1`, `@types/bcryptjs` → `@types/bcrypt`
+- Commit 07dbefe8 deployado no Render
+- Leucócito: 16/17 ✅ (único ❌ = login 502 enquanto o novo build compilava)
+
+**Health check #1234:**
+- site-st.onrender.com ✅ | salescockpit-api.onrender.com ✅
+- Age lisange ✅ | suzana ✅
+- DODGE: verde 13/13 tabelas
+- UptimeRobot: sem alertas de DOWN (só emails institucionais)
+- Playcenter: IAs ativas, última mensagem 17:50 ✅
+
+**Pendência descoberta:** RODAR assembleias paradas desde 2026-10-08. Não há RESULTADO/PERFEITO emails desde então. Provavelmente cron do SalesCockpit parou. Tabela `assembleia_sessions` tem 630 registros, última em 2026-10-08T22:18. Investigar próxima sessão.
+
+### Síntese Filosófica
+Às vezes o sistema que deveria estar em silêncio é exatamente o que faz mais barulho. O bcryptjs gritava em single-thread enquanto o Render tentava escutar o health check. O paradoxo: um mecanismo de segurança (hash de senha) era o agente da insegurança (queda do serviço). Trocar para o bcrypt nativo não é apenas uma otimização — é restituir ao sistema a capacidade de respirar enquanto trabalha.
+
+---
