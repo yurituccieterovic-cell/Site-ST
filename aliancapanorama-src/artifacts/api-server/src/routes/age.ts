@@ -1051,21 +1051,27 @@ Se não souber, diga: "Não tenho essa informação — entre em contato diretam
   ];
 
   let reply = "Desculpe, não consegui processar agora. Tente em instantes.";
+  let isError = false;
   try {
     reply = await routeLLM({ messages: llmMessages, maxTokens: 800, temperature: 0.5 });
-  } catch { /* usa fallback */ }
+  } catch (err) {
+    isError = true;
+    logger.warn({ err: String(err) }, "age/sabia-public: todos LLMs falharam");
+  }
 
-  // Persistir nova troca no histórico (max 40 mensagens totais = 20 pares)
-  const updated = [...history, { role: "user" as const, content: message! }, { role: "assistant" as const, content: reply }].slice(-40);
-  try {
-    await db.execute(sql`
-      INSERT INTO age_sabia_sessions (session_id, professional_id, messages, updated_at)
-      VALUES (${sid}, ${prof.id}, ${JSON.stringify(updated)}::jsonb, now())
-      ON CONFLICT (session_id) DO UPDATE SET messages = ${JSON.stringify(updated)}::jsonb, updated_at = now()
-    `);
-  } catch { /* não bloquear resposta se persistência falhar */ }
+  // Persistir nova troca SÓ se resposta real (não polui histórico com mensagens de erro)
+  if (!isError) {
+    const updated = [...history, { role: "user" as const, content: message! }, { role: "assistant" as const, content: reply }].slice(-40);
+    try {
+      await db.execute(sql`
+        INSERT INTO age_sabia_sessions (session_id, professional_id, messages, updated_at)
+        VALUES (${sid}, ${prof.id}, ${JSON.stringify(updated)}::jsonb, now())
+        ON CONFLICT (session_id) DO UPDATE SET messages = ${JSON.stringify(updated)}::jsonb, updated_at = now()
+      `);
+    } catch { /* não bloquear resposta se persistência falhar */ }
+  }
 
-  res.json({ reply, sessionId: sid });
+  res.json({ reply, sessionId: sid, isError });
 });
 
 // POST /api/age/:slug/sabia (auth required)

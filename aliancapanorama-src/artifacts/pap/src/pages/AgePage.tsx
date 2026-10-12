@@ -283,7 +283,11 @@ export function AgePage() {
   };
   const [notas, setNotas] = useState<Nota[]>([]);
   const [notasLoading, setNotasLoading] = useState(false);
-  const [notaForm, setNotaForm] = useState({ tipo: "nota", conteudo: "" });
+  const [notaForm, setNotaForm] = useState(() => {
+    let conteudo = "";
+    try { conteudo = localStorage.getItem(`nota-draft-${slug}`) ?? ""; } catch { /* ignore */ }
+    return { tipo: "nota", conteudo };
+  });
   const [notaEnviando, setNotaEnviando] = useState(false);
   const [perguntaEnviada, setPerguntaEnviada] = useState(false);
   const [forkId, setForkId] = useState<number | null>(null);
@@ -292,6 +296,9 @@ export function AgePage() {
   const [notaTarefaForm, setNotaTarefaForm] = useState({ titulo: "", descricao: "" });
   const [notaPacienteForm, setNotaPacienteForm] = useState({ nome: "", email: "" });
   const [notaAcaoSaving, setNotaAcaoSaving] = useState(false);
+  useEffect(() => {
+    try { localStorage.setItem(`nota-draft-${slug}`, notaForm.conteudo); } catch { /* ignore */ }
+  }, [notaForm.conteudo]);
 
   // Área do paciente
   const [patientNome, setPatientNome] = useState("");
@@ -1098,14 +1105,37 @@ export function AgePage() {
         signal: ctrl.signal,
       });
       clearTimeout(timer);
-      const d = await r.json() as { reply?: string; sessionId?: string };
-      const reply = d.reply ?? "Não consegui responder agora. Tente novamente. 🐦";
-      setMsgs(m => [...m, { role: "assistant", content: reply }]);
-      if (d.sessionId) setSabiaSessionId(d.sessionId);
-      // leitura automática: entrada por voz OU live mode ativo
-      if (sabiaVoiceRef.current || sabiaLiveModeRef.current) {
-        sabiaVoiceRef.current = false;
-        setTimeout(() => void tts.speak(`auto-${Date.now()}`, reply), 200);
+      const d = await r.json() as { reply?: string; sessionId?: string; isError?: boolean };
+      if (d.isError) {
+        setMsgs(m => [...m, { role: "assistant", content: "⚠️ Sistema ocupado — retentando em 5s…" }]);
+        const capturedEndpoint = endpoint;
+        const capturedSession = d.sessionId ?? sabiaSessionId;
+        setTimeout(async () => {
+          try {
+            const r2 = await fetch(capturedEndpoint, {
+              method: "POST", credentials: "include",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ message: userMsg, sessionId: capturedSession }),
+            });
+            const d2 = await r2.json() as { reply?: string; sessionId?: string; isError?: boolean };
+            const reply2 = (!d2.isError && d2.reply) ? d2.reply : null;
+            setMsgs(m => {
+              const copy = [...m];
+              copy[copy.length - 1] = { role: "assistant", content: reply2 ?? "🐦 Ainda indisponível. Tente novamente." };
+              return copy;
+            });
+            if (d2.sessionId) setSabiaSessionId(d2.sessionId);
+          } catch { /* ignore retry failure */ }
+        }, 5000);
+      } else {
+        const reply = d.reply ?? "Não consegui responder agora. Tente novamente. 🐦";
+        setMsgs(m => [...m, { role: "assistant", content: reply }]);
+        if (d.sessionId) setSabiaSessionId(d.sessionId);
+        // leitura automática: entrada por voz OU live mode ativo
+        if (sabiaVoiceRef.current || sabiaLiveModeRef.current) {
+          sabiaVoiceRef.current = false;
+          setTimeout(() => void tts.speak(`auto-${Date.now()}`, reply), 200);
+        }
       }
     } catch (err) {
       clearTimeout(timer);
@@ -4265,6 +4295,7 @@ export function AgePage() {
         });
         if (r.ok) {
           setNotaForm({ tipo: "nota", conteudo: "" });
+          try { localStorage.removeItem(`nota-draft-${slug}`); } catch { /* ignore */ }
           setTimeout(loadNotas, 300);
           if (isPergunta) {
             setPerguntaEnviada(true);
