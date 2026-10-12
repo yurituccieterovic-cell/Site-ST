@@ -2091,3 +2091,20 @@
 | S209-5 | Leucócito: 17/17 verde confirmado com novos testes Age | ✅ |
 | S209-6 | TTS/áudio também beneficiado pelo fix sameSite (requireAgeAuth passava a falhar) | ✅ fix implícito |
 | S209-7 | Yuri precisa fazer logout+login para renovar cookie (antigo era lax) | ⚠️ instrução |
+
+### S210 — Age 2.0: email prefs + SABIÁ memória + tarefas + agenda (2026-10-12)
+
+| # | Item | Status |
+|---|---|---|
+| S210-1 | Email prefs: coluna jsonb + endpoints GET/PATCH para profissional e paciente | ✅ commit 7bb33bfe |
+| S210-2 | SABIÁ memória: tabela age_sabia_sessions + histórico persistido por sessionId | ✅ commit 7bb33bfe |
+| S210-3 | Tasks ORDER BY semântico: atrasada→hoje→em_andamento→pendente→concluída | ✅ commit 7bb33bfe |
+| S210-4 | Slug susana→suzana: JasmimMangaPage.tsx + sys_age_core.md corrigidos | ✅ commit e1bd934b |
+| S210-5 | Tarefas UX: label de status + toast 3s + botão desfazer | ✅ commit 909bda86 |
+| S210-6 | Agenda: vistas Semana (grid 7 colunas) + Mês (dots clicáveis) | ✅ commit 909bda86 |
+| S210-7 | Filtros Dia/Semana/Mês/Lista + nav ‹ Hoje › | ✅ commit 909bda86 |
+| S210-8 | IDEIAS.md I993-I1000: spec completo Age 2.0 registrado | ✅ commit 909bda86 |
+| S210-9 | Deploy Render: backend (sabia_sessions + email prefs) | ✅ 202 disparado |
+| S210-10 | Senha paciente: "esqueci senha" + reset por email | ⏳ I995 — próxima fase |
+| S210-11 | Temas visuais Age (SOL/noturno/invertido/claro) | ⏳ I993 — fase 3 |
+| S210-12 | Multi-perfis Netflix | ⏳ I1000 — fase 4 |
