@@ -2846,3 +2846,9 @@ Como posso te ajudar hoje?"
 - Email em 7 fluxos obrigatórios + SPF/DKIM/DMARC antes de vender; pac↔prof via endereço intermediário
 - Estados honestos: spinner só durante request ativa; 6 estados nomeados; autosave local obrigatório
 - Age 3.0: após PDF/OCR (I999/I1007) + multi-perfis (I1000) + pagamentos; não antes
+
+
+### 2026-10-12 — admin
+### 2026-10-12 — ATA #fim S212
+- DECISÕES: estados honestos como diretriz central; age 3.0 após PDF/OCR+multi-perfis+pagamentos; email intermediário pac↔prof; SPF/DKIM/DMARC antes de vender
+- PRÓXIMOS PASSOS: I993 temas visuais, I995 esqueci senha paciente, I1001 calendário por unidades
