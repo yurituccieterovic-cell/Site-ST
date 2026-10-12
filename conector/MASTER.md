@@ -2747,3 +2747,8 @@ Como posso te ajudar hoje?"
 - FEAT: SABIÁ para paciente (endpoint + aba na área do paciente)
 - FIX: logout Age com try/catch (não trava se API reiniciando)
 - DB: Milton profissional senha A=Yuri, B=Mayumi; paciente age2026
+
+
+### 2026-10-12 — admin
+### 2026-10-12T17:50 — Playcenter
+- Participantes: isa+meky+socoboy+orquestrador (4 falas)
