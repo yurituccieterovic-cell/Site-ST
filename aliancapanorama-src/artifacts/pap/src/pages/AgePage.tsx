@@ -405,9 +405,14 @@ export function AgePage() {
   const [cadError, setCadError] = useState("");
   const TIPOS_PROF = ["psicóloga","psicólogo","médica","médico","nutricionista","fisioterapeuta","terapeuta","coach de saúde","enfermeira","enfermeiro","fonoaudióloga","fonoaudiólogo","dentista","psiquiatra","neurologista","cardiologista","dermatologista","ginecologista","pediatra","outro"];
 
-  // Vista Dia da agenda profissional (I145)
-  const [agendaFilter, setAgendaFilter] = useState<"todos" | "dia">("todos");
-  const [agendaDayOffset, setAgendaDayOffset] = useState(0); // 0=hoje, +1=amanhã, etc.
+  // Vista agenda profissional — Dia / Semana / Mês / Lista
+  const [agendaFilter, setAgendaFilter] = useState<"todos" | "dia" | "semana" | "mes">("todos");
+  const [agendaDayOffset, setAgendaDayOffset] = useState(0);
+  const [agendaWeekOffset, setAgendaWeekOffset] = useState(0);
+  const [agendaMonthOffset, setAgendaMonthOffset] = useState(0);
+  const [agendaMonthDay, setAgendaMonthDay] = useState<string | null>(null);
+  const [taskUndoData, setTaskUndoData] = useState<{ id: number; prevStatus: string; ts: number } | null>(null);
+  const [taskStatusToast, setTaskStatusToast] = useState<string | null>(null);
 
   // Visualização calendário (público) — todos os estados no top-level para respeitar rules of hooks
   type CalView = "lista" | "semana" | "mes";
@@ -2307,36 +2312,41 @@ export function AgePage() {
           <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600 }}>
             {agendaFilter === "dia"
               ? targetDate.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })
+              : agendaFilter === "semana" ? "Agenda — Semana"
+              : agendaFilter === "mes" ? "Agenda — Mês"
               : "Agenda — próximos 30 dias"}
           </h2>
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={loadAppts} style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>↻</button>
+            <button onClick={() => loadAppts()} style={{ background: "none", border: `1px solid ${color}44`, borderRadius: 6, color, padding: "4px 10px", cursor: "pointer", fontSize: 12 }}>↻</button>
             <button onClick={openProfBook} style={{ background: color, border: "none", borderRadius: 6, color: "#080c10", padding: "5px 12px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>+ Nova consulta</button>
           </div>
         </div>
 
-        {/* Filtro Vista Dia */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 16 }}>
-          <button onClick={() => setAgendaFilter("todos")}
-            style={{ padding: "4px 12px", borderRadius: 20, border: `1px solid ${agendaFilter === "todos" ? color : "#334155"}`, background: agendaFilter === "todos" ? color + "22" : "none", color: agendaFilter === "todos" ? color : "#64748b", fontSize: 12, cursor: "pointer", fontWeight: agendaFilter === "todos" ? 700 : 400 }}>
-            Todos
-          </button>
-          <button onClick={() => setAgendaFilter("dia")}
-            style={{ padding: "4px 12px", borderRadius: 20, border: `1px solid ${agendaFilter === "dia" ? color : "#334155"}`, background: agendaFilter === "dia" ? color + "22" : "none", color: agendaFilter === "dia" ? color : "#64748b", fontSize: 12, cursor: "pointer", fontWeight: agendaFilter === "dia" ? 700 : 400 }}>
-            Por dia
-          </button>
-          {agendaFilter === "dia" && (
-            <div style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: 4 }}>
-              <button onClick={() => setAgendaDayOffset(o => o - 1)}
-                style={{ background: "none", border: `1px solid #334155`, borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14, lineHeight: 1 }}>‹</button>
-              <button onClick={() => setAgendaDayOffset(0)}
-                style={{ background: agendaDayOffset === 0 ? color + "22" : "none", border: `1px solid ${agendaDayOffset === 0 ? color + "66" : "#334155"}`, borderRadius: 6, color: agendaDayOffset === 0 ? color : "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
-                Hoje
-              </button>
-              <button onClick={() => setAgendaDayOffset(o => o + 1)}
-                style={{ background: "none", border: `1px solid #334155`, borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14, lineHeight: 1 }}>›</button>
-            </div>
-          )}
+        {/* Filtro Vista Agenda: Dia / Semana / Mês / Lista */}
+        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 14, flexWrap: "wrap" }}>
+          {([["dia","Dia"],["semana","Semana"],["mes","Mês"],["todos","Lista"]] as const).map(([f, label]) => (
+            <button key={f} onClick={() => setAgendaFilter(f)}
+              style={{ padding: "4px 12px", borderRadius: 20, border: `1px solid ${agendaFilter === f ? color : "#334155"}`, background: agendaFilter === f ? color + "22" : "none", color: agendaFilter === f ? color : "#64748b", fontSize: 12, cursor: "pointer", fontWeight: agendaFilter === f ? 700 : 400 }}>
+              {label}
+            </button>
+          ))}
+          {/* Navegação: setas + botão Hoje */}
+          <div style={{ display: "flex", alignItems: "center", gap: 3, marginLeft: 4 }}>
+            <button onClick={() => {
+              if (agendaFilter === "dia") setAgendaDayOffset(o => o - 1);
+              else if (agendaFilter === "semana") setAgendaWeekOffset(o => o - 1);
+              else if (agendaFilter === "mes") setAgendaMonthOffset(o => o - 1);
+            }} style={{ background: "none", border: "1px solid #334155", borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14, lineHeight: 1, display: agendaFilter === "todos" ? "none" : "inline" }}>‹</button>
+            <button onClick={() => { setAgendaDayOffset(0); setAgendaWeekOffset(0); setAgendaMonthOffset(0); }}
+              style={{ padding: "2px 10px", borderRadius: 6, border: `1px solid ${(agendaFilter === "dia" && agendaDayOffset === 0) || (agendaFilter === "semana" && agendaWeekOffset === 0) || (agendaFilter === "mes" && agendaMonthOffset === 0) ? color + "66" : "#334155"}`, background: "none", color: "#94a3b8", fontSize: 11, cursor: "pointer", fontWeight: 600, display: agendaFilter === "todos" ? "none" : "inline" }}>
+              Hoje
+            </button>
+            <button onClick={() => {
+              if (agendaFilter === "dia") setAgendaDayOffset(o => o + 1);
+              else if (agendaFilter === "semana") setAgendaWeekOffset(o => o + 1);
+              else if (agendaFilter === "mes") setAgendaMonthOffset(o => o + 1);
+            }} style={{ background: "none", border: "1px solid #334155", borderRadius: 6, color: "#94a3b8", padding: "2px 8px", cursor: "pointer", fontSize: 14, lineHeight: 1, display: agendaFilter === "todos" ? "none" : "inline" }}>›</button>
+          </div>
         </div>
 
         {/* Onboarding self-service — aparece quando não há regras de disponibilidade */}
@@ -2610,46 +2620,151 @@ export function AgePage() {
             </div>
           </div>
         )}
-        {agendaFilter === "todos" && appts.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>Nenhum agendamento.</div>}
-        {agendaFilter === "dia" && Object.keys(grouped).length === 0 && (
-          <div style={{ color: "#64748b", fontSize: 14 }}>Nenhuma consulta neste dia.</div>
-        )}
-        {Object.entries(grouped).map(([day, dayAppts]) => {
-          const dayTasks = tasks.filter(t =>
-            t.dataVencimento &&
-            t.dataVencimento.slice(0, 10) === day &&
-            t.status !== "concluida" && t.status !== "cancelada"
-          );
-          return (
-            <div key={day} style={{ marginBottom: 20 }}>
-              <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
-                {fmtDay(day + "T12:00:00")}
-              </div>
-              {dayAppts.map(a => (
-                <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); setApptValor(a.valor ?? ""); }}
-                  style={{ background: "#0f1318", border: `1px solid ${(STATUS_COLOR[a.status] ?? color) + "55"}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: STATUS_COLOR[a.status] ?? color, flexShrink: 0 }} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{fmtTime(a.dataHora)} — {a.patientNome ?? "Paciente"}</div>
-                    <div style={{ color: "#64748b", fontSize: 12 }}>{STATUS_LABEL[a.status] ?? a.status} · {a.duracaoMin}min · {a.canal}</div>
+        {/* ── Vista Lista / Dia ───────────────────────────────── */}
+        {(agendaFilter === "todos" || agendaFilter === "dia") && (
+          <>
+            {agendaFilter === "todos" && appts.length === 0 && <div style={{ color: "#64748b", fontSize: 14 }}>Nenhum agendamento.</div>}
+            {agendaFilter === "dia" && Object.keys(grouped).length === 0 && (
+              <div style={{ color: "#64748b", fontSize: 14 }}>Nenhuma consulta neste dia.</div>
+            )}
+            {Object.entries(grouped).map(([day, dayAppts]) => {
+              const dayTasks = tasks.filter(t =>
+                t.dataVencimento && t.dataVencimento.slice(0, 10) === day &&
+                t.status !== "concluida" && t.status !== "cancelada"
+              );
+              return (
+                <div key={day} style={{ marginBottom: 20 }}>
+                  <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>
+                    {fmtDay(day + "T12:00:00")}
                   </div>
+                  {dayAppts.map(a => (
+                    <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); setApptValor(a.valor ?? ""); }}
+                      style={{ background: "#0f1318", border: `1px solid ${(STATUS_COLOR[a.status] ?? color) + "55"}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: STATUS_COLOR[a.status] ?? color, flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{fmtTime(a.dataHora)} — {a.patientNome ?? "Paciente"}</div>
+                        <div style={{ color: "#64748b", fontSize: 12 }}>{STATUS_LABEL[a.status] ?? a.status} · {a.duracaoMin}min · {a.canal}</div>
+                      </div>
+                    </div>
+                  ))}
+                  {dayTasks.length > 0 && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 4 }}>
+                      {dayTasks.map(t => (
+                        <div key={t.id} onClick={() => setView("tarefas")}
+                          style={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 6, padding: "3px 8px", fontSize: 11, color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, maxWidth: 200 }}>
+                          <span style={{ color: t.prioridade >= 5 ? "#f87171" : t.prioridade >= 4 ? "#fb923c" : "#facc15", flexShrink: 0 }}>✅</span>
+                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.titulo}</span>
+                          {t.allDay === false && <span style={{ color: "#475569", flexShrink: 0 }}>{new Date(t.dataVencimento!).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              ))}
-              {dayTasks.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 4 }}>
-                  {dayTasks.map(t => (
-                    <div key={t.id} onClick={() => setView("tarefas")}
-                      style={{ background: "#0f172a", border: "1px solid #334155", borderRadius: 6, padding: "3px 8px", fontSize: 11, color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, maxWidth: 200 }}>
-                      <span style={{ color: t.prioridade >= 5 ? "#f87171" : t.prioridade >= 4 ? "#fb923c" : "#facc15", flexShrink: 0 }}>✅</span>
-                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.titulo}</span>
-                      {t.allDay === false && <span style={{ color: "#475569", flexShrink: 0 }}>{new Date(t.dataVencimento!).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</span>}
+              );
+            })}
+          </>
+        )}
+
+        {/* ── Vista Semana ────────────────────────────────────── */}
+        {agendaFilter === "semana" && (() => {
+          const base = new Date(today); base.setDate(today.getDate() - ((today.getDay() + 6) % 7) + agendaWeekOffset * 7);
+          const wDays = Array.from({ length: 7 }, (_, i) => { const d = new Date(base); d.setDate(base.getDate() + i); return d.toISOString().slice(0, 10); });
+          const todayStr = today.toISOString().slice(0, 10);
+          const wLabel = `${new Date(wDays[0] + "T12:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })} – ${new Date(wDays[6] + "T12:00").toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}`;
+          const hasAny = wDays.some(d => allGrouped[d]?.length);
+          return (
+            <>
+              <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 10, textAlign: "center" }}>{wLabel}</div>
+              {!hasAny && <div style={{ color: "#64748b", fontSize: 14 }}>Nenhuma consulta nesta semana.</div>}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4 }}>
+                {["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map((d, i) => {
+                  const day = wDays[i];
+                  const isToday = day === todayStr;
+                  return (
+                    <div key={d} style={{ textAlign: "center" }}>
+                      <div style={{ color: isToday ? color : "#475569", fontSize: 9, fontWeight: 700, marginBottom: 2 }}>{d}</div>
+                      <div style={{ color: isToday ? color : "#64748b", fontSize: 11, fontWeight: isToday ? 700 : 400, marginBottom: 4 }}>
+                        {new Date(day + "T12:00").getDate()}
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                        {(allGrouped[day] ?? []).map(a => (
+                          <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); setApptValor(a.valor ?? ""); }}
+                            style={{ background: (STATUS_COLOR[a.status] ?? color) + "22", border: `1px solid ${(STATUS_COLOR[a.status] ?? color) + "55"}`, borderRadius: 5, padding: "3px 4px", cursor: "pointer", overflow: "hidden" }}>
+                            <div style={{ color: STATUS_COLOR[a.status] ?? color, fontSize: 9, fontWeight: 700 }}>{fmtTime(a.dataHora)}</div>
+                            <div style={{ color: "#94a3b8", fontSize: 9, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.patientNome ?? "Paciente"}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          );
+        })()}
+
+        {/* ── Vista Mês ───────────────────────────────────────── */}
+        {agendaFilter === "mes" && (() => {
+          const todayStr = today.toISOString().slice(0, 10);
+          const mBase = new Date(today.getFullYear(), today.getMonth() + agendaMonthOffset, 1);
+          const mName = mBase.toLocaleString("pt-BR", { month: "long", year: "numeric" });
+          const firstDow = (mBase.getDay() + 6) % 7;
+          const daysInM = new Date(mBase.getFullYear(), mBase.getMonth() + 1, 0).getDate();
+          const mCells = Array.from({ length: Math.ceil((firstDow + daysInM) / 7) * 7 }, (_, i) => {
+            const d = new Date(mBase); d.setDate(1 - firstDow + i); return d.toISOString().slice(0, 10);
+          });
+          const mStr = mBase.toISOString().slice(0, 7);
+          const selDay = agendaMonthDay;
+          return (
+            <>
+              <div style={{ color: "#94a3b8", fontSize: 12, marginBottom: 10, textAlign: "center", textTransform: "capitalize" }}>{mName}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, marginBottom: 12 }}>
+                {["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d => (
+                  <div key={d} style={{ color: "#475569", fontSize: 9, textAlign: "center", fontWeight: 700, padding: "2px 0" }}>{d}</div>
+                ))}
+                {mCells.map(day => {
+                  const dayAppts = allGrouped[day] ?? [];
+                  const inM = day.startsWith(mStr);
+                  const isToday = day === todayStr;
+                  const isSel = day === selDay;
+                  return (
+                    <div key={day} onClick={() => dayAppts.length && setAgendaMonthDay(isSel ? null : day)}
+                      style={{ minHeight: 44, background: isSel ? color + "22" : isToday ? "#0a1628" : "#0a0f16", border: `1px solid ${isSel ? color + "77" : isToday ? color + "44" : "#1e293b"}`, borderRadius: 6, padding: 4, cursor: dayAppts.length ? "pointer" : "default", opacity: inM ? 1 : 0.25 }}>
+                      <div style={{ color: isToday ? color : dayAppts.length ? "#e2e8f0" : "#334155", fontSize: 10, textAlign: "center", fontWeight: isToday ? 700 : 400, marginBottom: 2 }}>
+                        {new Date(day + "T12:00").getDate()}
+                      </div>
+                      {dayAppts.length > 0 && (
+                        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 2 }}>
+                          {dayAppts.slice(0, 4).map((a, i) => (
+                            <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: STATUS_COLOR[a.status] ?? color }} />
+                          ))}
+                          {dayAppts.length > 4 && <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#475569" }} />}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              {selDay && (allGrouped[selDay] ?? []).length > 0 && (
+                <div style={{ borderTop: `1px solid #1e293b`, paddingTop: 12 }}>
+                  <div style={{ color: "#94a3b8", fontSize: 12, fontWeight: 600, marginBottom: 8, textTransform: "capitalize" }}>
+                    {new Date(selDay + "T12:00").toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
+                  </div>
+                  {(allGrouped[selDay] ?? []).map(a => (
+                    <div key={a.id} onClick={() => { setSelectedAppt(a); setApptNotes(a.observacoes ?? ""); setApptValor(a.valor ?? ""); }}
+                      style={{ background: "#0f1318", border: `1px solid ${(STATUS_COLOR[a.status] ?? color) + "55"}`, borderRadius: 10, padding: "12px 14px", marginBottom: 8, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: STATUS_COLOR[a.status] ?? color, flexShrink: 0 }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ color: "#e2e8f0", fontWeight: 600, fontSize: 14 }}>{fmtTime(a.dataHora)} — {a.patientNome ?? "Paciente"}</div>
+                        <div style={{ color: "#64748b", fontSize: 12 }}>{STATUS_LABEL[a.status] ?? a.status} · {a.duracaoMin}min · {a.canal}</div>
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
-            </div>
+            </>
           );
-        })}
+        })()}
 
         {/* Modal de agendamento */}
         {selectedAppt && (
@@ -3814,13 +3929,40 @@ export function AgePage() {
       setTaskSaving(false);
     };
 
+    const STATUS_LABEL_T: Record<string, string> = {
+      pendente: "Pendente", em_andamento: "Em andamento", concluida: "Concluída", cancelada: "Cancelada",
+    };
+    const STATUS_TOAST_T: Record<string, string> = {
+      em_andamento: "Em andamento 🔄", concluida: "Concluída ✓", pendente: "Reaberta",
+    };
+
     const toggleStatus = async (task: AgeTask) => {
-      const next = task.status === "pendente" ? "em_andamento" : task.status === "em_andamento" ? "concluida" : "pendente";
+      const prev = task.status;
+      const next = prev === "pendente" ? "em_andamento" : prev === "em_andamento" ? "concluida" : "pendente";
       await fetch(`${API}/api/age/${slug}/tasks/${task.id}`, {
         method: "PATCH", credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: next }),
       });
+      await loadTasks(taskFilter || undefined);
+      const ts = Date.now();
+      setTaskUndoData({ id: task.id, prevStatus: prev, ts });
+      setTaskStatusToast(STATUS_TOAST_T[next] ?? next);
+      setTimeout(() => {
+        setTaskUndoData(u => u?.ts === ts ? null : u);
+        setTaskStatusToast(null);
+      }, 3000);
+    };
+
+    const undoStatus = async () => {
+      if (!taskUndoData) return;
+      await fetch(`${API}/api/age/${slug}/tasks/${taskUndoData.id}`, {
+        method: "PATCH", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: taskUndoData.prevStatus }),
+      });
+      setTaskUndoData(null);
+      setTaskStatusToast(null);
       await loadTasks(taskFilter || undefined);
     };
 
@@ -3892,6 +4034,19 @@ export function AgePage() {
           </button>
         </div>
 
+        {/* Toast + Undo */}
+        {taskStatusToast && (
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#1e293b", border: "1px solid #334155", borderRadius: 8, padding: "8px 14px", marginBottom: 10, fontSize: 13 }}>
+            <span style={{ color: "#e2e8f0" }}>{taskStatusToast}</span>
+            {taskUndoData && (
+              <button onClick={undoStatus}
+                style={{ background: "none", border: `1px solid ${color}66`, borderRadius: 6, color, padding: "2px 10px", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+                Desfazer
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Lista */}
         {tasksLoading ? (
           <div style={{ textAlign: "center", color: "#64748b", padding: "2rem" }}>Carregando...</div>
@@ -3902,8 +4057,13 @@ export function AgePage() {
             {tasks.map(task => (
               <div key={task.id} style={{ background: "#0f172a", borderRadius: 10, padding: "12px 14px", border: `1px solid ${task.status === "concluida" ? "#1e293b" : "#334155"}`, opacity: task.status === "concluida" ? 0.55 : 1 }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                  <button onClick={() => toggleStatus(task)}
-                    style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${STATUS_COLOR_T[task.status]}`, background: task.status === "concluida" ? STATUS_COLOR_T["concluida"] : "transparent", cursor: "pointer", flexShrink: 0, marginTop: 1 }} />
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, flexShrink: 0 }}>
+                    <button onClick={() => toggleStatus(task)} title={`${STATUS_LABEL_T[task.status]} → clique para avançar`}
+                      style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${STATUS_COLOR_T[task.status] ?? "#475569"}`, background: task.status === "concluida" ? STATUS_COLOR_T["concluida"] : task.status === "em_andamento" ? STATUS_COLOR_T["em_andamento"] + "44" : "transparent", cursor: task.status === "cancelada" ? "default" : "pointer", flexShrink: 0 }} />
+                    <span style={{ fontSize: 9, color: STATUS_COLOR_T[task.status] ?? "#475569", whiteSpace: "nowrap", fontWeight: 600 }}>
+                      {task.status === "pendente" ? "pendente" : task.status === "em_andamento" ? "andamento" : task.status === "concluida" ? "feita" : "cancel."}
+                    </span>
+                  </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                       <span style={{ color: "#e2e8f0", fontSize: 14, fontWeight: 600, textDecoration: task.status === "concluida" ? "line-through" : "none" }}>{task.titulo}</span>
