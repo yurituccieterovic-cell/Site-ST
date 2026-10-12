@@ -9522,3 +9522,56 @@ A frase que guia o desenvolvimento agora é: "O sistema não está funcionando s
 Yuri ditou. Perplexity ramificou. Claude implementa. A tríade está funcionando. Mas o verdadeiro teste é quando Mayumi — que não tem contexto técnico — consegue usar o Age no dia a dia sem precisar perguntar o que significa "azul".
 
 ---
+
+---
+
+## S212 — AGE 2.0: estabilidade + calendário por unidades + emails + docs
+
+**Data:** 2026-10-12 | **Operador:** Yuri (voz) + Perplexity (ramificação) + Cláudio (implementação)
+
+### O que foi feito
+
+**Spec AGE 2.0 — rodada completa** — Yuri ditou, Perplexity ramificou em 10 seções com referências técnicas (SPF/DKIM/DMARC, HIPAA, offline UX patterns), Claude registrou e implementa.
+
+**Diagnóstico SABIÁ** — Yuri reportou "Desculpe, não consegui processar" ainda ocorrendo. Diagnóstico: cold start pontual (Render Starter dorme após 15min de inatividade; primeiro request do pool LLM pode falhar). Todos os 8 provedores LLM estão no Render (GROQ, XAI, CLOUDFLARE, GEMINI, etc.). Fix: `isError` flag no backend + auto-retry 5s no frontend.
+
+**Novas ideias registradas:** I1001-I1011 (calendário por unidades, tasks vinculadas, raiz de notas, retorno de navegação, 7 fluxos de email, email intermediário, painel docs, compatibilidade, estados honestos, autosave offline, leucócito de estabilidade).
+
+**Spec Age 3.0 timing:** Após PDF/OCR real (I999/I1007) + multi-perfis (I1000) + pagamentos embedded. Estimativa: 3-4 sprints grandes.
+
+### Itens do #processo
+
+| Passo | O que foi feito |
+|---|---|
+| 1. Extrair | Spec AGE 2.0 de Yuri via voz + Perplexity |
+| 2. Ideias | I1001-I1011 registradas em IDEIAS.md |
+| 3. MAPA | S212 block adicionado |
+| 4. PSEUDO | Esta entrada |
+| 5. Código | SABIÁ isError + waking banner — agente forkado |
+| 6. Deploy | Auto-deploy via Render ao push |
+| 9. Conector | Atualizado após push |
+
+### Principais spec items desta rodada
+
+1. **Calendário por unidades** — drill-down: Mês → Semana → Dia → Unidade → Task vinculada. Botão Voltar preserva contexto exato (data, filtros, scroll). DB ready com `age_slots.tipo` enum.
+
+2. **Tasks vinculadas a unidades** — origem registrada (manual/nota/calendario/documento/lembrete). Ícone diferente por origem.
+
+3. **Raiz de notas** — `parent_id` já existe em `age_notas` (bootstrapped). UI de árvore = próximo sprint.
+
+4. **Estados honestos** — diretriz central da S212: *Um sistema confiável não é o que nunca falha; é o que falha de forma compreensível, preserva o trabalho do usuário e mostra o caminho de volta.* Tela preta → 6 estados com mensagem + ação. Spinner só existe durante request ativa.
+
+5. **Emails — 7 fluxos** — envio, recebimento, confirmação, troca, recuperação, notificações sem duplicar, anti-spam. SPF+DKIM+DMARC obrigatório antes de vender. Separação transacional/marketing.
+
+6. **Email intermediário** — paciente não vê email do profissional. Comunicação via endereço Age, histórico no vínculo.
+
+7. **ChatGPT Pro** — Yuri reportou cobrança de R$42,96 (3 meses grátis Nubank expiraram). Nenhuma ação necessária do sistema.
+
+### Síntese Filosófica
+
+O AGE está saindo do MVP e entrando no território de produto vendável. A spec desta sessão marca uma mudança de mentalidade: antes, o sistema funcionava para quem conhecia seus atalhos. Agora, precisa funcionar para quem chega sem manual — a secretária, o paciente que recebe o link, a profissional que abre o celular com o sol batendo na tela.
+
+A frase-guia chegou de Perplexity, mas é de Yuri: "Um sistema confiável não é o que nunca falha; é o que falha de forma compreensível." Isso não é só UX — é uma declaração de ética em software. O usuário tem direito de entender o que aconteceu com o trabalho dele.
+
+---
+

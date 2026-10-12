@@ -2108,3 +2108,23 @@
 | S210-10 | Senha paciente: "esqueci senha" + reset por email | ⏳ I995 — próxima fase |
 | S210-11 | Temas visuais Age (SOL/noturno/invertido/claro) | ⏳ I993 — fase 3 |
 | S210-12 | Multi-perfis Netflix | ⏳ I1000 — fase 4 |
+
+### S212 — AGE 2.0 estabilidade + calendário por unidades + emails + docs (2026-10-12)
+
+| # | Item | Status |
+|---|---|---|
+| S212-1 | SABIÁ: isError flag no backend + auto-retry 5s no frontend (cold start) | ⏳ agente forkado |
+| S212-2 | Waking banner: aviso visual "Sistema iniciando" durante cold start (30s) | ⏳ agente forkado |
+| S212-3 | I1001: Calendário por unidades — spec registrada, aguarda priorização | 📋 especificado |
+| S212-4 | I1002: Tasks vinculadas às unidades de horário — origem registrada no enum | 📋 especificado |
+| S212-5 | I1003: Raiz de notas — parent_id já existe em age_notas; UI pendente | ◑ banco OK |
+| S212-6 | I1004: Retorno ao último ponto de navegação (breadcrumb + localStorage) | 📋 especificado |
+| S212-7 | I1005: Testes de email — 7 fluxos + SPF/DKIM/DMARC + separação transacional | 📋 especificado |
+| S212-8 | I1006: Email intermediário paciente↔profissional (botão direto, histórico vínculo) | 📋 especificado |
+| S212-9 | I1007: Painel único de documentos (compatibilidade + OCR + extração) | 📋 especificado |
+| S212-10 | I1009: Estados honestos — waking banner implementado; spinner falso fix | ◑ parcial |
+| S212-11 | I1010: Salvamento local/offline (autosave notas + fila sync) | 📋 especificado |
+| S212-12 | I1011: Leucócito de estabilidade (task automática em falha) | 📋 especificado |
+| S212-13 | Spec AGE 2.0 enviada para Secretaria (Playcenter + Sales Cockpit) | ⏳ pendente |
+| S212-14 | Quando migrar para Age 3.0: após PDF/OCR (I999/I1007) + multi-perfis (I1000) + pagamentos | 📋 marco definido |
+
