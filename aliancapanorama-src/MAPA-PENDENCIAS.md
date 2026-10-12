@@ -2,6 +2,21 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S211 — AGE 2.0 spec + bugs críticos + #processo (2026-10-12)
+
+| # | Item | Status |
+|---|---|---|
+| S211-1 | SABIÁ: "Desculpe, não consegui processar" há tempos — root cause: cold start + LLM failures | 🔧 agente corrigindo |
+| S211-2 | SABIÁ pública: sem persistência de histórico de conversa | 🔧 agente corrigindo (age_sabia_sessions) |
+| S211-3 | Tarefas: ordenação incorreta (criadas de notas não aparecem no topo) | 🔧 agente corrigindo |
+| S211-4 | Tarefas: estados "bola azul" confusos — sem rótulo textual, sem feedback desfazer | 🔧 agente corrigindo |
+| S211-5 | Calendário profissional: sem botões Dia/Semana/Mês — "hoje" confuso dentro do mês | 🔧 agente corrigindo |
+| S211-6 | AGE 2.0 spec: 4 temas visuais (Claro/Noturno/SOL/Invertido) | 🔵 I993 planejado |
+| S211-7 | AGE 2.0 spec: módulo documentos (upload + OCR + extração + PDF/XLSX) | 🔵 I994-I997 planejados |
+| S211-8 | AGE 2.0 spec: múltiplos perfis por conta (Netflix-style) + autoria feed + permissões | 🔵 I998-I1000 planejados |
+| S211-9 | AGE 2.0 spec registrado em IDEIAS.md (I993-I1000) e PSEUDO.md para Mayumi | 🔧 em andamento |
+| S211-10 | Ramificação de nota: ainda não funciona direito | 🔴 investigar junto S211-3 |
+
 ### S210 — #1234 + Age audit + bugs histórico + perguntas venda (2026-10-12)
 
 | # | Item | Status |

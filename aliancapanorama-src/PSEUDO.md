@@ -9461,3 +9461,64 @@ O sistema estava se derrubando sozinho — as IAs escrevendo memória disparavam
 Às vezes o sistema que deveria estar em silêncio é exatamente o que faz mais barulho. O bcryptjs gritava em single-thread enquanto o Render tentava escutar o health check. O paradoxo: um mecanismo de segurança (hash de senha) era o agente da insegurança (queda do serviço). Trocar para o bcrypt nativo não é apenas uma otimização — é restituir ao sistema a capacidade de respirar enquanto trabalha.
 
 ---
+
+## Sessão S210 — 2026-10-12 · #1234 + Age audit + email_prefs + venda
+
+**Tema:** Vistoria antes da venda — o que está de pé, o que falta, quanto custa ficar impecável.
+
+### Decisões
+- Render Standard ($25/mês) para zero-downtime deploy — só quando começar a vender
+- Google Play via TWA (casca do PWA) — planejado pós-venda, hosting continua Render/Vercel
+- `email_prefs` JSONB em `age_professionals` + `age_patients` — toggles de notificações no perfil
+- Slug correto é `suzana` (não `susana`) — redirect 301 existia, mas docs e links estavam errados
+- Portal-invite JÁ existia — envia link criar/redefinir senha para paciente; Yuri não sabia
+
+### O que foi feito
+- Fix: JasmimMangaPage.tsx slug susana→suzana + tipos trocados (Lisange=psicóloga, Suzana=médica)
+- Fix: sys_age_core.md slug e URLs corretas
+- FEAT: email_prefs JSONB + GET/PATCH config profissional + GET/PATCH /patients/auth/prefs
+- FEAT: AgePage.tsx — toggles notificações em Disponibilidade (prof) + aba Notificações (paciente)
+
+### Síntese Filosófica
+Esta sessão foi uma vistoria — não de bugs novos, mas de clareza. O sistema estava mais robusto do que parecia. SABIÁ falava com profissional e paciente. Senha e reset existiam. O "convidar para portal" já resolvia o que Yuri achava que faltava.
+
+O que apareceu foi documentação errada (slug susana/suzana) e um item faltante genuíno (preferências de email). Esses são os dois tipos de dívida mais insidiosos: não quebram hoje, confundem amanhã.
+
+---
+
+## Sessão S211 — 2026-10-12 · AGE 2.0 spec + bugs críticos
+
+**Tema:** Yuri dita spec via voz, Perplexity ramifica, Claude implementa. A forma de colaboração que o ecossistema prometia.
+
+### Decisões
+- AGE 2.0 não é reescrita — é acréscimo. Diretriz: nunca remover, sempre agregar.
+- Temas visuais (SOL/Noturno/Invertido): planejado (I993) — prioritário para venda
+- Módulo de documentos (OCR+PDF+XLSX): planejado (I994-I997) — SABIÁ extrai com confirmação humana
+- Múltiplos perfis "Netflix": planejado (I998-I1000) — autoria no feed, permissões por perfil
+- Bugs críticos a corrigir agora: SABIÁ sem memória de conversa pública, tarefas ordem errada, bola azul sem rótulo, calendário sem Dia/Semana/Mês
+
+### Bugs reportados
+1. SABIÁ: "Desculpe, não consegui processar" há tempos (cold start + LLM fallback)
+2. SABIÁ pública: sem persistência de histórico (stateless)
+3. Tarefas criadas de nota: não aparecem no topo
+4. Bola de tarefa: azul = em andamento? Não havia rótulo textual
+5. Calendário profissional: sem alternância Dia/Semana/Mês; "hoje" confuso dentro do mês
+6. Ramificação de nota: não funciona direito
+
+### AGE 2.0 — Spec para Mayumi (secretaria)
+```
+1. Temas: Claro / Noturno / SOL (sol batendo na tela) / Invertido
+2. Calendário: botões Dia / Semana / Mês / Lista / Hoje (só navegação)
+3. Tarefas: estados com cor + texto; ordenação por prioridade semântica; desfazer
+4. Documentos: upload + OCR + extração de NF + PDF bem formatado + XLSX
+5. SABIÁ: lê documento, propõe extração, aguarda confirmação humana
+6. Múltiplos usuários: perfis dentro de uma conta (Yuri / Mayumi / Secretária / Convidado)
+7. Feed de autoria: "Mayumi criou tarefa a partir de nota X em 19h30"
+```
+
+### Síntese Filosófica
+A frase que guia o desenvolvimento agora é: "O sistema não está funcionando só porque a API responde; ele está funcionando quando a pessoa consegue fazer o que veio fazer, entende o que aconteceu e consegue desfazer ou revisar."
+
+Yuri ditou. Perplexity ramificou. Claude implementa. A tríade está funcionando. Mas o verdadeiro teste é quando Mayumi — que não tem contexto técnico — consegue usar o Age no dia a dia sem precisar perguntar o que significa "azul".
+
+---
