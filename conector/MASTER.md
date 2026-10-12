@@ -2823,3 +2823,17 @@ Como posso te ajudar hoje?"
 ### 2026-10-12 — admin
 ### 2026-10-12T22:50 — Playcenter
 - Participantes: isa+meky+socoboy+orquestrador (4 falas)
+
+
+### 2026-10-12 — admin
+### 2026-10-12T22:50 — Playcenter
+- Participantes: isa+meky+socoboy+orquestrador (4 falas)
+
+
+### 2026-10-12 — admin
+### 2026-10-12 — ATA S211 AGE 2.0
+- FEAT: SABIÁ pública com memória persistente (age_sabia_sessions)
+- FEAT: Calendário Dia/Semana/Mês/Lista + botão Hoje
+- FEAT: Tarefas — label de status + toast + desfazer + ordenação semântica
+- SPEC: AGE 2.0 completo registrado I993-I1000 (temas, docs/OCR, multi-perfis)
+- PRÓXIMO: temas visuais SOL/Noturno (I993), Vista Lista calendário (I994), PDF/OCR (I999)
