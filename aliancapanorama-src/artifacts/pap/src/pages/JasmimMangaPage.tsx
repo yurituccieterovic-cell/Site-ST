@@ -982,8 +982,8 @@ export default function JasmimMangaPage() {
           <div style={{ background: "#2dd4bf11", border: "1px solid #2dd4bf44", borderRadius: 12, padding: 14, marginBottom: 12 }}>
             <p style={{ color: "#2dd4bf", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>📄 Prontuários & Documentos — acesso rápido</p>
             {[
-              ["Lisange (Médica)", "/aliancapanorama/age/lisange"],
-              ["Suzana (Psicóloga)", "/aliancapanorama/age/susana"],
+              ["Lisange (Psicóloga)", "/aliancapanorama/age/lisange"],
+              ["Suzana (Médica)", "/aliancapanorama/age/suzana"],
               ["Painel Gestora", "/aliancapanorama/age/gestora"],
             ].map(([label, href]) => (
               <a key={href} href={href} style={{
@@ -1003,7 +1003,7 @@ export default function JasmimMangaPage() {
             <p style={{ color: "#2dd4bf", fontWeight: 700, margin: "0 0 8px", fontSize: 13 }}>💰 Financeiro & SABIÁ</p>
             {[
               ["Config Pagamentos — Lisange", "/aliancapanorama/age/lisange?adm=1"],
-              ["Config Pagamentos — Suzana", "/aliancapanorama/age/susana?adm=1"],
+              ["Config Pagamentos — Suzana", "/aliancapanorama/age/suzana?adm=1"],
               ["Painel Gestora (receita)", "/aliancapanorama/age/gestora"],
             ].map(([label, href]) => (
               <a key={href} href={href} style={{

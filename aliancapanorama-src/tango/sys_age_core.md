@@ -12,7 +12,7 @@
 | Slug | Nome | Tipo | Cor | Status |
 |---|---|---|---|---|
 | `lisange` | Lisange | psicóloga | teal `#2dd4bf` | ✅ seedada · 72 slots ativos · email: lisange.usp@gmail.com |
-| `susana` | Suzana | médica | lilás `#a78bfa` | ✅ seedada · 195 slots ativos (online seg-sex) · email: vitamind@ginsbergeye.com |
+| `suzana` | Suzana | médica | lilás `#a78bfa` | ✅ seedada · 195 slots ativos (online seg-sex) · email: vitamind@ginsbergeye.com |
 
 - Senha padrão: `age2026` (trocar no primeiro acesso)
 - Emails configurados via SQL direto Neon em 2026-09-10 (S122b)
@@ -31,7 +31,7 @@
 | | URL |
 |---|---|
 | Agenda Lisange | `site-st.vercel.app/aliancapanorama/age/lisange` |
-| Agenda Susana | `site-st.vercel.app/aliancapanorama/age/susana` |
+| Agenda Suzana | `site-st.vercel.app/aliancapanorama/age/suzana` |
 | Futuro (domínio) | `sociedadetucci.com.br/age/[slug]` |
 
 ## Arquitetura
@@ -122,7 +122,7 @@ Tom: calma, sábia, direta. Como o sabiá — sempre no lar, sabe de tudo.
 
 ```
 1. Ler sys_age_core.md (este arquivo)
-2. Verificar se profissionais existem: GET /api/age/lisange + /api/age/susana
+2. Verificar se profissionais existem: GET /api/age/lisange + /api/age/suzana
 3. Checar MAPA-PENDENCIAS.md itens 205-210
 4. Confirmar contexto e começar
 ```

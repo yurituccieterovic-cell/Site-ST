@@ -2,6 +2,20 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S210 — #1234 + Age audit + bugs histórico + perguntas venda (2026-10-12)
+
+| # | Item | Status |
+|---|---|---|
+| S210-1 | #1234 health check: todos OK (API/Vercel/SC/Age/Dodge/Playcenter/UptimeRobot) | ✅ OK |
+| S210-2 | Bug JasmimMangaPage: slug `susana` → `suzana` + tipo Lisange/Suzana trocados | ✅ commit pendente |
+| S210-3 | sys_age_core.md: slug `susana` → `suzana` + URLs + health check docs | ✅ corrigido |
+| S210-4 | Age: SABIÁ pública (paciente, sem auth) confirmada funcionando | ✅ testado ao vivo |
+| S210-5 | Age: "🔑 Convidar para portal" já existe (profissional envia link senha/reset ao paciente) | ✅ documentado |
+| S210-6 | Render Standard ($25/mês) para zero-downtime deploy quando vender | 🔵 decisão futura |
+| S210-7 | Google Play TWA: wrapper do PWA, hosting continua Render/Vercel (I992) | 🔵 planejado |
+| S210-8 | Age — seleção de notificações por email no perfil (profissional + paciente) | 🔴 pendente (I991) |
+| S210-9 | S206-13: RODAR assembleias paradas — não investigado nesta sessão | 🔴 pendente |
+
 ### S206 — Downtime horário + bcrypt + Milton Age (2026-10-12)
 
 | # | Item | Status |
