@@ -1014,15 +1014,24 @@ router.get("/age/:slug/sabia/history", requireAgeAuth, async (req, res): Promise
   res.json({ history: rows.reverse().map(r => ({ role: r.role, content: r.content, createdAt: r.createdAt, sessionId: r.sessionId })) });
 });
 
-// POST /api/age/:slug/sabia-public — versão pública (sem auth, contexto mínimo)
+// POST /api/age/:slug/sabia-public — versão pública (sem auth, contexto mínimo + histórico persistido)
 router.post("/age/:slug/sabia-public", async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const { message, sessionId } = req.body as { message?: string; sessionId?: string };
+  const { message, sessionId: incomingSessionId } = req.body as { message?: string; sessionId?: string };
   if (!message?.trim()) { res.status(400).json({ error: "message obrigatório" }); return; }
 
   const [prof] = await db.select({ id: ageProfessionalsTable.id, nome: ageProfessionalsTable.nome, tipo: ageProfessionalsTable.tipo, bio: ageProfessionalsTable.bio })
     .from(ageProfessionalsTable).where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true))).limit(1);
   if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  // Carregar ou criar sessão persistida
+  const sid = incomingSessionId?.trim() || randomUUID();
+  let history: { role: "user" | "assistant"; content: string }[] = [];
+  try {
+    const sesRes = await db.execute(sql`SELECT messages FROM age_sabia_sessions WHERE session_id = ${sid} LIMIT 1`);
+    const sesRow = (sesRes as any).rows?.[0];
+    if (sesRow) history = Array.isArray(sesRow.messages) ? sesRow.messages : JSON.parse(sesRow.messages ?? "[]");
+  } catch { /* tabela pode não existir ainda — ignora silenciosamente */ }
 
   const systemPrompt = `Você é SABIÁ 🐦, assistente de agenda da plataforma Age (Sociedade Tucci).
 Está no perfil público de ${prof.nome} (${prof.tipo}).
@@ -1033,15 +1042,30 @@ NÃO compartilhe dados de pacientes. NÃO faça diagnósticos.
 Respostas curtas, claras, em português. Kairós: saiba quando encaminhar para o profissional.
 Se não souber, diga: "Não tenho essa informação — entre em contato diretamente com ${prof.nome}."`;
 
+  // Montar contexto: system + histórico (max 10 pares para não explodir tokens) + nova mensagem
+  const histSlice = history.slice(-20); // max 20 mensagens = 10 pares
+  const llmMessages = [
+    { role: "system" as const, content: systemPrompt },
+    ...histSlice,
+    { role: "user" as const, content: message! },
+  ];
+
   let reply = "Desculpe, não consegui processar agora. Tente em instantes.";
   try {
-    reply = await routeLLM({
-      messages: [{ role: "system", content: systemPrompt }, { role: "user", content: message }],
-      maxTokens: 800, temperature: 0.5,
-    });
+    reply = await routeLLM({ messages: llmMessages, maxTokens: 800, temperature: 0.5 });
   } catch { /* usa fallback */ }
 
-  res.json({ reply, sessionId: sessionId ?? randomUUID() });
+  // Persistir nova troca no histórico (max 40 mensagens totais = 20 pares)
+  const updated = [...history, { role: "user" as const, content: message! }, { role: "assistant" as const, content: reply }].slice(-40);
+  try {
+    await db.execute(sql`
+      INSERT INTO age_sabia_sessions (session_id, professional_id, messages, updated_at)
+      VALUES (${sid}, ${prof.id}, ${JSON.stringify(updated)}::jsonb, now())
+      ON CONFLICT (session_id) DO UPDATE SET messages = ${JSON.stringify(updated)}::jsonb, updated_at = now()
+    `);
+  } catch { /* não bloquear resposta se persistência falhar */ }
+
+  res.json({ reply, sessionId: sid });
 });
 
 // POST /api/age/:slug/sabia (auth required)
@@ -2924,10 +2948,18 @@ router.get("/age/:slug/tasks", requireAgeAuth, async (req, res): Promise<void> =
     WHERE t.professional_id = ${profId}
     ${status ? sql`AND t.status = ${status}` : sql``}
     ORDER BY
-      CASE t.status WHEN 'pendente' THEN 0 WHEN 'em_andamento' THEN 1 ELSE 2 END,
-      t.data_vencimento ASC NULLS LAST,
-      t.prioridade DESC,
-      t.created_at DESC
+      -- Grupo: 0=atrasada, 1=vence hoje, 2=em_andamento, 3=pendente futura/sem data, 4=concluida, 5=cancelada
+      CASE
+        WHEN t.status IN ('concluida','cancelada') THEN
+          CASE t.status WHEN 'concluida' THEN 4 ELSE 5 END
+        WHEN t.data_vencimento IS NOT NULL AND t.data_vencimento::date < CURRENT_DATE THEN 0
+        WHEN t.data_vencimento IS NOT NULL AND t.data_vencimento::date = CURRENT_DATE THEN 1
+        WHEN t.status = 'em_andamento' THEN 2
+        ELSE 3
+      END,
+      -- Dentro do mesmo grupo: mais recente no topo (data de criação DESC)
+      t.created_at DESC,
+      t.prioridade DESC
     LIMIT ${lim}
   `);
   res.json((rows as any).rows ?? []);

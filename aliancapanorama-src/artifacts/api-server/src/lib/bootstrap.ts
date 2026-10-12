@@ -444,8 +444,20 @@ export async function ensureAgeTables(): Promise<void> {
   await db.execute(sql`ALTER TABLE age_professionals ADD COLUMN IF NOT EXISTS email_prefs JSONB NOT NULL DEFAULT '{"novo_agendamento": true, "cancelamento": true, "lembrete": true}'`);
   // Preferências de email: paciente escolhe quais notificações receber
   await db.execute(sql`ALTER TABLE age_patients ADD COLUMN IF NOT EXISTS email_prefs JSONB NOT NULL DEFAULT '{"confirmacao": true, "cancelamento": true, "lembrete": true}'`);
+  // Sessões SABIÁ pública — persistência de histórico por sessionId (paciente sem auth)
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS age_sabia_sessions (
+      id SERIAL PRIMARY KEY,
+      session_id TEXT NOT NULL UNIQUE,
+      professional_id INTEGER NOT NULL REFERENCES age_professionals(id) ON DELETE CASCADE,
+      messages JSONB NOT NULL DEFAULT '[]',
+      created_at TIMESTAMPTZ DEFAULT now(),
+      updated_at TIMESTAMPTZ DEFAULT now()
+    )
+  `);
+  await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_age_sabia_sessions_sid ON age_sabia_sessions(session_id)`);
 
-  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type +whatsapp +valor +password_b_hash +email_verify +email_prefs)");
+  logger.info("bootstrap: age tables OK (+patient_auth +age_forms +age_form_responses +age_documents +opcoes_pagamento +age_gestoras +age_invite_tokens +ficha_interna +age_notas +mensalidades +alertas +config_aprovacao +age_interesse +age_tasks +project_type +whatsapp +valor +password_b_hash +email_verify +email_prefs +sabia_sessions)");
 
   // Seed: Lisange e Susana com senha padrão AGE_DEFAULT_PASSWORD (trocar depois)
   const defaultPass = process.env.AGE_DEFAULT_PASSWORD ?? "age2026";
