@@ -212,7 +212,9 @@ router.post("/age/auth/login", loginLimit, async (req, res): Promise<void> => {
 
   const ip = canonicalIp(req);
   // Senha master ou senha B: não acionar IP challenge
-  const isNewIp = !isMaster && okA && prof.lastLoginIp && prof.lastLoginIp !== ip;
+  // AGE_IP_CHALLENGE=false desabilita o challenge globalmente (útil em fase de teste)
+  const ipChallengeEnabled = process.env["AGE_IP_CHALLENGE"] !== "false";
+  const isNewIp = ipChallengeEnabled && !isMaster && okA && prof.lastLoginIp && prof.lastLoginIp !== ip;
 
   if (isNewIp && prof.email) {
     // IP novo → challenge por email
