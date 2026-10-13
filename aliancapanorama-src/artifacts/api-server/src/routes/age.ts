@@ -42,8 +42,13 @@ const AGE_EMAIL_TO    = process.env.AGE_EMAIL_TO        ?? "";   // override: re
 const AGE_FORWARD       = process.env.AGE_EMAIL_FORWARD ?? "";       // sempre BCC neste email
 const AGE_DISABLE_PROF  = process.env.AGE_DISABLE_PROF_EMAILS === "true"; // desativa envio ao profissional/paciente
 
-async function sendEmail(to: string, subject: string, body: string, opts?: { force?: boolean }) {
+async function sendEmail(to: string, subject: string, body: string, opts?: { force?: boolean; liveMode?: boolean }) {
   if (!GMAIL_PASS) { logger.warn("AGE: GMAIL_APP_PASSWORD ausente, email não enviado"); return; }
+  // liveMode=false: profissional ainda não ativou emails para pacientes; só force=true passa
+  if (!opts?.force && opts?.liveMode === false) {
+    logger.info({ to, subject }, "age: email ignorado (liveMode=false)");
+    return;
+  }
   const transport = createTransport({ service: "gmail", auth: { user: GMAIL, pass: GMAIL_PASS } });
 
   // force=true: envia sempre para o destinatário real (ex: reset de senha)
@@ -617,12 +622,13 @@ router.post("/age/:slug/book", async (req, res): Promise<void> => {
   const cancelLink     = `${FRONT_URL}/age/${slug}?cancel=${cancelToken}`;
   const rescheduleLink = `${FRONT_URL}/age/${slug}?reschedule=${cancelToken}`;
 
-  // Email para o paciente
+  // Email para o paciente (só se profissional ativou modo live)
   if (patientEmail) {
     sendEmail(
       patientEmail,
       `Consulta confirmada — ${prof.nome}`,
       `Olá ${patientNome},\n\nSua consulta foi marcada!\n\n📅 ${dt}\n👤 ${prof.nome} (${prof.tipo})\n📍 Canal: ${canal}\n\nPrecisa cancelar ou remarcar?\n• Cancelar: ${cancelLink}\n• Remarcar: ${rescheduleLink}\n\n— SABIÁ`,
+      { liveMode: (prof as any).email_live ?? false },
     ).catch(e => logger.error({ err: e }, "age: sendEmail book patient"));
   }
 
@@ -683,6 +689,7 @@ router.post("/age/:slug/appointments/book-by-prof", requireAgeAuth, async (req, 
     const cancelLink = `${FRONT_URL}/age/${prof.slug}?cancel=${cancelToken}`;
     sendEmail(email, `Consulta agendada — ${prof.nome}`,
       `Olá ${nome},\n\nSua consulta foi agendada por ${prof.nome}.\n\n📅 ${dt}\n📍 Canal: ${canal}\n\nCancelar: ${cancelLink}\n\n— SABIÁ`,
+      { liveMode: (prof as any).email_live ?? false },
     ).catch(() => {});
   }
 
@@ -770,6 +777,7 @@ router.post("/age/:slug/appointments/by-token/:token/cancel", async (req, res): 
       appt.patientEmail,
       `Consulta cancelada — ${prof.nome}`,
       `Olá ${appt.patientNome ?? ""},\n\nSua consulta do dia ${dt} com ${prof.nome} foi cancelada.\n\nSe quiser remarcar, entre em contato ou acesse o site.\n\n— SABIÁ`,
+      { liveMode: (prof as any).email_live ?? false },
     ).catch(e => logger.error({ err: e }, "age: sendEmail cancel patient"));
   }
   if (prof.email) {
@@ -914,6 +922,7 @@ router.post("/age/:slug/appointments/by-token/:token/reschedule", async (req, re
       appt.patientEmail,
       `Consulta remarcada — ${prof.nome}`,
       `Olá ${appt.patientNome ?? ""},\n\nSua consulta foi remarcada!\n\n✅ Novo horário: ${dtNovo}\n❌ Horário anterior: ${dtAntes}\n\nPrecisa cancelar ou remarcar novamente?\n• Cancelar: ${cancelLink}\n• Remarcar: ${rescheduleLink}\n\n— SABIÁ`,
+      { liveMode: (prof as any).email_live ?? false },
     ).catch(e => logger.error({ err: e }, "age: sendEmail reschedule patient"));
   }
   if (prof.email) {
@@ -1876,13 +1885,14 @@ router.patch("/age/:slug/payment-options", requireAgeAuth, async (req, res): Pro
 // GET /api/age/:slug/config
 router.get("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const result = await db.execute(sql`SELECT intervalo_sessao_semanas, email_prefs FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const result = await db.execute(sql`SELECT intervalo_sessao_semanas, email_prefs, email_live FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
   const row = (result as any).rows?.[0];
   if (!row) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
   const defaultPrefs = { novo_agendamento: true, cancelamento: true, lembrete: true };
   res.json({
     intervaloSessaoSemanas: row.intervalo_sessao_semanas ?? 0,
     emailPrefs: { ...defaultPrefs, ...(row.email_prefs ?? {}) },
+    emailLive: row.email_live ?? false,
   });
 });
 
@@ -1890,7 +1900,7 @@ router.get("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> 
 router.patch("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
   const { slug } = req.params;
   if (req.session.ageProfessionalSlug !== slug) { res.status(403).json({ error: "Sem permissão" }); return; }
-  const { intervaloSessaoSemanas, emailPrefs } = req.body as { intervaloSessaoSemanas?: number; emailPrefs?: Record<string, boolean> };
+  const { intervaloSessaoSemanas, emailPrefs, emailLive } = req.body as { intervaloSessaoSemanas?: number; emailPrefs?: Record<string, boolean>; emailLive?: boolean };
   if (intervaloSessaoSemanas !== undefined) {
     const v = Math.max(0, Math.min(52, Math.floor(intervaloSessaoSemanas)));
     await db.execute(sql`UPDATE age_professionals SET intervalo_sessao_semanas = ${v} WHERE slug = ${slug}`);
@@ -1900,6 +1910,9 @@ router.patch("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void
     const safe: Record<string, boolean> = {};
     for (const k of allowed) if (typeof emailPrefs[k] === "boolean") safe[k] = emailPrefs[k];
     await db.execute(sql`UPDATE age_professionals SET email_prefs = ${JSON.stringify(safe)}::jsonb WHERE slug = ${slug}`);
+  }
+  if (typeof emailLive === "boolean") {
+    await db.execute(sql`UPDATE age_professionals SET email_live = ${emailLive} WHERE slug = ${slug}`);
   }
   res.json({ ok: true });
 });

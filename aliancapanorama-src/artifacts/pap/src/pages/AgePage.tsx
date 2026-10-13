@@ -164,6 +164,8 @@ export function AgePage() {
   const [emailPrefs, setEmailPrefs] = useState<Record<string, boolean>>({ novo_agendamento: true, cancelamento: true, lembrete: true });
   const [emailPrefsSaving, setEmailPrefsSaving] = useState(false);
   const [emailPrefsMsg, setEmailPrefsMsg] = useState("");
+  const [emailLive, setEmailLive] = useState(false);
+  const [emailLiveSaving, setEmailLiveSaving] = useState(false);
   // Email management
   const [profEmail, setProfEmail] = useState<string | null>(null);
   const [emailPending, setEmailPending] = useState<string | null>(null);
@@ -564,6 +566,7 @@ export function AgePage() {
         if (d) {
           setIntervaloSemanas(d.intervaloSessaoSemanas ?? 0);
           if (d.emailPrefs) setEmailPrefs(prev => ({ ...prev, ...d.emailPrefs }));
+          if (typeof d.emailLive === "boolean") setEmailLive(d.emailLive);
         }
       }).catch(() => {});
   }, [mode, slug]);
@@ -3579,6 +3582,43 @@ export function AgePage() {
             {intervaloSaving ? "Salvando…" : "Salvar"}
           </button>
           {intervaloMsg && <span style={{ marginLeft: 12, color: intervaloMsg.startsWith("✓") ? "#34d399" : "#f87171", fontSize: 13 }}>{intervaloMsg}</span>}
+        </div>
+
+        {/* Modo Live — emails para pacientes */}
+        <div style={{ background: emailLive ? "#052010" : "#0f1318", border: `1px solid ${emailLive ? "#34d399" : "#334155"}`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <div>
+              <div style={{ color: emailLive ? "#34d399" : "#94a3b8", fontSize: 13, fontWeight: 700 }}>
+                {emailLive ? "🟢 Modo Live — emails ativos" : "🔴 Modo Teste — emails desativados"}
+              </div>
+              <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>
+                {emailLive
+                  ? "Pacientes recebem emails de confirmação, cancelamento e lembrete."
+                  : "Nenhum email é enviado para pacientes. Ative quando estiver pronta para uso real."}
+              </div>
+            </div>
+            <button
+              disabled={emailLiveSaving}
+              onClick={async () => {
+                setEmailLiveSaving(true);
+                try {
+                  const r = await fetch(`${API}/api/age/${slug}/config`, {
+                    method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include",
+                    body: JSON.stringify({ emailLive: !emailLive }),
+                  });
+                  if (r.ok) setEmailLive(v => !v);
+                } catch { /* ignora */ }
+                setEmailLiveSaving(false);
+              }}
+              style={{
+                background: emailLive ? "#dc2626" : "#16a34a",
+                border: "none", borderRadius: 8, padding: "8px 16px",
+                color: "#fff", fontWeight: 700, fontSize: 13,
+                cursor: emailLiveSaving ? "default" : "pointer", flexShrink: 0,
+              }}>
+              {emailLiveSaving ? "…" : emailLive ? "Desativar" : "Ativar"}
+            </button>
+          </div>
         </div>
 
         {/* Notificações por email */}
