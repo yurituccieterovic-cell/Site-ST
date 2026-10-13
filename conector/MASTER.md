@@ -2864,3 +2864,10 @@ Como posso te ajudar hoje?"
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 233ms
+
+
+### 2026-10-13 — admin
+### 2026-10-13 — S212 addendum
+- I993 temas visuais implementado: noturno/sol/claro/invertido (DB+API+UI+CSS vars)
+- I995 esqueci senha paciente: já estava completo antes de S212
+- TEMAS obj centraliza 4 configs; useEffect propaga para document.root + body
