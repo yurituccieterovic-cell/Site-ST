@@ -9622,3 +9622,43 @@ Ficou um ensinamento: produto vendável não é produto sem bugs — é produto 
 
 ---
 
+
+## S213 — 2026-10-13 · Bugs Mayumi + fix observação + nova consulta
+
+**Tema:** Primeiro usuário real testa o sistema e encontra bugs de persistência + UX.
+
+### O que Mayumi reportou (10 bugs via voz + Perplexity)
+
+1. Todas as visões de agenda (Dia/Semana/Mês/Lista) mostram mesmo grid
+2. Calendário mensal sem barra de rolagem
+3. Observação em paciente > Info: não edita, sistema fecha, depois só 1 letra
+4. Ficha salva mas sistema fecha sozinho
+5. Nova consulta: só "Novo paciente", sem lista de pacientes
+6. Busca de paciente não retorna resultados
+7. Bloqueio de disponibilidade não salva
+8. Sistema cai após tentar criar bloqueio
+
+### Root causes encontrados
+
+**Bug principal (observação + fechamento):** `updatePatient` tinha `setSelectedPatient(null)` na linha 1088. Isso fechava o painel a cada salvar. Ao mover de Info para Ficha, o onBlur da textarea disparava `updatePatient`, que fechava o painel antes de carregar a ficha.
+
+**Bug observação (1 letra):** `value={p.observacoesPro ?? ""}` usa `p` do `filtered.map()` — stale closure. Cada keystroke chamava `setSelectedPatient({ ...p, observacoesPro: e.target.value })` mas `p.observacoesPro` ainda era null. Resultado: cada keystroke sobrescreve com apenas o último caractere digitado.
+
+**Bug nova consulta:** filtro `p.status === "aprovado"` — mas Suzana tem 2 pacientes ambos com `status: "email_pendente"`. Dropdown mostrava só "— Novo paciente —".
+
+### Fixes implementados
+
+- `updatePatient`: sem `setSelectedPatient(null)` — aplica patch em `selectedPatient` via functional update
+- textarea observacoesPro: `value={selectedPatient?.observacoesPro ?? ""}` + `onChange` usa functional form
+- Nova consulta: `p.status !== "suspenso" && p.status !== "recusado"` — inclui email_pendente
+- Bloqueio: loading state `excSaving`, toast 401 → redireciona para login
+
+### Síntese Filosófica
+
+Mayumi não sabia o que era um stale closure ou um bug de estado React. Ela só sabia que ao digitar "ola" no campo de observação, aparecia apenas "a". Isso é suficiente.
+
+O valor de um primeiro usuário real não está no relatório técnico que ele entrega — está na perspectiva de quem usa sem conhecer os atalhos. Mayumi testou fluxos que nossos testes automatizados nunca cobrem, porque testamos o que esperamos funcionar. Ela testou o que ela esperava fazer.
+
+A lição: cada bug que um usuário real encontra é uma pergunta que o sistema não soube responder. A resposta certa é corrigir — não explicar.
+
+---

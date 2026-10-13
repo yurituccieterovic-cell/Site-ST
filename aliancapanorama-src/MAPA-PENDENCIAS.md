@@ -2,6 +2,19 @@
 **PAP · Sociedade Tucci**
 > Parte do sistema MAPA. Ver MAPA-MASTER.md para índice geral.
 
+### S213 — Bugs Mayumi + #processo (2026-10-13)
+
+| # | Item | Status |
+|---|---|---|
+| S213-1 | Observação paciente > Info: não editava + só 1 letra → stale value fix | ✅ commit 9d40f06a |
+| S213-2 | Painel paciente fechava ao salvar observação (updatePatient setSelectedPatient(null)) | ✅ fix: mantém painel + aplica patch |
+| S213-3 | Nova consulta: só pacientes "aprovado" — Suzana tem todos "email_pendente" | ✅ filtro: != suspenso/recusado |
+| S213-4 | Bloqueio disponibilidade: loading state + toast 401 → redirect login | ✅ commit 9d40f06a |
+| S213-5 | Ficha paciente fecha sozinho | 🔵 provavelmente resolvido pelo fix S213-2 (blur em observacoesPro causava fechamento) |
+| S213-6 | Calendário sem rolagem + todas visões mostram mesmo grid | 🔵 I1012 — investigar iOS scroll |
+| S213-7 | Aprovar Mayumi Teste e Paciente Demo (status email_pendente → aprovado) | 🔵 Yuri decide quando ativar |
+| S213-8 | Assembleia registrada: bugs Mayumi reportados como alert (X-Arvore-Token) | ✅ msg 187ff9c3 |
+
 ### S211 — AGE 2.0 spec + bugs críticos + #processo (2026-10-12)
 
 | # | Item | Status |
