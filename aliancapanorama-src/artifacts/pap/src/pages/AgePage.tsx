@@ -2916,8 +2916,8 @@ export function AgePage() {
           </div>
         )}
 
-        {/* ── Calendário mensal de consultas ────────────────────────────────── */}
-        {(() => {
+        {/* ── Calendário mensal de consultas (só na view Lista) ──────────────── */}
+        {agendaFilter === "todos" && (() => {
           const now2 = new Date(); now2.setHours(0,0,0,0);
           const todayStr = now2.toISOString().slice(0,10);
           const mStart = new Date(now2.getFullYear(), now2.getMonth() + calMonthOffset, 1);
