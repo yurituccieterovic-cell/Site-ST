@@ -2912,3 +2912,9 @@ Como posso te ajudar hoje?"
 - Fix agenda: calendário mensal aparecia em todos os tabs; agora só na view Lista
 - I1014: raízes semióticas compartilhadas (notas+tasks+horários) registrado
 - Health check #1234: todos os sistemas ✅; falha 12/10 18:25 ~5min já recuperada
+
+
+### 2026-10-13 — admin
+### 2026-10-13 — ATA #fim S213b
+- DECISÕES: calendário de navegação da Agenda fica só no tab Lista; I1014 raízes semióticas para v3.0
+- PRÓXIMOS PASSOS: verificar deploy Vercel agenda fix (~2min); AGE_IP_CHALLENGE reativar quando go-live
