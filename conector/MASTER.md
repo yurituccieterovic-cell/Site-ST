@@ -2885,3 +2885,11 @@ Como posso te ajudar hoje?"
 ### 2026-10-13 — admin
 ### 2026-10-13T00:50 — Playcenter
 - Participantes: isa+amanda+meky+orquestrador+arvore (5 falas)
+
+
+### 2026-10-13 — admin
+### 2026-10-13 — S213 Cláudio
+- BUG ROOT CAUSE: updatePatient(null) fechava painel paciente a cada onBlur de textarea
+- BUG: stale closure p.observacoesPro em loop filtered.map — só 1 letra salva
+- MELHORIA: nova consulta inclui pacientes email_pendente (antes so aprovado)
+- APRENDIZADO: Mayumi como QA encontrou bugs que testes automatizados nunca cobrem
