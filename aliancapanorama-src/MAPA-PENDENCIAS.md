@@ -11,7 +11,7 @@
 | S211-3 | Tarefas: ordenação incorreta (criadas de notas não aparecem no topo) | 🔧 agente corrigindo |
 | S211-4 | Tarefas: estados "bola azul" confusos — sem rótulo textual, sem feedback desfazer | 🔧 agente corrigindo |
 | S211-5 | Calendário profissional: sem botões Dia/Semana/Mês — "hoje" confuso dentro do mês | 🔧 agente corrigindo |
-| S211-6 | AGE 2.0 spec: 4 temas visuais (Claro/Noturno/SOL/Invertido) | 🔵 I993 planejado |
+| S211-6 | AGE 2.0 spec: 4 temas visuais (Claro/Noturno/SOL/Invertido) | ✅ I993 implementado S212 |
 | S211-7 | AGE 2.0 spec: módulo documentos (upload + OCR + extração + PDF/XLSX) | 🔵 I994-I997 planejados |
 | S211-8 | AGE 2.0 spec: múltiplos perfis por conta (Netflix-style) + autoria feed + permissões | 🔵 I998-I1000 planejados |
 | S211-9 | AGE 2.0 spec registrado em IDEIAS.md (I993-I1000) e PSEUDO.md para Mayumi | 🔧 em andamento |
@@ -2127,4 +2127,6 @@
 | S212-12 | I1011: Leucócito de estabilidade (task automática em falha) | 📋 especificado |
 | S212-13 | Spec AGE 2.0 enviada para Secretaria (Playcenter + Sales Cockpit) | ⏳ pendente |
 | S212-14 | Quando migrar para Age 3.0: após PDF/OCR (I999/I1007) + multi-perfis (I1000) + pagamentos | 📋 marco definido |
+| S212-15 | I993 temas visuais: noturno/sol/claro/invertido — DB+API+UI implementados, deploy Render | ✅ S212 |
+| S212-16 | I995 esqueci senha paciente — já estava implementado (backend+frontend completos) | ✅ já existia |
 

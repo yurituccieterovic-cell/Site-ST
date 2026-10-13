@@ -9567,6 +9567,13 @@ Yuri ditou. Perplexity ramificou. Claude implementa. A tríade está funcionando
 
 7. **ChatGPT Pro** — Yuri reportou cobrança de R$42,96 (3 meses grátis Nubank expiraram). Nenhuma ação necessária do sistema.
 
+**Addendum S212 — I993 temas visuais (2026-10-13):**
+- Implementado: `tema TEXT DEFAULT 'noturno'` em age_professionals (bootstrap)
+- API: GET /config retorna `tema`; PATCH /config salva (validado: noturno/sol/claro/invertido)
+- Frontend: TEMAS const com 4 configs, `tema` state, useEffect aplica CSS vars no root + muda body background, toggle de 4 botões em Disponibilidade → Config
+- I995 (esqueci senha paciente): constatado já implementado (backend + frontend completos) — não reescrito
+- Commit: da438b29 · Push OK
+
 ### Síntese Filosófica
 
 O AGE está saindo do MVP e entrando no território de produto vendável. A spec desta sessão marca uma mudança de mentalidade: antes, o sistema funcionava para quem conhecia seus atalhos. Agora, precisa funcionar para quem chega sem manual — a secretária, o paciente que recebe o link, a profissional que abre o celular com o sol batendo na tela.
