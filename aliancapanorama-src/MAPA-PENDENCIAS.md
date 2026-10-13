@@ -2143,3 +2143,13 @@
 | S212-15 | I993 temas visuais: noturno/sol/claro/invertido — DB+API+UI implementados, deploy Render | ✅ S212 |
 | S212-16 | I995 esqueci senha paciente — já estava implementado (backend+frontend completos) | ✅ já existia |
 
+
+## S213b — 2026-10-13
+
+| Item | Descrição | Status |
+|---|---|---|
+| S213b-1 | Agenda: todos os tabs mostravam calendário mensal — fix: condicional `agendaFilter === "todos"` | ✅ S213b |
+| S213b-2 | Mês duplicado (dois calendários simultâneos) — resolvido pelo mesmo fix | ✅ S213b |
+| S213b-3 | Tasks — sistema funcionando (API retorna 401 = protegido corretamente) | ✅ confirmado |
+| S213b-4 | Leucócito ⚠️ 12/10 18:25 — Age API 502 ~5min, já recuperou | ✅ resolvido |
+| S213b-5 | I1014: Raízes semióticas compartilhadas — registrado, visualização para v3.0 | 📋 backlog |

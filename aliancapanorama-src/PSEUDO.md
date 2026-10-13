@@ -9662,3 +9662,31 @@ O valor de um primeiro usuário real não está no relatório técnico que ele e
 A lição: cada bug que um usuário real encontra é uma pergunta que o sistema não soube responder. A resposta certa é corrigir — não explicar.
 
 ---
+
+## S213b — 2026-10-13 · Agenda corrigida + #1234 manutenção
+
+### Contexto
+Continuação da S213. Mayumi + Yuri reportaram que **todos os tabs da Agenda** (Dia, Semana, Mês, Lista) mostravam o calendário mensal. Mês mostrava dois calendários simultâneos.
+
+### Root Cause
+Bloco `{(() => { /* calendário mensal */ })()}` em `AgendaView()` linha 2919 **sem nenhuma condição** de `agendaFilter`. Aparecia no fim de todos os tabs como "widget de navegação por data". No tab Mês, tanto o calendário condicional (`agendaFilter === "mes"`) quanto esse incondicional renderizavam juntos.
+
+### Fix
+`{agendaFilter === "todos" && (() => { ... })()}` — calendário de navegação aparece apenas no tab Lista, onde não conflita com nenhuma view principal.
+
+### #1234 Resultados
+- Todos os sistemas ✅ (Render, Vercel, Age lisange/suzana, Playcenter, Dodge 13/13, SalesCockpit)
+- UptimeRobot: 1 DOWN alert em 12/10 às 18:26 → UP às 18:31 (~5 min). Coincidiu com Leucócito ⚠️ 1 falha (Age login 502). Já recuperado.
+- #eage: sem thread nova de Mayumi desde 28 Set
+- Assembleias: nenhuma nova
+
+### Ideia registrada
+- I1014: Raízes semióticas compartilhadas — índices de notas aplicados em tasks e agendamentos. Visualização para v3.0.
+
+### Síntese Filosófica
+
+O calendário "invisível" que aparecia em todo lugar é uma metáfora de como sistemas acumulam camadas que ninguém lembra de remover. O código foi escrito com boa intenção — um mini-navegador permanente para pular de data em data. Mas sem contexto, ele virou ruído. Mayumi viu um calendário quando queria ver a agenda do dia.
+
+Remover não é destruir. É revelar o que já estava lá, embaixo do ruído.
+
+---
