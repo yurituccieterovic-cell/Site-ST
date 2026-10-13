@@ -2871,3 +2871,12 @@ Como posso te ajudar hoje?"
 - I993 temas visuais implementado: noturno/sol/claro/invertido (DB+API+UI+CSS vars)
 - I995 esqueci senha paciente: já estava completo antes de S212
 - TEMAS obj centraliza 4 configs; useEffect propaga para document.root + body
+
+
+### 2026-10-13 — admin
+### 2026-10-13 — MacroATA S212b Cláudio
+- SABIÁ cold start diagnosticado (Render Starter 15min timeout) — isError + retry mitigam
+- Mayumi primeiro acesso real ao Age (operadora Suzana) — senha age2026
+- I993 temas visuais implementado (noturno/sol/claro/invertido) — commit da438b29
+- email_live=false por padrão para todos os profissionais
+- AGE_IP_CHALLENGE=false temporário para onboarding
