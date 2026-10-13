@@ -2918,3 +2918,11 @@ Como posso te ajudar hoje?"
 ### 2026-10-13 — ATA #fim S213b
 - DECISÕES: calendário de navegação da Agenda fica só no tab Lista; I1014 raízes semióticas para v3.0
 - PRÓXIMOS PASSOS: verificar deploy Vercel agenda fix (~2min); AGE_IP_CHALLENGE reativar quando go-live
+
+
+### 2026-10-13 — admin
+### 2026-10-13 — S214 (Cláudio)
+- Brainstorm ficha de consulta + voz + formulários modulares (Yuri+Mayumi)
+- Princípio aprovado: A voz entra como relato; a IA organiza o relato; o profissional decide o que é clínico
+- I1015-I1018 registrados: ficha, ditado, formulários, anamnese 3 modos
+- Waze: contexto específico pendente esclarecimento
