@@ -1962,15 +1962,20 @@ export function AgePage() {
             </form>
           ) : (
             <form onSubmit={handleChallenge}>
-              <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 12 }}>
-                Novo dispositivo detectado. Um código de 6 dígitos foi enviado para o seu email.
+              <div style={{ background: `${color}18`, border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", marginBottom: 16 }}>
+                <div style={{ color, fontWeight: 600, fontSize: 13, marginBottom: 4 }}>📧 Código enviado!</div>
+                <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.5 }}>
+                  Enviamos um código de 6 dígitos para o seu email.<br />
+                  Verifique a caixa de entrada (e o spam) e cole o código abaixo.
+                </div>
               </div>
               <input
-                type="text" placeholder="Código de verificação" value={authCode} maxLength={6}
+                type="text" placeholder="000000" value={authCode} maxLength={6}
                 onChange={e => setAuthCode(e.target.value.replace(/\D/g, ""))}
-                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14, marginBottom: 12, boxSizing: "border-box", letterSpacing: 4, textAlign: "center" }}
+                style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}88`, borderRadius: 8, padding: "12px 14px", color: "#e2e8f0", fontSize: 22, marginBottom: 12, boxSizing: "border-box", letterSpacing: 8, textAlign: "center", fontWeight: 700 }}
+                autoFocus
               />
-              {authError && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 12 }}>{authError}</div>}
+              {authError && !/enviado/i.test(authError) && <div style={{ color: "#f87171", fontSize: 12, marginBottom: 12 }}>{authError}</div>}
               <button type="submit" disabled={authLoading || authCode.length < 6}
                 style={{ width: "100%", background: authLoading ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: authLoading ? "not-allowed" : "pointer" }}>
                 {authLoading ? "Verificando…" : "Confirmar"}
