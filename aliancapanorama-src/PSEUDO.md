@@ -9582,3 +9582,43 @@ A frase-guia chegou de Perplexity, mas é de Yuri: "Um sistema confiável não �
 
 ---
 
+## S212b — 2026-10-13 · Mayumi entra no Age + QA + Cold start SABIÁ
+
+**Data:** 2026-10-13 | **Continuação de S212**
+
+### O que foi feito
+
+**Mayumi entrou no Age como operadora da Suzana.** Primeiro acesso real ao sistema. SABIÁ apresentou erro "Desculpe, não consegui processar" — gerou frustração. Diagnóstico confirmado: cold start do Render Starter (servidor dorme após 15min, primeira requisição ao pool LLM falha). SABIÁ voltou após aquecimento natural do servidor.
+
+**QA sistemático realizado:**
+- Login Suzana: ✅ ok (senha `age2026`)
+- SABIÁ público Suzana: ✅ responde corretamente (`isError: false`)
+- Config Suzana: ✅ emailLive=false, tema=noturno
+- Slots Suzana: ✅ 16 slots disponíveis (próximo: 2026-10-19)
+- Pacientes Suzana: ✅ 2 cadastrados
+- Site Vercel: ✅ 200
+- Render: ✅ 200
+
+**I993 temas visuais:** implementado e deployado pelo agente (commit da438b29). Confirmado em produção.
+
+**I995 esqueci senha paciente:** confirmado já implementado na sessão anterior.
+
+### Diagnóstico cold start
+
+Cold start Render Starter = problema estrutural enquanto plano free/starter (15min timeout). Soluções:
+1. Render Standard $25/mês: zero-downtime deploy + warm server (aprovação Yuri pendente — I210-2)
+2. Cron keepalive: já implementado (pinga /healthz a cada 10min)
+3. Retry automático: já implementado (isError flag + 5s retry)
+
+A combinação de (2)+(3) mitiga mas não elimina: há uma janela de 30-60s após o primeiro wake onde o LLM pool pode falhar.
+
+### Síntese Filosófica
+
+Mayumi entrou. Isso não é trivial. O sistema passou do mundo dos testes para o mundo real — onde a pessoa do outro lado não tem contexto técnico, não sabe o que é cold start, e só sabe que apertou o botão e não funcionou.
+
+O momento pediu honestidade: mostrar o estado real do servidor, não fingir que vai responder. A barra de "Sistema ocupado — retentando em 5s…" é uma declaração de que o sistema respeita o tempo da Mayumi mais do que sua própria imagem de competência.
+
+Ficou um ensinamento: produto vendável não é produto sem bugs — é produto que trata bugs como informação, não como vergonha.
+
+---
+
