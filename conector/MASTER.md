@@ -2905,3 +2905,10 @@ Como posso te ajudar hoje?"
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 857ms
+
+
+### 2026-10-13 — admin
+### 2026-10-13 — S213b (Cláudio)
+- Fix agenda: calendário mensal aparecia em todos os tabs; agora só na view Lista
+- I1014: raízes semióticas compartilhadas (notas+tasks+horários) registrado
+- Health check #1234: todos os sistemas ✅; falha 12/10 18:25 ~5min já recuperada
