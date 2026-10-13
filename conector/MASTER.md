@@ -2893,3 +2893,8 @@ Como posso te ajudar hoje?"
 - BUG: stale closure p.observacoesPro em loop filtered.map — só 1 letra salva
 - MELHORIA: nova consulta inclui pacientes email_pendente (antes so aprovado)
 - APRENDIZADO: Mayumi como QA encontrou bugs que testes automatizados nunca cobrem
+
+
+### 2026-10-13 — admin
+### 2026-10-13T01:50 — Playcenter
+- Participantes: isa+amanda+meky+orquestrador+arvore (5 falas)
