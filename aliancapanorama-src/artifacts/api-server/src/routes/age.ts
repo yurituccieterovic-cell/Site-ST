@@ -1887,7 +1887,7 @@ router.patch("/age/:slug/payment-options", requireAgeAuth, async (req, res): Pro
 // GET /api/age/:slug/config
 router.get("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
   const { slug } = req.params;
-  const result = await db.execute(sql`SELECT intervalo_sessao_semanas, email_prefs, email_live FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
+  const result = await db.execute(sql`SELECT intervalo_sessao_semanas, email_prefs, email_live, tema FROM age_professionals WHERE slug = ${slug} LIMIT 1`);
   const row = (result as any).rows?.[0];
   if (!row) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
   const defaultPrefs = { novo_agendamento: true, cancelamento: true, lembrete: true };
@@ -1895,6 +1895,7 @@ router.get("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> 
     intervaloSessaoSemanas: row.intervalo_sessao_semanas ?? 0,
     emailPrefs: { ...defaultPrefs, ...(row.email_prefs ?? {}) },
     emailLive: row.email_live ?? false,
+    tema: row.tema ?? "noturno",
   });
 });
 
@@ -1902,7 +1903,7 @@ router.get("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> 
 router.patch("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void> => {
   const { slug } = req.params;
   if (req.session.ageProfessionalSlug !== slug) { res.status(403).json({ error: "Sem permissão" }); return; }
-  const { intervaloSessaoSemanas, emailPrefs, emailLive } = req.body as { intervaloSessaoSemanas?: number; emailPrefs?: Record<string, boolean>; emailLive?: boolean };
+  const { intervaloSessaoSemanas, emailPrefs, emailLive, tema } = req.body as { intervaloSessaoSemanas?: number; emailPrefs?: Record<string, boolean>; emailLive?: boolean; tema?: string };
   if (intervaloSessaoSemanas !== undefined) {
     const v = Math.max(0, Math.min(52, Math.floor(intervaloSessaoSemanas)));
     await db.execute(sql`UPDATE age_professionals SET intervalo_sessao_semanas = ${v} WHERE slug = ${slug}`);
@@ -1915,6 +1916,10 @@ router.patch("/age/:slug/config", requireAgeAuth, async (req, res): Promise<void
   }
   if (typeof emailLive === "boolean") {
     await db.execute(sql`UPDATE age_professionals SET email_live = ${emailLive} WHERE slug = ${slug}`);
+  }
+  const VALID_TEMAS = ["noturno", "sol", "claro", "invertido"];
+  if (tema && VALID_TEMAS.includes(tema)) {
+    await db.execute(sql`UPDATE age_professionals SET tema = ${tema} WHERE slug = ${slug}`);
   }
   res.json({ ok: true });
 });

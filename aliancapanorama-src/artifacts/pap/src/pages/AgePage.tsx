@@ -76,6 +76,15 @@ function fmtDay(iso: string) {
   return new Date(iso).toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short", timeZone: "America/Sao_Paulo" });
 }
 
+// ─── Temas visuais (I993) ────────────────────────────────────────────────────
+
+const TEMAS: Record<string, { bg: string; bg2: string; bg3: string; border: string; text: string; label: string }> = {
+  noturno:  { bg: "#080c10", bg2: "#0f1318", bg3: "#0a0f16", border: "#1e293b", text: "#e2e8f0", label: "🌙 Noturno" },
+  sol:      { bg: "#1a0e00", bg2: "#241500", bg3: "#150b00", border: "#4a2e00", text: "#fde68a", label: "☀️ Sol" },
+  claro:    { bg: "#f1f5f9", bg2: "#ffffff", bg3: "#e2e8f0", border: "#cbd5e1", text: "#0f172a", label: "🌤 Claro" },
+  invertido:{ bg: "#18181b", bg2: "#27272a", bg3: "#1c1c1f", border: "#3f3f46", text: "#fafafa", label: "🔄 Invertido" },
+};
+
 // ─── Component principal ──────────────────────────────────────────────────────
 
 export function AgePage() {
@@ -166,6 +175,8 @@ export function AgePage() {
   const [emailPrefsMsg, setEmailPrefsMsg] = useState("");
   const [emailLive, setEmailLive] = useState(false);
   const [emailLiveSaving, setEmailLiveSaving] = useState(false);
+  const [tema, setTema] = useState("noturno");
+  const [temaSaving, setTemaSaving] = useState(false);
   // Email management
   const [profEmail, setProfEmail] = useState<string | null>(null);
   const [emailPending, setEmailPending] = useState<string | null>(null);
@@ -247,6 +258,23 @@ export function AgePage() {
 
   // Sync live mode ref com state
   useEffect(() => { sabiaLiveModeRef.current = sabiaLiveMode; }, [sabiaLiveMode]);
+
+  // Aplica CSS vars do tema ao root (I993)
+  useEffect(() => {
+    const T = TEMAS[tema] ?? TEMAS.noturno;
+    const root = document.documentElement;
+    root.style.setProperty("--age-bg", T.bg);
+    root.style.setProperty("--age-bg2", T.bg2);
+    root.style.setProperty("--age-bg3", T.bg3);
+    root.style.setProperty("--age-border", T.border);
+    root.style.setProperty("--age-text", T.text);
+    document.body.style.background = T.bg;
+    document.body.style.color = T.text;
+    return () => {
+      document.body.style.background = "";
+      document.body.style.color = "";
+    };
+  }, [tema]);
 
   // Live mode: quando TTS termina → restart mic automaticamente
   useEffect(() => {
@@ -567,6 +595,7 @@ export function AgePage() {
           setIntervaloSemanas(d.intervaloSessaoSemanas ?? 0);
           if (d.emailPrefs) setEmailPrefs(prev => ({ ...prev, ...d.emailPrefs }));
           if (typeof d.emailLive === "boolean") setEmailLive(d.emailLive);
+          if (d.tema && TEMAS[d.tema]) setTema(d.tema);
         }
       }).catch(() => {});
   }, [mode, slug]);
@@ -1508,6 +1537,7 @@ export function AgePage() {
 
   const color = prof?.cor ?? "#2dd4bf";
   const colorDark = color + "33";
+  const tB = TEMAS[tema] ?? TEMAS.noturno;
 
   if (loading) return (
     <div style={{ minHeight: "100vh", background: "#080c10", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
@@ -3621,6 +3651,38 @@ export function AgePage() {
           </div>
         </div>
 
+        {/* Tema visual (I993) */}
+        <div style={{ background: "#0f1318", border: "1px solid #334155", borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 700, marginBottom: 4 }}>🎨 Tema visual</div>
+          <div style={{ color: "#64748b", fontSize: 12, marginBottom: 12 }}>Escolha a aparência do painel.</div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {Object.entries(TEMAS).map(([key, t]) => (
+              <button key={key} disabled={temaSaving}
+                onClick={async () => {
+                  setTemaSaving(true);
+                  try {
+                    const r = await fetch(`${API}/api/age/${slug}/config`, {
+                      method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include",
+                      body: JSON.stringify({ tema: key }),
+                    });
+                    if (r.ok) setTema(key);
+                  } catch { /* ignora */ }
+                  setTemaSaving(false);
+                }}
+                style={{
+                  background: tema === key ? color : "#1a2030",
+                  border: `1px solid ${tema === key ? color : "#334155"}`,
+                  borderRadius: 8, padding: "6px 14px",
+                  color: tema === key ? "#080c10" : "#94a3b8",
+                  fontSize: 12, fontWeight: tema === key ? 700 : 400,
+                  cursor: temaSaving ? "default" : "pointer",
+                }}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Notificações por email */}
         <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
           <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 4 }}>📧 Notificações por email</div>
@@ -5249,7 +5311,7 @@ export function AgePage() {
   // ─── LAYOUT ──────────────────────────────────────────────────────────────────
 
   return (
-    <div style={{ minHeight: "100vh", background: "#080c10", backgroundImage: "radial-gradient(ellipse at 20% 20%, rgba(45,212,191,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(45,212,191,0.04) 0%, transparent 45%), repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px)", color: "#e2e8f0", fontFamily: "system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: tB.bg, backgroundImage: tema === "noturno" ? "radial-gradient(ellipse at 20% 20%, rgba(45,212,191,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(45,212,191,0.04) 0%, transparent 45%), repeating-linear-gradient(135deg, transparent, transparent 40px, rgba(255,255,255,0.008) 40px, rgba(255,255,255,0.008) 41px)" : "none", color: tB.text, fontFamily: "system-ui, sans-serif" }}>
       {/* SABIÁ Onboarding Wizard */}
       {showOnboarding && (
         <div style={{ position: "fixed", inset: 0, background: "#080c10f0", zIndex: 10000, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
