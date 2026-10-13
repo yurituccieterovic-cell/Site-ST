@@ -9690,3 +9690,41 @@ O calendário "invisível" que aparecia em todo lugar é uma metáfora de como s
 Remover não é destruir. É revelar o que já estava lá, embaixo do ruído.
 
 ---
+
+## S214 — 2026-10-13 · Brainstorm Ficha de Consulta + Voz + Formulários
+
+### Origem
+Yuri + Mayumi testando AGE. Mayumi pediu: "onde o médico escreve a consulta?" → lacuna identificada. Perplexity elaborou a arquitetura completa; Yuri e Mayumi aprovaram o princípio orientador.
+
+### Princípio orientador (aprovado por Yuri + Mayumi)
+> **"A voz entra como relato; a IA organiza o relato; o profissional decide o que é clínico."**
+
+### Ideias registradas
+- I1015: Ficha de consulta vinculada a paciente + horário
+- I1016: Ditado — dois sistemas (transcrição + estruturação IA)
+- I1017: Formulários modulares por especialidade
+- I1018: Anamnese em 3 modos
+
+### MVP sugerido (10 passos)
+1. Campo de consulta no atendimento
+2. Botão de ditar
+3. Transcrição salva como texto bruto
+4. Botão "Organizar com SABIÁ"
+5. SABIÁ propõe campos preenchidos
+6. Profissional revisa e salva
+7. Rascunho local obrigatório
+8. Histórico de versões
+9. Formulário com blocos ativáveis
+10. Modo formulário + modo conversa + modo misto
+
+### Nota: o Waze
+Yuri mencionou "o que a Mayumi falou sobre o Waze e o AGE". Perplexity não conseguiu recuperar o contexto específico. Pendente: Yuri ou Mayumi retoma o ponto do Waze para detalhar a integração pretendida.
+
+### Síntese Filosófica
+A Mayumi perguntou: "Cadê o lugar onde o médico escreve?" Nós não tínhamos esse lugar. Tínhamos notas, observações, fichas parciais — mas não uma superfície de trabalho clínica integrada ao horário agendado.
+
+O brainstorm de hoje não resolve o problema tecnicamente. Ele nomeia o que falta. E nomear é o primeiro ato de construção. O princípio aprovado — "a voz entra como relato; a IA organiza; o profissional decide" — é uma fronteira ética clara num território confuso.
+
+A IA não cuida do paciente. A IA cuida do registro.
+
+---

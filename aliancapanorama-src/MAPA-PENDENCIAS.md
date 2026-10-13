@@ -2153,3 +2153,13 @@
 | S213b-3 | Tasks — sistema funcionando (API retorna 401 = protegido corretamente) | ✅ confirmado |
 | S213b-4 | Leucócito ⚠️ 12/10 18:25 — Age API 502 ~5min, já recuperou | ✅ resolvido |
 | S213b-5 | I1014: Raízes semióticas compartilhadas — registrado, visualização para v3.0 | 📋 backlog |
+
+## S214 — 2026-10-13 · Ficha de Consulta + Voz + Formulários
+
+| Item | Descrição | Status |
+|---|---|---|
+| S214-1 | I1015: Ficha de consulta (age_fichas) — tabela + UI vinculada ao agendamento | ⏳ backlog |
+| S214-2 | I1016: Ditado — Web Speech API + SABIÁ estruturação | ⏳ backlog |
+| S214-3 | I1017: Formulários modulares por especialidade | ⏳ backlog |
+| S214-4 | I1018: Anamnese em 3 modos (formulário/SABIÁ/misto) | ⏳ backlog |
+| S214-5 | Waze — retomar com Yuri/Mayumi o que foi proposto | ⏳ pendente esclarecimento |
