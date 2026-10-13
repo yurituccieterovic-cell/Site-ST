@@ -2926,3 +2926,9 @@ Como posso te ajudar hoje?"
 - Princípio aprovado: A voz entra como relato; a IA organiza o relato; o profissional decide o que é clínico
 - I1015-I1018 registrados: ficha, ditado, formulários, anamnese 3 modos
 - Waze: contexto específico pendente esclarecimento
+
+
+### 2026-10-13 — admin
+### 2026-10-13 — ATA #fim S213b+S214
+- DECISÕES: agenda fix (calendário só em Lista); princípio voz/IA/clínico aprovado; I1015-I1018 backlog
+- PRÓXIMOS PASSOS: implementar ficha de consulta (I1015 MVP); retomar Waze com Mayumi
