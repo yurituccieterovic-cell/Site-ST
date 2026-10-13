@@ -299,6 +299,7 @@ export function AgePage() {
   const [onboardingStep, setOnboardingStep] = useState(1);
   // Exception form
   const [excForm, setExcForm] = useState({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
+  const [excSaving, setExcSaving] = useState(false);
 
   // Feed operacional
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
@@ -1035,6 +1036,7 @@ export function AgePage() {
       addToast("Preencha início E fim do horário, ou deixe ambos em branco (dia inteiro).", "err");
       return;
     }
+    setExcSaving(true);
     try {
       const r = await fetch(`${API}/api/age/${slug}/exceptions`, {
         method: "POST", credentials: "include",
@@ -1049,17 +1051,21 @@ export function AgePage() {
       });
       if (r.ok) {
         const msg = excForm.horaInicio
-          ? `Exceção salva: ${excForm.data} ${excForm.horaInicio}–${excForm.horaFim} bloqueado.`
-          : `Exceção salva: ${excForm.data} (dia inteiro) bloqueado.`;
+          ? `✓ Bloqueado: ${excForm.data} ${excForm.horaInicio}–${excForm.horaFim}.`
+          : `✓ Bloqueado: ${excForm.data} (dia inteiro).`;
         addToast(msg, "ok");
         setExcForm({ data: "", tipo: "bloqueio", horaInicio: "", horaFim: "", descricao: "" });
         loadExceptions();
         loadSlots();
+      } else if (r.status === 401) {
+        addToast("Sessão expirada. Faça login novamente.", "err");
+        setMode("public"); setAuthStep("login");
       } else {
         const d = await r.json().catch(() => ({})) as { error?: string };
-        addToast(d.error ?? "Erro ao salvar exceção.", "err");
+        addToast(d.error ?? "Erro ao salvar bloqueio.", "err");
       }
-    } catch { addToast("Sem conexão. Tente novamente.", "err"); }
+    } catch { addToast("Sem conexão. Verifique a internet e tente novamente.", "err"); }
+    finally { setExcSaving(false); }
   }
 
   async function handleRegister(e: React.FormEvent) {
@@ -1079,13 +1085,15 @@ export function AgePage() {
     setRegLoading(false);
   }
 
-  async function updatePatient(id: number, patch: Record<string, string>) {
+  async function updatePatient(id: number, patch: Record<string, string | null>) {
     await fetch(`${API}/api/age/${slug}/patients/${id}`, {
       method: "PATCH", credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(patch),
     });
-    if (selectedPatient?.id === id) setSelectedPatient(null);
+    if (selectedPatient?.id === id) {
+      setSelectedPatient(sp => sp ? { ...sp, ...patch } : sp);
+    }
     loadPatients();
   }
 
@@ -2486,8 +2494,8 @@ export function AgePage() {
                     }}
                     style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, marginBottom: 6 }}>
                     <option value={0}>— Novo paciente —</option>
-                    {patients.filter(p => p.status === "aprovado").map(p => (
-                      <option key={p.id} value={p.id}>{p.nome}</option>
+                    {patients.filter(p => p.status !== "suspenso" && p.status !== "recusado").map(p => (
+                      <option key={p.id} value={p.id}>{p.nome} {p.status !== "aprovado" ? `(${PATIENT_STATUS_LABEL[p.status] ?? p.status})` : ""}</option>
                     ))}
                   </select>
                   {!profBookForm.patientId && (
@@ -3163,9 +3171,9 @@ export function AgePage() {
                     </div>
                     <textarea
                       placeholder="Observações internas (não visíveis ao paciente)"
-                      value={p.observacoesPro ?? ""}
-                      onChange={e => setSelectedPatient({ ...p, observacoesPro: e.target.value })}
-                      onBlur={() => updatePatient(p.id, { observacoesPro: selectedPatient.observacoesPro ?? "" })}
+                      value={selectedPatient?.observacoesPro ?? ""}
+                      onChange={e => setSelectedPatient(sp => sp ? { ...sp, observacoesPro: e.target.value } : sp)}
+                      onBlur={() => updatePatient(p.id, { observacoesPro: selectedPatient?.observacoesPro ?? "" })}
                       rows={2}
                       style={{ width: "100%", background: "#1a2030", border: `1px solid ${color}33`, borderRadius: 8, padding: "8px 10px", color: "#e2e8f0", fontSize: 12, resize: "vertical", boxSizing: "border-box" }}
                     />
@@ -3976,8 +3984,8 @@ export function AgePage() {
                   style={{ width: "100%", background: "#1a2030", border: "1px solid #f8717133", borderRadius: 6, color: "#e2e8f0", padding: "8px 10px", fontSize: 13 }} />
               </div>
             </div>
-            <button type="submit" style={{ width: "100%", background: "#f87171", color: "#fff", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
-              Bloquear data
+            <button type="submit" disabled={excSaving} style={{ width: "100%", background: excSaving ? "#7f1d1d" : "#f87171", color: "#fff", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 13, cursor: excSaving ? "not-allowed" : "pointer" }}>
+              {excSaving ? "Salvando…" : "Bloquear data"}
             </button>
           </form>
         </div>
