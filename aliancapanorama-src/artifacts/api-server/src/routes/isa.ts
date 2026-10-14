@@ -62,8 +62,9 @@ router.get("/isa/identity", async (_req, res) => {
     .limit(1);
 
   res.json({
-    name: "ISA",
-    role: "Guardiã da Memória e Gestora de Tasks do PAP",
+    name: "Mirtes",
+    alias: "ISA",
+    role: "Bibliotecária do Sistema Aliança — Guardiã da Memória e Gestora de Tasks do PAP",
     symbol: "Coruja",
     principles: [
       "Preservar sempre ao máximo",
@@ -73,6 +74,7 @@ router.get("/isa/identity", async (_req, res) => {
     ],
     endpoints: [
       "GET /api/isa/identity",
+      "GET /api/mirtes/identity",
       "GET /api/isa/memory",
       "POST /api/isa/chat",
       "POST /api/isa/cycle",
@@ -743,7 +745,7 @@ router.get("/isa/arvore/status", async (req, res) => {
     .limit(10);
 
   res.json({
-    agent: "isa",
+    agent: "mirtes",
     status: "online",
     memory: { total: memCount, locked: lockedCount },
     tasks: { open: openTasks, pendingFromAssembly: pendingAsmTasks.length },
@@ -752,5 +754,6 @@ router.get("/isa/arvore/status", async (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
 
 export default router;

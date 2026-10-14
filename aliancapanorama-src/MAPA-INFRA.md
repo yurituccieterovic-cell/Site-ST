@@ -49,7 +49,7 @@
 | Sessions | PostgreSQL (`session` table via connect-pg-simple) | ✅ Ativo |
 | Domínio | sociedadetucci.com.br (Vercel) | ✅ LIVE — rotas: /jasmim /pv /portal /studio /celular /adm |
 | GitHub | yurituccieterovic-cell/Site-ST | ✅ Ativo |
-| Bluesky ISA | isa-pap.bsky.social | ✅ LIVE |
+| Bluesky Mirtes | isa-pap.bsky.social | ✅ LIVE |
 | ARPIA | `/root/Arpia/` — sem servidor ativo | ⏸ Backlog |
 | Render API Key | `rnd_1PsQCvl3KXTnySlOnoIo879iqe1S` (em .pap-secrets) | ✅ Configurado |
 | Render Service ID | `srv-d9n682bm8hqs73dmg4kg` | ✅ |

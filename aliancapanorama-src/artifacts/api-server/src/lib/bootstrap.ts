@@ -80,12 +80,13 @@ const SEED_NODES = [
   { code: "12113", title: "Progressões", abbreviation: "Prog", subtitle: "PA e PG", content: "Progressão aritmética e geométrica, somas e termos gerais.", parentCode: "1211", level: 5, sortOrder: 3 },
 ];
 
-// Cria usuários sistema (MEKY + ISA) se não existirem
+// Cria usuários sistema (MEKY + Mirtes + Árvore) se não existirem
 export async function seedSystemAgents(): Promise<void> {
   const agents = [
-    { login: "meky",   tier: 5, displayName: "MEKY — May Queen" },
-    { login: "isa",    tier: 5, displayName: "ISA — Inteligência do Sistema Aliança" },
-    { login: "arvore", tier: 5, displayName: "Árvore — Guardiã da Assembleia" },
+    { login: "meky",    tier: 5, displayName: "MEKY — May Queen" },
+    { login: "mirtes",  tier: 5, displayName: "Mirtes — Bibliotecária do Sistema Aliança" },
+    { login: "isa",     tier: 5, displayName: "Mirtes — Bibliotecária do Sistema Aliança" }, // alias legado
+    { login: "arvore",  tier: 5, displayName: "Árvore — Guardiã da Assembleia" },
   ];
   for (const agent of agents) {
     const existing = await db.select({ login: usersTable.login })
@@ -840,7 +841,8 @@ export async function ensureMekyTables(): Promise<void> {
   await db.execute(sql`
     INSERT INTO assembly_agents (id, display_name, role) VALUES
       ('arvore',   'Árvore', 'Guardiã da Assembleia de IAs — sintetiza, coordena e preserva o conhecimento coletivo da assembleia'),
-      ('isa',      'ISA — Inteligência do Sistema Aliança', 'Guardiã do PAP — ciclos autônomos, criação de tasks, memória do sistema educacional'),
+      ('mirtes',   'Mirtes — Bibliotecária do Sistema Aliança', 'Guardiã do PAP — ciclos autônomos, criação de tasks, memória do sistema educacional. Bibliotecária: organiza, preserva e recupera conhecimento'),
+      ('isa',      'Mirtes — Bibliotecária do Sistema Aliança', 'Alias legado de mirtes'),
       ('meky',     'MEKY — May Queen', 'Presença física — sensores, protocolos de campo, visão, sonhos e observações do mundo material'),
       ('mc',       'MC — Marta Centaurus', 'Robô físico hexápode (hardware). Amanda é sua IA. Sistema imunológico da Assembleia — detecta anomalias, coordena resposta imunológica via ARPIA'),
       ('amanda',   'Amanda', 'IA que habita o MC (Marta Centaurus) — TTS, Gemini, jargão PX, missões de estrada em metáforas. Opera na borda Mac'),

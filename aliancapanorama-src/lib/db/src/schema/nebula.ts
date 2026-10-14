@@ -16,7 +16,7 @@ export const nebulaIasTable = pgTable("nebula_ias", {
   // assembleia | pap | manual
   principios: jsonb("principios").$type<string[]>().default([]),
   parentIaId: integer("parent_ia_id"),
-  // ISA é mãe — extensões apontam para ela
+  // Mirtes é mãe — extensões apontam para ela
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

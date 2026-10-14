@@ -18,7 +18,7 @@ function resolveAgent(req: any): { userId: number | null; name: string; type: st
     return { userId: null, name: "MEKY — Marta Centauros", type: "meky" };
   }
   if (req.headers["x-api-key"] === process.env.AI_API_KEY) {
-    return { userId: null, name: "ISA — Inteligência do Sistema Aliança", type: "isa" };
+    return { userId: null, name: "Mirtes — Bibliotecária do Sistema Aliança", type: "isa" };
   }
   return null;
 }

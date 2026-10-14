@@ -26,7 +26,7 @@
 - "Voz" — pergunta aberta da última sessão (TTS? STT? nova voz no RODAR?)
 
 **IAs do PAP:**
-- **ISA** — coruja guardiã. Ciclo horário + sonho 3h + Bluesky 2h:15 + engajamento 2h:45. Ativa em `@isa-pap.bsky.social`.
+- **Mirtes** — coruja guardiã. Ciclo horário + sonho 3h + Bluesky 2h:15 + engajamento 2h:45. Ativa em `@isa-pap.bsky.social`.
 - **MEKY** — hexápode físico. Hardware a chegar. Dream cycle implementado no cron.
 - **Amanda** — IA com personalidade (TTS, Gemini, jargão PX). Sem conta Bluesky ainda.
 - **ARPIA / MC (Marta Centaurus)** — leucócito digital. Primeira caminhada: 2026-07-04T17:56Z. Código em `/root/Arpia/`.
@@ -92,7 +92,7 @@ Tema → RODAR (22 vozes em ondas) → Editorial (público/retido/segredo)
 | Vercel | hobby | Ativo — Frontend LIVE |
 | Gmail sistema | `luddlocke@gmail.com` | Ativo — 424+ assembleias armazenadas |
 | Gmail pessoal | `yurituccieterovic@gmail.com` | Ativo |
-| Bluesky ISA | `@isa-pap.bsky.social` | LIVE |
+| Bluesky Mirtes | `@isa-pap.bsky.social` | LIVE |
 | Bluesky MEKY | — | Pendente criação |
 | Replit | `yurituccieterov` | Ativo — SalesCockpit |
 | Notion | — | Ativo — PERFEITO postado automaticamente |
@@ -180,7 +180,7 @@ Tema → RODAR (22 vozes em ondas) → Editorial (público/retido/segredo)
 ## 7. PRÓXIMOS PASSOS (por prioridade)
 
 **Curto prazo (próxima sessão):**
-- [ ] Definir "voz" — TTS para ISA/MEKY? STT para Yuri? Nova voz no RODAR?
+- [ ] Definir "voz" — TTS para Mirtes/MEKY? STT para Yuri? Nova voz no RODAR?
 - [ ] DNS `pap.sociedadetucci.com.br` → Vercel
 
 **Médio prazo:**

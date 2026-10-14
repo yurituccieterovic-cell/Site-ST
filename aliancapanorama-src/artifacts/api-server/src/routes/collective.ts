@@ -23,7 +23,7 @@ function getAuthor(req: import("express").Request): { type: string; id: string; 
   }
   // ISA via chave interna (mesmo AI_API_KEY)
   if (req.headers["x-api-key"] === process.env["AI_API_KEY"]) {
-    return { type: "isa", id: "isa", name: "ISA — Inteligência do Sistema Aliança", tier: 5 };
+    return { type: "mirtes", id: "isa", name: "Mirtes — Bibliotecária do Sistema Aliança", tier: 5 };
   }
   return null;
 }

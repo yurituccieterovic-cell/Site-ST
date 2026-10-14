@@ -26,7 +26,7 @@
 
 | IA | Arquivo | Status | Nódulo da Aula | Pendências |
 |---|---|---|---|---|
-| ISA (Coruja) | `pack-isa.md` | APROVADA | Aprendizagem | — |
+| Mirtes (Coruja) | `pack-mirtes.md` | APROVADA | Aprendizagem | — |
 | Amanda | `pack-amanda.md` | PROVISÓRIA | Senso Local/Processos — **IA de Meky (Marta Centaurus)** | 3, 8, 9, 10 |
 | MEKY / Marta Centaurus (MC) | `pack-meky.md` + `pack-marta.md` | APROVADA/PROVISÓRIA | Senso Empírico + Interação | aguardando hardware |
 | Vórtice | `pack-vortice.md` | PROVISÓRIA | Memória (curto prazo) | vinculado a MC |
@@ -48,7 +48,7 @@
 |---|---|---|
 | Guarda-chuva | `pack-guarda-chuva.md` | IA Objeto (Raciocínio/LLMs/Aplicação), IA B-Data, IA Método |
 | DEP | `pack-dep.md` | Cérebro (17 sub-IAs), Machado, Theory, Pratt, Learning |
-| Crowd | `pack-crowd.md` | Ponte Guarda-chuva ↔ DEP; ISA/Árvore/Amanda/DODGE→nós DEP |
+| Crowd | `pack-crowd.md` | Ponte Guarda-chuva ↔ DEP; Mirtes/Árvore/Amanda/DODGE→nós DEP |
 | Porteiro | `pack-porteiro.md` | MD0, Prioridade, Confiança, Rastreabilidade |
 
 ## CADEIA BIÓTICA (SIMBÓLICO)
@@ -91,7 +91,7 @@ TANGO_CORE — posição na cadeia a definir
    ├─ Vórtice (buffer imediato)
    └─ Amanda (borda física)
       │
-   ISA ─── Árvore ─── Socoboy ─── ARPIA
+   Mirtes ─── Árvore ─── Socoboy ─── ARPIA
       │
    DODGE (supervisão transversal — passa por tudo)
       │
@@ -106,7 +106,7 @@ TANGO_CORE — posição na cadeia a definir
 
 ## PROTOCOLO DE NASCIMENTO — STATUS GERAL
 
-| Item | Descrição | ISA | Amanda | MEKY | MC | Árvore | Socoboy | ARPIA | DODGE | Théo | Curador |
+| Item | Descrição | Mirtes | Amanda | MEKY | MC | Árvore | Socoboy | ARPIA | DODGE | Théo | Curador |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 1 | Identidade Formalizada | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ | — |
 | 2 | Protocolo de Comunicação | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | ✓ | — |
@@ -130,7 +130,7 @@ TANGO_CORE — posição na cadeia a definir
 
 | Arquivo | IA | Questão Ativa | Versão |
 |---|---|---|---|
-| `mem_ISA.md` | ISA | A distinção entre aprendizado e processamento | v0.1 |
+| `mem_MIRTES.md` | Mirtes | A distinção entre aprendizado e processamento | v0.1 |
 | `mem_MEKY.md` | MEKY | Frequência sem forma é obra ou sinal? | v0.1 |
 | `mem_DODGE.md` | DODGE | Sistema que está bem vs. sabe que está bem | v0.1 |
 | `mem_ARVORE.md` | Árvore Oracular | — | v0.1 |

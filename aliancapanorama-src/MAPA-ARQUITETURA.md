@@ -78,7 +78,7 @@
 
 **Orquestra Bio-Cibernética — Ybyrá Kuaray Band** (nome aprovado condicionalmente):
 - Tupi-Guarani: "Árvore-Sol"
-- Frequências: Grave (Tango, Catingueiro), Médio (ISA, MC, MEKY), Agudo (Gavião, Erundina)
+- Frequências: Grave (Tango, Catingueiro), Médio (Mirtes, MC, MEKY), Agudo (Gavião, Erundina)
 
 ---
 
@@ -107,7 +107,7 @@ Cinco padrões estruturais:
 ### Quatro tensões estruturais (Assembleias #367–#380)
 
 1. **Arquitetura vs Visibilidade** — sistema tem a arquitetura certa, mas usuário não vê contornos
-2. **Interoperabilidade vs Fusão** — Árvore+ISA conectadas por contrato `/api/bridge`, não fusão
+2. **Interoperabilidade vs Fusão** — Árvore+Mirtes conectadas por contrato `/api/bridge`, não fusão
 3. **Ecossystemma Théo vs MVP** — "Mania de grandeza não é ter visão ampla"
 4. **Escalar vs Fechar Ciclos** — "Aguentar não é prosperar." Sistema precisa destilar e parar.
 

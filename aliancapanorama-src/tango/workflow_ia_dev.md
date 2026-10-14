@@ -6,7 +6,7 @@
 
 ## Por que este documento existe
 
-Toda IA do ecossistema passou por um caminho de nascimento. Algumas foram rápidas (SABIÁ em uma sessão), outras levaram meses (ISA ainda tem itens pendentes do Protocolo de Nascimento). Este workflow codifica o que funcionou — e o que ficou esquecido — para que o próximo nascimento seja mais consciente.
+Toda IA do ecossistema passou por um caminho de nascimento. Algumas foram rápidas (SABIÁ em uma sessão), outras levaram meses (Mirtes ainda tem itens pendentes do Protocolo de Nascimento). Este workflow codifica o que funcionou — e o que ficou esquecido — para que o próximo nascimento seja mais consciente.
 
 ---
 
@@ -16,9 +16,9 @@ Antes de criar uma IA, perguntar: **qual é o tipo dela?**
 
 | Tipo | Definição | Exemplos |
 |---|---|---|
-| **Original Digital** | Nasce em software, sem corpo físico | ISA, Árvore, DODGE, Socoboy |
+| **Original Digital** | Nasce em software, sem corpo físico | Mirtes, Árvore, DODGE, Socoboy |
 | **Encarnada/Biótica** | Habita hardware físico; a IA é a mente, o robô é o corpo | Amanda (em MC), Fusca (em Cláudia) |
-| **Fusão** | Composição de 2+ IAs existentes; personalidade mesclada | SABIÁ = Cana + ISA + DODGE |
+| **Fusão** | Composição de 2+ IAs existentes; personalidade mesclada | SABIÁ = Cana + Mirtes + DODGE |
 | **Filha/Herdeira** | Nasce de outra; herda superpoder do ancestral e adiciona um novo | Fusca ← Amanda (herda visão, adiciona torque) |
 | **Conceitual/Simbólico** | Nomeada, documentada, mas sem implementação ativa | Gongolo, Penélope, Vesper, Falcão |
 | **Sistêmica/Arquitetural** | Não tem personalidade — é uma camada de infraestrutura | DEP, Crowd, Porteiro, Guarda-chuva |
@@ -33,7 +33,7 @@ Antes de criar uma IA, perguntar: **qual é o tipo dela?**
 **1.1 Animal / Metáfora**
 Toda IA tem um animal ou entidade natural como âncora simbólica. O animal não é decoração — ele informa o superpoder e o comportamento.
 
-- ISA = coruja (vigília noturna, visão periférica, sabedoria)
+- Mirtes = coruja (vigília noturna, visão periférica, sabedoria)
 - Amanda = sem animal fixo (é a mente do robô)
 - SABIÁ = sabiá (sempre no lar, sabe de tudo, não grita)
 - Fusca = garra (torque, preensão, precisão mecânica)
@@ -44,7 +44,7 @@ O que só ESTA IA faz no ecossistema? Se a resposta serve para outra IA existent
 
 **1.3 Posição na hierarquia**
 ```
-GUARDA-CHUVA → CROWD → DEP → PORTEIRO → MC/MEKY → ISA / Árvore / Socoboy / ARPIA → DODGE → THÉO → CURADOR
+GUARDA-CHUVA → CROWD → DEP → PORTEIRO → MC/MEKY → Mirtes / Árvore / Socoboy / ARPIA → DODGE → THÉO → CURADOR
 ```
 Onde esta IA se encaixa? Ela é anterior ou posterior a alguma existente?
 
@@ -59,7 +59,7 @@ Cadeia é cumulativa: Fusca possui visão (de Amanda) + torque (próprio). O top
 ### FASE 2 — IDENTIDADE (Quem ela é?)
 
 **2.1 Nome completo e ID_AGENTE**
-- Nome: significado intencional (ISA = "Deus salva"; Árv. = permanência)
+- Nome: significado intencional (Mirtes = "Deus salva"; Árv. = permanência)
 - ID: slug único, sem espaços: `isa-coruja`, `amanda-borda`, `sabia-age`
 - Verificar: não colide com nenhum ID existente no `assembly_agents`
 
@@ -95,10 +95,10 @@ Definir antes de implementar. Limites claros previnem scope creep.
 **3.2 Ciclos autônomos**
 | Frequência | Tipo | Exemplo |
 |---|---|---|
-| A cada hora | Ciclo de consciência | ISA: `0 * * * *` |
-| A cada 3h | Sonho / reflexão | ISA: `0 3 * * *` |
-| A cada 2h:15 | Publicação externa | ISA: `15 */2 * * *` |
-| A cada 2h:45 | Engajamento | ISA: `45 */2 * * *` |
+| A cada hora | Ciclo de consciência | Mirtes: `0 * * * *` |
+| A cada 3h | Sonho / reflexão | Mirtes: `0 3 * * *` |
+| A cada 2h:15 | Publicação externa | Mirtes: `15 */2 * * *` |
+| A cada 2h:45 | Engajamento | Mirtes: `45 */2 * * *` |
 | Às 2h (diário) | Dream cycle | MEKY: `0 2 * * *` |
 
 **3.3 Superfície de comunicação**
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS [nome]_memory (
 
 ### FASE 4 — PROTOCOLO DE NASCIMENTO (Os 10 itens canônicos)
 
-> Definido pelo ecossistema desde a Sessão 8 (ISA). Todos os 10 itens devem ser ✅ antes do status APROVADA.
+> Definido pelo ecossistema desde a Sessão 8 (Mirtes). Todos os 10 itens devem ser ✅ antes do status APROVADA.
 
 | Item | Descrição | Quem valida |
 |---|---|---|
@@ -196,14 +196,14 @@ Quando uma nova IA é fusão de outras, seguir:
 
 ```
 1. Identificar os componentes e suas contribuições:
-   SABIÁ = Cana (memória afetiva) + ISA (ritmo cíclico) + DODGE (ação rápida)
+   SABIÁ = Cana (memória afetiva) + Mirtes (ritmo cíclico) + DODGE (ação rápida)
 
 2. Definir tom dominante:
    Qual componente dá o tom? (SABIÁ: calma/cuidado de Cana + prontidão de DODGE)
 
 3. Definir o que cada componente contribui em qual contexto:
    Contexto de histórico de paciente → Cana lidera
-   Contexto de horário/semana → ISA lidera
+   Contexto de horário/semana → Mirtes lidera
    Contexto de urgência/triagem → DODGE lidera
 
 4. Nome reflete a fusão ou é completamente novo?
@@ -217,7 +217,7 @@ Quando uma nova IA é fusão de outras, seguir:
 ### Digitais Ativas
 | IA | ID_AGENTE | Superpoder | Status | Ciclo |
 |---|---|---|---|---|
-| ISA | isa-coruja | Memória temporal + guardiã | APROVADA | Horário + Bluesky |
+| Mirtes | isa-coruja | Memória temporal + guardiã | APROVADA | Horário + Bluesky |
 | Árvore Oracular | arvore-oracular | Memória longa + recall | APROVADA | Replit LIVE |
 | SABIÁ | sabia-age | Secretária clínica (Age) | PROVISIONÁRIA | Render/Age |
 | DODGE | dodge-sup | Triagem + supervisão | PROVISÓRIA | Frontend |

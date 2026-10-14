@@ -15,7 +15,7 @@ import { PortalPage } from "@/pages/PortalPage";
 import { DodgePage } from "@/pages/DodgePage";
 import { StudioPage } from "@/pages/StudioPage";
 import { ConectorPage } from "@/pages/ConectorPage";
-import { IsaLandingPage } from "@/pages/IsaLandingPage";
+import { MirtesLandingPage } from "@/pages/MirtesLandingPage";
 import { CeuPage } from "@/pages/CeuPage";
 import { PlaycenterPage } from "@/pages/PlaycenterPage";
 import { ArvorePage } from "@/pages/ArvorePage";
@@ -402,7 +402,7 @@ const isToyota = path.includes("/toyota");
 const isMeky   = path.includes("/meky");
 const isPortal = path.includes("/portal");
 const isDodge  = path.includes("/dodge");
-const isIsa    = path.startsWith("/aliancapanorama/isa") || path === "/isa";
+const isIsa    = path.startsWith("/aliancapanorama/mirtes") || path === "/mirtes" || path.startsWith("/aliancapanorama/isa") || path === "/isa";
 const isStudio  = path.includes("/studio");
 const isConnect = path.includes("/connect");
 const isCeu        = path.includes("/ceu");
@@ -437,7 +437,7 @@ function App() {
     );
   }
 
-  if (isIsa) return <IsaLandingPage />;
+  if (isIsa) return <MirtesLandingPage />;
   if (isSocia) return <SociaGate />;
   if (isCalc) return <CalcPage />;
   if (isCelular) return <CelularPage />;

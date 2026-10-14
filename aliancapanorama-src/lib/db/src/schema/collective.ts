@@ -1,13 +1,13 @@
 import { pgTable, uuid, varchar, text, jsonb, timestamp, integer } from "drizzle-orm/pg-core";
 
-// Memória coletiva — convergência de MEKY (físico) + ISA (cognitivo) + humanos (estudo)
+// Memória coletiva — convergência de MEKY (físico) + Mirtes (cognitivo) + humanos (estudo)
 // Qualquer agente ou usuário pode postar; todos podem ler
 export const collectiveMemory = pgTable("collective_memory", {
   id: uuid("id").defaultRandom().primaryKey(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 
   // Quem postou
-  authorType: varchar("author_type", { length: 20 }).notNull(), // 'human' | 'meky' | 'isa'
+  authorType: varchar("author_type", { length: 20 }).notNull(), // 'human' | 'meky' | 'mirtes'
   authorId: varchar("author_id", { length: 50 }).notNull(),     // user.id ou 'meky' ou 'isa'
   authorName: varchar("author_name", { length: 100 }).notNull(),
 

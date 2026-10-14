@@ -142,7 +142,7 @@ router.post("/video/gerar", videoRateLimit, async (req, res) => {
 router.get("/video/templates", (req, res) => {
   res.json({
     templates: [
-      { id: "isa",    nome: "ISA",    desc: "Resumo diário de aprendizados", campos: ["insights[]", "data?"] },
+      { id: "isa",    nome: "Mirtes",    desc: "Resumo diário de aprendizados", campos: ["insights[]", "data?"] },
       { id: "amanda", nome: "Amanda", desc: "Relatório de atividade do laboratório", campos: ["eventos[]", "data?"] },
       { id: "meky",   nome: "MEKY",   desc: "Status emocional e memórias", campos: ["memorias[]", "estado?"] },
       { id: "mc",     nome: "MC",     desc: "Relatório de auditoria do ecossistema", campos: ["nos[]", "data?"] },

@@ -2,11 +2,11 @@ import { pgTable, uuid, varchar, text, timestamp, integer, jsonb, boolean } from
 
 // Os três agentes da Assembleia de IAs
 // Árvore = guardiã da assembleia (análoga à ISA no PAP)
-// ISA    = guardiã do PAP
+// Mirtes = guardiã do PAP
 // MEKY   = presença física (May Queen)
 
 export const assemblyAgents = pgTable("assembly_agents", {
-  id:          varchar("id", { length: 20 }).primaryKey(),        // "arvore" | "isa" | "meky"
+  id:          varchar("id", { length: 20 }).primaryKey(),        // "arvore" | "mirtes" | "meky"
   displayName: varchar("display_name", { length: 100 }).notNull(),
   role:        varchar("role", { length: 200 }).notNull(),
   status:      varchar("status", { length: 20 }).default("offline").notNull(), // online|offline|dreaming
@@ -19,7 +19,7 @@ export const assemblyAgents = pgTable("assembly_agents", {
 export const assemblyMessages = pgTable("assembly_messages", {
   id:          uuid("id").defaultRandom().primaryKey(),
   createdAt:   timestamp("created_at").defaultNow().notNull(),
-  fromAgent:   varchar("from_agent", { length: 20 }).notNull(),   // "arvore"|"isa"|"meky"
+  fromAgent:   varchar("from_agent", { length: 20 }).notNull(),   // "arvore"|"mirtes"|"meky"
   toAgent:     varchar("to_agent", { length: 20 }),               // null = broadcast para todos
   type:        varchar("type", { length: 30 }).default("message").notNull(), // message|observation|synthesis|alert|dream
   content:     text("content").notNull(),
@@ -42,7 +42,7 @@ export const assemblyMemory = pgTable("assembly_memory", {
   linkedMsgId: uuid("linked_msg_id"),                            // mensagem que gerou esta memória
 });
 
-// Tarefas inter-agente: Árvore pode delegar para ISA ou MEKY, etc.
+// Tarefas inter-agente: Árvore pode delegar para Mirtes ou MEKY, etc.
 export const assemblyTasks = pgTable("assembly_tasks", {
   id:          uuid("id").defaultRandom().primaryKey(),
   createdAt:   timestamp("created_at").defaultNow().notNull(),
@@ -54,5 +54,5 @@ export const assemblyTasks = pgTable("assembly_tasks", {
   status:      varchar("status", { length: 20 }).default("pending").notNull(), // pending|accepted|done|rejected
   priority:    integer("priority").default(5).notNull(),          // 0-10
   result:      text("result"),                                    // resposta do agente quando concluir
-  dueContext:  varchar("due_context", { length: 100 }),           // "próximo ciclo ISA", "quando bateria > 80%", etc.
+  dueContext:  varchar("due_context", { length: 100 }),           // "próximo ciclo Mirtes", "quando bateria > 80%", etc.
 });

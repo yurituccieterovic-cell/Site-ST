@@ -49,6 +49,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/aliancapanorama/mirtes",
+      "destination": "/index.html"
+    },
+    {
       "source": "/aliancapanorama/isa",
       "destination": "/index.html"
     },
@@ -154,6 +158,14 @@
     },
     {
       "source": "/dodge/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/mirtes",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/mirtes/(.*)",
       "destination": "/index.html"
     },
     {

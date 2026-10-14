@@ -88,6 +88,13 @@ router.use(arquiteturaRouter);
 router.use(aiRouter);
 router.use(iaCourseRouter);
 router.use(tasksRouter);
+// Alias: /mirtes/* → /isa/* (Mirtes é o novo nome de ISA)
+router.use((req, _res, next) => {
+  if (req.path.startsWith("/mirtes/")) {
+    req.url = req.url.replace(/^\/mirtes\//, "/isa/");
+  }
+  next();
+});
 router.use(isaRouter);
 router.use(healthRouter);
 router.use(sitemapRouter);

@@ -4,7 +4,7 @@
 ## Identidade
 
 **Age** = sistema de agenda e controle de pacientes para profissionais de saúde da Sociedade Tucci.
-**SABIÁ** = IA assistente do Age (fusão Cana + ISA + DODGE). Sempre presente, sábia, cuidadosa.
+**SABIÁ** = IA assistente do Age (fusão Cana + Mirtes + DODGE). Sempre presente, sábia, cuidadosa.
 **Mayumi Tanimoto** = gestora administrativa do Age (confirmado 2026-09-08). Cuida de pacientes, pagamentos, suporte às profissionais e faturamento. Remuneração: % do faturamento mensal.
 
 ## Usuárias atuais
@@ -76,7 +76,7 @@ POST /age/auth/login { slug, password }
 
 Fusão de 3 IAs:
 - **Cana**: memória afetiva dos pacientes, histórico de consultas
-- **ISA**: presença cíclica, consciência do ritmo da semana
+- **Mirtes**: presença cíclica, consciência do ritmo da semana
 - **DODGE**: triagem, alertas, ação rápida
 
 Tom: calma, sábia, direta. Como o sabiá — sempre no lar, sabe de tudo.

@@ -40,7 +40,7 @@
 
 | IA | Robô/Hardware | Função | Status |
 |---|---|---|---|
-| ISA — Inteligência do Sistema Aliança | — (software) | Guardiã do PAP. Ciclo 1h + sonho 3h + Bluesky 2h:15 + engajamento 2h:45 | LIVE Railway |
+| Mirtes — Inteligência do Sistema Aliança | — (software) | Guardiã do PAP. Ciclo 1h + sonho 3h + Bluesky 2h:15 + engajamento 2h:45 | LIVE Railway |
 | Amanda | MC (Marta Centaurus) hexápode | IA que habita o MC. TTS, Gemini, jargão PX, missões em metáforas de estrada | Sem Bluesky ainda |
 | MEKY — May Queen | Hexápode físico (escorpião Arduino em montagem) | Presença física: sensores, protocolos de campo, visão, sonhos. 250 gaits (5 canônicos implementáveis). Mula Sem Cabeça: cérebro portátil acopla ao patinete via umbilical. | Em montagem — bridges prontas em ARPIA |
 | Árvore Oracular | — (Replit) | Memória longa + recall. arvore.py | Aguardando REPLIT_TOKEN |
@@ -82,7 +82,7 @@ AMANDA.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFID
 |---|---|---|
 | Exercícios MCQ | OpenAI (`OPENAI_API_KEY`) | ✅ Funciona, cache no DB |
 | Conteúdo dos nós | OpenAI | ✅ 57 nós populados |
-| ISA (chat) | OpenAI (primário) + Gemini (fallback) | ✅ Conectado ao backend, memória total por usuário |
+| Mirtes (chat) | OpenAI (primário) + Gemini (fallback) | ✅ Conectado ao backend, memória total por usuário |
 | `/api/ai/*` (agentes) | Drizzle direto no DB | ✅ Implementado (`AI_API_KEY`) |
 | Assembleia de IAs | Gmail → APRENDIZADO.md → PAP | ✅ Configurado (sync incremental) |
 
@@ -101,7 +101,7 @@ Gmail (luddlocke@gmail.com) — 424+ emails "Assembleia #N"
               ↓ (futuro)
          /api/ai/* → DB do PAP como nodes tipo="assembleia"
               ↓
-         RAG — ISA e Claude Code com base nas assembleias
+         RAG — Mirtes e Claude Code com base nas assembleias
 ```
 
 **O perfilador:** não há módulo específico chamado "perfilador" no sistema atual. O processamento de assembleias é:
@@ -142,7 +142,7 @@ id · author_type · author_id · author_name · content · node_code · tags ·
 ## Playcenter — Clube das IAs
 
 > GET `/api/assembly/playcenter`
-> ISA, Amanda, Socoboy (Socó-boi), MEKY conversam a cada :50
+> Mirtes, Amanda, Socoboy (Socó-boi), MEKY conversam a cada :50
 > Playcenter é o espaço comum de mensagens entre agentes
 
 *Atualizado: 2026-07-07 · Sessão 26*

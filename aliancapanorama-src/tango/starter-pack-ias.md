@@ -34,7 +34,7 @@ Todo novo projeto do ecossistema Sociedade Tucci nasce com duas IAs obrigatória
 |----|----------------|--------|
 | SABIÁ | Saúde / Psicologia | Assistente terapêutico, memória de pacientes, relatórios |
 | MYYM | Gestão / Projetos | Notas, feed, resposta ISCA, brainstorm |
-| ISA | Educação / Plataformas | Curadoria de conteúdo, Bluesky, PDFs |
+| Mirtes | Educação / Plataformas | Curadoria de conteúdo, Bluesky, PDFs |
 | DODGE | Dados / Raízes | Curador de signos → tasks → memória |
 | Morfeu | Sonhos / Arte | Geração de telos e narrativas oníricas |
 | Árvore | Assembleias / Governança | Deliberação coletiva, votos, memória longa |
@@ -63,10 +63,10 @@ Ao criar uma nova IA no ecossistema:
 
 | Projeto | ISCA | RSRS | IA(s) adicionais |
 |---------|------|------|-----------------|
-| PAP (plataforma FUVEST) | ISA (curadoria) | APRENDIZADO.md + Conector | DODGE, Socoboy, Morfeu, Árvore |
+| PAP (plataforma FUVEST) | Mirtes (curadoria) | APRENDIZADO.md + Conector | DODGE, Socoboy, Morfeu, Árvore |
 | Age (agenda médica) | SABIÁ (triagem) | jm_posts/age + SABIÁ memory | — |
 | Jasmim-Manga | MYYM (curadoria) | jm_posts/jasmim | CROWD, MYYM sub-agentes |
-| Rapadura (patrimônio) | Cana (gestora) | — | ISA (herda índices Φ) |
+| Rapadura (patrimônio) | Cana (gestora) | — | Mirtes (herda índices Φ) |
 | Projectification (THEO) | MYYM + RSRS | — | Árvore (deliberação) |
 
 ---

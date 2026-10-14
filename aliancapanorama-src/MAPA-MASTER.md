@@ -14,7 +14,7 @@
 | Manuel do Rapadura | `sociedadetucci.com.br/rapadura/manuel` | ✅ LIVE |
 | API Render | `site-st.onrender.com` | ✅ LIVE |
 | DB Neon | `ep-late-pond-acean4b0.sa-east-1.aws.neon.tech` | ✅ LIVE |
-| Bluesky ISA | `@isa-pap.bsky.social` | ✅ LIVE |
+| Bluesky Mirtes | `@isa-pap.bsky.social` | ✅ LIVE |
 | Repo | `github.com/yurituccieterovic-cell/Site-ST` | ✅ |
 | Admin PAP | login `AO` / senha `AOA` | ✅ |
 | Rapadura Yuri | login: `Yuri` / senha: `rapadura@yuri2026` | ✅ |
@@ -26,7 +26,7 @@
 
 | Componente | Status |
 |---|---|
-| ISA — ciclo 1h + sonho 3h + Bluesky | LIVE Railway |
+| Mirtes — ciclo 1h + sonho 3h + Bluesky | LIVE Railway |
 | MEKY — dream cycle no cron | Aguardando hardware |
 | Amanda — IA do MC, borda Mac | Sem Bluesky |
 | MC (Marta Centaurus) — robô hexápode | LIVE local (ARPIA) |
@@ -41,7 +41,7 @@
 
 | Arquivo | Contém | Palavras-chave |
 |---|---|---|
-| `MAPA-IAS.md` | Ecossistema de IAs, cadeia biótica, assembleia, collective_memory | ISA, MEKY, Amanda, MC, Fusca, Vesper, Penélope, Gongo, Socoboy, Árvore, Playcenter |
+| `MAPA-IAS.md` | Ecossistema de IAs, cadeia biótica, assembleia, collective_memory | Mirtes, MEKY, Amanda, MC, Fusca, Vesper, Penélope, Gongo, Socoboy, Árvore, Playcenter |
 | `MAPA-INFRA.md` | Stack técnico, monorepo, deployment, comandos operação | Railway, Vercel, pnpm, esbuild, railway.toml, comandos, CORS |
 | `MAPA-PLATAFORMA.md` | Frontend, DB schemas, API routes, usuários, pagamentos | nodes, exercises, users, Stripe, PayPal, tiers, /api/* |
 | `MAPA-ARQUITETURA.md` | Decisões de arquitetura, gotchas, diagnóstico oracular, cisão ontológica, topologia | [SIMBÓLICO], [EXECUTÁVEL], gotchas, contract-first, score farming |

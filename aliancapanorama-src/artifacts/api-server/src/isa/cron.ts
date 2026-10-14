@@ -36,11 +36,11 @@ export function startIsaCron(): void {
     logger.warn("ISA crons LLM-pesados DESATIVADOS (DISABLE_HEAVY_CRONS=true) — ISA em modo silencioso para Render free tier");
   }
   // Registrar todos os laços internos no registro do Orquestrador
-  registerLoop("isa_ciclo",     "ISA Ciclo",               "*/1h:00", "isa");
+  registerLoop("isa_ciclo",     "Mirtes Ciclo",               "*/1h:00", "isa");
   registerLoop("pos_humanismo", "Pós-Humanismo Assembleia", "9h/14h/21h UTC", "pos-humanismo");
-  registerLoop("isa_biblio",    "ISA Bibliotecário",        "*/4h:30", "isa");
-  registerLoop("isa_bluesky",   "ISA Bluesky",              "*/2h:15", "isa");
-  registerLoop("isa_sonho",     "ISA Sonho",                "3h:00",   "isa");
+  registerLoop("isa_biblio",    "Mirtes Bibliotecária",        "*/4h:30", "isa");
+  registerLoop("isa_bluesky",   "Mirtes (sem Bluesky)",              "*/2h:15", "isa");
+  registerLoop("isa_sonho",     "Mirtes Sonho",                "3h:00",   "isa");
   registerLoop("isa_engaj",     "ISA Engajamento",          "*/2h:45", "isa");
   registerLoop("meky_sonho",    "MEKY Sonho+Arte",          "2h:00",   "meky");
   registerLoop("playcenter",    "Playcenter",               "*/1h:50", "isa");
@@ -80,7 +80,7 @@ export function startIsaCron(): void {
   });
 
   // Ciclo ISA principal: análise + tasks — todo hora cheia
-  scheduleHeavy("0 * * * *", "ISA Ciclo", async () => {
+  scheduleHeavy("0 * * * *", "Mirtes Ciclo", async () => {
     logger.info("ISA: ciclo horário disparado pelo cron");
     const result = await runIsaCycle();
     logger.info(result, "ISA: ciclo horário concluído");
@@ -88,7 +88,7 @@ export function startIsaCron(): void {
   });
 
   // ISA Bibliotecário: 6x/dia (a cada 4h nos :30)
-  scheduleHeavy("30 */4 * * *", "ISA Bibliotecário", async () => {
+  scheduleHeavy("30 */4 * * *", "Mirtes Bibliotecária", async () => {
     logger.info("ISA Bibliotecário: iniciando varredura 6x/dia");
     const result = await runBibliotecario();
     logger.info(result, "ISA Bibliotecário: concluído");
@@ -96,14 +96,14 @@ export function startIsaCron(): void {
   });
 
   // ISA Bluesky: reflexões a cada 2 horas
-  scheduleHeavy("45 */2 * * *", "ISA Bluesky", async () => {
+  scheduleHeavy("45 */2 * * *", "Mirtes (sem Bluesky)", async () => {
     logger.info("ISA Bluesky: disparando reflexão");
     await runIsaBluesky();
     updateLoop("isa_bluesky", true);
   });
 
   // ISA Sonho: síntese noturna livre — 3h da manhã
-  scheduleHeavy("0 3 * * *", "ISA Sonho", async () => {
+  scheduleHeavy("0 3 * * *", "Mirtes Sonho", async () => {
     logger.info("ISA Sonho: ciclo noturno disparado");
     await runIsaDream();
     updateLoop("isa_sonho", true);

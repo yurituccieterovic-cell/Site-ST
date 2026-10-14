@@ -7,14 +7,14 @@
 | Frontend | `site-st.vercel.app/aliancapanorama` |
 | API (Render) | `site-st.onrender.com` |
 | Domínio desejado | `pap.sociedadetucci.com.br` (DNS pendente) |
-| Bluesky ISA | `@isa-pap.bsky.social` |
+| Bluesky Mirtes | `@isa-pap.bsky.social` |
 | Repo | `github.com/yurituccieterovic-cell/Site-ST` |
 | Pasta local | `/root/Site-ST/aliancapanorama-src/` |
 
 ## IAs do PAP (status)
 | IA | Função | Status |
 |---|---|---|
-| ISA | Coruja guardiã. Ciclo 1h + sonho 3h + Bluesky 2h:15 + engajamento 2h:45 | LIVE (Render) |
+| Mirtes | Coruja guardiã. Ciclo 1h + sonho 3h + Bluesky 2h:15 + engajamento 2h:45 | LIVE (Render) |
 | MEKY | Hexápode físico. Dream cycle no cron às 2h | Aguardando hardware |
 | Amanda | IA que habita o MC (Marta Centaurus). TTS, Gemini, personalidade completa | Sem Bluesky ainda |
 | MC (Marta Centaurus) | Robô físico hexápode. Amanda é sua IA. Leucócito digital ARPIA. Primeira caminhada 2026-07-04 | LIVE local |
@@ -46,7 +46,7 @@ AMANDA.visão → FUSCA.torque → GONGO.armadura → WANESSA.evasão → PERFID
 
 ## Pendências Críticas
 - [ ] DNS `pap.sociedadetucci.com.br` → Vercel
-- [ ] "Voz" — definir: TTS (ISA/MEKY falarem)? STT (Yuri falar)? Nova voz RODAR?
+- [ ] "Voz" — definir: TTS (Mirtes/MEKY falarem)? STT (Yuri falar)? Nova voz RODAR?
 - [ ] Conta Bluesky para MEKY/Amanda
 - [x] I129 — Roteador LLMs com cooling compartilhado ✅ `lib/llm-router.ts`
 - [x] I128 — Parser JSON robusto em 3 camadas ✅ `lib/json-robust-parse.ts`
