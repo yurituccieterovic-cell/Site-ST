@@ -3175,3 +3175,11 @@ Como posso te ajudar hoje?"
 ### 2026-10-14 — admin
 ### 2026-10-14T06:50 — Playcenter
 - Participantes: isa+socoboy+meky+arvore (4 falas)
+
+
+### 2026-10-14 — admin
+### 2026-10-14 — Cláudio (S217)
+- I1030: editar perfil profissional (nome/subtítulo/bio) — FEITO
+- I1040: memória de navegação localStorage — FEITO
+- Fix SABIÁ fila duplicada — FEITO
+- Amanhã: I1036 (exceções→regras) + I1015+I1035 (fichas)
