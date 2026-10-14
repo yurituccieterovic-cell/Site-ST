@@ -485,24 +485,32 @@ export function AgePage() {
   // Fetch profissional pública — com retry automático (servidor Render pode estar dormindo)
   useEffect(() => {
     let cancelled = false;
+    // Timer: se API demorar >3s (cold start), mostra aviso de aquecimento
+    let wakingTimer: ReturnType<typeof setTimeout> | null = setTimeout(() => {
+      if (!cancelled) setWaking(true);
+    }, 3000);
+    function clearWakingTimer() {
+      if (wakingTimer) { clearTimeout(wakingTimer); wakingTimer = null; }
+    }
     async function fetchWithRetry() {
       const MAX = 4; const DELAY = 4000;
       for (let attempt = 1; attempt <= MAX; attempt++) {
         try {
           if (!slug) {
             const r = await fetch(`${API}/api/age`);
-            if (!cancelled) { setProfList(r.ok ? await r.json() : []); setLoading(false); setWaking(false); }
+            if (!cancelled) { clearWakingTimer(); setProfList(r.ok ? await r.json() : []); setLoading(false); setWaking(false); }
             return;
           }
           const r = await fetch(`${API}/api/age/${slug}`);
           if (r.ok) {
-            if (!cancelled) { setProf(await r.json() as Prof); setLoading(false); setWaking(false); }
+            if (!cancelled) { clearWakingTimer(); setProf(await r.json() as Prof); setLoading(false); setWaking(false); }
             return;
           }
           throw new Error(`${r.status}`);
         } catch {
           if (cancelled) return;
           if (attempt < MAX) {
+            clearWakingTimer();
             setWaking(true);
             await new Promise(res => setTimeout(res, DELAY));
           } else {
@@ -513,7 +521,7 @@ export function AgePage() {
       }
     }
     fetchWithRetry();
-    return () => { cancelled = true; };
+    return () => { cancelled = true; clearWakingTimer(); };
   }, [slug]);
 
   // Verificar se já está logado

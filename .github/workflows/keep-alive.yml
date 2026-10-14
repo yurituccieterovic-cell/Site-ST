@@ -29,5 +29,5 @@ jobs:
           fi
           # Aquece rotas Age em paralelo
           curl -s -o /dev/null --max-time 30 https://site-st.onrender.com/api/age/lisange || true
-          curl -s -o /dev/null --max-time 30 https://site-st.onrender.com/api/age/susana  || true
+          curl -s -o /dev/null --max-time 30 https://site-st.onrender.com/api/age/suzana  || true
           echo "Warm-up completo: healthz=$STATUS"
