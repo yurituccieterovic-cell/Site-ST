@@ -3142,3 +3142,11 @@ Como posso te ajudar hoje?"
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 463ms
+
+
+### 2026-10-14 — admin
+### 2026-10-14 — Cláudio (S215b)
+- AGE 3.0: auto-cadastro direto de paciente sem email implementado (POST /patients/self-register)
+- Yuri+Mayumi: brainstorm fichas de consulta, tipos de atendimento, SABIÁ pode não responder, app gratuito SABIÁ
+- I1030-I1035 registrados; I1015+I1035 são prioridade próxima sessão
+- Keep-alive slug suzana corrigido; banner cold start 3s adicionado
