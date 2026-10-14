@@ -227,7 +227,7 @@ export function AgePage() {
   const sabiaVoiceRef = useRef(false);     // resposta deve ser lida automaticamente
   const prevListeningRef = useRef(false);
   const sabiaInputRef = useRef("");
-  const dispatchSabiaRef = useRef<(msg: string) => void>(() => {});
+  const dispatchSabiaRef = useRef<(msg: string, fromQueue?: boolean) => void>(() => {});
   const [sabiaLiveMode, setSabiaLiveMode] = useState(false);
   const sabiaLiveModeRef = useRef(false);
   const prevTtsPlayingRef = useRef<string | null>(null);
@@ -1139,8 +1139,8 @@ export function AgePage() {
     setMsgs(m => [...m, { role: "assistant", content: "🐦 Cancelado. Pode tentar novamente." }]);
   }
 
-  async function dispatchSabia(userMsg: string) {
-    setMsgs(m => [...m, { role: "user", content: userMsg }]);
+  async function dispatchSabia(userMsg: string, alreadyInChat = false) {
+    if (!alreadyInChat) setMsgs(m => [...m, { role: "user", content: userMsg }]);
     setSabiaLoading(true);
     const ctrl = new AbortController();
     sabiaAbortRef.current = ctrl;
@@ -1204,13 +1204,13 @@ export function AgePage() {
       // processar próximo da fila — usa ref estável para evitar closure stale
       setSabiaQueue(q => {
         const [next, ...rest] = q;
-        if (next) setTimeout(() => dispatchSabiaRef.current(next), 100);
+        if (next) setTimeout(() => dispatchSabiaRef.current(next, true), 100);
         return rest;
       });
     }
   }
   // Atualiza ref após cada render para que a fila sempre use a versão mais recente
-  dispatchSabiaRef.current = dispatchSabia;
+  dispatchSabiaRef.current = (msg: string, fromQueue?: boolean) => dispatchSabia(msg, fromQueue);
 
   async function sendSabia(e: React.FormEvent) {
     e.preventDefault();
@@ -1221,7 +1221,7 @@ export function AgePage() {
     try { localStorage.removeItem(`sabia-draft-${window.location.pathname}`); } catch { /* ignore */ }
     if (sabiaLoading) {
       setSabiaQueue(q => [...q, userMsg]);
-      setMsgs(m => [...m, { role: "user", content: `⏳ (em fila) ${userMsg}` }]);
+      setMsgs(m => [...m, { role: "user", content: userMsg }]);
       return;
     }
     await dispatchSabia(userMsg);

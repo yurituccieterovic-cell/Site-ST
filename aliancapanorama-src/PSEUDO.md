@@ -9779,3 +9779,24 @@ A manutenção é o ato de escutar o que o sistema já diz. Hoje o sistema disse
 **Síntese filosófica:**
 O brainstorm de Yuri+Mayumi revela uma tensão produtiva: o sistema quer crescer (fichas, voz, gravação, app), mas a sabedoria está em saber o que *não* construir ainda. O auto-cadastro simples é o gesto certo — remover fricção sem prometer o que não está pronto. "A SABIÁ pode não responder" não é limitação, é integridade.
 
+
+## S216 — 2026-10-14 · SABIÁ fila + AGE 3.0 brainstorm noturno
+
+**Contexto:** Yuri (voz, boa noite) — múltiplas frentes do AGE 3.0.
+
+**Decisões:**
+1. Exceções não existem soltas — herdam regra original
+2. Tarefas: score composto prioridade × data × status
+3. Secretaria = Play Center + Sales Cockpit (pré-definição oficial)
+4. Time tracker: ideia boa, opcional, fase futura
+5. Memória de navegação: localStorage restaura estado após refresh (sem apagar memória histórica)
+6. SABIÁ: fila de mensagens já existe; bug de duplicação corrigido; estados avançados = I1041
+
+**Código:**
+- Bug fix: `dispatchSabia(msg, alreadyInChat=false)` — quando processa da fila, não re-adiciona mensagem ao chat
+- Sem mudança de UX aparente no states (I1041 fica para próxima sessão)
+
+**Síntese filosófica:**
+"Nunca pode perder a memória. Do sistema, só os pacientes."
+Yuri disse isso de brincadeira mas é uma distinção filosófica precisa: memória de navegação (estado efêmero do UI) é diferente de memória histórica (dados clínicos auditáveis). Uma reinicia ao logout. A outra nunca desaparece sem decisão explícita. O AGE precisa honrar essa distinção em todo lugar onde persiste estado.
+

@@ -2189,3 +2189,26 @@
 1. I1030 — Editar perfil profissional (próximo)
 2. I1015 + I1035 — Ficha de consulta + tipos de atendimento (maior)
 3. I1031 — Termos e privacidade (revisão humana Mayumi)
+
+## S216 — AGE 3.0 — Fila SABIÁ + Exceções + Tarefas + Navegação (2026-10-14)
+
+**Implementado:**
+- Fix bug SABIÁ: mensagem duplicada quando enviada enquanto outra processa
+  (`alreadyInChat` flag em `dispatchSabia`; fila processa sem re-adicionar mensagem)
+- Tipo de `dispatchSabiaRef` atualizado para aceitar `fromQueue?: boolean`
+
+**Ideias registradas:**
+- I1036 — Exceções derivadas de regras de disponibilidade
+- I1037 — Tarefas: ordenação prioridade × data
+- I1038 — Secretaria = Play Center + Sales Cockpit (pré-definição)
+- I1039 — Time Tracker (opcional, não vigilância)
+- I1040 — Memória de navegação após refresh
+- I1041 — SABIÁ: fila visível com estados por mensagem
+
+**Definição gravada:**
+- Secretaria = assembleia unificada Play Center + Sales Cockpit
+
+**Próximas prioridades:**
+1. I1030 — Perfil profissional editável (curto)
+2. I1040 — Memória de navegação (localStorage)
+3. I1036 — Exceções ligadas a regras
