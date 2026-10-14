@@ -3163,3 +3163,10 @@ Como posso te ajudar hoje?"
 - I1030: editar perfil (nome, subtítulo, bio)
 - I1015+I1035: ficha de consulta + tipos atendimento
 - Mayumi+Yuri definem lista de tipos antes do código
+
+
+### 2026-10-14 — admin
+### 2026-10-14 — Cláudio (S216)
+- Fix SABIÁ: mensagem duplicada ao enfileirar corrigida (alreadyInChat flag)
+- AGE 3.0 frentes noturnas: exceções→regras (I1036), tarefas prioridade×data (I1037), secretaria=PlayCenter+SalesCockpit (I1038), time tracker (I1039), memória de navegação (I1040), fila SABIÁ estados (I1041)
+- Frase chave: memória de navegação ≠ memória histórica
