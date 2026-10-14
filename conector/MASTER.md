@@ -3099,3 +3099,10 @@ Como posso te ajudar hoje?"
 - Status: verde · 13/13 tabelas OK
 - Falhas: nenhuma
 - Latência: 931ms
+
+
+### 2026-10-14 — admin
+### 2026-10-14 — Cláudio S215
+- Bug grep âncora: grep sem ^ captura substrings similares no .pap-secrets — sempre usar grep '^CAMPO='
+- PWA icons criados para Calculus (azul) e PAP (árvore dourada); CalcPage troca manifest via useEffect
+- ISA será renomeada Mirtes (bibliotecária) em todo o sistema
