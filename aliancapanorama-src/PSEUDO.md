@@ -9752,3 +9752,10 @@ A IA não cuida do paciente. A IA cuida do registro.
 
 **Síntese filosófica:**
 A manutenção é o ato de escutar o que o sistema já diz. Hoje o sistema disse: "meu nome estava errado" (Calculus/PAP sem identidade PWA própria), "minha senha mudou" (Lisange), "meu grep estava guloso" (âncora). Diagnosticar é nomear — e nomear já é metade do conserto. A ISA vai se tornar Mirtes: outro nomeamento, mais fundamental.
+
+---
+## ATA S215b — 2026-10-14 · Senha Lisange + #fim
+
+**Decisão:** Senha da Lisange resetada para `age2026` (bcrypt cost 10) direto no Neon via psql. Login confirmado OK.
+
+**Síntese filosófica:** O sistema estava com uma porta trancada — a Lisange sem acesso ao próprio painel. A chave não era tecnológica, era uma senha esquecida. Às vezes a solução mais simples (trocar a senha) é a que libera o caminho. Abrir portas também é arquitetura.
