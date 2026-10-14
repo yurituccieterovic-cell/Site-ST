@@ -2212,3 +2212,17 @@
 1. I1030 — Perfil profissional editável (curto)
 2. I1040 — Memória de navegação (localStorage)
 3. I1036 — Exceções ligadas a regras
+
+## S218 — 2026-10-14 · Pipeline #1234 (manutenção autônoma)
+
+| Item | Descrição | Status |
+|---|---|---|
+| S218-1 | Leucócito ⚠️ 2 dias consecutivos: MASTER_PASSWORD não configurado no Render | ✅ corrigido — adicionado via Render API (22 vars) |
+| S218-2 | Suzana login quebrado: bcrypt cost 12 (7s) + email errado (matanimoto em vez de vitamind) | ✅ corrigido — hash cost 10, email fix, challenge limpo |
+| S218-3 | UptimeRobot: 2 alertas DOWN+UP (8/out e 12/out) — ambos auto-recuperados | ✅ sem ação necessária |
+| S218-4 | #eage Rodada 3 enviada: auto-cadastro + perfil profissional + aprovação manual/auto | ✅ enviado para Mayumi+Yuri |
+| S218-5 | Age Leucócito: AGE_IP_CHALLENGE=false no Render — verificado (challenge por IP desabilitado) | ✅ confirmado |
+
+**Pendências identificadas:**
+- Lisange: S215-1 ainda pendente (senha foi trocada, não é mais age2026) — confirmar senha com Lisange
+- Suzana: testar login após redeploy Render (MASTER_PASSWORD triggering redeploy)

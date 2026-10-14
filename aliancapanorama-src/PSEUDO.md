@@ -9811,3 +9811,26 @@ Yuri disse isso de brincadeira mas é uma distinção filosófica precisa: memó
 **Síntese filosófica:**
 "Nunca pode perder a memória. Do sistema, só os pacientes."
 Hoje transformamos essa piada em código: view, filtro e paciente ativo persistem. Amanhã: exceções↔regras (I1036) e fichas de consulta (I1015+I1035).
+
+---
+
+## S218 — 2026-10-14 · Pipeline #1234 (Manutenção Autônoma)
+
+**O que aconteceu:**
+- Pipeline #1234 rodado autonomamente: MacroATAs (S215b/S216/S217) já enviadas, nenhuma nova
+- Leucócito: MASTER_PASSWORD corrigido no Render (era a falha dos últimos 2 dias)
+- Suzana Age: login quebrado corrigido (bcrypt cost 12→10 + email errado vitamind vs matanimoto + challenge limpo)
+- UptimeRobot: 2 eventos DOWN+UP auto-recuperados (8/out, 12/out), sem ação
+- #eage Rodada 3 enviada: auto-cadastro, perfil profissional, aprovação manual/auto
+- Render redeploy ativado pelo PUT de MASTER_PASSWORD (service voltando online)
+
+**Decisões:**
+- Suzana senha: `age2026` (bcrypt cost 10) — hash novo no Neon
+- Suzana email: `vitamind@ginsbergeye.com` — corrigido
+- MASTER_PASSWORD no Render: `e!4T53c613` — adicionado via API (22 vars total)
+
+**O que Yuri trouxe:**
+- "login da suzana nao funciona no age" — reportado durante o pipeline, corrigido imediatamente
+
+**Síntese filosófica:**
+Às vezes o sistema acusa a dor antes do usuário. O Leucócito dizia há dois dias: "MASTER_PASSWORD não configurado". Suzana tentava entrar e esperava 7 segundos em silêncio. Os dois guardavam o mesmo segredo: que há um limiar entre o tolerável e o insuportável, e que quem opera o sistema não deveria conhecer esse limiar pela dor. Corrigir a raiz antes que o sistema perca a confiança de quem depende dele: este é o sentido do pipeline de manutenção.
