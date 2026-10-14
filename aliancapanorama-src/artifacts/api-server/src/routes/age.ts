@@ -3181,6 +3181,37 @@ router.get("/age/:slug/relatorio-mensal", requireAgeAuth, async (req, res): Prom
   }
 });
 
+// PATCH /api/age/:slug/professionals/me/profile — atualizar nome, subtítulo/especialidade, bio, cor
+router.patch("/age/:slug/professionals/me/profile", requireAgeAuth, async (req, res): Promise<void> => {
+  const profId = req.session.ageProfessionalId!;
+  const { nome, especialidade, bio, cor } = req.body as {
+    nome?: string; especialidade?: string; bio?: string; cor?: string;
+  };
+  if (!nome?.trim()) { res.status(400).json({ error: "nome é obrigatório" }); return; }
+  const corSafe = cor && /^#[0-9a-fA-F]{6}$/.test(cor) ? cor : null;
+  try {
+    if (corSafe) {
+      await db.execute(sql`
+        UPDATE age_professionals
+        SET nome = ${nome.trim()}, especialidade = ${especialidade?.trim() ?? null},
+            bio = ${bio?.trim() ?? null}, cor = ${corSafe}
+        WHERE id = ${profId}
+      `);
+    } else {
+      await db.execute(sql`
+        UPDATE age_professionals
+        SET nome = ${nome.trim()}, especialidade = ${especialidade?.trim() ?? null},
+            bio = ${bio?.trim() ?? null}
+        WHERE id = ${profId}
+      `);
+    }
+    res.json({ ok: true, nome: nome.trim(), especialidade: especialidade?.trim() ?? null, bio: bio?.trim() ?? null });
+  } catch (err) {
+    logger.error({ err }, "age: atualizar perfil");
+    res.status(500).json({ error: "Erro ao salvar perfil." });
+  }
+});
+
 // PATCH /api/age/:slug/professionals/me/contato — atualizar email/whatsapp do profissional
 router.patch("/age/:slug/professionals/me/contato", requireAgeAuth, async (req, res): Promise<void> => {
   const profId = req.session.ageProfessionalId!;

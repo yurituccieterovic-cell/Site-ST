@@ -167,6 +167,9 @@ export function AgePage() {
   const [paymentOpts, setPaymentOpts] = useState<Record<string, boolean>>({ presencial_dinheiro: true });
   const [paymentSaving, setPaymentSaving] = useState(false);
   const [paymentMsg, setPaymentMsg] = useState("");
+  const [profileForm, setProfileForm] = useState({ nome: "", especialidade: "", bio: "" });
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileMsg, setProfileMsg] = useState("");
   const [intervaloSemanas, setIntervaloSemanas] = useState(0);
   const [intervaloSaving, setIntervaloSaving] = useState(false);
   const [intervaloMsg, setIntervaloMsg] = useState("");
@@ -507,7 +510,13 @@ export function AgePage() {
           }
           const r = await fetch(`${API}/api/age/${slug}`);
           if (r.ok) {
-            if (!cancelled) { clearWakingTimer(); setProf(await r.json() as Prof); setLoading(false); setWaking(false); }
+            if (!cancelled) {
+              clearWakingTimer();
+              const p = await r.json() as Prof;
+              setProf(p);
+              setProfileForm({ nome: p.nome, especialidade: p.especialidade ?? "", bio: p.bio ?? "" });
+              setLoading(false); setWaking(false);
+            }
             return;
           }
           throw new Error(`${r.status}`);
@@ -3443,6 +3452,53 @@ export function AgePage() {
       <div style={{ padding: "1rem", maxWidth: 520 }}>
         <h2 style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Configurações</h2>
         <p style={{ color: "#64748b", fontSize: 13, marginBottom: 24 }}>Ajuste as opções da sua agenda.</p>
+
+        {/* Meu Perfil */}
+        <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
+          <div style={{ color, fontSize: 13, fontWeight: 600, marginBottom: 12 }}>👤 Meu Perfil</div>
+          <form onSubmit={async e => {
+            e.preventDefault();
+            setProfileSaving(true); setProfileMsg("");
+            try {
+              const r = await fetch(`${API}/api/age/${slug}/professionals/me/profile`, {
+                method: "PATCH", credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(profileForm),
+              });
+              const d = await r.json() as { ok?: boolean; nome?: string; error?: string };
+              if (d.ok) {
+                setProfileMsg("✓ Perfil salvo");
+                setProf(p => p ? { ...p, nome: d.nome ?? p.nome, especialidade: profileForm.especialidade || undefined, bio: profileForm.bio || undefined } : p);
+              } else setProfileMsg(d.error ?? "Erro ao salvar.");
+            } catch { setProfileMsg("Sem conexão."); }
+            setProfileSaving(false);
+            setTimeout(() => setProfileMsg(""), 3000);
+          }} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div>
+              <label style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, display: "block", marginBottom: 4 }}>Nome *</label>
+              <input value={profileForm.nome} onChange={e => setProfileForm(f => ({ ...f, nome: e.target.value }))} required
+                style={{ width: "100%", background: "#080c10", border: `1px solid ${color}44`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, boxSizing: "border-box" }} />
+            </div>
+            <div>
+              <label style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, display: "block", marginBottom: 4 }}>Subtítulo / Especialidade</label>
+              <input value={profileForm.especialidade} onChange={e => setProfileForm(f => ({ ...f, especialidade: e.target.value }))}
+                placeholder="Ex: Psicóloga · CRP 06/12345"
+                style={{ width: "100%", background: "#080c10", border: `1px solid ${color}44`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, boxSizing: "border-box" }} />
+            </div>
+            <div>
+              <label style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600, display: "block", marginBottom: 4 }}>Apresentação (bio)</label>
+              <textarea value={profileForm.bio} onChange={e => setProfileForm(f => ({ ...f, bio: e.target.value }))}
+                placeholder="Apresentação breve para os pacientes verem na sua página pública."
+                rows={3}
+                style={{ width: "100%", background: "#080c10", border: `1px solid ${color}44`, borderRadius: 8, color: "#e2e8f0", padding: "9px 12px", fontSize: 13, resize: "vertical", boxSizing: "border-box" }} />
+            </div>
+            {profileMsg && <div style={{ color: profileMsg.startsWith("✓") ? "#4ade80" : "#f87171", fontSize: 12 }}>{profileMsg}</div>}
+            <button type="submit" disabled={profileSaving || !profileForm.nome.trim()}
+              style={{ background: profileSaving ? "#1a2030" : color, border: "none", borderRadius: 8, color: "#080c10", padding: "9px 0", fontWeight: 700, fontSize: 13, cursor: "pointer", alignSelf: "flex-start", minWidth: 100 }}>
+              {profileSaving ? "Salvando…" : "Salvar perfil"}
+            </button>
+          </form>
+        </div>
 
         {/* Link de agendamento */}
         <div style={{ background: "#0f1318", border: `1px solid ${color}22`, borderRadius: 12, padding: "1rem", marginBottom: 16 }}>
