@@ -9759,3 +9759,23 @@ A manutenção é o ato de escutar o que o sistema já diz. Hoje o sistema disse
 **Decisão:** Senha da Lisange resetada para `age2026` (bcrypt cost 10) direto no Neon via psql. Login confirmado OK.
 
 **Síntese filosófica:** O sistema estava com uma porta trancada — a Lisange sem acesso ao próprio painel. A chave não era tecnológica, era uma senha esquecida. Às vezes a solução mais simples (trocar a senha) é a que libera o caminho. Abrir portas também é arquitetura.
+
+## S215b — 2026-10-14 · AGE 3.0 — Auto-cadastro + Brainstorm Yuri+Mayumi
+
+**Contexto:** Yuri enviou áudio com Mayumi descrevendo visão completa do AGE 3.0.
+
+**Decisões:**
+1. Auto-cadastro direto de paciente sem email (AGE_DISABLE_PROF_EMAILS estava desnecessário — já existia rota `/patients/direct` para profissional; nova `/self-register` para o próprio paciente)
+2. Cadastro não manda email por enquanto — MVP primeiro, email confirmação depois
+3. SABIÁ: regra de produto "pode não responder" — honestidade > completude
+4. Ficha de consulta: I1015 já existia; I1035 adiciona tipos de atendimento (Yuri+Mayumi definem lista depois)
+5. App SABIÁ gratuito: ideia estratégica registrada, não implementar agora
+
+**Código implementado:**
+- Backend: `POST /age/:slug/patients/self-register` — bcrypt 10, status=aprovado, auto-login sessão
+- Frontend: `selfRegMode` + formulário no `PatientLoginView` + botão "Criar conta"
+- Não: fichas (I1015/I1035), perfil editável (I1030), termos (I1031)
+
+**Síntese filosófica:**
+O brainstorm de Yuri+Mayumi revela uma tensão produtiva: o sistema quer crescer (fichas, voz, gravação, app), mas a sabedoria está em saber o que *não* construir ainda. O auto-cadastro simples é o gesto certo — remover fricção sem prometer o que não está pronto. "A SABIÁ pode não responder" não é limitação, é integridade.
+

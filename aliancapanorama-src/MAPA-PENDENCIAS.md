@@ -2167,3 +2167,25 @@
 | S215-1 | Lisange login quebrado — senha foi trocada, não é mais age2026 | ⏳ pendente — resetar senha ou confirmar com Lisange |
 | S215-2 | ISA → Mirtes: renomear em todo o sistema (código, DB, UI, docs, Bluesky conta nova) | ⏳ em andamento |
 | S215-3 | I1026: Audit grep âncora em todos os scripts .pap-secrets | ⏳ backlog |
+
+## S215b — AGE 3.0 — Brainstorm + Cadastro direto (2026-10-14)
+
+**Implementado:**
+- `POST /api/age/:slug/patients/self-register` — auto-cadastro sem email, bcrypt cost 10, status=aprovado
+- Frontend: botão "Criar conta" em PatientLoginView, formulário nome/email/senha/telefone, auto-login
+- Banner "Sistema acordando" após 3s cold start (antes só aparecia em falha HTTP)
+- Keep-alive: corrigido slug `suzana` (estava `susana`)
+- Lisange: last_login_ip limpo, AGE_IP_CHALLENGE=false confirmado
+
+**Ideias registradas (AGE 3.0):**
+- I1030 — Editar perfil profissional (nome, subtítulo, bio)
+- I1031 — Política de privacidade e termos de uso
+- I1032 — Memória de tentativas de cadastro sem pressionar
+- I1033 — App gratuito da SABIÁ
+- I1034 — Regra: SABIÁ pode não responder
+- I1035 — Tipos de atendimento na ficha (complementa I1015)
+
+**Pendências mais urgentes (próxima sessão):**
+1. I1030 — Editar perfil profissional (próximo)
+2. I1015 + I1035 — Ficha de consulta + tipos de atendimento (maior)
+3. I1031 — Termos e privacidade (revisão humana Mayumi)
