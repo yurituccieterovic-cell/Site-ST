@@ -3106,3 +3106,9 @@ Como posso te ajudar hoje?"
 - Bug grep âncora: grep sem ^ captura substrings similares no .pap-secrets — sempre usar grep '^CAMPO='
 - PWA icons criados para Calculus (azul) e PAP (árvore dourada); CalcPage troca manifest via useEffect
 - ISA será renomeada Mirtes (bibliotecária) em todo o sistema
+
+
+### 2026-10-14 — admin
+### 2026-10-14 — ATA #fim S215
+- DECISÕES: PWA icons Calculus+PAP deployados; ISA→Mirtes renomear todo sistema; Lisange senha reset pendente
+- PRÓXIMOS PASSOS: rename ISA→Mirtes no código; nova senha Lisange; I1026 audit grep
