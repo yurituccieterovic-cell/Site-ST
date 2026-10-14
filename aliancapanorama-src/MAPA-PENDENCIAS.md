@@ -2163,3 +2163,7 @@
 | S214-3 | I1017: Formulários modulares por especialidade | ⏳ backlog |
 | S214-4 | I1018: Anamnese em 3 modos (formulário/SABIÁ/misto) | ⏳ backlog |
 | S214-5 | Waze — retomar com Yuri/Mayumi o que foi proposto | ⏳ pendente esclarecimento |
+
+| S215-1 | Lisange login quebrado — senha foi trocada, não é mais age2026 | ⏳ pendente — resetar senha ou confirmar com Lisange |
+| S215-2 | ISA → Mirtes: renomear em todo o sistema (código, DB, UI, docs, Bluesky conta nova) | ⏳ em andamento |
+| S215-3 | I1026: Audit grep âncora em todos os scripts .pap-secrets | ⏳ backlog |

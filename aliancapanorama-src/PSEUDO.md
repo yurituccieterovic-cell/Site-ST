@@ -9728,3 +9728,27 @@ O brainstorm de hoje não resolve o problema tecnicamente. Ele nomeia o que falt
 A IA não cuida do paciente. A IA cuida do registro.
 
 ---
+
+---
+## ATA S215 — 2026-10-14 · Pipeline #1234 + PWA Icons + ISA→Mirtes
+
+**Sessão:** #1234 manutenção + fix PWA + rename
+
+**Decisões:**
+- PWA: cada rota principal recebe manifest e ícone próprios (CalcPage, Age, PAP). CalcPage.tsx troca manifest via useEffect.
+- ISA será renomeada Mirtes em todo o sistema. Bluesky: conta atual não funciona, criar nova conta @mirtes ou similar.
+- Lisange senha trocada: pendente reset. Não era age2026.
+
+**Feito:**
+- calculus-icon-192/512.png + calculus-manifest.json criados e deployados
+- pap-icon-192/512.png (árvore dourada) substitui logo genérico ST no manifest PAP
+- apple-mobile-web-app-title atualizado: "Aliança Panorama" (PAP) e "Calculus"
+- Bug grep âncora corrigido (A40104)
+- MAPA-PENDENCIAS atualizado com S215-1/2/3
+
+**Saúde das IAs (2026-10-14):**
+- site-st.onrender.com ✅ · salescockpit-api ✅ · Age lisange/suzana ✅
+- Dodge verde 13/13 · Playcenter ativo · UptimeRobot: 0 alertas
+
+**Síntese filosófica:**
+A manutenção é o ato de escutar o que o sistema já diz. Hoje o sistema disse: "meu nome estava errado" (Calculus/PAP sem identidade PWA própria), "minha senha mudou" (Lisange), "meu grep estava guloso" (âncora). Diagnosticar é nomear — e nomear já é metade do conserto. A ISA vai se tornar Mirtes: outro nomeamento, mais fundamental.
