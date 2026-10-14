@@ -384,6 +384,10 @@ export function AgePage() {
   const [forgotMode, setForgotMode] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotMsg, setForgotMsg] = useState("");
+  const [selfRegMode, setSelfRegMode] = useState(false);
+  const [selfRegForm, setSelfRegForm] = useState({ nome: "", email: "", password: "", telefone: "" });
+  const [selfRegLoading, setSelfRegLoading] = useState(false);
+  const [selfRegError, setSelfRegError] = useState("");
   // set-password via token (aprovação ou reset)
   const [setPwToken, setSetPwToken] = useState("");
   const [setPwForm, setSetPwForm] = useState({ password: "", confirm: "" });
@@ -1263,6 +1267,27 @@ export function AgePage() {
       const d = await r.json() as { ok?: boolean; message?: string };
       setForgotMsg(d.message ?? "Link enviado!");
     } catch { setForgotMsg("Sem conexão."); }
+  }
+
+  async function handleSelfRegister(e: React.FormEvent) {
+    e.preventDefault();
+    setSelfRegError(""); setSelfRegLoading(true);
+    try {
+      const r = await fetch(`${API}/api/age/${slug}/patients/self-register`, {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selfRegForm),
+      });
+      const d = await r.json() as { ok?: boolean; nome?: string; error?: string };
+      if (d.ok) {
+        setPatientNome(d.nome ?? selfRegForm.nome);
+        setSelfRegMode(false); setSelfRegForm({ nome: "", email: "", password: "", telefone: "" });
+        setMode("patient");
+      } else {
+        setSelfRegError(d.error ?? "Erro no cadastro.");
+      }
+    } catch { setSelfRegError("Sem conexão."); }
+    setSelfRegLoading(false);
   }
 
   async function gerarConvite(e: React.FormEvent) {
@@ -4935,7 +4960,32 @@ export function AgePage() {
           </div>
         </div>
 
-        {!forgotMode ? (
+        {selfRegMode ? (
+          <form onSubmit={handleSelfRegister} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 4 }}>Crie sua conta para acompanhar suas consultas.</div>
+            <input required placeholder="Nome completo *" value={selfRegForm.nome}
+              onChange={e => setSelfRegForm(f => ({ ...f, nome: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            <input required type="email" placeholder="Email *" value={selfRegForm.email}
+              onChange={e => setSelfRegForm(f => ({ ...f, email: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            <input required type="password" placeholder="Senha (mín. 8 chars) *" value={selfRegForm.password}
+              onChange={e => setSelfRegForm(f => ({ ...f, password: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            <input placeholder="Telefone (opcional)" value={selfRegForm.telefone}
+              onChange={e => setSelfRegForm(f => ({ ...f, telefone: e.target.value }))}
+              style={{ background: "#1a2030", border: `1px solid ${color}44`, borderRadius: 8, padding: "10px 14px", color: "#e2e8f0", fontSize: 14 }} />
+            {selfRegError && <div style={{ color: "#f87171", fontSize: 13 }}>{selfRegError}</div>}
+            <button type="submit" disabled={selfRegLoading}
+              style={{ background: selfRegLoading ? "#1a2030" : color, color: "#080c10", border: "none", borderRadius: 8, padding: "10px 0", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              {selfRegLoading ? "Criando conta…" : "Criar minha conta"}
+            </button>
+            <button type="button" onClick={() => { setSelfRegMode(false); setSelfRegError(""); }}
+              style={{ background: "none", border: "none", color: "#475569", fontSize: 12, cursor: "pointer" }}>
+              Já tenho conta — fazer login
+            </button>
+          </form>
+        ) : !forgotMode ? (
           <form onSubmit={handlePatientLogin} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <input type="email" placeholder="Seu email" value={patientLoginForm.email}
               onChange={e => setPatientLoginForm(f => ({ ...f, email: e.target.value }))}
@@ -4957,6 +5007,10 @@ export function AgePage() {
             <button type="button" onClick={() => setForgotMode(true)}
               style={{ background: "none", border: "none", color: "#64748b", fontSize: 12, cursor: "pointer", padding: "4px 0" }}>
               Esqueci minha senha
+            </button>
+            <button type="button" onClick={() => { setSelfRegMode(true); setSelfRegError(""); }}
+              style={{ background: "none", border: "none", color: color, fontSize: 12, cursor: "pointer", padding: "4px 0", fontWeight: 600 }}>
+              Criar conta
             </button>
             <button type="button" onClick={() => setMode("public")}
               style={{ background: "none", border: "none", color: "#475569", fontSize: 12, cursor: "pointer", padding: "4px 0" }}>

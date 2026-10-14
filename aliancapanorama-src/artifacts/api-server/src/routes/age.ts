@@ -2448,6 +2448,37 @@ router.post("/age/:slug/patients/auth/set-password", async (req, res): Promise<v
   res.json({ ok: true, nome: patient.nome });
 });
 
+// POST /api/age/:slug/patients/self-register — auto-cadastro sem email (Fase AGE 3.0)
+router.post("/age/:slug/patients/self-register", async (req, res): Promise<void> => {
+  const { slug } = req.params;
+  const { nome, email, password, telefone } = req.body as { nome?: string; email?: string; password?: string; telefone?: string };
+  if (!nome?.trim() || !email?.trim() || !password || password.length < 8) {
+    res.status(400).json({ error: "nome, email e senha (mín. 8 chars) são obrigatórios" }); return;
+  }
+  const [prof] = await db.select({ id: ageProfessionalsTable.id })
+    .from(ageProfessionalsTable)
+    .where(and(eq(ageProfessionalsTable.slug, slug!), eq(ageProfessionalsTable.ativa, true)))
+    .limit(1);
+  if (!prof) { res.status(404).json({ error: "Profissional não encontrada" }); return; }
+
+  const emailLower = email.trim().toLowerCase();
+  const [existing] = await db.select({ id: agePatientsTable.id })
+    .from(agePatientsTable)
+    .where(and(eq(agePatientsTable.professionalId, prof.id), eq(agePatientsTable.email, emailLower)))
+    .limit(1);
+  if (existing) { res.status(409).json({ error: "Este email já tem cadastro. Faça login." }); return; }
+
+  const hash = await bcrypt.hash(password, 10);
+  const [patient] = (await db.execute(sql`
+    INSERT INTO age_patients (professional_id, nome, email, telefone, status, password_hash, lgpd_consent, lgpd_consent_at)
+    VALUES (${prof.id}, ${nome.trim()}, ${emailLower}, ${telefone?.trim() ?? null}, 'aprovado', ${hash}, true, now())
+    RETURNING id, nome, email, status
+  `)).rows as { id: number; nome: string; email: string; status: string }[];
+
+  req.session.agePatientId = patient.id;
+  res.status(201).json({ ok: true, id: patient.id, nome: patient.nome, status: patient.status });
+});
+
 // POST /api/age/:slug/patients/auth/login
 router.post("/age/:slug/patients/auth/login", loginLimit, async (req, res): Promise<void> => {
   const slug = String(req.params.slug ?? "");
