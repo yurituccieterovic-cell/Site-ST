@@ -537,6 +537,19 @@ export function AgePage() {
     return () => { cancelled = true; clearWakingTimer(); };
   }, [slug]);
 
+  // Memória de navegação — salvar ao navegar (só no modo profissional)
+  useEffect(() => {
+    if (mode !== "professional" || !slug) return;
+    try {
+      localStorage.setItem(`age-nav-${slug}`, JSON.stringify({
+        view,
+        patientFilter,
+        selectedPatientId: selectedPatient?.id ?? null,
+        selectedPatientTab,
+      }));
+    } catch { /* ignore */ }
+  }, [mode, slug, view, patientFilter, selectedPatient?.id, selectedPatientTab]);
+
   // Verificar se já está logado
   useEffect(() => {
     fetch(`${API}/api/age/auth/me`, { credentials: "include" })
@@ -548,6 +561,20 @@ export function AgePage() {
           setAuthNome(d.nome ?? "");
           setProfEmail(d.email ?? null);
           setEmailPending(d.emailPending ?? null);
+          // Restaurar navegação salva
+          try {
+            const saved = localStorage.getItem(`age-nav-${slug}`);
+            if (saved) {
+              const nav = JSON.parse(saved) as { view?: View; patientFilter?: string; selectedPatientId?: number | null; selectedPatientTab?: string };
+              if (nav.view) setView(nav.view);
+              if (nav.patientFilter) setPatientFilter(nav.patientFilter);
+              if (nav.selectedPatientTab) setSelectedPatientTab(nav.selectedPatientTab as "info" | "docs" | "forms" | "ficha");
+              // selectedPatient será restaurado quando a lista de pacientes carregar (ver abaixo)
+              if (nav.selectedPatientId) {
+                sessionStorage.setItem(`age-restore-patient-${slug}`, String(nav.selectedPatientId));
+              }
+            }
+          } catch { /* ignore */ }
         }
       })
       .catch(() => {});
@@ -631,7 +658,20 @@ export function AgePage() {
   const loadPatients = useCallback(() => {
     if (mode !== "professional") return;
     fetch(`${API}/api/age/${slug}/patients?status=todos`, { credentials: "include" })
-      .then(r => r.json()).then(setPatients).catch(() => {});
+      .then(r => r.json())
+      .then((list: Patient[]) => {
+        setPatients(list);
+        // Restaurar paciente ativo após refresh
+        try {
+          const rid = sessionStorage.getItem(`age-restore-patient-${slug}`);
+          if (rid) {
+            const found = list.find(p => p.id === Number(rid));
+            if (found) setSelectedPatient(found);
+            sessionStorage.removeItem(`age-restore-patient-${slug}`);
+          }
+        } catch { /* ignore */ }
+      })
+      .catch(() => {});
   }, [mode, slug]);
 
   const loadFeed = useCallback(async () => {
