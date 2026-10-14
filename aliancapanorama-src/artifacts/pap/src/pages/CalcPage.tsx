@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Ábaco — triqueta animada com expressões (mascote da Sócia)
 function AbacoAvatar({ mood = "normal" }: { mood?: "normal" | "happy" | "think" }) {
@@ -93,6 +93,30 @@ function FinArazulYAvatar({ size = 32 }: { size?: number }) {
 
 export function CalcPage() {
   const [abacoMood, setAbacoMood] = useState<"normal" | "happy" | "think">("normal");
+
+  useEffect(() => {
+    const prevTitle = document.title;
+    const prevAppleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]')?.getAttribute("content");
+    const prevTheme = document.querySelector('meta[name="theme-color"]')?.getAttribute("content");
+    const manifestLink = document.querySelector('link[rel="manifest"]') as HTMLLinkElement | null;
+    const prevManifest = manifestLink?.href;
+    const touchIcon = document.querySelector('link[rel="apple-touch-icon"]') as HTMLLinkElement | null;
+    const prevTouchIcon = touchIcon?.href;
+
+    document.title = "S.T. Calculus";
+    document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute("content", "Calculus");
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#60a5fa");
+    if (manifestLink) manifestLink.href = "/aliancapanorama/calculus-manifest.json";
+    if (touchIcon) touchIcon.href = "/aliancapanorama/calculus-icon-512.png";
+
+    return () => {
+      document.title = prevTitle;
+      if (prevAppleTitle) document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute("content", prevAppleTitle);
+      if (prevTheme) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", prevTheme);
+      if (manifestLink && prevManifest) manifestLink.href = prevManifest;
+      if (touchIcon && prevTouchIcon) touchIcon.href = prevTouchIcon;
+    };
+  }, []);
 
   return (
     <div style={{ minHeight: "100vh", background: "#07090f", color: "#e2e8f0", fontFamily: "Georgia, serif" }}>
