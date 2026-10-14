@@ -9800,3 +9800,14 @@ O brainstorm de Yuri+Mayumi revela uma tensão produtiva: o sistema quer crescer
 "Nunca pode perder a memória. Do sistema, só os pacientes."
 Yuri disse isso de brincadeira mas é uma distinção filosófica precisa: memória de navegação (estado efêmero do UI) é diferente de memória histórica (dados clínicos auditáveis). Uma reinicia ao logout. A outra nunca desaparece sem decisão explícita. O AGE precisa honrar essa distinção em todo lugar onde persiste estado.
 
+
+## S217 — 2026-10-14 · I1030+I1040 — Perfil + Memória de navegação
+
+**Implementado:**
+- I1030: PATCH /age/:slug/professionals/me/profile + card "Meu Perfil" no ConfigView
+- I1040: localStorage salva view/filtro/pacienteId/tab; restaura ao re-logar
+- Fix: SABIÁ fila não duplicava mensagem (alreadyInChat flag)
+
+**Síntese filosófica:**
+"Nunca pode perder a memória. Do sistema, só os pacientes."
+Hoje transformamos essa piada em código: view, filtro e paciente ativo persistem. Amanhã: exceções↔regras (I1036) e fichas de consulta (I1015+I1035).
