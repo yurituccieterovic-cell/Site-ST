@@ -3150,3 +3150,16 @@ Como posso te ajudar hoje?"
 - Yuri+Mayumi: brainstorm fichas de consulta, tipos de atendimento, SABIÁ pode não responder, app gratuito SABIÁ
 - I1030-I1035 registrados; I1015+I1035 são prioridade próxima sessão
 - Keep-alive slug suzana corrigido; banner cold start 3s adicionado
+
+
+### 2026-10-14 — admin
+### 2026-10-14 — ATA #fim S215b
+**DECISÕES:**
+- Auto-cadastro paciente sem email (self-register) implementado e deployado
+- SABIÁ pode não responder: regra de produto registrada (I1034)
+- Fichas consulta (I1015+I1035) = próxima prioridade
+- Perfil profissional editável (I1030) = depois
+**PRÓXIMOS PASSOS:**
+- I1030: editar perfil (nome, subtítulo, bio)
+- I1015+I1035: ficha de consulta + tipos atendimento
+- Mayumi+Yuri definem lista de tipos antes do código
