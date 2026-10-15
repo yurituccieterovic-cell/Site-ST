@@ -2226,3 +2226,16 @@
 **Pendências identificadas:**
 - Lisange: S215-1 ainda pendente (senha foi trocada, não é mais age2026) — confirmar senha com Lisange
 - Suzana: testar login após redeploy Render (MASTER_PASSWORD triggering redeploy)
+
+## S219 — Crowd Piti + Secretaria (2026-10-15)
+
+| # | Item | Status |
+|---|---|---|
+| S219-1 | Secretaria = Playcenter + SalesCockpit — definição gravada em memória | ✅ |
+| S219-2 | Crowd não é fork — é assembleia própria (I917–I920) | ✅ clarificado |
+| S219-3 | Sistema Crowd criado: crowd_users, /api/crowd/*, CrowdPage.tsx | ✅ commit 468a908c |
+| S219-4 | Mayumi "MT" no Age — mudar exibição do nome da gestora | ⏳ não implementado |
+| S219-5 | Crédito Cláudio Coach + login Mayumi no Crowd | ⏳ não implementado |
+| S219-6 | Cronjob Crowd (Yuri vai instalar) | ⏳ aguarda Yuri |
+| S219-7 | Upgrade Render (quando o momento chegar) | ⏳ futuro |
+

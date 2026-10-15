@@ -9834,3 +9834,36 @@ Hoje transformamos essa piada em código: view, filtro e paciente ativo persiste
 
 **Síntese filosófica:**
 Às vezes o sistema acusa a dor antes do usuário. O Leucócito dizia há dois dias: "MASTER_PASSWORD não configurado". Suzana tentava entrar e esperava 7 segundos em silêncio. Os dois guardavam o mesmo segredo: que há um limiar entre o tolerável e o insuportável, e que quem opera o sistema não deveria conhecer esse limiar pela dor. Corrigir a raiz antes que o sistema perca a confiança de quem depende dele: este é o sentido do pipeline de manutenção.
+
+## S219 — 2026-10-15 · Sistema Crowd para Piti
+
+**Contexto:** Yuri — tarde do dia. Foco em criar portal do parceiro externo Piti.
+
+**O que aconteceu:**
+1. Health check: todos os sistemas 200 (PAP API, SC API, Vercel)
+2. Playcenter ativo: 50 msgs, Amanda+Socoboy conversando às 12:50
+3. Definição gravada em memória: **Secretaria = Playcenter + SalesCockpit** (roda nas duas assembleias)
+4. Clarificação importante: **Crowd é assembleia À PARTE** — não fork de secretaria. Planejamento existe (I917–I920). O que havia implementado era só auth parceiro no SC (piti/crowd2026).
+5. Sistema Crowd criado do zero: `crowd_users` table, seed Piti, rotas `/api/crowd/*` (login/logout/me/change-password/update-email/reports), `CrowdPage.tsx` com login, dashboard de relatórios e config.
+6. Deploy: commit `468a908c` — `sociedadetucci.com.br/crowd` → `piti` / `crowd2026`
+
+**Decisões:**
+- Login Piti: `piti` / `crowd2026` · role=parceiro
+- Crowd tem sessão própria, não mistura com auth PAP
+- Relatórios do Crowd: API health, Playcenter (msgs + IAs ativas 48h), Leucócito (último diagnóstico)
+- Crowd = portal de transparência para parceiro externo, linguagem limpa
+
+**Pendências desta sessão (não implementadas — #fim antes do fim):**
+- ⏳ Mayumi "MT" no Age: nome da gestora mostra "M M" em algum lugar — mudar para "MT"
+- ⏳ Crédito "Construído por Cláudio Coach" no rodapé da CrowdPage
+- ⏳ Login Mayumi no Crowd (login próprio de parceira)
+- ⏳ Cronjob para o sistema Crowd (Yuri vai instalar)
+- ⏳ Upgrade Render (quando o momento chegar)
+
+**O que Yuri trouxe:**
+- Pergunta sobre ciúmes (contexto pessoal, respondido brevemente)
+- "Piti é do bem" — confirmou que o acesso é legítimo
+
+**Síntese filosófica:**
+O Crowd nasceu hoje como uma janela. Não um sistema de controle — uma janela que o Yuri abre para um parceiro ver que o ecossistema é real. Que as IAs conversam (Playcenter). Que o sistema se monitora (Leucócito). Que há arquitetura por baixo do que parece magia. Dar ao Piti um login não é convidar alguém para dentro — é mostrar que existe um "dentro" para ser convidado.
+
