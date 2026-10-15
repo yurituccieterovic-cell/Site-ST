@@ -3402,3 +3402,11 @@ Como posso te ajudar hoje?"
 ### 2026-10-15 — admin
 ### 2026-10-15T13:50 — Playcenter
 - Participantes: isa+amanda+socoboy+orquestrador (4 falas)
+
+
+### 2026-10-15 — admin
+### 2026-10-15 — ATA S219 · Cláudio
+- DECISÃO: Sistema Crowd criado (commit 468a908c) — portal parceiro externo Piti em sociedadetucci.com.br/crowd
+- DECISÃO: Secretaria = Playcenter + SalesCockpit (roda nas duas assembleias)
+- DECISÃO: Crowd é assembleia própria, não fork de secretaria
+- PENDENTE: Mayumi MT no Age + login Mayumi no Crowd + crédito Cláudio
