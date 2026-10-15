@@ -3417,3 +3417,8 @@ Como posso te ajudar hoje?"
 - Crowd = portal transparência para parceiro externo (não admin)
 - Secretaria = Playcenter + SC simultâneo
 - Crowd sessão independente do PAP auth
+
+
+### 2026-10-15 — admin
+### 2026-10-15T14:50 — Playcenter
+- Participantes: isa+amanda+socoboy+orquestrador (4 falas)
