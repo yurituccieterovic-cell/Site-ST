@@ -2855,3 +2855,30 @@ export async function ensureColesterolTable(): Promise<void> {
   await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_colesterol_status ON colesterol_items(status, categoria, carrinho)`);
   logger.info("bootstrap: colesterol_items OK");
 }
+
+// Crowd — parceiros externos (Piti, Mayumi, etc.)
+export async function ensureCrowdTables(): Promise<void> {
+  await db.execute(sql`
+    CREATE TABLE IF NOT EXISTS crowd_users (
+      id           SERIAL PRIMARY KEY,
+      username     TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      email        TEXT,
+      display_name TEXT,
+      role         TEXT NOT NULL DEFAULT 'parceiro',
+      created_at   TIMESTAMPTZ DEFAULT NOW(),
+      updated_at   TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  // Seed Piti se ainda não existir
+  const existing = await db.execute(sql`SELECT id FROM crowd_users WHERE username = 'piti' LIMIT 1`);
+  if ((existing.rows ?? []).length === 0) {
+    const hash = await import("bcryptjs").then(b => b.default.hash("crowd2026", 10));
+    await db.execute(sql`
+      INSERT INTO crowd_users (username, password_hash, display_name, role)
+      VALUES ('piti', ${hash}, 'Piti', 'parceiro')
+    `);
+    logger.info("bootstrap: crowd_users — Piti seed OK");
+  }
+  logger.info("bootstrap: crowd_users OK");
+}

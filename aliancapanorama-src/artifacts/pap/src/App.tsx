@@ -33,6 +33,7 @@ import { CelularPage } from "@/pages/CelularPage";
 import { CssTutorialPage } from "@/pages/CssTutorialPage";
 import { CalcPage } from "@/pages/CalcPage";
 import { SociaPage } from "@/pages/SociaPage";
+import { CrowdPage } from "@/pages/CrowdPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useState, useEffect, useRef } from "react";
 
@@ -422,6 +423,7 @@ const isCelular     = path.includes("/celular");
 const isPv          = path.includes("/pv");
 const isJasmim      = path.includes("/jasmim");
 const isSocia       = path.includes("/socia");
+const isCrowd       = path.includes("/crowd");
 
 function App() {
   const [introDone, setIntroDone] = useState(() => !shouldShowIntro());
@@ -437,6 +439,7 @@ function App() {
     );
   }
 
+  if (isCrowd) return <CrowdPage />;
   if (isIsa) return <MirtesLandingPage />;
   if (isSocia) return <SociaGate />;
   if (isCalc) return <CalcPage />;

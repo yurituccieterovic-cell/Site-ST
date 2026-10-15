@@ -24,5 +24,9 @@ declare module "express-session" {
     // Age — gestora
     ageGestoraId?: number;
     ageGestoraNome?: string;
+    // Crowd — parceiro externo (Piti e outros)
+    crowdUserId?: number;
+    crowdUserName?: string;
+    crowdDisplayName?: string;
   }
 }

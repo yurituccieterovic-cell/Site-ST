@@ -68,6 +68,10 @@
     { "source": "/adm", "destination": "/aliancapanorama/index.html" },
     { "source": "/adm/(.*)", "destination": "/aliancapanorama/index.html" },
     { "source": "/pulseheadway", "destination": "/aliancapanorama/index.html" },
-    { "source": "/pulseheadway/(.*)", "destination": "/aliancapanorama/index.html" }
+    { "source": "/pulseheadway/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/crowd", "destination": "/aliancapanorama/index.html" },
+    { "source": "/crowd/(.*)", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/crowd", "destination": "/aliancapanorama/index.html" },
+    { "source": "/aliancapanorama/crowd/(.*)", "destination": "/aliancapanorama/index.html" }
   ]
 }

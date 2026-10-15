@@ -48,6 +48,7 @@ import pvRouter from "./pv";
 import jasmimRouter from "./jasmim";
 import arvoreTokenRouter from "./arvore-token";
 import leucocitoRouter from "./leucocito";
+import crowdRouter from "./crowd";
 
 const router: IRouter = Router();
 
@@ -82,6 +83,7 @@ router.use("/pv", pvRouter);
 router.use(jasmimRouter);
 router.use(arvoreTokenRouter);
 router.use(leucocitoRouter);
+router.use(crowdRouter);
 router.use(adminUsersRouter);
 router.use(nebulaRouter);
 router.use(arquiteturaRouter);
