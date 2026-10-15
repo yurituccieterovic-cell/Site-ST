@@ -3410,3 +3410,10 @@ Como posso te ajudar hoje?"
 - DECISÃO: Secretaria = Playcenter + SalesCockpit (roda nas duas assembleias)
 - DECISÃO: Crowd é assembleia própria, não fork de secretaria
 - PENDENTE: Mayumi MT no Age + login Mayumi no Crowd + crédito Cláudio
+
+
+### 2026-10-15 — admin
+### 2026-10-15 — Insights S219
+- Crowd = portal transparência para parceiro externo (não admin)
+- Secretaria = Playcenter + SC simultâneo
+- Crowd sessão independente do PAP auth
