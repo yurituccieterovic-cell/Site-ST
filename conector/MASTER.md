@@ -4271,3 +4271,8 @@ ok"
 ### 2026-10-20 — admin
 ### 2026-10-20T18:50 — Playcenter
 - Participantes: isa+amanda+meky+orquestrador+arvore (5 falas)
+
+
+### 2026-10-24 — admin
+### 2026-10-24T05:50 — Playcenter
+- Participantes: isa+socoboy+amanda+arvore (4 falas)
